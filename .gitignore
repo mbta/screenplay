@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-screenplay-*.tar
+screens-*.tar
 
 # If NPM crashes, it generates a log, let's ignore it too.
 npm-debug.log
@@ -32,3 +32,18 @@ npm-debug.log
 # we ignore priv/static. You may want to comment
 # this depending on your deployment strategy.
 /priv/static/
+
+# Local config files
+/priv/local.json
+/priv/signs_ui_config.json
+
+# local environment variables
+/priv/local.env
+
+/assets/coverage
+
+# Ignore the directory created by the ElixirLS VSCode plugin
+.elixir_ls/
+
+# Detritus left behind by macOS Finder
+.DS_Store
