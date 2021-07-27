@@ -1,0 +1,24 @@
+# Example environment configuration file: copy to `.envrc` (this is git-ignored)
+# and fill in any additional values you need. Will be automatically loaded and
+# unloaded by `direnv` if installed, or execute manually using `source .envrc`.
+
+# export ALGOLIA_APP_ID=
+# export ALGOLIA_SEARCH_KEY=
+# export ALGOLIA_WRITE_KEY=
+# export DRUPAL_ROOT=
+# export GOOGLE_API_KEY=
+# export OPEN_TRIP_PLANNER_URL=
+# export RECAPTCHA_PUBLIC_KEY=
+# export RECAPTCHA_PRIVATE_KEY=
+# export STATIC_HOST=
+# export SUPPORT_TICKET_REPLY_EMAIL=
+# export SUPPORT_TICKET_TO_EMAIL=
+# export V3_API_KEY=
+# export V3_URL=
+# export WIREMOCK_PATH=
+# export WIREMOCK_PROXY_URL=
+# export WIREMOCK_TRIP_PLAN_PROXY_URL=
+
+# You can also log in manually with `docker login`.
+# export DOCKER_USERNAME=
+# export DOCKER_PASSWORD=
