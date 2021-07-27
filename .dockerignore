@@ -1,5 +1,9 @@
-_build
-deps
-**/node_modules
-Dockerfile
-.dockerignore
+/assets/node_modules
+/deps
+/_build
+/Dockerfile
+/.git
+/config/*.local.exs
+/aws
+/cover
+*~
