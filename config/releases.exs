@@ -1,7 +1,6 @@
 import Config
 
-config :screenplay, ScreenplayWeb.AuthManager,
-  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+config :screenplay, ScreenplayWeb.AuthManager, secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: System.get_env("HOST"), port: 80],

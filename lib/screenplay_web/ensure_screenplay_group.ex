@@ -15,9 +15,9 @@ defmodule ScreenplayWeb.EnsureScreenplayGroup do
 
   def call(conn, opts) do
     with %{"groups" => groups} <- Guardian.Plug.current_claims(conn),
-          true <- is_list(groups),
-          screenplay_group = Keyword.fetch!(opts, :screenplay_group),
-          true <- screenplay_group in groups do
+         true <- is_list(groups),
+         screenplay_group = Keyword.fetch!(opts, :screenplay_group),
+         true <- screenplay_group in groups do
       conn
     else
       _ ->

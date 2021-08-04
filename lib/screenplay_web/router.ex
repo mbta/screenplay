@@ -46,7 +46,7 @@ defmodule ScreenplayWeb.Router do
       :ensure_auth,
       :ensure_screenplay_group
     ]
-    
+
     get("/", PageController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
