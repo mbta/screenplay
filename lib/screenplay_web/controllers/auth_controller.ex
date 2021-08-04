@@ -24,7 +24,7 @@ defmodule ScreenplayWeb.AuthController do
       %{groups: credentials.other.groups},
       ttl: {expiration - current_time, :seconds}
     )
-    |> redirect(to: ScreenplayWeb.Router.Helpers.admin_path(conn, :index))
+    |> redirect(to: ScreenplayWeb.Router.Helpers.page_path(conn, :index))
   end
 
   def callback(
