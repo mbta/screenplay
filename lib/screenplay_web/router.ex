@@ -13,10 +13,47 @@ defmodule ScreenplayWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :redirect_prod_http do
+    if Application.get_env(:screenplay, :redirect_http?) do
+      plug(Plug.SSL, rewrite_on: [:x_forwarded_proto])
+    end
+  end
+
+  pipeline :auth do
+    plug(ScreenplayWeb.AuthManager.Pipeline)
+  end
+
+  pipeline :ensure_auth do
+    plug(Guardian.Plug.EnsureAuthenticated)
+  end
+
+  pipeline :ensure_screenplay_group do
+    plug(ScreenplayWeb.EnsureScreenplayGroup)
+  end
+
   scope "/", ScreenplayWeb do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth])
+
+    get("/unauthorized", UnauthorizedController, :index)
+  end
+
+  scope "/auth", ScreenplayWeb do
+    pipe_through([:browser])
+
+    get("/:provider", AuthController, :request)
+    get("/:provider/callback", AuthController, :callback)
+  end
+
+  scope "/admin", ScreenplayWeb do
+    pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth, :ensure_screenplay_group]
+
+    get("/", AdminController, :index)
   end
 
   # Other scopes may use custom stacks.

@@ -54,4 +54,4 @@ COPY --from=app-builder /root/priv/static ./priv/static
 COPY --from=app-builder /root/_build/prod/rel/screenplay .
 
 # run the application
-CMD ["bin/screens", "start"]
+CMD ["bin/screenplay", "start"]

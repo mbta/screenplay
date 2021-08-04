@@ -16,6 +16,12 @@ config :screenplay, ScreenplayWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Configure Ueberauth to use Cognito
+config :ueberauth, Ueberauth,
+  providers: [
+    cognito: {Ueberauth.Strategy.Cognito, []}
+  ]
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key
