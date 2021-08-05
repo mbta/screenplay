@@ -1,6 +1,8 @@
 defmodule ScreenplayWeb.Controllers.AuthControllerTest do
   use ScreenplayWeb.ConnCase
 
+  alias ScreenplayWeb.Router.Helpers
+
   describe "callback" do
     test "redirects on success and saves refresh token", %{conn: conn} do
       current_time = System.system_time(:second)
@@ -16,11 +18,11 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
       conn =
         conn
         |> assign(:ueberauth_auth, auth)
-        |> get(ScreenplayWeb.Router.Helpers.auth_path(conn, :callback, "cognito"))
+        |> get(Helpers.auth_path(conn, :callback, "cognito"))
 
       response = html_response(conn, 302)
 
-      assert response =~ ScreenplayWeb.Router.Helpers.page_path(conn, :index)
+      assert response =~ Helpers.page_path(conn, :index)
       assert Guardian.Plug.current_claims(conn)["groups"] == ["test1"]
     end
 
@@ -28,7 +30,7 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
       conn =
         conn
         |> assign(:ueberauth_failure, %Ueberauth.Failure{})
-        |> get(ScreenplayWeb.Router.Helpers.auth_path(conn, :callback, "cognito"))
+        |> get(Helpers.auth_path(conn, :callback, "cognito"))
 
       response = response(conn, 401)
 
@@ -38,11 +40,11 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
 
   describe "request" do
     test "redirects to auth callback", %{conn: conn} do
-      conn = get(conn, ScreenplayWeb.Router.Helpers.auth_path(conn, :request, "cognito"))
+      conn = get(conn, Helpers.auth_path(conn, :request, "cognito"))
 
       response = response(conn, 302)
 
-      assert response =~ ScreenplayWeb.Router.Helpers.auth_path(conn, :callback, "cognito")
+      assert response =~ Helpers.auth_path(conn, :callback, "cognito")
     end
   end
 end

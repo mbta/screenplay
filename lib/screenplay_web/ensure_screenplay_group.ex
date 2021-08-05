@@ -5,6 +5,8 @@ defmodule ScreenplayWeb.EnsureScreenplayGroup do
 
   import Plug.Conn
 
+  alias ScreenplayWeb.Router.Helpers
+
   def init(options), do: options
 
   def call(conn, _opts) do
@@ -16,9 +18,7 @@ defmodule ScreenplayWeb.EnsureScreenplayGroup do
     else
       _ ->
         conn
-        |> Phoenix.Controller.redirect(
-          to: ScreenplayWeb.Router.Helpers.unauthorized_path(conn, :index)
-        )
+        |> Phoenix.Controller.redirect(to: Helpers.unauthorized_path(conn, :index))
         |> halt()
     end
   end

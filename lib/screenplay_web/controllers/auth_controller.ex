@@ -1,5 +1,8 @@
 defmodule ScreenplayWeb.AuthController do
   use ScreenplayWeb, :controller
+
+  alias ScreenplayWeb.Router.Helpers
+
   plug Ueberauth
 
   def request(conn, %{"provider" => provider}) when provider != "cognito" do
@@ -24,7 +27,7 @@ defmodule ScreenplayWeb.AuthController do
       %{groups: credentials.other.groups},
       ttl: {expiration - current_time, :seconds}
     )
-    |> redirect(to: ScreenplayWeb.Router.Helpers.page_path(conn, :index))
+    |> redirect(to: Helpers.page_path(conn, :index))
   end
 
   def callback(
