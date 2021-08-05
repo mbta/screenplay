@@ -31,11 +31,10 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.EnsureScreenplayGroup)
   end
 
-  scope "/auth", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :browser])
-
-    get("/:provider", AuthController, :request)
-    get("/:provider/callback", AuthController, :callback)
+  # Load balancer health check
+  # Exempt from auth checks and SSL redirects
+  scope "/", ScreenplayWeb do
+    get "/_health", HealthController, :index
   end
 
   scope "/", ScreenplayWeb do
@@ -48,13 +47,19 @@ defmodule ScreenplayWeb.Router do
     ]
 
     get("/", PageController, :index)
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
+
     get("/unauthorized", UnauthorizedController, :index)
   end
 
-  # Load balancer health check
-  # Exempt from auth checks and SSL redirects
-  scope "/", ScreenplayWeb do
-    get "/_health", HealthController, :index
+  scope "/auth", ScreenplayWeb do
+    pipe_through([:redirect_prod_http, :browser])
+
+    get("/:provider", AuthController, :request)
+    get("/:provider/callback", AuthController, :callback)
   end
 
   # Other scopes may use custom stacks.

@@ -25,8 +25,7 @@ config :phoenix, :json_library, Jason
 
 # Authenticate using Cognito
 config :screenplay,
-  # true? false?
-  redirect_http?: false,
+  redirect_http?: true,
   cognito_group: "screenplay"
 
 config :screenplay, ScreenplayWeb.AuthManager, issuer: "screenplay"
@@ -34,7 +33,7 @@ config :screenplay, ScreenplayWeb.AuthManager, issuer: "screenplay"
 # Placeholder for Cognito authentication, defined for real in environment configs
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: {Screenplay.Ueberauth.Strategy.Fake, []}
+    cognito: {Ueberauth.Strategy.Cognito, []}
   ]
 
 # Import environment specific config. This must remain at the bottom

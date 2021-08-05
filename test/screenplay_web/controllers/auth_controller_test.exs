@@ -20,7 +20,7 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
 
       response = html_response(conn, 302)
 
-      assert response =~ ScreenplayWeb.Router.Helpers.admin_path(conn, :index)
+      assert response =~ ScreenplayWeb.Router.Helpers.page_path(conn, :index)
       assert Guardian.Plug.current_claims(conn)["groups"] == ["test1"]
     end
 
