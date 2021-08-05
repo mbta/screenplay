@@ -65,3 +65,13 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :screenplay, ScreenplayWeb.AuthManager, secret_key: "secret key"
+
+config :screenplay,
+  redirect_http?: false
+
+config :ueberauth, Ueberauth,
+  providers: [
+    cognito: {Screenplay.Ueberauth.Strategy.Fake, []}
+  ]
