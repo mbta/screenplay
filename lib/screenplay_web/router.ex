@@ -47,6 +47,7 @@ defmodule ScreenplayWeb.Router do
     ]
 
     get("/", PageController, :index)
+    get("/outfront", OutfrontController, :index)
   end
 
   scope "/", ScreenplayWeb do
