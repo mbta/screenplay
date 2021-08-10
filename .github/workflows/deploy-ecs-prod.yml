@@ -2,15 +2,13 @@ name: Deploy to ECS
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: dev
-    concurrency: dev
+    environment: prod
+    concurrency: prod
 
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +23,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           ecs-cluster: screenplay
-          ecs-service: screenplay-dev
+          ecs-service: screenplay-prod
           docker-tag: ${{ steps.build-push.outputs.docker-tag }}
       - uses: mbta/actions/notify-slack-deploy@v1
         if: ${{ !cancelled() }}
