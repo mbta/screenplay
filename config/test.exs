@@ -7,12 +7,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
   server: false
 
 config :screenplay,
-  redirect_http?: false,
-  sftp_host: System.get_env("SFTP_HOST"),
-  sftp_user: System.get_env("SFTP_USER"),
-  sftp_password: System.get_env("SFTP_PASSWORD"),
-  sftp_remote_path: System.get_env("SFTP_REMOTE_PATH"),
-  sftp_local_path: System.get_env("SFTP_LOCAL_PATH")
+  redirect_http?: false
 
 config :screenplay, ScreenplayWeb.AuthManager, secret_key: "test key"
 

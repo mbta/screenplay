@@ -1,5 +1,4 @@
-defmodule ScreenplayWeb.OutfrontController do
-  use ScreenplayWeb, :controller
+defmodule Screenplay.Outfront.SFTP do
 
   @orientations ["Portrait", "Landscape"]
   @retries 3
@@ -16,21 +15,13 @@ defmodule ScreenplayWeb.OutfrontController do
     "Station 3" => "STATION-3"
   }
 
-  def index(conn, _params) do
-    set_takeover_image(["Station 2", "Station 1"])
-    get_outfront_image("STATION-1", "Landscape")
-    clear_images(["Station 2", "Station 1", "Station 3"])
-    
-    render(conn, "index.html")
-  end
-
   def set_takeover_image(stations, retry \\ @retries)
-  # Handle better
-  def set_takeover_image(_stations, _retry = 0), do: IO.puts('skipping set_takeover_image')
+  def set_takeover_image(_stations, _retry = 0), do: {:error, 'Too many attempts for: set_takeover_image'}
   def set_takeover_image(stations, retry) do
+    IO.puts('running the set')
 
     case SFTPClient.connect([host: @host, user: @user, password: @password], fn sftp_conn ->
-      
+      IO.puts('connected')
       Enum.each(@orientations, fn orientation ->
         make_image(orientation)
         |> post_image(sftp_conn, stations, orientation)
@@ -44,12 +35,11 @@ defmodule ScreenplayWeb.OutfrontController do
 
   # Replace with true "Make the image" logic
   defp make_image(_orientation) do
-    File.stream!("#{@local_path}/elixir.png", [], 32_768)
+    File.stream!("#{@local_path}/phoenix.png", [], 32_768)
   end
 
   defp post_image(image_stream, sftp_conn, stations, orientation, retry \\ @retries)
-  # Handle this better
-  defp post_image(_image, _conn, _stations, _orientation, _retry = 0), do: IO.puts('skipping post_image')
+  defp post_image(_image, _conn, _stations, _orientation, _retry = 0), do:  {:error, 'Too many attempts for: post_image'}
   defp post_image(image_stream, sftp_conn, stations, orientation, retry) do
 
     Enum.each(stations, fn station ->
@@ -78,8 +68,7 @@ defmodule ScreenplayWeb.OutfrontController do
   end
 
   def clear_images(stations, retry \\ @retries)
-  # Handle this better
-  def clear_images(_stations, _retry = 0), do: IO.puts('skipping clear_images')
+  def clear_images(_stations, _retry = 0), do: {:error, 'Too many attempts for: clear_images'}
   def clear_images(stations, retry) do
 
     case SFTPClient.connect([host: @host, user: @user, password: @password], fn sftp_conn ->
@@ -103,8 +92,7 @@ defmodule ScreenplayWeb.OutfrontController do
   end
 
   defp delete_station_images(conn, station, orientation, retry \\ @retries)
-  # Handle better
-  defp delete_station_images(_sftp_conn, _station, _orientation, _retry = 0), do: IO.puts('skipping delete_station_images')
+  defp delete_station_images(_sftp_conn, _station, _orientation, _retry = 0), do: {:error, 'Too many attempts for: delete_station_images'}
   defp delete_station_images(sftp_conn, station, orientation, retry) do
     case SFTPClient.delete_file(sftp_conn, "#{@remote_path}/#{orientation}/#{station}/new-file.png") do
       :ok -> :ok
@@ -113,8 +101,7 @@ defmodule ScreenplayWeb.OutfrontController do
   end
 
   defp station_has_screen_orientation(conn, station, orientation, retry \\ @retries)
-  # Handle better
-  defp station_has_screen_orientation(_conn, _station, _orientation, _retry = 0), do: IO.puts('skipping station_has_screen_orientation')
+  defp station_has_screen_orientation(_conn, _station, _orientation, _retry = 0), do: {:error, 'Too many attempts for: station_has_screen_orientation'}
   defp station_has_screen_orientation(conn, station, orientation, retry) do
     case SFTPClient.list_dir(conn, "#{@remote_path}/#{orientation}") do
       {:ok, stations_by_screen_type} -> station in stations_by_screen_type
@@ -123,10 +110,9 @@ defmodule ScreenplayWeb.OutfrontController do
   end
   
   # For the dashboard of active alerts
-  defp get_outfront_image(station, orientation, retry \\ @retries)
-  # Handle better
-  defp get_outfront_image(_station, _orientation, _retry = 0), do: IO.puts('skipping get_outfront_image')
-  defp get_outfront_image(station, orientation, retry) do
+  def get_outfront_image(station, orientation, retry \\ @retries)
+  def get_outfront_image(_station, _orientation, _retry = 0), do: {:error, 'Too many attempts for: get_outfront_image'}
+  def get_outfront_image(station, orientation, retry) do
 
     case SFTPClient.connect([host: @host, user: @user, password: @password], fn sftp_conn ->
 
@@ -143,8 +129,7 @@ defmodule ScreenplayWeb.OutfrontController do
   end
 
   defp do_get_outfront_image(sftp_conn, station, orientation, retry \\ @retries)
-  # Handle better
-  defp do_get_outfront_image(_conn, _station, _orientation, _retry = 0), do: IO.puts('skipping do_get_outfront_image')
+  defp do_get_outfront_image(_conn, _station, _orientation, _retry = 0), do: {:error, 'Too many attempts for: do_get_outfront_image'}
   defp do_get_outfront_image(sftp_conn, station, orientation, retry) do
     image_name = get_outfront_image_name(sftp_conn, station, orientation) 
 
@@ -163,8 +148,7 @@ defmodule ScreenplayWeb.OutfrontController do
   end
 
   defp get_outfront_image_name(sftp_conn, station, orientation, retry \\ @retries)
-  # Handle better
-  defp get_outfront_image_name(_sftp_conn, _station, _orientation, _retry = 0), do: IO.puts('skipping get_outfront_image_name')
+  defp get_outfront_image_name(_sftp_conn, _station, _orientation, _retry = 0), do: {:error, 'Too many attempts for: get_outfront_image_name'}
   defp get_outfront_image_name(sftp_conn, station, orientation, retry) do
     case SFTPClient.list_dir(sftp_conn, "#{@remote_path}/#{orientation}/#{station}") do
       {:ok, [image_name]} -> image_name
