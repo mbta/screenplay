@@ -12,9 +12,10 @@ defmodule Screenplay.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Screenplay.PubSub},
       # Start the Endpoint (http/https)
-      ScreenplayWeb.Endpoint
+      ScreenplayWeb.Endpoint,
       # Start a worker by calling: Screenplay.Worker.start_link(arg)
       # {Screenplay.Worker, arg}
+      Screenplay.Alerts.State
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

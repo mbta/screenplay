@@ -4,7 +4,9 @@ defmodule Screenplay.Alerts.Alert do
   """
 
   @enforce_keys [:message, :stations, :schedule]
-  defstruct @enforce_keys
+  defstruct [:id] ++ @enforce_keys
+
+  @type id :: non_neg_integer() | nil
 
   @type canned_message :: %{
           type: :canned,
@@ -24,6 +26,7 @@ defmodule Screenplay.Alerts.Alert do
         }
 
   @type t :: %__MODULE__{
+          id: id(),
           message: canned_message() | custom_message(),
           stations: list(station()),
           schedule: schedule()
