@@ -138,7 +138,8 @@ defmodule Screenplay.Outfront.SFTP do
   defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name, _retry = 0),
     do: raise("Too many attempts for: do_get_outfront_image")
 
-  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name = nil, _retry), do: nil
+  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name = nil, _retry),
+    do: nil
 
   defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry) do
     source_stream =
