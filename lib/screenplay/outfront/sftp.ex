@@ -90,7 +90,7 @@ defmodule Screenplay.Outfront.SFTP do
     SFTPClient.disconnect(sftp_conn)
   end
 
-  defp delete_station_images(conn, station, orientation, image_name, retry \\ @retries)
+  defp delete_station_images(stfp_conn, station, orientation, image_name, retry \\ @retries)
 
   defp delete_station_images(_sftp_conn, _station, _orientation, _image_name, _retry = 0),
     do: raise("Too many attempts for: delete_station_images")
@@ -135,10 +135,10 @@ defmodule Screenplay.Outfront.SFTP do
 
   defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry \\ @retries)
 
-  defp do_get_outfront_image(_conn, _station, _orientation, _image_name, _retry = 0),
+  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name, _retry = 0),
     do: raise("Too many attempts for: do_get_outfront_image")
 
-  defp do_get_outfront_image(_conn, _station, _orientation, _image_name = nil, _retry), do: nil
+  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name = nil, _retry), do: nil
 
   defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry) do
     source_stream =
