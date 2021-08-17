@@ -8,7 +8,7 @@ defmodule ScreenplayWeb.PageController do
     # SFTP.get_outfront_image("STATION-3", "Landscape")
     # SFTP.get_outfront_image("STATION-2", "Landscape")
     # SFTP.get_outfront_image("STATION-2", "Portrait")
-    SFTP.clear_images(["Station 2", "Station 1", "Station 3"])
+    # SFTP.clear_images(["Station 2", "Station 1", "Station 3"])
 
     render(conn, "index.html")
   end
