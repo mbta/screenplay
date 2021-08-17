@@ -104,7 +104,7 @@ defmodule Screenplay.Outfront.SFTP do
            "#{@remote_path}/#{orientation}/#{station}/#{image_name}"
          ) do
       :ok -> :ok
-      _ -> delete_station_images(sftp_conn, station, orientation, retry - 1)
+      _ -> delete_station_images(sftp_conn, station, orientation, image_name, retry - 1)
     end
   end
 
@@ -138,8 +138,7 @@ defmodule Screenplay.Outfront.SFTP do
   defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name, _retry = 0),
     do: raise("Too many attempts for: do_get_outfront_image")
 
-  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name = nil, _retry),
-    do: nil
+  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name = nil, _retry), do: nil
 
   defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry) do
     source_stream =
@@ -157,7 +156,7 @@ defmodule Screenplay.Outfront.SFTP do
       |> Stream.into(target_stream)
       |> Stream.run()
     rescue
-      _e -> do_get_outfront_image(sftp_conn, station, orientation, retry - 1)
+      _e -> do_get_outfront_image(sftp_conn, station, orientation, image_name, retry - 1)
     end
   end
 
