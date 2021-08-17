@@ -1,7 +1,7 @@
 defmodule ScreenplayWeb.PageController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.Outfront.SFTP
+  # alias Screenplay.Outfront.SFTP
 
   def index(conn, _params) do
     # SFTP.set_takeover_image(["Station 2", "Station 1"])
