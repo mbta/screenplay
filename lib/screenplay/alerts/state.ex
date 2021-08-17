@@ -21,6 +21,10 @@ defmodule Screenplay.Alerts.State do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
+  def get_state(pid \\ __MODULE__) do
+    GenServer.call(pid, :get_state)
+  end
+
   @spec get_all_alerts(GenServer.server()) :: list(Alert.t())
   def get_all_alerts(pid \\ __MODULE__) do
     GenServer.call(pid, :get_all_alerts)
@@ -70,5 +74,35 @@ defmodule Screenplay.Alerts.State do
   def handle_call({:delete_alert, id}, _from, %State{alerts: old_alerts} = state) do
     new_alerts = Map.delete(old_alerts, id)
     {:reply, :ok, %{state | alerts: new_alerts}}
+  end
+
+  def handle_call(:get_state, _from, state) do
+    {:reply, state, state}
+  end
+
+  ### Serialize
+
+  @spec to_json(t()) :: map()
+  def to_json(%__MODULE__{alerts: alerts, next_id: next_id}) do
+    serialized_alerts = alerts |> Map.values() |> Enum.map(&Alert.to_json/1)
+
+    %{
+      "alerts" => serialized_alerts,
+      "next_id" => next_id
+    }
+  end
+
+  @spec from_json(map()) :: t()
+  def from_json(%{"alerts" => alerts_json, "next_id" => next_id}) do
+    alerts_map =
+      alerts_json
+      |> Enum.map(&Alert.from_json/1)
+      |> Enum.map(fn %{id: id} = alert -> {id, alert} end)
+      |> Enum.into(%{})
+
+    %__MODULE__{
+      alerts: alerts_map,
+      next_id: next_id
+    }
   end
 end
