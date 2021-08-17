@@ -121,12 +121,7 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   # For the dashboard of active alerts
-  def get_outfront_image(station, orientation, retry \\ @retries)
-
-  def get_outfront_image(_station, _orientation, _retry = 0),
-    do: raise("Too many attempts for: get_outfront_image")
-
-  def get_outfront_image(station, orientation, retry) do
+  def get_outfront_image(station, orientation) do
     sftp_conn = start_connection()
 
     # First, check to see if that station has a screen of that orientation
@@ -143,8 +138,7 @@ defmodule Screenplay.Outfront.SFTP do
   defp do_get_outfront_image(_conn, _station, _orientation, _image_name, _retry = 0),
     do: raise("Too many attempts for: do_get_outfront_image")
 
-  defp do_get_outfront_image(_conn, _station, _orientation, _image_name = nil, _retry),
-    do: nil
+  defp do_get_outfront_image(_conn, _station, _orientation, _image_name = nil, _retry), do: nil
 
   defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry) do
     source_stream =
