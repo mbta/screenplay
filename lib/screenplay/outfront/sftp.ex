@@ -9,7 +9,6 @@ defmodule Screenplay.Outfront.SFTP do
   @user Application.compile_env(:screenplay, :sftp_user)
   @password Application.compile_env(:screenplay, :sftp_password)
   @remote_path Application.compile_env(:screenplay, :sftp_remote_path)
-  @local_path Application.compile_env(:screenplay, :sftp_local_path)
 
   @stations_map %{
     "Station 1" => "STATION-1",
@@ -27,28 +26,21 @@ defmodule Screenplay.Outfront.SFTP do
     end
   end
 
-  def set_takeover_image(stations) do
+  def set_takeover_image(stations, portrait_png, landscape_png) do
     sftp_conn = start_connection()
 
-    Enum.each(@orientations, fn orientation ->
-      make_image(orientation)
-      |> post_image(sftp_conn, stations, orientation)
-    end)
+    post_image(sftp_conn, portrait_png, stations, "Portrait")
+    post_image(sftp_conn, landscape_png, stations, "Landscape")
 
     SFTPClient.disconnect(sftp_conn)
   end
 
-  # Replace with true "Make the image" logic
-  defp make_image(_orientation) do
-    File.stream!("#{@local_path}/phoenix.png", [], 32_768)
-  end
+  defp post_image(sftp_conn, image_stream, stations, orientation, retry \\ @retries)
 
-  defp post_image(image_stream, sftp_conn, stations, orientation, retry \\ @retries)
-
-  defp post_image(_image, _conn, _stations, _orientation, _retry = 0),
+  defp post_image(_sftp_conn, _image_stream, _stations, _orientation, _retry = 0),
     do: raise("Too many attempts for: post_image")
 
-  defp post_image(image_stream, sftp_conn, stations, orientation, retry) do
+  defp post_image(sftp_conn, image_stream, stations, orientation, retry) do
     Enum.each(stations, fn station ->
       outfront_station = get_outfront_station_name(station)
 
@@ -117,47 +109,6 @@ defmodule Screenplay.Outfront.SFTP do
     case SFTPClient.list_dir(conn, "#{@remote_path}/#{orientation}") do
       {:ok, stations_by_screen_type} -> station in stations_by_screen_type
       _ -> station_has_screen_orientation(conn, station, orientation, retry - 1)
-    end
-  end
-
-  # For the dashboard of active alerts
-  def get_outfront_image(station, orientation) do
-    sftp_conn = start_connection()
-
-    # First, check to see if that station has a screen of that orientation
-    if station_has_screen_orientation(sftp_conn, station, orientation) do
-      image_name = get_outfront_image_name(sftp_conn, station, orientation)
-      do_get_outfront_image(sftp_conn, station, orientation, image_name)
-    end
-
-    SFTPClient.disconnect(sftp_conn)
-  end
-
-  defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry \\ @retries)
-
-  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name, _retry = 0),
-    do: raise("Too many attempts for: do_get_outfront_image")
-
-  defp do_get_outfront_image(_sftp_conn, _station, _orientation, _image_name = nil, _retry),
-    do: nil
-
-  defp do_get_outfront_image(sftp_conn, station, orientation, image_name, retry) do
-    source_stream =
-      SFTPClient.stream_file!(
-        sftp_conn,
-        "#{@remote_path}/#{orientation}/#{station}/#{image_name}"
-      )
-
-    # Currently, just storing the file locally.
-    # Should explore saving to a temp directory?
-    target_stream = File.stream!("#{@local_path}/#{station}_#{orientation}_downloaded.png")
-
-    try do
-      source_stream
-      |> Stream.into(target_stream)
-      |> Stream.run()
-    rescue
-      _e -> do_get_outfront_image(sftp_conn, station, orientation, image_name, retry - 1)
     end
   end
 
