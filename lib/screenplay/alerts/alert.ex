@@ -3,10 +3,12 @@ defmodule Screenplay.Alerts.Alert do
   Represents a single Outfront Takeover Alert.
   """
 
-  @enforce_keys [:message, :stations, :schedule]
-  defstruct [:id] ++ @enforce_keys
+  alias Screenplay.Alerts.State
 
-  @type id :: non_neg_integer() | nil
+  @enforce_keys [:id, :message, :stations, :schedule]
+  defstruct @enforce_keys
+
+  @type id :: String.t()
 
   @type canned_message :: %{
           type: :canned,
@@ -31,6 +33,21 @@ defmodule Screenplay.Alerts.Alert do
           stations: list(station()),
           schedule: schedule()
         }
+
+  @spec random_id :: id()
+  def random_id do
+    length = 16
+    length |> :crypto.strong_rand_bytes() |> Base.url_encode64()
+  end
+
+  def new(message, stations, schedule) do
+    %__MODULE__{
+      id: State.get_unused_alert_id(),
+      message: message,
+      stations: stations,
+      schedule: schedule
+    }
+  end
 
   @spec to_json(t()) :: map()
   def to_json(%__MODULE__{id: id, message: message, stations: stations, schedule: schedule}) do

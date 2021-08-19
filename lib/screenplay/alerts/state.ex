@@ -7,12 +7,11 @@ defmodule Screenplay.Alerts.State do
 
   alias Screenplay.Alerts.{Alert, State}
 
-  @enforce_keys [:alerts, :next_id]
+  @enforce_keys [:alerts]
   defstruct @enforce_keys
 
   @type t :: %__MODULE__{
-          alerts: %{Alert.id() => Alert.t()},
-          next_id: non_neg_integer()
+          alerts: %{Alert.id() => Alert.t()}
         }
 
   ### Client
@@ -21,17 +20,19 @@ defmodule Screenplay.Alerts.State do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
-  def get_state(pid \\ __MODULE__) do
-    GenServer.call(pid, :get_state)
-  end
-
   @spec get_all_alerts(GenServer.server()) :: list(Alert.t())
   def get_all_alerts(pid \\ __MODULE__) do
     GenServer.call(pid, :get_all_alerts)
   end
 
-  @spec add_alert(GenServer.server(), Alert.t()) :: :ok
-  def add_alert(pid \\ __MODULE__, new_alert) do
+  @spec add_alert(GenServer.server(), Alert.t()) :: :ok | {:error, String.t()}
+  def add_alert(pid \\ __MODULE__, alert)
+
+  def add_alert(_pid, %Alert{id: nil}) do
+    {:error, "Can't add alert with nil id"}
+  end
+
+  def add_alert(pid, new_alert) do
     GenServer.call(pid, {:add_alert, new_alert})
   end
 
@@ -45,12 +46,25 @@ defmodule Screenplay.Alerts.State do
     GenServer.call(pid, {:delete_alert, id})
   end
 
+  @spec get_unused_alert_id :: Alert.id()
+  def get_unused_alert_id do
+    current_ids = get_all_alerts() |> Enum.map(& &1.id)
+
+    new_id = Alert.random_id()
+
+    if Enum.member?(current_ids, new_id) do
+      get_unused_alert_id()
+    else
+      new_id
+    end
+  end
+
   ### Server
 
   @impl true
   def init(:ok) do
     # A later PR will fetch init_state from S3
-    init_state = %State{alerts: %{}, next_id: 0}
+    init_state = %State{alerts: %{}}
 
     {:ok, init_state}
   end
@@ -60,49 +74,37 @@ defmodule Screenplay.Alerts.State do
     {:reply, Map.values(alerts), state}
   end
 
-  def handle_call({:add_alert, new_alert}, _from, %State{alerts: old_alerts, next_id: next_id}) do
-    new_alerts = Map.put(old_alerts, next_id, %{new_alert | id: next_id})
-    new_state = %State{alerts: new_alerts, next_id: next_id + 1}
+  def handle_call({:add_alert, %{id: new_alert_id} = new_alert}, _from, %State{alerts: old_alerts}) do
+    new_state = %State{alerts: Map.put(old_alerts, new_alert_id, new_alert)}
     {:reply, :ok, new_state}
   end
 
-  def handle_call({:update_alert, id, new_alert}, _from, %State{alerts: old_alerts} = state) do
-    new_alerts = Map.put(old_alerts, id, %{new_alert | id: id})
-    {:reply, :ok, %{state | alerts: new_alerts}}
+  def handle_call({:update_alert, id, new_alert}, _from, %State{alerts: old_alerts}) do
+    new_state = %State{alerts: Map.put(old_alerts, id, new_alert)}
+    {:reply, :ok, new_state}
   end
 
-  def handle_call({:delete_alert, id}, _from, %State{alerts: old_alerts} = state) do
-    new_alerts = Map.delete(old_alerts, id)
-    {:reply, :ok, %{state | alerts: new_alerts}}
-  end
-
-  def handle_call(:get_state, _from, state) do
-    {:reply, state, state}
+  def handle_call({:delete_alert, id}, _from, %State{alerts: old_alerts}) do
+    new_state = %State{alerts: Map.delete(old_alerts, id)}
+    {:reply, :ok, new_state}
   end
 
   ### Serialize
 
   @spec to_json(t()) :: map()
-  def to_json(%__MODULE__{alerts: alerts, next_id: next_id}) do
+  def to_json(%__MODULE__{alerts: alerts}) do
     serialized_alerts = alerts |> Map.values() |> Enum.map(&Alert.to_json/1)
-
-    %{
-      "alerts" => serialized_alerts,
-      "next_id" => next_id
-    }
+    %{"alerts" => serialized_alerts}
   end
 
   @spec from_json(map()) :: t()
-  def from_json(%{"alerts" => alerts_json, "next_id" => next_id}) do
+  def from_json(%{"alerts" => alerts_json}) do
     alerts_map =
       alerts_json
       |> Enum.map(&Alert.from_json/1)
       |> Enum.map(fn %{id: id} = alert -> {id, alert} end)
       |> Enum.into(%{})
 
-    %__MODULE__{
-      alerts: alerts_map,
-      next_id: next_id
-    }
+    %__MODULE__{alerts: alerts_map}
   end
 end
