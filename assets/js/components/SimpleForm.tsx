@@ -31,6 +31,29 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
   }
 
   handleSubmit(event: any) {
+    this.generatePNG();
+    // PNG gets uploaded
+    // 
+    // Alert gets created in S3
+    this.postAlert()
+    event.preventDefault();
+  }
+
+  postAlert(): Promise<void> {  
+    const stations = ["Copley", "Boylston"];
+    const duration = 4;
+
+    return (
+      fetch(`/create?message=${this.state.message}&stations=${stations}&duration=${duration}`)
+        .then(response => {
+          if (!response.ok) throw new Error(response.statusText);
+        })
+        // @ts-ignore
+        .catch((error) => console.log('Failed to create alert: ', error) /* dispatch({ type: "CREATE_ERROR" }) */)
+    );
+  }
+
+  generatePNG() {
     // Currently hardcoded to only create the landscape PNG
     const svg = document.getElementById('landscape-svg') as HTMLElement;
     const svgSize = svg.getBoundingClientRect();
@@ -57,7 +80,6 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
     };
 
     img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(data)));
-    event.preventDefault();
   }
 
   //  This function attempts to create a new svg "text" element, chopping 
@@ -138,7 +160,7 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
               <option value="park-st">Park St</option>
             </select>
           </label>
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" disabled={!this.state.message}/>
         </form>
 
         <svg viewBox={"0 0 "+previewLongSide+" "+previewLongSide} height={previewLongSide} width={previewLongSide}>

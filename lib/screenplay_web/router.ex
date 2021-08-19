@@ -46,12 +46,15 @@ defmodule ScreenplayWeb.Router do
       :ensure_screenplay_group
     ]
 
-    get("/", PageController, :index)
+    get "/", PageController, :index
+    get "/create", AlertController, :create
   end
 
   scope "/", ScreenplayWeb do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
+    # Skate has this bit in the above scope, but I couldn't figure out how to make
+    # that work
     get("/unauthorized", UnauthorizedController, :index)
   end
 

@@ -33,18 +33,19 @@ defmodule Screenplay.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:credo, "~> 1.5.0", only: [:dev, :test]},
+      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
+      {:gettext, "~> 0.11"},
+      {:guardian, "~> 2.0"},
+      {:jason, "~> 1.0"},
       {:phoenix, "~> 1.5.9"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.4"},
+      {:plug_cowboy, "~> 2.0"},
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
-      {:gettext, "~> 0.11"},
-      {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
-      {:credo, "~> 1.5.0", only: [:dev, :test]},
-      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
-      {:guardian, "~> 2.0"},
+      {:timex, "~> 3.0"},
       {:ueberauth, "~> 0.6.3"},
       {:ueberauth_cognito, "~> 0.2.0"}
     ]
