@@ -9,9 +9,9 @@ defmodule Screenplay.Alerts.StateTest do
 
       alert = %Alert{
         id: "alert",
-        message: %{type: :canned, id: "1"},
+        message: %{type: :canned, id: 1},
         stations: ["Back Bay"],
-        schedule: %{start: nil, end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       alerts = %{alert.id => alert}
@@ -28,9 +28,9 @@ defmodule Screenplay.Alerts.StateTest do
 
       alert = %Alert{
         id: nil,
-        message: %{type: :canned, id: "1"},
+        message: %{type: :canned, id: 1},
         stations: ["South Station"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       assert {:error, _} = State.add_alert(pid, alert)
@@ -41,9 +41,9 @@ defmodule Screenplay.Alerts.StateTest do
 
       alert = %Alert{
         id: "alert",
-        message: %{type: :canned, id: "1"},
+        message: %{type: :canned, id: 1},
         stations: ["South Station"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       assert :ok == State.add_alert(pid, alert)
@@ -52,9 +52,9 @@ defmodule Screenplay.Alerts.StateTest do
         alerts: %{
           "alert" => %Alert{
             id: "alert",
-            message: %{id: "1", type: :canned},
+            message: %{type: :canned, id: 1},
             stations: ["South Station"],
-            schedule: %{end: nil, start: nil}
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
           }
         }
       }
@@ -69,16 +69,16 @@ defmodule Screenplay.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: "1"},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       a2 = %Alert{
         id: "a2",
         message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       alerts = %{"a1" => a1, "a2" => a2}
@@ -90,7 +90,7 @@ defmodule Screenplay.Alerts.StateTest do
         id: "a2",
         message: %{type: :custom, text: "All clear now"},
         stations: ["Kendall/MIT"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       assert :ok == State.update_alert(pid, "a2", new_alert)
@@ -99,14 +99,14 @@ defmodule Screenplay.Alerts.StateTest do
         alerts: %{
           "a1" => %Alert{
             id: "a1",
-            message: %{id: "1", type: :canned},
-            schedule: %{end: nil, start: nil},
+            message: %{type: :canned, id: 1},
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             stations: ["Haymarket", "Government Center"]
           },
           "a2" => %Alert{
             id: "a2",
             message: %{text: "All clear now", type: :custom},
-            schedule: %{end: nil, start: nil},
+            schedule: %{end: ~U[2021-08-19 17:39:42Z], start: ~U[2021-08-19 17:09:42Z]},
             stations: ["Kendall/MIT"]
           }
         }
@@ -122,16 +122,16 @@ defmodule Screenplay.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: "1"},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       a2 = %Alert{
         id: "a2",
         message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       alerts = %{"a1" => a1, "a2" => a2}
@@ -146,7 +146,7 @@ defmodule Screenplay.Alerts.StateTest do
           "a2" => %Alert{
             id: "a2",
             message: %{text: "This is an alert", type: :custom},
-            schedule: %{end: nil, start: nil},
+            schedule: %{end: ~U[2021-08-19 17:39:42Z], start: ~U[2021-08-19 17:09:42Z]},
             stations: ["Kendall/MIT"]
           }
         }
@@ -159,16 +159,16 @@ defmodule Screenplay.Alerts.StateTest do
   describe "to_json/1" do
     a1 = %Alert{
       id: "a1",
-      message: %{type: :canned, id: "1"},
+      message: %{type: :canned, id: 1},
       stations: ["Haymarket", "Government Center"],
-      schedule: %{start: nil, end: nil}
+      schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
     }
 
     a2 = %Alert{
       id: "a2",
       message: %{type: :custom, text: "This is an alert"},
       stations: ["Kendall/MIT"],
-      schedule: %{start: nil, end: nil}
+      schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
     }
 
     alerts = %{"a1" => a1, "a2" => a2}
@@ -187,14 +187,14 @@ defmodule Screenplay.Alerts.StateTest do
       "alerts" => [
         %{
           "id" => "a1",
-          "message" => %{"id" => "1", "type" => "canned"},
-          "schedule" => %{"end" => nil, "start" => nil},
+          "message" => %{"id" => 1, "type" => "canned"},
+          "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
           "stations" => ["Haymarket", "Government Center"]
         },
         %{
           "id" => "a2",
           "message" => %{"text" => "This is an alert", "type" => "custom"},
-          "schedule" => %{"end" => nil, "start" => nil},
+          "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
           "stations" => ["Kendall/MIT"]
         }
       ]

@@ -9,14 +9,14 @@ defmodule Screenplay.Alerts.AlertTest do
         id: "alert",
         message: %{type: :canned, id: "4"},
         stations: ["Wellington", "Malden Center"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       expected = %{
         "id" => "alert",
         "message" => %{"type" => "canned", "id" => "4"},
         "stations" => ["Wellington", "Malden Center"],
-        "schedule" => %{"start" => nil, "end" => nil}
+        "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"}
       }
 
       assert expected == Alert.to_json(alert)
@@ -27,32 +27,14 @@ defmodule Screenplay.Alerts.AlertTest do
         id: "alert",
         message: %{type: :custom, text: "This is an alert"},
         stations: ["Wellington", "Malden Center"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       expected = %{
         "id" => "alert",
         "message" => %{"type" => "custom", "text" => "This is an alert"},
         "stations" => ["Wellington", "Malden Center"],
-        "schedule" => %{"start" => nil, "end" => nil}
-      }
-
-      assert expected == Alert.to_json(alert)
-    end
-
-    test "handles DateTime" do
-      alert = %Alert{
-        id: "alert",
-        message: %{type: :canned, id: "4"},
-        stations: ["Wellington", "Malden Center"],
-        schedule: %{start: ~U[2021-08-19 18:36:40Z], end: ~U[2021-08-19 18:36:45Z]}
-      }
-
-      expected = %{
-        "id" => "alert",
-        "message" => %{"type" => "canned", "id" => "4"},
-        "stations" => ["Wellington", "Malden Center"],
-        "schedule" => %{"start" => "2021-08-19T18:36:40Z", "end" => "2021-08-19T18:36:45Z"}
+        "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"}
       }
 
       assert expected == Alert.to_json(alert)
@@ -65,14 +47,14 @@ defmodule Screenplay.Alerts.AlertTest do
         "id" => "alert",
         "message" => %{"type" => "canned", "id" => "4"},
         "stations" => ["Wellington", "Malden Center"],
-        "schedule" => %{"start" => nil, "end" => nil}
+        "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"}
       }
 
       expected = %Alert{
         id: "alert",
         message: %{type: :canned, id: "4"},
         stations: ["Wellington", "Malden Center"],
-        schedule: %{start: nil, end: nil}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       assert expected == Alert.from_json(json)
@@ -83,32 +65,14 @@ defmodule Screenplay.Alerts.AlertTest do
         "id" => "alert",
         "message" => %{"type" => "custom", "text" => "This is an alert"},
         "stations" => ["Wellington", "Malden Center"],
-        "schedule" => %{"start" => nil, "end" => nil}
+        "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"}
       }
 
       expected = %Alert{
         id: "alert",
         message: %{type: :custom, text: "This is an alert"},
         stations: ["Wellington", "Malden Center"],
-        schedule: %{start: nil, end: nil}
-      }
-
-      assert expected == Alert.from_json(json)
-    end
-
-    test "handles DateTime" do
-      json = %{
-        "id" => "alert",
-        "message" => %{"type" => "canned", "id" => "4"},
-        "stations" => ["Wellington", "Malden Center"],
-        "schedule" => %{"start" => "2021-08-19T18:36:40Z", "end" => "2021-08-19T18:36:45Z"}
-      }
-
-      expected = %Alert{
-        id: "alert",
-        message: %{type: :canned, id: "4"},
-        stations: ["Wellington", "Malden Center"],
-        schedule: %{start: ~U[2021-08-19 18:36:40Z], end: ~U[2021-08-19 18:36:45Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
       }
 
       assert expected == Alert.from_json(json)
