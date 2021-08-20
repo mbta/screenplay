@@ -47,7 +47,6 @@ defmodule ScreenplayWeb.Router do
     ]
 
     get "/", PageController, :index
-    get "/create", AlertController, :create
   end
 
   scope "/", ScreenplayWeb do
@@ -65,10 +64,11 @@ defmodule ScreenplayWeb.Router do
     get("/:provider/callback", AuthController, :callback)
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ScreenplayWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", ScreenplayWeb do
+    pipe_through :api
+
+    get "/create", AlertController, :create
+  end
 
   # Enables LiveDashboard only for development
   #

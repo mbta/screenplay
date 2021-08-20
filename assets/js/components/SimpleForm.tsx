@@ -44,7 +44,7 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
     const duration = 4;
 
     return (
-      fetch(`/create?message=${this.state.message}&stations=${stations}&duration=${duration}&landscape=${landscapePNG}&portrait=${portraitPNG}`)
+      fetch(`/api/create?message=${this.state.message}&stations=${stations}&duration=${duration}&landscape=${landscapePNG}&portrait=${portraitPNG}`)
         .then(response => {
           if (!response.ok) throw new Error(response.statusText);
         })
