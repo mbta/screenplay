@@ -31,20 +31,20 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
   }
 
   handleSubmit(event: any) {
-    this.generatePNG();
-    // PNG gets uploaded
-    // 
-    // Alert gets created in S3
     this.postAlert()
     event.preventDefault();
   }
 
-  postAlert(): Promise<void> {  
+  // PNG created, gets uploaded to Outfront
+  // Alert gets created in S3
+  postAlert(): Promise<void> { 
+    const landscapePNG = this.generatePNG('landscape');
+    const portraitPNG = this.generatePNG('portrait');
     const stations = ["Copley", "Boylston"];
     const duration = 4;
 
     return (
-      fetch(`/create?message=${this.state.message}&stations=${stations}&duration=${duration}`)
+      fetch(`/create?message=${this.state.message}&stations=${stations}&duration=${duration}&landscape=${landscapePNG}&portrait=${portraitPNG}`)
         .then(response => {
           if (!response.ok) throw new Error(response.statusText);
         })
@@ -53,9 +53,9 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
     );
   }
 
-  generatePNG() {
+  generatePNG(orientation: string) {
     // Currently hardcoded to only create the landscape PNG
-    const svg = document.getElementById('landscape-svg') as HTMLElement;
+    const svg = document.getElementById(orientation + '-svg') as HTMLElement;
     const svgSize = svg.getBoundingClientRect();
 
     const canvas = document.createElement('canvas')

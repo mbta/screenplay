@@ -30,7 +30,7 @@ defmodule Screenplay.Alerts.Alert do
   @type t :: %__MODULE__{
           id: id(),
           message: canned_message() | custom_message(),
-          stations: [station()],
+          stations: list(station()),
           schedule: schedule()
         }
 
@@ -40,7 +40,6 @@ defmodule Screenplay.Alerts.Alert do
     length |> :crypto.strong_rand_bytes() |> Base.url_encode64()
   end
 
-  @spec new(canned_message | custom_message, [station], schedule) :: t
   def new(message, stations, schedule) do
     %__MODULE__{
       id: State.get_unused_alert_id(),
