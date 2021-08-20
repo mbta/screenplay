@@ -110,7 +110,7 @@ defmodule Screenplay.Alerts.Alert do
     %{start: parse_datetime(start_json), end: parse_datetime(end_json)}
   end
 
-  defp serialize_datetime(%DateTime{} = dt), do: DateTime.to_iso8601(dt)
+  defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
 
   defp parse_datetime(json) do
     {:ok, dt, _offset} = DateTime.from_iso8601(json)
