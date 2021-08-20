@@ -46,7 +46,8 @@ defmodule Screenplay.MixProject do
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:guardian, "~> 2.0"},
       {:ueberauth, "~> 0.6.3"},
-      {:ueberauth_cognito, "~> 0.2.0"}
+      {:ueberauth_cognito, "~> 0.2.0"},
+      {:sftp_client, "~> 1.4"}
     ]
   end
 

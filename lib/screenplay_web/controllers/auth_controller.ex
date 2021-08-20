@@ -13,7 +13,7 @@ defmodule ScreenplayWeb.AuthController do
     send_resp(conn, 404, "Not Found")
   end
 
-  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
+  def callback(conn = %{assigns: %{ueberauth_auth: auth}}, _params) do
     username = auth.uid
     expiration = auth.credentials.expires_at
     credentials = auth.credentials
@@ -31,7 +31,7 @@ defmodule ScreenplayWeb.AuthController do
   end
 
   def callback(
-        %{assigns: %{ueberauth_failure: %Ueberauth.Failure{}}} = conn,
+        conn = %{assigns: %{ueberauth_failure: %Ueberauth.Failure{}}},
         _params
       ) do
     send_resp(conn, 401, "unauthenticated")
