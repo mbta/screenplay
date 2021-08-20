@@ -47,7 +47,8 @@ defmodule Screenplay.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:timex, "~> 3.0"},
       {:ueberauth, "~> 0.6.3"},
-      {:ueberauth_cognito, "~> 0.2.0"}
+      {:ueberauth_cognito, "~> 0.2.0"},
+      {:sftp_client, "~> 1.4"}
     ]
   end
 

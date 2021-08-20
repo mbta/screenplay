@@ -16,8 +16,8 @@ defmodule Screenplay.Alerts.State do
 
   ### Client
 
-  def start_link([]) do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
+  def start_link(opts \\ []) do
+    GenServer.start_link(__MODULE__, :ok, name: opts[:name] || __MODULE__)
   end
 
   @spec get_all_alerts(GenServer.server()) :: list(Alert.t())

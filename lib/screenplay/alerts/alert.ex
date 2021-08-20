@@ -12,7 +12,7 @@ defmodule Screenplay.Alerts.Alert do
 
   @type canned_message :: %{
           type: :canned,
-          id: String.t()
+          id: non_neg_integer()
         }
 
   @type custom_message :: %{
@@ -23,8 +23,8 @@ defmodule Screenplay.Alerts.Alert do
   @type station :: String.t()
 
   @type schedule :: %{
-          start: DateTime.t() | nil,
-          end: DateTime.t() | nil
+          start: DateTime.t(),
+          end: DateTime.t()
         }
 
   @type t :: %__MODULE__{
@@ -112,9 +112,6 @@ defmodule Screenplay.Alerts.Alert do
   end
 
   defp serialize_datetime(%DateTime{} = dt), do: DateTime.to_iso8601(dt)
-  defp serialize_datetime(nil), do: nil
-
-  defp parse_datetime(nil), do: nil
 
   defp parse_datetime(json) do
     {:ok, dt, _offset} = DateTime.from_iso8601(json)
