@@ -11,7 +11,8 @@ use Mix.Config
 # before starting your production server.
 config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  alerts_fetch_module: Screenplay.Alerts.S3Fetch
 
 # Do not print debug messages in production
 config :logger, level: :info
