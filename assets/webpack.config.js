@@ -46,6 +46,10 @@ module.exports = (env, options) => ({
             loader: "sass-loader"
           }
         ]
+      },
+      {
+        test: /\.png$/,
+        use: [{ loader: "file-loader" }],
       }
     ]
   },

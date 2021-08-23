@@ -70,7 +70,7 @@ defmodule Screenplay.Alerts.State do
   end
 
   @impl true
-  def handle_call(:get_all_alerts, _from, %State{alerts: alerts} = state) do
+  def handle_call(:get_all_alerts, _from, state = %State{alerts: alerts}) do
     {:reply, Map.values(alerts), state}
   end
 
