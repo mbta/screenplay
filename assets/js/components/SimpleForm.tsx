@@ -74,7 +74,7 @@ class SimpleForm extends React.Component<SimpleFormProps, SimpleFormState> {
     svgText.setAttributeNS(null, 'font-size', '12');
     svgText.setAttributeNS(null, 'fill', '#000000');         //  Black text
     svgText.setAttributeNS(null, 'text-anchor', 'middle');   //  Center the text
-    svgText.setAttributeNS(null, 'font-family', 'Helvetica, Arial, sans-serif')
+    svgText.setAttributeNS(null, 'font-family', 'Inter, sans-serif')
 
     // Split the message by max line length
     const words = message.split(" ");

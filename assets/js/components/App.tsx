@@ -1,6 +1,6 @@
 import React from "react";
-import AlertDashboard from "./AlertDashboard";
-import AlertWizard from "./AlertWizard";
+import AlertDashboard from "./AlertDashboard/AlertDashboard";
+import AlertWizard from "./AlertWizard/AlertWizard";
 import logo from '../../static/images/t-identity.png'
 
 interface AppProps {
@@ -16,7 +16,8 @@ class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      alertWizardOpen: false,
+      // Temporarily set to true
+      alertWizardOpen: true,
       alertId: null
     }
   };
@@ -30,9 +31,9 @@ class App extends React.Component<AppProps, AppState> {
       <div className="app-container">
         <div className="app-title">
           <img src={logo} alt="Logo" className="logo"/>
-          <div className="stacked-title">
+          <div className="stacked-title text-30">
             <div>Outfront Media screens</div>
-            <div className="bold">Emergency Takeover</div>
+            <div className="weight-700">Emergency Takeover</div>
           </div>
         </div>
         { this.state.alertWizardOpen

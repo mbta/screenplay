@@ -1,11 +1,16 @@
 /* This file is for your main application css. */
 @import "./alert-dashboard.scss";
+@import "./alert-wizard.scss";
 @import "./phoenix.css";
 @import "./colors.scss";
 
 
 html {
   background: $gray-700;
+  font-family: 'Inter', sans-serif;
+  body {
+    margin: 0;
+  }
 }
 
 .app-container {
@@ -25,11 +30,13 @@ html {
     }
     .stacked-title {
       color: white;
-      font-size: 30px;
-      line-height: 36px;
     }
   }
 }
 
+.text-14 { font-size: 14px; }
 .text-16 { font-size: 16px; }
-.bold { font-weight: 700; }
+.text-30 { font-size: 30px; line-height: 36px; }
+.weight-500 { font-weight: 500; }
+.weight-700 { font-weight: 700; }
+.weight-800 { font-weight: 800; }
