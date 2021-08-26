@@ -25,6 +25,11 @@ defmodule Screenplay.Alerts.State do
     GenServer.call(pid, :get_all_alerts)
   end
 
+  @spec get_alert(Alert.id()) :: Alert.t() | nil
+  def get_alert(id) do
+    Enum.find(get_all_alerts(), fn %{id: alert_id} -> id == alert_id end)
+  end
+
   @spec add_alert(GenServer.server(), Alert.t()) :: :ok | {:error, String.t()}
   def add_alert(pid \\ __MODULE__, alert)
 
@@ -62,11 +67,18 @@ defmodule Screenplay.Alerts.State do
   ### Server
 
   @impl true
-  def init(:ok) do
-    # A later PR will fetch init_state from S3
-    init_state = %State{alerts: %{}}
+  def init(opts) do
+    case opts do
+      :ok ->
+        fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+        {:ok, init_state} = fetch_module.get_state()
 
-    {:ok, init_state}
+        {:ok, init_state}
+
+      # Initialize with empty state, for testing purposes
+      :empty ->
+        {:ok, %State{alerts: %{}}}
+    end
   end
 
   @impl true
@@ -74,18 +86,21 @@ defmodule Screenplay.Alerts.State do
     {:reply, Map.values(alerts), state}
   end
 
-  def handle_call({:add_alert, %{id: new_alert_id} = new_alert}, _from, %State{alerts: old_alerts}) do
+  def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{alerts: old_alerts}) do
     new_state = %State{alerts: Map.put(old_alerts, new_alert_id, new_alert)}
+    :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
   def handle_call({:update_alert, id, new_alert}, _from, %State{alerts: old_alerts}) do
     new_state = %State{alerts: Map.put(old_alerts, id, new_alert)}
+    :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
   def handle_call({:delete_alert, id}, _from, %State{alerts: old_alerts}) do
     new_state = %State{alerts: Map.delete(old_alerts, id)}
+    :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
@@ -102,9 +117,14 @@ defmodule Screenplay.Alerts.State do
     alerts_map =
       alerts_json
       |> Enum.map(&Alert.from_json/1)
-      |> Enum.map(fn %{id: id} = alert -> {id, alert} end)
+      |> Enum.map(fn alert = %{id: id} -> {id, alert} end)
       |> Enum.into(%{})
 
     %__MODULE__{alerts: alerts_map}
+  end
+
+  defp save_state(new_state) do
+    fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+    fetch_module.put_state(new_state)
   end
 end

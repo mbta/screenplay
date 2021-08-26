@@ -1,0 +1,37 @@
+{
+  "alerts": [
+    {
+      "created_by": "user",
+      "edited_by": "user",
+      "id": "a1",
+      "message": {
+        "id": 1,
+        "type": "canned"
+      },
+      "schedule": {
+        "end": "2021-08-19T17:39:42Z",
+        "start": "2021-08-19T17:09:42Z"
+      },
+      "stations": [
+        "Haymarket",
+        "Government Center"
+      ]
+    },
+    {
+      "created_by": "user",
+      "edited_by": "user",
+      "id": "a2",
+      "message": {
+        "text": "All clear now",
+        "type": "custom"
+      },
+      "schedule": {
+        "end": "2021-08-19T17:39:42Z",
+        "start": "2021-08-19T17:09:42Z"
+      },
+      "stations": [
+        "Kendall/MIT"
+      ]
+    }
+  ]
+}

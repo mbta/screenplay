@@ -10,8 +10,15 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :screenplay, ScreenplayWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [port: 80],
+  http: [:inet6, port: 4000],
+  server: true,
   cache_static_manifest: "priv/static/cache_manifest.json"
+
+config :screenplay,
+  alerts_fetch_module: Screenplay.Alerts.S3Fetch,
+  alerts_s3_bucket: "mbta-ctd-config",
+  alerts_s3_path: "screenplay/screenplay-dev.json"
 
 # Do not print debug messages in production
 config :logger, level: :info

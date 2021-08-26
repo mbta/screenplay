@@ -11,7 +11,9 @@ defmodule Screenplay.Alerts.StateTest do
         id: "alert",
         message: %{type: :canned, id: 1},
         stations: ["Back Bay"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       alerts = %{alert.id => alert}
@@ -24,26 +26,30 @@ defmodule Screenplay.Alerts.StateTest do
 
   describe "add_alert/2" do
     test "returns error message when given an alert with id nil" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       alert = %Alert{
         id: nil,
         message: %{type: :canned, id: 1},
         stations: ["South Station"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       assert {:error, _} = State.add_alert(pid, alert)
     end
 
     test "adds alert" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       alert = %Alert{
         id: "alert",
         message: %{type: :canned, id: 1},
         stations: ["South Station"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       assert :ok == State.add_alert(pid, alert)
@@ -54,7 +60,9 @@ defmodule Screenplay.Alerts.StateTest do
             id: "alert",
             message: %{type: :canned, id: 1},
             stations: ["South Station"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
           }
         }
       }
@@ -65,20 +73,24 @@ defmodule Screenplay.Alerts.StateTest do
 
   describe "update_alert/3" do
     test "updates existing alert" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       a1 = %Alert{
         id: "a1",
         message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       a2 = %Alert{
         id: "a2",
         message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       alerts = %{"a1" => a1, "a2" => a2}
@@ -90,7 +102,9 @@ defmodule Screenplay.Alerts.StateTest do
         id: "a2",
         message: %{type: :custom, text: "All clear now"},
         stations: ["Kendall/MIT"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       assert :ok == State.update_alert(pid, "a2", new_alert)
@@ -101,13 +115,17 @@ defmodule Screenplay.Alerts.StateTest do
             id: "a1",
             message: %{type: :canned, id: 1},
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            stations: ["Haymarket", "Government Center"]
+            stations: ["Haymarket", "Government Center"],
+            created_by: "user",
+            edited_by: "user"
           },
           "a2" => %Alert{
             id: "a2",
             message: %{text: "All clear now", type: :custom},
             schedule: %{end: ~U[2021-08-19 17:39:42Z], start: ~U[2021-08-19 17:09:42Z]},
-            stations: ["Kendall/MIT"]
+            stations: ["Kendall/MIT"],
+            created_by: "user",
+            edited_by: "user"
           }
         }
       }
@@ -118,20 +136,24 @@ defmodule Screenplay.Alerts.StateTest do
 
   describe "delete_alert/2" do
     test "deletes the indicated alert" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       a1 = %Alert{
         id: "a1",
         message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       a2 = %Alert{
         id: "a2",
         message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
       }
 
       alerts = %{"a1" => a1, "a2" => a2}
@@ -147,7 +169,9 @@ defmodule Screenplay.Alerts.StateTest do
             id: "a2",
             message: %{text: "This is an alert", type: :custom},
             schedule: %{end: ~U[2021-08-19 17:39:42Z], start: ~U[2021-08-19 17:09:42Z]},
-            stations: ["Kendall/MIT"]
+            stations: ["Kendall/MIT"],
+            created_by: "user",
+            edited_by: "user"
           }
         }
       }
@@ -161,14 +185,18 @@ defmodule Screenplay.Alerts.StateTest do
       id: "a1",
       message: %{type: :canned, id: 1},
       stations: ["Haymarket", "Government Center"],
-      schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+      schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+      created_by: "user",
+      edited_by: "user"
     }
 
     a2 = %Alert{
       id: "a2",
       message: %{type: :custom, text: "This is an alert"},
       stations: ["Kendall/MIT"],
-      schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]}
+      schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+      created_by: "user",
+      edited_by: "user"
     }
 
     alerts = %{"a1" => a1, "a2" => a2}
@@ -189,13 +217,17 @@ defmodule Screenplay.Alerts.StateTest do
           "id" => "a1",
           "message" => %{"id" => 1, "type" => "canned"},
           "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
-          "stations" => ["Haymarket", "Government Center"]
+          "stations" => ["Haymarket", "Government Center"],
+          "created_by" => "user",
+          "edited_by" => "user"
         },
         %{
           "id" => "a2",
           "message" => %{"text" => "This is an alert", "type" => "custom"},
           "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
-          "stations" => ["Kendall/MIT"]
+          "stations" => ["Kendall/MIT"],
+          "created_by" => "user",
+          "edited_by" => "user"
         }
       ]
     }
