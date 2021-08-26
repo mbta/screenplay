@@ -26,7 +26,7 @@ defmodule Screenplay.Alerts.StateTest do
 
   describe "add_alert/2" do
     test "returns error message when given an alert with id nil" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       alert = %Alert{
         id: nil,
@@ -41,7 +41,7 @@ defmodule Screenplay.Alerts.StateTest do
     end
 
     test "adds alert" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       alert = %Alert{
         id: "alert",
@@ -73,7 +73,7 @@ defmodule Screenplay.Alerts.StateTest do
 
   describe "update_alert/3" do
     test "updates existing alert" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       a1 = %Alert{
         id: "a1",
@@ -136,7 +136,7 @@ defmodule Screenplay.Alerts.StateTest do
 
   describe "delete_alert/2" do
     test "deletes the indicated alert" do
-      {:ok, pid} = GenServer.start_link(State, :ok, [])
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
 
       a1 = %Alert{
         id: "a1",

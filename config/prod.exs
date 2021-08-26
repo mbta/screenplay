@@ -13,7 +13,8 @@ config :screenplay, ScreenplayWeb.Endpoint,
   url: [port: 80],
   http: [:inet6, port: 4000],
   server: true,
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  alerts_fetch_module: Screenplay.Alerts.S3Fetch
 
 # Do not print debug messages in production
 config :logger, level: :info

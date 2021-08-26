@@ -1,0 +1,16 @@
+{
+  "alerts": [
+    {
+      "id": "fN2-uRAGhio9PhC0cSSTfA==",
+      "message": {
+        "id": 4,
+        "type": "canned"
+      },
+      "schedule": {
+        "end": "2021-08-22T12:12:51.133371Z",
+        "start": "2021-08-22T12:12:51.130050Z"
+      },
+      "stations": []
+    }
+  ]
+}

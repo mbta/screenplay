@@ -47,7 +47,9 @@ defmodule Screenplay.MixProject do
       {:guardian, "~> 2.0"},
       {:ueberauth, "~> 0.6.3"},
       {:ueberauth_cognito, "~> 0.2.0"},
-      {:sftp_client, "~> 1.4"}
+      {:sftp_client, "~> 1.4"},
+      {:ex_aws, "~> 2.2"},
+      {:ex_aws_s3, "~> 2.2"}
     ]
   end
 

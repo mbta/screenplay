@@ -23,6 +23,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Use Jason for JSON parsing in ExAws
+config :ex_aws, json_codec: Jason
+
 # Authenticate using Cognito
 config :screenplay,
   redirect_http?: true,

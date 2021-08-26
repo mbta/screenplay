@@ -74,7 +74,9 @@ config :screenplay,
   sftp_user: System.get_env("SFTP_USER"),
   sftp_password: System.get_env("SFTP_PASSWORD"),
   sftp_remote_path: System.get_env("SFTP_REMOTE_PATH"),
-  sftp_local_path: System.get_env("SFTP_LOCAL_PATH")
+  sftp_local_path: System.get_env("SFTP_LOCAL_PATH"),
+  alerts_fetch_module: Screenplay.Alerts.LocalFetch,
+  local_alerts_path_spec: {:priv, "alerts.json"}
 
 config :ueberauth, Ueberauth,
   providers: [
