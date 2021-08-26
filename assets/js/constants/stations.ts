@@ -14,7 +14,7 @@ const STATIONS_BY_LINE: StationsByLine = {
     {
       name: "Alewife",
       portrait: true,
-      landscape: true
+      landscape: false
     },
     {
       name: "Davis",
@@ -32,8 +32,8 @@ const STATIONS_BY_LINE: StationsByLine = {
       landscape: false
     },
     {
-      name: "Savin Hill",
-      portrait: false,
+      name: "Central",
+      portrait: true,
       landscape: false
     },
     {
@@ -56,11 +56,76 @@ const STATIONS_BY_LINE: StationsByLine = {
       portrait: true,
       landscape: false
     },
+    {
+      name: "South Station",
+      portrait: true,
+      landscape: false
+    },
+    {
+      name: "Broadway",
+      portrait: true,
+      landscape: true
+    },
+    {
+      name: "Andrew",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "JFK/UMass",
+      portrait: true,
+      landscape: false
+    },
+    {
+      name: "Savin Hill",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Fields Corner",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Shawmut",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Ashmont",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "North Quincy",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Wollaston",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Quincy Center",
+      portrait: true,
+      landscape: true
+    },
+    {
+      name: "Quincy Adams",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Braintree",
+      portrait: false,
+      landscape: false
+    }
   ],
   orange: [
     {
       name: "Oak Grove",
-      portrait: true,
+      portrait: false,
       landscape: false
     },
     {
@@ -71,6 +136,11 @@ const STATIONS_BY_LINE: StationsByLine = {
     {
       name: "Wellington",
       portrait: true,
+      landscape: false
+    },
+    {
+      name: "Assembly",
+      portrait: false,
       landscape: false
     },
     {
@@ -105,14 +175,59 @@ const STATIONS_BY_LINE: StationsByLine = {
     },
     {
       name: "Chinatown",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Tufts Medical Center",
+      portrait: true,
+      landscape: true
+    },
+    {
+      name: "Back Bay",
+      portrait: true,
+      landscape: true
+    },
+    {
+      name: "Massachusetts Avenue",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Ruggles",
       portrait: true,
       landscape: false
     },
+    {
+      name: "Roxbury Crossing",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Jackson Square",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Stony Brook",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Green Street",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Forest Hills",
+      portrait: true,
+      landscape: false
+    }
   ],
   blue: [
     {
       name: "Bowdoin",
-      portrait: true,
+      portrait: false,
       landscape: false
     },
     {
@@ -127,12 +242,12 @@ const STATIONS_BY_LINE: StationsByLine = {
     },
     {
       name: "Aquarium",
-      portrait: true,
+      portrait: false,
       landscape: true
     },
     {
       name: "Maverick",
-      portrait: false,
+      portrait: true,
       landscape: false
     },
     {
@@ -142,17 +257,17 @@ const STATIONS_BY_LINE: StationsByLine = {
     },
     {
       name: "Wood Island",
-      portrait: true,
+      portrait: false,
       landscape: false
     },
     {
       name: "Orient Heights",
-      portrait: true,
+      portrait: false,
       landscape: false
     },
     {
       name: "Suffolk Downs",
-      portrait: true,
+      portrait: false,
       landscape: false
     },
     {
@@ -160,25 +275,25 @@ const STATIONS_BY_LINE: StationsByLine = {
       portrait: false,
       landscape: false
     },
+    {
+      name: "Revere Beach",
+      portrait: false,
+      landscape: false
+    },
+    {
+      name: "Wonderland",
+      portrait: false,
+      landscape: false
+    }
   ],
   silver: [
     {
       name: "World Trade Center",
-      portrait: true,
+      portrait: false,
       landscape: true
     }
   ],
   green: [
-    {
-      name: "Lechmere",
-      portrait: true,
-      landscape: false
-    },
-    {
-      name: "Science Park",
-      portrait: true,
-      landscape: false
-    },
     {
       name: "North Station",
       portrait: true,
@@ -210,15 +325,30 @@ const STATIONS_BY_LINE: StationsByLine = {
       landscape: false
     },
     {
-      name: "Copley Square",
+      name: "Copley",
       portrait: true,
       landscape: false
     },
     {
-      name: "Hynes",
+      name: "Hynes Convention Center",
       portrait: false,
       landscape: false
     },
+    {
+      name: "Kenmore",
+      portrait: true,
+      landscape: true
+    },
+    {
+      name: "Prudential",
+      portrait: false,
+      landscape: true
+    },
+    {
+      name: "Symphony",
+      portrait: false,
+      landscape: false
+    }
   ]
 }
 
