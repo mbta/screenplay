@@ -48,6 +48,27 @@
           font-size: 20px;
           margin-bottom: 16px;
         }
+
+        &.flex {
+          display: flex;
+        }
+        .hang-left {
+          flex: 1;
+        }
+        .hang-right {
+          text-align: right;
+          margin-left: 24px;
+          flex-shrink: 0;
+          .legend-entry {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 8px;
+            .legend-text {
+              margin-right: 8px;
+            }
+          }
+        }
       }
       
       .step-body {
@@ -56,32 +77,10 @@
         padding: 24px;
         display: flex;
 
-        // Create pane classes
+        // CREATE MESSAGE CLASSES
         .info {
           margin-right: 50px;
           flex-shrink: 0;
-        }
-        .radio-option {
-          display: inline-flex;
-          align-items: center;
-          width: 100%;
-          background: white;
-          border: 1px solid $gray-200;
-          padding: 12px;
-          
-          &.option-one {
-            border-radius: 6px 6px 0 0;
-          }
-          &.option-two {
-            border-radius: 0 0 6px 6px;
-          }
-          &.active {
-            background: $pink-100;
-            border-color: $pink-700;
-          }
-          input[type='radio'] {
-            margin-right: 17px;
-          }
         }
         .message-select{
           white-space: normal;
@@ -98,18 +97,117 @@
           height: 90px;
           background: white;
         }
+        //  END OF CREATE MESSAGE CLASSES
+
+        // PICK STATIONS CLASSES  
+        .station-column {
+          flex: 1 1 0px;
+          margin-right: 24px;
+
+          &.green {
+            margin-right: 0;
+          }
+          
+        }
+        
+        // END PICK STATIONS CLASSES
       }
     }
   }
-  
-  .wizard-sidebar {
-    background: $gray-500;
-    width: 318px;
-    padding: 24px;
+}
+
+.wizard-sidebar {
+  background: $gray-500;
+  width: 318px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0 8px 8px 0;
+
+  .station-card:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+  .station-card:nth-last-child(2) {
+    border-radius: 0 0 8px 8px;
+  }
+  .separator:last-child {
+    display: none;
+  }
+}
+
+.separator {
+  width: 100%;
+  height: 1px;
+  background: $gray-600;
+  display: flex;
+  justify-content: center;
+  > div {
+    height: 1px;
+    width: calc(100% - 12px);
+    background: $gray-400;
+  }
+}
+
+.station-card {
+  padding: 12px;
+  font-size: 14px;
+  line-height: 14px;
+  font-weight: 700;
+
+  &.read-only {
+    background: $gray-600;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    border-radius: 0 8px 8px 0;
+    color: white; 
+    width: 100%;
+    > * {
+      margin-right: 8px;
+    }
+  }
+  &.line {
+    border-radius: 6px 6px 0 0;
+  }
+  
+  label {
+    display: flex;
+    align-items: center;
+  }
+  input[type='checkbox'] {
+    margin: 0 16px 0 0;
+  }
+  .line-name {
+    font-size: 18px;
+    line-height: 18px;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 13.5px;
+    letter-spacing: 0.375px;
+    font-weight: 700;
+    &.abbrev {
+      padding: 3px 6.56px;
+      height: fit-content;
+    }
+  }
+  .station-name {
+    flex-grow: 1;
+    &.disabled {
+      margin-left: 29px;
+      font-weight: normal;
+      color: $gray-400;
+    }
+  }
+  .screen-icon {
+    margin-left: 8px;
+    align-self: normal;
+  }
+}
+.station-card.selectable {
+  border: 1px solid $gray-200;
+  background: white;
+
+  &:last-of-type {
+    border-radius: 0 0 6px 6px;
   }
 }
 
@@ -143,4 +241,27 @@
   .forward-button {
     margin-left: auto;
   }
+}
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  background: white;
+  border: 1px solid $gray-200;
+  padding: 12px;
+  
+  &.option-one {
+    border-radius: 6px 6px 0 0;
+  }
+  &.option-two {
+    border-radius: 0 0 6px 6px;
+  }
+
+  input[type='radio'] {
+    margin-right: 17px;
+  }
+}
+.selected-option {
+    background: $pink-100 !important;
+    border-color: $pink-700 !important;
 }

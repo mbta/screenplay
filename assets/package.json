@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.4",
+    "bootstrap": "^5.1.0",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.0.0-beta.6",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {

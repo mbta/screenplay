@@ -57,7 +57,7 @@ class CreateMessage extends React.Component<CreateMessageProps, CreateMessageSta
             <div className="text-14">(512 character max)</div>
           </div>
           <div>
-            <div className={`radio-option option-one ${this.state.messageOption === "1" ? "active" : ""}`}>
+            <div className={`radio-option option-one ${this.state.messageOption === "1" ? "selected-option" : ""}`}>
               <input type="radio" value="1" checked={this.state.messageOption === "1"} onChange={this.changeMessageOption} />
               <select className="message-select text-16" value={this.state.cannedMessage} onChange={this.changeCannedMessage}>
                 <option value={ -1 } hidden>Select canned message…</option>
@@ -66,7 +66,7 @@ class CreateMessage extends React.Component<CreateMessageProps, CreateMessageSta
                 ))}
               </select>
             </div>
-            <div className={`radio-option option-two ${this.state.messageOption === "2" ? "active" : ""}`}>
+            <div className={`radio-option option-two ${this.state.messageOption === "2" ? "selected-option" : ""}`}>
               <input type="radio" value="2" checked={this.state.messageOption === "2"} onChange={this.changeMessageOption} />
               <textarea className="message-textarea text-16" value={this.state.customMessage} placeholder="Type, or select a canned message above to edit here..." onChange={this.changeCustomMessage}></textarea>
             </div>

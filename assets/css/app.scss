@@ -4,6 +4,11 @@
 @import "./phoenix.css";
 @import "./colors.scss";
 
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/modal";
+// @import "~bootstrap/scss/buttons";
 
 html {
   background: $gray-700;
@@ -31,6 +36,29 @@ html {
     .stacked-title {
       color: white;
     }
+  }
+}
+
+.screen-icon {
+  background: $gray-400;
+  &.landscape {
+    height: 13.5px;
+    width: 24px;
+  }
+  &.portrait {
+    width: 13.5px;
+    height: 24px;
+  }
+  &.none {
+    background: repeating-linear-gradient(
+      45deg,
+      $gray-200,
+      $gray-200 12px,
+      white 10px,
+      white 15px
+    );
+    width: 13.5px;
+    height: 24px;
   }
 }
 

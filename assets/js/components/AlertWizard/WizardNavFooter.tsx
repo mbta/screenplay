@@ -3,6 +3,8 @@ import { ArrowNarrowLeftIcon, ArrowNarrowRightIcon } from '@heroicons/react/soli
 
 interface WizardNavFooterProps {
   step: number;
+  forward: () => void;
+  backward: () => void;
 }
 
 const backButton = (step: number) => {
@@ -31,13 +33,13 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
   return (
     <div className="wizard-nav-footer">
       { props.step !== 1 ?
-        <button>
+        <button onClick={ props.backward }>
           <ArrowNarrowLeftIcon className="arrow-icon"/>
           <span>{ backButton(props.step) }</span>
         </button>
         : null }
       { props.step !== 4 ?
-        <button className="forward-button">
+        <button className="forward-button" onClick={ props.forward }>
           <span>{ forwardButton(props.step) }</span>
           <ArrowNarrowRightIcon className="arrow-icon"/>
         </button>
