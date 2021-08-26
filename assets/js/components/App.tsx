@@ -19,8 +19,7 @@ class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      // Temporarily set to true
-      alertWizardOpen: true,
+      alertWizardOpen: false,
       alertId: null,
       modalOpen: false,
       modalContent: <></>

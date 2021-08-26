@@ -41,8 +41,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   constructor(props: AlertWizardProps) {
     super(props);
     this.state = {
-      // Temporarily set to pane 2
-      step: 2,
+      step: 1,
       selectedStations: [],
       cancelModal: false
     };
