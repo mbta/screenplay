@@ -67,18 +67,19 @@ defmodule Screenplay.Alerts.State do
   ### Server
 
   @impl true
-  def init(opts) do
-    case opts do
-      :ok ->
-        fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-        {:ok, init_state} = fetch_module.get_state()
+  def init(_opts) do
+    # case opts do
+    #   :ok ->
+    #     fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+    #     {:ok, init_state} = fetch_module.get_state()
 
-        {:ok, init_state}
+    #     {:ok, init_state}
 
-      # Initialize with empty state, for testing purposes
-      :empty ->
-        {:ok, %State{alerts: %{}}}
-    end
+    #   # Initialize with empty state, for testing purposes
+    #   :empty ->
+    #     {:ok, %State{alerts: %{}}}
+    # end
+    {:ok, %State{alerts: %{}}}
   end
 
   @impl true
