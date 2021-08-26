@@ -1,6 +1,8 @@
 defmodule Screenplay.Alerts.S3Fetch do
   @moduledoc false
 
+  require Logger
+
   alias Screenplay.Alerts.State
 
   @spec get_state() :: {:ok, State.t()} | :error
@@ -19,8 +21,12 @@ defmodule Screenplay.Alerts.S3Fetch do
     get_operation = ExAws.S3.get_object(bucket, path)
 
     case ExAws.request(get_operation) do
-      {:ok, %{body: body, status_code: 200}} -> {:ok, body}
-      _ -> :error
+      {:ok, %{body: body, status_code: 200}} ->
+        {:ok, body}
+
+      e ->
+        Logger.error(e)
+        :error
     end
   end
 
