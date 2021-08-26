@@ -1,6 +1,8 @@
 {
   "alerts": [
     {
+      "created_by": "user",
+      "edited_by": "user",
       "id": "a1",
       "message": {
         "id": 1,
@@ -16,6 +18,8 @@
       ]
     },
     {
+      "created_by": "user",
+      "edited_by": "user",
       "id": "a2",
       "message": {
         "text": "All clear now",
