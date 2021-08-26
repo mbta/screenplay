@@ -25,6 +25,11 @@ defmodule Screenplay.Alerts.State do
     GenServer.call(pid, :get_all_alerts)
   end
 
+  @spec get_alert(Alert.id()) :: Alert.t() | nil
+  def get_alert(id) do
+    Enum.find(get_all_alerts(), fn %{id: alert_id} -> id == alert_id end)
+  end
+
   @spec add_alert(GenServer.server(), Alert.t()) :: :ok | {:error, String.t()}
   def add_alert(pid \\ __MODULE__, alert)
 

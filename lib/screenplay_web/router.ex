@@ -62,10 +62,20 @@ defmodule ScreenplayWeb.Router do
     get("/:provider/callback", AuthController, :callback)
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ScreenplayWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", ScreenplayWeb do
+    pipe_through [
+      :redirect_prod_http,
+      :api,
+      :auth,
+      :ensure_auth,
+      :ensure_screenplay_group
+    ]
+
+    post("/create", AlertController, :create)
+    post("/edit", AlertController, :edit)
+    post("/clear", AlertController, :clear)
+    get("/list", AlertController, :list)
+  end
 
   # Enables LiveDashboard only for development
   #
