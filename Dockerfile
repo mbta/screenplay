@@ -6,7 +6,7 @@ ENV LANG="C.UTF-8" MIX_ENV="prod"
 WORKDIR /root
 ADD . .
 
-RUN apt-get update && apt-get install -y git
+RUN apt-get update --allow-releaseinfo-change && apt-get install -y git
 
 RUN mix do local.hex --force, local.rebar --force
 RUN mix do deps.get --only prod
@@ -44,7 +44,7 @@ WORKDIR /root
 ADD . .
 
 # erlang-crypto requires system library libssl1.1
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update --allow-releaseinfo-change && apt-get install -y --no-install-recommends \
   libssl1.1 \
   && rm -rf /var/lib/apt/lists/*
 

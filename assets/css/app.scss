@@ -1,36 +1,70 @@
 /* This file is for your main application css. */
+@import "./alert-dashboard.scss";
+@import "./alert-wizard.scss";
 @import "./phoenix.css";
+@import "./colors.scss";
 
-/* Alerts and form errors */
-.alert {
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/modal";
+// @import "~bootstrap/scss/buttons";
+
+html {
+  background: $gray-700;
+  font-family: 'Inter', sans-serif;
+  body {
+    margin: 0;
+  }
 }
-.alert-info {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
+
+.app-container {
+  margin: 24px 60px;
+
+  .app-title {
+    display: flex;
+    height: 120px;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .logo {
+      height: 64px;
+      width: 64px;
+      flex-shrink: 0;
+      margin: 0 20px 0 24px;
+    }
+    .stacked-title {
+      color: white;
+    }
+  }
 }
-.alert-warning {
-  color: #8a6d3b;
-  background-color: #fcf8e3;
-  border-color: #faebcc;
+
+.screen-icon {
+  background: $gray-400;
+  &.landscape {
+    height: 13.5px;
+    width: 24px;
+  }
+  &.portrait {
+    width: 13.5px;
+    height: 24px;
+  }
+  &.none {
+    background: repeating-linear-gradient(
+      45deg,
+      $gray-200,
+      $gray-200 12px,
+      white 10px,
+      white 15px
+    );
+    width: 13.5px;
+    height: 24px;
+  }
 }
-.alert-danger {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
-}
-.alert p {
-  margin-bottom: 0;
-}
-.alert:empty {
-  display: none;
-}
-.invalid-feedback {
-  color: #a94442;
-  display: block;
-  margin: -1rem 0 2rem;
-}
+
+.text-14 { font-size: 14px; }
+.text-16 { font-size: 16px; }
+.text-30 { font-size: 30px; line-height: 36px; }
+.weight-500 { font-weight: 500; }
+.weight-700 { font-weight: 700; }
+.weight-800 { font-weight: 800; }

@@ -10,7 +10,9 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :screenplay, ScreenplayWeb.Endpoint,
-  url: [host: "example.com", port: 80],
+  url: [port: 80],
+  http: [:inet6, port: 4000],
+  server: true,
   cache_static_manifest: "priv/static/cache_manifest.json",
   alerts_fetch_module: Screenplay.Alerts.S3Fetch
 
@@ -50,7 +52,3 @@ config :logger, level: :info
 #       force_ssl: [hsts: true]
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
-
-# Finally import the config/prod.secret.exs which loads secrets
-# and configuration from environment variables.
-import_config "prod.secret.exs"

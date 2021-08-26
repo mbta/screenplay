@@ -1,0 +1,56 @@
+@import "./colors.scss";
+
+.intro-block {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  border-radius: 8px;
+
+  .exclamation-circle {
+    height: 64px;
+    width: 64px;
+    border-radius: 32px;
+    background: $pink-700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 24px;
+    flex-shrink: 0;
+    
+    .exclamation {
+      height: 38.4px;
+      width: 38.4px;
+      color: white;
+    }
+  }
+
+  .intro-text {
+    margin: 0 24px 0 0;
+    flex-grow: 1;
+    font-weight: 500;
+    :last-child {
+      margin: 0;
+    }
+    .emphasized {
+      font-weight: 700;
+      color: $pink-700;
+    }
+  }
+  
+  .create-alert-button {
+    background: $pink-700;
+    border: none;
+    padding: 17px;
+    margin: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+
+    .plus-circle {
+      height: 16px;
+      width: 16px;
+      margin-right: 10px;
+    }
+  }
+}
