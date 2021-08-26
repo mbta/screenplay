@@ -5,7 +5,7 @@ defmodule Screenplay.Alerts.Alert do
 
   alias Screenplay.Alerts.State
 
-  @enforce_keys [:id, :message, :stations, :schedule]
+  @enforce_keys [:id, :message, :stations, :schedule, :created_by, :edited_by]
   defstruct @enforce_keys
 
   @type id :: String.t()
@@ -27,11 +27,21 @@ defmodule Screenplay.Alerts.Alert do
           end: DateTime.t()
         }
 
+  @type user :: String.t()
+
+  @type update_map :: %{
+          optional(:message) => canned_message() | custom_message(),
+          optional(:stations) => list(station),
+          optional(:schedule) => schedule()
+        }
+
   @type t :: %__MODULE__{
           id: id(),
           message: canned_message() | custom_message(),
           stations: list(station()),
-          schedule: schedule()
+          schedule: schedule(),
+          created_by: user(),
+          edited_by: user()
         }
 
   @spec random_id :: id()
@@ -40,22 +50,43 @@ defmodule Screenplay.Alerts.Alert do
     length |> :crypto.strong_rand_bytes() |> Base.url_encode64()
   end
 
-  def new(message, stations, schedule) do
+  @spec new(canned_message() | custom_message(), list(station()), schedule(), user()) :: t()
+  def new(message, stations, schedule, user) do
     %__MODULE__{
       id: State.get_unused_alert_id(),
       message: message,
       stations: stations,
-      schedule: schedule
+      schedule: schedule,
+      created_by: user,
+      edited_by: user
     }
   end
 
+  @spec update(t(), update_map(), user()) :: t()
+  def update(alert, changes_map, user) do
+    # Drop nil values from changes_map
+    changes_map = changes_map |> Enum.filter(fn {_, v} -> v != nil end) |> Enum.into(%{})
+
+    merged = Map.merge(alert, changes_map)
+    %{merged | edited_by: user}
+  end
+
   @spec to_json(t()) :: map()
-  def to_json(%__MODULE__{id: id, message: message, stations: stations, schedule: schedule}) do
+  def to_json(%__MODULE__{
+        id: id,
+        message: message,
+        stations: stations,
+        schedule: schedule,
+        created_by: created_by,
+        edited_by: edited_by
+      }) do
     %{
       "id" => id,
       "message" => message_to_json(message),
       "stations" => stations_to_json(stations),
-      "schedule" => schedule_to_json(schedule)
+      "schedule" => schedule_to_json(schedule),
+      "created_by" => created_by,
+      "edited_by" => edited_by
     }
   end
 
@@ -64,13 +95,17 @@ defmodule Screenplay.Alerts.Alert do
         "id" => id,
         "message" => message_json,
         "stations" => stations_json,
-        "schedule" => schedule_json
+        "schedule" => schedule_json,
+        "created_by" => created_by,
+        "edited_by" => edited_by
       }) do
     %__MODULE__{
       id: id,
       message: message_from_json(message_json),
       stations: stations_from_json(stations_json),
-      schedule: schedule_from_json(schedule_json)
+      schedule: schedule_from_json(schedule_json),
+      created_by: created_by,
+      edited_by: edited_by
     }
   end
 
