@@ -5,7 +5,11 @@ export interface Station {
   lines?: string[];
 }
 
-const STATIONS_BY_LINE = {
+interface StationsByLine {
+  [index: string]: Station[]
+}
+
+const STATIONS_BY_LINE: StationsByLine = {
   red: [
     {
       name: "Alewife",
