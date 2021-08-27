@@ -7,7 +7,7 @@ defmodule Screenplay.Outfront.FakeSFTP do
 
   require Logger
 
-  def set_takeover_image(stations, portrait_png, landscape_png) do
+  def set_takeover_image(stations, _portrait_png, _landscape_png) do
     _ = Logger.info("Setting images for #{stations}")
 
     :ok
