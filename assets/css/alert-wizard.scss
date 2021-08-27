@@ -5,6 +5,8 @@
   margin-bottom: 120px;
 
   .wizard-left-content {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
 
     .wizard-header {
@@ -35,6 +37,7 @@
       background: $gray-200;
     }
     .wizard-body {
+      flex-grow: 1;
       background: white;
       border-radius: 0 0 0 8px;
       color: $gray-600;
@@ -88,7 +91,7 @@
           width: 100%;
           font: unset;
           color: $gray-900;
-          background: white;
+          background-color: white;
         }
         .message-textarea {
           flex-grow: 1;
@@ -124,15 +127,13 @@
   flex-direction: column;
   align-items: center;
   border-radius: 0 8px 8px 0;
-
-  .station-card:first-child {
-    border-radius: 8px 8px 0 0;
-  }
-  .station-card:nth-last-child(2) {
-    border-radius: 0 0 8px 8px;
-  }
-  .separator:last-child {
-    display: none;
+  
+  .preview-title {
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
   }
 }
 
@@ -146,6 +147,9 @@
     height: 1px;
     width: calc(100% - 12px);
     background: $gray-400;
+  }
+  &.confirmation {
+    background: none;
   }
 }
 
@@ -163,6 +167,13 @@
     width: 100%;
     > * {
       margin-right: 8px;
+    }
+  }
+  &.confirmation {
+    background: white;
+    .station-name {
+      color: $gray-800;
+      font-weight: 600;
     }
   }
   &.line {
@@ -210,6 +221,23 @@
     border-radius: 0 0 6px 6px;
   }
 }
+.stacked-station-cards {
+  width: 100%;
+  &.confirmation {
+    width: fit-content;
+  }
+  .station-card:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  .station-card:nth-last-child(2) {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+  .separator:last-child {
+    display: none;
+  }
+}
 
 .wizard-nav-footer {
   background-color: #F3F4F6E5;
@@ -233,6 +261,11 @@
     :first-child {
       margin-right: 14.5px;
     }
+    
+  }
+  button[disabled] {
+    background: $gray-500;
+    opacity: 1;
   }
 
   .arrow-icon {
@@ -262,6 +295,31 @@
   }
 }
 .selected-option {
-    background: $pink-100 !important;
-    border-color: $pink-700 !important;
+  background: $pink-100 !important;
+  border-color: $pink-700 !important;
+}
+
+.landscape-hidden {
+  display: none;
+}
+.portrait-svg {
+  margin-bottom: 24px;
+}
+
+.confirmation-grid {
+  .gray-row {
+    background: $gray-100;
+  }
+  td {
+    vertical-align: top;
+    padding: 24px;
+  }
+  .emphasized-cell {
+    font-weight: 600;
+    color: $gray-800;
+  }
+  .edit-link {
+    cursor: pointer;
+    color: $pink-700;
+  }
 }
