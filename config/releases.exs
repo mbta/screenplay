@@ -12,3 +12,6 @@ config :ueberauth, Ueberauth.Strategy.Cognito,
   client_secret: System.get_env("COGNITO_CLIENT_SECRET"),
   user_pool_id: System.get_env("COGNITO_USER_POOL_ID"),
   aws_region: System.get_env("COGNITO_AWS_REGION")
+
+config :screenplay,
+  alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME")
