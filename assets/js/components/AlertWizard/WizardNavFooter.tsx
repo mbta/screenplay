@@ -5,6 +5,7 @@ interface WizardNavFooterProps {
   step: number;
   forward: () => void;
   backward: () => void;
+  waitingForInput: boolean;
 }
 
 const backButton = (step: number) => {
@@ -39,11 +40,11 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
         </button>
         : null }
       { props.step !== 4 ?
-        <button className="forward-button" onClick={ props.forward }>
+        <button className="forward-button" disabled={props.waitingForInput} onClick={ props.forward }>
           <span>{ forwardButton(props.step) }</span>
           <ArrowNarrowRightIcon className="arrow-icon"/>
         </button>
-        : <button>Fancy</button> }
+        : <button onClick={ props.forward }>Fancy</button> }
     </div>
   )
 };

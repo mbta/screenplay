@@ -3,13 +3,15 @@ import ConfirmationPage from './ConfirmationPage';
 import CreateMessage from './CreateMessage';
 import PickStations from './PickStations';
 import SetSchedule from './SetSchedule';
-import StationCard from './StationCard';
 import WizardNavFooter from './WizardNavFooter';
 import WizardStepper from './WizardStepper';
 
 import stationsByLine, { Station } from '../../constants/stations'
+import cannedMessages from '../../constants/messages'
 
 import { XIcon } from '@heroicons/react/solid';
+import WizardSidebar from './WizardSidebar';
+import { svgLongSide, svgShortSide } from '../../constants/misc';
 
 const modalContent = (
   <div className="cancel-modal">
@@ -33,48 +35,101 @@ interface AlertWizardProps {
 
 interface AlertWizardState {
   step: number;
-  selectedStations: Station[]
   cancelModal: boolean;
+  selectedStations: Station[]
+  messageOption: string;
+  cannedMessage: string;
+  customMessage: string;
+  duration: string | number;
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   constructor(props: AlertWizardProps) {
     super(props);
     this.state = {
+      // Page state
       step: 1,
+      cancelModal: false,
+      // User input state
       selectedStations: [],
-      cancelModal: false
+      messageOption: "1",
+      cannedMessage: "",
+      customMessage: "",
+      duration: 1
     };
 
     this.stepForward = this.stepForward.bind(this);
     this.stepBackward = this.stepBackward.bind(this);
+    this.goToStep = this.goToStep.bind(this);
+    this.waitingForInput = this.waitingForInput.bind(this);
+    
     this.checkStation = this.checkStation.bind(this);
     this.checkLine = this.checkLine.bind(this);
+    this.changeMessageOption = this.changeMessageOption.bind(this);
+    this.changeCannedMessage = this.changeCannedMessage.bind(this);
+    this.changeCustomMessage = this.changeCustomMessage.bind(this);
+    this.changeDuration = this.changeDuration.bind(this);
   }
 
-  renderSwitch(step: number) {
-    switch(step) {
+  renderSwitch() {
+    switch(this.state.step) {
       case 2:
         return <PickStations selectedStations={ this.state.selectedStations } checkStation={this.checkStation} checkLine={this.checkLine}/>;
       case 3:
-        return <SetSchedule />;
+        return <SetSchedule duration={this.state.duration} changeDuration={this.changeDuration}/>;
       case 4:
-        return <ConfirmationPage />;
+        return <ConfirmationPage
+            goToStep={this.goToStep}
+            selectedStations={this.state.selectedStations}
+            message={this.state.messageOption == "1" ? cannedMessages[parseInt(this.state.cannedMessage)] : this.state.customMessage}
+            duration={this.state.duration}/>;
       default:
-        return <CreateMessage/>;
+        return <CreateMessage
+            messageOption={this.state.messageOption}
+            cannedMessage={this.state.cannedMessage}
+            customMessage={this.state.customMessage}
+            changeMessageOption={this.changeMessageOption}
+            changeCannedMessage={this.changeCannedMessage}
+            changeCustomMessage={this.changeCustomMessage}/>
+    }
+  }
+
+  waitingForInput() {
+    switch(this.state.step) {
+      case 1: return !this.state.cannedMessage && !this.state.customMessage;
+      case 2: return this.state.selectedStations.length === 0;
+      // Because 1 hour is automatically selected
+      case 3: return false;
+      // TODO
+      case 4: return false;
+      default: return false;
     }
   }
 
   stepForward() {
-    this.setState(state => ({
-      step: state.step + 1
-    }))
+    if (this.state.step < 4) {
+      this.setState(state => ({
+        step: state.step + 1
+      }))
+    } else {
+      this.makePNG("portrait", svgShortSide, svgLongSide, this.handleSubmit)
+      this.makePNG("landscape", svgLongSide, svgShortSide, this.handleSubmit)
+    }
   }
 
   stepBackward() {
     this.setState(state => ({
       step: state.step - 1
     }))
+  }
+
+  goToStep(step: number) {
+    this.setState({step});
+  }
+
+  handleSubmit(url: string) {
+    // Todo: this'll make the fetch to the AlertController and post the url
+    console.log(url)
   }
 
   addStation(station: Station) {
@@ -108,6 +163,51 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
   }
 
+  changeMessageOption(event: any) {
+    this.setState({messageOption: event.target.value});
+  }
+
+  changeCannedMessage(event: any) {
+    const index = parseInt(event.target.value);
+    this.setState({messageOption: "1", cannedMessage: event.target.value, customMessage: cannedMessages[index]})
+  }
+
+  changeCustomMessage(event: any) {
+    this.setState({messageOption: "2", cannedMessage: "", customMessage: event.target.value})
+  }
+
+  changeDuration(event: any) {
+    if (event.target.value === "Open ended") {
+      this.setState({duration: event.target.value})
+    } else {
+      this.setState({duration: parseInt(event.target.value)})
+    }
+  }
+
+  makePNG(orientation: string, width: number, height: number, callback: (dataUrl: string) => void) {
+    const svg = document.getElementById(orientation + '-svg') as HTMLElement;
+
+    const canvas = document.createElement('canvas')
+    canvas.width = width //* svgScale
+    canvas.height = height //* svgScale
+    canvas.style.width = width.toString();
+    canvas.style.height = height.toString();
+
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    //ctx.scale(svgScale, svgScale);
+    
+    const data = (new XMLSerializer()).serializeToString(svg);
+    const img = new Image();
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0);
+      const imgURI = canvas.toDataURL('image/png')
+      callback(imgURI);
+    };
+
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(data)));
+  }
+
   render() {
     return (
       <>
@@ -122,33 +222,19 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
             </div>
             <WizardStepper/>
             <div className="wizard-body">
-              {this.renderSwitch(this.state.step)}
+              {this.renderSwitch()}
             </div>
           </div>
-          <div className="wizard-sidebar">
-            Preview
-            { this.state.selectedStations.map(station => {
-              if (!station.portrait && !station.landscape) {
-                return null;
-              }
-              
-              const lines = Object.keys(stationsByLine).filter(key => (
-                stationsByLine[key].some(x => x.name === station.name) 
-              ))
-
-              return (
-                <React.Fragment key={station.name}>
-                  <div className="station-card read-only">
-                    <StationCard lines={lines} station={station}/>
-                  </div>
-                  <div className="separator"><div></div></div>
-                </React.Fragment>
-              )
-            })}
-          </div>
+          <WizardSidebar
+              selectedStations={this.state.selectedStations}
+              step={this.state.step}
+              message={ this.state.messageOption == "1" ? cannedMessages[parseInt(this.state.cannedMessage)] : this.state.customMessage }/>
         </div>
-        <WizardNavFooter step={this.state.step} forward={this.stepForward} backward={this.stepBackward}/>
-        {/* <SimpleForm /> */}
+        <WizardNavFooter
+            step={this.state.step}
+            forward={this.stepForward}
+            backward={this.stepBackward}
+            waitingForInput={this.waitingForInput()}/>
       </>
     )
   }
