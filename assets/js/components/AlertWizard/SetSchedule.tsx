@@ -17,7 +17,6 @@ const SetSchedule = (props: SetScheduleProps): JSX.Element => {
       <div className="step-body">
         <div className="info">
           <div>Duration</div>
-          <div className="text-14">(512 character max)</div>
         </div>
         <div className="">
           <select className="message-select text-16" value={props.duration} onChange={props.changeDuration}>
