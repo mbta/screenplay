@@ -64,7 +64,10 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   defp get_outfront_station_name(station) do
-    Map.get(@stations_map, station)
+    _ = Map.get(@stations_map, station)
+
+    # Temporarily always use test station directory
+    "ZZZ_TEST_STATION"
   end
 
   def clear_images(stations) do
