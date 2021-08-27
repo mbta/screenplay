@@ -13,5 +13,12 @@ config :ueberauth, Ueberauth.Strategy.Cognito,
   user_pool_id: System.get_env("COGNITO_USER_POOL_ID"),
   aws_region: System.get_env("COGNITO_AWS_REGION")
 
+sftp_module =
+  case System.get_env("SFTP_SERVER") do
+    "outfront" -> Screenplay.Outfront.SFTP
+    _ -> Screenplay.Outfront.FakeSFTP
+  end
+
 config :screenplay,
-  alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME")
+  alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME"),
+  sftp_module: sftp_module
