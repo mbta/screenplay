@@ -10,18 +10,41 @@ interface AppProps {
 
 interface AppState {
   alertWizardOpen: boolean;
-  alertId: string | null;
+  alertData: any;
   modalOpen: boolean;
   modalContent: JSX.Element;
+}
+
+interface CannedMessage {
+  type: "canned";
+  id: number;
+}
+
+interface CustomMessage {
+  type: "custom";
+  text: string;
+}
+
+interface Schedule {
+  start: string;
+  end: string;
+}
+
+interface AlertData {
+  id: string;
+  created_by: string;
+  edited_by: string;
+  message: CannedMessage | CustomMessage;
+  schedule: Schedule;
+  stations: string[];
 }
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      // temporary
-      alertWizardOpen: true,
-      alertId: null,
+      alertWizardOpen: false,
+      alertData: null,
       modalOpen: false,
       modalContent: <></>
     }
@@ -38,6 +61,24 @@ class App extends React.Component<AppProps, AppState> {
     }))
   }
 
+  startAlertWizard() {
+    this.setState(state => ({
+      alertData: null,
+      alertWizardOpen: true,
+      modalOpen: false
+    }))
+  }
+
+  startEditWizard(alertData: AlertData) {
+    console.log(alertData)
+
+    this.setState(state => ({
+      alertData: alertData,
+      alertWizardOpen: true,
+      modalOpen: false
+    }))
+  }
+
   // The thought here is to allow a generic modal, which allows us to pass the content??  Sounds like an HOC
   openModal(modal: JSX.Element) {
     this.setState({modalContent: modal, modalOpen: true})
@@ -48,6 +89,7 @@ class App extends React.Component<AppProps, AppState> {
       modalOpen: !state.modalOpen
     })) 
   }
+
 
   render() {
     return (
@@ -61,8 +103,8 @@ class App extends React.Component<AppProps, AppState> {
             </div>
           </div>
           { this.state.alertWizardOpen
-            ? <AlertWizard triggerConfirmation={ this.openModal } toggleAlertWizard={this.toggleAlertWizard.bind(this)} />
-            : <AlertDashboard startAlertWizard={this.toggleAlertWizard.bind(this)}/>
+            ? <AlertWizard triggerConfirmation={ this.openModal } toggleAlertWizard={this.toggleAlertWizard.bind(this)} alertData={this.state.alertData} />
+            : <AlertDashboard startAlertWizard={this.startAlertWizard.bind(this)} startEditWizard={this.startEditWizard.bind(this)} />
           }
         </div>
         <ConfirmationModal
@@ -76,3 +118,4 @@ class App extends React.Component<AppProps, AppState> {
 };
 
 export default App;
+export { AlertData };

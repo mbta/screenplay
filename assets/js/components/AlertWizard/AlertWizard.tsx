@@ -5,6 +5,7 @@ import PickStations from './PickStations';
 import SetSchedule from './SetSchedule';
 import WizardNavFooter from './WizardNavFooter';
 import WizardStepper from './WizardStepper';
+import { AlertData } from "../App"
 
 import stationsByLine, { Station } from '../../constants/stations'
 import cannedMessages from '../../constants/messages'
@@ -12,6 +13,9 @@ import cannedMessages from '../../constants/messages'
 import { XIcon } from '@heroicons/react/solid';
 import WizardSidebar from './WizardSidebar';
 import { svgLongSide, svgShortSide } from '../../constants/misc';
+
+import parseISO from 'date-fns/parseISO'
+import differenceInHours from 'date-fns/differenceInHours'
 
 const modalContent = (
   <div className="cancel-modal">
@@ -30,8 +34,9 @@ const modalContent = (
 )
 
 interface AlertWizardProps {
-  triggerConfirmation: (modalContent: JSX.Element) => void,
-  toggleAlertWizard: () => void
+  alertData: AlertData | null;
+  triggerConfirmation: (modalContent: JSX.Element) => void;
+  toggleAlertWizard: () => void;
 }
 
 interface AlertWizardState {
@@ -44,36 +49,93 @@ interface AlertWizardState {
   duration: string | number;
   landscapePNG: string | null;
   portraitPNG: string | null;
+  id: string | null;
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   constructor(props: AlertWizardProps) {
     super(props);
-    this.state = {
-      // Page state
-      step: 1,
-      cancelModal: false,
-      // User input state
-      selectedStations: [],
-      messageOption: "1",
-      cannedMessage: "",
-      customMessage: "",
-      duration: 1,
-      landscapePNG: null,
-      portraitPNG: null,
-    };
+
+    if (props.alertData === null) {
+      this.state = {
+        // id is present if and only if editing an existing alert
+        id: null,
+        // Page state
+        step: 1,
+        cancelModal: false,
+        // User input state
+        selectedStations: [],
+        messageOption: "1",
+        cannedMessage: "",
+        customMessage: "",
+        duration: 1,
+        landscapePNG: null,
+        portraitPNG: null,
+      };
+    } else {
+      this.state = this.initializeState(props.alertData)
+    }
 
     this.stepForward = this.stepForward.bind(this);
     this.stepBackward = this.stepBackward.bind(this);
     this.goToStep = this.goToStep.bind(this);
     this.waitingForInput = this.waitingForInput.bind(this);
-    
+
     this.checkStation = this.checkStation.bind(this);
     this.checkLine = this.checkLine.bind(this);
     this.changeMessageOption = this.changeMessageOption.bind(this);
     this.changeCannedMessage = this.changeCannedMessage.bind(this);
     this.changeCustomMessage = this.changeCustomMessage.bind(this);
     this.changeDuration = this.changeDuration.bind(this);
+  }
+
+  initializeState(alertData: AlertData) {
+    const { id, message, stations, schedule } = alertData;
+
+    let messageOption, cannedMessage, customMessage;
+
+    if (message.type === "canned") {
+      messageOption = "1"
+      cannedMessage = message.id.toString()
+      customMessage = cannedMessages[message.id]
+    } else {
+      messageOption = "2"
+      cannedMessage = ""
+      customMessage = message.text
+    }
+
+    const allStations = ["blue", "green", "orange", "red", "silver"].flatMap(line => stationsByLine[line])
+
+    const matchStation = (station: string) => {
+      const result = allStations.find(({name}) => name === station);
+      if (result === undefined) {
+        throw new TypeError(`Station ${station} not present in list of all stations!`)
+      }
+      return result;
+    }
+
+    const selectedStations = stations.map(matchStation)
+
+    const {start: startString, end: endString} = schedule
+    const start = parseISO(startString)
+    const end = parseISO(endString)
+    const duration = differenceInHours(end, start)
+
+    return {
+      // id is present if and only if editing an existing alert
+      id: id,
+      // Page state
+      step: 1,
+      cancelModal: false,
+      // User input state
+      selectedStations: selectedStations,
+      messageOption: messageOption,
+      cannedMessage: cannedMessage,
+      customMessage: customMessage,
+      duration: duration,
+      landscapePNG: null,
+      portraitPNG: null,
+    };
   }
 
   renderSwitch() {
@@ -139,6 +201,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   handleSubmit() {
+    const endpoint = this.state.id === null ? "/api/create" : "/api/edit";
+
     const csrfMetaElement = document.head.querySelector("[name~=csrf-token][content]") as HTMLMetaElement
     const csrfToken = csrfMetaElement.content
 
@@ -154,8 +218,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const landscapePNG = this.state.landscapePNG
     const portraitPNG = this.state.portraitPNG
 
-    const data = { message, stations, duration, portrait_png: portraitPNG, landscape_png: landscapePNG}
-    fetch("/api/create", {
+    const data = { message, stations, duration, portrait_png: portraitPNG, landscape_png: landscapePNG, id: this.state.id }
+
+    fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
