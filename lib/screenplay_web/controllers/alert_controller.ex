@@ -21,7 +21,10 @@ defmodule ScreenplayWeb.AlertController do
     alert = Alert.new(message, stations, schedule, user)
     :ok = State.add_alert(alert)
 
-    _ = SFTP.set_takeover_images(stations, portrait_png, landscape_png)
+    portrait_image_data = decode_png(portrait_png)
+    landscape_image_data = decode_png(landscape_png)
+
+    _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
     json(conn, %{success: true})
   end
@@ -51,7 +54,10 @@ defmodule ScreenplayWeb.AlertController do
     new_alert = Alert.update(alert, changes, user)
     :ok = State.update_alert(id, new_alert)
 
-    _ = SFTP.set_takeover_images(stations, portrait_png, landscape_png)
+    portrait_image_data = decode_png(portrait_png)
+    landscape_image_data = decode_png(landscape_png)
+
+    _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
     json(conn, %{success: true})
   end
@@ -72,5 +78,10 @@ defmodule ScreenplayWeb.AlertController do
   def list(conn, _params) do
     alerts_json = State.get_all_alerts() |> Enum.map(&Alert.to_json/1)
     json(conn, alerts_json)
+  end
+
+  defp decode_png(png) do
+    "data:image/png;base64," <> raw = png
+    Base.decode64!(raw)
   end
 end
