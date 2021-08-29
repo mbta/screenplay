@@ -5,12 +5,7 @@ defmodule Screenplay.Outfront.SFTP do
   @orientations ["Portrait", "Landscape"]
   @retries 3
 
-  @host Application.compile_env(:screenplay, :sftp_host)
-  @user Application.compile_env(:screenplay, :sftp_user)
-  @password Application.compile_env(:screenplay, :sftp_password)
-  @remote_path Application.compile_env(:screenplay, :sftp_remote_path)
-
-  @stations_map %{
+  @stations_to_outfront_directories %{
     "Park Street" => "001_XFER_RED_GREEN_PARK",
     "Downtown Crossing" => "002_XFER_RED_ORANGE_SILVER_DOWNTOWNCROSSING",
     "South Station" => "003_XFER_RED_SILVER_CR_SOUTHSTATION",
@@ -73,115 +68,104 @@ defmodule Screenplay.Outfront.SFTP do
     "World Trade Center" => "125_1_2_3_SILVER_WORLDTRADE"
   }
 
+  def set_takeover_images(stations, portrait_png, landscape_png) do
+    conn = start_connection()
+
+    Enum.each(stations, fn station ->
+      write_image(conn, station, "Portrait", portrait_png)
+      write_image(conn, station, "Landscape", landscape_png)
+    end)
+
+    sftp_client_module().disconnect()
+  end
+
+  def clear_takeover_images(stations) do
+    conn = start_connection()
+
+    Enum.each(
+      stations,
+      fn station ->
+        delete_image(conn, station, "Portrait")
+        delete_image(conn, station, "Landscape")
+      end
+    )
+
+    sftp_client_module().disconnect()
+  end
+
+  defp sftp_client_module do
+    Application.get_env(:screenplay, :sftp_client_module)
+  end
+
   defp start_connection(retry \\ @retries)
-  defp start_connection(_retry = 0), do: raise("Could not establish SFTP connection")
+
+  defp start_connection(_retry = 0),
+    do: raise("Could not establish SFTP connection after #{@retries} attempts!")
 
   defp start_connection(retry) do
-    case SFTPClient.connect(host: @host, user: @user, password: @password) do
+    host = Application.get_env(:screenplay, :outfront_sftp_domain)
+    user = Application.get_env(:screenplay, :outfront_sftp_user)
+    key = Application.get_env(:screenplay, :outfront_ssh_key)
+
+    case sftp_client_module().connect(
+           host: host,
+           user: user,
+           key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
+         ) do
       {:ok, sftp_conn} -> sftp_conn
       {:error, _error} -> start_connection(retry - 1)
     end
   end
 
-  def set_takeover_image(stations, portrait_png, landscape_png) do
-    sftp_conn = start_connection()
+  defp write_image(conn, station, orientation, image_data, retry \\ @retries)
 
-    post_image(sftp_conn, portrait_png, stations, "Portrait")
-    post_image(sftp_conn, landscape_png, stations, "Landscape")
+  defp write_image(_conn, station, orientation, _image_data, _retry = 0),
+    do: raise("Failed to write #{orientation} image for #{station} after #{@retries} attempts!")
 
-    SFTPClient.disconnect(sftp_conn)
+  defp write_image(conn, station, orientation, image_data, retry) do
+    case do_write_image(conn, station, orientation, image_data, retry) do
+      {:ok, result} -> result
+      _ -> write_image(conn, station, orientation, image_data, retry - 1)
+    end
   end
 
-  defp post_image(sftp_conn, image_stream, stations, orientation, retry \\ @retries)
-
-  defp post_image(_sftp_conn, _image_stream, _stations, _orientation, _retry = 0),
-    do: raise("Too many attempts for: post_image")
-
-  defp post_image(sftp_conn, image_stream, stations, orientation, retry) do
-    Enum.each(stations, fn station ->
-      outfront_station = get_outfront_station_name(station)
-
-      # First, check to see if that station has a screen of that orientation
-      if station_has_screen_orientation(sftp_conn, outfront_station, orientation) do
-        target_stream =
-          SFTPClient.stream_file!(
-            sftp_conn,
-            "#{@remote_path}/#{orientation}/#{outfront_station}/new-file.png"
-          )
-
-        try do
-          image_stream
-          |> Stream.into(target_stream)
-          |> Stream.run()
-        rescue
-          _e -> post_image(image_stream, sftp_conn, stations, orientation, retry - 1)
-        end
-      end
-    end)
+  defp do_write_image(conn, station, orientation, image_data, _retry)
+       when orientation in @orientations do
+    path = get_outfront_path_for_image(station, orientation)
+    sftp_client_module().write_file(conn, path, image_data)
   end
 
-  defp get_outfront_station_name(station) do
-    _ = Map.get(@stations_map, station)
+  defp do_write_image(_conn, station, orientation, _image_data, _retry),
+    do: raise("Invalid orientation #{orientation} for station #{station}!")
+
+  defp delete_image(conn, station, orientation, retry \\ @retries)
+
+  defp delete_image(_conn, station, orientation, 0),
+    do: raise("Failed to delete #{orientation} image for #{station} after #{@retries} attempts!")
+
+  defp delete_image(conn, station, orientation, retry) do
+    case do_delete_image(conn, station, orientation) do
+      :ok -> :ok
+      _ -> delete_image(conn, station, orientation, retry - 1)
+    end
+  end
+
+  defp do_delete_image(conn, station, orientation) do
+    path = get_outfront_path_for_image(station, orientation)
+
+    # Note: Check what happens when the path doesn't exist.
+    sftp_client_module().delete_file(conn, path)
+  end
+
+  defp get_outfront_path_for_image(station, orientation) do
+    station_directory = get_outfront_directory_for_station(station)
+    Path.join(["emergency-messaging", orientation, station_directory, "takeover.png"])
+  end
+
+  defp get_outfront_directory_for_station(station) do
+    _ = Map.get(@stations_to_outfront_directories, station)
 
     # Temporarily always use test station directory
     "ZZZ_TEST_STATION"
-  end
-
-  def clear_images(stations) do
-    sftp_conn = start_connection()
-
-    for station <- stations, orientation <- @orientations do
-      outfront_station = get_outfront_station_name(station)
-      # First, check to see if this station has a sign with that orientation
-      if station_has_screen_orientation(sftp_conn, outfront_station, orientation) do
-        image_name = get_outfront_image_name(sftp_conn, outfront_station, orientation)
-        delete_station_images(sftp_conn, outfront_station, orientation, image_name)
-      end
-    end
-
-    SFTPClient.disconnect(sftp_conn)
-  end
-
-  defp delete_station_images(stfp_conn, station, orientation, image_name, retry \\ @retries)
-
-  defp delete_station_images(_sftp_conn, _station, _orientation, _image_name, _retry = 0),
-    do: raise("Too many attempts for: delete_station_images")
-
-  defp delete_station_images(_sftp_conn, _station, _orientation, _image_name = nil, _retry),
-    do: :ok
-
-  defp delete_station_images(sftp_conn, station, orientation, image_name, retry) do
-    case SFTPClient.delete_file(
-           sftp_conn,
-           "#{@remote_path}/#{orientation}/#{station}/#{image_name}"
-         ) do
-      :ok -> :ok
-      _ -> delete_station_images(sftp_conn, station, orientation, image_name, retry - 1)
-    end
-  end
-
-  defp station_has_screen_orientation(conn, station, orientation, retry \\ @retries)
-
-  defp station_has_screen_orientation(_conn, _station, _orientation, _retry = 0),
-    do: 'Too many attempts for: station_has_screen_orientation'
-
-  defp station_has_screen_orientation(conn, station, orientation, retry) do
-    case SFTPClient.list_dir(conn, "#{@remote_path}/#{orientation}") do
-      {:ok, stations_by_screen_type} -> station in stations_by_screen_type
-      _ -> station_has_screen_orientation(conn, station, orientation, retry - 1)
-    end
-  end
-
-  defp get_outfront_image_name(sftp_conn, station, orientation, retry \\ @retries)
-
-  defp get_outfront_image_name(_sftp_conn, _station, _orientation, _retry = 0),
-    do: raise("Too many attempts for: get_outfront_image_name")
-
-  defp get_outfront_image_name(sftp_conn, station, orientation, retry) do
-    case SFTPClient.list_dir(sftp_conn, "#{@remote_path}/#{orientation}/#{station}") do
-      {:ok, [image_name]} -> image_name
-      {:ok, []} -> nil
-      {:error, _error} -> get_outfront_image_name(sftp_conn, station, orientation, retry - 1)
-    end
   end
 end
