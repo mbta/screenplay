@@ -1,11 +1,9 @@
-import React from 'react';
+import React from "react";
 
 interface WizardStepperProps {}
 
 const WizardStepper = (props: WizardStepperProps): JSX.Element => {
-  return (
-    <></>
-  )
+  return <></>;
 };
 
 export default WizardStepper;

@@ -12,7 +12,7 @@
 
 html {
   background: $gray-700;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   body {
     margin: 0;
   }
@@ -62,9 +62,22 @@ html {
   }
 }
 
-.text-14 { font-size: 14px; }
-.text-16 { font-size: 16px; }
-.text-30 { font-size: 30px; line-height: 36px; }
-.weight-500 { font-weight: 500; }
-.weight-700 { font-weight: 700; }
-.weight-800 { font-weight: 800; }
+.text-14 {
+  font-size: 14px;
+}
+.text-16 {
+  font-size: 16px;
+}
+.text-30 {
+  font-size: 30px;
+  line-height: 36px;
+}
+.weight-500 {
+  font-weight: 500;
+}
+.weight-700 {
+  font-weight: 700;
+}
+.weight-800 {
+  font-weight: 800;
+}

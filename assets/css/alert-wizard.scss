@@ -31,7 +31,7 @@
           height: 12px;
           margin-right: 16px;
         }
-      } 
+      }
     }
     .wizard-stepper {
       background: $gray-200;
@@ -73,7 +73,7 @@
           }
         }
       }
-      
+
       .step-body {
         background: $gray-100;
         // ok this padding will need to be auto eventually
@@ -85,7 +85,7 @@
           margin-right: 50px;
           flex-shrink: 0;
         }
-        .message-select{
+        .message-select {
           white-space: normal;
           height: auto;
           width: 100%;
@@ -102,7 +102,7 @@
         }
         //  END OF CREATE MESSAGE CLASSES
 
-        // PICK STATIONS CLASSES  
+        // PICK STATIONS CLASSES
         .station-column {
           flex: 1 1 0px;
           margin-right: 24px;
@@ -110,9 +110,8 @@
           &.green {
             margin-right: 0;
           }
-          
         }
-        
+
         // END PICK STATIONS CLASSES
       }
     }
@@ -127,7 +126,7 @@
   flex-direction: column;
   align-items: center;
   border-radius: 0 8px 8px 0;
-  
+
   .preview-title {
     color: white;
     text-transform: uppercase;
@@ -163,7 +162,7 @@
     background: $gray-600;
     display: flex;
     align-items: center;
-    color: white; 
+    color: white;
     width: 100%;
     > * {
       margin-right: 8px;
@@ -179,12 +178,12 @@
   &.line {
     border-radius: 6px 6px 0 0;
   }
-  
+
   label {
     display: flex;
     align-items: center;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     margin: 0 16px 0 0;
   }
   .line-name {
@@ -240,7 +239,7 @@
 }
 
 .wizard-nav-footer {
-  background-color: #F3F4F6E5;
+  background-color: #f3f4f6e5;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -261,7 +260,6 @@
     :first-child {
       margin-right: 14.5px;
     }
-    
   }
   button[disabled] {
     background: $gray-500;
@@ -282,7 +280,7 @@
   background: white;
   border: 1px solid $gray-200;
   padding: 12px;
-  
+
   &.option-one {
     border-radius: 6px 6px 0 0;
   }
@@ -290,7 +288,7 @@
     border-radius: 0 0 6px 6px;
   }
 
-  input[type='radio'] {
+  input[type="radio"] {
     margin-right: 17px;
   }
 }
