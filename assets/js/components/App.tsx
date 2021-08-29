@@ -61,7 +61,7 @@ class App extends React.Component<AppProps, AppState> {
             </div>
           </div>
           { this.state.alertWizardOpen
-            ? <AlertWizard triggerConfirmation={ this.openModal }/>
+            ? <AlertWizard triggerConfirmation={ this.openModal } toggleAlertWizard={this.toggleAlertWizard.bind(this)} />
             : <AlertDashboard startAlertWizard={this.toggleAlertWizard.bind(this)}/>
           }
         </div>

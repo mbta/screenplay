@@ -33,4 +33,7 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
+# Local storage of takeover messages
+/priv/alerts.json
+
 .envrc

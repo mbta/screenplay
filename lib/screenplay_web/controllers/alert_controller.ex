@@ -16,6 +16,7 @@ defmodule ScreenplayWeb.AlertController do
 
     user = get_session(conn, "username")
 
+    message = Alert.message_from_json(message)
     alert = Alert.new(message, stations, schedule, user)
     :ok = State.add_alert(alert)
 
@@ -42,6 +43,7 @@ defmodule ScreenplayWeb.AlertController do
     start_dt = alert.schedule.start
     end_dt = DateTime.add(start_dt, 60 * 60 * duration_in_hours, :second)
     schedule = %{start: start_dt, end: end_dt}
+    message = Alert.message_from_json(message)
     changes = %{message: message, stations: stations, schedule: schedule}
 
     user = get_session(conn, "username")

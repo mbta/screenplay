@@ -66,6 +66,7 @@ defmodule ScreenplayWeb.Router do
     pipe_through [
       :redirect_prod_http,
       :api,
+      :browser,
       :auth,
       :ensure_auth,
       :ensure_screenplay_group
