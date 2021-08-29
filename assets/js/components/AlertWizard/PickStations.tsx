@@ -1,12 +1,12 @@
-import React from 'react';
-import StationColumn from './StationColumn';
+import React from "react";
+import StationColumn from "./StationColumn";
 
-import { Station } from '../../constants/stations'
+import { Station } from "../../constants/stations";
 
 interface PickStationsProps {
-  selectedStations: Station[]
-  checkStation: (station: Station) => void
-  checkLine: (line: string, checked: boolean) => void
+  selectedStations: Station[];
+  checkStation: (station: Station) => void;
+  checkLine: (line: string, checked: boolean) => void;
 }
 
 const PickStations = (props: PickStationsProps): JSX.Element => {
@@ -16,7 +16,10 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
         <div className="hang-left">
           <div className="step-header weight-700">Stations</div>
           <div>Select stations for Takeover.</div>
-          <div>Messages at transfer stations will be visible at ALL MODES serving that station.</div>
+          <div>
+            Messages at transfer stations will be visible at ALL MODES serving
+            that station.
+          </div>
         </div>
         <div className="hang-right">
           <div className="legend-entry">
@@ -34,17 +37,23 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
         </div>
       </div>
       <div className="step-body stations">
-        <div className={`station-column red`}><StationColumn line="red" { ...props }/></div>
-        <div className={`station-column orange`}><StationColumn line="orange" { ...props }/></div>
-        <div className="station-column">
-          <StationColumn line="blue" { ...props }/>
-          <br/>
-          <StationColumn line="silver" { ...props }/>
+        <div className={`station-column red`}>
+          <StationColumn line="red" {...props} />
         </div>
-        <div className={`station-column green`}><StationColumn line="green" { ...props }/></div>
+        <div className={`station-column orange`}>
+          <StationColumn line="orange" {...props} />
+        </div>
+        <div className="station-column">
+          <StationColumn line="blue" {...props} />
+          <br />
+          <StationColumn line="silver" {...props} />
+        </div>
+        <div className={`station-column green`}>
+          <StationColumn line="green" {...props} />
+        </div>
       </div>
     </>
-  )
+  );
 };
 
 export default PickStations;

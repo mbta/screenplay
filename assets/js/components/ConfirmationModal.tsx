@@ -1,6 +1,6 @@
 import React from "react";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 interface ModalProps {
   show: boolean;
@@ -24,8 +24,8 @@ const ConfirmationModal = (props: ModalProps): JSX.Element => {
       </Modal.Header>
       <Modal.Body>
         <p>
-          Canceling now will lose any progress you have made.
-          This action cannot be undone.
+          Canceling now will lose any progress you have made. This action cannot
+          be undone.
         </p>
       </Modal.Body>
       <Modal.Footer>
@@ -34,6 +34,6 @@ const ConfirmationModal = (props: ModalProps): JSX.Element => {
       </Modal.Footer>
     </Modal>
   );
-}
+};
 
-export default ConfirmationModal
+export default ConfirmationModal;
