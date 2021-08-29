@@ -21,13 +21,13 @@ defmodule Screenplay.Outfront.FakeSFTPClient do
   end
 
   def write_file(_conn, path, _data) do
-    _ = Logger.info("Writing to #{path}")
+    _ = Logger.info("Writing to fake #{path}")
 
     :ok
   end
 
   def delete_file(_conn, path) do
-    _ = Logger.info("Deleting file at #{path}")
+    _ = Logger.info("Deleting file at fake #{path}")
 
     :ok
   end
