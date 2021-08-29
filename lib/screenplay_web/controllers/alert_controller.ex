@@ -2,6 +2,7 @@ defmodule ScreenplayWeb.AlertController do
   use ScreenplayWeb, :controller
 
   alias Screenplay.Alerts.{Alert, State}
+  alias Screenplay.Outfront.SFTP
 
   def create(conn, %{
         "message" => message,
@@ -20,8 +21,7 @@ defmodule ScreenplayWeb.AlertController do
     alert = Alert.new(message, stations, schedule, user)
     :ok = State.add_alert(alert)
 
-    sftp_module = Application.get_env(:screenplay, :sftp_module)
-    _ = sftp_module.set_takeover_image(stations, portrait_png, landscape_png)
+    _ = SFTP.set_takeover_images(stations, portrait_png, landscape_png)
 
     json(conn, %{success: true})
   end
@@ -51,8 +51,7 @@ defmodule ScreenplayWeb.AlertController do
     new_alert = Alert.update(alert, changes, user)
     :ok = State.update_alert(id, new_alert)
 
-    sftp_module = Application.get_env(:screenplay, :sftp_module)
-    _ = sftp_module.set_takeover_image(stations, portrait_png, landscape_png)
+    _ = SFTP.set_takeover_images(stations, portrait_png, landscape_png)
 
     json(conn, %{success: true})
   end
@@ -65,8 +64,7 @@ defmodule ScreenplayWeb.AlertController do
     %Alert{stations: stations} = State.get_alert(id)
     :ok = State.delete_alert(id)
 
-    sftp_module = Application.get_env(:screenplay, :sftp_module)
-    _ = sftp_module.clear_images(stations)
+    _ = SFTP.clear_takeover_images(stations)
 
     json(conn, %{success: true})
   end
