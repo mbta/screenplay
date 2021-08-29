@@ -76,7 +76,7 @@ defmodule Screenplay.Outfront.SFTP do
       write_image(conn, station, "Landscape", landscape_png)
     end)
 
-    sftp_client_module().disconnect()
+    sftp_client_module().disconnect(conn)
   end
 
   def clear_takeover_images(stations) do
@@ -90,7 +90,7 @@ defmodule Screenplay.Outfront.SFTP do
       end
     )
 
-    sftp_client_module().disconnect()
+    sftp_client_module().disconnect(conn)
   end
 
   defp sftp_client_module do
@@ -124,7 +124,7 @@ defmodule Screenplay.Outfront.SFTP do
 
   defp write_image(conn, station, orientation, image_data, retry) do
     case do_write_image(conn, station, orientation, image_data, retry) do
-      {:ok, result} -> result
+      :ok -> :ok
       _ -> write_image(conn, station, orientation, image_data, retry - 1)
     end
   end
