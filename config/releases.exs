@@ -21,4 +21,7 @@ sftp_module =
 
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME"),
-  sftp_module: sftp_module
+  sftp_module: sftp_module,
+  outfront_ssh_key: System.get_env("OUTFRONT_SSH_KEY"),
+  outfront_sftp_user: System.get_env("OUTFRONT_SFTP_USER"),
+  outfront_sftp_domain: System.get_env("OUTFRONT_SFTP_DOMAIN")

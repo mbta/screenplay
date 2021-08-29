@@ -5,11 +5,6 @@ defmodule Screenplay.Outfront.SFTP do
   @orientations ["Portrait", "Landscape"]
   @retries 3
 
-  @host Application.compile_env(:screenplay, :sftp_host)
-  @user Application.compile_env(:screenplay, :sftp_user)
-  @password Application.compile_env(:screenplay, :sftp_password)
-  @remote_path Application.compile_env(:screenplay, :sftp_remote_path)
-
   @stations_map %{
     "Park Street" => "001_XFER_RED_GREEN_PARK",
     "Downtown Crossing" => "002_XFER_RED_ORANGE_SILVER_DOWNTOWNCROSSING",
@@ -77,7 +72,15 @@ defmodule Screenplay.Outfront.SFTP do
   defp start_connection(_retry = 0), do: raise("Could not establish SFTP connection")
 
   defp start_connection(retry) do
-    case SFTPClient.connect(host: @host, user: @user, password: @password) do
+    host = Application.get_env(:screenplay, :outfront_sftp_domain)
+    user = Application.get_env(:screenplay, :outfront_sftp_user)
+    key = Application.get_env(:screenplay, :outfront_ssh_key)
+
+    case SFTPClient.connect(
+           host: host,
+           user: user,
+           key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
+         ) do
       {:ok, sftp_conn} -> sftp_conn
       {:error, _error} -> start_connection(retry - 1)
     end
