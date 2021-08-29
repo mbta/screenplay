@@ -19,7 +19,6 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
 
     const expirationDate = new Date();
     expirationDate.setHours(expirationDate.getHours() + props.duration);
-    console.log("expiration: ", expirationDate);
     expirationString = expirationDate.toLocaleDateString(undefined, {
       weekday: "short",
       month: "long",

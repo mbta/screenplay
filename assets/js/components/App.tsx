@@ -70,8 +70,6 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   startEditWizard(alertData: AlertData) {
-    console.log(alertData);
-
     this.setState((state) => ({
       alertData: alertData,
       alertWizardOpen: true,
