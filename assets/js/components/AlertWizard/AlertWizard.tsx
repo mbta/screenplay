@@ -30,7 +30,8 @@ const modalContent = (
 )
 
 interface AlertWizardProps {
-  triggerConfirmation: (modalContent: JSX.Element) => void
+  triggerConfirmation: (modalContent: JSX.Element) => void,
+  toggleAlertWizard: () => void
 }
 
 interface AlertWizardState {
@@ -41,6 +42,8 @@ interface AlertWizardState {
   cannedMessage: string;
   customMessage: string;
   duration: string | number;
+  landscapePNG: string | null;
+  portraitPNG: string | null;
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
@@ -55,7 +58,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       messageOption: "1",
       cannedMessage: "",
       customMessage: "",
-      duration: 1
+      duration: 1,
+      landscapePNG: null,
+      portraitPNG: null,
     };
 
     this.stepForward = this.stepForward.bind(this);
@@ -107,13 +112,19 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   stepForward() {
-    if (this.state.step < 4) {
+    if (this.state.step === 4) {
+      this.handleSubmit()
+    } else {
+      // Temporary hack: to avoid race conditions, convert the SVG to a PNG upon station selection,
+      // which must always happen after message selection.
+      if (this.state.step === 2) {
+        this.makePNG("portrait", svgShortSide, svgLongSide, (url) => this.setState({portraitPNG: url}))
+        this.makePNG("landscape", svgLongSide, svgShortSide, (url) => this.setState({landscapePNG: url}))
+      }
+
       this.setState(state => ({
         step: state.step + 1
       }))
-    } else {
-      this.makePNG("portrait", svgShortSide, svgLongSide, this.handleSubmit)
-      this.makePNG("landscape", svgLongSide, svgShortSide, this.handleSubmit)
     }
   }
 
@@ -127,9 +138,51 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     this.setState({step});
   }
 
-  handleSubmit(url: string) {
-    // Todo: this'll make the fetch to the AlertController and post the url
-    console.log(url)
+  handleSubmit() {
+    const csrfMetaElement = document.head.querySelector("[name~=csrf-token][content]") as HTMLMetaElement
+    const csrfToken = csrfMetaElement.content
+
+    let message;
+    if (this.state.messageOption === "1") {
+      message = {type: "canned", id: parseInt(this.state.cannedMessage)}
+    } else {
+      message = {type: "custom", text: this.state.customMessage}
+    }
+
+    const stations = this.state.selectedStations.map(({name}) => name)
+    const duration = this.state.duration
+    const landscapePNG = this.state.landscapePNG
+    const portraitPNG = this.state.portraitPNG
+
+    const data = { message, stations, duration, portrait_png: portraitPNG, landscape_png: landscapePNG}
+    fetch("/api/create", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-csrf-token': csrfToken,
+      },
+      credentials: "include",
+      body: JSON.stringify(data)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText)
+        }
+
+        return response.json()
+      })
+      .then(({success}) => {
+        if (success) {
+          this.props.toggleAlertWizard();
+        } else {
+          // Should this be a toast or other user-visible message?
+          console.log('Error when creating alert with data: ', data)
+        }
+      })
+      .catch((error) => {
+        // Should this be a toast or other user-visible message?
+        console.log('Failed to create alert: ', error)
+      })
   }
 
   addStation(station: Station) {

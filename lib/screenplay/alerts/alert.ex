@@ -117,11 +117,11 @@ defmodule Screenplay.Alerts.Alert do
     %{"type" => "custom", "text" => text}
   end
 
-  defp message_from_json(%{"type" => "canned", "id" => id}) do
+  def message_from_json(%{"type" => "canned", "id" => id}) do
     %{type: :canned, id: id}
   end
 
-  defp message_from_json(%{"type" => "custom", "text" => text}) do
+  def message_from_json(%{"type" => "custom", "text" => text}) do
     %{type: :custom, text: text}
   end
 
