@@ -151,8 +151,15 @@ defmodule Screenplay.Outfront.SFTP do
       :ok ->
         :ok
 
-      {:error, msg} ->
-        _ = Logger.info("Delete image failed with: #{msg}")
+      {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
+        _ =
+          Logger.info(
+            "Skipping deleting #{orientation} image for #{station} as file does not exist"
+          )
+
+        :ok
+
+      _ ->
         delete_image(conn, station, orientation, retry - 1)
     end
   end
