@@ -163,9 +163,12 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   defp get_outfront_directory_for_station(station) do
-    _ = Map.get(@stations_to_outfront_directories, station)
+    dir = Map.get(@stations_to_outfront_directories, station)
 
-    # Temporarily always use test station directory
-    "ZZZ_TEST_STATION"
+    # Temporarily always use test station directory on prod
+    case sftp_client_module() do
+      SFTPClient -> "ZZZ_TEST_STATION"
+      Screenplay.Outfront.FakeSFTPClient -> dir
+    end
   end
 end
