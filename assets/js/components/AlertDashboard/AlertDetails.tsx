@@ -1,60 +1,80 @@
 import React from "react";
+import StackedStationCards from "../AlertWizard/StackedStationCards";
 import { AlertData } from "../App";
+import { formatDate, formatTime, getMessageString, matchStation } from "../../util";
+import { BanIcon, PencilIcon } from "@heroicons/react/solid";
+import { ModalDetails } from "../ConfirmationModal";
 
 interface AlertDetailsProps {
   data: any;
   setLastChangeTime: (time: number) => void;
   startEditWizard: (data: AlertData) => void;
+  clearAlert: (id: string, setLastChangeTime: (time: number) => void) => void
+  triggerConfirmation: (modalDetails: ModalDetails) => void;
 }
-
-const clearAlert = (id: string, setLastChangeTime: (time: number) => void) => {
-  const csrfMetaElement = document.head.querySelector(
-    "[name~=csrf-token][content]"
-  ) as HTMLMetaElement;
-  const csrfToken = csrfMetaElement.content;
-  const data = { id };
-
-  fetch("/api/clear", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-csrf-token": csrfToken,
-    },
-    credentials: "include",
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      return response.json();
-    })
-    .then(({ success }) => {
-      if (success) {
-        setLastChangeTime(Date.now());
-      } else {
-        // Should this be a toast or other user-visible message?
-        console.log("Error when clearing with id: ", id);
-      }
-    })
-    .catch((error) => {
-      // Should this be a toast or other user-visible message?
-      console.log("Failed to clear alert: ", error);
-    });
-};
 
 const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   const { data, setLastChangeTime, startEditWizard } = props;
-  const { id, message, stations } = data;
+  const { created_by, id, message, schedule, stations } = data;
+
+  const stationDetails = stations.map(matchStation);
+
+  const startDate = new Date(schedule.start)
+  const endDate = new Date(schedule.end)
+  const startDateString = formatDate(startDate) + ' @ ' + formatTime(startDate);
+  const endDateString = formatDate(endDate) + ' @ ' + formatTime(endDate);
+
+  const messageString = getMessageString(message)
+
+  const modalDetails: ModalDetails = {
+    icon: <BanIcon className="modal-icon" />,
+    header: "Clear Alert",
+    description: "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
+    cancelText: "Keep Alert",
+    confirmJSX: <>
+      <BanIcon className="button-icon" />
+      Clear Alert
+    </>,
+    onSubmit: () => props.clearAlert(id, setLastChangeTime)
+  };
 
   return (
-    <tr>
-      <td>{id}</td>
-      <td>{stations.join(", ")}</td>
-      <td onClick={() => startEditWizard(data)}>edit</td>
-      <td onClick={() => clearAlert(id, setLastChangeTime)}>clear</td>
-    </tr>
+    <div className="alert-card">
+      <div className="alert-preview"></div>
+      <div className="alert-details">
+        <div className="alert-header">
+          <StackedStationCards stations={stationDetails} className="published-alert"/>
+          <button className="edit-button" onClick={() => startEditWizard(data)}>
+            <PencilIcon className="button-icon" />
+            Edit
+          </button>
+          <button className="clear-button" onClick={() => props.triggerConfirmation(modalDetails)}>
+            <BanIcon className="button-icon" />
+            Clear Alert
+          </button>
+        </div>
+        <table className="details-grid confirmation">
+          <tbody>
+            <tr>
+              <td>Message text</td>
+              <td className="emphasized-cell">{messageString}</td>
+            </tr>
+            <tr className="gray-row">
+              <td>Start</td>
+              <td className="emphasized-cell">{startDateString}</td>
+            </tr>
+            <tr>
+              <td>Expiration</td>
+              <td className="emphasized-cell">{endDateString}</td>
+            </tr>
+            <tr className="gray-row">
+              <td>Posted by</td>
+              <td className="emphasized-cell round-corner">{created_by}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 

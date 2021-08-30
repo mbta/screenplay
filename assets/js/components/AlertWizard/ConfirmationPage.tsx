@@ -1,5 +1,6 @@
 import React from "react";
 import { Station } from "../../constants/stations";
+import { formatDate, formatTime } from "../../util";
 import StackedStationCards from "./StackedStationCards";
 
 interface ConfirmationPageProps {
@@ -19,14 +20,8 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
 
     const expirationDate = new Date();
     expirationDate.setHours(expirationDate.getHours() + props.duration);
-    expirationString = expirationDate.toLocaleDateString(undefined, {
-      weekday: "short",
-      month: "long",
-      day: "numeric",
-    });
-    expirationTime = new Intl.DateTimeFormat(undefined, {
-      timeStyle: "short",
-    }).format(expirationDate);
+    expirationString = formatDate(expirationDate);
+    expirationTime = formatTime(expirationDate);
   }
 
   return (
@@ -37,7 +32,7 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
           <div>Double check that all information is correct</div>
         </div>
       </div>
-      <table className="confirmation-grid">
+      <table className="details-grid">
         <tbody>
           <tr className="gray-row">
             <td>Message text</td>
@@ -52,7 +47,7 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
             <td>Stations</td>
             <td>
               <StackedStationCards
-                selectedStations={props.selectedStations}
+                stations={props.selectedStations}
                 className="confirmation"
               />
             </td>

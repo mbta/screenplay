@@ -3,18 +3,19 @@ import stationsByLine, { Station } from "../../constants/stations";
 import { abbreviation, color } from "../../util";
 
 interface StackedStationCardsProps {
-  selectedStations: Station[];
+  stations: Station[];
   className?: string;
 }
 
 const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
+  console.log('props.stations', props.stations)
   return (
     <div
       className={`stacked-station-cards ${
         props.className ? props.className : ""
       }`}
     >
-      {props.selectedStations.map((station) => {
+      {props.stations.map((station) => {
         if (!station.portrait && !station.landscape) {
           return null;
         }
