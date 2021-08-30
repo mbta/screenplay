@@ -270,9 +270,20 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       selectedStations: state.selectedStations.concat(station),
     }));
   }
+
+  stationsAreEqual(s1: Station, s2: Station): boolean {
+    return (
+      s1.name === s2.name &&
+      s1.portrait === s2.portrait &&
+      s1.landscape === s2.landscape
+    );
+  }
+
   removeStation(station: Station) {
     this.setState((state) => ({
-      selectedStations: state.selectedStations.filter((x) => x !== station),
+      selectedStations: state.selectedStations.filter(
+        (x) => !this.stationsAreEqual(x, station)
+      ),
     }));
   }
 
