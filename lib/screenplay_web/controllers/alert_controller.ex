@@ -77,6 +77,7 @@ defmodule ScreenplayWeb.AlertController do
 
   def list(conn, _params) do
     alerts_json = State.get_all_alerts() |> Enum.map(&Alert.to_json/1)
+    IO.inspect(alerts_json, label: "alerts_json")
     json(conn, alerts_json)
   end
 

@@ -141,7 +141,7 @@ const WizardSidebar = (props: WizardSidebarProps): JSX.Element => {
         </svg>
       </svg>
 
-      <StackedStationCards selectedStations={props.selectedStations} />
+      <StackedStationCards stations={props.selectedStations} />
     </div>
   );
 };

@@ -16,7 +16,6 @@ html {
   font-size: 62.5%;
 }
 body {
-  color: #000000;
   font-size: 1.6em;
   line-height: 1.6;
 }
@@ -50,15 +49,10 @@ input[type="submit"] {
   text-decoration: none;
   white-space: nowrap;
 }
-.button:focus,
 .button:hover,
-button:focus,
 button:hover,
-input[type="button"]:focus,
 input[type="button"]:hover,
-input[type="reset"]:focus,
 input[type="reset"]:hover,
-input[type="submit"]:focus,
 input[type="submit"]:hover {
   background-color: #606c76;
   border-color: #606c76;

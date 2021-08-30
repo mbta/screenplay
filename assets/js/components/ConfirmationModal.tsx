@@ -1,36 +1,42 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
+
+export interface ModalDetails {
+  icon: JSX.Element,
+  header: string,
+  description: string,
+  cancelText: string,
+  confirmJSX: JSX.Element,
+  onSubmit: (...args: any) => void
+}
 
 interface ModalProps {
   show: boolean;
   onHide: () => void;
-  onSubmit: () => void;
-  //children: JSX.Element;
+  modalDetails: ModalDetails;
 }
 
 const ConfirmationModal = (props: ModalProps): JSX.Element => {
+  const { icon, header, description, cancelText, confirmJSX, onSubmit } = props.modalDetails
   return (
     <Modal
-      {...props}
+      show={props.show}
+      onHide={props.onHide}
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Cancel new Takeover Alert
-        </Modal.Title>
-      </Modal.Header>
       <Modal.Body>
-        <p>
-          Canceling now will lose any progress you have made. This action cannot
-          be undone.
-        </p>
+        <div className="modal-header">
+          <div className="icon-circle">{icon}</div>
+          <div className="header-text">{header}</div>
+        </div>
+        <div className="modal-description">{description}</div>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={props.onHide}>Never mind</Button>
-        <Button onClick={props.onSubmit}>Confirm cancelation</Button>
+        <button className="cancel-button" onClick={props.onHide}>{cancelText}</button>
+        <button className="confirm-button" onClick={onSubmit}>{confirmJSX}</button>
       </Modal.Footer>
     </Modal>
   );

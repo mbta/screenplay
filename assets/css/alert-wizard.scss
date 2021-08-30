@@ -136,108 +136,6 @@
   }
 }
 
-.separator {
-  width: 100%;
-  height: 1px;
-  background: $gray-600;
-  display: flex;
-  justify-content: center;
-  > div {
-    height: 1px;
-    width: calc(100% - 12px);
-    background: $gray-400;
-  }
-  &.confirmation {
-    background: none;
-  }
-}
-
-.station-card {
-  padding: 12px;
-  font-size: 14px;
-  line-height: 14px;
-  font-weight: 700;
-
-  &.read-only {
-    background: $gray-600;
-    display: flex;
-    align-items: center;
-    color: white;
-    width: 100%;
-    > * {
-      margin-right: 8px;
-    }
-  }
-  &.confirmation {
-    background: white;
-    .station-name {
-      color: $gray-800;
-      font-weight: 600;
-    }
-  }
-  &.line {
-    border-radius: 6px 6px 0 0;
-  }
-
-  label {
-    display: flex;
-    align-items: center;
-  }
-  input[type="checkbox"] {
-    margin: 0 16px 0 0;
-  }
-  .line-name {
-    font-size: 18px;
-    line-height: 18px;
-    color: white;
-    padding: 3px 12px;
-    border-radius: 13.5px;
-    letter-spacing: 0.375px;
-    font-weight: 700;
-    &.abbrev {
-      padding: 3px 6.56px;
-      height: fit-content;
-    }
-  }
-  .station-name {
-    flex-grow: 1;
-    &.disabled {
-      margin-left: 29px;
-      font-weight: normal;
-      color: $gray-400;
-    }
-  }
-  .screen-icon {
-    margin-left: 8px;
-    align-self: normal;
-  }
-}
-.station-card.selectable {
-  border: 1px solid $gray-200;
-  background: white;
-
-  &:last-of-type {
-    border-radius: 0 0 6px 6px;
-  }
-}
-.stacked-station-cards {
-  width: 100%;
-  &.confirmation {
-    width: fit-content;
-  }
-  .station-card:first-child {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-  }
-  .station-card:nth-last-child(2) {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
-  .separator:last-child {
-    display: none;
-  }
-}
-
 .wizard-nav-footer {
   background-color: #f3f4f6e5;
   display: flex;
@@ -248,31 +146,12 @@
   position: fixed;
   bottom: 12px;
   width: calc(100% - 120px);
-
-  button {
-    display: flex;
-    align-items: center;
-    padding: 0 17px;
-    font-weight: 500;
-    font-size: 16px;
-    background: $pink-700;
-    border: none;
-    :first-child {
-      margin-right: 14.5px;
-    }
-  }
-  button[disabled] {
-    background: $gray-500;
-    opacity: 1;
-  }
-
-  .arrow-icon {
-    width: 15px;
-  }
+  
   .forward-button {
     margin-left: auto;
   }
 }
+
 .radio-option {
   display: inline-flex;
   align-items: center;
@@ -304,7 +183,8 @@
   margin-bottom: 24px;
 }
 
-.confirmation-grid {
+.details-grid {
+  margin-bottom: 0;
   .gray-row {
     background: $gray-100;
   }
@@ -315,6 +195,9 @@
   .emphasized-cell {
     font-weight: 600;
     color: $gray-800;
+    &.round-corner {
+      border-bottom-right-radius: 8px;
+    }
   }
   .edit-link {
     cursor: pointer;

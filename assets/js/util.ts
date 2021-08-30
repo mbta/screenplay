@@ -1,3 +1,7 @@
+import { CannedMessage, CustomMessage } from "./components/App";
+import CANNED_MESSAGES from "./constants/messages";
+import STATIONS_BY_LINE from "./constants/stations";
+
 export const color = (line: string) => {
   switch (line) {
     case "red":
@@ -27,3 +31,38 @@ export const abbreviation = (line: string) => {
       return "GL";
   }
 };
+
+const ALL_STATIONS = ["blue", "green", "orange", "red", "silver"].flatMap(
+  (line) => STATIONS_BY_LINE[line]
+);
+
+export const matchStation = (station: string) => {
+  const result = ALL_STATIONS.find(({ name }) => name === station);
+  if (result === undefined) {
+    throw new TypeError(
+      `Station ${station} not present in list of all stations!`
+    );
+  }
+  return result;
+};
+
+export const formatDate = (date: Date) => {
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+export const formatTime = (date: Date) => {
+  return new Intl.DateTimeFormat(undefined, {
+    timeStyle: "short",
+  }).format(date);
+}
+
+export const getMessageString = (message: CannedMessage | CustomMessage) => {
+  // @ts-ignore
+  if (message.id) return CANNED_MESSAGES[parseInt(message.id)]
+  // @ts-ignore
+  else return message.text
+}

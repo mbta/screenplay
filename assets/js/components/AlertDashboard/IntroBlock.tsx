@@ -26,7 +26,7 @@ const IntroBlock = (props: IntroBlockProps): JSX.Element => {
         </li>
       </ul>
       <button className="create-alert-button" onClick={props.startAlertWizard}>
-        <PlusCircleIcon className="plus-circle" />
+        <PlusCircleIcon className="button-icon" />
         <span className="text-16">Create new Takeover Alert</span>
       </button>
     </div>

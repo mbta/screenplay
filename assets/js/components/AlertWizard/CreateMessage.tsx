@@ -1,5 +1,5 @@
 import React from "react";
-import cannedMessages from "../../constants/messages";
+import CANNED_MESSAGES from "../../constants/messages";
 import { charLimit } from "../../constants/misc";
 
 interface CreateMessageProps {
@@ -47,7 +47,7 @@ const CreateMessage = (props: CreateMessageProps) => {
               <option value={-1} hidden>
                 Select canned message…
               </option>
-              {cannedMessages.map((message, index) => (
+              {CANNED_MESSAGES.map((message, index) => (
                 <option key={index} value={index}>
                   {message}
                 </option>

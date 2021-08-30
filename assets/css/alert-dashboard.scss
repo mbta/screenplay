@@ -40,17 +40,44 @@
 
   .create-alert-button {
     background: $pink-700;
-    border: none;
-    padding: 17px;
-    margin: 0;
     height: 50px;
-    display: flex;
-    align-items: center;
+  }
+}
 
-    .plus-circle {
-      height: 16px;
-      width: 16px;
-      margin-right: 10px;
+.alerts-list-header {
+  font-weight: 800;
+  margin: 48px 0 3px 24px;
+  color: white;
+}
+
+.alert-card {
+  display: flex;
+  margin-top: 24px;
+  .alert-preview {
+    width: 312px;
+    background: $gray-500;
+    border-radius: 8px 0 0 8px;
+  }
+  .alert-details {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 0 8px 8px 0;
+  }
+  .alert-header {
+    display: flex;
+    background: $gray-200;
+    align-items: center;
+    border-top-right-radius: 8px;
+    padding: 12px 24px;
+    button {
+      margin-left: 24px;
+    }
+    .edit-button {
+      color: $gray-700;
+      background-color: white;
+    }
+    .clear-button {
+      background-color: $cyan-700;
     }
   }
 }

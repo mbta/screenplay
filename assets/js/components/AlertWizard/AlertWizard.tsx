@@ -8,34 +8,20 @@ import WizardStepper from "./WizardStepper";
 import { AlertData } from "../App";
 
 import stationsByLine, { Station } from "../../constants/stations";
-import cannedMessages from "../../constants/messages";
+import CANNED_MESSAGES from "../../constants/messages";
 
 import { XIcon } from "@heroicons/react/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgShortSide } from "../../constants/misc";
+import { matchStation } from "../../util";
 
 import parseISO from "date-fns/parseISO";
 import differenceInHours from "date-fns/differenceInHours";
-
-const modalContent = (
-  <div className="cancel-modal">
-    <div className="cancel-body">
-      <div className="cancel-icon"></div>
-      <div className="cancel-text">
-        <div>Header</div>
-        <div>Description</div>
-      </div>
-    </div>
-    <div className="cancel-footer">
-      <button>Never mind</button>
-      <button>Confirm cancelation</button>
-    </div>
-  </div>
-);
+import { ModalDetails } from "../ConfirmationModal";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
-  triggerConfirmation: (modalContent: JSX.Element) => void;
+  triggerConfirmation: (modalDetails: ModalDetails) => void;
   toggleAlertWizard: () => void;
 }
 
@@ -97,26 +83,12 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     if (message.type === "canned") {
       messageOption = "1";
       cannedMessage = message.id.toString();
-      customMessage = cannedMessages[message.id];
+      customMessage = CANNED_MESSAGES[message.id];
     } else {
       messageOption = "2";
       cannedMessage = "";
       customMessage = message.text;
     }
-
-    const allStations = ["blue", "green", "orange", "red", "silver"].flatMap(
-      (line) => stationsByLine[line]
-    );
-
-    const matchStation = (station: string) => {
-      const result = allStations.find(({ name }) => name === station);
-      if (result === undefined) {
-        throw new TypeError(
-          `Station ${station} not present in list of all stations!`
-        );
-      }
-      return result;
-    };
 
     const selectedStations = stations.map(matchStation);
 
@@ -166,7 +138,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
             selectedStations={this.state.selectedStations}
             message={
               this.state.messageOption == "1"
-                ? cannedMessages[parseInt(this.state.cannedMessage)]
+                ? CANNED_MESSAGES[parseInt(this.state.cannedMessage)]
                 : this.state.customMessage
             }
             duration={this.state.duration}
@@ -333,7 +305,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     this.setState({
       messageOption: "1",
       cannedMessage: event.target.value,
-      customMessage: cannedMessages[index],
+      customMessage: CANNED_MESSAGES[index],
     });
   }
 
@@ -384,6 +356,16 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   render() {
+
+    const modalDetails: ModalDetails = {
+      icon: <XIcon className="modal-icon" />,
+      header: "Cancel new Takeover Alert",
+      description: "Canceling now will lose any progress you have made. This action cannot be undone.",
+      cancelText: "Never mind",
+      confirmJSX: <>Confirm cancellation</>,
+      onSubmit: this.props.toggleAlertWizard
+    };
+
     return (
       <>
         <div className="wizard-container">
@@ -391,7 +373,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
             <div className="wizard-header">
               <button
                 className="wizard-cancel"
-                onClick={() => this.props.triggerConfirmation(modalContent)}
+                onClick={() => this.props.triggerConfirmation(modalDetails)}
               >
                 <XIcon className="x" />
                 <span className="text-16 weight-500">Cancel</span>
@@ -408,7 +390,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
             step={this.state.step}
             message={
               this.state.messageOption == "1"
-                ? cannedMessages[parseInt(this.state.cannedMessage)]
+                ? CANNED_MESSAGES[parseInt(this.state.cannedMessage)]
                 : this.state.customMessage
             }
           />
