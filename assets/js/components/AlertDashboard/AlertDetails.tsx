@@ -4,6 +4,7 @@ import { AlertData } from "../App";
 import { formatDate, formatTime, getMessageString, matchStation } from "../../util";
 import { BanIcon, PencilIcon } from "@heroicons/react/solid";
 import { ModalDetails } from "../ConfirmationModal";
+import SVGPreviews from "../AlertWizard/SVGPreviews";
 
 interface AlertDetailsProps {
   data: any;
@@ -40,7 +41,9 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
 
   return (
     <div className="alert-card">
-      <div className="alert-preview"></div>
+      <div className="alert-preview">
+        <SVGPreviews showText={ true } message={messageString} />
+      </div>
       <div className="alert-details">
         <div className="alert-header">
           <StackedStationCards stations={stationDetails} className="published-alert"/>
