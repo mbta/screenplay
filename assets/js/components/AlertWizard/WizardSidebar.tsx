@@ -90,25 +90,28 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
     if (this.props.step > 1) {
       const portraitSVG = document.getElementById("portrait-svg");
       const landscapeSVG = document.getElementById("landscape-svg");
-
-      const portraitSvgText = createSVGtext(
-        this.props.message,
-        svgShortSide / 2,
-        svgLongSide / 2,
-        "portrait",
-        svgPortraitLineLength,
-        svgLineHeight
-      );
-      portraitSVG.append(portraitSvgText);
-      const landscapeSvgText = createSVGtext(
-        this.props.message,
-        svgLongSide / 2,
-        svgShortSide / 2,
-        "landscape",
-        svgLandscapeLineLength,
-        svgLineHeight
-      );
-      landscapeSVG.append(landscapeSvgText);
+      if (portraitSVG) {
+        const portraitSvgText = createSVGtext(
+          this.props.message,
+          svgShortSide / 2,
+          svgLongSide / 2,
+          "portrait",
+          svgPortraitLineLength,
+          svgLineHeight
+        );
+        portraitSVG.append(portraitSvgText);
+      }
+      if (landscapeSVG) {
+        const landscapeSvgText = createSVGtext(
+          this.props.message,
+          svgLongSide / 2,
+          svgShortSide / 2,
+          "landscape",
+          svgLandscapeLineLength,
+          svgLineHeight
+        );
+        landscapeSVG.append(landscapeSvgText);
+      }
     }
   }
 
