@@ -3,14 +3,18 @@ defmodule ScreenplayWeb.AlertController do
 
   alias Screenplay.Alerts.{Alert, State}
   alias Screenplay.Outfront.SFTP
+  alias ScreenplayWeb.UserActionLogger
 
-  def create(conn, %{
-        "message" => message,
-        "stations" => stations,
-        "duration" => duration_in_hours,
-        "portrait_png" => portrait_png,
-        "landscape_png" => landscape_png
-      }) do
+  def create(
+        conn,
+        params = %{
+          "message" => message,
+          "stations" => stations,
+          "duration" => duration_in_hours,
+          "portrait_png" => portrait_png,
+          "landscape_png" => landscape_png
+        }
+      ) do
     start_dt = DateTime.utc_now()
     end_dt = DateTime.add(start_dt, 60 * 60 * duration_in_hours, :second)
     schedule = %{start: start_dt, end: end_dt}
@@ -19,6 +23,13 @@ defmodule ScreenplayWeb.AlertController do
 
     message = Alert.message_from_json(message)
     alert = Alert.new(message, stations, schedule, user)
+
+    params_to_log =
+      params
+      |> Map.take(["message", "stations", "duration"])
+      |> Map.merge(%{"id" => alert.id})
+
+    _ = UserActionLogger.log(user, :create_alert, params_to_log)
     :ok = State.add_alert(alert)
 
     portrait_image_data = decode_png(portrait_png)
@@ -33,14 +44,17 @@ defmodule ScreenplayWeb.AlertController do
     json(conn, %{success: false})
   end
 
-  def edit(conn, %{
-        "id" => id,
-        "message" => message,
-        "stations" => stations,
-        "duration" => duration_in_hours,
-        "portrait_png" => portrait_png,
-        "landscape_png" => landscape_png
-      }) do
+  def edit(
+        conn,
+        params = %{
+          "id" => id,
+          "message" => message,
+          "stations" => stations,
+          "duration" => duration_in_hours,
+          "portrait_png" => portrait_png,
+          "landscape_png" => landscape_png
+        }
+      ) do
     alert = State.get_alert(id)
 
     start_dt = alert.schedule.start
@@ -52,6 +66,9 @@ defmodule ScreenplayWeb.AlertController do
     user = get_session(conn, "username")
 
     new_alert = Alert.update(alert, changes, user)
+
+    params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
+    _ = UserActionLogger.log(user, :update_alert, params_to_log)
     :ok = State.update_alert(id, new_alert)
 
     portrait_image_data = decode_png(portrait_png)
@@ -66,7 +83,10 @@ defmodule ScreenplayWeb.AlertController do
     json(conn, %{success: false})
   end
 
-  def clear(conn, %{"id" => id}) do
+  def clear(conn, params = %{"id" => id}) do
+    user = get_session(conn, "username")
+    _ = UserActionLogger.log(user, :clear_alert, params)
+
     %Alert{stations: stations} = State.get_alert(id)
     :ok = State.delete_alert(id)
 
