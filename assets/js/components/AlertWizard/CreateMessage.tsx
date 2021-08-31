@@ -25,7 +25,7 @@ const CreateMessage = (props: CreateMessageProps) => {
       <div className="step-body">
         <div className="info">
           <div>Message text</div>
-          <div className="text-14">(512 character max)</div>
+          <div className="text-14">(144 character max)</div>
         </div>
         <div>
           <div
