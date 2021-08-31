@@ -3,6 +3,9 @@ import StackedStationCards from "./StackedStationCards";
 
 import { Station } from "../../constants/stations";
 import {
+  portraitHeightMedian,
+  landscapeHeightMedian,
+  svgFontSize,
   svgLandscapeLineLength,
   svgLineHeight,
   svgLongSide,
@@ -20,8 +23,7 @@ interface WizardSidebarProps {
 //  it up into "tspan" pieces, if the message is too long
 const createSVGtext = (
   message: string,
-  x: number,
-  y: number,
+  heightMedian: number,
   orientation: string,
   maxCharsPerLine: number,
   lineHeight: number
@@ -32,12 +34,6 @@ const createSVGtext = (
   while (svgText.firstChild) {
     svgText.removeChild(svgText.firstChild);
   }
-
-  // Style the font
-  // svgText.setAttributeNS(null, "font-size", svgFontSize.toString());
-  // svgText.setAttributeNS(null, "fill", "#000000"); //  Black text
-  // svgText.setAttributeNS(null, "text-anchor", "middle"); //  Center the text
-  // svgText.setAttributeNS(null, "font-family", "Inter, sans-serif");
 
   // Split the message by max line length
   const words = message.split(" ");
@@ -59,21 +55,22 @@ const createSVGtext = (
   );
 
   // Take the array of message lines and and individual tspans to the text element
+  let y = heightMedian + svgFontSize/2;
+
   const textHeight = linesReducer.array.length * lineHeight;
   linesReducer.array.forEach((line) => {
-    y += lineHeight;
-
     //  Add a new <tspan> element
     const svgTSpan = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "tspan"
     );
-    svgTSpan.setAttributeNS(null, "x", x.toString());
-    svgTSpan.setAttributeNS(null, "y", (y - textHeight / 2).toString());
+    svgTSpan.setAttributeNS(null, "x", "0");
+    svgTSpan.setAttributeNS(null, "y", (y - textHeight/2).toString());
 
     const tSpanTextNode = document.createTextNode(line);
     svgTSpan.appendChild(tSpanTextNode);
     svgText.appendChild(svgTSpan);
+    y += lineHeight;
   });
 
   return svgText;
@@ -88,29 +85,27 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
   // Set up the text of the SVGs
   componentDidUpdate() {
     if (this.props.step > 1) {
-      const portraitSVG = document.getElementById("portrait-svg");
-      const landscapeSVG = document.getElementById("landscape-svg");
-      if (portraitSVG) {
+      const portraitTextContainer = document.getElementById("Portrait-Text-Container");
+      const landscapeTextContainer = document.getElementById("Landscape-Text-Container");
+      if (portraitTextContainer) {
         const portraitSvgText = createSVGtext(
           this.props.message,
-          svgShortSide / 2,
-          svgLongSide / 2,
-          "portrait",
+          portraitHeightMedian,
+          "Portrait",
           svgPortraitLineLength,
           svgLineHeight
         );
-        portraitSVG.append(portraitSvgText);
+        portraitTextContainer.append(portraitSvgText);
       }
-      if (landscapeSVG) {
+      if (landscapeTextContainer) {
         const landscapeSvgText = createSVGtext(
           this.props.message,
-          svgLongSide / 2,
-          svgShortSide / 2,
-          "landscape",
+          landscapeHeightMedian,
+          "Landscape",
           svgLandscapeLineLength,
           svgLineHeight
         );
-        landscapeSVG.append(landscapeSvgText);
+        landscapeTextContainer.append(landscapeSvgText);
       }
     }
   }
@@ -127,7 +122,7 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
             <g id="Outfront-Alert-Empty-Preview" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
               <rect fill="#FFDD00" x="0" y="0" width="1080" height="1920"></rect>
               <g id="CTA" transform="translate(48.000000, 1696.000000)">
-                <text id="url" fontSize="88" fontWeight="700" fill="#171F26">
+                <text id="url" fontFamily="sans-serif" fontSize="88" fontWeight="700" fill="#171F26">
                   <tspan x="255" y="126">mbta.com/alerts</tspan>
                 </text>
                 <g id="Logo/T-KO" fill="#171F26">
@@ -136,7 +131,7 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
               </g>
               <g id="Widget" transform="translate(48.000000, 272.000000)">
                 <path d="M193.04471,0 L952,0 C969.673112,-3.24649801e-15 984,14.326888 984,32 L984,1344 C984,1361.67311 969.673112,1376 952,1376 L32,1376 C14.326888,1376 2.164332e-15,1361.67311 0,1344 L0,189.465938 C-3.65817517e-14,180.854354 3.47089536,172.606236 9.62823578,166.585725 L170.672946,9.11978659 C176.652124,3.27347834 184.6823,-2.3332846e-14 193.04471,0 Z" id="Color-Block" fill="#171F26" transform="translate(492.000000, 688.000000) scale(-1, 1) translate(-492.000000, -688.000000) "></path>
-                <g id="Text" transform="translate(64.000000, 256.000000)" fill="#FFFFFF" opacity="0.33">
+                <g id="Blank-Text-Container" transform="translate(64.000000, 256.000000)" fill="#FFFFFF" opacity="0.33">
                   <rect id="Greek-text" x="0" y="791" width="728" height="82"></rect>
                   <rect id="Greek-text" x="0" y="663" width="668" height="82"></rect>
                   <rect id="Greek-text" x="0" y="535" width="828" height="82"></rect>
@@ -161,21 +156,21 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
             <g id="Outfront-Alert-Portrait" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
               <rect fill="#FFDD00" x="0" y="0" width="1080" height="1920"></rect>
               <g id="CTA" transform="translate(48.000000, 1696.000000)">
-                <text id="url" fontSize="88" fontWeight="700" fill="#171F26">
+                <text id="url" fontFamily="sans-serif" fontSize="88" fontWeight="700" fill="#171F26">
                   <tspan x="255" y="126">mbta.com/alerts</tspan>
                 </text>
                 <g id="Logo/T-KO" fill="#171F26">
                   <path d="M88,0 C136.601058,0 176,39.398942 176,88 C176,136.601058 136.601058,176 88,176 C39.398942,176 0,136.601058 0,88 C0,39.398942 39.398942,0 88,0 Z M88,7.744 C43.6758351,7.744 7.744,43.6758351 7.744,88 C7.744,132.324165 43.6758351,168.256 88,168.256 C132.324165,168.256 168.256,132.324165 168.256,88 C168.256,43.6758351 132.324165,7.744 88,7.744 Z M143.616,48.752 L143.616,76.736 L101.992,76.735 L101.992,145.2 L74.008,145.2 L74.008,76.735 L32.384,76.736 L32.384,48.752 L143.616,48.752 Z" id="Color"></path>
                 </g>
               </g>
-              <g id="Widget" transform="translate(48.000000, 272.000000)">
-                <path d="M193.04471,0 L952,0 C969.673112,-3.24649801e-15 984,14.326888 984,32 L984,1344 C984,1361.67311 969.673112,1376 952,1376 L32,1376 C14.326888,1376 2.164332e-15,1361.67311 0,1344 L0,189.465938 C-3.65817517e-14,180.854354 3.47089536,172.606236 9.62823578,166.585725 L170.672946,9.11978659 C176.652124,3.27347834 184.6823,-2.3332846e-14 193.04471,0 Z" id="Color-Block" fill="#171F26" transform="translate(492.000000, 688.000000) scale(-1, 1) translate(-492.000000, -688.000000) "></path>
-                <g id="Text" transform="translate(64.000000, 256.000000)" fill="#FFFFFF" fontSize="112" fontWeight="500">
-                  <text id="portrait-text" />
+              <g id="Portrait-Widget" transform="translate(48.000000, 272.000000)">
+                <path d="M193.04471,0 L952,0 C969.673112,-3.24649801e-15 984,14.326888 984,32 L984,1344 C984,1361.67311 969.673112,1376 952,1376 L32,1376 C14.326888,1376 2.164332e-15,1361.67311 0,1344 L0,189.465938 C-3.65817517e-14,180.854354 3.47089536,172.606236 9.62823578,166.585725 L170.672946,9.11978659 C176.652124,3.27347834 184.6823,-2.3332846e-14 193.04471,0 Z" id="Portrait-Color-Block" fill="#171F26" transform="translate(492.000000, 688.000000) scale(-1, 1) translate(-492.000000, -688.000000) "></path>
+                <g id="Portrait-Text-Container" transform="translate(64.000000, 256.000000)" fontFamily="sans-serif" fill="#FFFFFF" fontSize={svgFontSize} fontWeight="500">
+                  <text id="Portrait-text" />
                 </g>
               </g>
               <g id="Header" transform="translate(48.000000, 48.000000)" fill="#171F26">
-                <text id="Alert-type" fontSize="120" fontWeight="700" letterSpacing="4">
+                <text id="Alert-type" fontFamily="sans-serif" fontSize="120" fontWeight="700" letterSpacing="4">
                   <tspan x="224" y="144">ATTENTION</tspan>
                 </text>
                 <g id="Icon">
@@ -187,18 +182,18 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
         }
 
         {/* Landscape SVG */}
-        <svg id="landscape-svg" className="landscape-hidden" width="1920px" height="1080px" viewBox="0 0 1920 1080" version="1.1" xmlns="http://www.w3.org/2000/svg" style={{ background: "#FFDD00" }}>
+        <svg id="landscape-svg" className="landscape-hidden" width={svgLongSide} height={svgShortSide} viewBox="0 0 1920 1080" version="1.1" xmlns="http://www.w3.org/2000/svg" style={{ background: "#FFDD00" }}>
           <title>Outfront Alert Landscape</title>
           <g id="Outfront-Alert-Landscape" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
             <rect fill="#FFDD00" x="0" y="0" width="1920" height="1080"></rect>
-            <g id="Widget" transform="translate(48.000000, 256.000000)">
-              <path d="M193.04471,0 L1792,0 C1809.67311,-3.24649801e-15 1824,14.326888 1824,32 L1824,536 C1824,553.673112 1809.67311,568 1792,568 L32,568 C14.326888,568 2.164332e-15,553.673112 0,536 L0,189.465938 C3.50157181e-14,180.854354 3.47089536,172.606236 9.62823578,166.585725 L170.672946,9.11978659 C176.652124,3.27347834 184.6823,-2.3332846e-14 193.04471,0 Z" id="Color-Block" fill="#171F26" transform="translate(912.000000, 284.000000) scale(-1, 1) translate(-912.000000, -284.000000) "></path>
-              <g id="Text" transform="translate(64.000000, 92.000000)" fill="#FFFFFF" fontWeight="500" fontSize="112">
-                <text id="landscape-text" />
+            <g id="Landscape-Widget" transform="translate(48.000000, 256.000000)">
+              <path d="M193.04471,0 L1792,0 C1809.67311,-3.24649801e-15 1824,14.326888 1824,32 L1824,536 C1824,553.673112 1809.67311,568 1792,568 L32,568 C14.326888,568 2.164332e-15,553.673112 0,536 L0,189.465938 C3.50157181e-14,180.854354 3.47089536,172.606236 9.62823578,166.585725 L170.672946,9.11978659 C176.652124,3.27347834 184.6823,-2.3332846e-14 193.04471,0 Z" id="Landscape-Color-Block" fill="#171F26" transform="translate(912.000000, 284.000000) scale(-1, 1) translate(-912.000000, -284.000000) "></path>
+              <g id="Landscape-Text-Container" transform="translate(64.000000, 92.000000)" fontFamily="sans-serif" fill="#FFFFFF" fontWeight="500" fontSize={svgFontSize}>
+                <text id="Landscape-text" />
               </g>
             </g>
             <g id="CTA" transform="translate(64.000000, 864.000000)">
-              <text id="url" fontSize="120" fontWeight="700" fill="#171F26">
+              <text id="url" fontFamily="sans-serif" fontSize="120" fontWeight="700" fill="#171F26">
                 <tspan x="798" y="135">mbta.com/alerts</tspan>
               </text>
               <g id="Logo/T-KO" fill="#171F26">
@@ -206,7 +201,7 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
               </g>
             </g>
             <g id="Header" transform="translate(64.000000, 48.000000)" fill="#171F26">
-              <text id="Alert-type" fontSize="120" fontWeight="700" letterSpacing="3.33333333">
+              <text id="Alert-type" fontFamily="sans-serif" fontSize="120" fontWeight="700" letterSpacing="3.33333333">
                 <tspan x="224" y="124">ATTENTION</tspan>
               </text>
               <g id="Icon">

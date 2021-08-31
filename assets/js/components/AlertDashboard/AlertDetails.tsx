@@ -27,7 +27,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   const messageString = getMessageString(message)
 
   const modalDetails: ModalDetails = {
-    icon: <BanIcon className="modal-icon" />,
+    icon: <BanIcon className="icon" />,
     header: "Clear Alert",
     description: "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
     cancelText: "Keep Alert",

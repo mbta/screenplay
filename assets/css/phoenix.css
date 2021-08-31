@@ -33,8 +33,6 @@ button,
 input[type="button"],
 input[type="reset"],
 input[type="submit"] {
-  background-color: #0069d9;
-  border: 0.1rem solid #0069d9;
   border-radius: 0.4rem;
   color: #fff;
   cursor: pointer;
@@ -66,89 +64,6 @@ input[type="reset"][disabled],
 input[type="submit"][disabled] {
   cursor: default;
   opacity: 0.5;
-}
-.button[disabled]:focus,
-.button[disabled]:hover,
-button[disabled]:focus,
-button[disabled]:hover,
-input[type="button"][disabled]:focus,
-input[type="button"][disabled]:hover,
-input[type="reset"][disabled]:focus,
-input[type="reset"][disabled]:hover,
-input[type="submit"][disabled]:focus,
-input[type="submit"][disabled]:hover {
-  background-color: #0069d9;
-  border-color: #0069d9;
-}
-.button.button-outline,
-button.button-outline,
-input[type="button"].button-outline,
-input[type="reset"].button-outline,
-input[type="submit"].button-outline {
-  background-color: transparent;
-  color: #0069d9;
-}
-.button.button-outline:focus,
-.button.button-outline:hover,
-button.button-outline:focus,
-button.button-outline:hover,
-input[type="button"].button-outline:focus,
-input[type="button"].button-outline:hover,
-input[type="reset"].button-outline:focus,
-input[type="reset"].button-outline:hover,
-input[type="submit"].button-outline:focus,
-input[type="submit"].button-outline:hover {
-  background-color: transparent;
-  border-color: #606c76;
-  color: #606c76;
-}
-.button.button-outline[disabled]:focus,
-.button.button-outline[disabled]:hover,
-button.button-outline[disabled]:focus,
-button.button-outline[disabled]:hover,
-input[type="button"].button-outline[disabled]:focus,
-input[type="button"].button-outline[disabled]:hover,
-input[type="reset"].button-outline[disabled]:focus,
-input[type="reset"].button-outline[disabled]:hover,
-input[type="submit"].button-outline[disabled]:focus,
-input[type="submit"].button-outline[disabled]:hover {
-  border-color: inherit;
-  color: #0069d9;
-}
-.button.button-clear,
-button.button-clear,
-input[type="button"].button-clear,
-input[type="reset"].button-clear,
-input[type="submit"].button-clear {
-  background-color: transparent;
-  border-color: transparent;
-  color: #0069d9;
-}
-.button.button-clear:focus,
-.button.button-clear:hover,
-button.button-clear:focus,
-button.button-clear:hover,
-input[type="button"].button-clear:focus,
-input[type="button"].button-clear:hover,
-input[type="reset"].button-clear:focus,
-input[type="reset"].button-clear:hover,
-input[type="submit"].button-clear:focus,
-input[type="submit"].button-clear:hover {
-  background-color: transparent;
-  border-color: transparent;
-  color: #606c76;
-}
-.button.button-clear[disabled]:focus,
-.button.button-clear[disabled]:hover,
-button.button-clear[disabled]:focus,
-button.button-clear[disabled]:hover,
-input[type="button"].button-clear[disabled]:focus,
-input[type="button"].button-clear[disabled]:hover,
-input[type="reset"].button-clear[disabled]:focus,
-input[type="reset"].button-clear[disabled]:hover,
-input[type="submit"].button-clear[disabled]:focus,
-input[type="submit"].button-clear[disabled]:hover {
-  color: #0069d9;
 }
 code {
   background: #f4f5f6;

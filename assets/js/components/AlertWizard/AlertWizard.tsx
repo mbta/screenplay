@@ -12,7 +12,7 @@ import CANNED_MESSAGES from "../../constants/messages";
 
 import { XIcon } from "@heroicons/react/solid";
 import WizardSidebar from "./WizardSidebar";
-import { svgLongSide, svgShortSide } from "../../constants/misc";
+import { svgLongSide, svgScale, svgShortSide } from "../../constants/misc";
 import { matchStation } from "../../util";
 
 import parseISO from "date-fns/parseISO";
@@ -344,13 +344,13 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const svg = document.getElementById(orientation + "-svg") as HTMLElement;
 
     const canvas = document.createElement("canvas");
-    canvas.width = width; //* svgScale
-    canvas.height = height; //* svgScale
+    canvas.width = width * svgScale
+    canvas.height = height * svgScale
     canvas.style.width = width.toString();
     canvas.style.height = height.toString();
 
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-    //ctx.scale(svgScale, svgScale);
+    ctx.scale(svgScale, svgScale);
 
     const data = new XMLSerializer().serializeToString(svg);
     const img = new Image();
@@ -368,13 +368,16 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   render() {
 
     const modalDetails: ModalDetails = {
-      icon: <XIcon className="modal-icon" />,
+      icon: <XIcon className="icon" />,
       header: "Cancel new Takeover Alert",
       description: "Canceling now will lose any progress you have made. This action cannot be undone.",
       cancelText: "Never mind",
       confirmJSX: <>Confirm cancellation</>,
       onSubmit: this.props.toggleAlertWizard
     };
+
+    console.log('portrait ', this.state.portraitPNG)
+    console.log('landscape ', this.state.landscapePNG)
 
     return (
       <>
@@ -392,7 +395,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
                 Create new Takeover Alert
               </div>
             </div>
-            <WizardStepper />
+            <WizardStepper activeStep={this.state.step}/>
             <div className="wizard-body">{this.renderSwitch()}</div>
           </div>
           <WizardSidebar
