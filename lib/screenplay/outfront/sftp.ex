@@ -2,6 +2,9 @@ defmodule Screenplay.Outfront.SFTP do
   @moduledoc """
   This module handles the CRUD functions to the SFTP server
   """
+
+  require Logger
+
   @orientations ["Portrait", "Landscape"]
   @retries 3
 
@@ -145,8 +148,19 @@ defmodule Screenplay.Outfront.SFTP do
 
   defp delete_image(conn, station, orientation, retry) do
     case do_delete_image(conn, station, orientation) do
-      :ok -> :ok
-      _ -> delete_image(conn, station, orientation, retry - 1)
+      :ok ->
+        :ok
+
+      {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
+        _ =
+          Logger.info(
+            "Skipping deleting #{orientation} image for #{station} as file does not exist"
+          )
+
+        :ok
+
+      _ ->
+        delete_image(conn, station, orientation, retry - 1)
     end
   end
 
