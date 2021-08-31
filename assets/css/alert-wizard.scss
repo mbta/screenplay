@@ -231,3 +231,24 @@
     color: #171F26;
   }
 }
+
+.stepper {
+  display: flex;
+  background-color: $gray-200;
+  .step {
+    display: flex;
+    flex-grow: 1;
+    padding: 16px 24px;
+    align-items: center;
+  }
+  .step-text {
+    color: $gray-800;
+    &.emphasized {
+      color: $pink-700;
+      font-weight: 700;
+    }
+    &.muted {
+      color: $gray-600;
+    }
+  }
+}
