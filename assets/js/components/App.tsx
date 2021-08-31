@@ -43,6 +43,7 @@ class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
+      // TODO
       alertWizardOpen: false,
       alertData: null,
       modalOpen: false,
