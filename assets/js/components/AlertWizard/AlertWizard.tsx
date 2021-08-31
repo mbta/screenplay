@@ -376,8 +376,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       onSubmit: this.props.toggleAlertWizard
     };
 
-    console.log('portrait ', this.state.portraitPNG)
-    console.log('landscape ', this.state.landscapePNG)
 
     return (
       <>
