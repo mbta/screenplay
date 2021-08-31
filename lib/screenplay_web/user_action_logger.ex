@@ -1,6 +1,6 @@
 defmodule ScreenplayWeb.UserActionLogger do
   @moduledoc """
-  Helper for logging ever action a user takes.
+  Helper for logging every action a user takes.
   """
 
   require Logger
