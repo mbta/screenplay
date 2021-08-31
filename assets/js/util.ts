@@ -62,7 +62,7 @@ export const formatTime = (date: Date) => {
 
 export const getMessageString = (message: CannedMessage | CustomMessage) => {
   // @ts-ignore
-  if (message.id) return CANNED_MESSAGES[parseInt(message.id)]
+  if (message.id !== undefined) return CANNED_MESSAGES[parseInt(message.id)]
   // @ts-ignore
   else return message.text
 }
