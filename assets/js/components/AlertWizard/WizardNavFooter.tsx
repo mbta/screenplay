@@ -2,6 +2,7 @@ import React from "react";
 import {
   ArrowNarrowLeftIcon,
   ArrowNarrowRightIcon,
+  PlayIcon,
 } from "@heroicons/react/solid";
 
 interface WizardNavFooterProps {
@@ -37,22 +38,30 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
   return (
     <div className="wizard-nav-footer">
       {props.step !== 1 ? (
-        <button onClick={props.backward}>
-          <ArrowNarrowLeftIcon className="arrow-icon" />
+        <button
+          className="nav-button"
+          onClick={props.backward}
+        >
+          <ArrowNarrowLeftIcon className="button-icon" />
           <span>{backButton(props.step)}</span>
         </button>
       ) : null}
       {props.step !== 4 ? (
         <button
-          className="forward-button"
+          className="nav-button forward"
           disabled={props.waitingForInput}
           onClick={props.forward}
         >
           <span>{forwardButton(props.step)}</span>
-          <ArrowNarrowRightIcon className="arrow-icon" />
+          <ArrowNarrowRightIcon className="button-icon right" />
         </button>
       ) : (
-        <button onClick={props.forward}>Fancy</button>
+        <div className="submit-button-stripes">
+          <button className="submit-button" onClick={props.forward}>
+            Post Takeover Alert
+            <PlayIcon className="button-icon right" />
+          </button>
+        </div>
       )}
     </div>
   );

@@ -8,7 +8,6 @@ interface StackedStationCardsProps {
 }
 
 const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
-  console.log('props.stations', props.stations)
   return (
     <div
       className={`stacked-station-cards ${

@@ -141,14 +141,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px;
+  // padding: 24px;
   border-radius: 8px;
   position: fixed;
   bottom: 12px;
   width: calc(100% - 120px);
   
-  .forward-button {
-    margin-left: auto;
+  .nav-button{
+    margin: 24px;
+    &.forward {
+      margin-left: auto;
+    }
   }
 }
 
@@ -181,6 +184,9 @@
 }
 .portrait-svg {
   margin-bottom: 24px;
+  g#Text {
+    line-height: 128px;
+  }
 }
 
 .details-grid {
@@ -202,5 +208,26 @@
   .edit-link {
     cursor: pointer;
     color: $pink-700;
+  }
+}
+
+.submit-button-stripes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90px;
+  width: 318px;
+  border-radius: 0 8px 8px 0;
+  background: repeating-linear-gradient(
+    135deg,
+    $bright-yellow,
+    $bright-yellow 12px,
+    black 12px,
+    black 28px
+  );
+  .submit-button {
+    background: white;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    color: #171F26;
   }
 }

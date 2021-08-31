@@ -167,7 +167,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       // Because 1 hour is automatically selected
       case 3:
         return false;
-      // TODO
       case 4:
         return false;
       default:

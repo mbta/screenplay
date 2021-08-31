@@ -61,20 +61,25 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
 
   return (
     <>
-      <div className="text-30 alerts-list-header">Live Takeover Alerts</div>
-      {alertsData.map((data) => {
-        const { id } = data;
-        return (
-          <AlertDetails
-            data={data}
-            setLastChangeTime={setLastChangeTime}
-            startEditWizard={props.startEditWizard}
-            clearAlert={clearAlert}
-            triggerConfirmation={props.triggerConfirmation}
-            key={id}
-          />
-        );
-      })}
+      { alertsData.length > 0 ?
+      <>
+        <div className="text-30 alerts-list-header">Live Takeover Alerts</div>
+        { alertsData.map((data) => {
+          const { id } = data;
+          return (
+            <AlertDetails
+              data={data}
+              setLastChangeTime={setLastChangeTime}
+              startEditWizard={props.startEditWizard}
+              clearAlert={clearAlert}
+              triggerConfirmation={props.triggerConfirmation}
+              key={id}
+            />
+          );
+        })}
+      </>
+      : <div className="dot-grid"/>
+      }
     </>
   );
 };
