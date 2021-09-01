@@ -24,7 +24,7 @@ defmodule Screenplay.Alerts.Alert do
 
   @type schedule :: %{
           start: DateTime.t(),
-          end: DateTime.t()
+          end: DateTime.t() | nil
         }
 
   @type user :: String.t()
@@ -145,7 +145,10 @@ defmodule Screenplay.Alerts.Alert do
     %{start: parse_datetime(start_json), end: parse_datetime(end_json)}
   end
 
+  defp serialize_datetime(nil), do: nil
   defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
+
+  defp parse_datetime(nil), do: nil
 
   defp parse_datetime(json) do
     {:ok, dt, _offset} = DateTime.from_iso8601(json)
