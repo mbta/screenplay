@@ -17,8 +17,12 @@ interface SVGPreviewsProps {
 }
 
 const createSVGText = (message: string, orientation: string) => {
+  const attentionString = "Attention: ";
+
   if (message === undefined) {
     return null;
+  } else if (message.startsWith(attentionString)) {
+    message = message.slice(attentionString.length);
   }
 
   // Split the message by max line length
