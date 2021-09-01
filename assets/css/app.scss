@@ -10,7 +10,6 @@
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap/scss/modal";
 
-
 html {
   background: $gray-700;
   font-family: "Inter", sans-serif;
@@ -108,7 +107,6 @@ button {
 button[disabled] {
   background: $gray-500;
   opacity: 1;
-  
 }
 input[type="submit"][disabled]:hover {
   background-color: $gray-600;
@@ -138,7 +136,6 @@ footer {
       font-weight: 700;
       font-size: 30px;
       line-height: 36px;
-      
     }
     .modal-description {
       margin-left: 64px;

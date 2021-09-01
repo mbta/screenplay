@@ -5,8 +5,8 @@ import { ModalDetails } from "../ConfirmationModal";
 
 interface AlertsListProps {
   startEditWizard: (data: AlertData) => void;
-  triggerConfirmation: (modalDetails: ModalDetails) => void
-  closeModal: () => void
+  triggerConfirmation: (modalDetails: ModalDetails) => void;
+  closeModal: () => void;
 }
 
 const AlertsList = (props: AlertsListProps): JSX.Element => {
@@ -19,14 +19,16 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
       .then(setAlertsData);
   }, [lastChangeTime]);
 
-
-  const clearAlert = (id: string, setLastChangeTime: (time: number) => void) => {
+  const clearAlert = (
+    id: string,
+    setLastChangeTime: (time: number) => void
+  ) => {
     const csrfMetaElement = document.head.querySelector(
       "[name~=csrf-token][content]"
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
     const data = { id };
-  
+
     fetch("/api/clear", {
       method: "POST",
       headers: {
@@ -40,7 +42,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-  
+
         return response.json();
       })
       .then(({ success }) => {
@@ -56,30 +58,31 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
         console.log("Failed to clear alert: ", error);
       });
 
-    props.closeModal()
+    props.closeModal();
   };
 
   return (
     <>
-      { alertsData.length > 0 ?
-      <>
-        <div className="text-30 alerts-list-header">Live Takeover Alerts</div>
-        { alertsData.map((data) => {
-          const { id } = data;
-          return (
-            <AlertDetails
-              data={data}
-              setLastChangeTime={setLastChangeTime}
-              startEditWizard={props.startEditWizard}
-              clearAlert={clearAlert}
-              triggerConfirmation={props.triggerConfirmation}
-              key={id}
-            />
-          );
-        })}
-      </>
-      : <div className="dot-grid"/>
-      }
+      {alertsData.length > 0 ? (
+        <>
+          <div className="text-30 alerts-list-header">Live Takeover Alerts</div>
+          {alertsData.map((data) => {
+            const { id } = data;
+            return (
+              <AlertDetails
+                data={data}
+                setLastChangeTime={setLastChangeTime}
+                startEditWizard={props.startEditWizard}
+                clearAlert={clearAlert}
+                triggerConfirmation={props.triggerConfirmation}
+                key={id}
+              />
+            );
+          })}
+        </>
+      ) : (
+        <div className="dot-grid" />
+      )}
     </>
   );
 };

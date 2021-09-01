@@ -38,10 +38,7 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
   return (
     <div className="wizard-nav-footer">
       {props.step !== 1 ? (
-        <button
-          className="nav-button"
-          onClick={props.backward}
-        >
+        <button className="nav-button" onClick={props.backward}>
           <ArrowNarrowLeftIcon className="button-icon" />
           <span>{backButton(props.step)}</span>
         </button>

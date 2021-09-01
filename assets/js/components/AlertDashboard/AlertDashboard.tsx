@@ -7,8 +7,8 @@ import { ModalDetails } from "../ConfirmationModal";
 interface AlertDashboardProps {
   startAlertWizard: () => void;
   startEditWizard: (data: AlertData) => void;
-  triggerConfirmation: (modalDetails: ModalDetails) => void
-  closeModal: () => void
+  triggerConfirmation: (modalDetails: ModalDetails) => void;
+  closeModal: () => void;
 }
 
 const AlertDashboard = (props: AlertDashboardProps): JSX.Element => {
@@ -18,7 +18,8 @@ const AlertDashboard = (props: AlertDashboardProps): JSX.Element => {
       <AlertsList
         startEditWizard={props.startEditWizard}
         triggerConfirmation={props.triggerConfirmation}
-        closeModal={props.closeModal}/>
+        closeModal={props.closeModal}
+      />
       <footer>© 2021 – Massachusetts Bay Transportation Authority</footer>
     </>
   );

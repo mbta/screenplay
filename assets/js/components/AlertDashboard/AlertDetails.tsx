@@ -1,7 +1,12 @@
 import React from "react";
 import StackedStationCards from "../AlertWizard/StackedStationCards";
 import { AlertData } from "../App";
-import { formatDate, formatTime, getMessageString, matchStation } from "../../util";
+import {
+  formatDate,
+  formatTime,
+  getMessageString,
+  matchStation,
+} from "../../util";
 import { BanIcon, PencilIcon } from "@heroicons/react/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import SVGPreviews from "../AlertWizard/SVGPreviews";
@@ -10,7 +15,7 @@ interface AlertDetailsProps {
   data: any;
   setLastChangeTime: (time: number) => void;
   startEditWizard: (data: AlertData) => void;
-  clearAlert: (id: string, setLastChangeTime: (time: number) => void) => void
+  clearAlert: (id: string, setLastChangeTime: (time: number) => void) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
 }
 
@@ -20,38 +25,47 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
 
   const stationDetails = stations.map(matchStation);
 
-  const startDate = new Date(schedule.start)
-  const endDate = new Date(schedule.end)
-  const startDateString = formatDate(startDate) + ' @ ' + formatTime(startDate);
-  const endDateString = formatDate(endDate) + ' @ ' + formatTime(endDate);
+  const startDate = new Date(schedule.start);
+  const endDate = new Date(schedule.end);
+  const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
+  const endDateString = formatDate(endDate) + " @ " + formatTime(endDate);
 
-  const messageString = getMessageString(message)
+  const messageString = getMessageString(message);
 
   const modalDetails: ModalDetails = {
     icon: <BanIcon className="icon" />,
     header: "Clear Alert",
-    description: "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
+    description:
+      "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
     cancelText: "Keep Alert",
-    confirmJSX: <>
-      <BanIcon className="button-icon" />
-      Clear Alert
-    </>,
-    onSubmit: () => props.clearAlert(id, setLastChangeTime)
+    confirmJSX: (
+      <>
+        <BanIcon className="button-icon" />
+        Clear Alert
+      </>
+    ),
+    onSubmit: () => props.clearAlert(id, setLastChangeTime),
   };
 
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        <SVGPreviews showText={ true } message={messageString} />
+        <SVGPreviews showText={true} message={messageString} />
       </div>
       <div className="alert-details">
         <div className="alert-header">
-          <StackedStationCards stations={stationDetails} className="published-alert"/>
+          <StackedStationCards
+            stations={stationDetails}
+            className="published-alert"
+          />
           <button className="edit-button" onClick={() => startEditWizard(data)}>
             <PencilIcon className="button-icon" />
             Edit
           </button>
-          <button className="clear-button" onClick={() => props.triggerConfirmation(modalDetails)}>
+          <button
+            className="clear-button"
+            onClick={() => props.triggerConfirmation(modalDetails)}
+          >
             <BanIcon className="button-icon" />
             Clear Alert
           </button>

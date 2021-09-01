@@ -79,7 +79,8 @@
 }
 .stacked-station-cards {
   width: 100%;
-  &.confirmation, &.published-alert {
+  &.confirmation,
+  &.published-alert {
     width: fit-content;
   }
   &.published-alert {
@@ -109,7 +110,8 @@
     width: calc(100% - 12px);
     background: $gray-400;
   }
-  &.confirmation, &.published-alert {
+  &.confirmation,
+  &.published-alert {
     background: none;
   }
 }

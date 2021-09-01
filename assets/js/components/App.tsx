@@ -53,7 +53,7 @@ class App extends React.Component<AppProps, AppState> {
         description: "",
         cancelText: "",
         confirmJSX: <></>,
-        onSubmit: this.toggleModal
+        onSubmit: this.toggleModal,
       },
     };
 
@@ -63,7 +63,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   toggleAlertWizard() {
-    this.setState(state => ({
+    this.setState((state) => ({
       alertWizardOpen: !state.alertWizardOpen,
       modalOpen: false,
     }));
@@ -91,7 +91,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   toggleModal() {
-    this.setState(state => ({
+    this.setState((state) => ({
       modalOpen: !state.modalOpen,
     }));
   }
