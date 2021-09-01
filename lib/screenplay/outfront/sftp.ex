@@ -177,9 +177,6 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   defp get_outfront_directory_for_station(station) do
-    _ = Map.get(@stations_to_outfront_directories, station)
-
-    # Temporarily always use test station directory
-    "ZZZ_TEST_STATION"
+    Map.get(@stations_to_outfront_directories, station)
   end
 end
