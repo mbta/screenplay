@@ -390,7 +390,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
                 <span className="text-16 weight-500">Cancel</span>
               </button>
               <div className="wizard-title text-30 weight-800">
-                Create new Takeover Alert
+                {this.state.id === null ? "Create new Takeover Alert" : "Edit existing Takeover Alert"}
               </div>
             </div>
             <WizardStepper activeStep={this.state.step}/>
