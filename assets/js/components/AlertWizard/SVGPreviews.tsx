@@ -17,6 +17,10 @@ interface SVGPreviewsProps {
 }
 
 const createSVGText = (message: string, orientation: string) => {
+  if (message === undefined) {
+    return null;
+  }
+
   // Split the message by max line length
   const words = message.split(" ");
   const lineLength = orientation === "portrait" ? svgPortraitLineLength : svgLandscapeLineLength
