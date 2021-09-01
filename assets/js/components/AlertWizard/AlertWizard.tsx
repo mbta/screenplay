@@ -92,10 +92,16 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const selectedStations = stations.map(matchStation);
 
-    const { start: startString, end: endString } = schedule;
-    const start = parseISO(startString);
-    const end = parseISO(endString);
-    const duration = differenceInHours(end, start);
+    let duration;
+
+    if (schedule.end === null) {
+      duration = "Open ended";
+    } else {
+      const { start: startString, end: endString } = schedule;
+      const start = parseISO(startString);
+      const end = parseISO(endString);
+      duration = differenceInHours(end, start);
+    }
 
     return {
       // id is present if and only if editing an existing alert

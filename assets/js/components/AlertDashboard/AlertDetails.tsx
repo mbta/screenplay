@@ -26,9 +26,15 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   const stationDetails = stations.map(matchStation);
 
   const startDate = new Date(schedule.start);
-  const endDate = new Date(schedule.end);
   const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
-  const endDateString = formatDate(endDate) + " @ " + formatTime(endDate);
+
+  let endDateString;
+  if (schedule.end === null) {
+    endDateString = "Open ended";
+  } else {
+    const endDate = new Date(schedule.end);
+    endDateString = formatDate(endDate) + " @ " + formatTime(endDate);
+  }
 
   const messageString = getMessageString(message);
 

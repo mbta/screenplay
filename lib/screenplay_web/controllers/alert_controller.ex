@@ -15,10 +15,7 @@ defmodule ScreenplayWeb.AlertController do
           "landscape_png" => landscape_png
         }
       ) do
-    start_dt = DateTime.utc_now()
-    end_dt = DateTime.add(start_dt, 60 * 60 * duration_in_hours, :second)
-    schedule = %{start: start_dt, end: end_dt}
-
+    schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
     user = get_session(conn, "username")
 
     message = Alert.message_from_json(message)
@@ -56,10 +53,7 @@ defmodule ScreenplayWeb.AlertController do
         }
       ) do
     alert = State.get_alert(id)
-
-    start_dt = alert.schedule.start
-    end_dt = DateTime.add(start_dt, 60 * 60 * duration_in_hours, :second)
-    schedule = %{start: start_dt, end: end_dt}
+    schedule = schedule_from_duration(alert.schedule.start, duration_in_hours)
     message = Alert.message_from_json(message)
     changes = %{message: message, stations: stations, schedule: schedule}
 
@@ -98,6 +92,16 @@ defmodule ScreenplayWeb.AlertController do
   def list(conn, _params) do
     alerts_json = State.get_all_alerts() |> Enum.map(&Alert.to_json/1)
     json(conn, alerts_json)
+  end
+
+  defp schedule_from_duration(start_dt, duration) do
+    end_dt =
+      case duration do
+        "Open ended" -> nil
+        _ -> DateTime.add(start_dt, 60 * 60 * duration, :second)
+      end
+
+    %{start: start_dt, end: end_dt}
   end
 
   defp decode_png(png) do
