@@ -344,8 +344,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const svg = document.getElementById(orientation + "-svg") as HTMLElement;
 
     const canvas = document.createElement("canvas");
-    canvas.width = width * svgScale
-    canvas.height = height * svgScale
+    canvas.width = width * svgScale;
+    canvas.height = height * svgScale;
     canvas.style.width = width.toString();
     canvas.style.height = height.toString();
 
@@ -366,16 +366,15 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   render() {
-
     const modalDetails: ModalDetails = {
       icon: <XIcon className="icon" />,
       header: "Cancel new Takeover Alert",
-      description: "Canceling now will lose any progress you have made. This action cannot be undone.",
+      description:
+        "Canceling now will lose any progress you have made. This action cannot be undone.",
       cancelText: "Never mind",
       confirmJSX: <>Confirm cancellation</>,
-      onSubmit: this.props.toggleAlertWizard
+      onSubmit: this.props.toggleAlertWizard,
     };
-
 
     return (
       <>
@@ -390,10 +389,12 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
                 <span className="text-16 weight-500">Cancel</span>
               </button>
               <div className="wizard-title text-30 weight-800">
-                Create new Takeover Alert
+                {this.state.id === null
+                  ? "Create new Takeover Alert"
+                  : "Edit existing Takeover Alert"}
               </div>
             </div>
-            <WizardStepper activeStep={this.state.step}/>
+            <WizardStepper activeStep={this.state.step} />
             <div className="wizard-body">{this.renderSwitch()}</div>
           </div>
           <WizardSidebar

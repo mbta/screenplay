@@ -19,7 +19,10 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
     return (
       <div className="wizard-sidebar">
         <span className="preview-title text-16">Preview</span>
-        <SVGPreviews showText={ this.props.step > 1 } message={this.props.message}/>
+        <SVGPreviews
+          showText={this.props.step > 1}
+          message={this.props.message}
+        />
         <StackedStationCards stations={this.props.selectedStations} />
       </div>
     );

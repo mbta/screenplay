@@ -52,17 +52,17 @@ export const formatDate = (date: Date) => {
     month: "long",
     day: "numeric",
   });
-}
+};
 
 export const formatTime = (date: Date) => {
   return new Intl.DateTimeFormat(undefined, {
     timeStyle: "short",
   }).format(date);
-}
+};
 
 export const getMessageString = (message: CannedMessage | CustomMessage) => {
   // @ts-ignore
-  if (message.id !== undefined) return CANNED_MESSAGES[parseInt(message.id)]
+  if (message.id !== undefined) return CANNED_MESSAGES[parseInt(message.id)];
   // @ts-ignore
-  else return message.text
-}
+  else return message.text;
+};
