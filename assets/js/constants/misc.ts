@@ -11,4 +11,4 @@ export const svgLandscapeLineLength = 40;
 export const svgLineHeight = 104;
 export const svgFontSize = 88;
 
-export const charLimit = 144;
+export const charLimit = 155;
