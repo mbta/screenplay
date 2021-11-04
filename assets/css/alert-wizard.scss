@@ -254,3 +254,27 @@
     }
   }
 }
+
+.concurrent-warning-container {
+  display: flex;
+  background-color: $pink-700;
+  color: white;
+  align-items: center;
+  justify-content: start;
+  flex-flow: row;
+  height: 64px;
+  padding: 16px 24px;
+  font-weight: bold;
+
+  .warning-container-child {
+    display: flex;
+  }
+}
+
+.icon-container {
+  display: flex;
+}
+
+.warning-message {
+  display: flex;
+}

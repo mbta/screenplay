@@ -58,7 +58,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         duration: 1,
         landscapePNG: null,
         portraitPNG: null,
-        activeAlertsList: []
+        activeAlertsList: [],
       };
     } else {
       this.state = this.initializeState(props.alertData);
@@ -121,18 +121,27 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       duration: duration,
       landscapePNG: null,
       portraitPNG: null,
-      activeAlertsList: []
+      activeAlertsList: [],
     };
   }
 
   renderSwitch() {
     switch (this.state.step) {
       case 2:
+        let stationNamesWithActiveAlerts = [];
+        if (this.state.activeAlertsList.length > 0) {
+          stationNamesWithActiveAlerts = this.state.activeAlertsList
+            .map((alert) => alert.stations)
+            .reduce((result, current) => {
+              return current.concat(result.stations);
+            });
+        }
         return (
           <PickStations
             selectedStations={this.state.selectedStations}
             checkStation={this.checkStation}
             checkLine={this.checkLine}
+            activeAlertsStations={stationNamesWithActiveAlerts}
           />
         );
       case 3:
@@ -219,13 +228,17 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   fetchActiveAlertsList() {
     fetch("/api/list")
       .then((response) => response.json())
-      .then(data => {
+      .then((data) => {
         const now = new Date();
         const filteredList = data.filter((alert) => {
-          const { schedule: { start, end } } = alert;
-          return parseISO(start) <= now && (end === null || parseISO(end) > now)
+          const {
+            schedule: { start, end },
+          } = alert;
+          return (
+            parseISO(start) <= now && (end === null || parseISO(end) > now)
+          );
         });
-        this.setState({ activeAlertsList: filteredList })
+        this.setState({ activeAlertsList: filteredList });
       });
   }
 

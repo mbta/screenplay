@@ -2,11 +2,13 @@ import React from "react";
 import StationColumn from "./StationColumn";
 
 import { Station } from "../../constants/stations";
+import WizardWarning from "./WizardWarning";
 
 interface PickStationsProps {
   selectedStations: Station[];
   checkStation: (station: Station) => void;
   checkLine: (line: string, checked: boolean) => void;
+  activeAlertsStations: string[];
 }
 
 const PickStations = (props: PickStationsProps): JSX.Element => {
@@ -35,6 +37,9 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
             <div className="screen-icon none" />
           </div>
         </div>
+      </div>
+      <div>
+        <WizardWarning stationNames={props.activeAlertsStations} />
       </div>
       <div className="step-body stations">
         <div className={`station-column red`}>
