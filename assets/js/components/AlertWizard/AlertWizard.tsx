@@ -36,6 +36,7 @@ interface AlertWizardState {
   landscapePNG: string | null;
   portraitPNG: string | null;
   id: string | null;
+  activeAlertsList: any[];
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
@@ -57,10 +58,13 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         duration: 1,
         landscapePNG: null,
         portraitPNG: null,
+        activeAlertsList: []
       };
     } else {
       this.state = this.initializeState(props.alertData);
     }
+
+    this.fetchActiveAlertsList();
 
     this.stepForward = this.stepForward.bind(this);
     this.stepBackward = this.stepBackward.bind(this);
@@ -117,6 +121,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       duration: duration,
       landscapePNG: null,
       portraitPNG: null,
+      activeAlertsList: []
     };
   }
 
@@ -209,6 +214,19 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
   goToStep(step: number) {
     this.setState({ step });
+  }
+
+  fetchActiveAlertsList() {
+    fetch("/api/list")
+      .then((response) => response.json())
+      .then(data => {
+        const now = new Date();
+        const filteredList = data.filter((alert) => {
+          const { schedule: { start, end } } = alert;
+          return parseISO(start) <= now && (end === null || parseISO(end) > now)
+        });
+        this.setState({ activeAlertsList: filteredList })
+      });
   }
 
   handleSubmit() {
