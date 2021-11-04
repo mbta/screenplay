@@ -133,7 +133,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           stationNamesWithActiveAlerts = this.state.activeAlertsList
             .map((alert) => alert.stations)
             .reduce((result, current) => {
-              return current.concat(result.stations);
+              return current.concat(result);
             });
         }
         return (
