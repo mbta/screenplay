@@ -139,32 +139,30 @@ defmodule ScreenplayWeb.AlertController do
         )
         |> MapSet.size() > 0
     end)
-    |> Enum.each(fn a ->
-      case a do
-        # If existing alert has only one station, just delete it
-        %Alert{stations: [_single_station]} = a ->
+    |> Enum.each(fn
+      # If existing alert has only one station, just delete it
+      %Alert{stations: [_single_station]} = a ->
+        delete_alert(a.id, a.stations)
+
+      # If existing alert has multiple stations: remove the overlapping stations, update the alert, clear the overlapping images.
+      %Alert{stations: _stations} = a ->
+        stations_no_overlap = Enum.reject(a.stations, fn station -> station in stations end)
+
+        # Existing alert and new alert have the same station list
+        if length(stations_no_overlap) == 0 do
           delete_alert(a.id, a.stations)
+        else
+          stations_to_delete = stations -- stations_no_overlap
+          changes = %{message: a.message, stations: stations_no_overlap, schedule: a.schedule}
 
-        # If existing alert has multiple stations: remove the overlapping stations, update the alert, clear the overlapping images.
-        %Alert{stations: _stations} = a ->
-          stations_no_overlap = Enum.reject(a.stations, fn station -> station in stations end)
+          updated_alert = Alert.update(a, changes, user)
 
-          # Existing alert and new alert have the same station list
-          if length(stations_no_overlap) == 0 do
-            delete_alert(a.id, a.stations)
-          else
-            stations_to_delete = stations -- stations_no_overlap
-            changes = %{message: a.message, stations: stations_no_overlap, schedule: a.schedule}
+          params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
+          UserActionLogger.log(user, :update_alert, params_to_log)
+          :ok = State.update_alert(a.id, updated_alert)
 
-            updated_alert = Alert.update(a, changes, user)
-
-            params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
-            UserActionLogger.log(user, :update_alert, params_to_log)
-            :ok = State.update_alert(a.id, updated_alert)
-
-            SFTP.clear_takeover_images(stations_to_delete)
-          end
-      end
+          SFTP.clear_takeover_images(stations_to_delete)
+        end
     end)
   end
 end
