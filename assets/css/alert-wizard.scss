@@ -264,17 +264,9 @@
   flex-flow: row;
   height: 64px;
   padding: 16px 24px;
-  font-weight: bold;
 
   .warning-container-child {
     display: flex;
+    font-weight: bold;
   }
-}
-
-.icon-container {
-  display: flex;
-}
-
-.warning-message {
-  display: flex;
 }

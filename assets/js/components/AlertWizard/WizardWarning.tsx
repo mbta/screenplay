@@ -13,7 +13,7 @@ const WizardWarning = (props: WizardWarningProps): JSX.Element => {
           <ExclamationCircleIcon className="icon-circle pink" />
         </div>
 
-        <div className="warning-container-child warning-message">
+        <div className="warning-container-child">
           Continuing will replace the Live Takeover Alert already live at{" "}
           {props.stationNames.join(", ")}
         </div>
