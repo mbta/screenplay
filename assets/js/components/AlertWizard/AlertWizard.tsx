@@ -227,19 +227,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   fetchActiveAlertsList() {
-    fetch("/api/list")
+    fetch("/api/list_active")
       .then((response) => response.json())
       .then((data) => {
-        const now = new Date();
-        const filteredList = data.filter((alert) => {
-          const {
-            schedule: { start, end },
-          } = alert;
-          return (
-            parseISO(start) <= now && (end === null || parseISO(end) > now)
-          );
-        });
-        this.setState({ activeAlertsList: filteredList });
+        this.setState({ activeAlertsList: data });
       });
   }
 
