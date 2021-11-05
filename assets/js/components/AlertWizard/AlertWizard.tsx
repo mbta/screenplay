@@ -131,10 +131,11 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         let stationNamesWithActiveAlerts = [];
         if (this.state.activeAlertsList.length > 0) {
           stationNamesWithActiveAlerts = this.state.activeAlertsList
+            .filter((alert) => alert.id !== this.state.id)
             .map((alert) => alert.stations)
             .reduce((result, current) => {
               return current.concat(result);
-            });
+            }, []);
         }
         return (
           <PickStations
