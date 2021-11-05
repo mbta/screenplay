@@ -30,6 +30,16 @@ defmodule Screenplay.Alerts.State do
     Enum.find(get_all_alerts(), fn %{id: alert_id} -> id == alert_id end)
   end
 
+  def get_active_alerts(now \\ DateTime.utc_now()) do
+    Enum.filter(
+      get_all_alerts(),
+      fn %Alert{schedule: %{start: start_dt, end: end_dt}} ->
+        DateTime.compare(start_dt, now) in [:lt, :eq] and
+          (end_dt == nil or DateTime.compare(now, end_dt) == :lt)
+      end
+    )
+  end
+
   @spec add_alert(GenServer.server(), Alert.t()) :: :ok | {:error, String.t()}
   def add_alert(pid \\ __MODULE__, alert)
 
