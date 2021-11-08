@@ -30,9 +30,9 @@ defmodule Screenplay.Alerts.State do
     Enum.find(get_all_alerts(), fn %{id: alert_id} -> id == alert_id end)
   end
 
-  def get_active_alerts(now \\ DateTime.utc_now()) do
+  def get_active_alerts(pid \\ __MODULE__, now \\ DateTime.utc_now()) do
     Enum.filter(
-      get_all_alerts(),
+      get_all_alerts(pid),
       fn %Alert{schedule: %{start: start_dt, end: end_dt}} ->
         DateTime.compare(start_dt, now) in [:lt, :eq] and
           (end_dt == nil or DateTime.compare(now, end_dt) == :lt)
@@ -75,14 +75,16 @@ defmodule Screenplay.Alerts.State do
   end
 
   def remove_overlapping_alerts(
+        pid \\ __MODULE__,
         %{
           "id" => id,
           "stations" => stations
         },
-        user
+        user,
+        now \\ DateTime.utc_now()
       ) do
     # Get all active alerts and find any that share a station with the new alert (excluding self if editing)
-    get_active_alerts()
+    get_active_alerts(pid, now)
     |> Enum.filter(fn %{id: active_id, stations: active_alert_stations} ->
       (id == nil or id != active_id) and
         MapSet.intersection(
@@ -94,7 +96,7 @@ defmodule Screenplay.Alerts.State do
     |> Enum.reduce([], fn
       # If existing alert has only one station, just delete it
       %Alert{id: existing_id, stations: [_single_station]} = a, acc ->
-        :ok = State.delete_alert(existing_id)
+        :ok = State.delete_alert(pid, existing_id)
         Enum.concat(acc, a.stations)
 
       # If existing alert has multiple stations: remove the overlapping stations, update the alert, clear the overlapping images.
@@ -103,14 +105,14 @@ defmodule Screenplay.Alerts.State do
 
         # Existing alert and new alert have the same station list
         if length(stations_no_overlap) == 0 do
-          :ok = State.delete_alert(existing_id)
+          :ok = State.delete_alert(pid, existing_id)
           Enum.concat(acc, a.stations)
         else
           changes = %{message: a.message, stations: stations_no_overlap, schedule: a.schedule}
 
           updated_alert = Alert.update(a, changes, user)
 
-          :ok = State.update_alert(a.id, updated_alert)
+          :ok = State.update_alert(pid, a.id, updated_alert)
           Enum.concat(acc, stations -- stations_no_overlap)
         end
     end)
