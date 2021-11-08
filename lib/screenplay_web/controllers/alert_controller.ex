@@ -53,7 +53,7 @@ defmodule ScreenplayWeb.AlertController do
         }
       ) do
     alert = State.get_alert(id)
-    schedule = schedule_from_duration(alert.schedule.start, duration_in_hours)
+    schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
     message = Alert.message_from_json(message)
     changes = %{message: message, stations: stations, schedule: schedule}
 
