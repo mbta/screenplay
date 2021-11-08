@@ -180,6 +180,292 @@ defmodule Screenplay.Alerts.StateTest do
     end
   end
 
+  describe "remove_overlapping_alerts/2" do
+    test "deletes the overlapping alert with one station" do
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
+
+      a1 = %Alert{
+        id: "a1",
+        message: %{type: :canned, id: 1},
+        stations: ["Haymarket", "Government Center"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      a2 = %Alert{
+        id: "a2",
+        message: %{type: :custom, text: "This is an alert"},
+        stations: ["Kendall/MIT"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      params = %{
+        "id" => nil,
+        "stations" => ["South Station", "Kendall/MIT"]
+      }
+
+      user = "bar"
+
+      alerts = %{"a1" => a1, "a2" => a2}
+      state = %State{alerts: alerts}
+
+      :sys.replace_state(pid, fn _state -> state end)
+
+      assert ["Kendall/MIT"] ==
+               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+
+      expected_state = %State{
+        alerts: %{
+          "a1" => %Alert{
+            id: "a1",
+            message: %{type: :canned, id: 1},
+            stations: ["Haymarket", "Government Center"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          }
+        }
+      }
+
+      assert expected_state == :sys.get_state(pid)
+    end
+
+    test "deletes the overlapping alert with multiple stations" do
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
+
+      a1 = %Alert{
+        id: "a1",
+        message: %{type: :canned, id: 1},
+        stations: ["Haymarket", "Government Center"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      a2 = %Alert{
+        id: "a2",
+        message: %{type: :custom, text: "This is an alert"},
+        stations: ["South Station", "Kendall/MIT"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      params = %{
+        "id" => nil,
+        "stations" => ["South Station", "Kendall/MIT"]
+      }
+
+      user = "bar"
+
+      alerts = %{"a1" => a1, "a2" => a2}
+      state = %State{alerts: alerts}
+
+      :sys.replace_state(pid, fn _state -> state end)
+
+      assert ["South Station", "Kendall/MIT"] ==
+               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+
+      expected_state = %State{
+        alerts: %{
+          "a1" => %Alert{
+            id: "a1",
+            message: %{type: :canned, id: 1},
+            stations: ["Haymarket", "Government Center"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          }
+        }
+      }
+
+      assert expected_state == :sys.get_state(pid)
+    end
+
+    test "does not delete alert if no overlap" do
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
+
+      a1 = %Alert{
+        id: "a1",
+        message: %{type: :canned, id: 1},
+        stations: ["Haymarket", "Government Center"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      a2 = %Alert{
+        id: "a2",
+        message: %{type: :custom, text: "This is an alert"},
+        stations: ["Kendall/MIT"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      params = %{
+        "id" => nil,
+        "stations" => ["South Station"]
+      }
+
+      user = "bar"
+
+      alerts = %{"a1" => a1, "a2" => a2}
+      state = %State{alerts: alerts}
+
+      :sys.replace_state(pid, fn _state -> state end)
+
+      assert [] ==
+               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+
+      expected_state = %State{
+        alerts: %{
+          "a1" => %Alert{
+            id: "a1",
+            message: %{type: :canned, id: 1},
+            stations: ["Haymarket", "Government Center"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          },
+          "a2" => %Alert{
+            id: "a2",
+            message: %{type: :custom, text: "This is an alert"},
+            stations: ["Kendall/MIT"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          }
+        }
+      }
+
+      assert expected_state == :sys.get_state(pid)
+    end
+
+    test "does not delete alert if inactive" do
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
+
+      a1 = %Alert{
+        id: "a1",
+        message: %{type: :canned, id: 1},
+        stations: ["Haymarket", "Government Center"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      a2 = %Alert{
+        id: "a2",
+        message: %{type: :custom, text: "This is an alert"},
+        stations: ["Kendall/MIT"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:10:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      params = %{
+        "id" => nil,
+        "stations" => ["Kendall/MIT"]
+      }
+
+      user = "bar"
+
+      alerts = %{"a1" => a1, "a2" => a2}
+      state = %State{alerts: alerts}
+
+      :sys.replace_state(pid, fn _state -> state end)
+
+      assert [] ==
+               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+
+      expected_state = %State{
+        alerts: %{
+          "a1" => %Alert{
+            id: "a1",
+            message: %{type: :canned, id: 1},
+            stations: ["Haymarket", "Government Center"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          },
+          "a2" => %Alert{
+            id: "a2",
+            message: %{type: :custom, text: "This is an alert"},
+            stations: ["Kendall/MIT"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:10:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          }
+        }
+      }
+
+      assert expected_state == :sys.get_state(pid)
+    end
+
+    test "removes stations from existing alert if another station exists" do
+      {:ok, pid} = GenServer.start_link(State, :empty, [])
+
+      a1 = %Alert{
+        id: "a1",
+        message: %{type: :canned, id: 1},
+        stations: ["Haymarket", "Government Center"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      a2 = %Alert{
+        id: "a2",
+        message: %{type: :custom, text: "This is an alert"},
+        stations: ["South Station", "Kendall/MIT"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user"
+      }
+
+      params = %{
+        "id" => nil,
+        "stations" => ["Kendall/MIT"]
+      }
+
+      user = "bar"
+
+      alerts = %{"a1" => a1, "a2" => a2}
+      state = %State{alerts: alerts}
+
+      :sys.replace_state(pid, fn _state -> state end)
+
+      assert ["Kendall/MIT"] ==
+               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+
+      expected_state = %State{
+        alerts: %{
+          "a1" => %Alert{
+            id: "a1",
+            message: %{type: :canned, id: 1},
+            stations: ["Haymarket", "Government Center"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user"
+          },
+          "a2" => %Alert{
+            id: "a2",
+            message: %{type: :custom, text: "This is an alert"},
+            stations: ["South Station"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "bar"
+          }
+        }
+      }
+
+      assert expected_state == :sys.get_state(pid)
+    end
+  end
+
   describe "to_json/1" do
     a1 = %Alert{
       id: "a1",
