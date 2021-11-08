@@ -12,13 +12,17 @@ const SetSchedule = (props: SetScheduleProps): JSX.Element => {
         <div className="hang-left">
           <div className="step-header weight-700">Schedule</div>
           <div>
-            Choose an expected play duration. After that, we’ll remind you to
-            extend or clear the alert.
+            <span>
+              Choose an expected play duration. After that, we’ll remind you to
+              extend or clear the alert.
+            </span>
           </div>
         </div>
       </div>
       <div className="step-body">
-        <div className="info">Duration</div>
+        <div className="info">
+          <span>Duration</span>
+        </div>
         <div className="">
           <select
             className="message-select text-16"
