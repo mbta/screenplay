@@ -18,9 +18,7 @@ const SetSchedule = (props: SetScheduleProps): JSX.Element => {
         </div>
       </div>
       <div className="step-body">
-        <div className="info">
-          <div>Duration</div>
-        </div>
+        <div className="info">Duration</div>
         <div className="">
           <select
             className="message-select text-16"
