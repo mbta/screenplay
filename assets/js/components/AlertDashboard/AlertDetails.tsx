@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import StackedStationCards from "../AlertWizard/StackedStationCards";
 import { AlertData } from "../App";
 import {
@@ -10,6 +10,7 @@ import {
 import { BanIcon, PencilIcon } from "@heroicons/react/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import SVGPreviews from "../AlertWizard/SVGPreviews";
+import AlertReminder from "./AlertReminder"
 
 interface AlertDetailsProps {
   data: any;
@@ -20,7 +21,7 @@ interface AlertDetailsProps {
 }
 
 const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
-  const { data, setLastChangeTime, startEditWizard } = props;
+  const { data, setLastChangeTime, startEditWizard, triggerConfirmation } = props;
   const { created_by, id, message, schedule, stations } = data;
 
   const stationDetails = stations.map(matchStation);
@@ -53,24 +54,28 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     onSubmit: () => props.clearAlert(id, setLastChangeTime),
   };
 
+  const editAlert = useCallback(() => startEditWizard(data), [startEditWizard, data])
+  const clearAlert = useCallback(() => triggerConfirmation(modalDetails), [triggerConfirmation, modalDetails])
+
   return (
     <div className="alert-card">
       <div className="alert-preview">
         <SVGPreviews showText={true} message={messageString} />
       </div>
       <div className="alert-details">
+        <AlertReminder editAlert={editAlert} clearAlert={clearAlert} endDate={schedule.end} />
         <div className="alert-header">
           <StackedStationCards
             stations={stationDetails}
             className="published-alert"
           />
-          <button className="edit-button" onClick={() => startEditWizard(data)}>
+          <button className="edit-button" onClick={editAlert}>
             <PencilIcon className="button-icon" />
             Edit
           </button>
           <button
             className="clear-button"
-            onClick={() => props.triggerConfirmation(modalDetails)}
+            onClick={clearAlert}
           >
             <BanIcon className="button-icon" />
             Clear Alert
@@ -87,7 +92,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
               <td className="emphasized-cell">{startDateString}</td>
             </tr>
             <tr>
-              <td>Expiration</td>
+              <td>Reminder</td>
               <td className="emphasized-cell">{endDateString}</td>
             </tr>
             <tr className="gray-row">
