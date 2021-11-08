@@ -98,11 +98,6 @@ defmodule ScreenplayWeb.AlertController do
     json(conn, alerts_json)
   end
 
-  def list_active(conn, _params) do
-    alerts_json = State.get_active_alerts() |> Enum.map(&Alert.to_json/1)
-    json(conn, alerts_json)
-  end
-
   defp schedule_from_duration(start_dt, duration) do
     end_dt =
       case duration do

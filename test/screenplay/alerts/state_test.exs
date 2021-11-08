@@ -215,7 +215,7 @@ defmodule Screenplay.Alerts.StateTest do
       :sys.replace_state(pid, fn _state -> state end)
 
       assert ["Kendall/MIT"] ==
-               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+               State.remove_overlapping_alerts(pid, params, user)
 
       expected_state = %State{
         alerts: %{
@@ -267,7 +267,7 @@ defmodule Screenplay.Alerts.StateTest do
       :sys.replace_state(pid, fn _state -> state end)
 
       assert ["South Station", "Kendall/MIT"] ==
-               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+               State.remove_overlapping_alerts(pid, params, user)
 
       expected_state = %State{
         alerts: %{
@@ -319,7 +319,7 @@ defmodule Screenplay.Alerts.StateTest do
       :sys.replace_state(pid, fn _state -> state end)
 
       assert [] ==
-               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+               State.remove_overlapping_alerts(pid, params, user)
 
       expected_state = %State{
         alerts: %{
@@ -336,66 +336,6 @@ defmodule Screenplay.Alerts.StateTest do
             message: %{type: :custom, text: "This is an alert"},
             stations: ["Kendall/MIT"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user"
-          }
-        }
-      }
-
-      assert expected_state == :sys.get_state(pid)
-    end
-
-    test "does not delete alert if inactive" do
-      {:ok, pid} = GenServer.start_link(State, :empty, [])
-
-      a1 = %Alert{
-        id: "a1",
-        message: %{type: :canned, id: 1},
-        stations: ["Haymarket", "Government Center"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-        created_by: "user",
-        edited_by: "user"
-      }
-
-      a2 = %Alert{
-        id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
-        stations: ["Kendall/MIT"],
-        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:10:42Z]},
-        created_by: "user",
-        edited_by: "user"
-      }
-
-      params = %{
-        "id" => nil,
-        "stations" => ["Kendall/MIT"]
-      }
-
-      user = "bar"
-
-      alerts = %{"a1" => a1, "a2" => a2}
-      state = %State{alerts: alerts}
-
-      :sys.replace_state(pid, fn _state -> state end)
-
-      assert [] ==
-               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
-
-      expected_state = %State{
-        alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            stations: ["Haymarket", "Government Center"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user"
-          },
-          "a2" => %Alert{
-            id: "a2",
-            message: %{type: :custom, text: "This is an alert"},
-            stations: ["Kendall/MIT"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:10:42Z]},
             created_by: "user",
             edited_by: "user"
           }
@@ -439,7 +379,7 @@ defmodule Screenplay.Alerts.StateTest do
       :sys.replace_state(pid, fn _state -> state end)
 
       assert ["Kendall/MIT"] ==
-               State.remove_overlapping_alerts(pid, params, user, ~U[2021-08-19 17:19:42Z])
+               State.remove_overlapping_alerts(pid, params, user)
 
       expected_state = %State{
         alerts: %{

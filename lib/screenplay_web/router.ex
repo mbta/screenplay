@@ -76,7 +76,6 @@ defmodule ScreenplayWeb.Router do
     post("/edit", AlertController, :edit)
     post("/clear", AlertController, :clear)
     get("/list", AlertController, :list)
-    get("/list_active", AlertController, :list_active)
   end
 
   # Enables LiveDashboard only for development
