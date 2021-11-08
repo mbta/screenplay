@@ -99,12 +99,13 @@ defmodule Screenplay.Alerts.State do
         :ok = State.delete_alert(pid, existing_id)
         Enum.concat(acc, a.stations)
 
-      # If existing alert has multiple stations: remove the overlapping stations, update the alert, clear the overlapping images.
+      # If existing alert has multiple stations: remove the overlapping stations,
+      # update the alert, clear the overlapping images.
       %Alert{id: existing_id, stations: _stations} = a, acc ->
         stations_no_overlap = Enum.reject(a.stations, fn station -> station in stations end)
 
         # Existing alert and new alert have the same station list
-        if length(stations_no_overlap) == 0 do
+        if Enum.empty?(stations_no_overlap) do
           :ok = State.delete_alert(pid, existing_id)
           Enum.concat(acc, a.stations)
         else
