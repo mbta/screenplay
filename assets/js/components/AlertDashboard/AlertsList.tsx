@@ -19,6 +19,10 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
       .then(setAlertsData);
   }, [lastChangeTime]);
 
+  useEffect(() => {
+    setTimeout(() => setLastChangeTime(Date.now()), 60000);
+  }, [lastChangeTime]);
+
   const clearAlert = (
     id: string,
     setLastChangeTime: (time: number) => void
