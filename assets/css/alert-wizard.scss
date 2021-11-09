@@ -57,6 +57,10 @@
         }
         .hang-left {
           flex: 1;
+
+          .station-message:not(:first-child) {
+            padding-top: 12px;
+          }
         }
         .hang-right {
           text-align: right;
