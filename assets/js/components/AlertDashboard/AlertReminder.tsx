@@ -24,4 +24,4 @@ const AlertReminder = ({ clearAlert, editAlert, endDate }): JSX.Element => {
   )
 }
 
-export default AlertReminder
+export default AlertReminder;
