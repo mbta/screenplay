@@ -147,14 +147,20 @@ footer {
     padding: 24px;
     border-radius: 0 0 8px 8px;
     .cancel-button {
-      background-color: white;
+      background-color: $gray-50;
       border: 1px solid $gray-300;
       color: $gray-700;
+      &:hover {
+        background-color: white;
+      }
     }
     .confirm-button {
       margin-left: 24px;
       background-color: $cyan-700;
       border: 1px solid $gray-300;
+      &:hover {
+        background: $cyan-900;
+      }
     }
   }
 }
