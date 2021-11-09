@@ -301,6 +301,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   checkLine(line: string, checked: boolean) {
+    if (line === "silver") {
+      return;
+    }
     if (checked) {
       stationsByLine[line]
         .filter((station) => station.portrait || station.landscape)

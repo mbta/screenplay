@@ -43,6 +43,9 @@
   input[type="checkbox"] {
     margin: 0 16px 0 0;
   }
+  input[name="silver"] {
+    visibility: hidden;
+  }
   .line-name {
     font-size: 18px;
     line-height: 18px;
