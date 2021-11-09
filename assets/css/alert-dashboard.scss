@@ -39,10 +39,10 @@
   }
 
   .create-alert-button {
-    background: $pink-700;
+    background-color: $pink-700;
     height: 50px;
     &:hover {
-      background: $pink-900;
+      background-color: $pink-900;
     }
   }
 }
