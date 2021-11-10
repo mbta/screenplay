@@ -58,6 +58,7 @@
   }
   .station-name {
     flex-grow: 1;
+    line-height: 36px;
     &.disabled {
       margin-left: 29px;
       font-weight: normal;
