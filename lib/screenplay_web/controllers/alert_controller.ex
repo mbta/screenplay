@@ -16,7 +16,8 @@ defmodule ScreenplayWeb.AlertController do
         }
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
-    user = get_session(conn, "username")
+    session = get_session(conn)
+    user = Map.get(session, "name") || Map.get(session, "username")
 
     message = Alert.message_from_json(message)
     alert = Alert.new(message, stations, schedule, user)
@@ -57,7 +58,8 @@ defmodule ScreenplayWeb.AlertController do
     message = Alert.message_from_json(message)
     changes = %{message: message, stations: stations, schedule: schedule}
 
-    user = get_session(conn, "username")
+    session = get_session(conn)
+    user = Map.get(session, "name") || Map.get(session, "username")
 
     new_alert = Alert.update(alert, changes, user)
 
@@ -78,7 +80,8 @@ defmodule ScreenplayWeb.AlertController do
   end
 
   def clear(conn, params = %{"id" => id}) do
-    user = get_session(conn, "username")
+    session = get_session(conn)
+    user = Map.get(session, "name") || Map.get(session, "username")
     _ = UserActionLogger.log(user, :clear_alert, params)
 
     %Alert{stations: stations} = State.get_alert(id)
@@ -90,7 +93,8 @@ defmodule ScreenplayWeb.AlertController do
   end
 
   def clear_all(conn, _params) do
-    user = get_session(conn, "username")
+    session = get_session(conn)
+    user = Map.get(session, "name") || Map.get(session, "username")
     _ = UserActionLogger.log(user, :clear_all_alerts)
 
     State.get_all_alerts()
