@@ -15,6 +15,7 @@ defmodule ScreenplayWeb.AuthController do
 
   def callback(conn = %{assigns: %{ueberauth_auth: auth}}, _params) do
     username = auth.uid
+    name = auth.info.name
     expiration = auth.credentials.expires_at
     credentials = auth.credentials
 
@@ -28,6 +29,7 @@ defmodule ScreenplayWeb.AuthController do
       ttl: {expiration - current_time, :seconds}
     )
     |> Plug.Conn.put_session(:username, username)
+    |> Plug.Conn.put_session(:name, name)
     |> redirect(to: Helpers.page_path(conn, :index))
   end
 
