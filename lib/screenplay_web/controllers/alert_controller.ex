@@ -98,7 +98,7 @@ defmodule ScreenplayWeb.AlertController do
     _ = UserActionLogger.log(user, :clear_all_alerts)
 
     State.get_all_alerts()
-    |> Enum.map(fn %Alert{id: id, stations: stations} ->
+    |> Enum.each(fn %Alert{id: id, stations: stations} ->
       :ok = State.delete_alert(id)
       SFTP.clear_takeover_images(stations)
     end)
