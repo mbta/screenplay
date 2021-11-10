@@ -89,6 +89,19 @@ defmodule ScreenplayWeb.AlertController do
     json(conn, %{success: true})
   end
 
+  def clear_all(conn, _params) do
+    user = get_session(conn, "username")
+    _ = UserActionLogger.log(user, :clear_all_alerts)
+
+    State.get_all_alerts()
+    |> Enum.map(fn %Alert{id: id, stations: stations} ->
+      :ok = State.delete_alert(id)
+      SFTP.clear_takeover_images(stations)
+    end)
+
+    json(conn, %{success: true})
+  end
+
   def list(conn, _params) do
     alerts_json = State.get_all_alerts() |> Enum.map(&Alert.to_json/1)
     json(conn, alerts_json)
