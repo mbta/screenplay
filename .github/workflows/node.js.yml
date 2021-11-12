@@ -3,6 +3,10 @@
 
 name: Node.js CI
 
+defaults:
+  run:
+    working-directory: ./assets
+
 on:
   push:
     branches: [ master ]
@@ -26,13 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - name: npm run ci
-      working-directory: ./assets
-      run: npm ci
-    - name: npm run deploy
-      working-directory: ./assets
-      run: npm run deploy
+    - run: npm ci
+    - run: npm run deploy
     # TODO:  
-    #- name: npm test
-    #  working-directory: ./assets
-    #  run: npm test
+    #- run: npm test
