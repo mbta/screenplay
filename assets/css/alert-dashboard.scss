@@ -63,6 +63,26 @@
     background-color: white;
     border-radius: 0 8px 8px 0;
   }
+  .alert-reminder {
+    align-items: center;
+    background-color: $pink-700;
+    color: white;
+    display: flex;
+    font-weight: 700;
+    height: 64px;
+
+    .reminder-icon {
+      height: 32px;
+      width: 32px;
+      margin: 16px;
+      margin-left: 28px;
+    }
+
+    .reminder-action {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
   .alert-header {
     display: flex;
     background: $gray-200;
