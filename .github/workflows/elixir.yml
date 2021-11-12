@@ -78,5 +78,5 @@ jobs:
           node-version: 14.x
           cache: 'npm'
           cache-dependency-path: './assets'
-      - run: npm ci
-      - run: npm run deploy
+      - run: npm --prefix assets ci
+      - run: npm --prefix assets run deploy
