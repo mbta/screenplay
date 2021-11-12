@@ -10,7 +10,7 @@ import {
 import { BanIcon, PencilIcon } from "@heroicons/react/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import SVGPreviews from "../AlertWizard/SVGPreviews";
-import AlertReminder from "./AlertReminder"
+import AlertReminder from "./AlertReminder";
 
 interface AlertDetailsProps {
   data: any;
@@ -21,7 +21,8 @@ interface AlertDetailsProps {
 }
 
 const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
-  const { data, setLastChangeTime, startEditWizard, triggerConfirmation } = props;
+  const { data, setLastChangeTime, startEditWizard, triggerConfirmation } =
+    props;
   const { created_by, id, message, schedule, stations } = data;
 
   const stationDetails = stations.map(matchStation);
@@ -54,8 +55,14 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     onSubmit: () => props.clearAlert(id, setLastChangeTime),
   };
 
-  const editAlert = useCallback(() => startEditWizard(data), [startEditWizard, data])
-  const clearAlert = useCallback(() => triggerConfirmation(modalDetails), [triggerConfirmation, modalDetails])
+  const editAlert = useCallback(
+    () => startEditWizard(data),
+    [startEditWizard, data]
+  );
+  const clearAlert = useCallback(
+    () => triggerConfirmation(modalDetails),
+    [triggerConfirmation, modalDetails]
+  );
 
   return (
     <div className="alert-card">
@@ -63,7 +70,11 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
         <SVGPreviews showText={true} message={messageString} />
       </div>
       <div className="alert-details">
-        <AlertReminder editAlert={editAlert} clearAlert={clearAlert} endDate={schedule.end} />
+        <AlertReminder
+          editAlert={editAlert}
+          clearAlert={clearAlert}
+          endDate={schedule.end}
+        />
         <div className="alert-header">
           <StackedStationCards
             stations={stationDetails}
@@ -73,10 +84,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
             <PencilIcon className="button-icon" />
             Edit
           </button>
-          <button
-            className="clear-button"
-            onClick={clearAlert}
-          >
+          <button className="clear-button" onClick={clearAlert}>
             <BanIcon className="button-icon" />
             Clear Alert
           </button>
