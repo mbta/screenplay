@@ -26,6 +26,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm assets ci
-    - run: npm assets run deploy --if-present
-    - run: npm assets test
+    - name: npm run ci
+      working-directory: ./assets
+      run: npm ci
+    - name: npm run deploy
+      working-directory: ./assets
+      run: npm run deploy
+    # TODO:  
+    #- name: npm test
+    #  working-directory: ./assets
+    #  run: npm test
