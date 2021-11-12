@@ -71,3 +71,12 @@ jobs:
           name: elixir-lcov
           path: cover/
       - uses: mbta/actions/dialyzer@v1
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: 'npm'
+          cache-dependency-path: './assets'
+    - run: npm ci
+    - run: npm run deploy
