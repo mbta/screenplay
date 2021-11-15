@@ -64,7 +64,6 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
             disabled={props.waitingForInput}
             onClick={props.forward}
             onMouseOver={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
           >
             <span>{forwardButton(props.step)}</span>
             <ArrowNarrowRightIcon className="button-icon right" />
