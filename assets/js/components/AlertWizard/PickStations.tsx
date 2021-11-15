@@ -15,16 +15,16 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
       <div className="step-instructions flex">
         <div className="hang-left">
           <div className="step-header weight-700">Stations</div>
-          <div className="station-message">
+          <div>
             <span>Select stations for Takeover.</span>
           </div>
-          <div className="station-message">
+          <div>
             <span>
               Messages at transfer stations will be visible at ALL MODES serving
               that station.
             </span>
           </div>
-          <div className="station-message">
+          <div>
             <span>
               Above ground Green Line stops do not have Outfront Media screens.
             </span>
