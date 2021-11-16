@@ -301,12 +301,19 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   checkLine(line: string, checked: boolean) {
+    if (line === "silver") {
+      return;
+    }
     if (checked) {
-      stationsByLine[line].forEach((station) => {
-        if (!this.state.selectedStations.some((x) => x.name === station.name)) {
-          this.addStation(station);
-        }
-      });
+      stationsByLine[line]
+        .filter((station) => station.portrait || station.landscape)
+        .forEach((station) => {
+          if (
+            !this.state.selectedStations.some((x) => x.name === station.name)
+          ) {
+            this.addStation(station);
+          }
+        });
     } else {
       stationsByLine[line].forEach((station) => this.removeStation(station));
     }
