@@ -109,7 +109,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               <g id="CTA" transform="translate(48.000000, 1696.000000)">
                 <text
                   id="url"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fontSize="88"
                   fontWeight="700"
                   fill="#171F26"
@@ -241,7 +241,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               <g id="CTA" transform="translate(48.000000, 1696.000000)">
                 <text
                   id="url"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fontSize="88"
                   fontWeight="700"
                   fill="#171F26"
@@ -270,7 +270,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
                 <g
                   id="Portrait-Text-Container"
                   transform="translate(64.000000, 256.000000)"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fill="#FFFFFF"
                   fontSize={svgFontSize}
                   fontWeight="500"
@@ -285,7 +285,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               >
                 <text
                   id="Alert-type"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fontSize="120"
                   fontWeight="700"
                   letterSpacing="4"
@@ -338,7 +338,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               <g
                 id="Landscape-Text-Container"
                 transform="translate(64.000000, 92.000000)"
-                fontFamily="sans-serif"
+                fontFamily="Inter"
                 fill="#FFFFFF"
                 fontWeight="500"
                 fontSize={svgFontSize}
@@ -349,7 +349,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             <g id="CTA" transform="translate(64.000000, 864.000000)">
               <text
                 id="url"
-                fontFamily="sans-serif"
+                fontFamily="Inter"
                 fontSize="120"
                 fontWeight="700"
                 fill="#171F26"
@@ -372,7 +372,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             >
               <text
                 id="Alert-type"
-                fontFamily="sans-serif"
+                fontFamily="Inter"
                 fontSize="120"
                 fontWeight="700"
                 letterSpacing="3.33333333"
