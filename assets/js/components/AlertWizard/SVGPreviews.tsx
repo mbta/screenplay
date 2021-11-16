@@ -9,6 +9,7 @@ import {
   svgLongSide,
   svgPortraitLineLength,
   svgShortSide,
+  interBase64,
 } from "../../constants/misc";
 
 interface SVGPreviewsProps {
@@ -91,6 +92,14 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             xmlns="http://www.w3.org/2000/svg"
             style={{ background: "#FFDD00" }}
           >
+            <style>
+              {`@font-face {
+                font-family: 'Inter';
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64}');
+                font-weight: normal;
+                font-style: normal;
+              }`}
+            </style>
             <title>Outfront Alert - Empty Preview</title>
             <g
               id="Outfront-Alert-Empty-Preview"
@@ -221,8 +230,16 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             viewBox="0 0 1080 1920"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
-            style={{ background: "#FFDD00" }}
+            style={{ background: "#FFDD00", fontFamily: "Inter" }}
           >
+            <style>
+              {`@font-face {
+                font-family: 'Inter';
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64}');
+                font-weight: normal;
+                font-style: normal;
+              }`}
+            </style>
             <title>Outfront Alert Portrait</title>
             <g
               id="Outfront-Alert-Portrait"
@@ -316,6 +333,14 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
           xmlns="http://www.w3.org/2000/svg"
           style={{ background: "#FFDD00" }}
         >
+          <style>
+            {`@font-face {
+                font-family: 'Inter';
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64}');
+                font-weight: normal;
+                font-style: normal;
+              }`}
+          </style>
           <title>Outfront Alert Landscape</title>
           <g
             id="Outfront-Alert-Landscape"
