@@ -230,7 +230,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             viewBox="0 0 1080 1920"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
-            style={{ background: "#FFDD00", fontFamily: "Inter" }}
+            style={{ background: "#FFDD00" }}
           >
             <style>
               {`@font-face {
