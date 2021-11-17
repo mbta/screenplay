@@ -9,7 +9,8 @@ import {
   svgLongSide,
   svgPortraitLineLength,
   svgShortSide,
-  interBase64,
+  interBase64Weight500,
+  interBase64Weight700,
 } from "../../constants/misc";
 
 interface SVGPreviewsProps {
@@ -95,9 +96,17 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             <style>
               {`@font-face {
                 font-family: 'Inter';
-                src: url('data:font/truetype;charset=utf-8;base64,${interBase64}');
-                font-weight: normal;
                 font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight700}');
+              }
+              @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
               }`}
             </style>
             <title>Outfront Alert - Empty Preview</title>
@@ -235,9 +244,17 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             <style>
               {`@font-face {
                 font-family: 'Inter';
-                src: url('data:font/truetype;charset=utf-8;base64,${interBase64}');
-                font-weight: normal;
                 font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight700}');
+              }
+              @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
               }`}
             </style>
             <title>Outfront Alert Portrait</title>
@@ -336,9 +353,17 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
           <style>
             {`@font-face {
                 font-family: 'Inter';
-                src: url('data:font/truetype;charset=utf-8;base64,${interBase64}');
-                font-weight: normal;
                 font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight700}');
+              }
+              @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
               }`}
           </style>
           <title>Outfront Alert Landscape</title>
