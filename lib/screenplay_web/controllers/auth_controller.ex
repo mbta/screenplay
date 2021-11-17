@@ -28,8 +28,7 @@ defmodule ScreenplayWeb.AuthController do
       %{groups: credentials.other.groups},
       ttl: {expiration - current_time, :seconds}
     )
-    |> Plug.Conn.put_session(:username, username)
-    |> Plug.Conn.put_session(:name, name)
+    |> Plug.Conn.put_session(:username, name || username)
     |> redirect(to: Helpers.page_path(conn, :index))
   end
 
