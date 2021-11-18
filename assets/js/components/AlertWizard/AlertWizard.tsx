@@ -413,11 +413,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <WizardSidebar
             selectedStations={this.state.selectedStations}
             step={this.state.step}
-            message={
-              this.state.messageOption == "1"
-                ? CANNED_MESSAGES[parseInt(this.state.cannedMessage)]
-                : this.state.customMessage
+            customMessage={
+              this.state.messageOption == "1" ? "" : this.state.customMessage
             }
+            cannedMessageId={this.state.cannedMessage}
           />
         </div>
         <WizardNavFooter

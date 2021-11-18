@@ -67,7 +67,14 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        <SVGPreviews showText={true} message={messageString} />
+        {message.id === undefined ? (
+          <SVGPreviews showText={true} message={messageString} />
+        ) : (
+          <img
+            className="portrait-png"
+            src={`/images/Outfront-Alert-${message.id}-portrait.png`}
+          />
+        )}
       </div>
       <div className="alert-details">
         <AlertReminder
