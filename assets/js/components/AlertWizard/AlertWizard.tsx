@@ -354,8 +354,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     height: number,
     callback: (dataUrl: string) => void
   ) {
-    const svg = document.getElementById(orientation + "-svg") as HTMLElement;
-
     const canvas = document.createElement("canvas");
     canvas.width = width * svgScale;
     canvas.height = height * svgScale;
@@ -365,17 +363,22 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.scale(svgScale, svgScale);
 
-    const data = new XMLSerializer().serializeToString(svg);
     const img = new Image();
 
+    if (this.state.cannedMessage !== "") {
+      img.src = `/images/Outfront-Alert-${this.state.cannedMessage}-${orientation}.png`;
+    } else {
+      const svg = document.getElementById(orientation + "-svg") as HTMLElement;
+      const data = new XMLSerializer().serializeToString(svg);
+      img.src =
+        "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(data)));
+    }
+
     img.onload = () => {
-      ctx.drawImage(img, 0, 0);
+      ctx.drawImage(img, 0, 0, width, height);
       const imgURI = canvas.toDataURL("image/png");
       callback(imgURI);
     };
-
-    img.src =
-      "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(data)));
   }
 
   render() {
