@@ -51,6 +51,12 @@
   font-weight: 800;
   margin: 48px 0 3px 24px;
   color: white;
+  display: flex;
+}
+
+.clear-all-alerts-button {
+  margin-left: auto;
+  background-color: $cyan-700;
 }
 
 .alert-card {

@@ -35,7 +35,9 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
 
   @impl Ueberauth.Strategy
   def info(_conn) do
-    %Ueberauth.Auth.Info{}
+    %Ueberauth.Auth.Info{
+      name: "Fake User"
+    }
   end
 
   @impl Ueberauth.Strategy
