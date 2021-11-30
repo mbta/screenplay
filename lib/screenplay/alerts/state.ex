@@ -64,6 +64,13 @@ defmodule Screenplay.Alerts.State do
     end
   end
 
+  @spec get_outdated_alerts() :: list(Alert.t())
+  def get_outdated_alerts(now \\ DateTime.utc_now()) do
+    Enum.filter(get_all_alerts(), fn %{schedule: %{end: end_dt}} ->
+      DateTime.compare(now, end_dt) == :gt
+    end)
+  end
+
   ### Server
 
   @impl true
