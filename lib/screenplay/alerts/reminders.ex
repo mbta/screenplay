@@ -19,19 +19,20 @@ defmodule Screenplay.Alerts.Reminders do
   def handle_info(:work, state) do
     url = Application.get_env(:screenplay, :slack_webhook_url, "")
 
-    if url !== "" do
-      schedule_work()
+    schedule_work()
 
-      case State.get_outdated_alerts() do
-        [] ->
-          Logger.debug("No outdated alerts found")
+    case State.get_outdated_alerts() do
+      [] ->
+        Logger.debug("No outdated alerts found")
 
-        alerts ->
-          Enum.each(alerts, fn %Alert{stations: stations} ->
-            format_slack_message(stations)
-            |> send_slack_message(url)
-          end)
-      end
+      alerts when url != "" ->
+        Enum.each(alerts, fn %Alert{stations: stations} ->
+          format_slack_message(stations)
+          |> send_slack_message(url)
+        end)
+
+      _ ->
+        Logger.info("No Slack Webhook URL found")
     end
 
     {:noreply, state}
@@ -39,7 +40,6 @@ defmodule Screenplay.Alerts.Reminders do
 
   defp format_slack_message(stations) do
     group_id = Application.get_env(:screenplay, :pio_slack_group_id)
-    Logger.debug(group_id)
 
     %{
       blocks: [
