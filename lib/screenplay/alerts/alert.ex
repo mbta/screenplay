@@ -52,7 +52,7 @@ defmodule Screenplay.Alerts.Alert do
           created_by: user(),
           edited_by: user(),
           cleared_at: DateTime.t() | nil,
-          cleared_by: user() | nil
+          cleared_by: user()
         }
 
   @spec random_id :: id()
