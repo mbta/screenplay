@@ -24,6 +24,25 @@ defmodule Screenplay.Alerts.AlertTest do
     end
   end
 
+  describe "clear/2" do
+    test "sets cleared_at and cleared_by properties" do
+      alert = %Alert{
+        id: "alert",
+        message: %{type: :canned, id: 1},
+        stations: ["Orient Heights", "Airport"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "test user",
+        edited_by: "test_user",
+        cleared_at: nil,
+        cleared_by: nil
+      }
+
+      clear_user = "clear_user"
+
+      assert %{cleared_by: ^clear_user, cleared_at: %DateTime{}} = Alert.clear(alert, clear_user)
+    end
+  end
+
   describe "update/3" do
     test "replaces the specified values, and not others" do
       alert = %Alert{
@@ -32,7 +51,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Orient Heights", "Airport"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "test user",
-        edited_by: "test_user"
+        edited_by: "test_user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       changes_map = %{message: %{type: :custom, text: "All clear"}}
@@ -44,7 +65,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Orient Heights", "Airport"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "test user",
-        edited_by: "test_user2"
+        edited_by: "test_user2",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       assert expected == Alert.update(alert, changes_map, update_user)
@@ -57,7 +80,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Orient Heights", "Airport"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "test user",
-        edited_by: "test_user"
+        edited_by: "test_user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       changes_map = %{message: nil, stations: ["Government Center"], schedule: nil}
@@ -69,7 +94,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "test user",
-        edited_by: "test_user2"
+        edited_by: "test_user2",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       assert expected == Alert.update(alert, changes_map, update_user)
@@ -84,7 +111,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Wellington", "Malden Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       expected = %{
@@ -93,7 +122,9 @@ defmodule Screenplay.Alerts.AlertTest do
         "stations" => ["Wellington", "Malden Center"],
         "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
         "created_by" => "user",
-        "edited_by" => "user"
+        "edited_by" => "user",
+        "cleared_at" => nil,
+        "cleared_by" => nil
       }
 
       assert expected == Alert.to_json(alert)
@@ -106,7 +137,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Wellington", "Malden Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       expected = %{
@@ -115,7 +148,9 @@ defmodule Screenplay.Alerts.AlertTest do
         "stations" => ["Wellington", "Malden Center"],
         "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
         "created_by" => "user",
-        "edited_by" => "user"
+        "edited_by" => "user",
+        "cleared_at" => nil,
+        "cleared_by" => nil
       }
 
       assert expected == Alert.to_json(alert)
@@ -139,7 +174,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Wellington", "Malden Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       assert expected == Alert.from_json(json)
@@ -161,7 +198,9 @@ defmodule Screenplay.Alerts.AlertTest do
         stations: ["Wellington", "Malden Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       assert expected == Alert.from_json(json)
