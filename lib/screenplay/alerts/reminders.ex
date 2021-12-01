@@ -48,7 +48,7 @@ defmodule Screenplay.Alerts.Reminders do
           text: %{
             type: "mrkdwn",
             text:
-              "Hi#{if group_id !== "", do: " <!subteam^#{group_id}>", else: ""}! Reminder that the Emergency Takeover at #{Enum.join(stations, ", ")} is still active."
+              "#{if group_id !== "", do: "<!subteam^#{group_id}> ", else: ""}Reminder that the Emergency Takeover at #{Enum.join(stations, ", ")} is still active."
           }
         },
         %{
