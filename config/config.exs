@@ -29,8 +29,7 @@ config :ex_aws, json_codec: Jason
 # Authenticate using Cognito
 config :screenplay,
   redirect_http?: true,
-  cognito_group: "screenplay",
-  pio_slack_group_id: "SD0M14JV6"
+  cognito_group: "screenplay"
 
 config :screenplay, ScreenplayWeb.AuthManager, issuer: "screenplay"
 
