@@ -5,7 +5,16 @@ defmodule Screenplay.Alerts.Alert do
 
   alias Screenplay.Alerts.State
 
-  @enforce_keys [:id, :message, :stations, :schedule, :created_by, :edited_by, :cleared_at, :cleared_by]
+  @enforce_keys [
+    :id,
+    :message,
+    :stations,
+    :schedule,
+    :created_by,
+    :edited_by,
+    :cleared_at,
+    :cleared_by
+  ]
   defstruct @enforce_keys
 
   @type id :: String.t()

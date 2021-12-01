@@ -87,20 +87,37 @@ defmodule Screenplay.Alerts.State do
     {:reply, Map.values(alerts), state}
   end
 
-  def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{alerts: old_alerts, cleared_alerts: cleared_alerts}) do
-    new_state = %State{alerts: Map.put(old_alerts, new_alert_id, new_alert), cleared_alerts: cleared_alerts}
+  def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{
+        alerts: old_alerts,
+        cleared_alerts: cleared_alerts
+      }) do
+    new_state = %State{
+      alerts: Map.put(old_alerts, new_alert_id, new_alert),
+      cleared_alerts: cleared_alerts
+    }
+
     :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
-  def handle_call({:update_alert, id, new_alert}, _from, %State{alerts: old_alerts, cleared_alerts: cleared_alerts}) do
+  def handle_call({:update_alert, id, new_alert}, _from, %State{
+        alerts: old_alerts,
+        cleared_alerts: cleared_alerts
+      }) do
     new_state = %State{alerts: Map.put(old_alerts, id, new_alert), cleared_alerts: cleared_alerts}
     :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
-  def handle_call({:clear_alert, alert = %Alert{id: id}}, _from, %State{alerts: old_alerts, cleared_alerts: cleared_alerts}) do
-    new_state = %State{alerts: Map.delete(old_alerts, id), cleared_alerts: Map.put(cleared_alerts, id, alert)}
+  def handle_call({:clear_alert, alert = %Alert{id: id}}, _from, %State{
+        alerts: old_alerts,
+        cleared_alerts: cleared_alerts
+      }) do
+    new_state = %State{
+      alerts: Map.delete(old_alerts, id),
+      cleared_alerts: Map.put(cleared_alerts, id, alert)
+    }
+
     :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
@@ -124,9 +141,9 @@ defmodule Screenplay.Alerts.State do
 
     cleared_alerts_map =
       cleared_alerts_json
-        |> Enum.map(&Alert.from_json/1)
-        |> Enum.map(fn alert = %{id: id} -> {id, alert} end)
-        |> Enum.into(%{})
+      |> Enum.map(&Alert.from_json/1)
+      |> Enum.map(fn alert = %{id: id} -> {id, alert} end)
+      |> Enum.into(%{})
 
     %__MODULE__{alerts: alerts_map, cleared_alerts: cleared_alerts_map}
   end
