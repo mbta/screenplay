@@ -7,11 +7,12 @@ defmodule Screenplay.Alerts.State do
 
   alias Screenplay.Alerts.{Alert, State}
 
-  @enforce_keys [:alerts]
+  @enforce_keys [:alerts, :cleared_alerts]
   defstruct @enforce_keys
 
   @type t :: %__MODULE__{
-          alerts: %{Alert.id() => Alert.t()}
+          alerts: %{Alert.id() => Alert.t()},
+          cleared_alerts: %{Alert.id() => Alert.t()}
         }
 
   ### Client
@@ -46,9 +47,9 @@ defmodule Screenplay.Alerts.State do
     GenServer.call(pid, {:update_alert, id, new_alert})
   end
 
-  @spec delete_alert(GenServer.server(), Alert.id()) :: :ok
-  def delete_alert(pid \\ __MODULE__, id) do
-    GenServer.call(pid, {:delete_alert, id})
+  @spec clear_alert(GenServer.server(), Alert.t()) :: :ok
+  def clear_alert(pid \\ __MODULE__, alert) do
+    GenServer.call(pid, {:clear_alert, alert})
   end
 
   @spec get_unused_alert_id :: Alert.id()
@@ -77,7 +78,7 @@ defmodule Screenplay.Alerts.State do
 
       # Initialize with empty state, for testing purposes
       :empty ->
-        {:ok, %State{alerts: %{}}}
+        {:ok, %State{alerts: %{}, cleared_alerts: %{}}}
     end
   end
 
@@ -86,20 +87,37 @@ defmodule Screenplay.Alerts.State do
     {:reply, Map.values(alerts), state}
   end
 
-  def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{alerts: old_alerts}) do
-    new_state = %State{alerts: Map.put(old_alerts, new_alert_id, new_alert)}
+  def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{
+        alerts: old_alerts,
+        cleared_alerts: cleared_alerts
+      }) do
+    new_state = %State{
+      alerts: Map.put(old_alerts, new_alert_id, new_alert),
+      cleared_alerts: cleared_alerts
+    }
+
     :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
-  def handle_call({:update_alert, id, new_alert}, _from, %State{alerts: old_alerts}) do
-    new_state = %State{alerts: Map.put(old_alerts, id, new_alert)}
+  def handle_call({:update_alert, id, new_alert}, _from, %State{
+        alerts: old_alerts,
+        cleared_alerts: cleared_alerts
+      }) do
+    new_state = %State{alerts: Map.put(old_alerts, id, new_alert), cleared_alerts: cleared_alerts}
     :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
 
-  def handle_call({:delete_alert, id}, _from, %State{alerts: old_alerts}) do
-    new_state = %State{alerts: Map.delete(old_alerts, id)}
+  def handle_call({:clear_alert, alert = %Alert{id: id}}, _from, %State{
+        alerts: old_alerts,
+        cleared_alerts: cleared_alerts
+      }) do
+    new_state = %State{
+      alerts: Map.delete(old_alerts, id),
+      cleared_alerts: Map.put(cleared_alerts, id, alert)
+    }
+
     :ok = save_state(new_state)
     {:reply, :ok, new_state}
   end
@@ -107,12 +125,29 @@ defmodule Screenplay.Alerts.State do
   ### Serialize
 
   @spec to_json(t()) :: map()
-  def to_json(%__MODULE__{alerts: alerts}) do
+  def to_json(%__MODULE__{alerts: alerts, cleared_alerts: cleared_alerts}) do
     serialized_alerts = alerts |> Map.values() |> Enum.map(&Alert.to_json/1)
-    %{"alerts" => serialized_alerts}
+    serialized_cleared_alerts = cleared_alerts |> Map.values() |> Enum.map(&Alert.to_json/1)
+    %{"alerts" => serialized_alerts, "cleared_alerts" => serialized_cleared_alerts}
   end
 
   @spec from_json(map()) :: t()
+  def from_json(%{"alerts" => alerts_json, "cleared_alerts" => cleared_alerts_json}) do
+    alerts_map =
+      alerts_json
+      |> Enum.map(&Alert.from_json/1)
+      |> Enum.map(fn alert = %{id: id} -> {id, alert} end)
+      |> Enum.into(%{})
+
+    cleared_alerts_map =
+      cleared_alerts_json
+      |> Enum.map(&Alert.from_json/1)
+      |> Enum.map(fn alert = %{id: id} -> {id, alert} end)
+      |> Enum.into(%{})
+
+    %__MODULE__{alerts: alerts_map, cleared_alerts: cleared_alerts_map}
+  end
+
   def from_json(%{"alerts" => alerts_json}) do
     alerts_map =
       alerts_json
@@ -120,7 +155,7 @@ defmodule Screenplay.Alerts.State do
       |> Enum.map(fn alert = %{id: id} -> {id, alert} end)
       |> Enum.into(%{})
 
-    %__MODULE__{alerts: alerts_map}
+    %__MODULE__{alerts: alerts_map, cleared_alerts: %{}}
   end
 
   defp save_state(new_state) do
