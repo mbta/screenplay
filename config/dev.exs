@@ -78,7 +78,6 @@ config :screenplay,
   alerts_fetch_module: Screenplay.Alerts.LocalFetch,
   local_alerts_path_spec: {:priv, "alerts.json"},
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
-  slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL"),
   pio_slack_group_id: ""
 
 config :ueberauth, Ueberauth,

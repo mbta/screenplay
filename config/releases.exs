@@ -25,4 +25,5 @@ config :screenplay,
   outfront_ssh_key: System.get_env("OUTFRONT_SSH_KEY"),
   outfront_sftp_user: System.get_env("OUTFRONT_SFTP_USER"),
   outfront_sftp_domain: System.get_env("OUTFRONT_SFTP_DOMAIN"),
-  pio_slack_group_id: "SD0M14JV6"
+  pio_slack_group_id: "SD0M14JV6",
+  slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL")
