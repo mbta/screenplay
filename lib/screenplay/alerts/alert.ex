@@ -5,7 +5,7 @@ defmodule Screenplay.Alerts.Alert do
 
   alias Screenplay.Alerts.State
 
-  @enforce_keys [:id, :message, :stations, :schedule, :created_by, :edited_by]
+  @enforce_keys [:id, :message, :stations, :schedule, :created_by, :edited_by, :cleared_at, :cleared_by]
   defstruct @enforce_keys
 
   @type id :: String.t()
@@ -41,7 +41,9 @@ defmodule Screenplay.Alerts.Alert do
           stations: list(station()),
           schedule: schedule(),
           created_by: user(),
-          edited_by: user()
+          edited_by: user(),
+          cleared_at: DateTime.t() | nil,
+          cleared_by: user()
         }
 
   @spec random_id :: id()
@@ -58,7 +60,9 @@ defmodule Screenplay.Alerts.Alert do
       stations: stations,
       schedule: schedule,
       created_by: user,
-      edited_by: user
+      edited_by: user,
+      cleared_at: nil,
+      cleared_by: nil
     }
   end
 
@@ -71,6 +75,11 @@ defmodule Screenplay.Alerts.Alert do
     %{merged | edited_by: user}
   end
 
+  @spec clear(t(), user()) :: t()
+  def clear(alert, user) do
+    %{alert | cleared_by: user, cleared_at: DateTime.utc_now()}
+  end
+
   @spec to_json(t()) :: map()
   def to_json(%__MODULE__{
         id: id,
@@ -78,7 +87,9 @@ defmodule Screenplay.Alerts.Alert do
         stations: stations,
         schedule: schedule,
         created_by: created_by,
-        edited_by: edited_by
+        edited_by: edited_by,
+        cleared_at: cleared_at,
+        cleared_by: cleared_by
       }) do
     %{
       "id" => id,
@@ -86,11 +97,35 @@ defmodule Screenplay.Alerts.Alert do
       "stations" => stations_to_json(stations),
       "schedule" => schedule_to_json(schedule),
       "created_by" => created_by,
-      "edited_by" => edited_by
+      "edited_by" => edited_by,
+      "cleared_at" => serialize_datetime(cleared_at),
+      "cleared_by" => cleared_by
     }
   end
 
   @spec from_json(map()) :: t()
+  def from_json(%{
+        "id" => id,
+        "message" => message_json,
+        "stations" => stations_json,
+        "schedule" => schedule_json,
+        "created_by" => created_by,
+        "edited_by" => edited_by,
+        "cleared_at" => cleared_at,
+        "cleared_by" => cleared_by
+      }) do
+    %__MODULE__{
+      id: id,
+      message: message_from_json(message_json),
+      stations: stations_from_json(stations_json),
+      schedule: schedule_from_json(schedule_json),
+      created_by: created_by,
+      edited_by: edited_by,
+      cleared_at: parse_datetime(cleared_at),
+      cleared_by: cleared_by
+    }
+  end
+
   def from_json(%{
         "id" => id,
         "message" => message_json,
@@ -105,7 +140,9 @@ defmodule Screenplay.Alerts.Alert do
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
       created_by: created_by,
-      edited_by: edited_by
+      edited_by: edited_by,
+      cleared_at: nil,
+      cleared_by: nil
     }
   end
 

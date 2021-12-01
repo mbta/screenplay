@@ -81,8 +81,9 @@ defmodule ScreenplayWeb.AlertController do
     user = get_session(conn, "username")
     _ = UserActionLogger.log(user, :clear_alert, params)
 
-    %Alert{stations: stations} = State.get_alert(id)
-    :ok = State.delete_alert(id)
+    alert = State.get_alert(id)
+    %Alert{stations: stations} = alert
+    :ok = alert |> Alert.clear(user) |> State.clear_alert()
 
     _ = SFTP.clear_takeover_images(stations)
 
@@ -94,8 +95,8 @@ defmodule ScreenplayWeb.AlertController do
     _ = UserActionLogger.log(user, :clear_all_alerts)
 
     State.get_all_alerts()
-    |> Enum.each(fn %Alert{id: id, stations: stations} ->
-      :ok = State.delete_alert(id)
+    |> Enum.each(fn alert = %Alert{stations: stations} ->
+      :ok = alert |> Alert.clear(user) |> State.clear_alert()
       SFTP.clear_takeover_images(stations)
     end)
 
