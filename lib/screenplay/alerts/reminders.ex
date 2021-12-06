@@ -27,7 +27,8 @@ defmodule Screenplay.Alerts.Reminders do
 
       alerts when url != "" ->
         Enum.each(alerts, fn %Alert{stations: stations} ->
-          format_slack_message(stations)
+          stations
+          |> format_slack_message()
           |> send_slack_message(url)
         end)
 
