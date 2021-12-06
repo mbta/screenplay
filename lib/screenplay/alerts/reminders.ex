@@ -21,19 +21,20 @@ defmodule Screenplay.Alerts.Reminders do
 
     schedule_work()
 
-    case State.get_outdated_alerts() do
-      [] ->
-        Logger.debug("No outdated alerts found")
+    if url == "" do
+      Logger.info("No Slack Webhook URL found")
+    else
+      case State.get_outdated_alerts() do
+        [] ->
+          Logger.debug("No outdated alerts found")
 
-      alerts when url != "" ->
-        Enum.each(alerts, fn %Alert{stations: stations} ->
-          stations
-          |> format_slack_message()
-          |> send_slack_message(url)
-        end)
-
-      _ ->
-        Logger.info("No Slack Webhook URL found")
+        alerts when url != "" ->
+          Enum.each(alerts, fn %Alert{stations: stations} ->
+            stations
+            |> format_slack_message()
+            |> send_slack_message(url)
+          end)
+      end
     end
 
     {:noreply, state}
