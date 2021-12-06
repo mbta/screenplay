@@ -7,7 +7,8 @@ import SVGPreviews from "./SVGPreviews";
 interface WizardSidebarProps {
   selectedStations: Station[];
   step: number;
-  message: string;
+  customMessage: string;
+  cannedMessageId: string;
 }
 
 class WizardSidebar extends React.Component<WizardSidebarProps> {
@@ -15,14 +16,31 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
     super(props);
   }
 
+  getPreviewImage() {
+    if (this.props.step === 1) {
+      return (
+        <img
+          className="portrait-png"
+          src={`/images/Outfront-Alert-Empty-Preview.png`}
+        />
+      );
+    } else if (this.props.cannedMessageId !== "") {
+      return (
+        <img
+          className="portrait-png"
+          src={`/images/Outfront-Alert-${this.props.cannedMessageId}-portrait.png`}
+        />
+      );
+    }
+
+    return <SVGPreviews showText={true} message={this.props.customMessage} />;
+  }
+
   render() {
     return (
       <div className="wizard-sidebar">
         <span className="preview-title text-16">Preview</span>
-        <SVGPreviews
-          showText={this.props.step > 1}
-          message={this.props.message}
-        />
+        {this.getPreviewImage()}
         <StackedStationCards stations={this.props.selectedStations} />
       </div>
     );
