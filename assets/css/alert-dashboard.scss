@@ -122,3 +122,21 @@
   width: 270px;
   max-width: none;
 }
+
+.alert-history-card {
+  display: flex;
+  margin-top: 24px;
+
+  .alert-details {
+    flex-grow: 1;
+    background-color: white;
+    border-radius: 8px;
+  }
+  .alert-header {
+    display: flex;
+    background: $gray-200;
+    align-items: center;
+    border-top-right-radius: 8px;
+    padding: 12px 24px;
+  }
+}
