@@ -15,7 +15,8 @@ defmodule Screenplay.Application do
       ScreenplayWeb.Endpoint,
       # Start a worker by calling: Screenplay.Worker.start_link(arg)
       # {Screenplay.Worker, arg}
-      Screenplay.Alerts.State
+      Screenplay.Alerts.State,
+      Screenplay.Alerts.Reminders
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
