@@ -28,7 +28,7 @@ defmodule Screenplay.Alerts.Reminders do
         [] ->
           Logger.debug("No outdated alerts found")
 
-        alerts when url != "" ->
+        alerts ->
           Enum.each(alerts, fn %Alert{stations: stations} ->
             stations
             |> format_slack_message()
