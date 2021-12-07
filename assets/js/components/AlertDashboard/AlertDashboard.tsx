@@ -3,6 +3,7 @@ import AlertsList from "./AlertsList";
 import IntroBlock from "./IntroBlock";
 import { AlertData } from "../App";
 import { ModalDetails } from "../ConfirmationModal";
+import AlertsHistory from "./AlertsHistory";
 
 interface AlertDashboardProps {
   startAlertWizard: () => void;
@@ -20,6 +21,7 @@ const AlertDashboard = (props: AlertDashboardProps): JSX.Element => {
         triggerConfirmation={props.triggerConfirmation}
         closeModal={props.closeModal}
       />
+      <AlertsHistory />
       <footer>© 2021 – Massachusetts Bay Transportation Authority</footer>
     </>
   );

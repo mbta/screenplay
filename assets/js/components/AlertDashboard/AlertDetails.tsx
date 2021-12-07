@@ -103,7 +103,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
               <td className="emphasized-cell">{messageString}</td>
             </tr>
             <tr className="gray-row">
-              <td>Start</td>
+              <td>Posted</td>
               <td className="emphasized-cell">{startDateString}</td>
             </tr>
             <tr>
