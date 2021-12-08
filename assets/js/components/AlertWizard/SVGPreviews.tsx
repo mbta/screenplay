@@ -9,6 +9,8 @@ import {
   svgLongSide,
   svgPortraitLineLength,
   svgShortSide,
+  interBase64Weight500,
+  interBase64Weight700,
 } from "../../constants/misc";
 
 interface SVGPreviewsProps {
@@ -91,6 +93,22 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             xmlns="http://www.w3.org/2000/svg"
             style={{ background: "#FFDD00" }}
           >
+            <style>
+              {`@font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight700}');
+              }
+              @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
+              }`}
+            </style>
             <title>Outfront Alert - Empty Preview</title>
             <g
               id="Outfront-Alert-Empty-Preview"
@@ -109,7 +127,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               <g id="CTA" transform="translate(48.000000, 1696.000000)">
                 <text
                   id="url"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fontSize="88"
                   fontWeight="700"
                   fill="#171F26"
@@ -223,6 +241,22 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             xmlns="http://www.w3.org/2000/svg"
             style={{ background: "#FFDD00" }}
           >
+            <style>
+              {`@font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight700}');
+              }
+              @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
+              }`}
+            </style>
             <title>Outfront Alert Portrait</title>
             <g
               id="Outfront-Alert-Portrait"
@@ -241,7 +275,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               <g id="CTA" transform="translate(48.000000, 1696.000000)">
                 <text
                   id="url"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fontSize="88"
                   fontWeight="700"
                   fill="#171F26"
@@ -270,7 +304,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
                 <g
                   id="Portrait-Text-Container"
                   transform="translate(64.000000, 256.000000)"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fill="#FFFFFF"
                   fontSize={svgFontSize}
                   fontWeight="500"
@@ -285,7 +319,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               >
                 <text
                   id="Alert-type"
-                  fontFamily="sans-serif"
+                  fontFamily="Inter"
                   fontSize="120"
                   fontWeight="700"
                   letterSpacing="4"
@@ -316,6 +350,22 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
           xmlns="http://www.w3.org/2000/svg"
           style={{ background: "#FFDD00" }}
         >
+          <style>
+            {`@font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 700;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight700}');
+              }
+              @font-face {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 500;
+                font-display: swap;
+                src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
+              }`}
+          </style>
           <title>Outfront Alert Landscape</title>
           <g
             id="Outfront-Alert-Landscape"
@@ -338,7 +388,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
               <g
                 id="Landscape-Text-Container"
                 transform="translate(64.000000, 92.000000)"
-                fontFamily="sans-serif"
+                fontFamily="Inter"
                 fill="#FFFFFF"
                 fontWeight="500"
                 fontSize={svgFontSize}
@@ -349,7 +399,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             <g id="CTA" transform="translate(64.000000, 864.000000)">
               <text
                 id="url"
-                fontFamily="sans-serif"
+                fontFamily="Inter"
                 fontSize="120"
                 fontWeight="700"
                 fill="#171F26"
@@ -372,7 +422,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
             >
               <text
                 id="Alert-type"
-                fontFamily="sans-serif"
+                fontFamily="Inter"
                 fontSize="120"
                 fontWeight="700"
                 letterSpacing="3.33333333"

@@ -75,6 +75,7 @@ defmodule ScreenplayWeb.Router do
     post("/create", AlertController, :create)
     post("/edit", AlertController, :edit)
     post("/clear", AlertController, :clear)
+    post("/clear_all", AlertController, :clear_all)
     get("/list", AlertController, :list)
   end
 

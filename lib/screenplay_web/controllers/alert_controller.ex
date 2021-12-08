@@ -55,7 +55,7 @@ defmodule ScreenplayWeb.AlertController do
         }
       ) do
     alert = State.get_alert(id)
-    schedule = schedule_from_duration(alert.schedule.start, duration_in_hours)
+    schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
     message = Alert.message_from_json(message)
     changes = %{message: message, stations: stations, schedule: schedule}
 
@@ -85,10 +85,24 @@ defmodule ScreenplayWeb.AlertController do
     user = get_session(conn, "username")
     _ = UserActionLogger.log(user, :clear_alert, params)
 
-    %Alert{stations: stations} = State.get_alert(id)
-    :ok = State.delete_alert(id)
+    alert = State.get_alert(id)
+    %Alert{stations: stations} = alert
+    :ok = alert |> Alert.clear(user) |> State.clear_alert()
 
     _ = SFTP.clear_takeover_images(stations)
+
+    json(conn, %{success: true})
+  end
+
+  def clear_all(conn, _params) do
+    user = get_session(conn, "username")
+    _ = UserActionLogger.log(user, :clear_all_alerts)
+
+    State.get_all_alerts()
+    |> Enum.each(fn alert = %Alert{stations: stations} ->
+      :ok = alert |> Alert.clear(user) |> State.clear_alert()
+      SFTP.clear_takeover_images(stations)
+    end)
 
     json(conn, %{success: true})
   end

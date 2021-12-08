@@ -5,7 +5,8 @@
   "scripts": {
     "deploy": "webpack --mode production",
     "watch": "webpack --mode development --watch",
-    "format": "prettier --write \"{.,**}/*.{js,json,ts,tsx,css,scss}\""
+    "format": "prettier --write \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
+    "format:check": "prettier --check \"{.,**}/*.{js,json,ts,tsx,css,scss}\""
   },
   "dependencies": {
     "@heroicons/react": "^1.0.4",

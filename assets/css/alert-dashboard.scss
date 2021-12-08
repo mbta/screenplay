@@ -39,8 +39,11 @@
   }
 
   .create-alert-button {
-    background: $pink-700;
+    background-color: $pink-700;
     height: 50px;
+    &:hover {
+      background-color: $pink-900;
+    }
   }
 }
 
@@ -48,6 +51,12 @@
   font-weight: 800;
   margin: 48px 0 3px 24px;
   color: white;
+  display: flex;
+}
+
+.clear-all-alerts-button {
+  margin-left: auto;
+  background-color: $cyan-700;
 }
 
 .alert-card {
@@ -63,6 +72,26 @@
     background-color: white;
     border-radius: 0 8px 8px 0;
   }
+  .alert-reminder {
+    align-items: center;
+    background-color: $pink-700;
+    color: white;
+    display: flex;
+    font-weight: 700;
+    height: 64px;
+
+    .reminder-icon {
+      height: 32px;
+      width: 32px;
+      margin: 16px;
+      margin-left: 28px;
+    }
+
+    .reminder-action {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
   .alert-header {
     display: flex;
     background: $gray-200;
@@ -74,10 +103,22 @@
     }
     .edit-button {
       color: $gray-700;
-      background-color: white;
+      background-color: $gray-50;
+      &:hover {
+        background-color: white;
+      }
     }
     .clear-button {
       background-color: $cyan-700;
+      &:hover {
+        background-color: $cyan-900;
+      }
     }
   }
+}
+
+.portrait-png {
+  height: 480px;
+  width: 270px;
+  max-width: none;
 }

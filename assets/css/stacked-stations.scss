@@ -22,6 +22,9 @@
       color: $gray-800;
       font-weight: 600;
     }
+    &:first-child {
+      padding-top: 0;
+    }
   }
   &.published-alert {
     background-color: unset;
@@ -43,6 +46,9 @@
   input[type="checkbox"] {
     margin: 0 16px 0 0;
   }
+  input[name="silver"] {
+    visibility: hidden;
+  }
   .line-name {
     font-size: 18px;
     line-height: 18px;
@@ -58,6 +64,7 @@
   }
   .station-name {
     flex-grow: 1;
+    line-height: 36px;
     &.disabled {
       margin-left: 29px;
       font-weight: normal;

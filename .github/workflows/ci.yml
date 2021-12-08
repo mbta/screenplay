@@ -1,4 +1,4 @@
-name: Elixir CI
+name: CI
 
 on: push
 
@@ -60,6 +60,20 @@ jobs:
         run: mix credo --strict
       - name: Run tests
         run: mix test --cover
+        
+      # NPM Build + Test
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: 'npm'
+          cache-dependency-path: './assets'
+      - run: npm --prefix assets ci
+      - run: npm --prefix assets run deploy
+      - run: npm --prefix assets run format:check
+      # TODO: previous steps will cover build errors, but no tests currently in project.
+      # - run: npm --prefix assets test
+
       - name: Save PR information
         run: |
           echo "${{ github.event.pull_request.number }}" > cover/PR_NUMBER

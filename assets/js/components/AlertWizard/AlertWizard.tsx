@@ -10,7 +10,7 @@ import { AlertData } from "../App";
 import stationsByLine, { Station } from "../../constants/stations";
 import CANNED_MESSAGES from "../../constants/messages";
 
-import { XIcon } from "@heroicons/react/solid";
+import { BanIcon, XIcon } from "@heroicons/react/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "../../constants/misc";
 import { matchStation } from "../../util";
@@ -324,12 +324,19 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   checkLine(line: string, checked: boolean) {
+    if (line === "silver") {
+      return;
+    }
     if (checked) {
-      stationsByLine[line].forEach((station) => {
-        if (!this.state.selectedStations.some((x) => x.name === station.name)) {
-          this.addStation(station);
-        }
-      });
+      stationsByLine[line]
+        .filter((station) => station.portrait || station.landscape)
+        .forEach((station) => {
+          if (
+            !this.state.selectedStations.some((x) => x.name === station.name)
+          ) {
+            this.addStation(station);
+          }
+        });
     } else {
       stationsByLine[line].forEach((station) => this.removeStation(station));
     }
@@ -370,8 +377,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     height: number,
     callback: (dataUrl: string) => void
   ) {
-    const svg = document.getElementById(orientation + "-svg") as HTMLElement;
-
     const canvas = document.createElement("canvas");
     canvas.width = width * svgScale;
     canvas.height = height * svgScale;
@@ -381,22 +386,27 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.scale(svgScale, svgScale);
 
-    const data = new XMLSerializer().serializeToString(svg);
     const img = new Image();
 
+    if (this.state.cannedMessage !== "") {
+      img.src = `/images/Outfront-Alert-${this.state.cannedMessage}-${orientation}.png`;
+    } else {
+      const svg = document.getElementById(orientation + "-svg") as HTMLElement;
+      const data = new XMLSerializer().serializeToString(svg);
+      img.src =
+        "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(data)));
+    }
+
     img.onload = () => {
-      ctx.drawImage(img, 0, 0);
+      ctx.drawImage(img, 0, 0, width, height);
       const imgURI = canvas.toDataURL("image/png");
       callback(imgURI);
     };
-
-    img.src =
-      "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(data)));
   }
 
   render() {
     const modalDetails: ModalDetails = {
-      icon: <XIcon className="icon" />,
+      icon: <BanIcon className="icon" />,
       header: "Cancel new Takeover Alert",
       description:
         "Canceling now will lose any progress you have made. This action cannot be undone.",
@@ -429,11 +439,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <WizardSidebar
             selectedStations={this.state.selectedStations}
             step={this.state.step}
-            message={
-              this.state.messageOption == "1"
-                ? CANNED_MESSAGES[parseInt(this.state.cannedMessage)]
-                : this.state.customMessage
+            customMessage={
+              this.state.messageOption == "1" ? "" : this.state.customMessage
             }
+            cannedMessageId={this.state.cannedMessage}
           />
         </div>
         <WizardNavFooter

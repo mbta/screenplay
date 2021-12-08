@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ArrowNarrowLeftIcon,
   ArrowNarrowRightIcon,
@@ -34,7 +34,17 @@ const forwardButton = (step: number) => {
   }
 };
 
+const disabledText = (step: number) => {
+  switch (step) {
+    case 1:
+      return "Please input message text above to continue";
+    case 2:
+      return "Please select affected stations above to continue";
+  }
+};
+
 const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
+  const [hovered, setHovered] = useState(false);
   return (
     <div className="wizard-nav-footer">
       {props.step !== 1 ? (
@@ -43,15 +53,22 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
           <span>{backButton(props.step)}</span>
         </button>
       ) : null}
+
       {props.step !== 4 ? (
-        <button
-          className="nav-button forward"
-          disabled={props.waitingForInput}
-          onClick={props.forward}
-        >
-          <span>{forwardButton(props.step)}</span>
-          <ArrowNarrowRightIcon className="button-icon right" />
-        </button>
+        <div className="forward">
+          {hovered && props.waitingForInput ? (
+            <span className="disabled-text">{disabledText(props.step)}</span>
+          ) : null}
+          <button
+            className="nav-button"
+            disabled={props.waitingForInput}
+            onClick={props.forward}
+            onMouseOver={() => setHovered(true)}
+          >
+            <span>{forwardButton(props.step)}</span>
+            <ArrowNarrowRightIcon className="button-icon right" />
+          </button>
+        </div>
       ) : (
         <div className="submit-button-stripes">
           <button className="submit-button" onClick={props.forward}>

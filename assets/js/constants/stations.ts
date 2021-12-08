@@ -9,6 +9,7 @@ interface StationsByLine {
   [index: string]: Station[];
 }
 
+// Terminal Stations are listed in all caps
 const STATIONS_BY_LINE: StationsByLine = {
   red: [
     {
@@ -92,7 +93,7 @@ const STATIONS_BY_LINE: StationsByLine = {
       landscape: false,
     },
     {
-      name: "Ashmont",
+      name: "ASHMONT",
       portrait: false,
       landscape: false,
     },
@@ -117,7 +118,7 @@ const STATIONS_BY_LINE: StationsByLine = {
       landscape: false,
     },
     {
-      name: "Braintree",
+      name: "BRAINTREE",
       portrait: false,
       landscape: false,
     },
