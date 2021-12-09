@@ -73,40 +73,7 @@ defmodule Screenplay.Alerts.State do
         },
         user
       ) do
-    # Get all active alerts and find any that share a station with the new alert (excluding self if editing)
-    get_all_alerts(pid)
-    |> Enum.filter(fn %{id: active_id, stations: active_alert_stations} ->
-      (id == nil or id != active_id) and
-        MapSet.intersection(
-          MapSet.new(stations),
-          MapSet.new(active_alert_stations)
-        )
-        |> MapSet.size() > 0
-    end)
-    |> Enum.reduce([], fn
-      # If existing alert has only one station, just delete it
-      %Alert{id: existing_id, stations: [_single_station]} = a, acc ->
-        :ok = State.clear_alert(pid, existing_id)
-        Enum.concat(acc, a.stations)
-
-      # If existing alert has multiple stations: remove the overlapping stations,
-      # update the alert, clear the overlapping images.
-      %Alert{id: existing_id, stations: _stations} = a, acc ->
-        stations_no_overlap = Enum.reject(a.stations, fn station -> station in stations end)
-
-        # Existing alert and new alert have the same station list
-        if Enum.empty?(stations_no_overlap) do
-          :ok = State.clear_alert(pid, existing_id)
-          Enum.concat(acc, a.stations)
-        else
-          changes = %{message: a.message, stations: stations_no_overlap, schedule: a.schedule}
-
-          updated_alert = Alert.update(a, changes, user)
-
-          :ok = State.update_alert(pid, a.id, updated_alert)
-          Enum.concat(acc, stations -- stations_no_overlap)
-        end
-    end)
+    GenServer.call(pid, {:remove_overlapping_alerts, id, stations, user})
   end
 
   @spec get_outdated_alerts() :: list(Alert.t())
@@ -173,6 +140,67 @@ defmodule Screenplay.Alerts.State do
     {:reply, :ok, new_state}
   end
 
+  def handle_call(
+        {:remove_overlapping_alerts, id, stations, user},
+        _from,
+        %State{
+          alerts: old_alerts,
+          cleared_alerts: cleared_alerts
+        }
+      ) do
+    # Get all active alerts and find any that share a station with the new alert (excluding self if editing)
+
+    %{
+      alerts: new_alerts,
+      cleared_alerts: new_cleared_alerts,
+      stations_to_delete: stations_to_delete
+    } =
+      old_alerts
+      |> get_overlapping_stations(id, stations)
+      |> Enum.reduce(
+        %{alerts: old_alerts, cleared_alerts: cleared_alerts, stations_to_delete: []},
+        fn
+          # If existing alert has only one station, just delete it
+          %Alert{id: existing_id, stations: [_single_station]} = a, acc ->
+            %{
+              alerts: Map.delete(acc.alerts, existing_id),
+              cleared_alerts: Map.put(acc.cleared_alerts, existing_id, a),
+              stations_to_delete: Enum.concat(acc.stations_to_delete, a.stations)
+            }
+
+          # If existing alert has multiple stations: remove the overlapping stations,
+          # update the alert, clear the overlapping images.
+          %Alert{id: existing_id, stations: _stations} = a, acc ->
+            stations_no_overlap = Enum.reject(a.stations, fn station -> station in stations end)
+
+            # Existing alert and new alert have the same station list
+            if Enum.empty?(stations_no_overlap) do
+              %{
+                alerts: Map.delete(acc.alerts, existing_id),
+                cleared_alerts: Map.put(acc.cleared_alerts, existing_id, a),
+                stations_to_delete: Enum.concat(acc.stations_to_delete, a.stations)
+              }
+            else
+              changes = %{message: a.message, stations: stations_no_overlap, schedule: a.schedule}
+
+              %{
+                alerts: Map.put(acc.alerts, existing_id, Alert.update(a, changes, user)),
+                cleared_alerts: acc.cleared_alerts,
+                stations_to_delete:
+                  Enum.concat(acc.stations_to_delete, stations -- stations_no_overlap)
+              }
+            end
+        end
+      )
+
+    new_state = %State{
+      alerts: new_alerts,
+      cleared_alerts: new_cleared_alerts
+    }
+
+    {:reply, stations_to_delete, new_state}
+  end
+
   ### Serialize
 
   @spec to_json(t()) :: map()
@@ -212,5 +240,18 @@ defmodule Screenplay.Alerts.State do
   defp save_state(new_state) do
     fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
     fetch_module.put_state(new_state)
+  end
+
+  defp get_overlapping_stations(existing_alerts, new_id, new_stations) do
+    existing_alerts
+    |> Map.values()
+    |> Enum.filter(fn %Alert{id: active_id, stations: active_alert_stations} ->
+      (new_id == nil or new_id != active_id) and
+        MapSet.intersection(
+          MapSet.new(new_stations),
+          MapSet.new(active_alert_stations)
+        )
+        |> MapSet.size() > 0
+    end)
   end
 end
