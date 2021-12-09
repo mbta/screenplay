@@ -260,34 +260,32 @@ defmodule Screenplay.Alerts.StateTest do
       assert ["Kendall/MIT"] ==
                State.remove_overlapping_alerts(pid, params, user)
 
-      expected_state = %State{
-        alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            stations: ["Haymarket", "Government Center"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{
-          "a2" => %Alert{
-            id: "a2",
-            message: %{type: :custom, text: "This is an alert"},
-            stations: ["Kendall/MIT"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: DateTime.utc_now(),
-            cleared_by: user
-          }
-        }
-      }
-
-      assert expected_state == :sys.get_state(pid)
+      assert %State{
+               alerts: %{
+                 "a1" => %Alert{
+                   id: "a1",
+                   message: %{type: :canned, id: 1},
+                   stations: ["Haymarket", "Government Center"],
+                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+                   created_by: "user",
+                   edited_by: "user",
+                   cleared_at: nil,
+                   cleared_by: nil
+                 }
+               },
+               cleared_alerts: %{
+                 "a2" => %Alert{
+                   id: "a2",
+                   message: %{type: :custom, text: "This is an alert"},
+                   stations: ["Kendall/MIT"],
+                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+                   created_by: "user",
+                   edited_by: "user",
+                   cleared_at: %DateTime{},
+                   cleared_by: ^user
+                 }
+               }
+             } = :sys.get_state(pid)
     end
 
     test "deletes the overlapping alert with multiple stations" do
@@ -330,34 +328,32 @@ defmodule Screenplay.Alerts.StateTest do
       assert ["South Station", "Kendall/MIT"] ==
                State.remove_overlapping_alerts(pid, params, user)
 
-      expected_state = %State{
-        alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            stations: ["Haymarket", "Government Center"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{
-          "a2" => %Alert{
-            id: "a2",
-            message: %{type: :custom, text: "This is an alert"},
-            stations: ["South Station", "Kendall/MIT"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: DateTime.utc_now(),
-            cleared_by: user
-          }
-        }
-      }
-
-      assert expected_state == :sys.get_state(pid)
+      assert %State{
+               alerts: %{
+                 "a1" => %Alert{
+                   id: "a1",
+                   message: %{type: :canned, id: 1},
+                   stations: ["Haymarket", "Government Center"],
+                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+                   created_by: "user",
+                   edited_by: "user",
+                   cleared_at: nil,
+                   cleared_by: nil
+                 }
+               },
+               cleared_alerts: %{
+                 "a2" => %Alert{
+                   id: "a2",
+                   message: %{type: :custom, text: "This is an alert"},
+                   stations: ["South Station", "Kendall/MIT"],
+                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+                   created_by: "user",
+                   edited_by: "user",
+                   cleared_at: %DateTime{},
+                   cleared_by: ^user
+                 }
+               }
+             } = :sys.get_state(pid)
     end
 
     test "does not delete alert if no overlap" do
