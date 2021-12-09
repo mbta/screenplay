@@ -12,7 +12,7 @@ interface PickStationsProps {
 }
 
 const PickStations = (props: PickStationsProps): JSX.Element => {
-  const [filteredAlerts, setFilteredAlerts] = useState([]);
+  const [filteredAlerts, setFilteredAlerts] = useState<string[]>([]);
 
   useEffect(() => {
     setFilteredAlerts(
