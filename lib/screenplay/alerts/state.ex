@@ -164,7 +164,7 @@ defmodule Screenplay.Alerts.State do
           %Alert{id: existing_id, stations: [_single_station]} = a, acc ->
             %{
               alerts: Map.delete(acc.alerts, existing_id),
-              cleared_alerts: Map.put(acc.cleared_alerts, existing_id, a),
+              cleared_alerts: Map.put(acc.cleared_alerts, existing_id, Alert.clear(a, user)),
               stations_to_delete: Enum.concat(acc.stations_to_delete, a.stations)
             }
 
@@ -177,7 +177,7 @@ defmodule Screenplay.Alerts.State do
             if Enum.empty?(stations_no_overlap) do
               %{
                 alerts: Map.delete(acc.alerts, existing_id),
-                cleared_alerts: Map.put(acc.cleared_alerts, existing_id, a),
+                cleared_alerts: Map.put(acc.cleared_alerts, existing_id, Alert.clear(a, user)),
                 stations_to_delete: Enum.concat(acc.stations_to_delete, a.stations)
               }
             else
@@ -198,6 +198,7 @@ defmodule Screenplay.Alerts.State do
       cleared_alerts: new_cleared_alerts
     }
 
+    :ok = save_state(new_state)
     {:reply, stations_to_delete, new_state}
   end
 
