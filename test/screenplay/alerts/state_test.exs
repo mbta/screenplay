@@ -229,7 +229,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       a2 = %Alert{
@@ -238,7 +240,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       params = %{
@@ -249,7 +253,7 @@ defmodule Screenplay.Alerts.StateTest do
       user = "bar"
 
       alerts = %{"a1" => a1, "a2" => a2}
-      state = %State{alerts: alerts}
+      state = %State{alerts: alerts, cleared_alerts: %{}}
 
       :sys.replace_state(pid, fn _state -> state end)
 
@@ -264,7 +268,21 @@ defmodule Screenplay.Alerts.StateTest do
             stations: ["Haymarket", "Government Center"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             created_by: "user",
-            edited_by: "user"
+            edited_by: "user",
+            cleared_at: nil,
+            cleared_by: nil
+          }
+        },
+        cleared_alerts: %{
+          "a2" => %Alert{
+            id: "a2",
+            message: %{type: :custom, text: "This is an alert"},
+            stations: ["Kendall/MIT"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user",
+            cleared_at: DateTime.utc_now(),
+            cleared_by: user
           }
         }
       }
@@ -281,7 +299,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       a2 = %Alert{
@@ -290,7 +310,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["South Station", "Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       params = %{
@@ -301,7 +323,7 @@ defmodule Screenplay.Alerts.StateTest do
       user = "bar"
 
       alerts = %{"a1" => a1, "a2" => a2}
-      state = %State{alerts: alerts}
+      state = %State{alerts: alerts, cleared_alerts: %{}}
 
       :sys.replace_state(pid, fn _state -> state end)
 
@@ -316,7 +338,21 @@ defmodule Screenplay.Alerts.StateTest do
             stations: ["Haymarket", "Government Center"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             created_by: "user",
-            edited_by: "user"
+            edited_by: "user",
+            cleared_at: nil,
+            cleared_by: nil
+          }
+        },
+        cleared_alerts: %{
+          "a2" => %Alert{
+            id: "a2",
+            message: %{type: :custom, text: "This is an alert"},
+            stations: ["South Station", "Kendall/MIT"],
+            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+            created_by: "user",
+            edited_by: "user",
+            cleared_at: DateTime.utc_now(),
+            cleared_by: user
           }
         }
       }
@@ -333,7 +369,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       a2 = %Alert{
@@ -342,7 +380,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       params = %{
@@ -353,7 +393,7 @@ defmodule Screenplay.Alerts.StateTest do
       user = "bar"
 
       alerts = %{"a1" => a1, "a2" => a2}
-      state = %State{alerts: alerts}
+      state = %State{alerts: alerts, cleared_alerts: %{}}
 
       :sys.replace_state(pid, fn _state -> state end)
 
@@ -368,7 +408,9 @@ defmodule Screenplay.Alerts.StateTest do
             stations: ["Haymarket", "Government Center"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             created_by: "user",
-            edited_by: "user"
+            edited_by: "user",
+            cleared_at: nil,
+            cleared_by: nil
           },
           "a2" => %Alert{
             id: "a2",
@@ -376,9 +418,12 @@ defmodule Screenplay.Alerts.StateTest do
             stations: ["Kendall/MIT"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             created_by: "user",
-            edited_by: "user"
+            edited_by: "user",
+            cleared_at: nil,
+            cleared_by: nil
           }
-        }
+        },
+        cleared_alerts: %{}
       }
 
       assert expected_state == :sys.get_state(pid)
@@ -393,7 +438,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       a2 = %Alert{
@@ -402,7 +449,9 @@ defmodule Screenplay.Alerts.StateTest do
         stations: ["South Station", "Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
-        edited_by: "user"
+        edited_by: "user",
+        cleared_at: nil,
+        cleared_by: nil
       }
 
       params = %{
@@ -413,7 +462,7 @@ defmodule Screenplay.Alerts.StateTest do
       user = "bar"
 
       alerts = %{"a1" => a1, "a2" => a2}
-      state = %State{alerts: alerts}
+      state = %State{alerts: alerts, cleared_alerts: %{}}
 
       :sys.replace_state(pid, fn _state -> state end)
 
@@ -428,7 +477,9 @@ defmodule Screenplay.Alerts.StateTest do
             stations: ["Haymarket", "Government Center"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             created_by: "user",
-            edited_by: "user"
+            edited_by: "user",
+            cleared_at: nil,
+            cleared_by: nil
           },
           "a2" => %Alert{
             id: "a2",
@@ -436,9 +487,12 @@ defmodule Screenplay.Alerts.StateTest do
             stations: ["South Station"],
             schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
             created_by: "user",
-            edited_by: "bar"
+            edited_by: "bar",
+            cleared_at: nil,
+            cleared_by: nil
           }
-        }
+        },
+        cleared_alerts: %{}
       }
 
       assert expected_state == :sys.get_state(pid)
