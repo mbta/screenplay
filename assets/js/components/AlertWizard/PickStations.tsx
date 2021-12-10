@@ -1,15 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StationColumn from "./StationColumn";
 
 import { Station } from "../../constants/stations";
+import WizardWarning from "./WizardWarning";
 
 interface PickStationsProps {
   selectedStations: Station[];
   checkStation: (station: Station) => void;
   checkLine: (line: string, checked: boolean) => void;
+  activeAlertsStations: string[];
 }
 
 const PickStations = (props: PickStationsProps): JSX.Element => {
+  const [filteredAlerts, setFilteredAlerts] = useState<string[]>([]);
+
+  useEffect(() => {
+    setFilteredAlerts(
+      props.activeAlertsStations.filter((station) =>
+        props.selectedStations.map((station) => station.name).includes(station)
+      )
+    );
+  }, [props.selectedStations]);
+
   return (
     <>
       <div className="step-instructions flex">
@@ -39,6 +51,7 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
           </div>
         </div>
       </div>
+      <WizardWarning stationNames={filteredAlerts} />
       <div className="step-body stations">
         <div className={`station-column red`}>
           <StationColumn line="red" {...props} />

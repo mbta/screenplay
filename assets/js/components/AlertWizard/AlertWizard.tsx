@@ -36,6 +36,7 @@ interface AlertWizardState {
   landscapePNG: string | null;
   portraitPNG: string | null;
   id: string | null;
+  activeAlertsList: any[];
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
@@ -57,10 +58,13 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         duration: 1,
         landscapePNG: null,
         portraitPNG: null,
+        activeAlertsList: [],
       };
     } else {
       this.state = this.initializeState(props.alertData);
     }
+
+    this.fetchActiveAlertsList();
 
     this.stepForward = this.stepForward.bind(this);
     this.stepBackward = this.stepBackward.bind(this);
@@ -117,17 +121,28 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       duration: duration,
       landscapePNG: null,
       portraitPNG: null,
+      activeAlertsList: [],
     };
   }
 
   renderSwitch() {
     switch (this.state.step) {
       case 2:
+        let stationNamesWithActiveAlerts = [];
+        if (this.state.activeAlertsList.length > 0) {
+          stationNamesWithActiveAlerts = this.state.activeAlertsList
+            .filter((alert) => alert.id !== this.state.id)
+            .map((alert) => alert.stations)
+            .reduce((result, current) => {
+              return current.concat(result);
+            }, []);
+        }
         return (
           <PickStations
             selectedStations={this.state.selectedStations}
             checkStation={this.checkStation}
             checkLine={this.checkLine}
+            activeAlertsStations={stationNamesWithActiveAlerts}
           />
         );
       case 3:
@@ -209,6 +224,14 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
   goToStep(step: number) {
     this.setState({ step });
+  }
+
+  fetchActiveAlertsList() {
+    fetch("/api/list")
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ activeAlertsList: data });
+      });
   }
 
   handleSubmit() {

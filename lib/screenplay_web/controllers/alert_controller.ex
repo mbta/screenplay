@@ -18,6 +18,8 @@ defmodule ScreenplayWeb.AlertController do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
     user = get_session(conn, "username")
 
+    remove_overlapping_alerts(params, user)
+
     message = Alert.message_from_json(message)
     alert = Alert.new(message, stations, schedule, user)
 
@@ -58,6 +60,8 @@ defmodule ScreenplayWeb.AlertController do
     changes = %{message: message, stations: stations, schedule: schedule}
 
     user = get_session(conn, "username")
+
+    remove_overlapping_alerts(params, user)
 
     new_alert = Alert.update(alert, changes, user)
 
@@ -121,5 +125,10 @@ defmodule ScreenplayWeb.AlertController do
   defp decode_png(png) do
     "data:image/png;base64," <> raw = png
     Base.decode64!(raw)
+  end
+
+  defp remove_overlapping_alerts(params, user) do
+    stations_to_delete = State.remove_overlapping_alerts(params, user)
+    SFTP.clear_takeover_images(stations_to_delete)
   end
 end
