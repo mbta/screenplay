@@ -31,6 +31,11 @@ defmodule Screenplay.Alerts.State do
     Enum.find(get_all_alerts(), fn %{id: alert_id} -> id == alert_id end)
   end
 
+  @spec get_all_cleared_alerts(GenServer.server()) :: list(Alert.t())
+  def get_all_cleared_alerts(pid \\ __MODULE__) do
+    GenServer.call(pid, :get_all_cleared_alerts)
+  end
+
   @spec add_alert(GenServer.server(), Alert.t()) :: :ok | {:error, String.t()}
   def add_alert(pid \\ __MODULE__, alert)
 
@@ -92,6 +97,10 @@ defmodule Screenplay.Alerts.State do
   @impl true
   def handle_call(:get_all_alerts, _from, state = %State{alerts: alerts}) do
     {:reply, Map.values(alerts), state}
+  end
+
+  def handle_call(:get_all_cleared_alerts, _from, state = %State{cleared_alerts: cleared_alerts}) do
+    {:reply, Map.values(cleared_alerts), state}
   end
 
   def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{

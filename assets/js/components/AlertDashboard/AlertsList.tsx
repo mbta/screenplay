@@ -8,20 +8,19 @@ interface AlertsListProps {
   startEditWizard: (data: AlertData) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
   closeModal: () => void;
+  lastChangeTime: number;
+  setLastChangeTime: (time: number) => void;
+
 }
 
 const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [alertsData, setAlertsData] = useState([]);
-  const [lastChangeTime, setLastChangeTime] = useState(Date.now());
+  const { lastChangeTime, setLastChangeTime } = props;
 
   useEffect(() => {
     fetch("/api/list")
       .then((response) => response.json())
       .then(setAlertsData);
-  }, [lastChangeTime]);
-
-  useEffect(() => {
-    setTimeout(() => setLastChangeTime(Date.now()), 60000);
   }, [lastChangeTime]);
 
   const clearAlert = (

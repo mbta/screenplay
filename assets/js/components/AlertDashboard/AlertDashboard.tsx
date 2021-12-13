@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AlertsList from "./AlertsList";
 import IntroBlock from "./IntroBlock";
 import { AlertData } from "../App";
@@ -13,15 +13,23 @@ interface AlertDashboardProps {
 }
 
 const AlertDashboard = (props: AlertDashboardProps): JSX.Element => {
+  const [lastChangeTime, setLastChangeTime] = useState(Date.now());
+
+  useEffect(() => {
+    setTimeout(() => setLastChangeTime(Date.now()), 60000);
+  }, [lastChangeTime]);
+
   return (
     <>
       <IntroBlock startAlertWizard={props.startAlertWizard} />
       <AlertsList
+        lastChangeTime={lastChangeTime}
+        setLastChangeTime={setLastChangeTime}
         startEditWizard={props.startEditWizard}
         triggerConfirmation={props.triggerConfirmation}
         closeModal={props.closeModal}
       />
-      <AlertsHistory />
+      <AlertsHistory lastChangeTime={lastChangeTime} setLastChangeTime={setLastChangeTime} />
       <footer>© 2021 – Massachusetts Bay Transportation Authority</footer>
     </>
   );

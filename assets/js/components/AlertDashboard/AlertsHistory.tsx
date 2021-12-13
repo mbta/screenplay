@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import AlertHistoryDetail from "./AlertHistoryDetail";
 
-interface AlertsHistoryProps {}
+interface AlertsHistoryProps {
+  lastChangeTime: number;
+}
 
-const AlertsHistory = (props: AlertsHistoryProps): JSX.Element => {
+const AlertsHistory = ({ lastChangeTime }: AlertsHistoryProps): JSX.Element => {
   const [alertsData, setAlertsData] = useState([]);
-  const [lastChangeTime, setLastChangeTime] = useState(Date.now());
 
   useEffect(() => {
-    fetch("/api/list")
+    fetch("/api/list_cleared")
       .then((response) => response.json())
       .then(setAlertsData);
   }, [lastChangeTime]);
