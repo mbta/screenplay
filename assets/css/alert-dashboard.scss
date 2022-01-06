@@ -62,6 +62,8 @@
 .alert-card {
   display: flex;
   margin-top: 24px;
+  filter: drop-shadow(0px 0px 24px rgba(0, 0, 0, 0.25));
+
   .alert-preview {
     padding: 24px 66px;
     background: $gray-500;
@@ -71,6 +73,12 @@
     flex-grow: 1;
     background-color: white;
     border-radius: 0 8px 8px 0;
+    &.past-alert {
+      border-radius: 8px;
+      .alert-header {
+        border-radius: 8px 8px 0 0;
+      }
+    }
   }
   .alert-reminder {
     align-items: center;
@@ -97,6 +105,7 @@
     background: $gray-200;
     align-items: center;
     border-top-right-radius: 8px;
+    border-bottom: 1px solid $gray-400;
     padding: 12px 24px;
     button {
       margin-left: 24px;
@@ -121,4 +130,37 @@
   height: 480px;
   width: 270px;
   max-width: none;
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px;
+  border-top: 2px solid $gray-800;
+  font-weight: 500;
+  color: $gray-400;
+  .page-stepper {
+    padding: 16px 0;
+    width: 150px;
+    &.next {
+      text-align: right;
+    }
+    &.hidden {
+      visibility: hidden;
+    }
+  }
+  .pages {
+    display: flex;
+  }
+  .page-number {
+    padding: 16px;
+    &.current {
+      margin-top: -2px;
+      color: white;
+      border-top: 2px solid $pink-700;
+    }
+  }
+  .page-stepper:hover, .page-number:hover {
+      cursor: pointer;
+  }
 }

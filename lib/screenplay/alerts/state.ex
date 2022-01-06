@@ -21,14 +21,19 @@ defmodule Screenplay.Alerts.State do
     GenServer.start_link(__MODULE__, :ok, name: opts[:name] || __MODULE__)
   end
 
-  @spec get_all_alerts(GenServer.server()) :: list(Alert.t())
-  def get_all_alerts(pid \\ __MODULE__) do
-    GenServer.call(pid, :get_all_alerts)
+  @spec get_active_alerts(GenServer.server()) :: list(Alert.t())
+  def get_active_alerts(pid \\ __MODULE__) do
+    GenServer.call(pid, :get_active_alerts)
+  end
+
+  @spec get_past_alerts(GenServer.server()) :: list(Alert.t())
+  def get_past_alerts(pid \\ __MODULE__) do
+    GenServer.call(pid, :get_past_alerts)
   end
 
   @spec get_alert(Alert.id()) :: Alert.t() | nil
   def get_alert(id) do
-    Enum.find(get_all_alerts(), fn %{id: alert_id} -> id == alert_id end)
+    Enum.find(get_active_alerts(), fn %{id: alert_id} -> id == alert_id end)
   end
 
   @spec add_alert(GenServer.server(), Alert.t()) :: :ok | {:error, String.t()}
@@ -49,12 +54,13 @@ defmodule Screenplay.Alerts.State do
 
   @spec clear_alert(GenServer.server(), Alert.t()) :: :ok
   def clear_alert(pid \\ __MODULE__, alert) do
+    IO.inspect(alert, label: "alert")
     GenServer.call(pid, {:clear_alert, alert})
   end
 
   @spec get_unused_alert_id :: Alert.id()
   def get_unused_alert_id do
-    current_ids = get_all_alerts() |> Enum.map(& &1.id)
+    current_ids = get_active_alerts() |> Enum.map(& &1.id)
 
     new_id = Alert.random_id()
 
@@ -78,7 +84,7 @@ defmodule Screenplay.Alerts.State do
 
   @spec get_outdated_alerts() :: list(Alert.t())
   def get_outdated_alerts(now \\ DateTime.utc_now()) do
-    Enum.filter(get_all_alerts(), fn %{schedule: %{end: end_dt}} ->
+    Enum.filter(get_active_alerts(), fn %{schedule: %{end: end_dt}} ->
       DateTime.compare(now, end_dt) == :gt
     end)
   end
@@ -101,8 +107,13 @@ defmodule Screenplay.Alerts.State do
   end
 
   @impl true
-  def handle_call(:get_all_alerts, _from, state = %State{alerts: alerts}) do
+  def handle_call(:get_active_alerts, _from, state = %State{alerts: alerts}) do
     {:reply, Map.values(alerts), state}
+  end
+
+  @impl true
+  def handle_call(:get_past_alerts, _from, state = %State{cleared_alerts: cleared_alerts}) do
+    {:reply, Map.values(cleared_alerts), state}
   end
 
   def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{
