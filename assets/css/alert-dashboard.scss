@@ -6,6 +6,7 @@
   align-items: center;
   padding: 24px;
   border-radius: 8px;
+  margin-bottom: 48px;
 
   .exclamation-circle {
     height: 64px;
@@ -49,7 +50,7 @@
 
 .alerts-list-header {
   font-weight: 800;
-  margin: 48px 0 3px 24px;
+  margin: 0 0 3px 24px;
   color: white;
   display: flex;
 }
@@ -171,4 +172,9 @@
   .page-number:hover {
     cursor: pointer;
   }
+}
+
+hr.solid-separator {
+  border-top: 1px solid $gray-800;
+  margin: 48px 24px 16px 24px;
 }

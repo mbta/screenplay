@@ -156,6 +156,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
               />
             );
           })}
+          {pastAlertsData.length > 0 && <hr className="solid-separator" />}
         </>
       )}
       {pastAlertsData.length > 0 && (

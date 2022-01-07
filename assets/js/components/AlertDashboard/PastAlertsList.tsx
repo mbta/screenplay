@@ -13,8 +13,7 @@ interface PastAlertsListState {
   currentPage: number;
 }
 
-// Change this to 20 after testing
-const pageLength = 4;
+const pageLength = 20;
 
 export class PastAlertsList extends React.Component<
   PastAlertsListProps,
