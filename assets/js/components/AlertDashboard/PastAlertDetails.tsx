@@ -6,9 +6,10 @@ import {
   getMessageString,
   matchStation,
 } from "../../util";
+import { AlertData } from "../App";
 
 interface PastAlertDetailsProps {
-  data: any;
+  data: AlertData;
 }
 
 const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
@@ -17,7 +18,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   const stationDetails = stations.map(matchStation);
 
   const startDate = new Date(schedule.start);
-  const clearedDate = new Date(cleared_at)
+  const clearedDate = new Date(cleared_at);
   const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
   const clearedDateString = formatDate(clearedDate) + " @ " + formatTime(clearedDate);
 

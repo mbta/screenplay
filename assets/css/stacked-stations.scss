@@ -12,7 +12,7 @@
     align-items: center;
     color: white;
     width: 100%;
-    > * {
+    .line-name {
       margin-right: 8px;
     }
   }
@@ -32,6 +32,7 @@
       color: $gray-800;
       font-size: 30px;
       font-weight: 800;
+      line-height: 36px;
     }
   }
 
@@ -64,7 +65,7 @@
   }
   .station-name {
     flex-grow: 1;
-    line-height: 36px;
+    margin-right: 20px;
     &.disabled {
       margin-left: 29px;
       font-weight: normal;
@@ -73,7 +74,9 @@
   }
   .screen-icon {
     margin-left: 8px;
+    margin-top: 6px;
     align-self: normal;
+    flex-shrink: 0;
   }
 }
 .station-card.selectable {

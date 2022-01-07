@@ -78,6 +78,13 @@
       .alert-header {
         border-radius: 8px 8px 0 0;
       }
+      .screen-icon {
+        display: none;
+      }
+      .station-name {
+        font-size: 18px;
+        line-height: unset;
+      }
     }
   }
   .alert-reminder {

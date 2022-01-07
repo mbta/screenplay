@@ -32,6 +32,8 @@ interface Schedule {
 
 interface AlertData {
   id: string;
+  cleared_at: string;
+  cleared_by: string;
   created_by: string;
   edited_by: string;
   message: CannedMessage | CustomMessage;

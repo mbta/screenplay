@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 import PastAlertDetails from "./PastAlertDetails";
 import { ArrowNarrowLeftIcon, ArrowNarrowRightIcon } from "@heroicons/react/solid";
+import { AlertData } from "../App";
 
 interface PastAlertsListProps {
-  pastAlertsData: any;
+  pastAlertsData: AlertData[];
 }
 interface PastAlertsListState {
   currentPage: number;
@@ -11,7 +12,6 @@ interface PastAlertsListState {
 
 // Change this to 20 after testing
 const pageLength = 4;
-
 
 export class PastAlertsList extends React.Component<PastAlertsListProps, PastAlertsListState> {
   private pastAlertsHeaderRef: React.RefObject<HTMLInputElement>;
@@ -41,6 +41,10 @@ export class PastAlertsList extends React.Component<PastAlertsListProps, PastAle
     }));
     this.pastAlertsHeaderRef.current.scrollIntoView();
   }
+  sort = (alerts: AlertData[]) =>
+    alerts.sort((a, b) =>
+      new Date(b.cleared_at).valueOf() - new Date(a.cleared_at).valueOf()
+    )
 
   render() {
     const { pastAlertsData } = this.props
@@ -55,7 +59,7 @@ export class PastAlertsList extends React.Component<PastAlertsListProps, PastAle
           <span>Past Takeover Alerts</span>
         </div>
 
-        {pastAlertsData.slice(firstIndex, firstIndex + 3).map((data: any) => {
+        {this.sort(pastAlertsData).slice(firstIndex, firstIndex + pageLength).map((data: AlertData) => {
           const { id } = data;
           return (
             <PastAlertDetails

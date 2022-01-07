@@ -54,7 +54,6 @@ defmodule Screenplay.Alerts.State do
 
   @spec clear_alert(GenServer.server(), Alert.t()) :: :ok
   def clear_alert(pid \\ __MODULE__, alert) do
-    IO.inspect(alert, label: "alert")
     GenServer.call(pid, {:clear_alert, alert})
   end
 
