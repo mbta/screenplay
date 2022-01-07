@@ -23,25 +23,25 @@ export class PastAlertsList extends React.Component<PastAlertsListProps, PastAle
     this.pastAlertsHeaderRef = React.createRef();
   }
   
-  goToPage = (page: number) => {
+  goToPage = (page: number): void => {
     this.setState({
       currentPage: page
     });
-    this.pastAlertsHeaderRef.current.scrollIntoView();
+    if (this.pastAlertsHeaderRef.current) this.pastAlertsHeaderRef.current.scrollIntoView();
   }
-  nextPage = () => {
+  nextPage = (): void => {
     this.setState(prevState => ({
       currentPage: prevState.currentPage + 1
     }));
-    this.pastAlertsHeaderRef.current.scrollIntoView();
+    if (this.pastAlertsHeaderRef.current) this.pastAlertsHeaderRef.current.scrollIntoView();
   }
-  backPage = () => {
+  backPage = (): void => {
     this.setState(prevState => ({
       currentPage: prevState.currentPage - 1
     }));
-    this.pastAlertsHeaderRef.current.scrollIntoView();
+    if (this.pastAlertsHeaderRef.current) this.pastAlertsHeaderRef.current.scrollIntoView();
   }
-  sort = (alerts: AlertData[]) =>
+  sort = (alerts: AlertData[]): AlertData[] =>
     alerts.sort((a, b) =>
       new Date(b.cleared_at).valueOf() - new Date(a.cleared_at).valueOf()
     )
