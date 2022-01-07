@@ -3,9 +3,9 @@ defmodule Screenplay.Alerts.StateTest do
 
   alias Screenplay.Alerts.{Alert, State}
 
-  describe "get_all_alerts/1" do
-    test "returns all alerts" do
-      {:ok, alerts_server} = start_supervised({State, [name: :get_all_alerts_test]})
+  describe "get_active_alerts/1" do
+    test "returns all active alerts" do
+      {:ok, alerts_server} = start_supervised({State, [name: :get_active_alerts_test]})
 
       alert = %Alert{
         id: "alert",
@@ -22,7 +22,30 @@ defmodule Screenplay.Alerts.StateTest do
       state = %State{alerts: alerts, cleared_alerts: %{}}
 
       :sys.replace_state(alerts_server, fn _state -> state end)
-      assert State.get_all_alerts(alerts_server) == [alert]
+      assert State.get_active_alerts(alerts_server) == [alert]
+    end
+  end
+
+  describe "get_past_alerts/1" do
+    test "returns all past alerts" do
+      {:ok, alerts_server} = start_supervised({State, [name: :get_past_alerts_test]})
+
+      cleared_alert = %Alert{
+        id: "alert",
+        message: %{type: :canned, id: 1},
+        stations: ["Back Bay"],
+        schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
+        created_by: "user",
+        edited_by: "user",
+        cleared_at: ~U[2021-08-19 17:39:42Z],
+        cleared_by: "user"
+      }
+
+      cleared_alerts = %{cleared_alert.id => cleared_alert}
+      state = %State{alerts: %{}, cleared_alerts: cleared_alerts}
+
+      :sys.replace_state(alerts_server, fn _state -> state end)
+      assert State.get_past_alerts(alerts_server) == [cleared_alert]
     end
   end
 
