@@ -212,7 +212,8 @@
   .gray-row {
     background: $gray-100;
   }
-  td, .padded-by-line {
+  td,
+  .padded-by-line {
     color: $gray-600;
     vertical-align: top;
     padding: 24px;

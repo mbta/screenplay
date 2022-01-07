@@ -13,14 +13,16 @@ interface PastAlertDetailsProps {
 }
 
 const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
-  const { cleared_at, cleared_by, created_by, message, schedule, stations } = props.data;
+  const { cleared_at, cleared_by, created_by, message, schedule, stations } =
+    props.data;
 
   const stationDetails = stations.map(matchStation);
 
   const startDate = new Date(schedule.start);
   const clearedDate = new Date(cleared_at);
   const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
-  const clearedDateString = formatDate(clearedDate) + " @ " + formatTime(clearedDate);
+  const clearedDateString =
+    formatDate(clearedDate) + " @ " + formatTime(clearedDate);
 
   const messageString = getMessageString(message);
 
@@ -44,7 +46,8 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
               <td>
                 <span className="emphasized-cell">{startDateString}</span>
                 <span className="padded-by-line">by</span>
-                <span className="emphasized-cell">{created_by}</span></td>
+                <span className="emphasized-cell">{created_by}</span>
+              </td>
             </tr>
             <tr>
               <td>Cleared</td>
