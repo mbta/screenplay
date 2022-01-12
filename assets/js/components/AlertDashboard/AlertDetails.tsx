@@ -96,7 +96,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
             Clear Alert
           </button>
         </div>
-        <table className="details-grid confirmation">
+        <table className="details-grid">
           <tbody>
             <tr>
               <td>Message text</td>

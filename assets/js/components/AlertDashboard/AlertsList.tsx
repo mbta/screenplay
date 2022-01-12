@@ -3,6 +3,7 @@ import AlertDetails from "./AlertDetails";
 import { AlertData } from "../App";
 import { ModalDetails } from "../ConfirmationModal";
 import { BanIcon } from "@heroicons/react/solid";
+import { PastAlertsList } from "./PastAlertsList";
 
 interface AlertsListProps {
   startEditWizard: (data: AlertData) => void;
@@ -12,12 +13,19 @@ interface AlertsListProps {
 
 const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [alertsData, setAlertsData] = useState([]);
+  const [pastAlertsData, setPastAlertsData] = useState([]);
   const [lastChangeTime, setLastChangeTime] = useState(Date.now());
 
   useEffect(() => {
-    fetch("/api/list")
+    fetch("/api/active_alerts")
       .then((response) => response.json())
       .then(setAlertsData);
+  }, [lastChangeTime]);
+
+  useEffect(() => {
+    fetch("/api/past_alerts")
+      .then((response) => response.json())
+      .then(setPastAlertsData);
   }, [lastChangeTime]);
 
   useEffect(() => {
@@ -120,7 +128,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
 
   return (
     <>
-      {alertsData.length > 0 ? (
+      {alertsData.length > 0 && (
         <>
           <div className="text-30 alerts-list-header">
             <span>Live Takeover Alerts</span>
@@ -148,8 +156,13 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
               />
             );
           })}
+          {pastAlertsData.length > 0 && <hr className="solid-separator" />}
         </>
-      ) : (
+      )}
+      {pastAlertsData.length > 0 && (
+        <PastAlertsList pastAlertsData={pastAlertsData} />
+      )}
+      {alertsData.length + pastAlertsData.length === 0 && (
         <div className="dot-grid" />
       )}
     </>

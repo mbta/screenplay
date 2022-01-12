@@ -227,7 +227,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   fetchActiveAlertsList() {
-    fetch("/api/list")
+    fetch("/api/active_alerts")
       .then((response) => response.json())
       .then((data) => {
         this.setState({ activeAlertsList: data });
