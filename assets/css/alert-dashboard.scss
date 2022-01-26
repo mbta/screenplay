@@ -108,6 +108,9 @@
       cursor: pointer;
     }
   }
+  .alert-header.compact {
+    padding: 0px 12px;
+  }
   .alert-header {
     display: flex;
     background: $gray-200;
