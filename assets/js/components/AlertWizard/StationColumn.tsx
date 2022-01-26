@@ -15,8 +15,10 @@ const StationColumn = (props: StationColumnProps): JSX.Element => {
     <div>
       <SelectableLine
         line={props.line}
-        checked={stationsByLine[props.line].every((lineStation) =>
-          props.selectedStations.some((x) => x.name === lineStation.name)
+        checked={stationsByLine[props.line].every(
+          (lineStation) =>
+            (!lineStation.landscape && !lineStation.portrait) ||
+            props.selectedStations.some((x) => x.name === lineStation.name)
         )}
         checkLine={props.checkLine}
       />
