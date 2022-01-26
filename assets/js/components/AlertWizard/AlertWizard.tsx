@@ -111,7 +111,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       // id is present if and only if editing an existing alert
       id: id,
       // Page state
-      step: 1,
+      step: alertData.step || 1,
       cancelModal: false,
       // User input state
       selectedStations: selectedStations,
