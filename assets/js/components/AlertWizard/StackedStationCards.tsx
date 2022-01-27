@@ -44,14 +44,12 @@ const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
               <div className="station-name">{station.name}</div>
               {station.landscape && (
                 <ScreenIcon
-                  id={station.name}
                   tooltipText="Outfront DUPs"
                   orientation="landscape"
                 />
               )}
               {station.portrait && (
                 <ScreenIcon
-                  id={station.name}
                   tooltipText="Outfront Liveboards"
                   orientation="portrait"
                 />
