@@ -37,6 +37,7 @@ interface AlertWizardState {
   portraitPNG: string | null;
   id: string | null;
   activeAlertsList: any[];
+  showErrorMessage: boolean;
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
@@ -59,6 +60,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         landscapePNG: null,
         portraitPNG: null,
         activeAlertsList: [],
+        showErrorMessage: false,
       };
     } else {
       this.state = this.initializeState(props.alertData);
@@ -122,6 +124,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       landscapePNG: null,
       portraitPNG: null,
       activeAlertsList: [],
+      showErrorMessage: false,
     };
   }
 
@@ -196,6 +199,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   stepForward() {
+    if (this.waitingForInput()) {
+      this.setState({ showErrorMessage: true });
+      return;
+    }
     if (this.state.step === 4) {
       this.handleSubmit();
     } else {
@@ -214,6 +221,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         step: state.step + 1,
       }));
     }
+
+    this.setState({ showErrorMessage: false });
   }
 
   stepBackward() {
@@ -450,6 +459,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           forward={this.stepForward}
           backward={this.stepBackward}
           waitingForInput={this.waitingForInput()}
+          showErrorText={this.state.showErrorMessage}
         />
       </>
     );
