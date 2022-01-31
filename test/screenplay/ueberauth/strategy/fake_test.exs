@@ -22,7 +22,7 @@ defmodule Screenplay.Ueberauth.Strategy.FakeTest do
     test "uid/1" do
       conn = conn(:get, "/auth/cognito/callback")
 
-      assert uid(conn) == "fake_uid"
+      assert uid(conn) == "ActiveDirectory_MBTA\\fake_uid"
     end
 
     test "credentials/1" do

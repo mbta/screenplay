@@ -201,6 +201,8 @@ defmodule Screenplay.Alerts.Alert do
     dt
   end
 
+  defp trim_username(nil), do: nil
+
   defp trim_username(username) do
     username
     |> String.replace("ActiveDirectory_MBTA\\", "")
