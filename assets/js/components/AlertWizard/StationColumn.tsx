@@ -15,11 +15,11 @@ const StationColumn = (props: StationColumnProps): JSX.Element => {
     <div>
       <SelectableLine
         line={props.line}
-        checked={stationsByLine[props.line].every(
-          (lineStation) =>
-            (!lineStation.landscape && !lineStation.portrait) ||
-            props.selectedStations.some((x) => x.name === lineStation.name)
-        )}
+        checked={stationsByLine[props.line]
+          // Ignore disabled stations when determining whether the whole line is selected
+          .filter(({landscape, portrait}) => landscape || portrait)
+          .every((lineStation) => props.selectedStations.some((x) => x.name === lineStation.name))
+        }
         checkLine={props.checkLine}
       />
       {stationsByLine[props.line].map((station) => {
