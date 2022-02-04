@@ -6,7 +6,7 @@ import { ModalDetails } from "../ConfirmationModal";
 
 interface AlertDashboardProps {
   startAlertWizard: () => void;
-  startEditWizard: (data: AlertData) => void;
+  startEditWizard: (data: AlertData, step: number) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
   closeModal: () => void;
 }

@@ -37,6 +37,7 @@ interface AlertWizardState {
   portraitPNG: string | null;
   id: string | null;
   activeAlertsList: any[];
+  showErrorMessage: boolean;
 }
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
@@ -59,6 +60,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         landscapePNG: null,
         portraitPNG: null,
         activeAlertsList: [],
+        showErrorMessage: false,
       };
     } else {
       this.state = this.initializeState(props.alertData);
@@ -111,7 +113,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       // id is present if and only if editing an existing alert
       id: id,
       // Page state
-      step: 1,
+      step: alertData.step || 1,
       cancelModal: false,
       // User input state
       selectedStations: selectedStations,
@@ -122,6 +124,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       landscapePNG: null,
       portraitPNG: null,
       activeAlertsList: [],
+      showErrorMessage: false,
     };
   }
 
@@ -196,24 +199,25 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   stepForward() {
+    if (this.waitingForInput()) {
+      this.setState({ showErrorMessage: true });
+      return;
+    }
     if (this.state.step === 4) {
       this.handleSubmit();
     } else {
       // Temporary hack: to avoid race conditions, convert the SVG to a PNG upon station selection,
       // which must always happen after message selection.
       if (this.state.step === 2) {
-        this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
-          this.setState({ portraitPNG: url })
-        );
-        this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
-          this.setState({ landscapePNG: url })
-        );
+        this.generatePNGs();
       }
 
       this.setState((state) => ({
         step: state.step + 1,
       }));
     }
+
+    this.setState({ showErrorMessage: false });
   }
 
   stepBackward() {
@@ -404,7 +408,20 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     };
   }
 
+  generatePNGs() {
+    this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
+      this.setState({ portraitPNG: url })
+    );
+    this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
+      this.setState({ landscapePNG: url })
+    );
+  }
+
   render() {
+    const { step, landscapePNG, portraitPNG } = this.state;
+    if (step > 2 && (landscapePNG === null || portraitPNG === null)) {
+      this.generatePNGs();
+    }
     const modalDetails: ModalDetails = {
       icon: <BanIcon className="icon" />,
       header: "Cancel new Takeover Alert",
@@ -450,6 +467,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           forward={this.stepForward}
           backward={this.stepBackward}
           waitingForInput={this.waitingForInput()}
+          showErrorText={this.state.showErrorMessage}
         />
       </>
     );

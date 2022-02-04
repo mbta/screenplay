@@ -1,6 +1,8 @@
 import React from "react";
+import ReactTooltip from "react-tooltip";
 import stationsByLine, { Station } from "../../constants/stations";
 import { abbreviation, color } from "../../util";
+import ScreenIcon from "./ScreenIcon";
 
 interface StackedStationCardsProps {
   stations: Station[];
@@ -40,9 +42,17 @@ const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
                 </div>
               ))}
               <div className="station-name">{station.name}</div>
-              {station.landscape && <div className="screen-icon landscape" />}
+              {station.landscape && (
+                <ScreenIcon
+                  tooltipText="Outfront DUPs"
+                  orientation="landscape"
+                />
+              )}
               {station.portrait && (
-                <div className="screen-icon portrait" />
+                <ScreenIcon
+                  tooltipText="Outfront Liveboards"
+                  orientation="portrait"
+                />
               )}{" "}
             </div>
             <div

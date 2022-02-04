@@ -39,6 +39,7 @@ interface AlertData {
   message: CannedMessage | CustomMessage;
   schedule: Schedule;
   stations: string[];
+  step: number | null;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -79,7 +80,8 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
-  startEditWizard(alertData: AlertData) {
+  startEditWizard(alertData: AlertData, step: number) {
+    alertData.step = step;
     this.setState({
       alertData: alertData,
       alertWizardOpen: true,

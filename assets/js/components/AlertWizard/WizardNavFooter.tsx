@@ -10,6 +10,7 @@ interface WizardNavFooterProps {
   forward: () => void;
   backward: () => void;
   waitingForInput: boolean;
+  showErrorText: boolean;
 }
 
 const backButton = (step: number) => {
@@ -44,7 +45,6 @@ const disabledText = (step: number) => {
 };
 
 const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
-  const [hovered, setHovered] = useState(false);
   return (
     <div className="wizard-nav-footer">
       {props.step !== 1 ? (
@@ -56,14 +56,14 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
 
       {props.step !== 4 ? (
         <div className="forward">
-          {hovered && props.waitingForInput ? (
+          {props.showErrorText && props.waitingForInput ? (
             <span className="disabled-text">{disabledText(props.step)}</span>
           ) : null}
           <button
-            className="nav-button"
-            disabled={props.waitingForInput}
+            className={
+              "nav-button" + (props.waitingForInput ? " disabled" : "")
+            }
             onClick={props.forward}
-            onMouseOver={() => setHovered(true)}
           >
             <span>{forwardButton(props.step)}</span>
             <ArrowNarrowRightIcon className="button-icon right" />

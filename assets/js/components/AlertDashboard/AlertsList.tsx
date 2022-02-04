@@ -4,9 +4,10 @@ import { AlertData } from "../App";
 import { ModalDetails } from "../ConfirmationModal";
 import { BanIcon } from "@heroicons/react/solid";
 import { PastAlertsList } from "./PastAlertsList";
+import ReactTooltip from "react-tooltip";
 
 interface AlertsListProps {
-  startEditWizard: (data: AlertData) => void;
+  startEditWizard: (data: AlertData, step: number) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
   closeModal: () => void;
 }
@@ -141,6 +142,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
                 <span className="text-16">Clear all</span>
               </button>
             )}
+            <ReactTooltip />
           </div>
 
           {alertsData.map((data) => {

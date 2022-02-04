@@ -142,6 +142,9 @@
   .svg-previews {
     margin-bottom: 24px;
   }
+  .stacked-station-cards {
+    padding-top: 24px;
+  }
 }
 
 .wizard-nav-footer {
@@ -168,9 +171,14 @@
   .nav-button {
     box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.25);
     margin: 24px;
-    &:not(:disabled):hover {
+    &:not(.disabled):hover {
       background: $pink-900;
     }
+  }
+  .disabled {
+    cursor: default;
+    background: $gray-500;
+    opacity: 1;
   }
 }
 

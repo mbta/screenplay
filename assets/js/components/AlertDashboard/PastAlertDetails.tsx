@@ -29,7 +29,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-details past-alert">
-        <div className="alert-header">
+        <div className="alert-header compact">
           <StackedStationCards
             stations={stationDetails}
             className="published-alert"
