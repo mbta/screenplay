@@ -3,7 +3,7 @@ import { ClockIcon } from "@heroicons/react/solid";
 
 interface AlertReminderProps {
   clearAlert: () => void;
-  editAlert: () => void;
+  editAlert: (step) => void;
   endDate: string | null;
 }
 
@@ -21,7 +21,7 @@ const AlertReminder = ({
       <ClockIcon className="reminder-icon" />
       <div>
         <span>Reminder that this alert is still posted. Please </span>
-        <span className="reminder-action" onClick={editAlert}>
+        <span className="reminder-action" onClick={() => editAlert(3)}>
           Edit
         </span>
         <span> for a later reminder, or </span>

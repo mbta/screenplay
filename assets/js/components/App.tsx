@@ -80,8 +80,8 @@ class App extends React.Component<AppProps, AppState> {
     });
   }
 
-  startEditWizard(alertData: AlertData) {
-    alertData.step = 3;
+  startEditWizard(alertData: AlertData, step) {
+    alertData.step = step;
     this.setState({
       alertData: alertData,
       alertWizardOpen: true,
