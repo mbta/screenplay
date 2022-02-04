@@ -24,3 +24,4 @@ jobs:
           asana-secret: ${{ secrets.ASANA_GITHUB_INTEGRATION_SECRET }}
       - name: Log output status
         run: echo "Status is ${{ steps.postAttachment.outputs.status }}"
+        

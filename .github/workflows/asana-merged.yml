@@ -14,3 +14,4 @@ jobs:
           asana-pat: ${{ secrets.ASANA_SECRET_FOR_INSURIFY_ACTION }}
           trigger-phrase: "\\*\\*Asana task\\*\\*:"
           targets: '[{"project": "Screens Dev - Sprint", "section": "Next Outfront Takeover Release"}]'
+          
