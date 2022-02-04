@@ -15,7 +15,7 @@ import AlertReminder from "./AlertReminder";
 interface AlertDetailsProps {
   data: any;
   setLastChangeTime: (time: number) => void;
-  startEditWizard: (data: AlertData, step) => void;
+  startEditWizard: (data: AlertData, step: number) => void;
   clearAlert: (id: string, setLastChangeTime: (time: number) => void) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
 }
@@ -56,7 +56,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   };
 
   const editAlert = useCallback(
-    (step) => startEditWizard(data, step),
+    (step: number) => startEditWizard(data, step),
     [startEditWizard, data]
   );
   const clearAlert = useCallback(

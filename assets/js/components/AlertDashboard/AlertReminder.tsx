@@ -3,7 +3,7 @@ import { ClockIcon } from "@heroicons/react/solid";
 
 interface AlertReminderProps {
   clearAlert: () => void;
-  editAlert: (step) => void;
+  editAlert: (step: number) => void;
   endDate: string | null;
 }
 
