@@ -19,7 +19,7 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
 
   @impl Ueberauth.Strategy
   def uid(_conn) do
-    "fake_uid"
+    "ActiveDirectory_MBTA\\fake_uid"
   end
 
   @impl Ueberauth.Strategy
@@ -36,7 +36,7 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
   @impl Ueberauth.Strategy
   def info(_conn) do
     %Ueberauth.Auth.Info{
-      name: "Fake User"
+      name: "ActiveDirectory_MBTA\\Fake User"
     }
   end
 
