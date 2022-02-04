@@ -7,7 +7,7 @@ import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
 
 interface AlertsListProps {
-  startEditWizard: (data: AlertData) => void;
+  startEditWizard: (data: AlertData, step: number) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
   closeModal: () => void;
 }
