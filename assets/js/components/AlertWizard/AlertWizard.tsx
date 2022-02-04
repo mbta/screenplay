@@ -209,12 +209,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       // Temporary hack: to avoid race conditions, convert the SVG to a PNG upon station selection,
       // which must always happen after message selection.
       if (this.state.step === 2) {
-        this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
-          this.setState({ portraitPNG: url })
-        );
-        this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
-          this.setState({ landscapePNG: url })
-        );
+        this.generatePNGs();
       }
 
       this.setState((state) => ({
@@ -413,7 +408,20 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     };
   }
 
+  generatePNGs() {
+    this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
+      this.setState({ portraitPNG: url })
+    );
+    this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
+      this.setState({ landscapePNG: url })
+    );
+  }
+
   render() {
+    const { step, landscapePNG, portraitPNG } = this.state;
+    if (step > 2 && (landscapePNG === null || portraitPNG === null)) {
+      this.generatePNGs();
+    }
     const modalDetails: ModalDetails = {
       icon: <BanIcon className="icon" />,
       header: "Cancel new Takeover Alert",
