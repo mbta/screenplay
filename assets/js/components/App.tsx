@@ -3,13 +3,7 @@ import OutfrontTakeoverTool from "./OutfrontTakeoverTool/OutfrontTakeoverTool";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 
-interface AppProps {
-  name: string;
-}
-
-interface AppState {}
-
-class App extends React.Component<AppProps, AppState> {
+class App extends React.Component {
   render() {
     return (
       <Routes>
