@@ -11,7 +11,7 @@ import {
   svgShortSide,
   interBase64Weight500,
   interBase64Weight700,
-} from "../../constants/misc";
+} from "../../../constants/misc";
 
 interface SVGPreviewsProps {
   showText: boolean;

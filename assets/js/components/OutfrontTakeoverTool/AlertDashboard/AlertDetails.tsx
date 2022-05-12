@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
 import StackedStationCards from "../AlertWizard/StackedStationCards";
-import { AlertData } from "../App";
+import { AlertData } from "../OutfrontTakeoverTool";
 import {
   formatDate,
   formatTime,
   getMessageString,
   matchStation,
-} from "../../util";
+} from "../../../util";
 import { BanIcon, PencilIcon } from "@heroicons/react/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import SVGPreviews from "../AlertWizard/SVGPreviews";

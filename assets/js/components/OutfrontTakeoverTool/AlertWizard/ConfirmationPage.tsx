@@ -1,6 +1,6 @@
 import React from "react";
-import { Station } from "../../constants/stations";
-import { formatDate, formatTime } from "../../util";
+import { Station } from "../../../constants/stations";
+import { formatDate, formatTime } from "../../../util";
 import StackedStationCards from "./StackedStationCards";
 
 interface ConfirmationPageProps {

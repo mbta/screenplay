@@ -4,7 +4,7 @@ import {
   ArrowNarrowLeftIcon,
   ArrowNarrowRightIcon,
 } from "@heroicons/react/solid";
-import { AlertData } from "../App";
+import { AlertData } from "../../App";
 
 interface PastAlertsListProps {
   pastAlertsData: AlertData[];

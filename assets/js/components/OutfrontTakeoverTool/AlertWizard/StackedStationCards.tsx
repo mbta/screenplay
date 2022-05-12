@@ -1,7 +1,6 @@
 import React from "react";
-import ReactTooltip from "react-tooltip";
-import stationsByLine, { Station } from "../../constants/stations";
-import { abbreviation, color } from "../../util";
+import stationsByLine, { Station } from "../../../constants/stations";
+import { abbreviation, color } from "../../../util";
 import ScreenIcon from "./ScreenIcon";
 
 interface StackedStationCardsProps {
