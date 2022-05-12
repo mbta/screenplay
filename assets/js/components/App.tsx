@@ -1,6 +1,7 @@
 import React from "react";
 import OutfrontTakeoverTool from "./OutfrontTakeoverTool/OutfrontTakeoverTool";
-import { Routes, Route, Outlet, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Dashboard from "./Dashboard/Dashboard";
 
 interface AppProps {
   name: string;
@@ -17,6 +18,7 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <Routes>
         <Route path="/" element={<OutfrontTakeoverTool />}></Route>
+        <Route path="/dashboard" element={<Dashboard />}></Route>
       </Routes>
     );
   }
