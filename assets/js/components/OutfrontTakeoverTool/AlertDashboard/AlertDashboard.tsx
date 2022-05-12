@@ -1,7 +1,7 @@
 import React from "react";
 import AlertsList from "./AlertsList";
 import IntroBlock from "./IntroBlock";
-import { AlertData } from "../App";
+import { AlertData } from "../OutfrontTakeoverTool";
 import { ModalDetails } from "../ConfirmationModal";
 
 interface AlertDashboardProps {

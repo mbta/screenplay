@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AlertDetails from "./AlertDetails";
-import { AlertData } from "../App";
+import { AlertData } from "../OutfrontTakeoverTool";
 import { ModalDetails } from "../ConfirmationModal";
 import { BanIcon } from "@heroicons/react/solid";
 import { PastAlertsList } from "./PastAlertsList";

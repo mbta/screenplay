@@ -4,7 +4,7 @@ import {
   ArrowNarrowLeftIcon,
   ArrowNarrowRightIcon,
 } from "@heroicons/react/solid";
-import { AlertData } from "../../App";
+import { AlertData } from "../../OutfrontTakeoverTool/OutfrontTakeoverTool";
 
 interface PastAlertsListProps {
   pastAlertsData: AlertData[];
