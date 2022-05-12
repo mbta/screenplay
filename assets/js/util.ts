@@ -1,4 +1,7 @@
-import { CannedMessage, CustomMessage } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
+import {
+  CannedMessage,
+  CustomMessage,
+} from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
 import STATIONS_BY_LINE from "./constants/stations";
 
