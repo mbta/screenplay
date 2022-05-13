@@ -5,15 +5,15 @@ import PickStations from "./PickStations";
 import SetSchedule from "./SetSchedule";
 import WizardNavFooter from "./WizardNavFooter";
 import WizardStepper from "./WizardStepper";
-import { AlertData } from "../App";
+import { AlertData } from "../OutfrontTakeoverTool";
 
-import stationsByLine, { Station } from "../../constants/stations";
-import CANNED_MESSAGES from "../../constants/messages";
+import stationsByLine, { Station } from "../../../constants/stations";
+import CANNED_MESSAGES from "../../../constants/messages";
 
 import { BanIcon, XIcon } from "@heroicons/react/solid";
 import WizardSidebar from "./WizardSidebar";
-import { svgLongSide, svgScale, svgShortSide } from "../../constants/misc";
-import { matchStation } from "../../util";
+import { svgLongSide, svgScale, svgShortSide } from "../../../constants/misc";
+import { matchStation } from "../../../util";
 
 import parseISO from "date-fns/parseISO";
 import differenceInHours from "date-fns/differenceInHours";

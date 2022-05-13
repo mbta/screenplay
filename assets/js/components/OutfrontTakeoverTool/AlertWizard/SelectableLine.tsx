@@ -1,5 +1,5 @@
 import React from "react";
-import { color } from "../../util";
+import { color } from "../../../util";
 
 interface SelectableLineProps {
   line: string;

@@ -1,24 +1,24 @@
-const path = require('path');
-const glob = require('glob');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require("path");
+const glob = require("glob");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = (env, options) => ({
   optimization: {
     minimizer: [
       new TerserPlugin({ cache: true, parallel: true, sourceMap: false }),
-      new OptimizeCSSAssetsPlugin({})
-    ]
+      new OptimizeCSSAssetsPlugin({}),
+    ],
   },
   entry: {
-    'main-app': glob.sync('./vendor/**/*.js').concat(['./js/main-app.js'])
+    "main-app": glob.sync("./vendor/**/*.js").concat(["./js/main-app.js"]),
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, '../priv/static/js'),
-    publicPath: '/js/'
+    filename: "[name].js",
+    path: path.resolve(__dirname, "../priv/static/js"),
+    publicPath: "/js/",
   },
   devtool: "source-map",
   module: {
@@ -28,39 +28,39 @@ module.exports = (env, options) => ({
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader'
+            loader: "babel-loader",
           },
           {
-            loader: "ts-loader"
-          }
-        ]
+            loader: "ts-loader",
+          },
+        ],
       },
       {
         test: /\.s?css$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader"
+            loader: "css-loader",
           },
           {
-            loader: "sass-loader"
-          }
-        ]
+            loader: "sass-loader",
+          },
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|jp2|webp)$/,
-        loader: 'file-loader',
+        loader: "file-loader",
         options: {
-          name: '[name].[ext]',
+          name: "[name].[ext]",
         },
-      }
-    ]
+      },
+    ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx"]
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: '../css/app.css' }),
-    new CopyWebpackPlugin([{ from: 'static/', to: '../' }])
-  ]
+    new MiniCssExtractPlugin({ filename: "../css/app.css" }),
+    new CopyWebpackPlugin([{ from: "static/", to: "../" }]),
+  ],
 });

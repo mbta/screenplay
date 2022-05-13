@@ -47,6 +47,7 @@ defmodule ScreenplayWeb.Router do
     ]
 
     get("/", PageController, :index)
+    get("/dashboard", DashboardController, :index)
   end
 
   scope "/", ScreenplayWeb do
@@ -92,7 +93,7 @@ defmodule ScreenplayWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: ScreenplayWeb.Telemetry
+      live_dashboard "/telemetry_dashboard", metrics: ScreenplayWeb.Telemetry
     end
   end
 end

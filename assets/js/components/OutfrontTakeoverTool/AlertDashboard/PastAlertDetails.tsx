@@ -5,8 +5,8 @@ import {
   formatTime,
   getMessageString,
   matchStation,
-} from "../../util";
-import { AlertData } from "../App";
+} from "../../../util";
+import { AlertData } from "../OutfrontTakeoverTool";
 
 interface PastAlertDetailsProps {
   data: AlertData;

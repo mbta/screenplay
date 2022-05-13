@@ -1,7 +1,7 @@
 import React from "react";
 import SelectableLine from "./SelectableLine";
 import SelectableStation from "./SelectableStation";
-import stationsByLine, { Station } from "../../constants/stations";
+import stationsByLine, { Station } from "../../../constants/stations";
 
 interface StationColumnProps {
   line: string;

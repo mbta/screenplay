@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StationColumn from "./StationColumn";
 
-import { Station } from "../../constants/stations";
+import { Station } from "../../../constants/stations";
 import WizardWarning from "./WizardWarning";
 
 interface PickStationsProps {

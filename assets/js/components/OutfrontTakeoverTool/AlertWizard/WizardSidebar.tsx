@@ -1,7 +1,7 @@
 import React from "react";
 import StackedStationCards from "./StackedStationCards";
 
-import { Station } from "../../constants/stations";
+import { Station } from "../../../constants/stations";
 import SVGPreviews from "./SVGPreviews";
 
 interface WizardSidebarProps {
