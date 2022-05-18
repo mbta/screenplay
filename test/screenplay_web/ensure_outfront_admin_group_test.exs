@@ -1,0 +1,24 @@
+defmodule ScreenplayWeb.EnsureOutfrontAdminGroupTest do
+  use ScreenplayWeb.ConnCase
+
+  describe "init/1" do
+    test "passes options through unchanged" do
+      assert ScreenplayWeb.EnsureOutfrontAdminGroup.init([]) == []
+    end
+  end
+
+  describe "call/2" do
+    @tag :authenticated_admin
+    test "does nothing when user is in the outfront admin group", %{conn: conn} do
+      assert conn == ScreenplayWeb.EnsureOutfrontAdminGroup.call(conn, [])
+    end
+
+    @tag :authenticated
+    test "redirects when user is not in the outfront admin group", %{conn: conn} do
+      conn = ScreenplayWeb.EnsureOutfrontAdminGroup.call(conn, [])
+
+      response = html_response(conn, 302)
+      assert response =~ "/unauthorized"
+    end
+  end
+end
