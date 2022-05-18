@@ -26,17 +26,12 @@ config :phoenix, :json_library, Jason
 # Use Jason for JSON parsing in ExAws
 config :ex_aws, json_codec: Jason
 
-# Authenticate using Cognito
-config :screenplay,
-  redirect_http?: true,
-  cognito_group: "screenplay"
-
 config :screenplay, ScreenplayWeb.AuthManager, issuer: "screenplay"
 
 # Placeholder for Cognito authentication, defined for real in environment configs
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: {Ueberauth.Strategy.Cognito, []}
+    cognito: nil
   ]
 
 # Import environment specific config. This must remain at the bottom
