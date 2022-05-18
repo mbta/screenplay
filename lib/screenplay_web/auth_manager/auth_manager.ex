@@ -3,7 +3,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   use Guardian, otp_app: :screenplay
 
-  @type access_level :: :none | :read_only | :outfront_admin
+  @type access_level :: :none | :read_only | :admin
 
   @screenplay_admin_group "screenplay-admin"
 
@@ -20,7 +20,7 @@ defmodule ScreenplayWeb.AuthManager do
   @spec claims_access_level(Guardian.Token.claims()) :: access_level()
   def claims_access_level(%{"groups" => groups}) do
     if not is_nil(groups) and @screenplay_admin_group in groups do
-      :outfront_admin
+      :admin
     else
       :read_only
     end

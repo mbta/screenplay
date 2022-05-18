@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.EnsureOutfrontAdminGroup do
+defmodule ScreenplayWeb.EnsureScreenplayAdminGroup do
   @moduledoc """
   Verify that the user has permission to access the Outfront Takeover Tool.
   """
@@ -11,7 +11,7 @@ defmodule ScreenplayWeb.EnsureOutfrontAdminGroup do
 
   def call(conn, _opts) do
     with claims <- Guardian.Plug.current_claims(conn),
-         true <- ScreenplayWeb.AuthManager.claims_access_level(claims) == :outfront_admin do
+         true <- ScreenplayWeb.AuthManager.claims_access_level(claims) == :admin do
       conn
     else
       _ ->

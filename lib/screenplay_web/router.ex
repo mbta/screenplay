@@ -27,7 +27,7 @@ defmodule ScreenplayWeb.Router do
     plug(Guardian.Plug.EnsureAuthenticated)
   end
 
-  pipeline :ensure_outfront_admin_group do
+  pipeline :ensure_screenplay_admin_group do
     plug(ScreenplayWeb.EnsureOutfrontAdminGroup)
   end
 
@@ -43,7 +43,7 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_outfront_admin_group
+      :ensure_screenplay_admin_group
     ]
 
     get("/", PageController, :index)
@@ -70,7 +70,7 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_outfront_admin_group
+      :ensure_screenplay_admin_group
     ]
 
     post("/create", AlertController, :create)
