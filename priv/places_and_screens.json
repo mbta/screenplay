@@ -1,11 +1,30 @@
 [{
+    "id": "place-CM-0493",
+    "name": "Wareham Village",
+    "routes": ["CapeFlyer"],
+    "screens": []
+}, {
+    "id": "place-CM-0547",
+    "name": "Buzzards Bay",
+    "routes": ["CapeFlyer"],
+    "screens": []
+}, {
+    "id": "place-CM-0564",
+    "name": "Bourne",
+    "routes": ["CapeFlyer"],
+    "screens": []
+}, {
+    "id": "place-CM-0790",
+    "name": "Hyannis",
+    "routes": ["CapeFlyer"],
+    "screens": []
+}, {
     "id": "place-FR-0098",
     "name": "Waltham",
     "routes": ["CR-Fitchburg"],
     "screens": [{
         "disabled": false,
         "id": "WalthamCR",
-        "stop_id": "place-FR-0098",
         "type": "dup"
     }]
 }, {
@@ -20,9 +39,6 @@
         "id": "RALE",
         "type": "pa_ess",
         "zone": "m"
-    }, {
-        "id": "301",
-        "type": "solari"
     }]
 }, {
     "id": "place-alsgr",
@@ -66,7 +82,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Airport",
-        "stop_id": "place-aport",
         "type": "dup"
     }, {
         "id": "BAIR",
@@ -84,7 +99,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Aquarium",
-        "stop_id": "place-aqucl",
         "type": "dup"
     }, {
         "id": "BAQU",
@@ -123,12 +137,10 @@
     "screens": [{
         "disabled": false,
         "id": "1507",
-        "stop_id": "place-asmnl",
         "type": "pre_fare_v2"
     }, {
         "disabled": false,
         "id": "1506",
-        "stop_id": "place-asmnl",
         "type": "pre_fare_v2"
     }, {
         "id": "RASH",
@@ -176,12 +188,10 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-BackBay",
-        "stop_id": "place-bbsta",
         "type": "dup"
     }, {
         "disabled": false,
         "id": "1509",
-        "stop_id": "place-bbsta",
         "type": "pre_fare_v2"
     }, {
         "id": "OBAC",
@@ -219,43 +229,32 @@
     "name": "Washington Square",
     "routes": ["Green-C"],
     "screens": [{
-        "direction_id": 1,
         "disabled": false,
         "id": "213",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_double"
     }, {
-        "direction_id": 0,
         "disabled": false,
         "id": "104",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_single"
     }, {
         "disabled": false,
         "id": "1204",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_v2"
     }, {
-        "direction_id": 0,
         "disabled": false,
         "id": "204",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_double"
     }, {
-        "direction_id": 1,
         "disabled": false,
         "id": "203",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_double"
     }, {
         "disabled": false,
         "id": "1203",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_v2"
     }, {
         "disabled": false,
         "id": "1213",
-        "stop_id": "place-bcnwa",
         "type": "gl_eink_v2"
     }]
 }, {
@@ -263,28 +262,20 @@
     "name": "Blandford Street",
     "routes": ["Green-B"],
     "screens": [{
-        "direction_id": 0,
         "disabled": false,
         "id": "102",
-        "stop_id": "place-bland",
         "type": "gl_eink_single"
     }, {
-        "direction_id": 1,
         "disabled": false,
         "id": "111",
-        "stop_id": "place-bland",
         "type": "gl_eink_single"
     }, {
-        "direction_id": 0,
         "disabled": true,
         "id": "112",
-        "stop_id": "place-bland",
         "type": "gl_eink_single"
     }, {
-        "direction_id": 1,
         "disabled": true,
         "id": "101",
-        "stop_id": "place-bland",
         "type": "gl_eink_single"
     }]
 }, {
@@ -338,7 +329,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Broadway",
-        "stop_id": "place-brdwy",
         "type": "dup"
     }, {
         "id": "RBRO",
@@ -547,9 +537,6 @@
         "id": "RCEN",
         "type": "pa_ess",
         "zone": "s"
-    }, {
-        "id": "302",
-        "type": "solari"
     }]
 }, {
     "id": "place-coecl",
@@ -576,7 +563,6 @@
     "screens": [{
         "disabled": false,
         "id": "Landscape255",
-        "stop_id": "place-davis",
         "type": "dup"
     }, {
         "id": "RDAV",
@@ -682,12 +668,10 @@
     "screens": [{
         "disabled": false,
         "id": "1510",
-        "stop_id": "place-forhl",
         "type": "pre_fare_v2"
     }, {
         "disabled": false,
         "id": "1511",
-        "stop_id": "place-forhl",
         "type": "pre_fare_v2"
     }, {
         "id": "OFOR",
@@ -701,12 +685,6 @@
         "id": "SFOR",
         "type": "pa_ess",
         "zone": "m"
-    }, {
-        "id": "305",
-        "type": "solari"
-    }, {
-        "id": "306",
-        "type": "solari"
     }]
 }, {
     "id": "place-gover",
@@ -715,12 +693,10 @@
     "screens": [{
         "disabled": false,
         "id": "1503",
-        "stop_id": "place-gover",
         "type": "pre_fare_v2"
     }, {
         "disabled": false,
         "id": "1502",
-        "stop_id": "place-gover",
         "type": "pre_fare_v2"
     }, {
         "id": "BGOV",
@@ -776,7 +752,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Haymarket",
-        "stop_id": "place-haecl",
         "type": "dup"
     }, {
         "id": "OHAY",
@@ -798,9 +773,6 @@
         "id": "GHAY",
         "type": "pa_ess",
         "zone": "w"
-    }, {
-        "id": "308",
-        "type": "solari"
     }]
 }, {
     "id": "place-harsq",
@@ -818,9 +790,6 @@
         "id": "RHAR",
         "type": "pa_ess",
         "zone": "s"
-    }, {
-        "id": "307",
-        "type": "solari"
     }]
 }, {
     "id": "place-harvd",
@@ -834,24 +803,18 @@
     "screens": [{
         "disabled": false,
         "id": "1208",
-        "stop_id": "place-hsmnl",
         "type": "gl_eink_v2"
     }, {
-        "direction_id": 1,
         "disabled": false,
         "id": "208",
-        "stop_id": "place-hsmnl",
         "type": "gl_eink_double"
     }, {
-        "direction_id": 1,
         "disabled": false,
         "id": "207",
-        "stop_id": "place-hsmnl",
         "type": "gl_eink_double"
     }, {
         "disabled": false,
         "id": "1207",
-        "stop_id": "place-hsmnl",
         "type": "gl_eink_v2"
     }]
 }, {
@@ -925,7 +888,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Kenmore",
-        "stop_id": "place-kencl",
         "type": "dup"
     }, {
         "id": "GKEN",
@@ -1035,24 +997,18 @@
     "screens": [{
         "disabled": false,
         "id": "1206",
-        "stop_id": "place-mfa",
         "type": "gl_eink_v2"
     }, {
         "disabled": false,
         "id": "1216",
-        "stop_id": "place-mfa",
         "type": "gl_eink_v2"
     }, {
-        "direction_id": 0,
         "disabled": false,
         "id": "206",
-        "stop_id": "place-mfa",
         "type": "gl_eink_double"
     }, {
-        "direction_id": 0,
         "disabled": false,
         "id": "216",
-        "stop_id": "place-mfa",
         "type": "gl_eink_double"
     }]
 }, {
@@ -1080,7 +1036,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Malden",
-        "stop_id": "place-mlmnl",
         "type": "dup"
     }, {
         "id": "OMAL",
@@ -1098,12 +1053,10 @@
     "screens": [{
         "disabled": false,
         "id": "1505",
-        "stop_id": "place-mvbcl",
         "type": "pre_fare_v2"
     }, {
         "disabled": false,
         "id": "1504",
-        "stop_id": "place-mvbcl",
         "type": "pre_fare_v2"
     }, {
         "id": "BMAV",
@@ -1113,9 +1066,6 @@
         "id": "BMAV",
         "type": "pa_ess",
         "zone": "w"
-    }, {
-        "id": "309",
-        "type": "solari"
     }]
 }, {
     "id": "place-newtn",
@@ -1272,7 +1222,6 @@
     "screens": [{
         "disabled": false,
         "id": "1508",
-        "stop_id": "place-portr",
         "type": "pre_fare_v2"
     }, {
         "id": "RPOR",
@@ -1294,7 +1243,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-Prudential",
-        "stop_id": "place-prmnl",
         "type": "dup"
     }, {
         "id": "GPRU",
@@ -1333,7 +1281,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-QuincyCenter",
-        "stop_id": "place-qnctr",
         "type": "dup"
     }, {
         "id": "RQUC",
@@ -1428,9 +1375,6 @@
         "id": "SRUG",
         "type": "pa_ess",
         "zone": "m"
-    }, {
-        "id": "310",
-        "type": "solari"
     }]
 }, {
     "id": "place-rvrwy",
@@ -1595,7 +1539,6 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-SullivanSquare",
-        "stop_id": "place-sull",
         "type": "dup"
     }, {
         "id": "OSUL",
@@ -1609,9 +1552,6 @@
         "id": "OSUL",
         "type": "pa_ess",
         "zone": "s"
-    }, {
-        "id": "311",
-        "type": "solari"
     }]
 }, {
     "id": "place-sumav",
@@ -1643,22 +1583,18 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-TuftsMedicalCenter",
-        "stop_id": "place-tumnl",
         "type": "dup"
     }, {
         "disabled": false,
         "id": "1413",
-        "stop_id": "place-tumnl",
         "type": "bus_shelter_v2"
     }, {
         "disabled": false,
         "id": "1411",
-        "stop_id": "place-tumnl",
         "type": "bus_shelter_v2"
     }, {
         "disabled": false,
         "id": "1501",
-        "stop_id": "place-tumnl",
         "type": "pre_fare_v2"
     }, {
         "id": "ONEM",
@@ -1728,7 +1664,6 @@
     "screens": [{
         "disabled": false,
         "id": "1512",
-        "stop_id": "place-welln",
         "type": "pre_fare_v2"
     }, {
         "id": "OWEL",
@@ -1789,9 +1724,6 @@
         "id": "BWON",
         "type": "pa_ess",
         "zone": "m"
-    }, {
-        "id": "312",
-        "type": "solari"
     }]
 }, {
     "id": "place-woodl",
@@ -1818,12 +1750,10 @@
     "screens": [{
         "disabled": false,
         "id": "DUP-TestScreen",
-        "stop_id": "place-wtcst",
         "type": "dup"
     }, {
         "disabled": false,
         "id": "DUP-WTC",
-        "stop_id": "place-wtcst",
         "type": "dup"
     }]
 }, {
@@ -1833,7 +1763,6 @@
     "screens": [{
         "disabled": false,
         "id": "1407",
-        "stop_id": "10413",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -1843,12 +1772,10 @@
     "screens": [{
         "disabled": false,
         "id": "11",
-        "stop_id": "21365",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1011",
-        "stop_id": "21365",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -1858,7 +1785,6 @@
     "screens": [{
         "disabled": false,
         "id": "1402",
-        "stop_id": "1743",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -1868,7 +1794,6 @@
     "screens": [{
         "disabled": false,
         "id": "1403",
-        "stop_id": "1266",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -1878,12 +1803,10 @@
     "screens": [{
         "disabled": false,
         "id": "4",
-        "stop_id": "2134",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1004",
-        "stop_id": "2134",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -1893,12 +1816,10 @@
     "screens": [{
         "disabled": false,
         "id": "6",
-        "stop_id": "22549",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1006",
-        "stop_id": "22549",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -1908,12 +1829,10 @@
     "screens": [{
         "disabled": false,
         "id": "2",
-        "stop_id": "383",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1002",
-        "stop_id": "383",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -1923,12 +1842,10 @@
     "screens": [{
         "disabled": false,
         "id": "1005",
-        "stop_id": "32549",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "5",
-        "stop_id": "32549",
         "type": "bus_eink"
     }]
 }, {
@@ -1938,7 +1855,6 @@
     "screens": [{
         "disabled": false,
         "id": "1404",
-        "stop_id": "1216",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -1948,12 +1864,10 @@
     "screens": [{
         "disabled": false,
         "id": "1008",
-        "stop_id": "36466",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "8",
-        "stop_id": "36466",
         "type": "bus_eink"
     }]
 }, {
@@ -1963,12 +1877,10 @@
     "screens": [{
         "disabled": false,
         "id": "3",
-        "stop_id": "5496",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1003",
-        "stop_id": "5496",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -1978,7 +1890,6 @@
     "screens": [{
         "disabled": false,
         "id": "1409",
-        "stop_id": "1265",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -1988,12 +1899,10 @@
     "screens": [{
         "disabled": false,
         "id": "1017",
-        "stop_id": "5605",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "17",
-        "stop_id": "5605",
         "type": "bus_eink"
     }]
 }, {
@@ -2003,12 +1912,10 @@
     "screens": [{
         "disabled": false,
         "id": "1007",
-        "stop_id": "5615",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "7",
-        "stop_id": "5615",
         "type": "bus_eink"
     }]
 }, {
@@ -2018,12 +1925,10 @@
     "screens": [{
         "disabled": false,
         "id": "1009",
-        "stop_id": "11257",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "9",
-        "stop_id": "11257",
         "type": "bus_eink"
     }]
 }, {
@@ -2033,7 +1938,6 @@
     "screens": [{
         "disabled": false,
         "id": "1408",
-        "stop_id": "1188",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -2043,7 +1947,6 @@
     "screens": [{
         "disabled": false,
         "id": "1415",
-        "stop_id": "117",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -2053,12 +1956,10 @@
     "screens": [{
         "disabled": false,
         "id": "15",
-        "stop_id": "390",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1015",
-        "stop_id": "390",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -2068,7 +1969,6 @@
     "screens": [{
         "disabled": false,
         "id": "20",
-        "stop_id": "5002",
         "type": "bus_eink"
     }]
 }, {
@@ -2078,12 +1978,10 @@
     "screens": [{
         "disabled": false,
         "id": "1010",
-        "stop_id": "58",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "10",
-        "stop_id": "58",
         "type": "bus_eink"
     }]
 }, {
@@ -2093,7 +1991,6 @@
     "screens": [{
         "disabled": false,
         "id": "21",
-        "stop_id": "5333",
         "type": "bus_eink"
     }]
 }, {
@@ -2103,12 +2000,10 @@
     "screens": [{
         "disabled": false,
         "id": "1014",
-        "stop_id": "1357",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "14",
-        "stop_id": "1357",
         "type": "bus_eink"
     }]
 }, {
@@ -2118,12 +2013,10 @@
     "screens": [{
         "disabled": false,
         "id": "1012",
-        "stop_id": "178",
         "type": "bus_eink_v2"
     }, {
         "disabled": false,
         "id": "12",
-        "stop_id": "178",
         "type": "bus_eink"
     }]
 }, {
@@ -2133,7 +2026,6 @@
     "screens": [{
         "disabled": false,
         "id": "1414",
-        "stop_id": "8309",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -2143,12 +2035,10 @@
     "screens": [{
         "disabled": false,
         "id": "1",
-        "stop_id": "1722",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1001",
-        "stop_id": "1722",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -2158,12 +2048,10 @@
     "screens": [{
         "disabled": false,
         "id": "16",
-        "stop_id": "407",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1016",
-        "stop_id": "407",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -2173,12 +2061,10 @@
     "screens": [{
         "disabled": false,
         "id": "18",
-        "stop_id": "637",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1018",
-        "stop_id": "637",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -2188,12 +2074,10 @@
     "screens": [{
         "disabled": false,
         "id": "1405",
-        "stop_id": "11413",
         "type": "bus_shelter_v2"
     }, {
         "disabled": false,
         "id": "1406",
-        "stop_id": "11413",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -2203,12 +2087,10 @@
     "screens": [{
         "disabled": false,
         "id": "19",
-        "stop_id": "8178",
         "type": "bus_eink"
     }, {
         "disabled": false,
         "id": "1019",
-        "stop_id": "8178",
         "type": "bus_eink_v2"
     }]
 }, {
@@ -2218,7 +2100,6 @@
     "screens": [{
         "disabled": false,
         "id": "23",
-        "stop_id": "6022",
         "type": "bus_eink"
     }]
 }, {
@@ -2228,12 +2109,10 @@
     "screens": [{
         "disabled": false,
         "id": "1412",
-        "stop_id": "1060",
         "type": "bus_shelter_v2"
     }, {
         "disabled": false,
         "id": "1410",
-        "stop_id": "1060",
         "type": "bus_shelter_v2"
     }]
 }, {
@@ -2243,7 +2122,6 @@
     "screens": [{
         "disabled": false,
         "id": "22",
-        "stop_id": "795",
         "type": "bus_eink"
     }]
 }, {
@@ -2253,18 +2131,6 @@
     "screens": [{
         "disabled": false,
         "id": "1401",
-        "stop_id": "1215",
         "type": "bus_shelter_v2"
-    }]
-}, {
-    "id": "place-nubn",
-    "name": "Nubian",
-    "routes": ["Silver", "1", "8", "14", "15", "19", "23", "28", "41", "42", "44", "45", "47", "66", "171"],
-    "screens": [{
-        "id": "303",
-        "type": "solari"
-    }, {
-        "id": "304",
-        "type": "solari"
     }]
 }]
