@@ -6,8 +6,10 @@ ENV LANG="C.UTF-8" MIX_ENV="prod"
 WORKDIR /root
 ADD . .
 
-RUN apt-get update --allow-releaseinfo-change && apt-get install -y git
+# Install git
+RUN apk --no-cache add git make
 
+# Install Hex+Rebar
 RUN mix do local.hex --force, local.rebar --force
 RUN mix do deps.get --only prod
 
