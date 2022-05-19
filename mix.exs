@@ -10,7 +10,8 @@ defmodule Screenplay.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: LcovEx]
     ]
   end
 
@@ -51,7 +52,8 @@ defmodule Screenplay.MixProject do
       {:sftp_client, "~> 1.4"},
       {:ex_aws, "~> 2.2"},
       {:ex_aws_s3, "~> 2.2"},
-      {:httpoison, "~> 1.8.0"}
+      {:httpoison, "~> 1.8.0"},
+      {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false}
     ]
   end
 
