@@ -28,7 +28,7 @@ defmodule ScreenplayWeb.Router do
   end
 
   pipeline :ensure_screenplay_admin_group do
-    plug(ScreenplayWeb.EnsureOutfrontAdminGroup)
+    plug(ScreenplayWeb.EnsureScreenplayAdminGroup)
   end
 
   # Load balancer health check
