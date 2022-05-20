@@ -8,7 +8,8 @@
     "lint": "eslint --fix \"{.,**}/*.{js,json,ts,tsx}\"",
     "lint:check": "eslint \"{.,**}/*.{js,json,ts,tsx}\"",
     "format": "prettier --write \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
-    "format:check": "prettier --check \"{.,**}/*.{js,json,ts,tsx,css,scss}\""
+    "format:check": "prettier --check \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
+    "test": "jest"
   },
   "dependencies": {
     "@heroicons/react": "^1.0.4",
@@ -26,9 +27,11 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@types/date-fns": "^2.6.0",
+    "@types/jest": "^27.5.1",
     "@types/phoenix": "^1.5.2",
     "@types/react": "^17.0.17",
     "@types/react-dom": "^17.0.9",
+    "@types/react-test-renderer": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
     "babel-loader": "^8.0.0",
@@ -39,16 +42,48 @@
     "eslint-plugin-react": "^7.30.0",
     "file-loader": "^6.2.0",
     "hard-source-webpack-plugin": "^0.13.1",
+    "jest": "^28.1.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "prettier": "2.3.2",
+    "react-test-renderer": "^18.1.0",
     "sass-loader": "^8.0.2",
     "source-map-loader": "^3.0.0",
     "terser-webpack-plugin": "^2.3.2",
+    "ts-jest": "^28.0.2",
     "ts-loader": "^8.2.0",
     "typescript": "^4.3.5",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.2"
+  },
+  "jest": {
+    "clearMocks": true,
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(src|tests)/.*\\.test\\.tsx?$",
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js"
+    },
+    "collectCoverage": true,
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "./tsconfig.test.json"
+      }
+    },
+    "globalSetup": "./tests/global-setup.js"
   }
 }
