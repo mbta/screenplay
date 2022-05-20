@@ -60,7 +60,9 @@ jobs:
         run: mix credo --strict
       - name: Run tests
         run: mix test --cover
-        
+      - name: Security checks
+        run: mix sobelow --skip --exit
+
       # NPM Build + Test
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
