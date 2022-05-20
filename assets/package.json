@@ -27,6 +27,8 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@types/date-fns": "^2.6.0",
+    "@types/enzyme": "^3.10.12",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^27.5.1",
     "@types/phoenix": "^1.5.2",
     "@types/react": "^17.0.17",
@@ -37,17 +39,21 @@
     "babel-loader": "^8.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^8.15.0",
     "eslint-plugin-jsx-a11y": "^6.5.1",
     "eslint-plugin-react": "^7.30.0",
     "file-loader": "^6.2.0",
     "hard-source-webpack-plugin": "^0.13.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "prettier": "2.3.2",
-    "react-test-renderer": "^18.1.0",
+    "react-test-renderer": "^17.0.2",
     "sass-loader": "^8.0.2",
     "source-map-loader": "^3.0.0",
     "terser-webpack-plugin": "^2.3.2",
@@ -62,21 +68,20 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "testRegex": "(src|tests)/.*\\.test\\.tsx?$",
+    "testRegex": "(js|tests)/.*\\.test\\.tsx?$",
     "modulePaths": [
-      "<rootDir>/src"
+      "<rootDir>/js"
     ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
       "js",
       "jsx",
-      "json",
-      "node"
+      "json"
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/tests/__mocks__/styleMock.js"
+      "\\.(css|less)$": "identity-obj-proxy"
     },
     "collectCoverage": true,
     "globals": {
@@ -84,6 +89,7 @@
         "tsconfig": "./tsconfig.test.json"
       }
     },
-    "globalSetup": "./tests/global-setup.js"
+    "globalSetup": "./tests/global-setup.js",
+    "testEnvironment": "jsdom"
   }
 }

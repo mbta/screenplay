@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import OutfrontTakeoverTool from "./OutfrontTakeoverTool/OutfrontTakeoverTool";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 
-class App extends React.Component {
+class AppRoutes extends React.Component {
   render() {
     return (
       <Routes>
@@ -13,5 +13,13 @@ class App extends React.Component {
     );
   }
 }
+
+const App = (): ReactElement<HTMLDivElement> => {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+};
 
 export default App;
