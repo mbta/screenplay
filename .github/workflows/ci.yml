@@ -73,8 +73,7 @@ jobs:
       - run: npm --prefix assets ci
       - run: npm --prefix assets run deploy
       - run: npm --prefix assets run format:check
-      # TODO: previous steps will cover build errors, but no tests currently in project.
-      # - run: npm --prefix assets test
+      - run: npm --prefix assets test
 
       - name: Save PR information
         run: |
