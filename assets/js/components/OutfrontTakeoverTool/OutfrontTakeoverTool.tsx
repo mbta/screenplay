@@ -4,8 +4,6 @@ import AlertWizard from "./AlertWizard/AlertWizard";
 import logo from "../../../static/images/t-identity.png";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
 
-interface AppProps {}
-
 interface AppState {
   alertWizardOpen: boolean;
   alertData: any;
@@ -40,8 +38,11 @@ interface AlertData {
   step: number | null;
 }
 
-class OutfrontTakeoverTool extends React.Component<AppProps, AppState> {
-  constructor(props: AppProps) {
+class OutfrontTakeoverTool extends React.Component<
+  Record<string, never>,
+  AppState
+> {
+  constructor(props = {}) {
     super(props);
     this.state = {
       // TODO

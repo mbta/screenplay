@@ -24,7 +24,7 @@ module.exports = {
     },
     "reportUnusedDisableDirectives": true,
     "rules": {
-      "no-console": "error",
+      "no-console": 0,
       "prefer-rest-params": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": [
@@ -45,5 +45,7 @@ module.exports = {
       ],
       "react/hook-use-state": "error",
       "react/no-danger": "error",
+      "jsx-a11y/no-static-element-interactions": "off",
+      "jsx-a11y/click-events-have-key-events": "off"
     }
   };

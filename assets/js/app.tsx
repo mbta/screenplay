@@ -1,6 +1,7 @@
 // We need to import the CSS so that webpack will load it.
 // The MiniCssExtractPlugin is used to separate it out into
 // its own CSS file.
+declare function require(name: string): string;
 require("../css/app.scss");
 
 // webpack automatically bundles all modules in your
@@ -16,7 +17,6 @@ import "phoenix_html";
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
 
 import App from "./components/App";
 

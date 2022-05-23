@@ -73,6 +73,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
           <img
             className="portrait-png"
             src={`/images/Outfront-Alert-${message.id}-portrait.png`}
+            alt=""
           />
         )}
       </div>
