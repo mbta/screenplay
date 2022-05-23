@@ -61,15 +61,15 @@ jobs:
       - name: Run tests
         run: mix test --cover
       - name: Security checks
-        run: mix sobelow --skip --exit
+        run: mix sobelow --config
 
       # NPM Build + Test
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
-          cache: 'npm'
-          cache-dependency-path: './assets'
+          cache: "npm"
+          cache-dependency-path: "./assets"
       - run: npm --prefix assets ci
       - run: npm --prefix assets run deploy
       - run: npm --prefix assets run format:check
