@@ -72,7 +72,7 @@ jobs:
           cache-dependency-path: "./assets"
       - run: npm --prefix assets ci
       - run: npm --prefix assets run deploy
-      - run: npm --prefix assets run format:check
+      - run: npm --prefix assets run check
       - run: npm --prefix assets test
 
       - name: Save PR information
