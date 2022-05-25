@@ -17,12 +17,14 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
 
       conn =
         conn
+        |> init_test_session(foo: "bar")
         |> assign(:ueberauth_auth, auth)
+        |> Plug.Conn.put_session(:previous_path, "/test")
         |> get(Helpers.auth_path(conn, :callback, "cognito"))
 
       response = html_response(conn, 302)
 
-      assert response =~ Helpers.page_path(conn, :index)
+      assert response =~ "/test"
       assert Guardian.Plug.current_claims(conn)["groups"] == ["test1"]
     end
 

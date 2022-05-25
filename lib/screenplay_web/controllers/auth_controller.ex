@@ -1,8 +1,6 @@
 defmodule ScreenplayWeb.AuthController do
   use ScreenplayWeb, :controller
 
-  alias ScreenplayWeb.Router.Helpers
-
   plug Ueberauth
 
   def request(conn, %{"provider" => provider}) when provider != "cognito" do
