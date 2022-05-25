@@ -253,4 +253,4 @@ merged =
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
 
-File.write!("scripts/places_and_screens.json", Jason.encode!(merged), [:binary])
+File.write!("priv/places_and_screens.json", Jason.encode!(merged), [:binary])
