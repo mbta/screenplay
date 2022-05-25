@@ -21,6 +21,8 @@ defmodule ScreenplayWeb.AuthController do
 
     current_time = System.system_time(:second)
 
+    previous_path = conn.private[:plug_session]["previous_path"]
+
     conn
     |> Guardian.Plug.sign_in(
       ScreenplayWeb.AuthManager,
@@ -29,7 +31,8 @@ defmodule ScreenplayWeb.AuthController do
       ttl: {expiration - current_time, :seconds}
     )
     |> Plug.Conn.put_session(:username, name || username)
-    |> redirect(to: Helpers.page_path(conn, :index))
+    # Redirect to whatever page they came from
+    |> redirect(to: previous_path)
   end
 
   def callback(
