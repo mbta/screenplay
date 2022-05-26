@@ -19,7 +19,8 @@ defmodule ScreenplayWeb.AuthController do
 
     current_time = System.system_time(:second)
 
-    previous_path = conn.private[:plug_session]["previous_path"]
+    previous_path = Plug.Conn.get_session(conn, :previous_path)
+    Plug.Conn.delete_session(conn, :previous_path)
 
     conn
     |> Guardian.Plug.sign_in(
