@@ -114,7 +114,7 @@ live_screens =
   )
 
 # We only need to store bus stops in places if there is a screen there.
-bus_stops =
+bus_stops_with_screens =
   Enum.filter(live_screens, fn
     {stop_id, _} ->
       string_is_number?.(stop_id)
@@ -122,7 +122,7 @@ bus_stops =
 
 params =
   URI.encode_query(%{
-    "filter[id]" => Enum.map_join(bus_stops, ",", fn {stop_id, _} -> stop_id end)
+    "filter[id]" => Enum.map_join(bus_stops_with_screens, ",", fn {stop_id, _} -> stop_id end)
   })
 
 # Get stop info for bus stops with screens
@@ -132,10 +132,10 @@ bus_stops_parsed = Jason.decode!(body)
 %{"data" => bus_data} = bus_stops_parsed
 
 # Transform data into model we need
-buses =
+bus_stops =
   bus_data
   |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
-    {_, screens_at_stop} = Enum.find(bus_stops, [], fn {stop_id, _} -> id == stop_id end)
+    {_, screens_at_stop} = Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
 
     %{id: id, name: name, screens: screens_at_stop}
   end)
@@ -159,8 +159,8 @@ contents =
       %{id: id, name: name, screens: []}
     end
   end)
-  # Add on buses
-  |> Enum.concat(buses)
+  # Add on bus stops
+  |> Enum.concat(bus_stops)
   # Just in case
   |> Enum.uniq()
   # Get the routes at each stop
