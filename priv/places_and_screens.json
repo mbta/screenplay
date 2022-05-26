@@ -12,11 +12,13 @@
     "name": "Alewife",
     "routes": ["Red", "62", "67", "76", "350"],
     "screens": [{
-        "id": "RALE",
+        "id": "alewife_center_southbound",
+        "station_code": "RALE",
         "type": "pa_ess",
         "zone": "c"
     }, {
-        "id": "RALE",
+        "id": "alewife_mezzanine_southbound",
+        "station_code": "RALE",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -30,11 +32,13 @@
     "name": "Amory Street",
     "routes": ["Green-B"],
     "screens": [{
-        "id": "GAMO",
+        "id": "amory_st_eastbound",
+        "station_code": "GAMO",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GAMO",
+        "id": "amory_st_westbound",
+        "station_code": "GAMO",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -43,15 +47,18 @@
     "name": "Andrew",
     "routes": ["Red", "708", "9", "10", "16", "17", "18", "171"],
     "screens": [{
-        "id": "RAND",
+        "id": "andrew_mezzanine",
+        "station_code": "RAND",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RAND",
+        "id": "andrew_northbound",
+        "station_code": "RAND",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RAND",
+        "id": "andrew_southbound",
+        "station_code": "RAND",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -64,11 +71,13 @@
         "id": "DUP-Airport",
         "type": "dup"
     }, {
-        "id": "BAIR",
+        "id": "airport_eastbound",
+        "station_code": "BAIR",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BAIR",
+        "id": "airport_westbound",
+        "station_code": "BAIR",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -81,15 +90,18 @@
         "id": "DUP-Aquarium",
         "type": "dup"
     }, {
-        "id": "BAQU",
+        "id": "aquarium_eastbound",
+        "station_code": "BAQU",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BAQU",
+        "id": "aquarium_mezzanine",
+        "station_code": "BAQU",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "BAQU",
+        "id": "aquarium_westbound",
+        "station_code": "BAQU",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -98,15 +110,18 @@
     "name": "Arlington",
     "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
     "screens": [{
-        "id": "GARL",
+        "id": "arlington_eastbound",
+        "station_code": "GARL",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GARL",
+        "id": "arlington_westbound",
+        "station_code": "GARL",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GARL",
+        "id": "arlington_mezzanine",
+        "station_code": "GARL",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -123,11 +138,13 @@
         "id": "1506",
         "type": "pre_fare_v2"
     }, {
-        "id": "RASH",
+        "id": "ashmont_mezzanine",
+        "station_code": "RASH",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RASH",
+        "id": "red_ashmont_northbound",
+        "station_code": "RASH",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -136,15 +153,18 @@
     "name": "Assembly",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OASQ",
+        "id": "assembly_mezzanine",
+        "station_code": "OASQ",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OASQ",
+        "id": "assembly_northbound",
+        "station_code": "OASQ",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OASQ",
+        "id": "assembly_southbound",
+        "station_code": "OASQ",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -153,11 +173,13 @@
     "name": "Babcock Street",
     "routes": ["Green-B"],
     "screens": [{
-        "id": "GBAB",
+        "id": "babcock_st_eastbound",
+        "station_code": "GBAB",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GBAB",
+        "id": "babcock_st_westbound",
+        "station_code": "GBAB",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -174,15 +196,18 @@
         "id": "1509",
         "type": "pre_fare_v2"
     }, {
-        "id": "OBAC",
+        "id": "back_bay_mezzanine",
+        "station_code": "OBAC",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OBAC",
+        "id": "back_bay_northbound",
+        "station_code": "OBAC",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OBAC",
+        "id": "back_bay_southbound",
+        "station_code": "OBAC",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -196,11 +221,13 @@
     "name": "Beaconsfield",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GBEA",
+        "id": "beaconsfield_eastbound",
+        "station_code": "GBEA",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GBEA",
+        "id": "beaconsfield_westbound",
+        "station_code": "GBEA",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -263,11 +290,13 @@
     "name": "Beachmont",
     "routes": ["Blue"],
     "screens": [{
-        "id": "BBEA",
+        "id": "beachmont_eastbound",
+        "station_code": "BBEA",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BBEA",
+        "id": "beachmont_westbound",
+        "station_code": "BBEA",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -281,11 +310,13 @@
     "name": "Bowdoin",
     "routes": ["Blue"],
     "screens": [{
-        "id": "BBOW",
+        "id": "bowdoin_eastbound",
+        "station_code": "BBOW",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BBOW",
+        "id": "bowdoin_mezzanine",
+        "station_code": "BBOW",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -294,11 +325,13 @@
     "name": "Boylston",
     "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
     "screens": [{
-        "id": "GBOY",
+        "id": "boylston_eastbound",
+        "station_code": "GBOY",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GBOY",
+        "id": "boylston_westbound",
+        "station_code": "GBOY",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -311,15 +344,18 @@
         "id": "DUP-Broadway",
         "type": "dup"
     }, {
-        "id": "RBRO",
+        "id": "broadway_mezzanine",
+        "station_code": "RBRO",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RBRO",
+        "id": "broadway_northbound",
+        "station_code": "RBRO",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RBRO",
+        "id": "broadway_southbound",
+        "station_code": "RBRO",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -333,11 +369,13 @@
     "name": "Brookline Hills",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GBRH",
+        "id": "brookline_hills_eastbound",
+        "station_code": "GBRH",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GBRH",
+        "id": "brookline_hills_westbound",
+        "station_code": "GBRH",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -351,11 +389,13 @@
     "name": "Braintree",
     "routes": ["Red", "CR-Kingston", "CR-Middleborough", "210", "226", "230", "236"],
     "screens": [{
-        "id": "RBRA",
+        "id": "braintree_center_northbound",
+        "station_code": "RBRA",
         "type": "pa_ess",
         "zone": "c"
     }, {
-        "id": "RBRA",
+        "id": "braintree_mezzanine_northbound",
+        "station_code": "RBRA",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -374,7 +414,8 @@
     "name": "Butler",
     "routes": ["Mattapan"],
     "screens": [{
-        "id": "MBUT",
+        "id": "butler_center",
+        "station_code": "MBUT",
         "type": "pa_ess",
         "zone": "c"
     }]
@@ -383,11 +424,13 @@
     "name": "Brookline Village",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GBRV",
+        "id": "brookline_village_eastbound",
+        "station_code": "GBRV",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GBRV",
+        "id": "brookline_village_westbound",
+        "station_code": "GBRV",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -396,7 +439,8 @@
     "name": "Capen Street",
     "routes": ["Mattapan"],
     "screens": [{
-        "id": "MCAP",
+        "id": "capen_street_inbound",
+        "station_code": "MCAP",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -405,15 +449,18 @@
     "name": "Community College",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OCOM",
+        "id": "community_college_mezzanine",
+        "station_code": "OCOM",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OCOM",
+        "id": "community_college_northbound",
+        "station_code": "OCOM",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OCOM",
+        "id": "community_college_southbound",
+        "station_code": "OCOM",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -422,11 +469,13 @@
     "name": "Cedar Grove",
     "routes": ["Mattapan"],
     "screens": [{
-        "id": "MCED",
+        "id": "cedar_grove_outbound",
+        "station_code": "MCED",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "MCED",
+        "id": "cedar_grove_inbound",
+        "station_code": "MCED",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -435,11 +484,13 @@
     "name": "Central Avenue",
     "routes": ["Mattapan"],
     "screens": [{
-        "id": "MCEN",
+        "id": "central_avenue_outbound",
+        "station_code": "MCEN",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "MCEN",
+        "id": "central_avenue_inbound",
+        "station_code": "MCEN",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -448,11 +499,13 @@
     "name": "Chestnut Hill",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GCHE",
+        "id": "chestnut_hill_eastbound",
+        "station_code": "GCHE",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GCHE",
+        "id": "chestnut_hill_westbound",
+        "station_code": "GCHE",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -470,11 +523,13 @@
         "id": "1513",
         "type": "pre_fare_v2"
     }, {
-        "id": "RMGH",
+        "id": "charles_mgh_northbound",
+        "station_code": "RMGH",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RMGH",
+        "id": "charles_mgh_southbound",
+        "station_code": "RMGH",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -483,19 +538,23 @@
     "name": "Chinatown",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OCHN",
+        "id": "chinatown_northbound_lobby",
+        "station_code": "OCHN",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OCHS",
+        "id": "chinatown_southbound_lobby",
+        "station_code": "OCHS",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OCHN",
+        "id": "chinatown_northbound",
+        "station_code": "OCHN",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OCHS",
+        "id": "chinatown_southbound",
+        "station_code": "OCHS",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -514,11 +573,13 @@
     "name": "Central",
     "routes": ["Red"],
     "screens": [{
-        "id": "RCEN",
+        "id": "central_northbound",
+        "station_code": "RCEN",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RCEN",
+        "id": "central_southbound",
+        "station_code": "RCEN",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -527,11 +588,13 @@
     "name": "Copley",
     "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
     "screens": [{
-        "id": "GCOP",
+        "id": "copley_eastbound",
+        "station_code": "GCOP",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GCOP",
+        "id": "copley_westbound",
+        "station_code": "GCOP",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -549,15 +612,18 @@
         "id": "Landscape255",
         "type": "dup"
     }, {
-        "id": "RDAV",
+        "id": "davis_mezzanine",
+        "station_code": "RDAV",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RDAV",
+        "id": "davis_northbound",
+        "station_code": "RDAV",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RDAV",
+        "id": "davis_southbound",
+        "station_code": "RDAV",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -571,19 +637,23 @@
     "name": "Downtown Crossing",
     "routes": ["Red", "Orange"],
     "screens": [{
-        "id": "ODTN",
+        "id": "orange_downtown_crossing_northbound",
+        "station_code": "ODTN",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "ODTS",
+        "id": "orange_downtown_crossing_southbound",
+        "station_code": "ODTS",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "RDTC",
+        "id": "red_downtown_crossing_northbound",
+        "station_code": "RDTC",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RDTC",
+        "id": "red_downtown_crossing_southbound",
+        "station_code": "RDTC",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -592,11 +662,13 @@
     "name": "Eliot",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GELI",
+        "id": "eliot_eastbound",
+        "station_code": "GELI",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GELI",
+        "id": "eliot_westbound",
+        "station_code": "GELI",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -620,11 +692,13 @@
     "name": "Fenway",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GFEN",
+        "id": "fenway_eastbound",
+        "station_code": "GFEN",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GFEN",
+        "id": "fenway_westbound",
+        "station_code": "GFEN",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -633,15 +707,18 @@
     "name": "Fields Corner",
     "routes": ["Red", "15", "17", "18", "19", "201", "202", "210", "215"],
     "screens": [{
-        "id": "RFIE",
+        "id": "fields_corner_mezzanine",
+        "station_code": "RFIE",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RFIE",
+        "id": "fields_corner_northbound",
+        "station_code": "RFIE",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RFIE",
+        "id": "fields_corner_southbound",
+        "station_code": "RFIE",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -658,15 +735,18 @@
         "id": "1511",
         "type": "pre_fare_v2"
     }, {
-        "id": "OFOR",
+        "id": "forest_hills_main_lobby",
+        "station_code": "OFOR",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OFOR",
+        "id": "forest_hills_platform",
+        "station_code": "OFOR",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "SFOR",
+        "id": "forest_hills_entrances_from_busways",
+        "station_code": "SFOR",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -683,27 +763,33 @@
         "id": "1502",
         "type": "pre_fare_v2"
     }, {
-        "id": "BGOV",
+        "id": "government_center_eastbound",
+        "station_code": "BGOV",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BGOV",
+        "id": "government_center_mezzanine",
+        "station_code": "BGOV",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "BGOV",
+        "id": "government_center_westbound",
+        "station_code": "BGOV",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GGOV",
+        "id": "green_government_center_eastbound",
+        "station_code": "GGOV",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GGOV",
+        "id": "green_government_center_westbound",
+        "station_code": "GGOV",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GGOV",
+        "id": "green_government_center_mezzanine",
+        "station_code": "GGOV",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -717,15 +803,18 @@
     "name": "Green Street",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OGRE",
+        "id": "green_street_mezzanine",
+        "station_code": "OGRE",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OGRE",
+        "id": "green_street_northbound",
+        "station_code": "OGRE",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OGRE",
+        "id": "green_street_southbound",
+        "station_code": "OGRE",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -738,23 +827,28 @@
         "id": "DUP-Haymarket",
         "type": "dup"
     }, {
-        "id": "OHAY",
+        "id": "orange_haymarket_mezzanine",
+        "station_code": "OHAY",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OHAY",
+        "id": "orange_haymarket_northbound",
+        "station_code": "OHAY",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OHAY",
+        "id": "orange_haymarket_southbound",
+        "station_code": "OHAY",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "GHAY",
+        "id": "green_haymarket_eastbound",
+        "station_code": "GHAY",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GHAY",
+        "id": "green_haymarket_westbound",
+        "station_code": "GHAY",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -763,15 +857,18 @@
     "name": "Harvard",
     "routes": ["Red", "71", "73", "74", "75", "77", "78", "86", "96"],
     "screens": [{
-        "id": "RHAR",
+        "id": "harvard_mezzanine",
+        "station_code": "RHAR",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RHAR",
+        "id": "harvard_northbound",
+        "station_code": "RHAR",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RHAR",
+        "id": "harvard_southbound",
+        "station_code": "RHAR",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -811,15 +908,18 @@
     "name": "Hynes Convention Center",
     "routes": ["Green-B", "Green-C", "Green-D"],
     "screens": [{
-        "id": "GAUD",
+        "id": "hynes_eastbound",
+        "station_code": "GAUD",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GAUD",
+        "id": "hynes_westbound",
+        "station_code": "GAUD",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GAUD",
+        "id": "hynes_mezzanine",
+        "station_code": "GAUD",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -828,15 +928,18 @@
     "name": "Jackson Square",
     "routes": ["Orange", "14", "22", "29", "41", "44"],
     "screens": [{
-        "id": "OJAC",
+        "id": "jackson_square_mezzanine",
+        "station_code": "OJAC",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OJAC",
+        "id": "jackson_square_northbound",
+        "station_code": "OJAC",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OJAC",
+        "id": "jackson_square_southbound",
+        "station_code": "OJAC",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -845,23 +948,28 @@
     "name": "JFK/UMass",
     "routes": ["Red", "CR-Greenbush", "CR-Kingston", "CR-Middleborough", "8", "16", "41"],
     "screens": [{
-        "id": "RJFK",
+        "id": "jfk_umass_ashmont_platform_southbound",
+        "station_code": "RJFK",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "RJFK",
+        "id": "jfk_umass_braintree_platform_southbound",
+        "station_code": "RJFK",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "RJFK",
+        "id": "jfk_umass_ashmont_platform_northbound",
+        "station_code": "RJFK",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "RJFK",
+        "id": "jfk_umass_braintree_platform_northbound",
+        "station_code": "RJFK",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RJFK",
+        "id": "jfk_umass_mezzanine",
+        "station_code": "RJFK",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -874,23 +982,28 @@
         "id": "DUP-Kenmore",
         "type": "dup"
     }, {
-        "id": "GKEN",
+        "id": "kenmore_b_eastbound",
+        "station_code": "GKEN",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GKEN",
+        "id": "kenmore_b_westbound",
+        "station_code": "GKEN",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GKEN",
+        "id": "kenmore_c_d_eastbound",
+        "station_code": "GKEN",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "GKEN",
+        "id": "kenmore_c_d_westbound",
+        "station_code": "GKEN",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "GKEN",
+        "id": "kenmore_mezzanine",
+        "station_code": "GKEN",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -899,11 +1012,13 @@
     "name": "Kendall/MIT",
     "routes": ["Red"],
     "screens": [{
-        "id": "RKEN",
+        "id": "kendall_mit_northbound",
+        "station_code": "RKEN",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RKEN",
+        "id": "kendall_mit_southbound",
+        "station_code": "RKEN",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -922,15 +1037,18 @@
     "name": "Lechmere",
     "routes": ["Green-E", "69", "80", "87", "88"],
     "screens": [{
-        "id": "GLEC",
+        "id": "lechmere_green_line_eastbound",
+        "station_code": "GLEC",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GLEC",
+        "id": "lechmere_green_line_westbound",
+        "station_code": "GLEC",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GLEC",
+        "id": "lechmere_green_line_mezzanine",
+        "station_code": "GLEC",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -944,11 +1062,13 @@
     "name": "Longwood",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GLON",
+        "id": "longwood_eastbound",
+        "station_code": "GLON",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GLON",
+        "id": "longwood_westbound",
+        "station_code": "GLON",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -957,15 +1077,18 @@
     "name": "Massachusetts Avenue",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OMAS",
+        "id": "mass_ave_mezzanine",
+        "station_code": "OMAS",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OMAS",
+        "id": "mass_ave_northbound",
+        "station_code": "OMAS",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OMAS",
+        "id": "mass_ave_southbound",
+        "station_code": "OMAS",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1000,11 +1123,13 @@
     "name": "Milton",
     "routes": ["Mattapan"],
     "screens": [{
-        "id": "MMIL",
+        "id": "milton_outbound",
+        "station_code": "MMIL",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "MMIL",
+        "id": "milton_inbound",
+        "station_code": "MMIL",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -1022,11 +1147,13 @@
         "id": "DUP-Malden",
         "type": "dup"
     }, {
-        "id": "OMAL",
+        "id": "malden_lobby",
+        "station_code": "OMAL",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OMAL",
+        "id": "malden_center_platform",
+        "station_code": "OMAL",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -1043,11 +1170,13 @@
         "id": "1504",
         "type": "pre_fare_v2"
     }, {
-        "id": "BMAV",
+        "id": "maverick_eastbound",
+        "station_code": "BMAV",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BMAV",
+        "id": "maverick_westbound",
+        "station_code": "BMAV",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1056,11 +1185,13 @@
     "name": "Newton Highlands",
     "routes": ["Green-D", "59"],
     "screens": [{
-        "id": "GNEH",
+        "id": "newton_highlands_eastbound",
+        "station_code": "GNEH",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GNEH",
+        "id": "newton_highlands_westbound",
+        "station_code": "GNEH",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1069,11 +1200,13 @@
     "name": "Newton Centre",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GNEC",
+        "id": "newton_centre_eastbound",
+        "station_code": "GNEC",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GNEC",
+        "id": "newton_centre_westbound",
+        "station_code": "GNEC",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1082,31 +1215,38 @@
     "name": "North Station",
     "routes": ["Orange", "Green-D", "Green-E", "CR-Fitchburg", "CR-Haverhill", "CR-Lowell", "CR-Newburyport"],
     "screens": [{
-        "id": "ONST",
+        "id": "orange_north_station_northbound",
+        "station_code": "ONST",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "ONST",
+        "id": "orange_north_station_southbound",
+        "station_code": "ONST",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "ONST",
+        "id": "orange_north_station_mezzanine",
+        "station_code": "ONST",
         "type": "pa_ess",
         "zone": "c"
     }, {
-        "id": "ONST",
+        "id": "orange_north_station_commuter_rail_exit",
+        "station_code": "ONST",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "GNST",
+        "id": "green_north_station_eastbound",
+        "station_code": "GNST",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GNST",
+        "id": "green_north_station_westbound",
+        "station_code": "GNST",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GNST",
+        "id": "green_north_station_commuter_rail_exit",
+        "station_code": "GNST",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -1115,15 +1255,18 @@
     "name": "North Quincy",
     "routes": ["Red", "210", "211", "215", "217"],
     "screens": [{
-        "id": "RNQU",
+        "id": "north_quincy_mezzanine",
+        "station_code": "RNQU",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RNQU",
+        "id": "north_quincy_northbound",
+        "station_code": "RNQU",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RNQU",
+        "id": "north_quincy_southbound",
+        "station_code": "RNQU",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1137,15 +1280,18 @@
     "name": "Oak Grove",
     "routes": ["Orange", "131", "137"],
     "screens": [{
-        "id": "OOAK",
+        "id": "oak_grove_mezzanine_southbound",
+        "station_code": "OOAK",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OOAK",
+        "id": "oak_grove_east_busway",
+        "station_code": "OOAK",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "OOAK",
+        "id": "oak_grove_platform",
+        "station_code": "OOAK",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1154,15 +1300,18 @@
     "name": "Orient Heights",
     "routes": ["Blue", "120", "712", "713"],
     "screens": [{
-        "id": "BORH",
+        "id": "orient_heights_eastbound",
+        "station_code": "BORH",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BORH",
+        "id": "orient_heights_mezzanine",
+        "station_code": "BORH",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "BORH",
+        "id": "orient_heights_westbound",
+        "station_code": "BORH",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1171,31 +1320,38 @@
     "name": "Park Street",
     "routes": ["Red", "Green-B", "Green-C", "Green-D", "Green-E"],
     "screens": [{
-        "id": "RPRK",
+        "id": "red_park_st_northbound",
+        "station_code": "RPRK",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RPRK",
+        "id": "red_park_st_southbound",
+        "station_code": "RPRK",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "RPRK",
+        "id": "red_park_st_center",
+        "station_code": "RPRK",
         "type": "pa_ess",
         "zone": "c"
     }, {
-        "id": "GPRKE",
+        "id": "park_st_eastbound",
+        "station_code": "GPRKE",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GPRKE",
+        "id": "park_st_winter_st_concourse",
+        "station_code": "GPRKE",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "GPRKW",
+        "id": "park_st_westbound_wall_track",
+        "station_code": "GPRKW",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GPRKW",
+        "id": "park_st_westbound_fence_track",
+        "station_code": "GPRKW",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -1208,15 +1364,18 @@
         "id": "1508",
         "type": "pre_fare_v2"
     }, {
-        "id": "RPOR",
+        "id": "porter_mezzanine",
+        "station_code": "RPOR",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RPOR",
+        "id": "porter_northbound",
+        "station_code": "RPOR",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RPOR",
+        "id": "porter_southbound",
+        "station_code": "RPOR",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1229,15 +1388,18 @@
         "id": "DUP-Prudential",
         "type": "dup"
     }, {
-        "id": "GPRU",
+        "id": "prudential_eastbound",
+        "station_code": "GPRU",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GPRU",
+        "id": "prudential_westbound",
+        "station_code": "GPRU",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GPRU",
+        "id": "prudential_mezzanine",
+        "station_code": "GPRU",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -1246,15 +1408,18 @@
     "name": "Quincy Adams",
     "routes": ["Red"],
     "screens": [{
-        "id": "RQUA",
+        "id": "quincy_adams_mezzanine",
+        "station_code": "RQUA",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RQUA",
+        "id": "quincy_adams_northbound",
+        "station_code": "RQUA",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RQUA",
+        "id": "quincy_adams_southbound",
+        "station_code": "RQUA",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1267,15 +1432,18 @@
         "id": "DUP-QuincyCenter",
         "type": "dup"
     }, {
-        "id": "RQUC",
+        "id": "quincy_center_mezzanine",
+        "station_code": "RQUC",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RQUC",
+        "id": "quincy_center_northbound",
+        "station_code": "RQUC",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RQUC",
+        "id": "quincy_center_southbound",
+        "station_code": "RQUC",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1284,15 +1452,18 @@
     "name": "Revere Beach",
     "routes": ["Blue"],
     "screens": [{
-        "id": "BREV",
+        "id": "revere_beach_eastbound",
+        "station_code": "BREV",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BREV",
+        "id": "revere_beach_mezzanine",
+        "station_code": "BREV",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "BREV",
+        "id": "revere_beach_westbound",
+        "station_code": "BREV",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1301,15 +1472,18 @@
     "name": "Roxbury Crossing",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OROX",
+        "id": "roxbury_crossing_mezzanine",
+        "station_code": "OROX",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OROX",
+        "id": "roxbury_crossing_northbound",
+        "station_code": "OROX",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OROX",
+        "id": "roxbury_crossing_southbound",
+        "station_code": "OROX",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1318,7 +1492,8 @@
     "name": "Riverside",
     "routes": ["Green-D", "558"],
     "screens": [{
-        "id": "GRIV",
+        "id": "riverside_entire_station",
+        "station_code": "GRIV",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1327,11 +1502,13 @@
     "name": "Reservoir",
     "routes": ["Green-D", "51", "86"],
     "screens": [{
-        "id": "GRES",
+        "id": "reservoir_eastbound",
+        "station_code": "GRES",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GRES",
+        "id": "reservoir_westbound",
+        "station_code": "GRES",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1340,23 +1517,28 @@
     "name": "Ruggles",
     "routes": ["Orange", "CR-Franklin", "CR-Needham", "CR-Providence", "747", "708", "8", "9", "15", "19", "22", "23", "28", "29", "43", "44", "45", "47"],
     "screens": [{
-        "id": "ORUG",
+        "id": "ruggles_northbound",
+        "station_code": "ORUG",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "ORUG",
+        "id": "ruggles_southbound",
+        "station_code": "ORUG",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "ORUG",
+        "id": "ruggles_center",
+        "station_code": "ORUG",
         "type": "pa_ess",
         "zone": "c"
     }, {
-        "id": "ORUG",
+        "id": "ruggles_mezzanine",
+        "station_code": "ORUG",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "SRUG",
+        "id": "ruggles_upper_busway",
+        "station_code": "SRUG",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -1370,15 +1552,18 @@
     "name": "Stony Brook",
     "routes": ["Orange"],
     "screens": [{
-        "id": "OSTO",
+        "id": "stony_brook_mezzanine",
+        "station_code": "OSTO",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OSTO",
+        "id": "stony_brook_northbound",
+        "station_code": "OSTO",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OSTO",
+        "id": "stony_brook_southbound",
+        "station_code": "OSTO",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1387,11 +1572,13 @@
     "name": "Suffolk Downs",
     "routes": ["Blue"],
     "screens": [{
-        "id": "BSUF",
+        "id": "suffolk_downs_eastbound",
+        "station_code": "BSUF",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BSUF",
+        "id": "suffolk_downs_westbound",
+        "station_code": "BSUF",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1400,15 +1587,18 @@
     "name": "Savin Hill",
     "routes": ["Red"],
     "screens": [{
-        "id": "RSAV",
+        "id": "savin_hill_mezzanine",
+        "station_code": "RSAV",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RSAV",
+        "id": "savin_hill_northbound",
+        "station_code": "RSAV",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RSAV",
+        "id": "savin_hill_southbound",
+        "station_code": "RSAV",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1422,15 +1612,18 @@
     "name": "Shawmut",
     "routes": ["Red"],
     "screens": [{
-        "id": "RSHA",
+        "id": "shawmut_mezzanine",
+        "station_code": "RSHA",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RSHA",
+        "id": "shawmut_northbound",
+        "station_code": "RSHA",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RSHA",
+        "id": "shawmut_southbound",
+        "station_code": "RSHA",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1444,15 +1637,18 @@
     "name": "Science Park/West End",
     "routes": ["Green-E"],
     "screens": [{
-        "id": "GSCI",
+        "id": "science_park_eastbound",
+        "station_code": "GSCI",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GSCI",
+        "id": "science_park_westbound",
+        "station_code": "GSCI",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GSCI",
+        "id": "science_park_mezzanine",
+        "station_code": "GSCI",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -1461,19 +1657,23 @@
     "name": "South Station",
     "routes": ["Red", "741", "742", "743", "CR-Fairmount", "CR-Worcester", "CR-Franklin", "CR-Greenbush", "CR-Kingston", "CR-Middleborough", "CR-Needham", "CR-Providence"],
     "screens": [{
-        "id": "RSOU",
+        "id": "red_south_station_mezzanine",
+        "station_code": "RSOU",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RSOU",
+        "id": "red_south_station_northbound",
+        "station_code": "RSOU",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RSOU",
+        "id": "red_south_station_southbound",
+        "station_code": "RSOU",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "SSOU",
+        "id": "south_station_silver_line_arrival_platform",
+        "station_code": "SSOU",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1482,27 +1682,33 @@
     "name": "State",
     "routes": ["Orange", "Blue"],
     "screens": [{
-        "id": "BSTA",
+        "id": "state_blue_eastbound",
+        "station_code": "BSTA",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BSTA",
+        "id": "state_blue_mezzanine",
+        "station_code": "BSTA",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "BSTA",
+        "id": "state_blue_westbound",
+        "station_code": "BSTA",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "OSTN",
+        "id": "orange_state_mezzanine",
+        "station_code": "OSTN",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OSTN",
+        "id": "orange_state_northbound",
+        "station_code": "OSTN",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OSTS",
+        "id": "orange_state_southbound",
+        "station_code": "OSTS",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1525,15 +1731,18 @@
         "id": "DUP-SullivanSquare",
         "type": "dup"
     }, {
-        "id": "OSUL",
+        "id": "sullivan_mezzanine",
+        "station_code": "OSUL",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OSUL",
+        "id": "sullivan_northbound",
+        "station_code": "OSUL",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OSUL",
+        "id": "sullivan_southbound",
+        "station_code": "OSUL",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1547,11 +1756,13 @@
     "name": "Symphony",
     "routes": ["Green-E"],
     "screens": [{
-        "id": "GSYM",
+        "id": "symphony_eastbound",
+        "station_code": "GSYM",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GSYM",
+        "id": "symphony_westbound",
+        "station_code": "GSYM",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1581,15 +1792,18 @@
         "id": "1501",
         "type": "pre_fare_v2"
     }, {
-        "id": "ONEM",
+        "id": "tufts_mezzanine",
+        "station_code": "ONEM",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "ONEM",
+        "id": "tufts_northbound",
+        "station_code": "ONEM",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "ONEM",
+        "id": "tufts_southbound",
+        "station_code": "ONEM",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1598,15 +1812,18 @@
     "name": "Union Square",
     "routes": ["Green-E"],
     "screens": [{
-        "id": "GUNS",
+        "id": "union_sq_track_one",
+        "station_code": "GUNS",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GUNS",
+        "id": "union_sq_track_two",
+        "station_code": "GUNS",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "GUNS",
+        "id": "union_sq_mezzanine",
+        "station_code": "GUNS",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -1615,11 +1832,13 @@
     "name": "Valley Road",
     "routes": ["Mattapan"],
     "screens": [{
-        "id": "MVAL",
+        "id": "valley_road_outbound",
+        "station_code": "MVAL",
         "type": "pa_ess",
         "zone": "s"
     }, {
-        "id": "MVAL",
+        "id": "valley_road_inbound",
+        "station_code": "MVAL",
         "type": "pa_ess",
         "zone": "n"
     }]
@@ -1628,11 +1847,13 @@
     "name": "Waban",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GWAB",
+        "id": "waban_eastbound",
+        "station_code": "GWAB",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GWAB",
+        "id": "waban_westbound",
+        "station_code": "GWAB",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1650,15 +1871,18 @@
         "id": "1512",
         "type": "pre_fare_v2"
     }, {
-        "id": "OWEL",
+        "id": "wellington_mezzanine",
+        "station_code": "OWEL",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "OWEL",
+        "id": "wellington_northbound",
+        "station_code": "OWEL",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "OWEL",
+        "id": "wellington_southbound",
+        "station_code": "OWEL",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1667,15 +1891,18 @@
     "name": "Wood Island",
     "routes": ["Blue", "112", "120", "121"],
     "screens": [{
-        "id": "BWOO",
+        "id": "wood_island_eastbound",
+        "station_code": "BWOO",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "BWOO",
+        "id": "wood_island_mezzanine",
+        "station_code": "BWOO",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "BWOO",
+        "id": "wood_island_westbound",
+        "station_code": "BWOO",
         "type": "pa_ess",
         "zone": "w"
     }]
@@ -1684,15 +1911,18 @@
     "name": "Wollaston",
     "routes": ["Red"],
     "screens": [{
-        "id": "RWOL",
+        "id": "wollaston_mezzanine",
+        "station_code": "RWOL",
         "type": "pa_ess",
         "zone": "m"
     }, {
-        "id": "RWOL",
+        "id": "wollaston_northbound",
+        "station_code": "RWOL",
         "type": "pa_ess",
         "zone": "n"
     }, {
-        "id": "RWOL",
+        "id": "wollaston_southbound",
+        "station_code": "RWOL",
         "type": "pa_ess",
         "zone": "s"
     }]
@@ -1705,11 +1935,13 @@
         "id": "1514",
         "type": "pre_fare_v2"
     }, {
-        "id": "BWON",
+        "id": "wonderland_westbound",
+        "station_code": "BWON",
         "type": "pa_ess",
         "zone": "w"
     }, {
-        "id": "BWON",
+        "id": "wonderland_mezzanine",
+        "station_code": "BWON",
         "type": "pa_ess",
         "zone": "m"
     }]
@@ -1718,11 +1950,13 @@
     "name": "Woodland",
     "routes": ["Green-D"],
     "screens": [{
-        "id": "GWOO",
+        "id": "woodland_eastbound",
+        "station_code": "GWOO",
         "type": "pa_ess",
         "zone": "e"
     }, {
-        "id": "GWOO",
+        "id": "woodland_westbound",
+        "station_code": "GWOO",
         "type": "pa_ess",
         "zone": "w"
     }]

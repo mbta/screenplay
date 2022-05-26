@@ -239,10 +239,11 @@ pa_ess_screens =
       |> hd()
     end,
     fn %{
-         "pa_ess_loc" => id,
+         "id" => id,
+         "pa_ess_loc" => station_code,
          "text_zone" => zone
        } ->
-      %{id: id, zone: zone, type: "pa_ess"}
+      %{id: id, station_code: station_code, zone: zone, type: "pa_ess"}
     end
   )
   |> Enum.into(%{})
