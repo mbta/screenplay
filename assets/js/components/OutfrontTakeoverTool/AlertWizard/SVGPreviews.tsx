@@ -52,7 +52,7 @@ const createSVGText = (message: string, orientation: string) => {
   );
 
   // Take the array of message lines and and individual tspans to the text element
-  let y = medianHeight + svgFontSize / 2;
+  const y = medianHeight + svgFontSize / 2;
   const textHeight = linesReducer.array.length * svgLineHeight;
 
   return (

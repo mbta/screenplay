@@ -13,6 +13,7 @@ defmodule Screenplay.Alerts.LocalFetch do
     end
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp do_get do
     path = local_alerts_path()
 
@@ -28,6 +29,7 @@ defmodule Screenplay.Alerts.LocalFetch do
     do_put(contents)
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp do_put(contents) do
     path = local_alerts_path()
 

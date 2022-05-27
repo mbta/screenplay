@@ -129,9 +129,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   renderSwitch() {
+    let stationNamesWithActiveAlerts = [];
     switch (this.state.step) {
       case 2:
-        let stationNamesWithActiveAlerts = [];
         if (this.state.activeAlertsList.length > 0) {
           stationNamesWithActiveAlerts = this.state.activeAlertsList
             .filter((alert) => alert.id !== this.state.id)
