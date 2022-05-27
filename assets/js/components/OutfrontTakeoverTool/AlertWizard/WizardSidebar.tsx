@@ -22,6 +22,7 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
         <img
           className="portrait-png"
           src={`/images/Outfront-Alert-Empty-Preview.png`}
+          alt=""
         />
       );
     } else if (this.props.cannedMessageId !== "") {
@@ -29,6 +30,7 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
         <img
           className="portrait-png"
           src={`/images/Outfront-Alert-${this.props.cannedMessageId}-portrait.png`}
+          alt=""
         />
       );
     }
