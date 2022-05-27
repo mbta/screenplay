@@ -1,8 +1,6 @@
 defmodule ScreenplayWeb.AuthController do
   use ScreenplayWeb, :controller
 
-  alias ScreenplayWeb.Router.Helpers
-
   plug Ueberauth
 
   def request(conn, %{"provider" => provider}) when provider != "cognito" do
@@ -21,6 +19,9 @@ defmodule ScreenplayWeb.AuthController do
 
     current_time = System.system_time(:second)
 
+    previous_path = Plug.Conn.get_session(conn, :previous_path)
+    Plug.Conn.delete_session(conn, :previous_path)
+
     conn
     |> Guardian.Plug.sign_in(
       ScreenplayWeb.AuthManager,
@@ -29,7 +30,8 @@ defmodule ScreenplayWeb.AuthController do
       ttl: {expiration - current_time, :seconds}
     )
     |> Plug.Conn.put_session(:username, name || username)
-    |> redirect(to: Helpers.page_path(conn, :index))
+    # Redirect to whatever page they came from
+    |> redirect(to: previous_path)
   end
 
   def callback(

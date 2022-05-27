@@ -4,6 +4,7 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
   """
 
   use Ueberauth.Strategy
+  alias Ueberauth.Strategy.Helpers, as: Helpers
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
@@ -23,13 +24,13 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
   end
 
   @impl Ueberauth.Strategy
-  def credentials(_conn) do
+  def credentials(conn) do
     %Ueberauth.Auth.Credentials{
       token: "fake_access_token",
       refresh_token: "fake_refresh_token",
       expires: true,
       expires_at: System.system_time(:second) + 60 * 60,
-      other: %{groups: [Application.get_env(:screenplay, :cognito_group)]}
+      other: %{groups: Helpers.options(conn)[:groups]}
     }
   end
 

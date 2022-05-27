@@ -32,21 +32,20 @@ defmodule ScreenplayWeb.ConnCase do
   setup tags do
     {conn, user} =
       cond do
-        tags[:authenticated] ->
+        tags[:authenticated_admin] ->
           user = "test_user"
-          screenplay_group = Application.get_env(:screenplay, :cognito_group)
 
           conn =
             Phoenix.ConnTest.build_conn()
             |> Plug.Test.init_test_session(%{})
             |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
-              groups: [screenplay_group]
+              "groups" => ["screenplay-admin"]
             })
             |> Plug.Conn.put_session(:username, user)
 
           {conn, user}
 
-        tags[:authenticated_not_in_group] ->
+        tags[:authenticated] ->
           user = "test_user"
 
           conn =
