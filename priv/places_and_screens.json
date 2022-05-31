@@ -1,0 +1,2358 @@
+[{
+    "id": "place-FR-0098",
+    "name": "Waltham",
+    "routes": ["CR-Fitchburg"],
+    "screens": [{
+        "disabled": false,
+        "id": "WalthamCR",
+        "type": "dup"
+    }]
+}, {
+    "id": "place-alfcl",
+    "name": "Alewife",
+    "routes": ["Red", "62", "67", "76", "350"],
+    "screens": [{
+        "id": "alewife_center_southbound",
+        "station_code": "RALE",
+        "type": "pa_ess",
+        "zone": "c"
+    }, {
+        "id": "alewife_mezzanine_southbound",
+        "station_code": "RALE",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-alsgr",
+    "name": "Allston Street",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-amory",
+    "name": "Amory Street",
+    "routes": ["Green-B"],
+    "screens": [{
+        "id": "amory_st_eastbound",
+        "station_code": "GAMO",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "amory_st_westbound",
+        "station_code": "GAMO",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-andrw",
+    "name": "Andrew",
+    "routes": ["Red", "708", "9", "10", "16", "17", "18", "171"],
+    "screens": [{
+        "id": "andrew_mezzanine",
+        "station_code": "RAND",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "andrew_northbound",
+        "station_code": "RAND",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "andrew_southbound",
+        "station_code": "RAND",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-aport",
+    "name": "Airport",
+    "routes": ["Blue", "743", "171"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Airport",
+        "type": "dup"
+    }, {
+        "id": "airport_eastbound",
+        "station_code": "BAIR",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "airport_westbound",
+        "station_code": "BAIR",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-aqucl",
+    "name": "Aquarium",
+    "routes": ["Blue"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Aquarium",
+        "type": "dup"
+    }, {
+        "id": "aquarium_eastbound",
+        "station_code": "BAQU",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "aquarium_mezzanine",
+        "station_code": "BAQU",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "aquarium_westbound",
+        "station_code": "BAQU",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-armnl",
+    "name": "Arlington",
+    "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
+    "screens": [{
+        "id": "arlington_eastbound",
+        "station_code": "GARL",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "arlington_westbound",
+        "station_code": "GARL",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "arlington_mezzanine",
+        "station_code": "GARL",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-asmnl",
+    "name": "Ashmont",
+    "routes": ["Red", "Mattapan", "15", "18", "21", "22", "23", "24", "26", "45", "215", "217", "240"],
+    "screens": [{
+        "disabled": false,
+        "id": "1507",
+        "type": "pre_fare_v2"
+    }, {
+        "disabled": false,
+        "id": "1506",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "ashmont_mezzanine",
+        "station_code": "RASH",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "red_ashmont_northbound",
+        "station_code": "RASH",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-astao",
+    "name": "Assembly",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "assembly_mezzanine",
+        "station_code": "OASQ",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "assembly_northbound",
+        "station_code": "OASQ",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "assembly_southbound",
+        "station_code": "OASQ",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-babck",
+    "name": "Babcock Street",
+    "routes": ["Green-B"],
+    "screens": [{
+        "id": "babcock_st_eastbound",
+        "station_code": "GBAB",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "babcock_st_westbound",
+        "station_code": "GBAB",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-bbsta",
+    "name": "Back Bay",
+    "routes": ["Orange", "CR-Worcester", "CR-Franklin", "CR-Needham", "CR-Providence", "39"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-BackBay",
+        "type": "dup"
+    }, {
+        "disabled": false,
+        "id": "1509",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "back_bay_mezzanine",
+        "station_code": "OBAC",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "back_bay_northbound",
+        "station_code": "OBAC",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "back_bay_southbound",
+        "station_code": "OBAC",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-bckhl",
+    "name": "Back of the Hill",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-bcnfd",
+    "name": "Beaconsfield",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "beaconsfield_eastbound",
+        "station_code": "GBEA",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "beaconsfield_westbound",
+        "station_code": "GBEA",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-bcnwa",
+    "name": "Washington Square",
+    "routes": ["Green-C"],
+    "screens": [{
+        "disabled": false,
+        "id": "213",
+        "type": "gl_eink_double"
+    }, {
+        "disabled": false,
+        "id": "104",
+        "type": "gl_eink_single"
+    }, {
+        "disabled": false,
+        "id": "1204",
+        "type": "gl_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "204",
+        "type": "gl_eink_double"
+    }, {
+        "disabled": false,
+        "id": "203",
+        "type": "gl_eink_double"
+    }, {
+        "disabled": false,
+        "id": "1203",
+        "type": "gl_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "1213",
+        "type": "gl_eink_v2"
+    }]
+}, {
+    "id": "place-bland",
+    "name": "Blandford Street",
+    "routes": ["Green-B"],
+    "screens": [{
+        "disabled": false,
+        "id": "102",
+        "type": "gl_eink_single"
+    }, {
+        "disabled": false,
+        "id": "111",
+        "type": "gl_eink_single"
+    }, {
+        "disabled": true,
+        "id": "112",
+        "type": "gl_eink_single"
+    }, {
+        "disabled": true,
+        "id": "101",
+        "type": "gl_eink_single"
+    }]
+}, {
+    "id": "place-bmmnl",
+    "name": "Beachmont",
+    "routes": ["Blue"],
+    "screens": [{
+        "id": "beachmont_eastbound",
+        "station_code": "BBEA",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "beachmont_westbound",
+        "station_code": "BBEA",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-bndhl",
+    "name": "Brandon Hall",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-bomnl",
+    "name": "Bowdoin",
+    "routes": ["Blue"],
+    "screens": [{
+        "id": "bowdoin_eastbound",
+        "station_code": "BBOW",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "bowdoin_mezzanine",
+        "station_code": "BBOW",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-boyls",
+    "name": "Boylston",
+    "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
+    "screens": [{
+        "id": "boylston_eastbound",
+        "station_code": "GBOY",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "boylston_westbound",
+        "station_code": "GBOY",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-brdwy",
+    "name": "Broadway",
+    "routes": ["Red"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Broadway",
+        "type": "dup"
+    }, {
+        "id": "broadway_mezzanine",
+        "station_code": "RBRO",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "broadway_northbound",
+        "station_code": "RBRO",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "broadway_southbound",
+        "station_code": "RBRO",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-brico",
+    "name": "Packard's Corner",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-brkhl",
+    "name": "Brookline Hills",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "brookline_hills_eastbound",
+        "station_code": "GBRH",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "brookline_hills_westbound",
+        "station_code": "GBRH",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-brmnl",
+    "name": "Brigham Circle",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-brntn",
+    "name": "Braintree",
+    "routes": ["Red", "CR-Kingston", "CR-Middleborough", "210", "226", "230", "236"],
+    "screens": [{
+        "id": "braintree_center_northbound",
+        "station_code": "RBRA",
+        "type": "pa_ess",
+        "zone": "c"
+    }, {
+        "id": "braintree_mezzanine_northbound",
+        "station_code": "RBRA",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-bucen",
+    "name": "Boston University Central",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-buest",
+    "name": "Boston University East",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-butlr",
+    "name": "Butler",
+    "routes": ["Mattapan"],
+    "screens": [{
+        "id": "butler_center",
+        "station_code": "MBUT",
+        "type": "pa_ess",
+        "zone": "c"
+    }]
+}, {
+    "id": "place-bvmnl",
+    "name": "Brookline Village",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "brookline_village_eastbound",
+        "station_code": "GBRV",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "brookline_village_westbound",
+        "station_code": "GBRV",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-capst",
+    "name": "Capen Street",
+    "routes": ["Mattapan"],
+    "screens": [{
+        "id": "capen_street_inbound",
+        "station_code": "MCAP",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-ccmnl",
+    "name": "Community College",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "community_college_mezzanine",
+        "station_code": "OCOM",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "community_college_northbound",
+        "station_code": "OCOM",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "community_college_southbound",
+        "station_code": "OCOM",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-cedgr",
+    "name": "Cedar Grove",
+    "routes": ["Mattapan"],
+    "screens": [{
+        "id": "cedar_grove_outbound",
+        "station_code": "MCED",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "cedar_grove_inbound",
+        "station_code": "MCED",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-cenav",
+    "name": "Central Avenue",
+    "routes": ["Mattapan"],
+    "screens": [{
+        "id": "central_avenue_outbound",
+        "station_code": "MCEN",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "central_avenue_inbound",
+        "station_code": "MCEN",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-chhil",
+    "name": "Chestnut Hill",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "chestnut_hill_eastbound",
+        "station_code": "GCHE",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "chestnut_hill_westbound",
+        "station_code": "GCHE",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-chill",
+    "name": "Chestnut Hill Avenue",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-chmnl",
+    "name": "Charles/MGH",
+    "routes": ["Red"],
+    "screens": [{
+        "disabled": false,
+        "id": "1513",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "charles_mgh_northbound",
+        "station_code": "RMGH",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "charles_mgh_southbound",
+        "station_code": "RMGH",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-chncl",
+    "name": "Chinatown",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "chinatown_northbound_lobby",
+        "station_code": "OCHN",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "chinatown_southbound_lobby",
+        "station_code": "OCHS",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "chinatown_northbound",
+        "station_code": "OCHN",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "chinatown_southbound",
+        "station_code": "OCHS",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-chswk",
+    "name": "Chiswick Road",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-clmnl",
+    "name": "Cleveland Circle",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-cntsq",
+    "name": "Central",
+    "routes": ["Red"],
+    "screens": [{
+        "id": "central_northbound",
+        "station_code": "RCEN",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "central_southbound",
+        "station_code": "RCEN",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-coecl",
+    "name": "Copley",
+    "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
+    "screens": [{
+        "id": "copley_eastbound",
+        "station_code": "GCOP",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "copley_westbound",
+        "station_code": "GCOP",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-cool",
+    "name": "Coolidge Corner",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-davis",
+    "name": "Davis",
+    "routes": ["Red", "87", "88", "89", "90", "94", "96"],
+    "screens": [{
+        "disabled": false,
+        "id": "Landscape255",
+        "type": "dup"
+    }, {
+        "id": "davis_mezzanine",
+        "station_code": "RDAV",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "davis_northbound",
+        "station_code": "RDAV",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "davis_southbound",
+        "station_code": "RDAV",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-denrd",
+    "name": "Dean Road",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-dwnxg",
+    "name": "Downtown Crossing",
+    "routes": ["Red", "Orange"],
+    "screens": [{
+        "id": "orange_downtown_crossing_northbound",
+        "station_code": "ODTN",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "orange_downtown_crossing_southbound",
+        "station_code": "ODTS",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "red_downtown_crossing_northbound",
+        "station_code": "RDTC",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "red_downtown_crossing_southbound",
+        "station_code": "RDTC",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-eliot",
+    "name": "Eliot",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "eliot_eastbound",
+        "station_code": "GELI",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "eliot_westbound",
+        "station_code": "GELI",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-engav",
+    "name": "Englewood Avenue",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-fbkst",
+    "name": "Fairbanks Street",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-fenwd",
+    "name": "Fenwood Road",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-fenwy",
+    "name": "Fenway",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "fenway_eastbound",
+        "station_code": "GFEN",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "fenway_westbound",
+        "station_code": "GFEN",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-fldcr",
+    "name": "Fields Corner",
+    "routes": ["Red", "15", "17", "18", "19", "201", "202", "210", "215"],
+    "screens": [{
+        "id": "fields_corner_mezzanine",
+        "station_code": "RFIE",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "fields_corner_northbound",
+        "station_code": "RFIE",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "fields_corner_southbound",
+        "station_code": "RFIE",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-forhl",
+    "name": "Forest Hills",
+    "routes": ["Orange", "CR-Needham", "16", "21", "30", "31", "32", "33", "34", "34E", "35", "36", "37", "38", "39", "40", "42", "50", "51"],
+    "screens": [{
+        "disabled": false,
+        "id": "1510",
+        "type": "pre_fare_v2"
+    }, {
+        "disabled": false,
+        "id": "1511",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "forest_hills_main_lobby",
+        "station_code": "OFOR",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "forest_hills_platform",
+        "station_code": "OFOR",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "forest_hills_entrances_from_busways",
+        "station_code": "SFOR",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-gover",
+    "name": "Government Center",
+    "routes": ["Green-B", "Green-C", "Green-D", "Green-E", "Blue"],
+    "screens": [{
+        "disabled": false,
+        "id": "1503",
+        "type": "pre_fare_v2"
+    }, {
+        "disabled": false,
+        "id": "1502",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "government_center_eastbound",
+        "station_code": "BGOV",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "government_center_mezzanine",
+        "station_code": "BGOV",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "government_center_westbound",
+        "station_code": "BGOV",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "green_government_center_eastbound",
+        "station_code": "GGOV",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "green_government_center_westbound",
+        "station_code": "GGOV",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "green_government_center_mezzanine",
+        "station_code": "GGOV",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-grigg",
+    "name": "Griggs Street",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-grnst",
+    "name": "Green Street",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "green_street_mezzanine",
+        "station_code": "OGRE",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "green_street_northbound",
+        "station_code": "OGRE",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "green_street_southbound",
+        "station_code": "OGRE",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-haecl",
+    "name": "Haymarket",
+    "routes": ["Orange", "Green-D", "Green-E"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Haymarket",
+        "type": "dup"
+    }, {
+        "id": "orange_haymarket_mezzanine",
+        "station_code": "OHAY",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "orange_haymarket_northbound",
+        "station_code": "OHAY",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "orange_haymarket_southbound",
+        "station_code": "OHAY",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "green_haymarket_eastbound",
+        "station_code": "GHAY",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "green_haymarket_westbound",
+        "station_code": "GHAY",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-harsq",
+    "name": "Harvard",
+    "routes": ["Red", "71", "73", "74", "75", "77", "78", "86", "96"],
+    "screens": [{
+        "id": "harvard_mezzanine",
+        "station_code": "RHAR",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "harvard_northbound",
+        "station_code": "RHAR",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "harvard_southbound",
+        "station_code": "RHAR",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-harvd",
+    "name": "Harvard Avenue",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-hsmnl",
+    "name": "Heath Street",
+    "routes": ["Green-E"],
+    "screens": [{
+        "disabled": false,
+        "id": "1208",
+        "type": "gl_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "208",
+        "type": "gl_eink_double"
+    }, {
+        "disabled": false,
+        "id": "207",
+        "type": "gl_eink_double"
+    }, {
+        "disabled": false,
+        "id": "1207",
+        "type": "gl_eink_v2"
+    }]
+}, {
+    "id": "place-hwsst",
+    "name": "Hawes Street",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-hymnl",
+    "name": "Hynes Convention Center",
+    "routes": ["Green-B", "Green-C", "Green-D"],
+    "screens": [{
+        "id": "hynes_eastbound",
+        "station_code": "GAUD",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "hynes_westbound",
+        "station_code": "GAUD",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "hynes_mezzanine",
+        "station_code": "GAUD",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-jaksn",
+    "name": "Jackson Square",
+    "routes": ["Orange", "14", "22", "29", "41", "44"],
+    "screens": [{
+        "id": "jackson_square_mezzanine",
+        "station_code": "OJAC",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "jackson_square_northbound",
+        "station_code": "OJAC",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "jackson_square_southbound",
+        "station_code": "OJAC",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-jfk",
+    "name": "JFK/UMass",
+    "routes": ["Red", "CR-Greenbush", "CR-Kingston", "CR-Middleborough", "8", "16", "41"],
+    "screens": [{
+        "id": "jfk_umass_ashmont_platform_southbound",
+        "station_code": "RJFK",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "jfk_umass_braintree_platform_southbound",
+        "station_code": "RJFK",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "jfk_umass_ashmont_platform_northbound",
+        "station_code": "RJFK",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "jfk_umass_braintree_platform_northbound",
+        "station_code": "RJFK",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "jfk_umass_mezzanine",
+        "station_code": "RJFK",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-kencl",
+    "name": "Kenmore",
+    "routes": ["Green-B", "Green-C", "Green-D", "8", "9", "19", "57", "60", "65"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Kenmore",
+        "type": "dup"
+    }, {
+        "id": "kenmore_b_eastbound",
+        "station_code": "GKEN",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "kenmore_b_westbound",
+        "station_code": "GKEN",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "kenmore_c_d_eastbound",
+        "station_code": "GKEN",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "kenmore_c_d_westbound",
+        "station_code": "GKEN",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "kenmore_mezzanine",
+        "station_code": "GKEN",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-knncl",
+    "name": "Kendall/MIT",
+    "routes": ["Red"],
+    "screens": [{
+        "id": "kendall_mit_northbound",
+        "station_code": "RKEN",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "kendall_mit_southbound",
+        "station_code": "RKEN",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-kntst",
+    "name": "Kent Street",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-lake",
+    "name": "Boston College",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-lech",
+    "name": "Lechmere",
+    "routes": ["Green-E", "69", "80", "87", "88"],
+    "screens": [{
+        "id": "lechmere_green_line_eastbound",
+        "station_code": "GLEC",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "lechmere_green_line_westbound",
+        "station_code": "GLEC",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "lechmere_green_line_mezzanine",
+        "station_code": "GLEC",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-lngmd",
+    "name": "Longwood Medical Area",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-longw",
+    "name": "Longwood",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "longwood_eastbound",
+        "station_code": "GLON",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "longwood_westbound",
+        "station_code": "GLON",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-masta",
+    "name": "Massachusetts Avenue",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "mass_ave_mezzanine",
+        "station_code": "OMAS",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "mass_ave_northbound",
+        "station_code": "OMAS",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "mass_ave_southbound",
+        "station_code": "OMAS",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-matt",
+    "name": "Mattapan",
+    "routes": ["Mattapan", "15", "24", "28", "29", "30", "31", "33", "245", "716"],
+    "screens": []
+}, {
+    "id": "place-mfa",
+    "name": "Museum of Fine Arts",
+    "routes": ["Green-E"],
+    "screens": [{
+        "disabled": false,
+        "id": "1206",
+        "type": "gl_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "1216",
+        "type": "gl_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "206",
+        "type": "gl_eink_double"
+    }, {
+        "disabled": false,
+        "id": "216",
+        "type": "gl_eink_double"
+    }]
+}, {
+    "id": "place-miltt",
+    "name": "Milton",
+    "routes": ["Mattapan"],
+    "screens": [{
+        "id": "milton_outbound",
+        "station_code": "MMIL",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "milton_inbound",
+        "station_code": "MMIL",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-mispk",
+    "name": "Mission Park",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-mlmnl",
+    "name": "Malden Center",
+    "routes": ["Orange", "CR-Haverhill", "97", "99", "101", "104", "105", "106", "108", "131", "132", "137", "411", "430"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Malden",
+        "type": "dup"
+    }, {
+        "id": "malden_lobby",
+        "station_code": "OMAL",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "malden_center_platform",
+        "station_code": "OMAL",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-mvbcl",
+    "name": "Maverick",
+    "routes": ["Blue", "114", "116", "117", "120", "121"],
+    "screens": [{
+        "disabled": false,
+        "id": "1505",
+        "type": "pre_fare_v2"
+    }, {
+        "disabled": false,
+        "id": "1504",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "maverick_eastbound",
+        "station_code": "BMAV",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "maverick_westbound",
+        "station_code": "BMAV",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-newtn",
+    "name": "Newton Highlands",
+    "routes": ["Green-D", "59"],
+    "screens": [{
+        "id": "newton_highlands_eastbound",
+        "station_code": "GNEH",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "newton_highlands_westbound",
+        "station_code": "GNEH",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-newto",
+    "name": "Newton Centre",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "newton_centre_eastbound",
+        "station_code": "GNEC",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "newton_centre_westbound",
+        "station_code": "GNEC",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-north",
+    "name": "North Station",
+    "routes": ["Orange", "Green-D", "Green-E", "CR-Fitchburg", "CR-Haverhill", "CR-Lowell", "CR-Newburyport"],
+    "screens": [{
+        "id": "orange_north_station_northbound",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "orange_north_station_southbound",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "orange_north_station_mezzanine",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "c"
+    }, {
+        "id": "orange_north_station_commuter_rail_exit",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "green_north_station_eastbound",
+        "station_code": "GNST",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "green_north_station_westbound",
+        "station_code": "GNST",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "green_north_station_commuter_rail_exit",
+        "station_code": "GNST",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-nqncy",
+    "name": "North Quincy",
+    "routes": ["Red", "210", "211", "215", "217"],
+    "screens": [{
+        "id": "north_quincy_mezzanine",
+        "station_code": "RNQU",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "north_quincy_northbound",
+        "station_code": "RNQU",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "north_quincy_southbound",
+        "station_code": "RNQU",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-nuniv",
+    "name": "Northeastern University",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-ogmnl",
+    "name": "Oak Grove",
+    "routes": ["Orange", "131", "137"],
+    "screens": [{
+        "id": "oak_grove_mezzanine_southbound",
+        "station_code": "OOAK",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "oak_grove_east_busway",
+        "station_code": "OOAK",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "oak_grove_platform",
+        "station_code": "OOAK",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-orhte",
+    "name": "Orient Heights",
+    "routes": ["Blue", "120", "712", "713"],
+    "screens": [{
+        "id": "orient_heights_eastbound",
+        "station_code": "BORH",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "orient_heights_mezzanine",
+        "station_code": "BORH",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "orient_heights_westbound",
+        "station_code": "BORH",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-pktrm",
+    "name": "Park Street",
+    "routes": ["Red", "Green-B", "Green-C", "Green-D", "Green-E"],
+    "screens": [{
+        "id": "red_park_st_northbound",
+        "station_code": "RPRK",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "red_park_st_southbound",
+        "station_code": "RPRK",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "red_park_st_center",
+        "station_code": "RPRK",
+        "type": "pa_ess",
+        "zone": "c"
+    }, {
+        "id": "park_st_eastbound",
+        "station_code": "GPRKE",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "park_st_winter_st_concourse",
+        "station_code": "GPRKE",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "park_st_westbound_wall_track",
+        "station_code": "GPRKW",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "park_st_westbound_fence_track",
+        "station_code": "GPRKW",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-portr",
+    "name": "Porter",
+    "routes": ["Red", "CR-Fitchburg"],
+    "screens": [{
+        "disabled": false,
+        "id": "1508",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "porter_mezzanine",
+        "station_code": "RPOR",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "porter_northbound",
+        "station_code": "RPOR",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "porter_southbound",
+        "station_code": "RPOR",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-prmnl",
+    "name": "Prudential",
+    "routes": ["Green-E"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-Prudential",
+        "type": "dup"
+    }, {
+        "id": "prudential_eastbound",
+        "station_code": "GPRU",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "prudential_westbound",
+        "station_code": "GPRU",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "prudential_mezzanine",
+        "station_code": "GPRU",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-qamnl",
+    "name": "Quincy Adams",
+    "routes": ["Red"],
+    "screens": [{
+        "id": "quincy_adams_mezzanine",
+        "station_code": "RQUA",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "quincy_adams_northbound",
+        "station_code": "RQUA",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "quincy_adams_southbound",
+        "station_code": "RQUA",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-qnctr",
+    "name": "Quincy Center",
+    "routes": ["Red", "CR-Greenbush", "CR-Kingston", "CR-Middleborough", "210", "211", "215", "216", "217", "220", "222", "225", "230", "236", "238", "245"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-QuincyCenter",
+        "type": "dup"
+    }, {
+        "id": "quincy_center_mezzanine",
+        "station_code": "RQUC",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "quincy_center_northbound",
+        "station_code": "RQUC",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "quincy_center_southbound",
+        "station_code": "RQUC",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-rbmnl",
+    "name": "Revere Beach",
+    "routes": ["Blue"],
+    "screens": [{
+        "id": "revere_beach_eastbound",
+        "station_code": "BREV",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "revere_beach_mezzanine",
+        "station_code": "BREV",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "revere_beach_westbound",
+        "station_code": "BREV",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-rcmnl",
+    "name": "Roxbury Crossing",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "roxbury_crossing_mezzanine",
+        "station_code": "OROX",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "roxbury_crossing_northbound",
+        "station_code": "OROX",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "roxbury_crossing_southbound",
+        "station_code": "OROX",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-river",
+    "name": "Riverside",
+    "routes": ["Green-D", "558"],
+    "screens": [{
+        "id": "riverside_entire_station",
+        "station_code": "GRIV",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-rsmnl",
+    "name": "Reservoir",
+    "routes": ["Green-D", "51", "86"],
+    "screens": [{
+        "id": "reservoir_eastbound",
+        "station_code": "GRES",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "reservoir_westbound",
+        "station_code": "GRES",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-rugg",
+    "name": "Ruggles",
+    "routes": ["Orange", "CR-Franklin", "CR-Needham", "CR-Providence", "747", "708", "8", "9", "15", "19", "22", "23", "28", "29", "43", "44", "45", "47"],
+    "screens": [{
+        "id": "ruggles_northbound",
+        "station_code": "ORUG",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "ruggles_southbound",
+        "station_code": "ORUG",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "ruggles_center",
+        "station_code": "ORUG",
+        "type": "pa_ess",
+        "zone": "c"
+    }, {
+        "id": "ruggles_mezzanine",
+        "station_code": "ORUG",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "ruggles_upper_busway",
+        "station_code": "SRUG",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-rvrwy",
+    "name": "Riverway",
+    "routes": ["Green-E"],
+    "screens": []
+}, {
+    "id": "place-sbmnl",
+    "name": "Stony Brook",
+    "routes": ["Orange"],
+    "screens": [{
+        "id": "stony_brook_mezzanine",
+        "station_code": "OSTO",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "stony_brook_northbound",
+        "station_code": "OSTO",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "stony_brook_southbound",
+        "station_code": "OSTO",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-sdmnl",
+    "name": "Suffolk Downs",
+    "routes": ["Blue"],
+    "screens": [{
+        "id": "suffolk_downs_eastbound",
+        "station_code": "BSUF",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "suffolk_downs_westbound",
+        "station_code": "BSUF",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-shmnl",
+    "name": "Savin Hill",
+    "routes": ["Red"],
+    "screens": [{
+        "id": "savin_hill_mezzanine",
+        "station_code": "RSAV",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "savin_hill_northbound",
+        "station_code": "RSAV",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "savin_hill_southbound",
+        "station_code": "RSAV",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-smary",
+    "name": "Saint Mary's Street",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-smmnl",
+    "name": "Shawmut",
+    "routes": ["Red"],
+    "screens": [{
+        "id": "shawmut_mezzanine",
+        "station_code": "RSHA",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "shawmut_northbound",
+        "station_code": "RSHA",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "shawmut_southbound",
+        "station_code": "RSHA",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-sougr",
+    "name": "South Street",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-spmnl",
+    "name": "Science Park/West End",
+    "routes": ["Green-E"],
+    "screens": [{
+        "id": "science_park_eastbound",
+        "station_code": "GSCI",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "science_park_westbound",
+        "station_code": "GSCI",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "science_park_mezzanine",
+        "station_code": "GSCI",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-sstat",
+    "name": "South Station",
+    "routes": ["Red", "741", "742", "743", "CR-Fairmount", "CR-Worcester", "CR-Franklin", "CR-Greenbush", "CR-Kingston", "CR-Middleborough", "CR-Needham", "CR-Providence"],
+    "screens": [{
+        "id": "red_south_station_mezzanine",
+        "station_code": "RSOU",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "red_south_station_northbound",
+        "station_code": "RSOU",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "red_south_station_southbound",
+        "station_code": "RSOU",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "south_station_silver_line_arrival_platform",
+        "station_code": "SSOU",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-state",
+    "name": "State",
+    "routes": ["Orange", "Blue"],
+    "screens": [{
+        "id": "state_blue_eastbound",
+        "station_code": "BSTA",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "state_blue_mezzanine",
+        "station_code": "BSTA",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "state_blue_westbound",
+        "station_code": "BSTA",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "orange_state_mezzanine",
+        "station_code": "OSTN",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "orange_state_northbound",
+        "station_code": "OSTN",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "orange_state_southbound",
+        "station_code": "OSTS",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-sthld",
+    "name": "Sutherland Road",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-stpul",
+    "name": "Saint Paul Street",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-sull",
+    "name": "Sullivan Square",
+    "routes": ["Orange", "747", "86", "89", "90", "91", "92", "93", "95", "101", "104", "105", "109"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-SullivanSquare",
+        "type": "dup"
+    }, {
+        "id": "sullivan_mezzanine",
+        "station_code": "OSUL",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "sullivan_northbound",
+        "station_code": "OSUL",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "sullivan_southbound",
+        "station_code": "OSUL",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-sumav",
+    "name": "Summit Avenue",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-symcl",
+    "name": "Symphony",
+    "routes": ["Green-E"],
+    "screens": [{
+        "id": "symphony_eastbound",
+        "station_code": "GSYM",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "symphony_westbound",
+        "station_code": "GSYM",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-tapst",
+    "name": "Tappan Street",
+    "routes": ["Green-C"],
+    "screens": []
+}, {
+    "id": "place-tumnl",
+    "name": "Tufts Medical Center",
+    "routes": ["Orange"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-TuftsMedicalCenter",
+        "type": "dup"
+    }, {
+        "disabled": false,
+        "id": "1413",
+        "type": "bus_shelter_v2"
+    }, {
+        "disabled": false,
+        "id": "1411",
+        "type": "bus_shelter_v2"
+    }, {
+        "disabled": false,
+        "id": "1501",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "tufts_mezzanine",
+        "station_code": "ONEM",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "tufts_northbound",
+        "station_code": "ONEM",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "tufts_southbound",
+        "station_code": "ONEM",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-unsqu",
+    "name": "Union Square",
+    "routes": ["Green-E"],
+    "screens": [{
+        "id": "union_sq_track_one",
+        "station_code": "GUNS",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "union_sq_track_two",
+        "station_code": "GUNS",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "union_sq_mezzanine",
+        "station_code": "GUNS",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-valrd",
+    "name": "Valley Road",
+    "routes": ["Mattapan"],
+    "screens": [{
+        "id": "valley_road_outbound",
+        "station_code": "MVAL",
+        "type": "pa_ess",
+        "zone": "s"
+    }, {
+        "id": "valley_road_inbound",
+        "station_code": "MVAL",
+        "type": "pa_ess",
+        "zone": "n"
+    }]
+}, {
+    "id": "place-waban",
+    "name": "Waban",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "waban_eastbound",
+        "station_code": "GWAB",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "waban_westbound",
+        "station_code": "GWAB",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-wascm",
+    "name": "Washington Street",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-welln",
+    "name": "Wellington",
+    "routes": ["Orange", "97", "99", "100", "106", "108", "110", "112", "134"],
+    "screens": [{
+        "disabled": false,
+        "id": "1512",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "wellington_mezzanine",
+        "station_code": "OWEL",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "wellington_northbound",
+        "station_code": "OWEL",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "wellington_southbound",
+        "station_code": "OWEL",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-wimnl",
+    "name": "Wood Island",
+    "routes": ["Blue", "112", "120", "121"],
+    "screens": [{
+        "id": "wood_island_eastbound",
+        "station_code": "BWOO",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "wood_island_mezzanine",
+        "station_code": "BWOO",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "wood_island_westbound",
+        "station_code": "BWOO",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-wlsta",
+    "name": "Wollaston",
+    "routes": ["Red"],
+    "screens": [{
+        "id": "wollaston_mezzanine",
+        "station_code": "RWOL",
+        "type": "pa_ess",
+        "zone": "m"
+    }, {
+        "id": "wollaston_northbound",
+        "station_code": "RWOL",
+        "type": "pa_ess",
+        "zone": "n"
+    }, {
+        "id": "wollaston_southbound",
+        "station_code": "RWOL",
+        "type": "pa_ess",
+        "zone": "s"
+    }]
+}, {
+    "id": "place-wondl",
+    "name": "Wonderland",
+    "routes": ["Blue", "110", "116", "117", "411", "424", "426", "439", "441", "442", "450", "455"],
+    "screens": [{
+        "disabled": false,
+        "id": "1514",
+        "type": "pre_fare_v2"
+    }, {
+        "id": "wonderland_westbound",
+        "station_code": "BWON",
+        "type": "pa_ess",
+        "zone": "w"
+    }, {
+        "id": "wonderland_mezzanine",
+        "station_code": "BWON",
+        "type": "pa_ess",
+        "zone": "m"
+    }]
+}, {
+    "id": "place-woodl",
+    "name": "Woodland",
+    "routes": ["Green-D"],
+    "screens": [{
+        "id": "woodland_eastbound",
+        "station_code": "GWOO",
+        "type": "pa_ess",
+        "zone": "e"
+    }, {
+        "id": "woodland_westbound",
+        "station_code": "GWOO",
+        "type": "pa_ess",
+        "zone": "w"
+    }]
+}, {
+    "id": "place-wrnst",
+    "name": "Warren Street",
+    "routes": ["Green-B"],
+    "screens": []
+}, {
+    "id": "place-wtcst",
+    "name": "World Trade Center",
+    "routes": ["741", "742", "743"],
+    "screens": [{
+        "disabled": false,
+        "id": "DUP-TestScreen",
+        "type": "dup"
+    }, {
+        "disabled": false,
+        "id": "DUP-WTC",
+        "type": "dup"
+    }]
+}, {
+    "id": "10413",
+    "name": "Columbus Ave @ Weld Ave",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1407",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "21365",
+    "name": "S Huntington Ave @ Huntington Ave",
+    "routes": ["35", "39"],
+    "screens": [{
+        "disabled": false,
+        "id": "11",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1011",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "1743",
+    "name": "Columbus Ave @ Walnut Ave",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1402",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "1266",
+    "name": "Columbus Ave opp Bray St",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1403",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "2134",
+    "name": "Church St @ Lexington St",
+    "routes": ["73"],
+    "screens": [{
+        "disabled": false,
+        "id": "4",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1004",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "22549",
+    "name": "Harvard Sq @ Garden St - Dawes Island",
+    "routes": ["66", "86"],
+    "screens": [{
+        "disabled": false,
+        "id": "6",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1006",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "383",
+    "name": "Blue Hill Ave @ Ellington St",
+    "routes": ["14", "22", "28", "29", "32", "34", "36", "45"],
+    "screens": [{
+        "disabled": false,
+        "id": "2",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1002",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "32549",
+    "name": "Eliot St @ Bennett St",
+    "routes": ["66", "71", "74", "75", "77", "78", "86", "96"],
+    "screens": [{
+        "disabled": false,
+        "id": "1005",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "5",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "1216",
+    "name": "Columbus Ave @ Dimock St",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1404",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "36466",
+    "name": "Hyde Park Ave @ Oak Street",
+    "routes": ["32", "39", "50"],
+    "screens": [{
+        "disabled": false,
+        "id": "1008",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "8",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "5496",
+    "name": "Broadway @ Norwood St",
+    "routes": ["97", "104", "109", "110", "112"],
+    "screens": [{
+        "disabled": false,
+        "id": "3",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1003",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "1265",
+    "name": "Columbus Ave @ Dimock St",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1409",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "5605",
+    "name": "Washington Ave @ Broadway",
+    "routes": ["111", "112", "114", "116", "117"],
+    "screens": [{
+        "disabled": false,
+        "id": "1017",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "17",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "5615",
+    "name": "Hawthorne St @ Broadway",
+    "routes": ["111", "112", "114", "116", "117"],
+    "screens": [{
+        "disabled": false,
+        "id": "1007",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "7",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "11257",
+    "name": "Malcolm X Blvd @ King St",
+    "routes": ["15", "23", "28", "44", "45", "66"],
+    "screens": [{
+        "disabled": false,
+        "id": "1009",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "9",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "1188",
+    "name": "Columbus Ave opp Weld Ave",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1408",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "117",
+    "name": "Congress St @ Haymarket Sta",
+    "routes": ["4", "15", "39", "57", "92", "93", "426", "428", "450"],
+    "screens": [{
+        "disabled": false,
+        "id": "1415",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "390",
+    "name": "Warren St @ Quincy St",
+    "routes": ["14", "19", "23", "28"],
+    "screens": [{
+        "disabled": false,
+        "id": "15",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1015",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "5002",
+    "name": "Salem St opp River St",
+    "routes": ["94", "95", "96", "101", "134"],
+    "screens": [{
+        "disabled": false,
+        "id": "20",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "58",
+    "name": "Massachusetts Ave @ Harrison Ave",
+    "routes": ["1"],
+    "screens": [{
+        "disabled": false,
+        "id": "1010",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "10",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "5333",
+    "name": "Salem St @ Fellsway Garage",
+    "routes": ["95", "101"],
+    "screens": [{
+        "disabled": false,
+        "id": "21",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "1357",
+    "name": "Tremont St opp Roxbury Crossing Sta",
+    "routes": ["66"],
+    "screens": [{
+        "disabled": false,
+        "id": "1014",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "14",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "178",
+    "name": "Saint James Ave @ Dartmouth St",
+    "routes": ["9", "10", "39", "55", "57", "501", "504"],
+    "screens": [{
+        "disabled": false,
+        "id": "1012",
+        "type": "bus_eink_v2"
+    }, {
+        "disabled": false,
+        "id": "12",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "8309",
+    "name": "Surface Rd @ Hanover St",
+    "routes": ["92", "93", "111", "117", "426", "428", "450"],
+    "screens": [{
+        "disabled": false,
+        "id": "1414",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "1722",
+    "name": "1624 Blue Hill Ave @ Mattapan Sq",
+    "routes": ["28", "29", "31"],
+    "screens": [{
+        "disabled": false,
+        "id": "1",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1001",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "407",
+    "name": "Warren St @ Townsend St",
+    "routes": ["10", "14", "19", "22", "23", "28"],
+    "screens": [{
+        "disabled": false,
+        "id": "16",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1016",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "637",
+    "name": "Washington St @ Firth Rd",
+    "routes": ["30", "34", "34E", "35", "36", "37", "39", "40", "50", "51"],
+    "screens": [{
+        "disabled": false,
+        "id": "18",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1018",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "11413",
+    "name": "Columbus Ave @ Walnut Ave",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1405",
+        "type": "bus_shelter_v2"
+    }, {
+        "disabled": false,
+        "id": "1406",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "8178",
+    "name": "Watertown Sq Terminal",
+    "routes": ["59", "70", "71"],
+    "screens": [{
+        "disabled": false,
+        "id": "19",
+        "type": "bus_eink"
+    }, {
+        "disabled": false,
+        "id": "1019",
+        "type": "bus_eink_v2"
+    }]
+}, {
+    "id": "6022",
+    "name": "Poplar St @ South St",
+    "routes": ["30", "34", "34E", "40", "50"],
+    "screens": [{
+        "disabled": false,
+        "id": "23",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "1060",
+    "name": "Magazine St @ Green St",
+    "routes": ["64", "83", "91"],
+    "screens": [{
+        "disabled": false,
+        "id": "1412",
+        "type": "bus_shelter_v2"
+    }, {
+        "disabled": false,
+        "id": "1410",
+        "type": "bus_shelter_v2"
+    }]
+}, {
+    "id": "795",
+    "name": "Corinth St @ Cohasset St",
+    "routes": ["14", "24", "35", "36", "37", "51"],
+    "screens": [{
+        "disabled": false,
+        "id": "22",
+        "type": "bus_eink"
+    }]
+}, {
+    "id": "1215",
+    "name": "Columbus Ave @ Bray St",
+    "routes": ["22", "29", "44"],
+    "screens": [{
+        "disabled": false,
+        "id": "1401",
+        "type": "bus_shelter_v2"
+    }]
+}]
