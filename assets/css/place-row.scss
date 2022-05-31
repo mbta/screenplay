@@ -9,6 +9,14 @@
     background-color: $cool-gray-20;
     padding: 0px 0px 16px;
   }
+
+  &.disabled {
+    opacity: 0.4;
+
+    .hidden-toggle {
+      visibility: hidden;
+    }
+  }
 }
 
 .row {
