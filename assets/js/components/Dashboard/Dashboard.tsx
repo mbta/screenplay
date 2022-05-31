@@ -1,4 +1,5 @@
 import React from "react";
+import "../../../css/screenplay.scss";
 
 class Dashboard extends React.Component {
   render() {
