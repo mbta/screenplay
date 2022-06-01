@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
@@ -21,6 +21,12 @@ config :screenplay,
 
 # Do not print debug messages in production
 config :logger, level: :info
+
+# Configure Ueberauth to use Cognito
+config :ueberauth, Ueberauth,
+  providers: [
+    cognito: {Ueberauth.Strategy.Cognito, []}
+  ]
 
 # ## SSL Support
 #
