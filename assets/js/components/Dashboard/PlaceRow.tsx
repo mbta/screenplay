@@ -48,16 +48,14 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   return (
     <div
       key={props.eventKey}
+      onClick={hasScreens ? rowOnClick : () => undefined}
       className={classNames("place-row", {
         open: isOpen,
         disabled: !hasScreens,
       })}
     >
       <Container fluid>
-        <Row
-          onClick={hasScreens ? rowOnClick : () => undefined}
-          className="align-items-center text-white"
-        >
+        <Row className="align-items-center text-white">
           <Col
             lg="auto"
             className={classNames({
