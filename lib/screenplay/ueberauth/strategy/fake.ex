@@ -3,7 +3,7 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
   Mock Ueberauth strategy for development.
   """
 
-  use Ueberauth.Strategy
+  use Ueberauth.Strategy, ignores_csrf_attack: true
   alias Ueberauth.Strategy.Helpers, as: Helpers
 
   @impl Ueberauth.Strategy
