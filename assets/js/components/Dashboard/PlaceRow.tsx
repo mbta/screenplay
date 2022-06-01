@@ -69,17 +69,20 @@ const PlaceRow = (props: ModalProps): JSX.Element => {
           <Col lg={2} className="place-name">
             {props.name}
           </Col>
-          <Col lg={2} className="pe-5 d-flex justify-content-end">
+          <Col lg={4} className="pe-5 d-flex justify-content-end">
             {renderModesAndLinesIcons()}
           </Col>
-          <Col lg={2} className="place-screen-types pe-5">
+          <Col
+            lg={2}
+            className="place-screen-types pe-5 d-flex justify-content-center"
+          >
             {formatScreenTypes()}
           </Col>
           <Col lg={1} className="place-stop-id">
             {props.stopId}
           </Col>
-          <Col lg={2} className="text-center pe-3">
-            {props.status}
+          <Col lg={2} className="d-flex justify-content-end pe-3 place-status">
+            {hasScreens ? props.status : "-"}
           </Col>
         </Row>
       </Container>
