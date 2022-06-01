@@ -37,7 +37,7 @@ const PlaceRow = (props: ModalProps): JSX.Element => {
       <img
         className="place-mode-line-icon"
         key={modeOrLine}
-        src={`/images/${modeOrLine.toLowerCase()}-icon.png`}
+        src={`/images/pills/${modeOrLine.toLowerCase()}.png`}
         alt=""
         width={38}
         height={20}
