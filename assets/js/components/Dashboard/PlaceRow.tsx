@@ -10,7 +10,7 @@ import {
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
 
-interface ModalProps {
+interface PlaceRowProps {
   name: string;
   modesAndLines: string[];
   screenTypes: string[];
@@ -19,7 +19,7 @@ interface ModalProps {
   eventKey: string;
 }
 
-const PlaceRow = (props: ModalProps): JSX.Element => {
+const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
   const isOpen = activeEventKey === props.eventKey;
