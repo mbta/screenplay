@@ -47,12 +47,12 @@ defmodule ScreenplayWeb.Router do
     ]
 
     get("/", PageController, :index)
-    get("/dashboard", DashboardController, :index)
   end
 
   scope "/", ScreenplayWeb do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
+    get("/dashboard", DashboardController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
