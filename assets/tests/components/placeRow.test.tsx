@@ -2,19 +2,24 @@ import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import PlaceRow from "../../js/components/Dashboard/PlaceRow";
 import { Accordion } from "react-bootstrap";
+import { Place } from "../../js/models/place";
 
 describe("PlaceRow", () => {
   test("opens when clicked", async () => {
+    const place: Place = {
+      id: "place-stop1",
+      name: "Place Name1",
+      modesAndLines: ["CR", "RL"],
+      status: "Auto",
+      screens: [
+        { id: "1111", type: "DUP", disabled: false },
+        { id: "2222", type: "Solari", disabled: false },
+      ],
+    };
+
     const { getByTestId } = render(
       <Accordion>
-        <PlaceRow
-          name="Place Name"
-          modesAndLines={["CR", "RL"]}
-          screenTypes={["DUP", "Solari"]}
-          status="Auto"
-          stopId="place-stop"
-          eventKey="0"
-        />
+        <PlaceRow place={place} eventKey="0" />
       </Accordion>
     );
 
@@ -26,16 +31,17 @@ describe("PlaceRow", () => {
   });
 
   test("shows no screens", async () => {
+    const place: Place = {
+      id: "place-stop1",
+      name: "Place Name1",
+      modesAndLines: ["CR", "RL"],
+      status: "Auto",
+      screens: [],
+    };
+
     const { getByTestId } = render(
       <Accordion>
-        <PlaceRow
-          name="Place Name"
-          modesAndLines={["CR", "RL"]}
-          screenTypes={[]}
-          status="Auto"
-          stopId="place-stop"
-          eventKey="0"
-        />
+        <PlaceRow place={place} eventKey="0" />
       </Accordion>
     );
 
