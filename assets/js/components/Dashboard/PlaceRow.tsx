@@ -19,6 +19,10 @@ interface PlaceRowProps {
   eventKey: string;
 }
 
+/**
+ * Component used to display each place and their screen simulations.
+ * Assumes it is displayed in an Accordion component from react-bootstrap.
+ */
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
