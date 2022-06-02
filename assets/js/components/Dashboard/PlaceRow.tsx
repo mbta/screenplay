@@ -9,13 +9,10 @@ import {
 } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
+import { Place } from "../../models/place";
 
 interface PlaceRowProps {
-  name: string;
-  modesAndLines: string[];
-  screenTypes: string[];
-  stopId: string;
-  status: string;
+  place: Place;
   eventKey: string;
 }
 
@@ -24,20 +21,21 @@ interface PlaceRowProps {
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
+  const { id, modesAndLines, name, screens, status } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
   const isOpen = activeEventKey?.includes(props.eventKey);
-  const hasScreens = props.screenTypes.length !== 0;
+  const hasScreens = screens.length !== 0;
 
   function formatScreenTypes() {
-    if (props.screenTypes.length === 0) {
+    if (!hasScreens) {
       return "no screens";
     }
-    return props.screenTypes.join(" · ");
+    return screens.map((screen) => screen.type).join(" · ");
   }
 
   function renderModesAndLinesIcons() {
-    return props.modesAndLines.map((modeOrLine) => (
+    return modesAndLines.map((modeOrLine) => (
       <img
         className="place-mode-line-icon"
         key={modeOrLine}
@@ -70,7 +68,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </Col>
           <Col lg={2} className="place-name">
-            {props.name}
+            {name}
           </Col>
           <Col lg={4} className="pe-5 d-flex justify-content-end">
             {renderModesAndLinesIcons()}
@@ -83,14 +81,14 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
             {formatScreenTypes()}
           </Col>
           <Col lg={1} className="place-stop-id">
-            {props.stopId}
+            {id}
           </Col>
           <Col
             lg={2}
             className="d-flex justify-content-end pe-3 place-status"
             data-testid="place-status"
           >
-            {hasScreens ? props.status : "-"}
+            {hasScreens ? status : "-"}
           </Col>
         </Row>
       </Container>
