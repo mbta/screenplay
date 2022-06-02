@@ -53,6 +53,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         open: isOpen,
         disabled: !hasScreens,
       })}
+      data-testid="place-row"
     >
       <Container fluid>
         <Row className="align-items-center text-white">
@@ -73,13 +74,18 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           <Col
             lg={2}
             className="place-screen-types pe-5 d-flex justify-content-center"
+            data-testid="place-screen-types"
           >
             {formatScreenTypes()}
           </Col>
           <Col lg={1} className="place-stop-id">
             {props.stopId}
           </Col>
-          <Col lg={2} className="d-flex justify-content-end pe-3 place-status">
+          <Col
+            lg={2}
+            className="d-flex justify-content-end pe-3 place-status"
+            data-testid="place-status"
+          >
             {hasScreens ? props.status : "-"}
           </Col>
         </Row>
