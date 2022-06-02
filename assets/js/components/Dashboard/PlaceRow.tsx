@@ -22,7 +22,7 @@ interface PlaceRowProps {
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
-  const isOpen = activeEventKey === props.eventKey;
+  const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens = props.screenTypes.length !== 0;
 
   function formatScreenTypes() {

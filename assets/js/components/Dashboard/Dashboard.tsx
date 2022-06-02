@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
             lg={11}
             style={{ background: "#171F26", padding: "24px 32px 32px 32px" }}
           >
-            <Accordion flush>
+            <Accordion flush alwaysOpen>
               <PlaceRow
                 name="Place Name"
                 modesAndLines={["CR", "RL"]}
