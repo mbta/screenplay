@@ -16,9 +16,9 @@ module.exports = (env, options) => ({
     "app": glob.sync("./vendor/**/*.js").concat(["./js/app.tsx"]),
   },
   output: {
-    filename: "app.tsx",
+    filename: "app.js",
     path: path.resolve(__dirname, "../priv/static/js"),
-    publicPath: "/js/",
+    publicPath: "/js/"
   },
   devtool: "source-map",
   module: {
