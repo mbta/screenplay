@@ -10,6 +10,7 @@ defmodule Screenplay.Config.LocalFetch do
     end
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp do_get do
     path = local_config_path()
 
