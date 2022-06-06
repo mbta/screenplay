@@ -3,14 +3,14 @@ defmodule Screenplay.Config.LocalFetch do
 
   @behaviour Screenplay.Config.Fetch
 
-  def get_config() do
-    with {:ok, file_contents} <- do_get(),
-         {:ok, json} <- Jason.decode(file_contents) do
-      {:ok, json}
+  def get_config do
+    case do_get() do
+      {:ok, file_contents} -> Jason.decode(file_contents)
+      _ -> :error
     end
   end
 
-  defp do_get() do
+  defp do_get do
     path = local_config_path()
 
     case File.read(path) do

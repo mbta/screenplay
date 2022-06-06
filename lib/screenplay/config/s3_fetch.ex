@@ -5,14 +5,14 @@ defmodule Screenplay.Config.S3Fetch do
 
   @behaviour Screenplay.Config.Fetch
 
-  def get_config() do
-    with {:ok, file_contents} <- do_get(),
-         {:ok, json} <- Jason.decode(file_contents) do
-      {:ok, json}
+  def get_config do
+    case do_get() do
+      {:ok, file_contents} -> Jason.decode(file_contents)
+      _ -> :error
     end
   end
 
-  defp do_get() do
+  defp do_get do
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
 
