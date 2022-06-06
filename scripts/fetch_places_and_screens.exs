@@ -39,12 +39,29 @@ format_bus_routes = fn routes ->
   end
 end
 
-format_cr_routes = fn routes ->
-  if Enum.any?(routes, &String.starts_with?(&1, "CR-")) do
-    routes |> Enum.reject(&String.starts_with?(&1, "CR-")) |> Enum.concat(["CR"])
-  else
-    routes
-  end
+sort_routes = fn routes ->
+  route_order = [
+    "Bus",
+    "CR",
+    "Ferry",
+    "Mattapan",
+    "Silver",
+    "Blue",
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Orange",
+    "Red"
+  ]
+
+  Enum.sort(
+    routes,
+    fn a, b ->
+      Enum.find_index(route_order, fn x -> x == a end) <
+        Enum.find_index(route_order, fn x -> x == b end)
+    end
+  )
 end
 
 # Get live config from S3
@@ -188,11 +205,22 @@ contents =
     %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
     %{"data" => data} = Jason.decode!(body)
 
+    if id == "place-sstat" do
+      IO.inspect(data)
+    end
+
     routes =
       data
-      |> Enum.map(fn %{"id" => route_id} -> route_id end)
+      |> Enum.map(fn
+        %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
+        %{"id" => "CR-" <> _} -> "CR"
+        # Bus edge case I found in the data.
+        %{"id" => "34E"} -> "Bus"
+        %{"id" => route_id} -> route_id
+      end)
+      |> Enum.dedup()
       |> format_bus_routes.()
-      |> format_cr_routes.()
+      |> sort_routes.()
 
     Map.put(stop, :routes, routes)
   end)
