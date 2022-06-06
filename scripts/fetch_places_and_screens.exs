@@ -303,5 +303,6 @@ merged =
   Enum.map(contents, fn %{id: id, screens: screens} = place ->
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
+  |> Enum.sort_by(& &1.name)
 
 File.write!("priv/places_and_screens.json", Jason.encode!(merged), [:binary])
