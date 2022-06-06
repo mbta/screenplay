@@ -27,8 +27,24 @@ end
 
 cr_or_bus_only? = fn routes ->
   Enum.all?(routes, fn route ->
-    String.starts_with?(route, "CR-") or string_is_number?.(route)
+    route == "CR" or route == "Bus"
   end)
+end
+
+format_bus_routes = fn routes ->
+  if Enum.any?(routes, &string_is_number?.(&1)) do
+    routes |> Enum.reject(&string_is_number?.(&1)) |> Enum.concat(["Bus"])
+  else
+    routes
+  end
+end
+
+format_cr_routes = fn routes ->
+  if Enum.any?(routes, &String.starts_with?(&1, "CR-")) do
+    routes |> Enum.reject(&String.starts_with?(&1, "CR-")) |> Enum.concat(["CR"])
+  else
+    routes
+  end
 end
 
 # Get live config from S3
@@ -135,7 +151,8 @@ bus_stops_parsed = Jason.decode!(body)
 bus_stops =
   bus_data
   |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
-    {_, screens_at_stop} = Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
+    {_, screens_at_stop} =
+      Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
 
     %{id: id, name: name, screens: screens_at_stop}
   end)
@@ -171,7 +188,12 @@ contents =
     %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
     %{"data" => data} = Jason.decode!(body)
 
-    routes = data |> Enum.map(fn %{"id" => route_id} -> route_id end)
+    routes =
+      data
+      |> Enum.map(fn %{"id" => route_id} -> route_id end)
+      |> format_bus_routes.()
+      |> format_cr_routes.()
+
     Map.put(stop, :routes, routes)
   end)
   # Get rid of CR stops with no screens
