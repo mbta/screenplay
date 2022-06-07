@@ -214,8 +214,8 @@ contents =
         %{"id" => "34E"} -> "Bus"
         %{"id" => route_id} -> route_id
       end)
-      |> Enum.dedup()
       |> format_bus_routes.()
+      |> Enum.dedup()
       |> sort_routes.()
 
     Map.put(stop, :routes, routes)
