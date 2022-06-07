@@ -5,6 +5,6 @@ defmodule ScreenplayWeb.DashboardApiController do
 
   def index(conn, _params) do
     {:ok, config} = @config_fetcher.get_config()
-    json(conn, %{config: config})
+    json(conn, config)
   end
 end
