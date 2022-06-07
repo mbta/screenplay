@@ -31,7 +31,22 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     if (!hasScreens) {
       return "no screens";
     }
-    return screens.map((screen) => screen.type).join(" · ");
+
+    const typeMap: Record<string, string> = {
+      pa_ess: "PA",
+      bus_shelter_v2: "Bus Shelter",
+      pre_fare_v2: "Prefare",
+      dup: "DUP",
+      gl_eink_single: "GL E-Ink",
+      gl_eink_double: "GL E-Ink",
+      gl_eink_v2: "GL E-Ink",
+      bus_eink: "Bus E-Ink",
+      bus_eink_v2: "Bus E-Ink",
+      solari: "Solari",
+    };
+
+    const types = new Set(screens.map((screen) => typeMap[screen.type]));
+    return Array.from(types).join(" · ");
   }
 
   function renderModesAndLinesIcons() {
