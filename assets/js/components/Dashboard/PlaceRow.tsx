@@ -85,12 +85,12 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           <Col lg={2} className="place-name">
             {name}
           </Col>
-          <Col lg={4} className="pe-5 d-flex justify-content-end">
+          <Col lg={3} className="d-flex justify-content-end">
             {renderModesAndLinesIcons()}
           </Col>
           <Col
-            lg={2}
-            className="place-screen-types pe-5 d-flex justify-content-center"
+            lg={3}
+            className="place-screen-types d-flex justify-content-center"
             data-testid="place-screen-types"
           >
             {formatScreenTypes()}
