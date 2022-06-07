@@ -205,10 +205,6 @@ contents =
     %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
     %{"data" => data} = Jason.decode!(body)
 
-    if id == "place-sstat" do
-      IO.inspect(data)
-    end
-
     routes =
       data
       |> Enum.map(fn
