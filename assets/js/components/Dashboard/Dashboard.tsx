@@ -24,7 +24,7 @@ const Dashboard = (): JSX.Element => {
           <Accordion flush alwaysOpen>
             {places.map((place: Place, index) => (
               <PlaceRow
-                key={place.name}
+                key={place.id}
                 place={place}
                 eventKey={index.toString()}
               />
