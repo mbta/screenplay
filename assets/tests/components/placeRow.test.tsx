@@ -9,7 +9,7 @@ describe("PlaceRow", () => {
     const place: Place = {
       id: "place-stop1",
       name: "Place Name1",
-      modesAndLines: ["CR", "RL"],
+      routes: ["CR", "RL"],
       status: "Auto",
       screens: [
         { id: "1111", type: "DUP", disabled: false },
@@ -34,7 +34,7 @@ describe("PlaceRow", () => {
     const place: Place = {
       id: "place-stop1",
       name: "Place Name1",
-      modesAndLines: ["CR", "RL"],
+      routes: ["CR", "RL"],
       status: "Auto",
       screens: [],
     };

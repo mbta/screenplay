@@ -21,7 +21,7 @@ interface PlaceRowProps {
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
-  const { id, modesAndLines, name, screens, status } = props.place;
+  const { id, routes, name, screens, status } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
   const isOpen = activeEventKey?.includes(props.eventKey);
@@ -35,11 +35,11 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   }
 
   function renderModesAndLinesIcons() {
-    return modesAndLines.map((modeOrLine) => (
+    return routes.map((route) => (
       <img
         className="place-mode-line-icon"
-        key={modeOrLine}
-        src={`/images/pills/${modeOrLine.toLowerCase()}.png`}
+        key={route}
+        src={`/images/pills/${route.toLowerCase()}.png`}
         alt=""
         width={38}
         height={20}
