@@ -205,10 +205,6 @@ contents =
     %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
     %{"data" => data} = Jason.decode!(body)
 
-    if id == "place-sstat" do
-      IO.inspect(data)
-    end
-
     routes =
       data
       |> Enum.map(fn
@@ -218,8 +214,8 @@ contents =
         %{"id" => "34E"} -> "Bus"
         %{"id" => route_id} -> route_id
       end)
-      |> Enum.dedup()
       |> format_bus_routes.()
+      |> Enum.dedup()
       |> sort_routes.()
 
     Map.put(stop, :routes, routes)
