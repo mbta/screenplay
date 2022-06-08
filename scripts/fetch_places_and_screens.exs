@@ -27,8 +27,41 @@ end
 
 cr_or_bus_only? = fn routes ->
   Enum.all?(routes, fn route ->
-    String.starts_with?(route, "CR-") or string_is_number?.(route)
+    route == "CR" or route == "Bus"
   end)
+end
+
+format_bus_routes = fn routes ->
+  if Enum.any?(routes, &string_is_number?.(&1)) do
+    routes |> Enum.reject(&string_is_number?.(&1)) |> Enum.concat(["Bus"])
+  else
+    routes
+  end
+end
+
+sort_routes = fn routes ->
+  route_order = [
+    "Bus",
+    "CR",
+    "Ferry",
+    "Mattapan",
+    "Silver",
+    "Blue",
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Orange",
+    "Red"
+  ]
+
+  Enum.sort(
+    routes,
+    fn a, b ->
+      Enum.find_index(route_order, fn x -> x == a end) <
+        Enum.find_index(route_order, fn x -> x == b end)
+    end
+  )
 end
 
 # Get live config from S3
@@ -135,7 +168,8 @@ bus_stops_parsed = Jason.decode!(body)
 bus_stops =
   bus_data
   |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
-    {_, screens_at_stop} = Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
+    {_, screens_at_stop} =
+      Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
 
     %{id: id, name: name, screens: screens_at_stop}
   end)
@@ -171,7 +205,19 @@ contents =
     %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
     %{"data" => data} = Jason.decode!(body)
 
-    routes = data |> Enum.map(fn %{"id" => route_id} -> route_id end)
+    routes =
+      data
+      |> Enum.map(fn
+        %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
+        %{"id" => "CR-" <> _} -> "CR"
+        # Bus edge case I found in the data.
+        %{"id" => "34E"} -> "Bus"
+        %{"id" => route_id} -> route_id
+      end)
+      |> format_bus_routes.()
+      |> Enum.dedup()
+      |> sort_routes.()
+
     Map.put(stop, :routes, routes)
   end)
   # Get rid of CR stops with no screens
@@ -253,5 +299,6 @@ merged =
   Enum.map(contents, fn %{id: id, screens: screens} = place ->
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
+  |> Enum.sort_by(& &1.name)
 
 File.write!("priv/places_and_screens.json", Jason.encode!(merged), [:binary])
