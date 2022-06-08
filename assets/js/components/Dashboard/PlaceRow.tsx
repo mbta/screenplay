@@ -21,7 +21,7 @@ interface PlaceRowProps {
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
-  const { id, routes, name, screens } = props.place;
+  const { routes, name, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
   const isOpen = activeEventKey?.includes(props.eventKey);
@@ -82,28 +82,25 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           >
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </Col>
-          <Col lg={2} className="place-name">
+          <Col lg={3} className="place-name">
             {name}
           </Col>
-          <Col lg={3} className="d-flex justify-content-end">
+          <Col lg={3} className="d-flex justify-content-end pe-5">
             {renderModesAndLinesIcons()}
           </Col>
           <Col
             lg={3}
-            className="place-screen-types d-flex justify-content-center"
+            className="place-screen-types pe-5"
             data-testid="place-screen-types"
           >
             {formatScreenTypes()}
           </Col>
-          <Col lg={1} className="place-stop-id">
-            {id}
-          </Col>
           <Col
             lg={2}
-            className="d-flex justify-content-end pe-3 place-status"
+            className="d-flex place-status"
             data-testid="place-status"
           >
-            {hasScreens ? "Auto" : "-"}
+            {hasScreens ? "Auto" : "—"}
           </Col>
         </Row>
       </Container>
