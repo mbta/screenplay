@@ -50,12 +50,30 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   }
 
   function renderModesAndLinesIcons() {
-    return routes.map((route) => (
+    const numberOfGLBranches = routes.filter((route) =>
+      route.startsWith("Green-")
+    ).length;
+
+    // If the list of routes contains a single GL branch, show the GL branch icon.
+    // If it contains more than one branch, show the GL icon.
+    // Otherwise, show the route icon.
+    const newRoutes = routes.reduce((result: string[], current) => {
+      if (current.startsWith("Green-") && numberOfGLBranches > 1) {
+        if (!result.includes("Green")) {
+          result.push("Green");
+        }
+      } else {
+        result.push(current);
+      }
+      return result;
+    }, []);
+
+    return newRoutes.map((route) => (
       <img
         className="place-mode-line-icon"
         key={route}
         src={`/images/pills/${route.toLowerCase()}.png`}
-        alt=""
+        alt={route}
         width={38}
         height={20}
       />

@@ -9,7 +9,7 @@ describe("PlaceRow", () => {
     const place: Place = {
       id: "place-stop1",
       name: "Place Name1",
-      routes: ["CR", "Red"],
+      routes: ["CR", "Red", "Green-B"],
       status: "Auto",
       screens: [
         { id: "1111", type: "dup", disabled: false },
@@ -18,7 +18,7 @@ describe("PlaceRow", () => {
       ],
     };
 
-    const { getByTestId } = render(
+    const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
         <PlaceRow place={place} eventKey="0" />
       </Accordion>
@@ -31,18 +31,20 @@ describe("PlaceRow", () => {
       "DUP · Solari · Bus Shelter"
     );
     expect(getByTestId("place-status").textContent).toBe("Auto");
+    expect(getByAltText("Green-B")).toBeInTheDocument();
+    expect(queryByAltText("Green")).toBeNull();
   });
 
   test("shows no screens", async () => {
     const place: Place = {
       id: "place-stop1",
       name: "Place Name1",
-      routes: ["CR", "Red"],
+      routes: ["CR", "Red", "Green-B", "Green-C"],
       status: "Auto",
       screens: [],
     };
 
-    const { getByTestId } = render(
+    const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
         <PlaceRow place={place} eventKey="0" />
       </Accordion>
@@ -53,5 +55,9 @@ describe("PlaceRow", () => {
     expect(getByTestId("place-row").className).not.toContain("open");
     expect(getByTestId("place-screen-types").textContent).toBe("no screens");
     expect(getByTestId("place-status").textContent).toBe("—");
+    console.log(getByAltText("Green"));
+    expect(getByAltText("Green")).toBeInTheDocument();
+    expect(queryByAltText("Green-B")).toBeNull();
+    expect(queryByAltText("Green-C")).toBeNull();
   });
 });
