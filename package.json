@@ -1,0 +1,6 @@
+{
+  "name": "screenplay",
+  "scripts": {
+    "install": "npm install --prefix assets --omit=optional"
+  }
+}
