@@ -11,8 +11,6 @@ config :screenplay,
   alerts_fetch_module: Screenplay.Alerts.LocalFetch,
   local_alerts_path_spec: {:test, "alerts.json"}
 
-config :screenplay, ScreenplayWeb.AuthManager, secret_key: "test key"
-
 config :ueberauth, Ueberauth,
   providers: [
     cognito: {Screenplay.Ueberauth.Strategy.Fake, []}

@@ -27,6 +27,8 @@ jobs:
   build:
     name: Build and test
     runs-on: ubuntu-latest
+    env:
+      GUARDIAN_SECRET_KEY: test_auth_secret
     needs: asdf
     steps:
       - uses: actions/checkout@v2
