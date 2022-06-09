@@ -1,15 +1,20 @@
 import React, { ReactElement } from "react";
-import OutfrontTakeoverTool from "./OutfrontTakeoverTool/OutfrontTakeoverTool";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Dashboard from "./Dashboard/Dashboard";
+
+const OutfrontTakeoverTool = React.lazy(
+  () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
+);
+const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
 
 class AppRoutes extends React.Component {
   render() {
     return (
-      <Routes>
-        <Route path="/" element={<OutfrontTakeoverTool />}></Route>
-        <Route path="/dashboard" element={<Dashboard />}></Route>
-      </Routes>
+      <React.Suspense fallback={<></>}>
+        <Routes>
+          <Route path="/" element={<OutfrontTakeoverTool />}></Route>
+          <Route path="/dashboard" element={<Dashboard />}></Route>
+        </Routes>
+      </React.Suspense>
     );
   }
 }

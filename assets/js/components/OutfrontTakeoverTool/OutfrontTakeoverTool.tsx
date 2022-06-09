@@ -1,7 +1,6 @@
 import React from "react";
 import AlertDashboard from "./AlertDashboard/AlertDashboard";
 import AlertWizard from "./AlertWizard/AlertWizard";
-import logo from "../../../static/images/t-identity.png";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
 
 interface AppState {
@@ -104,7 +103,7 @@ class OutfrontTakeoverTool extends React.Component<
       <>
         <div className="app-container">
           <div className="app-title">
-            <img src={logo} alt="Logo" className="logo" />
+            <img src="/images/t-identity.png" alt="Logo" className="logo" />
             <div className="stacked-title text-30">
               <div>Outfront Media screens</div>
               <div className="weight-700">Emergency Takeover</div>
