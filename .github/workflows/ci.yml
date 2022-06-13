@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GUARDIAN_SECRET_KEY: test_auth_secret
+      SECRET_KEY_BASE: local_secret_key_base_at_least_64_bytes_________________________________
     needs: asdf
     steps:
       - uses: actions/checkout@v2
