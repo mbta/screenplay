@@ -55,7 +55,6 @@ describe("PlaceRow", () => {
     expect(getByTestId("place-row").className).not.toContain("open");
     expect(getByTestId("place-screen-types").textContent).toBe("no screens");
     expect(getByTestId("place-status").textContent).toBe("—");
-    console.log(getByAltText("Green"));
     expect(getByAltText("Green")).toBeInTheDocument();
     expect(queryByAltText("Green-B")).toBeNull();
     expect(queryByAltText("Green-C")).toBeNull();
