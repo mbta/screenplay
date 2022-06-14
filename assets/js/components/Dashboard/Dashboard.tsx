@@ -10,7 +10,11 @@ const Dashboard = (): JSX.Element => {
   useEffect(() => {
     fetch("/api/dashboard")
       .then((response) => response.json())
-      .then(setPlaces);
+      .then((placeList: []) => {
+        setPlaces(
+          placeList.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
+        );
+      });
   }, []);
 
   return (
