@@ -92,10 +92,7 @@ const Dashboard = (): JSX.Element => {
           <Container fluid>
             <Row className="place-list__header-row d-flex align-items-center">
               <Col className="place-list__sort-label" lg={4}>
-                ABC
-                <span>
-                  <ArrowDown />
-                </span>
+                ABC <ArrowDown />
               </Col>
               <Col
                 className="place-list__mode-line-filter d-flex justify-content-end pe-5"
