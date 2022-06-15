@@ -9,7 +9,8 @@ config :screenplay, ScreenplayWeb.Endpoint,
 config :screenplay,
   redirect_http?: false,
   alerts_fetch_module: Screenplay.Alerts.LocalFetch,
-  local_alerts_path_spec: {:test, "alerts.json"}
+  local_alerts_path_spec: {:test, "alerts.json"},
+  config_fetcher: Screenplay.Config.LocalFetch
 
 config :screenplay, ScreenplayWeb.AuthManager, secret_key: "test key"
 
