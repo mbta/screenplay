@@ -113,11 +113,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           >
             {formatScreenTypes()}
           </Col>
-          <Col
-            lg={2}
-            className="d-flex place-status"
-            data-testid="place-status"
-          >
+          <Col lg={2} className="place-status" data-testid="place-status">
             {hasScreens ? "Auto" : "—"}
           </Col>
         </Row>
