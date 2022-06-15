@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 interface FilterDropdownProps {
   list: string[];
   onSelect: (eventKey: string | null) => void;
-  modeLineFilterValue: string;
+  selectedValue: string;
 }
 
 /**
@@ -12,16 +12,16 @@ interface FilterDropdownProps {
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
 const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
-  const { list, modeLineFilterValue, onSelect } = props;
+  const { list, selectedValue, onSelect } = props;
 
-  const isDefault = () => modeLineFilterValue === list[0];
+  const isDefault = () => selectedValue === list[0];
 
   return (
     <ButtonGroup>
       {!isDefault() && <Button onClick={() => onSelect(list[0])}>X</Button>}
       <DropdownButton
         onSelect={onSelect}
-        title={modeLineFilterValue}
+        title={selectedValue}
         size="lg"
         style={{ width: "100%" }}
       >

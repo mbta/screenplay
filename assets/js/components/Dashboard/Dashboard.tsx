@@ -101,21 +101,21 @@ const Dashboard = (): JSX.Element => {
                 <FilterDropdown
                   list={modesAndLines}
                   onSelect={(value: any) => handleModeOrLineSelect(value)}
-                  modeLineFilterValue={modeLineFilterValue}
+                  selectedValue={modeLineFilterValue}
                 />
               </Col>
               <Col className="place-list__screen-type-filter pe-5" lg={3}>
                 <FilterDropdown
                   list={screenTypes}
                   onSelect={(value: any) => handleScreenTypeSelect(value)}
-                  modeLineFilterValue={screenTypeFilterValue}
+                  selectedValue={screenTypeFilterValue}
                 />
               </Col>
               <Col className="place-list__status-filter" lg={2}>
                 <FilterDropdown
                   list={statuses}
                   onSelect={(value: any) => handleStatusSelect(value)}
-                  modeLineFilterValue={statusFilterValue}
+                  selectedValue={statusFilterValue}
                 />
               </Col>
             </Row>
