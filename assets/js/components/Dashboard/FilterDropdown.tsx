@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { XCircleFill } from "react-bootstrap-icons";
 
 interface FilterDropdownProps {
   list: string[];
@@ -18,7 +19,14 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
 
   return (
     <ButtonGroup>
-      {!isDefault() && <Button onClick={() => onSelect(list[0])}>X</Button>}
+      {!isDefault() && (
+        <Button
+          onClick={() => onSelect(list[0])}
+          data-testid="filter-dropdown-clear-button"
+        >
+          <XCircleFill size={16} className="m-0" />
+        </Button>
+      )}
       <DropdownButton
         onSelect={onSelect}
         title={selectedValue}
