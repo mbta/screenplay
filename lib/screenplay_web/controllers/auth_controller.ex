@@ -45,11 +45,47 @@ defmodule ScreenplayWeb.AuthController do
     send_resp(conn, 401, "unauthenticated")
   end
 
+  # @spec logout(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  # def logout(conn, _params) do
+  #   conn
+  #   |> Guardian.Plug.sign_out(AuthManager)
+  #   |> clear_session()
+  #   |> redirect(to: "/dashboard")
+  # end
+
   @spec logout(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def logout(conn, _params) do
+  def logout(conn, params) do
+    redirect_url = logout_redirect_url(params["provider"])
+
     conn
     |> Guardian.Plug.sign_out(AuthManager)
     |> clear_session()
-    |> redirect(to: "/dashboard")
+
+    case redirect_url do
+      nil -> redirect(conn, to: "/dashboard")
+      _ -> redirect(conn, external: redirect_url)
+    end
+  end
+
+  @spec logout_redirect_url(String.t()) :: String.t()
+  defp logout_redirect_url("cognito") do
+    auth_domain =
+      :ueberauth
+      |> Application.get_env(Ueberauth.Strategy.Cognito)
+      |> Keyword.get(:auth_domain)
+      |> IO.inspect(label: "auth domain")
+
+    redirect_params =
+      URI.encode_query(%{
+        "client_id" =>
+          :ueberauth
+          |> Application.get_env(Ueberauth.Strategy.Cognito)
+          |> Keyword.get(:client_id)
+      })
+
+    case auth_domain do
+      nil -> nil
+      _ -> "https://#{auth_domain}/logout?" <> redirect_params
+    end
   end
 end
