@@ -3,14 +3,17 @@ defmodule ScreenplayWeb.AuthController do
 
   plug Ueberauth
 
+  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def request(conn, %{"provider" => provider}) when provider != "cognito" do
     send_resp(conn, 404, "Not Found")
   end
 
+  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def callback(conn, %{"provider" => provider}) when provider != "cognito" do
     send_resp(conn, 404, "Not Found")
   end
 
+  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def callback(conn = %{assigns: %{ueberauth_auth: auth}}, _params) do
     username = auth.uid
     name = auth.info.name
@@ -34,10 +37,19 @@ defmodule ScreenplayWeb.AuthController do
     |> redirect(to: previous_path)
   end
 
+  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def callback(
         conn = %{assigns: %{ueberauth_failure: %Ueberauth.Failure{}}},
         _params
       ) do
     send_resp(conn, 401, "unauthenticated")
+  end
+
+  @spec logout(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def logout(conn, _params) do
+    conn
+    |> Guardian.Plug.sign_out(AuthManager)
+    |> clear_session()
+    |> redirect(to: "/dashboard")
   end
 end

@@ -182,14 +182,14 @@ defmodule Screenplay.Alerts.AlertTest do
       assert expected == Alert.from_json(json)
     end
 
-    test "handles custom message" do
+    test "handles custom message and trims username" do
       json = %{
         "id" => "alert",
         "message" => %{"type" => "custom", "text" => "This is an alert"},
         "stations" => ["Wellington", "Malden Center"],
         "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
-        "created_by" => "user",
-        "edited_by" => "user"
+        "created_by" => "ActiveDirectory_MBTA\\user",
+        "edited_by" => "ActiveDirectory_MBTA\\user"
       }
 
       expected = %Alert{

@@ -46,13 +46,15 @@ defmodule ScreenplayWeb.Router do
       :ensure_screenplay_admin_group
     ]
 
-    get("/", PageController, :index)
+    get("/", PageController, :takeover_redirect)
+    get("/emergency-takeover", PageController, :index)
   end
 
   scope "/", ScreenplayWeb do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardController, :index)
+    get("/dashboard/:page", DashboardController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
@@ -67,6 +69,7 @@ defmodule ScreenplayWeb.Router do
 
     get("/:provider", AuthController, :request)
     get("/:provider/callback", AuthController, :callback)
+    get("/:provider/logout", AuthController, :logout)
   end
 
   scope "/api", ScreenplayWeb do
