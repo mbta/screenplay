@@ -32,6 +32,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
         title={selectedValue}
         size="lg"
         style={{ width: "100%" }}
+        data-testid="filter-dropdown-button"
       >
         {list.map((item) => {
           return (
