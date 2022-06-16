@@ -3,7 +3,7 @@ defmodule ScreenplayWeb.AuthController do
 
   plug Ueberauth
 
-  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
+  @spec request(Plug.Conn.t(), any) :: Plug.Conn.t()
   def request(conn, %{"provider" => provider}) when provider != "cognito" do
     send_resp(conn, 404, "Not Found")
   end
@@ -13,7 +13,6 @@ defmodule ScreenplayWeb.AuthController do
     send_resp(conn, 404, "Not Found")
   end
 
-  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def callback(conn = %{assigns: %{ueberauth_auth: auth}}, _params) do
     username = auth.uid
     name = auth.info.name
@@ -37,7 +36,6 @@ defmodule ScreenplayWeb.AuthController do
     |> redirect(to: previous_path)
   end
 
-  @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def callback(
         conn = %{assigns: %{ueberauth_failure: %Ueberauth.Failure{}}},
         _params
