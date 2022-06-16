@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { XCircleFill } from "react-bootstrap-icons";
 
 interface FilterDropdownItem {
@@ -22,7 +22,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
   const isDefault = () => selectedValue.label === list[0].label;
 
   return (
-    <ButtonGroup>
+    <ButtonGroup className="filter-dropdown__button-group">
       {!isDefault() && (
         <Button
           onClick={() => onSelect(list[0].label)}
@@ -31,21 +31,25 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           <XCircleFill size={16} className="m-0" />
         </Button>
       )}
-      <DropdownButton
-        onSelect={onSelect}
-        title={selectedValue.label}
-        size="lg"
-        style={{ width: "100%" }}
-        data-testid="filter-dropdown-button"
-      >
-        {list.map(({ label }) => {
-          return (
-            <Dropdown.Item key={label} eventKey={label}>
-              {label}
-            </Dropdown.Item>
-          );
-        })}
-      </DropdownButton>
+      <Dropdown onSelect={onSelect} as={ButtonGroup}>
+        <Dropdown.Toggle
+          className="filter-dropdown__dropdown-button"
+          title={selectedValue.label}
+          size="lg"
+          data-testid="filter-dropdown-button"
+        >
+          {selectedValue.label}
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          {list.map(({ label }) => {
+            return (
+              <Dropdown.Item key={label} eventKey={label}>
+                {label}
+              </Dropdown.Item>
+            );
+          })}
+        </Dropdown.Menu>
+      </Dropdown>
     </ButtonGroup>
   );
 };

@@ -1,0 +1,13 @@
+.btn-group > .btn {
+  background-color: #165c96 !important;
+  border-color: #165c96 !important;
+
+  &:hover,
+  &:focus {
+    background-color: rgb(0, 117, 219) !important;
+    border-color: rgb(0, 117, 219) !important;
+  }
+}
+
+.filter-dropdown__clear-button {
+}
