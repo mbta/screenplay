@@ -4,7 +4,11 @@ import FilterDropdown from "../../js/components/Dashboard/FilterDropdown";
 
 describe("Dashboard", () => {
   test("renders clear filter button if default is not selected", async () => {
-    const list = ["item1", "item2", "item3"];
+    const list = [
+      { label: "item1", ids: ["item1"] },
+      { label: "item2", ids: ["item2"] },
+      { label: "item3", ids: ["item3"] },
+    ];
     const { getByTestId } = render(
       <FilterDropdown
         list={list}
@@ -17,8 +21,17 @@ describe("Dashboard", () => {
   });
 
   test("renders default if clear button is clicked", async () => {
-    const list = ["item1", "item2", "item3"];
-    const onSelect = (newValue: any) => (selectedValue = newValue);
+    const list = [
+      { label: "item1", ids: ["item1"] },
+      { label: "item2", ids: ["item2"] },
+      { label: "item3", ids: ["item3"] },
+    ];
+    const onSelect = (newValue: any) => {
+      const selectedItem = list.find(({ label }) => label === newValue);
+      if (selectedItem) {
+        selectedValue = selectedItem;
+      }
+    };
     let selectedValue = list[1];
     const { getByTestId, rerender, queryByTestId } = render(
       <FilterDropdown
@@ -39,7 +52,7 @@ describe("Dashboard", () => {
     );
     expect(queryByTestId("filter-dropdown-clear-button")).toBeNull();
     expect(getByTestId("filter-dropdown-button").firstChild?.textContent).toBe(
-      list[0]
+      list[0].label
     );
   });
 });
