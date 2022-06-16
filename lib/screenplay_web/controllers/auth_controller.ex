@@ -55,9 +55,10 @@ defmodule ScreenplayWeb.AuthController do
 
   @spec logout(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def logout(conn, params) do
-    redirect_url = logout_redirect_url(params["provider"])
+    redirect_url = logout_redirect_url(conn, params["provider"])
 
     conn
+    # we don't specify AuthManager :think:
     |> Guardian.Plug.sign_out(AuthManager)
     |> clear_session()
 
@@ -67,8 +68,8 @@ defmodule ScreenplayWeb.AuthController do
     end
   end
 
-  @spec logout_redirect_url(String.t()) :: String.t()
-  defp logout_redirect_url("cognito") do
+  @spec logout_redirect_url(Plug.Conn.t(), String.t()) :: String.t()
+  defp logout_redirect_url(conn, "cognito") do
     auth_domain =
       :ueberauth
       |> Application.get_env(Ueberauth.Strategy.Cognito)
