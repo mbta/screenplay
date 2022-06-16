@@ -80,7 +80,8 @@ defmodule ScreenplayWeb.AuthController do
         "client_id" =>
           :ueberauth
           |> Application.get_env(Ueberauth.Strategy.Cognito)
-          |> Keyword.get(:client_id)
+          |> Keyword.get(:client_id),
+        "logout_uri" => ScreenplayWeb.Router.Helpers.dashboard_url(conn, :index)
       })
 
     case auth_domain do
