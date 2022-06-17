@@ -99,6 +99,7 @@ const Dashboard = (): JSX.Element => {
         );
       });
     }
+    // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
