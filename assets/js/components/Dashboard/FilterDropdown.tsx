@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
-import { XCircleFill } from "react-bootstrap-icons";
+import { Check, XCircleFill } from "react-bootstrap-icons";
 import classNames from "classnames";
 
 interface FilterDropdownItem {
@@ -78,9 +78,10 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
                 key={label}
                 eventKey={label}
                 active={label === selectedValue.label}
-                className="filter-dropdown__dropdown-item"
+                className="filter-dropdown__dropdown-item d-flex justify-content-between align-items-center"
               >
                 {label}
+                {selectedValue.label === label && <Check />}
               </Dropdown.Item>
             );
           })}
