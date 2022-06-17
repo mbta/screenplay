@@ -21,7 +21,6 @@ interface CustomMenuProps {
 
 const CustomMenu = React.forwardRef<HTMLElement, CustomMenuProps>(
   ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
-    console.log(children);
     return (
       <div
         ref={ref as any}
