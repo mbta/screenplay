@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { XCircleFill } from "react-bootstrap-icons";
+import classNames from "classnames";
 
 interface FilterDropdownItem {
   label: string;
@@ -56,7 +57,12 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
       )}
       <Dropdown onSelect={onSelect} as={ButtonGroup}>
         <Dropdown.Toggle
-          className="filter-dropdown__dropdown-button d-flex justify-content-between"
+          className={classNames(
+            "filter-dropdown__dropdown-button d-flex justify-content-between",
+            {
+              "filter-dropdown__dropdown-button--small": !isDefault(),
+            }
+          )}
           title={selectedValue.label}
           data-testid="filter-dropdown-button"
         >
