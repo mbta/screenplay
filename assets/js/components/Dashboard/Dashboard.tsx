@@ -50,7 +50,7 @@ const statuses = [
 ];
 
 const Dashboard = (): JSX.Element => {
-  const [places, setPlaces] = useState([]);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     modesAndLines[0]
   );
@@ -88,6 +88,19 @@ const Dashboard = (): JSX.Element => {
     if (selectedFilter) {
       setStatusFilterValue(selectedFilter);
     }
+  };
+
+  const filterPlaces = () => {
+    let filteredPlaces = places;
+    if (screenTypeFilterValue !== screenTypes[0]) {
+      filteredPlaces = places.filter((place) => {
+        return place.screens.some((screen) =>
+          screenTypeFilterValue.ids.includes(screen.type)
+        );
+      });
+    }
+
+    return filteredPlaces;
   };
 
   return (
@@ -132,7 +145,7 @@ const Dashboard = (): JSX.Element => {
               </Col>
             </Row>
             <Accordion flush alwaysOpen>
-              {places.map((place: Place, index) => (
+              {filterPlaces().map((place: Place, index) => (
                 <PlaceRow
                   key={place.id}
                   place={place}
