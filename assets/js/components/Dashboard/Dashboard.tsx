@@ -116,7 +116,7 @@ const Dashboard = (): JSX.Element => {
           }}
         >
           <Container fluid>
-            <Row className="place-list__header-row">
+            <Row className="place-list__header-row d-flex align-items-center">
               <Col
                 className="place-list__sort-label d-flex align-items-center"
                 lg={4}
