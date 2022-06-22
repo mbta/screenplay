@@ -50,7 +50,7 @@ const statuses = [
   { label: "Screen off", ids: ["Off"] },
 ];
 
-const Dashboard = (props: {page: string}): JSX.Element => {
+const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState([]);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     modesAndLines[0]
@@ -97,8 +97,8 @@ const Dashboard = (props: {page: string}): JSX.Element => {
     case "alerts":
       header = "Posted Alerts";
       content = (
-        <div style={{color: "white"}}>This will be posted alerts</div>
-      )
+        <div style={{ color: "white" }}>This will be posted alerts</div>
+      );
       break;
     case "overrides":
       header = "Overrides";
@@ -138,7 +138,7 @@ const Dashboard = (props: {page: string}): JSX.Element => {
             ))}
           </Accordion>
         </Container>
-      )
+      );
   }
 
   return (
@@ -149,7 +149,6 @@ const Dashboard = (props: {page: string}): JSX.Element => {
         <div className="page-content__body">{content}</div>
       </div>
     </div>
-                    
   );
 };
 

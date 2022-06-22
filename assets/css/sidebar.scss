@@ -23,12 +23,13 @@
   display: flex;
   flex-direction: column;
   margin: 24px 16px auto 16px;
-  
+
   .nav-link__name {
     padding-left: 16px;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
   }
-  button, .takeover-button {
+  button,
+  .takeover-button {
     border: none;
     height: 40px;
     margin-bottom: 8px;
@@ -43,11 +44,11 @@
       font-weight: 800;
     }
     &:hover {
-      background-color: #0075DB66;
+      background-color: #0075db66;
     }
   }
   .takeover-button {
-    background-color: #BE185D99;
+    background-color: #be185d99;
     margin-top: 60px;
     display: flex;
     align-items: center;
