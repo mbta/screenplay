@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import FilterDropdown from "./FilterDropdown";
-import { Accordion, Container, Row, Col } from "react-bootstrap";
+import { Accordion, Container } from "react-bootstrap";
 import { ArrowDown } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
