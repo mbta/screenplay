@@ -4,6 +4,7 @@ defmodule Screenplay.Alerts.Alert do
   """
 
   alias Screenplay.Alerts.State
+  alias Screenplay.Util
 
   @enforce_keys [
     :id,
@@ -68,8 +69,8 @@ defmodule Screenplay.Alerts.Alert do
       message: message,
       stations: stations,
       schedule: schedule,
-      created_by: trim_username(user),
-      edited_by: trim_username(user),
+      created_by: Util.trim_username(user),
+      edited_by: Util.trim_username(user),
       cleared_at: nil,
       cleared_by: nil
     }
@@ -81,7 +82,7 @@ defmodule Screenplay.Alerts.Alert do
     changes_map = changes_map |> Enum.filter(fn {_, v} -> v != nil end) |> Enum.into(%{})
 
     merged = Map.merge(alert, changes_map)
-    %{merged | edited_by: trim_username(user)}
+    %{merged | edited_by: Util.trim_username(user)}
   end
 
   @spec clear(t(), user()) :: t()
@@ -105,10 +106,10 @@ defmodule Screenplay.Alerts.Alert do
       "message" => message_to_json(message),
       "stations" => stations_to_json(stations),
       "schedule" => schedule_to_json(schedule),
-      "created_by" => trim_username(created_by),
-      "edited_by" => trim_username(edited_by),
+      "created_by" => Util.trim_username(created_by),
+      "edited_by" => Util.trim_username(edited_by),
       "cleared_at" => serialize_datetime(cleared_at),
-      "cleared_by" => trim_username(cleared_by)
+      "cleared_by" => Util.trim_username(cleared_by)
     }
   end
 
@@ -128,10 +129,10 @@ defmodule Screenplay.Alerts.Alert do
       message: message_from_json(message_json),
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
-      created_by: trim_username(created_by),
-      edited_by: trim_username(edited_by),
+      created_by: Util.trim_username(created_by),
+      edited_by: Util.trim_username(edited_by),
       cleared_at: parse_datetime(cleared_at),
-      cleared_by: trim_username(cleared_by)
+      cleared_by: Util.trim_username(cleared_by)
     }
   end
 
@@ -148,8 +149,8 @@ defmodule Screenplay.Alerts.Alert do
       message: message_from_json(message_json),
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
-      created_by: trim_username(created_by),
-      edited_by: trim_username(edited_by),
+      created_by: Util.trim_username(created_by),
+      edited_by: Util.trim_username(edited_by),
       cleared_at: nil,
       cleared_by: nil
     }
@@ -199,12 +200,5 @@ defmodule Screenplay.Alerts.Alert do
   defp parse_datetime(json) do
     {:ok, dt, _offset} = DateTime.from_iso8601(json)
     dt
-  end
-
-  defp trim_username(nil), do: nil
-
-  defp trim_username(username) do
-    username
-    |> String.replace("ActiveDirectory_MBTA\\", "")
   end
 end
