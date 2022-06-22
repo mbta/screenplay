@@ -1,0 +1,74 @@
+.sidebar-container {
+  min-width: 250px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-brand {
+  margin: 24px 16px;
+  display: inline-flex;
+  text-decoration: none;
+  &__text {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    padding: 0 8px;
+    color: white;
+  }
+}
+
+.sidebar-container nav {
+  display: flex;
+  flex-direction: column;
+  margin: 24px 16px auto 16px;
+  
+  .nav-link__name {
+    padding-left: 16px;
+    letter-spacing: .5px;
+  }
+  button, .takeover-button {
+    border: none;
+    height: 40px;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: left;
+    font-weight: 500;
+  }
+  button {
+    background-color: unset;
+    &.selected {
+      background-color: $main-blue;
+      font-weight: 800;
+    }
+    &:hover {
+      background-color: #0075DB66;
+    }
+  }
+  .takeover-button {
+    background-color: #BE185D99;
+    margin-top: 60px;
+    display: flex;
+    align-items: center;
+    &:hover {
+      background: $pink-700;
+    }
+  }
+}
+
+.sidebar__user-info {
+  display: flex;
+  color: white;
+  padding: 16px 24px 16px 28px;
+  align-items: center;
+  background-color: $cool-gray-20;
+  .username {
+    padding-left: 16px;
+    margin-right: auto;
+    font-weight: 700;
+  }
+  .logout {
+    color: white;
+  }
+}

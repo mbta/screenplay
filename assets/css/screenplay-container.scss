@@ -1,0 +1,27 @@
+.screenplay-container {
+  display: flex;
+  height: 100vh;
+  background-color: $cool-gray-30;
+
+  .page-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
+
+    .page-content__header {
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 40px;
+      color: white;
+      padding: 24px 32px;  
+    }
+    .page-content__body {
+      background-color: $cool-gray-15;
+      padding: 24px 20px;
+      border-radius: 16px 0px 0px 0px;
+      flex-grow: 1;
+    }
+  }
+}

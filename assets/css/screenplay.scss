@@ -1,8 +1,14 @@
+@import "~bootstrap/scss/bootstrap";
 @import "colors.scss";
 @import "dashboard.scss";
 @import "place-row.scss";
 @import "filter-dropdown.scss";
+@import "sidebar.scss";
+@import "screenplay-container.scss";
 
 $body-bg: $cool-gray-30;
 
-@import "~bootstrap/scss/bootstrap";
+html {font-size: 16px}
+body {
+  font-family: "Inter", sans-serif;
+}

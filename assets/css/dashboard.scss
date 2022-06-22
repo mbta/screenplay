@@ -1,6 +1,8 @@
 .place-list__header-row {
-  margin-left: 16px !important;
-  margin-bottom: 24px !important;
+  margin-left: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
 }
 
 .place-list__sort-label {
@@ -8,6 +10,6 @@
   font-weight: 900;
   font-size: 16px;
   line-height: 24px;
-
   letter-spacing: 1px;
+  margin-right: auto;
 }
