@@ -2,7 +2,7 @@ import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import FilterDropdown from "../../js/components/Dashboard/FilterDropdown";
 
-describe("Dashboard", () => {
+describe("FilterDropdown", () => {
   test("renders clear filter button if default is not selected", async () => {
     const list = [
       { label: "item1", ids: ["item1"] },
