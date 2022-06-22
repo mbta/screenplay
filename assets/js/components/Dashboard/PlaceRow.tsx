@@ -21,7 +21,7 @@ interface PlaceRowProps {
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
-  const { id, modesAndLines, name, screens, status } = props.place;
+  const { routes, name, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey);
   const isOpen = activeEventKey?.includes(props.eventKey);
@@ -31,16 +31,49 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     if (!hasScreens) {
       return "no screens";
     }
-    return screens.map((screen) => screen.type).join(" · ");
+
+    const typeMap: Record<string, string> = {
+      pa_ess: "PA",
+      bus_shelter_v2: "Bus Shelter",
+      pre_fare_v2: "Prefare",
+      dup: "DUP",
+      gl_eink_single: "GL E-Ink",
+      gl_eink_double: "GL E-Ink",
+      gl_eink_v2: "GL E-Ink",
+      bus_eink: "Bus E-Ink",
+      bus_eink_v2: "Bus E-Ink",
+      solari: "Solari",
+    };
+
+    const types = new Set(screens.map((screen) => typeMap[screen.type]));
+    return Array.from(types).join(" · ");
   }
 
   function renderModesAndLinesIcons() {
-    return modesAndLines.map((modeOrLine) => (
+    const numberOfGLBranches = routes.filter((route) =>
+      route.startsWith("Green-")
+    ).length;
+
+    // If the list of routes contains a single GL branch, show the GL branch icon.
+    // If it contains more than one branch, show the GL icon.
+    // Otherwise, show the route icon.
+    const newRoutes = routes.reduce((result: string[], current) => {
+      if (current.startsWith("Green-") && numberOfGLBranches > 1) {
+        if (!result.includes("Green")) {
+          result.push("Green");
+        }
+      } else {
+        result.push(current);
+      }
+      return result;
+    }, []);
+
+    return newRoutes.map((route) => (
       <img
         className="place-mode-line-icon"
-        key={modeOrLine}
-        src={`/images/pills/${modeOrLine.toLowerCase()}.png`}
-        alt=""
+        key={route}
+        src={`/images/pills/${route.toLowerCase()}.png`}
+        alt={route}
         width={38}
         height={20}
       />
@@ -67,28 +100,21 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           >
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </Col>
-          <Col lg={2} className="place-name">
+          <Col lg={3} className="place-name">
             {name}
           </Col>
-          <Col lg={4} className="pe-5 d-flex justify-content-end">
+          <Col lg={3} className="d-flex justify-content-end pe-5">
             {renderModesAndLinesIcons()}
           </Col>
           <Col
-            lg={2}
-            className="place-screen-types pe-5 d-flex justify-content-center"
+            lg={3}
+            className="place-screen-types pe-5"
             data-testid="place-screen-types"
           >
             {formatScreenTypes()}
           </Col>
-          <Col lg={1} className="place-stop-id">
-            {id}
-          </Col>
-          <Col
-            lg={2}
-            className="d-flex justify-content-end pe-3 place-status"
-            data-testid="place-status"
-          >
-            {hasScreens ? status : "-"}
+          <Col lg={2} className="place-status" data-testid="place-status">
+            {hasScreens ? "Auto" : "—"}
           </Col>
         </Row>
       </Container>
