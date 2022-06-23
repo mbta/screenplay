@@ -92,9 +92,9 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   };
 
   const goToHome = () => {
-    setModeLineFilterValue(modesAndLines[0])
-    setScreenTypeFilterValue(screenTypes[0])
-    setStatusFilterValue(statuses[0])
+    setModeLineFilterValue(modesAndLines[0]);
+    setScreenTypeFilterValue(screenTypes[0]);
+    setStatusFilterValue(statuses[0]);
   };
 
   let header, content;
@@ -149,7 +149,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
 
   return (
     <div className="screenplay-container">
-      <Sidebar goToHome={goToHome}/>
+      <Sidebar goToHome={goToHome} />
       <div className="page-content">
         <div className="page-content__header">{header}</div>
         <div className="page-content__body">{content}</div>
