@@ -51,7 +51,7 @@ const statuses = [
 ];
 
 const Dashboard = (props: { page: string }): JSX.Element => {
-  const [places, setPlaces] = useState([]);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     modesAndLines[0]
   );
@@ -91,6 +91,20 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     }
   };
 
+  const filterPlaces = () => {
+    let filteredPlaces = places;
+    if (screenTypeFilterValue !== screenTypes[0]) {
+      filteredPlaces = places.filter((place) => {
+        return place.screens.some((screen) =>
+          screenTypeFilterValue.ids.includes(screen.type)
+        );
+      });
+    }
+    // Can add additional filtering in if statements here.
+
+    return filteredPlaces;
+  };
+
   const goToHome = () => {
     setModeLineFilterValue(modesAndLines[0]);
     setScreenTypeFilterValue(screenTypes[0]);
@@ -115,7 +129,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       content = (
         <Container fluid>
           <div className="place-list__header-row">
-            <div className="place-list__sort-label">
+            <div className="place-list__sort-label d-flex align-items-center">
               ABC <ArrowDown />
             </div>
             <FilterDropdown
@@ -135,7 +149,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
             />
           </div>
           <Accordion flush alwaysOpen>
-            {places.map((place: Place, index) => (
+            {filterPlaces().map((place: Place, index) => (
               <PlaceRow
                 key={place.id}
                 place={place}
