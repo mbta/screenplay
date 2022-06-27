@@ -64,10 +64,8 @@ export const formatTime = (date: Date) => {
 };
 
 export const getMessageString = (message: CannedMessage | CustomMessage) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (message.id !== undefined) return CANNED_MESSAGES[parseInt(message.id)];
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   else return message.text;
 };

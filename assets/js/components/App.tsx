@@ -11,8 +11,18 @@ class AppRoutes extends React.Component {
     return (
       <React.Suspense fallback={<></>}>
         <Routes>
-          <Route path="/" element={<OutfrontTakeoverTool />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route
+            path="/emergency-takeover"
+            element={<OutfrontTakeoverTool />}
+          ></Route>
+          <Route
+            path="/dashboard"
+            element={<Dashboard page="places" />}
+          ></Route>
+          <Route
+            path="/dashboard/alerts"
+            element={<Dashboard page="alerts" />}
+          ></Route>
         </Routes>
       </React.Suspense>
     );
