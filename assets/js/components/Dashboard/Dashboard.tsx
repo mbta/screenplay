@@ -129,7 +129,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       content = (
         <Container fluid>
           <div className="place-list__header-row">
-            <div className="place-list__sort-label">
+            <div className="place-list__sort-label d-flex align-items-center">
               ABC <ArrowDown />
             </div>
             <FilterDropdown
