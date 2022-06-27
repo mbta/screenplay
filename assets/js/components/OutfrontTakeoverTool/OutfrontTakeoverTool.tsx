@@ -101,7 +101,7 @@ class OutfrontTakeoverTool extends React.Component<
   render() {
     return (
       <>
-        <div className="app-container">
+        <div className="outfront-container">
           <div className="app-title">
             <img src="/images/t-identity.png" alt="Logo" className="logo" />
             <div className="stacked-title text-30">

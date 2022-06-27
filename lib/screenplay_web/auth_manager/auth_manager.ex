@@ -7,10 +7,16 @@ defmodule ScreenplayWeb.AuthManager do
 
   @screenplay_admin_group "screenplay-admin"
 
+  @spec subject_for_token(
+          resource :: Guardian.Token.resource(),
+          claims :: Guardian.Token.claims()
+        ) :: {:ok, String.t()} | {:error, atom()}
   def subject_for_token(resource, _claims) do
     {:ok, resource}
   end
 
+  @spec resource_from_claims(claims :: Guardian.Token.claims()) ::
+          {:error, :invalid_claims} | {:ok, String.t()}
   def resource_from_claims(%{"sub" => username}) do
     {:ok, username}
   end
