@@ -1,6 +1,12 @@
 {
   "name": "screenplay",
   "scripts": {
-    "install": "npm install --prefix assets --omit=optional"
+    "install": "npm install --prefix assets --omit=optional",
+    "lint": "npm --prefix assets run lint",
+    "lint:check": "npm --prefix assets run lint:check",
+    "format": "npm --prefix assets run format",
+    "format:check": "npm --prefix assets run format:check",
+    "test": "npm --prefix assets test",
+    "check": "npm --prefix assets run check"
   }
 }
