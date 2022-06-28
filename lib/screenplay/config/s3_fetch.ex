@@ -29,6 +29,6 @@ defmodule Screenplay.Config.S3Fetch do
   end
 
   defp config_path_for_environment do
-    "screenplay/places_and_screens.json"
+    "screenplay/#{Application.get_env(:screenplay, :environment_name, "dev")}/places_and_screens.json"
   end
 end
