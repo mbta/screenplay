@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import FilterDropdown from "./FilterDropdown";
 import { Accordion, Container } from "react-bootstrap";
-import { ArrowDown } from "react-bootstrap-icons";
+import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import Sidebar from "./Sidebar";
@@ -52,6 +52,8 @@ const statuses = [
 
 const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState<Place[]>([]);
+  // ascending = true, descending = false
+  const [sortDirection, setSortDirection] = useState(true);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     modesAndLines[0]
   );
@@ -64,9 +66,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     fetch("/api/dashboard")
       .then((response) => response.json())
       .then((placeList: []) => {
-        setPlaces(
-          placeList.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
-        );
+        setPlaces(placeList);
       });
   }, []);
 
@@ -89,6 +89,21 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     if (selectedFilter) {
       setStatusFilterValue(selectedFilter);
     }
+  };
+
+  const sortPlaces = (places: Place[]) => {
+    if (
+      modeLineFilterValue === modesAndLines[0] ||
+      statusFilterValue !== statuses[0] ||
+      screenTypeFilterValue !== screenTypes[0]
+    ) {
+      return sortDirection
+        ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
+        : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
+    }
+    // Sorting for mode/line filter
+
+    return places;
   };
 
   const filterPlaces = () => {
@@ -129,8 +144,11 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       content = (
         <Container fluid>
           <div className="place-list__header-row">
-            <div className="place-list__sort-label d-flex align-items-center">
-              ABC <ArrowDown />
+            <div
+              className="place-list__sort-label d-flex align-items-center"
+              onClick={() => setSortDirection(!sortDirection)}
+            >
+              ABC {sortDirection ? <ArrowDown /> : <ArrowUp />}
             </div>
             <FilterDropdown
               list={modesAndLines}
@@ -149,7 +167,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
             />
           </div>
           <Accordion flush alwaysOpen>
-            {filterPlaces().map((place: Place, index) => (
+            {sortPlaces(filterPlaces()).map((place: Place, index) => (
               <PlaceRow
                 key={place.id}
                 place={place}
