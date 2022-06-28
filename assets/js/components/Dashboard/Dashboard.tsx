@@ -149,7 +149,15 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               className="place-list__sort-label d-flex align-items-center"
               onClick={() => setSortDirection(!sortDirection)}
             >
-              ABC {sortDirection ? <ArrowDown /> : <ArrowUp />}
+              {sortDirection ? (
+                <>
+                  ABC <ArrowDown />
+                </>
+              ) : (
+                <>
+                  ZYX <ArrowUp />
+                </>
+              )}
             </div>
             <FilterDropdown
               list={modesAndLines}
