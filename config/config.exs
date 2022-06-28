@@ -14,8 +14,10 @@ config :screenplay, ScreenplayWeb.Endpoint,
   render_errors: [view: ScreenplayWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Screenplay.PubSub,
   live_view: [signing_salt: "vSiyKz7D"],
-  config_fetcher: Screenplay.Config.S3Fetch,
   config_s3_bucket: "mbta-ctd-config"
+
+config :screenplay,
+  config_fetcher: Screenplay.Config.S3Fetch
 
 # Configures Elixir's Logger
 config :logger, :console,
