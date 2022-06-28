@@ -15,6 +15,9 @@
 
 .filter-dropdown__clear-button {
   height: 36px !important;
+    &:hover {
+        opacity: .6;
+      }
 }
 
 .filter-dropdown__dropdown-button {
@@ -26,6 +29,10 @@
   &--small {
     width: 210px !important;
   }
+
+    &:hover {
+      opacity: .6;
+    }
 }
 
 .filter-dropdown__dropdown-menu {

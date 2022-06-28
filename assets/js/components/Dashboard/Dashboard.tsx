@@ -8,19 +8,19 @@ import { Place } from "../../models/place";
 
 const modesAndLines = [
   { label: "All MODES", ids: ["All"] },
-  { label: "Red Line", ids: ["Red"] },
-  { label: "Orange Line", ids: ["Orange"] },
-  { label: "Green Line B C D E", ids: ["Green"] },
-  { label: "Green Line B", ids: ["Green-B"] },
-  { label: "Green Line C", ids: ["Green-C"] },
-  { label: "Green Line D", ids: ["Green-D"] },
-  { label: "Green Line E", ids: ["Green-E"] },
-  { label: "Blue Line", ids: ["Blue"] },
-  { label: "Silver Line", ids: ["Silver"] },
-  { label: "Bus", ids: ["Bus"] },
-  { label: "Commuter Rail", ids: ["CR"] },
-  { label: "Ferry", ids: ["Ferry"] },
-  { label: "Access", ids: ["Access"] },
+  { label: "Red Line", ids: ["Red"], color: "#DA291C" },
+  { label: "Orange Line", ids: ["Orange"], color: "#ED8B00" },
+  { label: "Green Line B C D E", ids: ["Green"], color: "#00843D" },
+  { label: "Green Line B", ids: ["Green-B"], color: "#00843D" },
+  { label: "Green Line C", ids: ["Green-C"], color: "#00843D" },
+  { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
+  { label: "Green Line E", ids: ["Green-E"], color: "#00843D" },
+  { label: "Blue Line", ids: ["Blue"], color: "#003DA5" },
+  { label: "Silver Line", ids: ["Silver"], color: "#7C878E" },
+  { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
+  { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
+  { label: "Ferry", ids: ["Ferry"], color: "#008EAA" },
+  { label: "Access", ids: ["Access"], color: "#165C96" },
 ];
 
 const screenTypes = [
