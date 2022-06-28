@@ -124,6 +124,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     setModeLineFilterValue(modesAndLines[0]);
     setScreenTypeFilterValue(screenTypes[0]);
     setStatusFilterValue(statuses[0]);
+    setSortDirection(true);
   };
 
   let header, content;
