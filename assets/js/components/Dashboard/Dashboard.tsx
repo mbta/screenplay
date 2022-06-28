@@ -10,7 +10,7 @@ const modesAndLines = [
   { label: "All MODES", ids: ["All"] },
   { label: "Red Line", ids: ["Red"], color: "#DA291C" },
   { label: "Orange Line", ids: ["Orange"], color: "#ED8B00" },
-  { label: "Green Line B C D E", ids: ["Green"], color: "#00843D" },
+  { label: "Green Line B C D E", ids: ["Green-B", "Green-C", "Green-D", "Green-E"], color: "#00843D" },
   { label: "Green Line B", ids: ["Green-B"], color: "#00843D" },
   { label: "Green Line C", ids: ["Green-C"], color: "#00843D" },
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
@@ -98,6 +98,15 @@ const Dashboard = (): JSX.Element => {
           screenTypeFilterValue.ids.includes(screen.type)
         );
       });
+    }
+
+    if (modeLineFilterValue !== modesAndLines[0]) {
+        filteredPlaces = filteredPlaces.filter((place) => {
+          return place.routes.some((route) =>
+            modeLineFilterValue.ids.includes(route)
+          );
+        })
+        // if it's a route, sort it by stop order
     }
     // Can add additional filtering in if statements here.
 
