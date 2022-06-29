@@ -11,7 +11,7 @@ const modesAndLines = [
   { label: "All MODES", ids: ["All"] },
   { label: "Red Line", ids: ["Red"], color: "#DA291C" },
   { label: "Orange Line", ids: ["Orange"], color: "#ED8B00" },
-  { label: "Green Line B C D E", ids: ["Green"], color: "#00843D" },
+  { label: "Green Line", ids: ["Green-B", "Green-C", "Green-D", "Green-E"], color: "#00843D" },
   { label: "Green Line B", ids: ["Green-B"], color: "#00843D" },
   { label: "Green Line C", ids: ["Green-C"], color: "#00843D" },
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
@@ -59,6 +59,7 @@ const Dashboard = (): JSX.Element => {
     screenTypes[0]
   );
   const [statusFilterValue, setStatusFilterValue] = useState(statuses[0]);
+  const [sortLabel, setSortLabel] = useState("ABC")
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -73,6 +74,14 @@ const Dashboard = (): JSX.Element => {
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = modesAndLines.find(({ label }) => label === value);
     if (selectedFilter) {
+      const line = selectedFilter.label.split(" ")[0]
+      let sortLabel = "ABC"
+      if (line === "Green" || line === "Blue") {
+        sortLabel = "WESTBOUND";
+      } else if (line === "Red" || line === "Orange"){
+        sortLabel = "SOUTHBOUND";
+      }
+      setSortLabel(sortLabel);
       setModeLineFilterValue(selectedFilter);
     }
   };
@@ -148,7 +157,7 @@ const Dashboard = (): JSX.Element => {
                 className="place-list__sort-label d-flex align-items-center"
                 lg={4}
               >
-                ABC <ArrowDown />
+                {sortLabel} <ArrowDown />
               </Col>
               <Col
                 className="place-list__mode-line-filter d-flex justify-content-end pe-5"
