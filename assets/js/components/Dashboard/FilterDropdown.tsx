@@ -46,7 +46,8 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
   
   const isDefault = () => selectedValue.label === list[0].label;
 
-  const color = selectedValue.color ? selectedValue.color : defaultButtonColor;
+  const backgroundColor = selectedValue.color ? selectedValue.color : defaultButtonColor;
+  const color = selectedValue.label === "Bus" ? "black" : "white"
 
   return (
     <ButtonGroup className="filter-dropdown__button-group">
@@ -56,11 +57,11 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           data-testid="filter-dropdown-clear-button"
           className="filter-dropdown__clear-button"
           style={{
-            background: color,
-            border: color
+            background: backgroundColor,
+            border: backgroundColor
           }}
         >
-          <XCircleFill size={16} className="m-0" />
+          <XCircleFill size={16} className="m-0" style={{color: color}}/>
         </Button>
       )}
       <Dropdown onSelect={onSelect} as={ButtonGroup}>
@@ -74,8 +75,9 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           title={selectedValue.label}
           data-testid="filter-dropdown-button"
           style={{
-            background: color,
-            border: color
+            background: backgroundColor,
+            border: backgroundColor,
+            color: color
           }}
         >
           {selectedValue.label}
