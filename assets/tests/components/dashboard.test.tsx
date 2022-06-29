@@ -1,6 +1,14 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import Dashboard from "../../js/components/Dashboard/Dashboard";
+import { MemoryRouter } from "react-router-dom";
+
+beforeAll(() => {
+  const app = document.createElement("div");
+  app.id = "app";
+  app.dataset.username = "test";
+  document.body.appendChild(app);
+});
 
 describe("Dashboard", () => {
   let originalFetch: any;
@@ -77,7 +85,8 @@ describe("Dashboard", () => {
 
   test("filters places by screen type", async () => {
     const { getByRole, getByText, queryByText, findByRole } = render(
-      <Dashboard />
+      <Dashboard page="places" />,
+      { wrapper: MemoryRouter }
     );
 
     await act(async () => {

@@ -18,7 +18,7 @@ html {
   }
 }
 
-.app-container {
+.outfront-container {
   margin: 24px 60px;
 
   .app-title {
@@ -91,26 +91,28 @@ html {
   }
 }
 
-button {
-  display: flex;
-  align-items: center;
-  padding: 0 17px;
-  font-weight: 500;
-  font-size: 16px;
-  background: $pink-700;
-  border: none;
-  border-radius: 6px;
-  :first-child {
-    margin-right: 14.5px;
+.outfront-container {
+  button {
+    display: flex;
+    align-items: center;
+    padding: 0 17px;
+    font-weight: 500;
+    font-size: 16px;
+    background: $pink-700;
+    border: none;
+    border-radius: 6px;
+    :first-child {
+      margin-right: 14.5px;
+    }
   }
-}
-button[disabled] {
-  background: $gray-500;
-  opacity: 1;
-}
-input[type="submit"][disabled]:hover {
-  background-color: $gray-600;
-  border-color: $gray-600;
+  button[disabled] {
+    background: $gray-500;
+    opacity: 1;
+  }
+  input[type="submit"][disabled]:hover {
+    background-color: $gray-600;
+    border-color: $gray-600;
+  }
 }
 
 footer {

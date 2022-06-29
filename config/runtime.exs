@@ -20,7 +20,7 @@ sftp_client_module =
   end
 
 config :screenplay,
-  alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME"),
+  alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
   sftp_client_module: sftp_client_module,
   outfront_ssh_key: System.get_env("OUTFRONT_SSH_KEY"),
   outfront_sftp_user: System.get_env("OUTFRONT_SFTP_USER"),

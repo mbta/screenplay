@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import FilterDropdown from "./FilterDropdown";
-import { Accordion, Container, Row, Col } from "react-bootstrap";
+import { Accordion, Container } from "react-bootstrap";
 import { ArrowDown } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import STATIONS_BY_LINE from "../../constants/stations";
+import Sidebar from "./Sidebar";
 
 const modesAndLines = [
   { label: "All MODES", ids: ["All"] },
@@ -50,7 +51,7 @@ const statuses = [
   { label: "Screen off", ids: ["Off"] },
 ];
 
-const Dashboard = (): JSX.Element => {
+const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     modesAndLines[0]
@@ -121,6 +122,7 @@ const Dashboard = (): JSX.Element => {
           sortByStationOrder(filteredPlaces, modeLineFilterValue)
         }
     }
+    // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
@@ -140,63 +142,70 @@ const Dashboard = (): JSX.Element => {
       })
     }
 
+  const goToHome = () => {
+    setModeLineFilterValue(modesAndLines[0]);
+    setScreenTypeFilterValue(screenTypes[0]);
+    setStatusFilterValue(statuses[0]);
+  };
+
+  let header, content;
+
+  switch (props.page) {
+    case "alerts":
+      header = "Posted Alerts";
+      content = (
+        <div style={{ color: "white" }}>This will be posted alerts</div>
+      );
+      break;
+    case "overrides":
+      header = "Overrides";
+      content = null;
+      break;
+    default:
+      header = "Places";
+      content = (
+        <Container fluid>
+          <div className="place-list__header-row">
+            <div className="place-list__sort-label d-flex align-items-center">
+              {sortLabel} <ArrowDown />
+            </div>
+            <FilterDropdown
+              list={modesAndLines}
+              onSelect={(value: any) => handleModeOrLineSelect(value)}
+              selectedValue={modeLineFilterValue}
+            />
+            <FilterDropdown
+              list={screenTypes}
+              onSelect={(value: any) => handleScreenTypeSelect(value)}
+              selectedValue={screenTypeFilterValue}
+            />
+            <FilterDropdown
+              list={statuses}
+              onSelect={(value: any) => handleStatusSelect(value)}
+              selectedValue={statusFilterValue}
+            />
+          </div>
+          <Accordion flush alwaysOpen>
+            {filterPlaces().map((place: Place, index) => (
+              <PlaceRow
+                key={place.id}
+                place={place}
+                eventKey={index.toString()}
+              />
+            ))}
+          </Accordion>
+        </Container>
+      );
+  }
+
   return (
-    <Container fluid>
-      <Row>
-        <Col lg={1} style={{ background: "black" }}></Col>
-        <Col
-          lg={11}
-          style={{
-            background: "#171F26",
-            padding: "24px 32px 32px 32px",
-          }}
-        >
-          <Container fluid>
-            <Row className="place-list__header-row d-flex align-items-center">
-              <Col
-                className="place-list__sort-label d-flex align-items-center"
-                lg={4}
-              >
-                {sortLabel} <ArrowDown />
-              </Col>
-              <Col
-                className="place-list__mode-line-filter d-flex justify-content-end pe-5"
-                lg={2}
-              >
-                <FilterDropdown
-                  list={modesAndLines}
-                  onSelect={(value: any) => handleModeOrLineSelect(value)}
-                  selectedValue={modeLineFilterValue}
-                />
-              </Col>
-              <Col className="place-list__screen-type-filter pe-5" lg={3}>
-                <FilterDropdown
-                  list={screenTypes}
-                  onSelect={(value: any) => handleScreenTypeSelect(value)}
-                  selectedValue={screenTypeFilterValue}
-                />
-              </Col>
-              <Col className="place-list__status-filter" lg={2}>
-                <FilterDropdown
-                  list={statuses}
-                  onSelect={(value: any) => handleStatusSelect(value)}
-                  selectedValue={statusFilterValue}
-                />
-              </Col>
-            </Row>
-            <Accordion flush alwaysOpen>
-              {filterPlaces().map((place: Place, index) => (
-                <PlaceRow
-                  key={place.id}
-                  place={place}
-                  eventKey={index.toString()}
-                />
-              ))}
-            </Accordion>
-          </Container>
-        </Col>
-      </Row>
-    </Container>
+    <div className="screenplay-container">
+      <Sidebar goToHome={goToHome} />
+      <div className="page-content">
+        <div className="page-content__header">{header}</div>
+        <div className="page-content__body">{content}</div>
+      </div>
+    </div>
   );
 };
 

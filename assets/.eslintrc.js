@@ -26,6 +26,7 @@ module.exports = {
     "rules": {
       "no-console": 0,
       "prefer-rest-params": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",

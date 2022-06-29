@@ -14,20 +14,25 @@
 }
 
 .filter-dropdown__clear-button {
-  height: 36px !important;
-    &:hover {
-        opacity: .6;
-      }
+  &:hover {
+      opacity: .6;
+    }
+  height: 36px;
+  line-height: 0;
 }
 
 .filter-dropdown__dropdown-button {
-  width: 244px !important;
-  height: 36px !important;
-  font-size: 16px !important;
-  line-height: 24px !important;
+  min-width: 188px;
+  height: 36px;
+  font-size: 16px;
+  line-height: 24px;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  align-items: center;
 
   &--small {
-    width: 210px !important;
+    min-width: 152px;
   }
 
     &:hover {
@@ -35,24 +40,20 @@
     }
 }
 
+.filter-dropdown__button-group {
+  margin-left: 16px;
+}
+
 .filter-dropdown__dropdown-menu {
-  min-width: 100% !important;
-  padding: 8px 8px 0 8px !important;
-  border-radius: 6px !important;
-  // -8px centers dropdown menu under dropdown button
-  // 38px shifts it down by (height of dropdown button + 2px for padding)
-  transform: translate3d(-8px, 38px, 0px) !important;
+  padding: 8px 8px 0 8px;
+  border-radius: 6px;
 
   & > ul {
-    padding-left: 0 !important;
+    padding-left: 0;
   }
 }
 
 .filter-dropdown__dropdown-item {
-  border-radius: 6px !important;
-  width: 244px !important;
-  height: 36px !important;
-  font-size: 16px !important;
-  line-height: 24px !important;
-  padding: 6px 16px !important;
+  border-radius: 6px;
+  padding: 6px 16px;
 }

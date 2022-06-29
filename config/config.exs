@@ -13,7 +13,9 @@ config :screenplay, ScreenplayWeb.Endpoint,
   secret_key_base: "drimL+OI78FRmMU5+sERpEFHEwpUIrTo1CMAafmiAXM+YjD0G5tJHQlkcZyQanhu",
   render_errors: [view: ScreenplayWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Screenplay.PubSub,
-  live_view: [signing_salt: "vSiyKz7D"],
+  live_view: [signing_salt: "vSiyKz7D"]
+
+config :screenplay,
   config_fetcher: Screenplay.Config.S3Fetch,
   config_s3_bucket: "mbta-ctd-config"
 

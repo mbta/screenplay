@@ -1,5 +1,6 @@
 defmodule ScreenplayWeb.Controllers.AuthControllerTest do
   use ScreenplayWeb.ConnCase
+  import Test.Support.Helpers
 
   alias ScreenplayWeb.Router.Helpers
 
@@ -49,4 +50,29 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
       assert response =~ Helpers.auth_path(conn, :callback, "cognito")
     end
   end
+
+  # describe "logout" do
+  #   @tag :authenticated_admin
+  #   test "logs user out & redirects to dashboard requiring login", %{conn: conn} do
+  #     domain = "test_auth_domain"
+  #     client_id = "test_client_id"
+
+  #     reassign_env(:ueberauth, Ueberauth.Strategy.Cognito,
+  #       auth_domain: domain,
+  #       client_id: client_id
+  #     )
+
+  #     conn =
+  #       conn
+  #       |> put_session(:user_id, "00001")
+  #       |> get(Helpers.auth_path(conn, :logout, "cognito"))
+
+  #     response = response(conn, 302)
+  #     assert response =~ "/dashboard"
+
+  #     assert is_nil(Guardian.Plug.current_claims(conn))
+
+  #     assert is_nil(get_session(conn, :user_id))
+  #   end
+  # end
 end
