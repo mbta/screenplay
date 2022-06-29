@@ -5,12 +5,13 @@ import { Accordion, Container, Row, Col } from "react-bootstrap";
 import { ArrowDown } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
+import STATIONS_BY_LINE from "../../constants/stations";
 
 const modesAndLines = [
   { label: "All MODES", ids: ["All"] },
   { label: "Red Line", ids: ["Red"], color: "#DA291C" },
   { label: "Orange Line", ids: ["Orange"], color: "#ED8B00" },
-  { label: "Green Line B C D E", ids: ["Green-B", "Green-C", "Green-D", "Green-E"], color: "#00843D" },
+  { label: "Green Line B C D E", ids: ["Green"], color: "#00843D" },
   { label: "Green Line B", ids: ["Green-B"], color: "#00843D" },
   { label: "Green Line C", ids: ["Green-C"], color: "#00843D" },
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
@@ -106,12 +107,29 @@ const Dashboard = (): JSX.Element => {
             modeLineFilterValue.ids.includes(route)
           );
         })
-        // if it's a route, sort it by stop order
+        
+        if (modeLineFilterValue.label.includes("Line")) {
+          sortByStationOrder(filteredPlaces, modeLineFilterValue)
+        }
     }
-    // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
+
+  const sortByStationOrder = (places: Place[], filter: { label: string; }) => {
+      const line = filter.label.split(" ")[0]
+      const stationOrder = STATIONS_BY_LINE[line.toLowerCase()]
+
+      places.sort((placeA, placeB) => {
+        const indexA = stationOrder.findIndex(station => {
+          return station.name.toLowerCase() === placeA.name.toLowerCase()
+        });
+        const indexB = stationOrder.findIndex(station => {
+          return station.name.toLowerCase() === placeB.name.toLowerCase()
+        });
+        return indexA - indexB
+      })
+    }
 
   return (
     <Container fluid>
