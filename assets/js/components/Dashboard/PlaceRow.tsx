@@ -10,6 +10,7 @@ import {
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
 import { Place } from "../../models/place";
+import ScreenDetail from "./ScreenDetail";
 
 interface PlaceRowProps {
   place: Place;
@@ -119,7 +120,11 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         </Row>
       </Container>
       <Accordion.Collapse eventKey={props.eventKey}>
-        <div className="screen-preview-container">Hello World</div>
+        <div className="screen-preview-container">
+          {screens.map((screen) => (
+            <ScreenDetail key={screen.id} screen={screen} />
+          ))}
+        </div>
       </Accordion.Collapse>
     </div>
   );
