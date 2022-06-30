@@ -14,7 +14,7 @@ describe("PlaceRow", () => {
       screens: [
         { id: "1111", type: "dup", disabled: false },
         { id: "2222", type: "solari", disabled: false },
-        { id: "2222", type: "bus_shelter_v2", disabled: false },
+        { id: "3333", type: "bus_shelter_v2", disabled: false },
       ],
     };
 
