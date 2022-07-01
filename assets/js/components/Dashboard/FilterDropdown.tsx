@@ -43,11 +43,13 @@ const CustomMenu = React.forwardRef<HTMLElement, CustomMenuProps>(
  */
 const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
   const { list, selectedValue, onSelect } = props;
-  
+
   const isDefault = () => selectedValue.label === list[0].label;
 
-  const backgroundColor = selectedValue.color ? selectedValue.color : defaultButtonColor;
-  const color = selectedValue.label === "Bus" ? "black" : "white"
+  const backgroundColor = selectedValue.color
+    ? selectedValue.color
+    : defaultButtonColor;
+  const color = selectedValue.label === "Bus" ? "black" : "white";
 
   return (
     <ButtonGroup className="filter-dropdown__button-group">
@@ -58,10 +60,10 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           className="filter-dropdown__clear-button"
           style={{
             background: backgroundColor,
-            border: backgroundColor
+            border: backgroundColor,
           }}
         >
-          <XCircleFill size={16} className="m-0" style={{color: color}}/>
+          <XCircleFill size={16} className="m-0" style={{ color: color }} />
         </Button>
       )}
       <Dropdown onSelect={onSelect} as={ButtonGroup}>
@@ -77,7 +79,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           style={{
             background: backgroundColor,
             border: backgroundColor,
-            color: color
+            color: color,
           }}
         >
           {selectedValue.label}

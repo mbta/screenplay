@@ -121,7 +121,7 @@ const STATIONS_BY_LINE: StationsByLine = {
       name: "ASHMONT",
       portrait: false,
       landscape: false,
-    }
+    },
   ],
   orange: [
     {
