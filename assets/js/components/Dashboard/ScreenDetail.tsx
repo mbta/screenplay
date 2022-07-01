@@ -4,23 +4,29 @@ import ReportAProblemButton from "./ReportAProblemButton";
 import { SCREEN_TYPES } from "../../constants/constants";
 
 interface ScreenDetailProps {
-  screen: Screen;
+  screens: Screen[];
 }
 
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
-  const { id, type } = props.screen;
-
   const translateScreenType = () => {
-    return SCREEN_TYPES.find(({ ids }) => ids.includes(type))?.label;
+    return SCREEN_TYPES.find(({ ids }) => ids.includes(props.screens[0].type))
+      ?.label;
   };
 
   return (
     <div className="screen-detail__container">
-      <div className="screen-detail__screen-type-location">
-        {translateScreenType()} / Location
+      <div className="screen-detail__header">
+        <div className="screen-detail__screen-type-location">
+          {translateScreenType()} / Location
+        </div>
+        <div className="screen-detail__report-a-problem-button">
+          <ReportAProblemButton />
+        </div>
       </div>
-      <div className="screen-detail__report-a-problem-button">
-        <ReportAProblemButton id={id} />
+      <div>
+        {props.screens.map((screen) => (
+          <div key={screen.id}>{screen.id}</div>
+        ))}
       </div>
     </div>
   );

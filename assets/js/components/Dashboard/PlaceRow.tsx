@@ -72,6 +72,18 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     );
   };
 
+  const groupScreens = (screens: Screen[]) => {
+    const paEssScreens = screens.filter((screen) => screen.type === "pa_ess");
+    const groupedScreens = screens
+      .filter((screen) => screen.type !== "pa_ess")
+      .map((screen) => [screen]);
+
+    if (paEssScreens.length > 0) {
+      groupedScreens.push(paEssScreens);
+    }
+    return groupedScreens;
+  };
+
   const renderModesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
       route.startsWith("Green-")
@@ -143,9 +155,10 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       </Container>
       <Accordion.Collapse eventKey={props.eventKey}>
         <div className="screen-preview-container">
-          {sortScreens().map((screen) => (
-            <ScreenDetail key={screen.id} screen={screen} />
-          ))}
+          {hasScreens &&
+            groupScreens(sortScreens()).map((screens, index) => (
+              <ScreenDetail key={index} screens={screens} />
+            ))}
         </div>
       </Accordion.Collapse>
     </div>
