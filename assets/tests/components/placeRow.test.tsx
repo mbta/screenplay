@@ -28,7 +28,7 @@ describe("PlaceRow", () => {
     fireEvent.click(getByTestId("place-row"));
     expect(getByTestId("place-row").className).toBe("place-row open");
     expect(getByTestId("place-screen-types").textContent).toBe(
-      "DUP · Solari · Bus Shelter"
+      "DUP · Bus Shelter · Solari"
     );
     expect(getByTestId("place-status").textContent).toBe("Auto");
     expect(getByAltText("Green-B")).toBeInTheDocument();
