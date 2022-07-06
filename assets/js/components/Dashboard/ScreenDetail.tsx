@@ -14,6 +14,19 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       ?.label;
   };
 
+  const generateSource = (screen: Screen) => {
+    const { id, type } = screen;
+    const baseUrl = "https://screens-dev-green.mbtace.com";
+    if (type.includes("v2")) {
+      return `${baseUrl}/v2/screen/${id}`;
+    }
+    if (type.includes("bus") || type.includes("gl")) {
+      return `${baseUrl}/screen/${id}`;
+    }
+
+    return "";
+  };
+
   return (
     <div className="screen-detail__container">
       <div className="screen-detail__header">
@@ -26,7 +39,19 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       </div>
       <div>
         {props.isOpen &&
-          props.screens.map((screen) => <div key={screen.id}>{screen.id}</div>)}
+          props.screens.map((screen) => (
+            <div
+              key={screen.id}
+              className={`screen-detail__iframe-container-${screen.type}`}
+            >
+              <iframe
+                className={`screen-detail__iframe-${screen.type}`}
+                title={screen.id}
+                src={generateSource(screen)}
+                loading="lazy"
+              />
+            </div>
+          ))}
       </div>
     </div>
   );
