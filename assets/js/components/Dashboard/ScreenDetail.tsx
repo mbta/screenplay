@@ -37,22 +37,19 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
           <ReportAProblemButton />
         </div>
       </div>
-      <div>
-        {props.isOpen &&
-          props.screens.map((screen) => (
-            <div
-              key={screen.id}
-              className={`screen-detail__iframe-container-${screen.type}`}
-            >
-              <iframe
-                className={`screen-detail__iframe-${screen.type}`}
-                title={screen.id}
-                src={generateSource(screen)}
-                loading="lazy"
-              />
-            </div>
-          ))}
-      </div>
+      {props.isOpen &&
+        props.screens.map((screen) => (
+          <div
+            key={screen.id}
+            className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
+          >
+            <iframe
+              className={`screen-detail__iframe screen-detail__iframe--${screen.type}`}
+              title={screen.id}
+              src={generateSource(screen)}
+            />
+          </div>
+        ))}
     </div>
   );
 };
