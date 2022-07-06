@@ -5,6 +5,7 @@ import { SCREEN_TYPES } from "../../constants/constants";
 
 interface ScreenDetailProps {
   screens: Screen[];
+  isOpen: boolean;
 }
 
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
@@ -24,9 +25,8 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         </div>
       </div>
       <div>
-        {props.screens.map((screen) => (
-          <div key={screen.id}>{screen.id}</div>
-        ))}
+        {props.isOpen &&
+          props.screens.map((screen) => <div key={screen.id}>{screen.id}</div>)}
       </div>
     </div>
   );

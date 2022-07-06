@@ -154,12 +154,18 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         </Row>
       </Container>
       <Accordion.Collapse eventKey={props.eventKey}>
-        <div className="screen-preview-container">
-          {hasScreens &&
-            groupScreens(sortScreens()).map((screens, index) => (
-              <ScreenDetail key={index} screens={screens} />
-            ))}
-        </div>
+        <>
+          <div className="screen-preview-container">
+            {hasScreens &&
+              groupScreens(sortScreens()).map((screens, index) => (
+                <ScreenDetail
+                  key={index}
+                  screens={screens}
+                  isOpen={isOpen ?? false}
+                />
+              ))}
+          </div>
+        </>
       </Accordion.Collapse>
     </div>
   );
