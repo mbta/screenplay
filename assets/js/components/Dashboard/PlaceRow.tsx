@@ -10,6 +10,8 @@ import {
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
 import { Place } from "../../models/place";
+import { Screen } from "../../models/screen";
+import ScreenDetail from "./ScreenDetail";
 
 interface PlaceRowProps {
   place: Place;
@@ -27,7 +29,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens = screens.length !== 0;
 
-  function formatScreenTypes() {
+  const formatScreenTypes = () => {
     if (!hasScreens) {
       return "no screens";
     }
@@ -45,11 +47,44 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       solari: "Solari",
     };
 
-    const types = new Set(screens.map((screen) => typeMap[screen.type]));
+    const types = new Set(sortScreens().map((screen) => typeMap[screen.type]));
     return Array.from(types).join(" · ");
-  }
+  };
 
-  function renderModesAndLinesIcons() {
+  const sortScreens = (screenList: Screen[] = screens) => {
+    const screenTypeOrder = [
+      "dup",
+      "bus_shelter_v2",
+      "bus_eink",
+      "bus_eink_v2",
+      "gl_eink_single",
+      "gl_eink_double",
+      "gl_eink_v2",
+      "pre_fare_v2",
+      "solari",
+      "pa_ess",
+    ];
+
+    return screenList.sort((a, b) =>
+      screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type)
+        ? 1
+        : -1
+    );
+  };
+
+  const groupScreens = (screens: Screen[]) => {
+    const paEssScreens = screens.filter((screen) => screen.type === "pa_ess");
+    const groupedScreens = screens
+      .filter((screen) => screen.type !== "pa_ess")
+      .map((screen) => [screen]);
+
+    if (paEssScreens.length > 0) {
+      groupedScreens.push(paEssScreens);
+    }
+    return groupedScreens;
+  };
+
+  const renderModesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
       route.startsWith("Green-")
     ).length;
@@ -78,7 +113,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         height={20}
       />
     ));
-  }
+  };
 
   return (
     <div
@@ -119,7 +154,12 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         </Row>
       </Container>
       <Accordion.Collapse eventKey={props.eventKey}>
-        <div className="screen-preview-container">Hello World</div>
+        <div className="screen-preview-container">
+          {hasScreens &&
+            groupScreens(sortScreens()).map((screens, index) => (
+              <ScreenDetail key={index} screens={screens} />
+            ))}
+        </div>
       </Accordion.Collapse>
     </div>
   );

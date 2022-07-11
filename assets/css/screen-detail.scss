@@ -1,0 +1,22 @@
+.screen-detail__container {
+  background-color: $cool-gray-40;
+  border-radius: 8px;
+  padding: 24px 16px;
+
+  &:not(:last-child) {
+    margin-bottom: 4px;
+  }
+}
+
+.screen-detail__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.screen-detail__screen-type-location {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: white;
+}

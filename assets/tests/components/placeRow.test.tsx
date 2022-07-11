@@ -14,7 +14,7 @@ describe("PlaceRow", () => {
       screens: [
         { id: "1111", type: "dup", disabled: false },
         { id: "2222", type: "solari", disabled: false },
-        { id: "2222", type: "bus_shelter_v2", disabled: false },
+        { id: "3333", type: "bus_shelter_v2", disabled: false },
       ],
     };
 
@@ -28,7 +28,7 @@ describe("PlaceRow", () => {
     fireEvent.click(getByTestId("place-row"));
     expect(getByTestId("place-row").className).toBe("place-row open");
     expect(getByTestId("place-screen-types").textContent).toBe(
-      "DUP · Solari · Bus Shelter"
+      "DUP · Bus Shelter · Solari"
     );
     expect(getByTestId("place-status").textContent).toBe("Auto");
     expect(getByAltText("Green-B")).toBeInTheDocument();
