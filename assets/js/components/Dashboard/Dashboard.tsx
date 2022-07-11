@@ -5,14 +5,18 @@ import { Accordion, Container } from "react-bootstrap";
 import { ArrowDown } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
-import STATIONS_BY_LINE from "../../constants/stations";
+import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import Sidebar from "./Sidebar";
 
 const modesAndLines = [
   { label: "All MODES", ids: ["All"] },
   { label: "Red Line", ids: ["Red"], color: "#DA291C" },
   { label: "Orange Line", ids: ["Orange"], color: "#ED8B00" },
-  { label: "Green Line", ids: ["Green-B", "Green-C", "Green-D", "Green-E"], color: "#00843D" },
+  {
+    label: "Green Line",
+    ids: ["Green-B", "Green-C", "Green-D", "Green-E"],
+    color: "#00843D",
+  },
   { label: "Green Line B", ids: ["Green-B"], color: "#00843D" },
   { label: "Green Line C", ids: ["Green-C"], color: "#00843D" },
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
@@ -60,7 +64,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     screenTypes[0]
   );
   const [statusFilterValue, setStatusFilterValue] = useState(statuses[0]);
-  const [sortLabel, setSortLabel] = useState("ABC")
+  const [sortLabel, setSortLabel] = useState("ABC");
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -75,11 +79,11 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = modesAndLines.find(({ label }) => label === value);
     if (selectedFilter) {
-      const line = selectedFilter.label.split(" ")[0]
-      let sortLabel = "ABC"
+      const line = selectedFilter.label.split(" ")[0];
+      let sortLabel = "ABC";
       if (line === "Green" || line === "Blue") {
         sortLabel = "WESTBOUND";
-      } else if (line === "Red" || line === "Orange"){
+      } else if (line === "Red" || line === "Orange") {
         sortLabel = "SOUTHBOUND";
       }
       setSortLabel(sortLabel);
@@ -112,35 +116,35 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     }
 
     if (modeLineFilterValue !== modesAndLines[0]) {
-        filteredPlaces = filteredPlaces.filter((place) => {
-          return place.routes.some((route) =>
-            modeLineFilterValue.ids.includes(route)
-          );
-        })
-        
-        if (modeLineFilterValue.label.includes("Line")) {
-          sortByStationOrder(filteredPlaces, modeLineFilterValue)
-        }
+      filteredPlaces = filteredPlaces.filter((place) => {
+        return place.routes.some((route) =>
+          modeLineFilterValue.ids.includes(route)
+        );
+      });
+
+      if (modeLineFilterValue.label.includes("Line")) {
+        sortByStationOrder(filteredPlaces, modeLineFilterValue);
+      }
     }
     // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
 
-  const sortByStationOrder = (places: Place[], filter: { label: string; }) => {
-      const line = filter.label.split(" ")[0]
-      const stationOrder = STATIONS_BY_LINE[line.toLowerCase()]
+  const sortByStationOrder = (places: Place[], filter: { label: string }) => {
+    const line = filter.label.split(" ")[0];
+    const stationOrder = STATION_ORDER_BY_LINE[line.toLowerCase()];
 
-      places.sort((placeA, placeB) => {
-        const indexA = stationOrder.findIndex(station => {
-          return station.name.toLowerCase() === placeA.name.toLowerCase()
-        });
-        const indexB = stationOrder.findIndex(station => {
-          return station.name.toLowerCase() === placeB.name.toLowerCase()
-        });
-        return indexA - indexB
-      })
-    }
+    places.sort((placeA, placeB) => {
+      const indexA = stationOrder.findIndex((station) => {
+        return station.name.toLowerCase() === placeA.name.toLowerCase();
+      });
+      const indexB = stationOrder.findIndex((station) => {
+        return station.name.toLowerCase() === placeB.name.toLowerCase();
+      });
+      return indexA - indexB;
+    });
+  };
 
   const goToHome = () => {
     setModeLineFilterValue(modesAndLines[0]);
