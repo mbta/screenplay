@@ -6,59 +6,21 @@ import { ArrowDown } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import Sidebar from "./Sidebar";
-
-const modesAndLines = [
-  { label: "All MODES", ids: ["All"] },
-  { label: "Red Line", ids: ["Red"] },
-  { label: "Orange Line", ids: ["Orange"] },
-  { label: "Green Line B C D E", ids: ["Green"] },
-  { label: "Green Line B", ids: ["Green-B"] },
-  { label: "Green Line C", ids: ["Green-C"] },
-  { label: "Green Line D", ids: ["Green-D"] },
-  { label: "Green Line E", ids: ["Green-E"] },
-  { label: "Blue Line", ids: ["Blue"] },
-  { label: "Silver Line", ids: ["Silver"] },
-  { label: "Bus", ids: ["Bus"] },
-  { label: "Commuter Rail", ids: ["CR"] },
-  { label: "Ferry", ids: ["Ferry"] },
-  { label: "Access", ids: ["Access"] },
-];
-
-const screenTypes = [
-  { label: "All SCREEN TYPES", ids: ["All"] },
-  { label: "Bus Shelter", ids: ["bus_shelter_v2"] },
-  { label: "DUP", ids: ["dup"] },
-  { label: "E-Ink: Bus", ids: ["bus_eink", "bus_eink_v2"] },
-  {
-    label: "E-Ink: Green Line",
-    ids: ["gl_eink_single", "gl_eink_double", "gl_eink_v2"],
-  },
-  { label: "Elevator", ids: ["elevator"] },
-  { label: "Outfront Media", ids: ["ofm"] },
-  { label: "PA/ESS", ids: ["pa_ess"] },
-  { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
-  { label: "Solari", ids: ["solari"] },
-];
-
-const statuses = [
-  { label: "Any STATUS", ids: ["Any"] },
-  { label: "Auto", ids: ["Auto"] },
-  { label: "Headway mode", ids: ["Headway"] },
-  { label: "Overrides", ids: ["Overrides"] },
-  { label: "Emergency takeovers", ids: ["Takeovers"] },
-  { label: "Errors", ids: ["Errors"] },
-  { label: "Screen off", ids: ["Off"] },
-];
+import {
+  MODES_AND_LINES,
+  SCREEN_TYPES,
+  STATUSES,
+} from "../../constants/constants";
 
 const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState<Place[]>([]);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
-    modesAndLines[0]
+    MODES_AND_LINES[0]
   );
   const [screenTypeFilterValue, setScreenTypeFilterValue] = useState(
-    screenTypes[0]
+    SCREEN_TYPES[0]
   );
-  const [statusFilterValue, setStatusFilterValue] = useState(statuses[0]);
+  const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -71,21 +33,21 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   }, []);
 
   const handleModeOrLineSelect = (value: string) => {
-    const selectedFilter = modesAndLines.find(({ label }) => label === value);
+    const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter) {
       setModeLineFilterValue(selectedFilter);
     }
   };
 
   const handleScreenTypeSelect = (value: string) => {
-    const selectedFilter = screenTypes.find(({ label }) => label === value);
+    const selectedFilter = SCREEN_TYPES.find(({ label }) => label === value);
     if (selectedFilter) {
       setScreenTypeFilterValue(selectedFilter);
     }
   };
 
   const handleStatusSelect = (value: string) => {
-    const selectedFilter = statuses.find(({ label }) => label === value);
+    const selectedFilter = STATUSES.find(({ label }) => label === value);
     if (selectedFilter) {
       setStatusFilterValue(selectedFilter);
     }
@@ -93,7 +55,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
 
   const filterPlaces = () => {
     let filteredPlaces = places;
-    if (screenTypeFilterValue !== screenTypes[0]) {
+    if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredPlaces = places.filter((place) => {
         return place.screens.some((screen) =>
           screenTypeFilterValue.ids.includes(screen.type)
@@ -106,9 +68,9 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   };
 
   const goToHome = () => {
-    setModeLineFilterValue(modesAndLines[0]);
-    setScreenTypeFilterValue(screenTypes[0]);
-    setStatusFilterValue(statuses[0]);
+    setModeLineFilterValue(MODES_AND_LINES[0]);
+    setScreenTypeFilterValue(SCREEN_TYPES[0]);
+    setStatusFilterValue(STATUSES[0]);
   };
 
   let header, content;
@@ -133,17 +95,17 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               ABC <ArrowDown />
             </div>
             <FilterDropdown
-              list={modesAndLines}
+              list={MODES_AND_LINES}
               onSelect={(value: any) => handleModeOrLineSelect(value)}
               selectedValue={modeLineFilterValue}
             />
             <FilterDropdown
-              list={screenTypes}
+              list={SCREEN_TYPES}
               onSelect={(value: any) => handleScreenTypeSelect(value)}
               selectedValue={screenTypeFilterValue}
             />
             <FilterDropdown
-              list={statuses}
+              list={STATUSES}
               onSelect={(value: any) => handleStatusSelect(value)}
               selectedValue={statusFilterValue}
             />
