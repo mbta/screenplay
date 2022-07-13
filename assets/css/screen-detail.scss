@@ -22,19 +22,28 @@
 }
 
 .screen-detail__iframe-container {
+  margin-left: auto;
+  margin-right: auto;
+
   &--bus_shelter_v2 {
     height: 344px;
   }
 
-  &--bus_eink,
-  &--gl_eink_double,
   &--bus_eink_v2,
   &--gl_eink_v2 {
     height: 480px;
   }
 
+  &--bus_eink,
+  &--gl_eink_double {
+    height: 480px;
+    width: 180px;
+  }
+
   &--gl_eink_single {
     height: 240px;
+    width: 180px;
+    background-color: white;
   }
 
   &--pre_fare_v2 {
@@ -52,6 +61,21 @@
     &--bus_eink_v2,
     &--gl_eink_v2 {
       height: 480px;
+    }
+
+    &--bus_eink,
+    &--gl_eink_double {
+      height: 3200px;
+      width: 1200px;
+      transform: scale(15%);
+      transform-origin: top left;
+    }
+
+    &--gl_eink_single {
+      height: 1600px;
+      width: 1200px;
+      transform: scale(15%);
+      transform-origin: top left;
     }
   }
 }
