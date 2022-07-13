@@ -16,6 +16,7 @@ import ScreenDetail from "./ScreenDetail";
 interface PlaceRowProps {
   place: Place;
   eventKey: string;
+  handleClick: () => void;
 }
 
 /**
@@ -25,7 +26,9 @@ interface PlaceRowProps {
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { routes, name, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
-  const rowOnClick = useAccordionButton(props.eventKey);
+  const rowOnClick = useAccordionButton(props.eventKey, () =>
+    props.handleClick()
+  );
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens = screens.length !== 0;
 

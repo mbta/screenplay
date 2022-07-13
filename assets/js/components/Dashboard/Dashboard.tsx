@@ -22,6 +22,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   );
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
 
+  const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
+
   useEffect(() => {
     fetch("/api/dashboard")
       .then((response) => response.json())
@@ -31,6 +33,10 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         );
       });
   }, []);
+
+  useEffect(() => {
+    setActiveEventKeys([]);
+  }, [modeLineFilterValue, screenTypeFilterValue, statusFilterValue]);
 
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
@@ -110,12 +116,22 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               selectedValue={statusFilterValue}
             />
           </div>
-          <Accordion flush alwaysOpen>
+          <Accordion flush alwaysOpen activeKey={activeEventKeys}>
             {filterPlaces().map((place: Place, index) => (
               <PlaceRow
                 key={place.id}
                 place={place}
                 eventKey={index.toString()}
+                handleClick={() => {
+                  const i = index.toString();
+                  if (activeEventKeys.includes(i)) {
+                    setActiveEventKeys(
+                      activeEventKeys.filter((eventKey) => eventKey !== i)
+                    );
+                  } else {
+                    setActiveEventKeys([...activeEventKeys, i]);
+                  }
+                }}
               />
             ))}
           </Accordion>
