@@ -4,6 +4,7 @@ defmodule ScreenplayWeb.DashboardController do
   alias Screenplay.Util
 
   plug(:username)
+  plug(:environment_name)
 
   def index(conn, _params) do
     render(conn, "index.html")
@@ -16,5 +17,9 @@ defmodule ScreenplayWeb.DashboardController do
       |> Util.trim_username()
 
     assign(conn, :username, username)
+  end
+
+  defp environment_name(conn, _) do
+    assign(conn, :environment_name, Application.get_env(:screenplay, :environment_name, "dev"))
   end
 end
