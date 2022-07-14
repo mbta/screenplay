@@ -18,7 +18,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     const { id, type } = screen;
     const baseUrl = "https://screens-dev-green.mbtace.com";
     if (type.includes("v2")) {
-      return `${baseUrl}/v2/screen/${id}`;
+      return `${baseUrl}/v2/screen/${id}/simulation`;
     }
     if (type.includes("bus") || type.includes("gl")) {
       return `${baseUrl}/screen/${id}`;
