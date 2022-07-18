@@ -63,17 +63,32 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     }
   };
 
+  const sortLabelOnClick = () => {
+    if (sortLabel === "ABC") setSortLabel("ZXY");
+    else if (sortLabel === "ZXY") setSortLabel("ABC");
+    else if (sortLabel === "WESTBOUND") setSortLabel("EASTBOUND");
+    else if (sortLabel === "EASTBOUND") setSortLabel("WESTBOUND");
+    else if (sortLabel === "SOUTHBOUND") setSortLabel("NORTHBOUND");
+    else if (sortLabel === "NORTHBOUND") setSortLabel("SOUTHBOUND");
+
+    setSortDirection(!sortDirection);
+  };
+
   const sortPlaces = (places: Place[]) => {
-    if (
-      modeLineFilterValue === MODES_AND_LINES[0] ||
-      statusFilterValue !== STATUSES[0] ||
-      screenTypeFilterValue !== SCREEN_TYPES[0]
-    ) {
+    if (modeLineFilterValue === MODES_AND_LINES[0]) {
       return sortDirection
         ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
         : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
+    } else if (
+      // This catches on Silver Line, which we haven't really discussed how it should be treated.
+      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
+      // It should probably treated as a bus route, but still a question for Adam.
+      modeLineFilterValue.label.includes("Line") &&
+      statusFilterValue === STATUSES[0] &&
+      screenTypeFilterValue === SCREEN_TYPES[0]
+    ) {
+      return sortByStationOrder(places, modeLineFilterValue, !sortDirection);
     }
-    // Sorting for mode/line filter
 
     return places;
   };
@@ -94,20 +109,17 @@ const Dashboard = (props: { page: string }): JSX.Element => {
           modeLineFilterValue.ids.includes(route)
         );
       });
-
-      // This catches on Silver Line, which we haven't really discussed how it should be treated.
-      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
-      // It should probably treated as a bus route, but still a question for Adam.
-      if (modeLineFilterValue.label.includes("Line")) {
-        sortByStationOrder(filteredPlaces, modeLineFilterValue);
-      }
     }
     // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
 
-  const sortByStationOrder = (places: Place[], filter: { label: string }) => {
+  const sortByStationOrder = (
+    places: Place[],
+    filter: { label: string },
+    reverse?: boolean
+  ) => {
     const line = filter.label.split(" ")[0];
     const stationOrder = STATION_ORDER_BY_LINE[line.toLowerCase()];
 
@@ -120,6 +132,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       });
       return indexA - indexB;
     });
+
+    return reverse ? places.reverse() : places;
   };
 
   const goToHome = () => {
@@ -149,7 +163,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
           <div className="place-list__header-row">
             <div
               className="place-list__sort-label d-flex align-items-center"
-              onClick={() => setSortDirection(!sortDirection)}
+              onClick={sortLabelOnClick}
             >
               {sortLabel} {sortDirection ? <ArrowDown /> : <ArrowUp />}
             </div>
