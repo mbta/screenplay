@@ -2,9 +2,11 @@ import React from "react";
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { Check, XCircleFill } from "react-bootstrap-icons";
 import classNames from "classnames";
+import { defaultButtonColor } from "../../constants/misc";
 
 interface FilterDropdownItem {
   label: string;
+  color?: string;
 }
 
 interface FilterDropdownProps {
@@ -44,6 +46,11 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
 
   const isDefault = () => selectedValue.label === list[0].label;
 
+  const backgroundColor = selectedValue.color
+    ? selectedValue.color
+    : defaultButtonColor;
+  const color = selectedValue.label === "Bus" ? "black" : "white";
+
   return (
     <ButtonGroup className="filter-dropdown__button-group">
       {!isDefault() && (
@@ -51,8 +58,12 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           onClick={() => onSelect(list[0].label)}
           data-testid="filter-dropdown-clear-button"
           className="filter-dropdown__clear-button"
+          style={{
+            background: backgroundColor,
+            border: backgroundColor,
+          }}
         >
-          <XCircleFill size={16} className="m-0" />
+          <XCircleFill size={16} className="m-0" style={{ color: color }} />
         </Button>
       )}
       <Dropdown onSelect={onSelect} as={ButtonGroup}>
@@ -65,6 +76,11 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           )}
           title={selectedValue.label}
           data-testid="filter-dropdown-button"
+          style={{
+            background: backgroundColor,
+            border: backgroundColor,
+            color: color,
+          }}
         >
           {selectedValue.label}
         </Dropdown.Toggle>
