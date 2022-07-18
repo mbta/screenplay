@@ -119,4 +119,41 @@ describe("Dashboard", () => {
       });
     });
   });
+
+  test("filters places by mode and route", async () => {
+    const { getByRole, getByText, queryByText, findByRole } = render(
+      <Dashboard page="places" />,
+      { wrapper: MemoryRouter }
+    );
+
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "All MODES" }));
+      fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+      await waitFor(() => {
+        expect(getByText("Airport")).toBeInTheDocument();
+        expect(queryByText("Alewife")).not.toBeInTheDocument();
+        expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "All MODES" }));
+      fireEvent.click(await findByRole("button", { name: "Red Line" }));
+      await waitFor(() => {
+        expect(getByText("Alewife")).toBeInTheDocument();
+        expect(queryByText("Airport")).not.toBeInTheDocument();
+        expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "All MODES" }));
+      fireEvent.click(await findByRole("button", { name: "Bus" }));
+      await waitFor(() => {
+        expect(getByText("Columbus Ave @ Bray St")).toBeInTheDocument();
+        expect(getByText("Alewife")).toBeInTheDocument();
+        expect(getByText("Airport")).toBeInTheDocument();
+      });
+    });
+  });
 });
