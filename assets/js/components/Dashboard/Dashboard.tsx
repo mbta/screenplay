@@ -83,9 +83,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       // This catches on Silver Line, which we haven't really discussed how it should be treated.
       // Right now, the places list for SL is empty because its screens are all getting listed as buses.
       // It should probably treated as a bus route, but still a question for Adam.
-      modeLineFilterValue.label.includes("Line") &&
-      statusFilterValue === STATUSES[0] &&
-      screenTypeFilterValue === SCREEN_TYPES[0]
+      modeLineFilterValue.label.includes("Line")
     ) {
       return sortByStationOrder(places, modeLineFilterValue, !sortDirection);
     }
