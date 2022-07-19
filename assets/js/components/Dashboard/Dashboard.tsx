@@ -15,8 +15,8 @@ import {
 
 const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState<Place[]>([]);
-  // ascending = true, descending = false
-  const [sortDirection, setSortDirection] = useState(true);
+  // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
+  const [sortDirection, setSortDirection] = useState(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
   );
@@ -71,12 +71,12 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     else if (sortLabel === "SOUTHBOUND") setSortLabel("NORTHBOUND");
     else if (sortLabel === "NORTHBOUND") setSortLabel("SOUTHBOUND");
 
-    setSortDirection(!sortDirection);
+    setSortDirection(1 - sortDirection);
   };
 
   const sortPlaces = (places: Place[]) => {
     if (modeLineFilterValue === MODES_AND_LINES[0]) {
-      return sortDirection
+      return sortDirection === 0
         ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
         : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
     } else if (
@@ -85,7 +85,11 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       // It should probably treated as a bus route, but still a question for Adam.
       modeLineFilterValue.label.includes("Line")
     ) {
-      return sortByStationOrder(places, modeLineFilterValue, !sortDirection);
+      return sortByStationOrder(
+        places,
+        modeLineFilterValue,
+        sortDirection === 1
+      );
     }
 
     return places;
@@ -138,7 +142,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     setModeLineFilterValue(MODES_AND_LINES[0]);
     setScreenTypeFilterValue(SCREEN_TYPES[0]);
     setStatusFilterValue(STATUSES[0]);
-    setSortDirection(true);
+    setSortDirection(0);
   };
 
   let header, content;
@@ -164,7 +168,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               onClick={sortLabelOnClick}
               data-testid="sort-label"
             >
-              {sortLabel} {sortDirection ? <ArrowDown /> : <ArrowUp />}
+              {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
             </div>
             <FilterDropdown
               list={MODES_AND_LINES}
