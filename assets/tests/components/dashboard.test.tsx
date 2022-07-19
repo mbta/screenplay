@@ -83,7 +83,7 @@ describe("Dashboard", () => {
     global.fetch = originalFetch;
   });
 
-  describe("Filters", () => {
+  describe("filtering", () => {
     test("filters places by screen type", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
         <Dashboard page="places" />,
@@ -154,6 +154,73 @@ describe("Dashboard", () => {
           expect(getByText("Columbus Ave @ Bray St")).toBeInTheDocument();
           expect(getByText("Alewife")).toBeInTheDocument();
           expect(getByText("Airport")).toBeInTheDocument();
+        });
+      });
+    });
+  });
+
+  describe("sorting", () => {
+    test("sort label changes depending on filter selected", async () => {
+      const { getByTestId, getByRole, findByRole } = render(
+        <Dashboard page="places" />,
+        { wrapper: MemoryRouter }
+      );
+
+      await act(async () => {
+        expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe(
+            "WESTBOUND"
+          );
+        });
+
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Red Line" }));
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe(
+            "SOUTHBOUND"
+          );
+        });
+
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Bus" }));
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
+        });
+      });
+    });
+
+    test("sort label changes when clicked", async () => {
+      const { getByTestId, getByRole, findByRole } = render(
+        <Dashboard page="places" />,
+        { wrapper: MemoryRouter }
+      );
+
+      await act(async () => {
+        expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe("ZXY");
+        });
+
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Red Line" }));
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe(
+            "NORTHBOUND"
+          );
+        });
+
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe(
+            "EASTBOUND"
+          );
         });
       });
     });

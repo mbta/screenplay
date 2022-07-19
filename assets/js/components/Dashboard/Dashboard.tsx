@@ -164,6 +164,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
             <div
               className="place-list__sort-label d-flex align-items-center"
               onClick={sortLabelOnClick}
+              data-testid="sort-label"
             >
               {sortLabel} {sortDirection ? <ArrowDown /> : <ArrowUp />}
             </div>
