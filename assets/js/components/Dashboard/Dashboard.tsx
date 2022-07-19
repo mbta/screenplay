@@ -5,6 +5,7 @@ import { Accordion, Container } from "react-bootstrap";
 import { ArrowDown } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
+import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import Sidebar from "./Sidebar";
 import {
   MODES_AND_LINES,
@@ -21,8 +22,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     SCREEN_TYPES[0]
   );
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
-
   const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
+  const [sortLabel, setSortLabel] = useState("ABC");
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -41,6 +42,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter) {
+      const line = selectedFilter.label.split(" ")[0];
+      let sortLabel = "ABC";
+      if (line === "Green" || line === "Blue") {
+        sortLabel = "WESTBOUND";
+      } else if (line === "Red" || line === "Orange") {
+        sortLabel = "SOUTHBOUND";
+      }
+      setSortLabel(sortLabel);
       setModeLineFilterValue(selectedFilter);
     }
   };
@@ -68,9 +77,39 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         );
       });
     }
+
+    if (modeLineFilterValue !== MODES_AND_LINES[0]) {
+      filteredPlaces = filteredPlaces.filter((place) => {
+        return place.routes.some((route) =>
+          modeLineFilterValue.ids.includes(route)
+        );
+      });
+
+      // This catches on Silver Line, which we haven't really discussed how it should be treated.
+      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
+      // It should probably treated as a bus route, but still a question for Adam.
+      if (modeLineFilterValue.label.includes("Line")) {
+        sortByStationOrder(filteredPlaces, modeLineFilterValue);
+      }
+    }
     // Can add additional filtering in if statements here.
 
     return filteredPlaces;
+  };
+
+  const sortByStationOrder = (places: Place[], filter: { label: string }) => {
+    const line = filter.label.split(" ")[0];
+    const stationOrder = STATION_ORDER_BY_LINE[line.toLowerCase()];
+
+    places.sort((placeA, placeB) => {
+      const indexA = stationOrder.findIndex((station) => {
+        return station.name.toLowerCase() === placeA.name.toLowerCase();
+      });
+      const indexB = stationOrder.findIndex((station) => {
+        return station.name.toLowerCase() === placeB.name.toLowerCase();
+      });
+      return indexA - indexB;
+    });
   };
 
   const goToHome = () => {
@@ -98,7 +137,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         <Container fluid>
           <div className="place-list__header-row">
             <div className="place-list__sort-label d-flex align-items-center">
-              ABC <ArrowDown />
+              {sortLabel} <ArrowDown />
             </div>
             <FilterDropdown
               list={MODES_AND_LINES}
