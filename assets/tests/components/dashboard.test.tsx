@@ -168,5 +168,157 @@ describe("Dashboard", () => {
         });
       });
     });
+
+    test("sort order changes for RL", async () => {
+      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
+        <Dashboard page="places" />,
+        { wrapper: MemoryRouter }
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Red Line" }));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual(["Alewife", "Davis", "Porter", "Park Street"]);
+        });
+
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual(["Park Street", "Porter", "Davis", "Alewife"]);
+        });
+      });
+    });
+
+    test("sort order changes for OL", async () => {
+      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
+        <Dashboard page="places" />,
+        { wrapper: MemoryRouter }
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Orange Line" }));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual([
+            "Oak Grove",
+            "Malden Center",
+            "Wellington",
+            "North Station",
+            "Haymarket",
+          ]);
+        });
+
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual([
+            "Haymarket",
+            "North Station",
+            "Wellington",
+            "Malden Center",
+            "Oak Grove",
+          ]);
+        });
+      });
+    });
+
+    test("sort order changes for GL", async () => {
+      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
+        <Dashboard page="places" />,
+        { wrapper: MemoryRouter }
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Green Line" }));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual([
+            "Union Square",
+            "Lechmere",
+            "Science Park/West End",
+            "North Station",
+            "Haymarket",
+            "Government Center",
+            "Park Street",
+            "Boylston",
+          ]);
+        });
+
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual([
+            "Boylston",
+            "Park Street",
+            "Government Center",
+            "Haymarket",
+            "North Station",
+            "Science Park/West End",
+            "Lechmere",
+            "Union Square",
+          ]);
+        });
+      });
+    });
+
+    test("sort order changes for BL", async () => {
+      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
+        <Dashboard page="places" />,
+        { wrapper: MemoryRouter }
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual([
+            "Wonderland",
+            "Revere Beach",
+            "Beachmont",
+            "Government Center",
+          ]);
+        });
+
+        fireEvent.click(getByTestId("sort-label"));
+        await waitFor(() => {
+          expect(
+            getAllByTestId("place-name").map(
+              (placeName) => placeName.textContent
+            )
+          ).toStrictEqual([
+            "Government Center",
+            "Beachmont",
+            "Revere Beach",
+            "Wonderland",
+          ]);
+        });
+      });
+    });
   });
 });
