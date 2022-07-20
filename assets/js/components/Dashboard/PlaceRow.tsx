@@ -138,7 +138,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           >
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </Col>
-          <Col lg={3} className="place-name">
+          <Col lg={3} className="place-name" data-testid="place-name">
             {name}
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-5">

@@ -1,0 +1,497 @@
+[
+  {
+    "id": "place-alfcl",
+    "name": "Alewife",
+    "routes": ["Bus", "Red"],
+    "screens": [
+      {
+        "id": "alewife_center_southbound",
+        "station_code": "RALE",
+        "type": "pa_ess",
+        "zone": "c"
+      },
+      {
+        "id": "alewife_mezzanine_southbound",
+        "station_code": "RALE",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-davis",
+    "name": "Davis",
+    "routes": ["Bus", "Red"],
+    "screens": [
+      { "disabled": false, "id": "Landscape255", "type": "dup" },
+      {
+        "id": "davis_mezzanine",
+        "station_code": "RDAV",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "davis_northbound",
+        "station_code": "RDAV",
+        "type": "pa_ess",
+        "zone": "n"
+      },
+      {
+        "id": "davis_southbound",
+        "station_code": "RDAV",
+        "type": "pa_ess",
+        "zone": "s"
+      }
+    ]
+  },
+  {
+    "id": "place-portr",
+    "name": "Porter",
+    "routes": ["CR", "Red"],
+    "screens": [
+      { "disabled": false, "id": "PRE-108", "type": "pre_fare_v2" },
+      { "disabled": false, "id": "1508", "type": "pre_fare_v2" },
+      {
+        "id": "porter_mezzanine",
+        "station_code": "RPOR",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "porter_northbound",
+        "station_code": "RPOR",
+        "type": "pa_ess",
+        "zone": "n"
+      },
+      {
+        "id": "porter_southbound",
+        "station_code": "RPOR",
+        "type": "pa_ess",
+        "zone": "s"
+      }
+    ]
+  },
+  {
+    "id": "place-ogmnl",
+    "name": "Oak Grove",
+    "routes": ["Bus", "Orange"],
+    "screens": [
+      {
+        "id": "oak_grove_mezzanine_southbound",
+        "station_code": "OOAK",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "oak_grove_east_busway",
+        "station_code": "OOAK",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "oak_grove_platform",
+        "station_code": "OOAK",
+        "type": "pa_ess",
+        "zone": "s"
+      }
+    ]
+  },
+  {
+    "id": "place-mlmnl",
+    "name": "Malden Center",
+    "routes": ["Bus", "CR", "Orange"],
+    "screens": [
+      { "disabled": false, "id": "DUP-Malden", "type": "dup" },
+      {
+        "id": "malden_lobby",
+        "station_code": "OMAL",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "malden_center_platform",
+        "station_code": "OMAL",
+        "type": "pa_ess",
+        "zone": "n"
+      }
+    ]
+  },
+  {
+    "id": "place-welln",
+    "name": "Wellington",
+    "routes": ["Bus", "Orange"],
+    "screens": [
+      { "disabled": false, "id": "1512", "type": "pre_fare_v2" },
+      { "disabled": false, "id": "PRE-112", "type": "pre_fare_v2" },
+      {
+        "id": "wellington_mezzanine",
+        "station_code": "OWEL",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "wellington_northbound",
+        "station_code": "OWEL",
+        "type": "pa_ess",
+        "zone": "n"
+      },
+      {
+        "id": "wellington_southbound",
+        "station_code": "OWEL",
+        "type": "pa_ess",
+        "zone": "s"
+      }
+    ]
+  },
+  {
+    "id": "place-gover",
+    "name": "Government Center",
+    "routes": ["Blue", "Green-B", "Green-C", "Green-D", "Green-E"],
+    "screens": [
+      { "disabled": false, "id": "1503", "type": "pre_fare_v2" },
+      { "disabled": false, "id": "PRE-103", "type": "pre_fare_v2" },
+      { "disabled": false, "id": "1502", "type": "pre_fare_v2" },
+      { "disabled": false, "id": "PRE-102", "type": "pre_fare_v2" },
+      {
+        "id": "government_center_eastbound",
+        "station_code": "BGOV",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "government_center_mezzanine",
+        "station_code": "BGOV",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "government_center_westbound",
+        "station_code": "BGOV",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "green_government_center_eastbound",
+        "station_code": "GGOV",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "green_government_center_westbound",
+        "station_code": "GGOV",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "green_government_center_mezzanine",
+        "station_code": "GGOV",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-pktrm",
+    "name": "Park Street",
+    "routes": ["Green-B", "Green-C", "Green-D", "Green-E", "Red"],
+    "screens": [
+      {
+        "id": "red_park_st_northbound",
+        "station_code": "RPRK",
+        "type": "pa_ess",
+        "zone": "n"
+      },
+      {
+        "id": "red_park_st_southbound",
+        "station_code": "RPRK",
+        "type": "pa_ess",
+        "zone": "s"
+      },
+      {
+        "id": "red_park_st_center",
+        "station_code": "RPRK",
+        "type": "pa_ess",
+        "zone": "c"
+      },
+      {
+        "id": "park_st_eastbound",
+        "station_code": "GPRKE",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "park_st_winter_st_concourse",
+        "station_code": "GPRKE",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "park_st_westbound_wall_track",
+        "station_code": "GPRKW",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "park_st_westbound_fence_track",
+        "station_code": "GPRKW",
+        "type": "pa_ess",
+        "zone": "n"
+      }
+    ]
+  },
+  {
+    "id": "place-boyls",
+    "name": "Boylston",
+    "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
+    "screens": [
+      {
+        "id": "boylston_eastbound",
+        "station_code": "GBOY",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "boylston_westbound",
+        "station_code": "GBOY",
+        "type": "pa_ess",
+        "zone": "w"
+      }
+    ]
+  },
+  {
+    "id": "place-north",
+    "name": "North Station",
+    "routes": ["CR", "Green-D", "Green-E", "Orange"],
+    "screens": [
+      {
+        "id": "orange_north_station_northbound",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "n"
+      },
+      {
+        "id": "orange_north_station_southbound",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "s"
+      },
+      {
+        "id": "orange_north_station_mezzanine",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "c"
+      },
+      {
+        "id": "orange_north_station_commuter_rail_exit",
+        "station_code": "ONST",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "green_north_station_eastbound",
+        "station_code": "GNST",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "green_north_station_westbound",
+        "station_code": "GNST",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "green_north_station_commuter_rail_exit",
+        "station_code": "GNST",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-haecl",
+    "name": "Haymarket",
+    "routes": ["Green-D", "Green-E", "Orange"],
+    "screens": [
+      { "disabled": false, "id": "DUP-Haymarket", "type": "dup" },
+      {
+        "id": "orange_haymarket_mezzanine",
+        "station_code": "OHAY",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "orange_haymarket_northbound",
+        "station_code": "OHAY",
+        "type": "pa_ess",
+        "zone": "n"
+      },
+      {
+        "id": "orange_haymarket_southbound",
+        "station_code": "OHAY",
+        "type": "pa_ess",
+        "zone": "s"
+      },
+      {
+        "id": "green_haymarket_eastbound",
+        "station_code": "GHAY",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "green_haymarket_westbound",
+        "station_code": "GHAY",
+        "type": "pa_ess",
+        "zone": "w"
+      }
+    ]
+  },
+  {
+    "id": "place-unsqu",
+    "name": "Union Square",
+    "routes": ["Green-E"],
+    "screens": [
+      {
+        "id": "union_sq_track_one",
+        "station_code": "GUNS",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "union_sq_track_two",
+        "station_code": "GUNS",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "union_sq_mezzanine",
+        "station_code": "GUNS",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-lech",
+    "name": "Lechmere",
+    "routes": ["Bus", "Green-E"],
+    "screens": [
+      {
+        "id": "lechmere_green_line_eastbound",
+        "station_code": "GLEC",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "lechmere_green_line_westbound",
+        "station_code": "GLEC",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "lechmere_green_line_mezzanine",
+        "station_code": "GLEC",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-spmnl",
+    "name": "Science Park/West End",
+    "routes": ["Green-E"],
+    "screens": [
+      {
+        "id": "science_park_eastbound",
+        "station_code": "GSCI",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "science_park_westbound",
+        "station_code": "GSCI",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "science_park_mezzanine",
+        "station_code": "GSCI",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-wondl",
+    "name": "Wonderland",
+    "routes": ["Bus", "Blue"],
+    "screens": [
+      { "disabled": false, "id": "PRE-114", "type": "pre_fare_v2" },
+      { "disabled": false, "id": "1514", "type": "pre_fare_v2" },
+      {
+        "id": "wonderland_westbound",
+        "station_code": "BWON",
+        "type": "pa_ess",
+        "zone": "w"
+      },
+      {
+        "id": "wonderland_mezzanine",
+        "station_code": "BWON",
+        "type": "pa_ess",
+        "zone": "m"
+      }
+    ]
+  },
+  {
+    "id": "place-rbmnl",
+    "name": "Revere Beach",
+    "routes": ["Blue"],
+    "screens": [
+      {
+        "id": "revere_beach_eastbound",
+        "station_code": "BREV",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "revere_beach_mezzanine",
+        "station_code": "BREV",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "revere_beach_westbound",
+        "station_code": "BREV",
+        "type": "pa_ess",
+        "zone": "w"
+      }
+    ]
+  },
+  {
+    "id": "place-bmmnl",
+    "name": "Beachmont",
+    "routes": ["Blue"],
+    "screens": [
+      {
+        "id": "beachmont_eastbound",
+        "station_code": "BBEA",
+        "type": "pa_ess",
+        "zone": "e"
+      },
+      {
+        "id": "beachmont_westbound",
+        "station_code": "BBEA",
+        "type": "pa_ess",
+        "zone": "w"
+      }
+    ]
+  },
+  {
+    "id": "1215",
+    "name": "Columbus Ave @ Bray St",
+    "routes": ["Bus"],
+    "screens": [
+      { "disabled": false, "id": "BUS-104", "type": "bus_shelter_v2" },
+      { "disabled": false, "id": "1401", "type": "bus_shelter_v2" }
+    ]
+  }
+]
