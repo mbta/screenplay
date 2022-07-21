@@ -23,14 +23,18 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         ? "https://screens-dev.mbtace.com"
         : "https://screens.mbta.com";
 
-    if (type.includes("v2")) {
-      return `${baseUrl}/v2/screen/${id}/simulation`;
-    }
-    if (type.includes("bus") || type.includes("gl")) {
-      return `${baseUrl}/screen/${id}`;
-    }
+    switch (type) {
+      case "bus_shelter_v2":
+      case "gl_eink_v2":
+      case "bus_eink_v2":
+      case "pre_fare_v2":
+        return `${baseUrl}/v2/screen/${id}/simulation`;
 
-    return "";
+      case "dup":
+        return `${baseUrl}/screen/${id}/simulation`;
+      default:
+        return "";
+    }
   };
 
   return (

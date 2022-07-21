@@ -51,6 +51,10 @@
     height: 344px;
   }
 
+  &--dup {
+    width: 832px;
+  }
+
   .screen-detail__iframe {
     width: 100%;
 
@@ -77,6 +81,10 @@
       width: 1200px;
       transform: scale(15%);
       transform-origin: top left;
+    }
+
+    &--dup {
+      height: 160px;
     }
   }
 }
