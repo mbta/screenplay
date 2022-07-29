@@ -239,11 +239,11 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
   green: [
     {
       name: "Union Square",
-      inlineMap: "Green-D-Branch-Top",
+      inlineMap: "Green-D-Trunk-Top",
     },
     {
       name: "Lechmere",
-      inlineMap: "Green-Fork-Up",
+      inlineMap: "Green-Trunk-Middle",
     },
     {
       name: "Science Park/West End",
