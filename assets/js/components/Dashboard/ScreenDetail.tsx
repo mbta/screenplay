@@ -43,6 +43,11 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         <div className="screen-detail__screen-type-location">
           {translateScreenType()} / Location
         </div>
+        {props.screens[0].type === "dup" && (
+          <div className="screen-detail__dup-ad-text">
+            Cycle in the ad loop for 7.5 seconds every 45 seconds
+          </div>
+        )}
         <div className="screen-detail__report-a-problem-button">
           <ReportAProblemButton />
         </div>
