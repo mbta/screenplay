@@ -129,6 +129,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     return reverse ? places.reverse() : places;
   };
 
+  const isOnlyFilteredByRoute = () => {
+    return (
+      modeLineFilterValue !== MODES_AND_LINES[0] &&
+      statusFilterValue === STATUSES[0] &&
+      screenTypeFilterValue === SCREEN_TYPES[0]
+    );
+  };
+
   const getFilteredLine = () =>
     modeLineFilterValue.label === "Green Line"
       ? "Green"
@@ -188,6 +196,9 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                 key={place.id}
                 place={place}
                 eventKey={index.toString()}
+                filteredLine={
+                  isOnlyFilteredByRoute() ? getFilteredLine() : null
+                }
               />
             ))}
           </Accordion>
