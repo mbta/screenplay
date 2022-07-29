@@ -498,6 +498,358 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       inlineMap: "Green-D-Trunk-Bottom"
     },
   ],
+  "green-b": [    
+    {
+      name: "Government Center",
+      inlineMap: "Green-B-Trunk-Top"
+    },
+    {
+      name: "Park Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Boylston",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Arlington",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Copley",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Hynes Convention Center",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Kenmore",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Blandford Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Boston University East",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Boston University Central",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Amory Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Babcock Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Packard's Corner",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Harvard Avenue",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Griggs Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Allston Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Warren Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Washington Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Sutherland Road",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Chiswick Road",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Chestnut Hill Avenue",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "South Street",
+      inlineMap: "Green-B-Trunk-Middle"
+    },
+    {
+      name: "Boston College",
+      inlineMap: "Green-B-Trunk-Bottom"
+    }
+  ],
+  "green-c": [
+    {
+      name: "Government Center",
+      inlineMap: "Green-C-Trunk-Top"
+    },
+    {
+      name: "Park Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Boylston",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Arlington",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Copley",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Hynes Convention Center",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Kenmore",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Saint Mary's Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Hawes Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Kent Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Saint Paul Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Coolidge Corner",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Summit Avenue",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Brandon Hall",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Fairbanks Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Washington Square",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Tappan Street",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Dean Road",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Englewood Avenue",
+      inlineMap: "Green-C-Trunk-Middle"
+    },
+    {
+      name: "Cleveland Circle",
+      inlineMap: "Green-C-Trunk-Bottom"
+    },
+  ],
+  "green-d": [
+    {
+      name: "North Station",
+      inlineMap: "Green-D-Trunk-Top"
+    },
+    {
+      name: "Haymarket",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Government Center",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Park Street",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Boylston",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Arlington",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Copley",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Hynes Convention Center",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Kenmore",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Fenway",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Longwood",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Brookline Village",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Brookline Hills",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Beaconsfield",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Reservoir",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Chestnut Hill",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Newton Centre",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Newton Highlands",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Eliot",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Waban",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Woodland",
+      inlineMap: "Green-D-Trunk-Middle"
+    },
+    {
+      name: "Riverside",
+      inlineMap: "Green-D-Trunk-Bottom"
+    },
+  ],
+  "green-e": [
+    {
+      name: "Union Square",
+      inlineMap: "Green-E-Trunk-Top"
+    },
+    {
+      name: "Lechmere",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Science Park/West End",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "North Station",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Haymarket",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Government Center",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Park Street",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Boylston",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Arlington",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Copley",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Prudential",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Symphony",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Northeastern University",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Museum of Fine Arts",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Longwood Medical Area",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Brigham Circle",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Fenwood Road",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Mission Park",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Riverway",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Back of the Hill",
+      inlineMap: "Green-E-Trunk-Middle"
+    },
+    {
+      name: "Heath Street",
+      inlineMap: "Green-E-Trunk-Bottom"
+    }
+  ],
 };
 
 export default STATION_ORDER_BY_LINE;
