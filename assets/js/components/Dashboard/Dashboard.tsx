@@ -85,11 +85,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       // It should probably treated as a bus route, but still a question for Adam.
       modeLineFilterValue.label.includes("Line")
     ) {
-      return sortByStationOrder(
-        places,
-        modeLineFilterValue,
-        sortDirection === 1
-      );
+      return sortByStationOrder(places, sortDirection === 1);
     }
 
     return places;
@@ -117,13 +113,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     return filteredPlaces;
   };
 
-  const sortByStationOrder = (
-    places: Place[],
-    filter: { label: string },
-    reverse?: boolean
-  ) => {
-    const line = filter.label.split(" ")[0];
-    const stationOrder = STATION_ORDER_BY_LINE[line.toLowerCase()];
+  const sortByStationOrder = (places: Place[], reverse?: boolean) => {
+    const stationOrder = STATION_ORDER_BY_LINE[getFilteredLine().toLowerCase()];
 
     places.sort((placeA, placeB) => {
       const indexA = stationOrder.findIndex((station) => {
@@ -137,6 +128,11 @@ const Dashboard = (props: { page: string }): JSX.Element => {
 
     return reverse ? places.reverse() : places;
   };
+
+  const getFilteredLine = () =>
+    modeLineFilterValue.label === "Green Line"
+      ? "Green"
+      : modeLineFilterValue.ids[0];
 
   const goToHome = () => {
     setModeLineFilterValue(MODES_AND_LINES[0]);
