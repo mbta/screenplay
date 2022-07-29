@@ -137,10 +137,15 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     );
   };
 
-  const getFilteredLine = () =>
-    modeLineFilterValue.label === "Green Line"
-      ? "Green"
-      : modeLineFilterValue.ids[0];
+  const getFilteredLine = () => {
+    if (modeLineFilterValue.label.includes("Line")) {
+      return modeLineFilterValue.label === "Green Line"
+        ? "Green"
+        : modeLineFilterValue.ids[0];
+    }
+
+    return "";
+  };
 
   const goToHome = () => {
     setModeLineFilterValue(MODES_AND_LINES[0]);
