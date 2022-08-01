@@ -68,9 +68,58 @@ end
 {:ok, file} = get_config.("mbta-ctd-config", "screens/screens-prod.json")
 parsed = Jason.decode!(file)
 
+formatted_screens =
+  parsed["screens"]
+  # This reduce allows us to split out a single config into multiple places.
+  # Only splits out DUPs, but can be modified to work with other screen types.
+  |> Enum.reduce(
+    [],
+    fn
+      {id,
+       %{
+         "app_id" => "dup",
+         "app_params" => %{
+           "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
+           "secondary" => %{"sections" => []}
+         }
+       } = stuff},
+      acc ->
+        primary =
+          Enum.map(primary_stop_ids, fn stop_id ->
+            {id, Map.put(stuff, "stop", stop_id)}
+          end)
+
+        acc ++ primary
+
+      {id,
+       %{
+         "app_id" => "dup",
+         "app_params" => %{
+           "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
+           "secondary" => %{"sections" => [%{"stop_ids" => secondary_stop_ids} | _]}
+         }
+       } = stuff},
+      acc ->
+        primary =
+          Enum.map(primary_stop_ids, fn stop_id ->
+            {id, Map.put(stuff, "stop", stop_id)}
+          end)
+
+        secondary =
+          Enum.map(secondary_stop_ids, fn stop_id ->
+            {id, Map.put(stuff, "stop", stop_id)}
+          end)
+
+        acc ++ primary ++ secondary
+
+      screen, acc ->
+        acc ++ [screen]
+    end
+  )
+
 # Most screen types store their stop_id in a different place. Broke all types out in case anything changes.
 live_screens =
-  parsed["screens"]
+  formatted_screens
   |> Enum.group_by(
     fn
       {_id, %{"app_id" => "bus_eink", "app_params" => %{"stop_id" => stop_id}}} ->
@@ -128,9 +177,9 @@ live_screens =
       {_id,
        %{
          "app_id" => "dup",
-         "app_params" => %{"primary" => %{"sections" => [%{"stop_ids" => stop_ids} | _]}}
+         "stop" => stop_id
        }} ->
-        hd(stop_ids)
+        stop_id
     end,
     fn
       {id, %{"app_id" => app_id, "disabled" => disabled}} ->
@@ -188,15 +237,35 @@ contents =
     screens_at_stop = live_screens[id]
 
     if not is_nil(screens_at_stop) do
-      %{id: id, name: name, screens: screens_at_stop}
+      %{id: id, name: name, screens: Enum.dedup(screens_at_stop)}
     else
       %{id: id, name: name, screens: []}
     end
   end)
   # Add on bus stops
   |> Enum.concat(bus_stops)
+  |> Enum.group_by(fn %{name: name} -> name end)
+  |> Enum.map(fn
+    {_name, [place]} ->
+      place
+
+    {name, places} ->
+      # Combine entries that reference the same stop by merging their list of screens.
+      Enum.reduce(places, fn x, y ->
+        Map.merge(x, y, fn
+          # Always try to use the station id. If there isn't one, just use the id from the first entry
+          :id, "place-" <> _ = v1, _v2 -> v1
+          :id, _v1, "place-" <> _ = v2 -> v2
+          :id, v1, _v2 -> v1
+          :name, _, _ -> name
+          # Combine the list of screens
+          :screens, v1, v2 -> Enum.dedup(v1 ++ v2)
+          _k, v1, _v2 -> v1
+        end)
+      end)
+  end)
   # Just in case
-  |> Enum.uniq()
+  |> Enum.uniq_by(fn %{name: name} -> name end)
   # Get the routes at each stop
   |> Enum.map(fn %{id: id} = stop ->
     # Not a big fan of this. Goes through each station one by one.
