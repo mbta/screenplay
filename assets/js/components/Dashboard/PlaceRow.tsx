@@ -148,9 +148,11 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           {props.filteredLine && (
             <Col
               lg="auto"
-              className={`map-segment-container map-segment-container__${
-                props.filteredLine
-              } ${!props.defaultSort ? "map-segment-container__flipped" : ""}`}
+              className={classNames(
+                "map-segment-container",
+                `map-segment-container__${props.filteredLine}`,
+                { "map-segment-container__flipped": !props.defaultSort }
+              )}
             >
               <img
                 className="map-segment"
