@@ -18,10 +18,14 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
-    const baseUrl =
-      environmentName === "dev"
-        ? "https://screens-dev.mbtace.com"
-        : "https://screens.mbta.com";
+    let baseUrl;
+    if (environmentName === "dev") {
+      baseUrl = "https://screens-dev.mbtace.com";
+    } else if (environmentName === "dev-green") {
+      baseUrl = "https://screens-dev-green.mbtace.com";
+    } else {
+      baseUrl = "https://screens.mbta.com";
+    }
 
     if (type.includes("v2")) {
       return `${baseUrl}/v2/screen/${id}/simulation`;
