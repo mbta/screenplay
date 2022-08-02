@@ -17,6 +17,49 @@
       visibility: hidden;
     }
   }
+
+  &.filtered-by-route {
+    margin-bottom: 0;
+    border-radius: 0;
+    border-left: 1px solid $cool-gray-40;
+    border-bottom: 1px solid $cool-gray-40;
+    border-right: 1px solid $cool-gray-40;
+
+    &:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+
+    &.open {
+      border-radius: 8px;
+    }
+  }
+}
+
+.map-segment-container {
+  position: relative;
+  overflow: hidden;
+  height: 56px;
+
+  &__Red,
+  &__Green,
+  &__Green-B,
+  &__Green-C,
+  &__Green-D,
+  &__Green-E {
+    width: 44px;
+  }
+
+  &__Orange,
+  &__Blue {
+    width: 20px;
+  }
+}
+
+.map-segment {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
 }
 
 .row {

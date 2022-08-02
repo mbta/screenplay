@@ -12,11 +12,13 @@ import classNames from "classnames";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import ScreenDetail from "./ScreenDetail";
+import STATION_ORDER_BY_LINE, { Station } from "../../constants/stationOrder";
 
 interface PlaceRowProps {
   place: Place;
   eventKey: string;
   handleClick: () => void;
+  filteredLine?: string | null;
 }
 
 /**
@@ -118,6 +120,12 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     ));
   };
 
+  const getInlineMap = (place: Place, stationOrder: Station[]) => {
+    return stationOrder.find(
+      (station) => station.name.toLowerCase() === place.name.toLowerCase()
+    )?.inlineMap;
+  };
+
   return (
     <div
       key={props.eventKey}
@@ -125,6 +133,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       className={classNames("place-row", {
         open: isOpen,
         disabled: !hasScreens,
+        "filtered-by-route": props.filteredLine,
       })}
       data-testid="place-row"
     >
@@ -138,7 +147,22 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           >
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </Col>
-          <Col lg={3} className="place-name">
+          {props.filteredLine && (
+            <Col
+              lg="auto"
+              className={`map-segment-container map-segment-container__${props.filteredLine}`}
+            >
+              <img
+                className="map-segment"
+                src={`/images/inline-maps/${getInlineMap(
+                  props.place,
+                  STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
+                )}.png`}
+                alt=""
+              />
+            </Col>
+          )}
+          <Col lg={3} className="place-name" data-testid="place-name">
             {name}
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-5">
