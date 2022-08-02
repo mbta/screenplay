@@ -18,6 +18,7 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   filteredLine?: string | null;
+  defaultSort: boolean;
 }
 
 /**
@@ -147,7 +148,9 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           {props.filteredLine && (
             <Col
               lg="auto"
-              className={`map-segment-container map-segment-container__${props.filteredLine}`}
+              className={`map-segment-container map-segment-container__${
+                props.filteredLine
+              } ${!props.defaultSort ? "map-segment-container__flipped" : ""}`}
             >
               <img
                 className="map-segment"
