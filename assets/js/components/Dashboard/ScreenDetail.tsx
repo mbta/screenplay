@@ -26,7 +26,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     if (type.includes("v2")) {
       return `${baseUrl}/v2/screen/${id}/simulation`;
     }
-    if (type.includes("bus") || type.includes("gl")) {
+    if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
       return `${baseUrl}/screen/${id}`;
     }
 
