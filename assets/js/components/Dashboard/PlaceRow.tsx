@@ -17,7 +17,7 @@ import STATION_ORDER_BY_LINE, { Station } from "../../constants/stationOrder";
 interface PlaceRowProps {
   place: Place;
   eventKey: string;
-  handleClick: () => void;
+  onClick: (eventKey: string) => void;
   filteredLine?: string | null;
 }
 
@@ -29,7 +29,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { routes, name, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey, () =>
-    props.handleClick()
+    props.onClick(props.eventKey)
   );
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens = screens.length !== 0;

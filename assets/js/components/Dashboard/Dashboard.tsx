@@ -159,6 +159,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     setSortDirection(0);
   };
 
+  const handleAccordionClick = (eventKey: string) => {
+    if (activeEventKeys.includes(eventKey)) {
+      setActiveEventKeys(activeEventKeys.filter((e) => e !== eventKey));
+    } else {
+      setActiveEventKeys([...activeEventKeys, eventKey]);
+    }
+  };
+
   let header, content;
 
   switch (props.page) {
@@ -206,16 +214,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                 key={place.id}
                 place={place}
                 eventKey={index.toString()}
-                handleClick={() => {
-                  const i = index.toString();
-                  if (activeEventKeys.includes(i)) {
-                    setActiveEventKeys(
-                      activeEventKeys.filter((eventKey) => eventKey !== i)
-                    );
-                  } else {
-                    setActiveEventKeys([...activeEventKeys, i]);
-                  }
-                }}
+                onClick={handleAccordionClick}
                 filteredLine={
                   isOnlyFilteredByRoute() ? getFilteredLine() : null
                 }
