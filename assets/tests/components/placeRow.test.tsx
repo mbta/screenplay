@@ -4,6 +4,13 @@ import PlaceRow from "../../js/components/Dashboard/PlaceRow";
 import { Accordion } from "react-bootstrap";
 import { Place } from "../../js/models/place";
 
+beforeAll(() => {
+  const app = document.createElement("div");
+  app.id = "app";
+  app.dataset.environmentName = "dev";
+  document.body.appendChild(app);
+});
+
 describe("PlaceRow", () => {
   test("opens when clicked", async () => {
     const place: Place = {
@@ -18,9 +25,16 @@ describe("PlaceRow", () => {
       ],
     };
 
+    const handleClick = jest.fn();
+
     const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
-        <PlaceRow place={place} eventKey="0" defaultSort />
+        <PlaceRow
+          place={place}
+          eventKey="0"
+          onClick={handleClick}
+          defaultSort
+        />
       </Accordion>
     );
 
@@ -44,9 +58,16 @@ describe("PlaceRow", () => {
       screens: [],
     };
 
+    const handleClick = jest.fn();
+
     const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
-        <PlaceRow place={place} eventKey="0" defaultSort />
+        <PlaceRow
+          place={place}
+          eventKey="0"
+          onClick={handleClick}
+          defaultSort
+        />
       </Accordion>
     );
 

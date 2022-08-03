@@ -24,6 +24,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     SCREEN_TYPES[0]
   );
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
+  const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
   const [sortLabel, setSortLabel] = useState("ABC");
 
   useEffect(() => {
@@ -33,6 +34,10 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         setPlaces(placeList);
       });
   }, []);
+
+  useEffect(() => {
+    setActiveEventKeys([]);
+  }, [modeLineFilterValue, screenTypeFilterValue, statusFilterValue]);
 
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
@@ -154,6 +159,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     setSortDirection(0);
   };
 
+  const handleAccordionClick = (eventKey: string) => {
+    if (activeEventKeys.includes(eventKey)) {
+      setActiveEventKeys(activeEventKeys.filter((e) => e !== eventKey));
+    } else {
+      setActiveEventKeys([...activeEventKeys, eventKey]);
+    }
+  };
+
   let header, content;
 
   switch (props.page) {
@@ -195,12 +208,13 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               selectedValue={statusFilterValue}
             />
           </div>
-          <Accordion flush alwaysOpen>
+          <Accordion flush alwaysOpen activeKey={activeEventKeys}>
             {sortPlaces(filterPlaces()).map((place: Place, index) => (
               <PlaceRow
                 key={place.id}
                 place={place}
                 eventKey={index.toString()}
+                onClick={handleAccordionClick}
                 filteredLine={
                   isOnlyFilteredByRoute() ? getFilteredLine() : null
                 }
