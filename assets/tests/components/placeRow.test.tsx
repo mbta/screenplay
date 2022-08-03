@@ -29,7 +29,7 @@ describe("PlaceRow", () => {
 
     const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
-        <PlaceRow place={place} eventKey="0" handleClick={handleClick} />
+        <PlaceRow place={place} eventKey="0" onClick={handleClick} />
       </Accordion>
     );
 
@@ -57,7 +57,7 @@ describe("PlaceRow", () => {
 
     const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
-        <PlaceRow place={place} eventKey="0" handleClick={handleClick} />
+        <PlaceRow place={place} eventKey="0" onClick={handleClick} />
       </Accordion>
     );
 
