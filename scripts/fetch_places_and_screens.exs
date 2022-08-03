@@ -254,13 +254,24 @@ contents =
       Enum.reduce(places, fn x, y ->
         Map.merge(x, y, fn
           # Always try to use the station id. If there isn't one, just use the id from the first entry
-          :id, "place-" <> _ = v1, _v2 -> v1
-          :id, _v1, "place-" <> _ = v2 -> v2
-          :id, v1, _v2 -> v1
-          :name, _, _ -> name
+          :id, "place-" <> _ = v1, _v2 ->
+            v1
+
+          :id, _v1, "place-" <> _ = v2 ->
+            v2
+
+          :id, v1, _v2 ->
+            v1
+
+          :name, _, _ ->
+            name
+
           # Combine the list of screens
-          :screens, v1, v2 -> Enum.dedup(v1 ++ v2)
-          _k, v1, _v2 -> v1
+          :screens, v1, v2 ->
+            Enum.uniq(v1 ++ v2)
+
+          _k, v1, _v2 ->
+            v1
         end)
       end)
   end)
