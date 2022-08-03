@@ -53,6 +53,10 @@
   &__Blue {
     width: 20px;
   }
+
+  &__flipped {
+    transform: scaleY(-1);
+  }
 }
 
 .map-segment {
