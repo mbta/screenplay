@@ -20,7 +20,7 @@ describe("PlaceRow", () => {
 
     const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
-        <PlaceRow place={place} eventKey="0" />
+        <PlaceRow place={place} eventKey="0" defaultSort />
       </Accordion>
     );
 
@@ -46,7 +46,7 @@ describe("PlaceRow", () => {
 
     const { getByTestId, getByAltText, queryByAltText } = render(
       <Accordion>
-        <PlaceRow place={place} eventKey="0" />
+        <PlaceRow place={place} eventKey="0" defaultSort />
       </Accordion>
     );
 

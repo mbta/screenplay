@@ -204,6 +204,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                 filteredLine={
                   isOnlyFilteredByRoute() ? getFilteredLine() : null
                 }
+                defaultSort={sortDirection === 0}
               />
             ))}
           </Accordion>
