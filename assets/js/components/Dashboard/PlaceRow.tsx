@@ -12,11 +12,14 @@ import classNames from "classnames";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import ScreenDetail from "./ScreenDetail";
+import STATION_ORDER_BY_LINE, { Station } from "../../constants/stationOrder";
 
 interface PlaceRowProps {
   place: Place;
   eventKey: string;
-  handleClick: () => void;
+  onClick: (eventKey: string) => void;
+  filteredLine?: string | null;
+  defaultSort: boolean;
 }
 
 /**
@@ -27,7 +30,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { routes, name, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey, () =>
-    props.handleClick()
+    props.onClick(props.eventKey)
   );
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens = screens.length !== 0;
@@ -118,6 +121,12 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     ));
   };
 
+  const getInlineMap = (place: Place, stationOrder: Station[]) => {
+    return stationOrder.find(
+      (station) => station.name.toLowerCase() === place.name.toLowerCase()
+    )?.inlineMap;
+  };
+
   return (
     <div
       key={props.eventKey}
@@ -125,6 +134,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       className={classNames("place-row", {
         open: isOpen,
         disabled: !hasScreens,
+        "filtered-by-route": props.filteredLine,
       })}
       data-testid="place-row"
     >
@@ -138,6 +148,25 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           >
             {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </Col>
+          {props.filteredLine && (
+            <Col
+              lg="auto"
+              className={classNames(
+                "map-segment-container",
+                `map-segment-container__${props.filteredLine}`,
+                { "map-segment-container__flipped": !props.defaultSort }
+              )}
+            >
+              <img
+                className="map-segment"
+                src={`/images/inline-maps/${getInlineMap(
+                  props.place,
+                  STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
+                )}.png`}
+                alt=""
+              />
+            </Col>
+          )}
           <Col lg={3} className="place-name" data-testid="place-name">
             {name}
           </Col>
