@@ -1,6 +1,12 @@
 # Script to gather screenplay places and screens.
 #
-# Example usage: API_V3_KEY=<your_key_here> mix run scripts/places_and_screens.exs
+# Example usage: API_V3_KEY=<your_key_here> mix run scripts/places_and_screens.exs --environment prod
+
+{opts, _, _} =
+  System.argv()
+  |> OptionParser.parse(strict: [environment: :string])
+
+environment = Keyword.get(opts, :environment, "dev")
 
 api_v3_key = System.get_env("API_V3_KEY")
 headers = [{"x-api-key", api_v3_key}]
@@ -65,7 +71,7 @@ sort_routes = fn routes ->
 end
 
 # Get live config from S3
-{:ok, file} = get_config.("mbta-ctd-config", "screens/screens-prod.json")
+{:ok, file} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
 parsed = Jason.decode!(file)
 
 # Most screen types store their stop_id in a different place. Broke all types out in case anything changes.

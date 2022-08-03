@@ -17,6 +17,7 @@ import STATION_ORDER_BY_LINE, { Station } from "../../constants/stationOrder";
 interface PlaceRowProps {
   place: Place;
   eventKey: string;
+  onClick: (eventKey: string) => void;
   filteredLine?: string | null;
   defaultSort: boolean;
 }
@@ -28,7 +29,9 @@ interface PlaceRowProps {
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { routes, name, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
-  const rowOnClick = useAccordionButton(props.eventKey);
+  const rowOnClick = useAccordionButton(props.eventKey, () =>
+    props.onClick(props.eventKey)
+  );
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens = screens.length !== 0;
 
@@ -183,12 +186,18 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         </Row>
       </Container>
       <Accordion.Collapse eventKey={props.eventKey}>
-        <div className="screen-preview-container">
-          {hasScreens &&
-            groupScreens(sortScreens()).map((screens, index) => (
-              <ScreenDetail key={index} screens={screens} />
-            ))}
-        </div>
+        <>
+          <div className="screen-preview-container">
+            {hasScreens &&
+              groupScreens(sortScreens()).map((screens, index) => (
+                <ScreenDetail
+                  key={index}
+                  screens={screens}
+                  isOpen={isOpen ?? false}
+                />
+              ))}
+          </div>
+        </>
       </Accordion.Collapse>
     </div>
   );
