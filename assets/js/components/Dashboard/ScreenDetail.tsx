@@ -14,6 +14,9 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       ?.label;
   };
 
+  const getScreenLocation = () =>
+    props.screens[0].location ? `/ ${props.screens[0].location}` : "";
+
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
@@ -41,7 +44,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     <div className="screen-detail__container">
       <div className="screen-detail__header">
         <div className="screen-detail__screen-type-location">
-          {translateScreenType()} / Location
+          {translateScreenType()} {getScreenLocation()}
         </div>
         <div className="screen-detail__report-a-problem-button">
           <ReportAProblemButton />
