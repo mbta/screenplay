@@ -9,14 +9,31 @@ import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import Sidebar from "./Sidebar";
 import {
   MODES_AND_LINES,
+  SORT_LABELS_BY_LINE,
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
 
+type DirectionID = 0 | 1;
+
+const getSortLabel = (
+  modeLineFilterValue: { label: string },
+  sortDirection: DirectionID
+) => {
+  const line = modeLineFilterValue.label.split(" ")[0];
+  const sortLabels = SORT_LABELS_BY_LINE[line];
+
+  if (sortLabels) {
+    return sortLabels[sortDirection];
+  } else {
+    return ["ABC", "ZYX"][sortDirection];
+  }
+};
+
 const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState<Place[]>([]);
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
-  const [sortDirection, setSortDirection] = useState(0);
+  const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
   );
@@ -25,7 +42,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   );
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
   const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
-  const [sortLabel, setSortLabel] = useState("ABC");
+
+  const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -42,14 +60,6 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter) {
-      const line = selectedFilter.label.split(" ")[0];
-      let sortLabel = "ABC";
-      if (line === "Green" || line === "Blue") {
-        sortLabel = "WESTBOUND";
-      } else if (line === "Red" || line === "Orange") {
-        sortLabel = "SOUTHBOUND";
-      }
-      setSortLabel(sortLabel);
       setModeLineFilterValue(selectedFilter);
     }
   };
@@ -69,18 +79,11 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   };
 
   const sortLabelOnClick = () => {
-    if (sortLabel === "ABC") setSortLabel("ZXY");
-    else if (sortLabel === "ZXY") setSortLabel("ABC");
-    else if (sortLabel === "WESTBOUND") setSortLabel("EASTBOUND");
-    else if (sortLabel === "EASTBOUND") setSortLabel("WESTBOUND");
-    else if (sortLabel === "SOUTHBOUND") setSortLabel("NORTHBOUND");
-    else if (sortLabel === "NORTHBOUND") setSortLabel("SOUTHBOUND");
-
-    setSortDirection(1 - sortDirection);
+    setSortDirection((1 - sortDirection) as DirectionID);
   };
 
   const sortPlaces = (places: Place[]) => {
-    if (modeLineFilterValue === MODES_AND_LINES[0]) {
+    if (["ABC", "ZYX"].includes(sortLabel)) {
       return sortDirection === 0
         ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
         : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
