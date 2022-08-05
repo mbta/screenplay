@@ -4,5 +4,6 @@ export interface Screen {
   type: string;
   zone?: string;
   disabled: boolean;
+  location?: string;
   hidden?: boolean;
 }

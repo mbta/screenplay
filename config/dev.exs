@@ -77,7 +77,8 @@ config :screenplay,
   local_alerts_path_spec: {:priv, "alerts.json"},
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
   config_fetcher: Screenplay.Config.LocalFetch,
-  local_config_file_spec: {:priv, "places_and_screens.json"}
+  local_config_file_spec: {:priv, "places_and_screens.json"},
+  local_locations_file_spec: {:priv, "screen_locations.json"}
 
 config :ueberauth, Ueberauth,
   providers: [

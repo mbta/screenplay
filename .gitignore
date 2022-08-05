@@ -37,5 +37,6 @@ npm-debug.log
 # Local storage of takeover messages
 /priv/alerts.json
 /priv/places_and_screens.json
+/priv/screen_locations.json
 
 .envrc
