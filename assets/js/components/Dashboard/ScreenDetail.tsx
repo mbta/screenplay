@@ -2,6 +2,7 @@ import React from "react";
 import { Screen } from "../../models/screen";
 import ReportAProblemButton from "./ReportAProblemButton";
 import { SCREEN_TYPES } from "../../constants/constants";
+import PaessDetailContainer from "./PaessDetailContainer";
 
 interface ScreenDetailProps {
   screens: Screen[];
@@ -13,6 +14,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     return SCREEN_TYPES.find(({ ids }) => ids.includes(props.screens[0].type))
       ?.label;
   };
+  const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
 
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
@@ -34,7 +36,11 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   };
 
   return (
-    <div className="screen-detail__container">
+    <div
+      className={`screen-detail__container ${
+        isPaess ? "screen-detail__container--paess" : ""
+      }`}
+    >
       <div className="screen-detail__header">
         <div className="screen-detail__screen-type-location">
           {translateScreenType()} / Location
@@ -44,17 +50,24 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         </div>
       </div>
       {props.isOpen &&
-        props.screens.map((screen) => (
-          <div
-            key={screen.id}
-            className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
-          >
-            <iframe
-              className={`screen-detail__iframe screen-detail__iframe--${screen.type}`}
-              title={screen.id}
-              src={generateSource(screen)}
-            />
-          </div>
+        (isPaess ? (
+          <PaessDetailContainer
+            key={props.screens[0].station_code!}
+            screens={props.screens}
+          ></PaessDetailContainer>
+        ) : (
+          props.screens.map((screen) => (
+            <div
+              key={screen.id}
+              className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
+            >
+              <iframe
+                className={`screen-detail__iframe screen-detail__iframe--${screen.type}`}
+                title={screen.id}
+                src={generateSource(screen)}
+              />
+            </div>
+          ))
         ))}
     </div>
   );

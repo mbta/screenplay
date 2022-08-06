@@ -3,6 +3,11 @@
   border-radius: 8px;
   padding: 24px 16px;
 
+  &--paess {
+    background: linear-gradient(to bottom, $cool-gray-40 30%, $cool-gray-40 20%);
+  }
+
+
   &:not(:last-child) {
     margin-bottom: 4px;
   }
@@ -51,6 +56,12 @@
     height: 344px;
   }
 
+  &--pa_ess {
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+  }
+
   .screen-detail__iframe {
     width: 100%;
 
@@ -77,6 +88,11 @@
       width: 1200px;
       transform: scale(15%);
       transform-origin: top left;
+    }
+
+    &--pa_ess {
+      height: 80px;
+      width: 250px;
     }
   }
 }
