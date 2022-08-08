@@ -33,6 +33,7 @@ const PaessDetailContainer = (
         <Col
           key={`${stationCode}-left`}
           className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+          data-testid="paess-col-left"
         >
           <div>
             {leftScreens.map((screen) => (
@@ -50,6 +51,7 @@ const PaessDetailContainer = (
         <Col
           key={`${stationCode}-center`}
           className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+          data-testid="paess-col-center"
         >
           <div>
             {centerScreens.map((screen) => (
@@ -67,6 +69,7 @@ const PaessDetailContainer = (
         <Col
           key={`${stationCode}-right`}
           className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+          data-testid="paess-col-right"
         >
           <div>
             {rightScreens.map((screen) => (
