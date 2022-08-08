@@ -14,7 +14,23 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     return SCREEN_TYPES.find(({ ids }) => ids.includes(props.screens[0].type))
       ?.label;
   };
+
   const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
+
+  const getPaessRoute = () => {
+    switch (props.screens[0].station_code!.charAt(0)) {
+      case "G":
+        return "green";
+      case "R":
+        return "red";
+      case "B":
+        return "blue";
+      case "O":
+        return "orange";
+      case "S":
+        return "bus";
+    }
+  };
 
   const getScreenLocation = () =>
     props.screens[0].location ? `/ ${props.screens[0].location}` : "";
@@ -44,12 +60,18 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 
   return (
     <div
-      className={`screen-detail__container ${
-        isPaess ? "screen-detail__container--paess" : ""
+      className={`screen-detail__container${
+        isPaess ? ` screen-detail__container--paess-${getPaessRoute()}` : ""
       }`}
     >
       <div className="screen-detail__header">
-        <div className="screen-detail__screen-type-location">
+        <div
+          className={`screen-detail__screen-type-location${
+            isPaess && getPaessRoute() == "bus"
+              ? " screen-detail__screen-type-location--paess-bus"
+              : ""
+          }`}
+        >
           {translateScreenType()} {getScreenLocation()}
         </div>
         <div className="screen-detail__report-a-problem-button">

@@ -3,8 +3,24 @@
   border-radius: 8px;
   padding: 24px 16px;
 
-  &--paess {
-    background: linear-gradient(to bottom, $cool-gray-40 30%, $cool-gray-40 20%);
+  &--paess-green {
+    background: linear-gradient(to bottom, $mbta-green 70px, $cool-gray-40 70px);
+  }
+
+  &--paess-red {
+    background: linear-gradient(to bottom, $mbta-red 70px, $cool-gray-40 70px);
+  }
+
+  &--paess-blue {
+    background: linear-gradient(to bottom, $mbta-blue 70px, $cool-gray-40 70px);
+  }
+
+  &--paess-orange {
+    background: linear-gradient(to bottom, $mbta-orange 70px, $cool-gray-40 70px);
+  }
+
+  &--paess-bus {
+    background: linear-gradient(to bottom, $mbta-bus 70px, $cool-gray-40 70px);
   }
 
 
@@ -24,6 +40,10 @@
   font-size: 20px;
   line-height: 24px;
   color: white;
+
+  &--paess-bus {
+    color:black
+  }
 }
 
 .screen-detail__iframe-container {

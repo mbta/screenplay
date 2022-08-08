@@ -89,7 +89,18 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       .map((screen) => [screen]);
 
     if (paEssScreens.length > 0) {
-      groupedScreens.push(paEssScreens);
+      const paEssGroupedByRoute = new Map<string, Screen[]>();
+      paEssScreens.map((paEssScreen) => {
+        const routeLetter = paEssScreen.station_code!.charAt(0);
+
+        paEssGroupedByRoute.has(routeLetter)
+          ? paEssGroupedByRoute.get(routeLetter)!.push(paEssScreen)
+          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
+      });
+
+      paEssGroupedByRoute.forEach((screens) => {
+        groupedScreens.push(screens);
+      });
     }
 
     return groupedScreens;
