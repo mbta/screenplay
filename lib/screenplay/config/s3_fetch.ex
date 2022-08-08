@@ -6,15 +6,19 @@ defmodule Screenplay.Config.S3Fetch do
   @behaviour Screenplay.Config.Fetch
 
   def get_config do
-    case do_get() do
-      {:ok, file_contents} -> Jason.decode(file_contents)
+    with {:ok, config_contents} <- do_get(:config),
+         {:ok, location_contents} <- do_get(:locations),
+         {:ok, config_json} <- Jason.decode(config_contents),
+         {:ok, location_json} <- Jason.decode(location_contents) do
+      {:ok, config_json, location_json}
+    else
       _ -> :error
     end
   end
 
-  defp do_get do
+  defp do_get(file_spec) do
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
-    path = config_path_for_environment()
+    path = config_path_for_environment(file_spec)
 
     get_operation = ExAws.S3.get_object(bucket, path)
 
@@ -28,7 +32,12 @@ defmodule Screenplay.Config.S3Fetch do
     end
   end
 
-  defp config_path_for_environment do
-    "screenplay/#{Application.get_env(:screenplay, :environment_name, "dev")}/places_and_screens.json"
+  defp config_path_for_environment(file_spec) do
+    base_path = "screenplay/#{Application.get_env(:screenplay, :environment_name, "dev")}"
+
+    case file_spec do
+      :config -> "#{base_path}/places_and_screens.json"
+      :locations -> "#{base_path}/screen_locations.json"
+    end
   end
 end

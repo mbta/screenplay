@@ -2,19 +2,38 @@ import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import FilterDropdown from "./FilterDropdown";
 import { Accordion, Container } from "react-bootstrap";
-import { ArrowDown } from "react-bootstrap-icons";
+import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import Sidebar from "./Sidebar";
 import {
   MODES_AND_LINES,
+  SORT_LABELS_BY_LINE,
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
 
+type DirectionID = 0 | 1;
+
+const getSortLabel = (
+  modeLineFilterValue: { label: string },
+  sortDirection: DirectionID
+) => {
+  const line = modeLineFilterValue.label.split(" ")[0];
+  const sortLabels = SORT_LABELS_BY_LINE[line];
+
+  if (sortLabels) {
+    return sortLabels[sortDirection];
+  } else {
+    return ["ABC", "ZYX"][sortDirection];
+  }
+};
+
 const Dashboard = (props: { page: string }): JSX.Element => {
   const [places, setPlaces] = useState<Place[]>([]);
+  // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
+  const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
   );
@@ -23,15 +42,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   );
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
   const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
-  const [sortLabel, setSortLabel] = useState("ABC");
+
+  const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
   useEffect(() => {
     fetch("/api/dashboard")
       .then((response) => response.json())
       .then((placeList: []) => {
-        setPlaces(
-          placeList.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
-        );
+        setPlaces(placeList);
       });
   }, []);
 
@@ -42,14 +60,6 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter) {
-      const line = selectedFilter.label.split(" ")[0];
-      let sortLabel = "ABC";
-      if (line === "Green" || line === "Blue") {
-        sortLabel = "WESTBOUND";
-      } else if (line === "Red" || line === "Orange") {
-        sortLabel = "SOUTHBOUND";
-      }
-      setSortLabel(sortLabel);
       setModeLineFilterValue(selectedFilter);
     }
   };
@@ -68,6 +78,27 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     }
   };
 
+  const sortLabelOnClick = () => {
+    setSortDirection((1 - sortDirection) as DirectionID);
+  };
+
+  const sortPlaces = (places: Place[]) => {
+    if (["ABC", "ZYX"].includes(sortLabel)) {
+      return sortDirection === 0
+        ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
+        : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
+    } else if (
+      // This catches on Silver Line, which we haven't really discussed how it should be treated.
+      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
+      // It should probably treated as a bus route, but still a question for Adam.
+      modeLineFilterValue.label.includes("Line")
+    ) {
+      return sortByStationOrder(places, sortDirection === 1);
+    }
+
+    return places;
+  };
+
   const filterPlaces = () => {
     let filteredPlaces = places;
     if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
@@ -84,22 +115,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
           modeLineFilterValue.ids.includes(route)
         );
       });
-
-      // This catches on Silver Line, which we haven't really discussed how it should be treated.
-      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
-      // It should probably treated as a bus route, but still a question for Adam.
-      if (modeLineFilterValue.label.includes("Line")) {
-        sortByStationOrder(filteredPlaces, modeLineFilterValue);
-      }
     }
     // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
 
-  const sortByStationOrder = (places: Place[], filter: { label: string }) => {
-    const line = filter.label.split(" ")[0];
-    const stationOrder = STATION_ORDER_BY_LINE[line.toLowerCase()];
+  const sortByStationOrder = (places: Place[], reverse?: boolean) => {
+    const stationOrder = STATION_ORDER_BY_LINE[getFilteredLine().toLowerCase()];
 
     places.sort((placeA, placeB) => {
       const indexA = stationOrder.findIndex((station) => {
@@ -110,12 +133,41 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       });
       return indexA - indexB;
     });
+
+    return reverse ? places.reverse() : places;
+  };
+
+  const isOnlyFilteredByRoute = () => {
+    return (
+      modeLineFilterValue !== MODES_AND_LINES[0] &&
+      statusFilterValue === STATUSES[0] &&
+      screenTypeFilterValue === SCREEN_TYPES[0]
+    );
+  };
+
+  const getFilteredLine = () => {
+    if (modeLineFilterValue.label.includes("Line")) {
+      return modeLineFilterValue.label === "Green Line"
+        ? "Green"
+        : modeLineFilterValue.ids[0];
+    }
+
+    return "";
   };
 
   const goToHome = () => {
     setModeLineFilterValue(MODES_AND_LINES[0]);
     setScreenTypeFilterValue(SCREEN_TYPES[0]);
     setStatusFilterValue(STATUSES[0]);
+    setSortDirection(0);
+  };
+
+  const handleAccordionClick = (eventKey: string) => {
+    if (activeEventKeys.includes(eventKey)) {
+      setActiveEventKeys(activeEventKeys.filter((e) => e !== eventKey));
+    } else {
+      setActiveEventKeys([...activeEventKeys, eventKey]);
+    }
   };
 
   let header, content;
@@ -136,8 +188,12 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       content = (
         <Container fluid>
           <div className="place-list__header-row">
-            <div className="place-list__sort-label d-flex align-items-center">
-              {sortLabel} <ArrowDown />
+            <div
+              className="place-list__sort-label d-flex align-items-center"
+              onClick={sortLabelOnClick}
+              data-testid="sort-label"
+            >
+              {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
             </div>
             <FilterDropdown
               list={MODES_AND_LINES}
@@ -156,21 +212,16 @@ const Dashboard = (props: { page: string }): JSX.Element => {
             />
           </div>
           <Accordion flush alwaysOpen activeKey={activeEventKeys}>
-            {filterPlaces().map((place: Place, index) => (
+            {sortPlaces(filterPlaces()).map((place: Place, index) => (
               <PlaceRow
                 key={place.id}
                 place={place}
                 eventKey={index.toString()}
-                handleClick={() => {
-                  const i = index.toString();
-                  if (activeEventKeys.includes(i)) {
-                    setActiveEventKeys(
-                      activeEventKeys.filter((eventKey) => eventKey !== i)
-                    );
-                  } else {
-                    setActiveEventKeys([...activeEventKeys, i]);
-                  }
-                }}
+                onClick={handleAccordionClick}
+                filteredLine={
+                  isOnlyFilteredByRoute() ? getFilteredLine() : null
+                }
+                defaultSort={sortDirection === 0}
               />
             ))}
           </Accordion>

@@ -16,19 +16,26 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   };
   const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
 
+  const getScreenLocation = () =>
+    props.screens[0].location ? `/ ${props.screens[0].location}` : "";
+
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
-    const baseUrl =
-      environmentName === "dev"
-        ? "https://screens-dev.mbtace.com"
-        : "https://screens.mbta.com";
+    let baseUrl;
+    if (environmentName === "dev") {
+      baseUrl = "https://screens-dev.mbtace.com";
+    } else if (environmentName === "dev-green") {
+      baseUrl = "https://screens-dev-green.mbtace.com";
+    } else {
+      baseUrl = "https://screens.mbta.com";
+    }
 
     if (type.includes("v2")) {
       return `${baseUrl}/v2/screen/${id}/simulation`;
     }
-    if (type.includes("bus") || type.includes("gl")) {
+    if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
       return `${baseUrl}/screen/${id}`;
     }
 
@@ -43,7 +50,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     >
       <div className="screen-detail__header">
         <div className="screen-detail__screen-type-location">
-          {translateScreenType()} / Location
+          {translateScreenType()} {getScreenLocation()}
         </div>
         <div className="screen-detail__report-a-problem-button">
           <ReportAProblemButton />
