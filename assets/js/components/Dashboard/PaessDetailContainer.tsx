@@ -29,12 +29,12 @@ const PaessDetailContainer = (
 
   return (
     <Row className="h-100" md={3}>
-      {leftScreens.length > 0 && (
-        <Col
-          key={`${stationCode}-left`}
-          className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
-          data-testid="paess-col-left"
-        >
+      <Col
+        key={`${stationCode}-left`}
+        className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+        data-testid="paess-col-left"
+      >
+        {leftScreens.length > 0 && (
           <div>
             {leftScreens.map((screen) => (
               <PaessScreenDetail
@@ -45,14 +45,14 @@ const PaessDetailContainer = (
               />
             ))}
           </div>
-        </Col>
-      )}
-      {centerScreens.length > 0 && (
-        <Col
-          key={`${stationCode}-center`}
-          className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
-          data-testid="paess-col-center"
-        >
+        )}
+      </Col>
+      <Col
+        key={`${stationCode}-center`}
+        className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+        data-testid="paess-col-center"
+      >
+        {centerScreens.length > 0 && (
           <div>
             {centerScreens.map((screen) => (
               <PaessScreenDetail
@@ -63,14 +63,14 @@ const PaessDetailContainer = (
               />
             ))}
           </div>
-        </Col>
-      )}
-      {rightScreens.length > 0 && (
-        <Col
-          key={`${stationCode}-right`}
-          className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
-          data-testid="paess-col-right"
-        >
+        )}
+      </Col>
+      <Col
+        key={`${stationCode}-right`}
+        className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+        data-testid="paess-col-right"
+      >
+        {rightScreens.length > 0 && (
           <div>
             {rightScreens.map((screen) => (
               <PaessScreenDetail
@@ -81,8 +81,8 @@ const PaessDetailContainer = (
               />
             ))}
           </div>
-        </Col>
-      )}
+        )}
+      </Col>
     </Row>
   );
 };
