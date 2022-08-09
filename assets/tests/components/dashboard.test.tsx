@@ -46,7 +46,7 @@ describe("Dashboard", () => {
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
-        fireEvent.click(await findByRole("button", { name: "PA/ESS" }));
+        fireEvent.click(await findByRole("button", { name: "PA ESS" }));
         await waitFor(() => {
           expect(getByText("Davis")).toBeInTheDocument();
           expect(getByText("Alewife")).toBeInTheDocument();
