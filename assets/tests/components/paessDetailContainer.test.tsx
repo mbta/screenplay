@@ -41,9 +41,7 @@ describe("PaessDetailContainer", () => {
       },
     ];
 
-    const { getByTestId, getByText } = render(
-      <PaessDetailContainer screens={screens} />
-    );
+    const { getByText } = render(<PaessDetailContainer screens={screens} />);
 
     expect(getByText("Test Label")).toBeInTheDocument();
   });

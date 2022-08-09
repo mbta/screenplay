@@ -18,18 +18,9 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
 
   const getPaessRoute = () => {
-    switch (props.screens[0].station_code!.charAt(0)) {
-      case "G":
-        return "green";
-      case "R":
-        return "red";
-      case "B":
-        return "blue";
-      case "O":
-        return "orange";
-      case "S":
-        return "bus";
-    }
+    return props.screens[0].station_code
+      ? props.screens[0].station_code.charAt(0).toLowerCase()
+      : "";
   };
 
   const getScreenLocation = () =>
@@ -67,8 +58,8 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       <div className="screen-detail__header">
         <div
           className={`screen-detail__screen-type-location${
-            isPaess && getPaessRoute() == "bus"
-              ? " screen-detail__screen-type-location--paess-bus"
+            isPaess && getPaessRoute() == "s"
+              ? " screen-detail__screen-type-location--paess-s"
               : ""
           }`}
         >
@@ -81,7 +72,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       {props.isOpen &&
         (isPaess ? (
           <PaessDetailContainer
-            key={props.screens[0].station_code!}
+            key={props.screens[0].station_code}
             screens={props.screens}
           ></PaessDetailContainer>
         ) : (

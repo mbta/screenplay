@@ -16,15 +16,16 @@ const PaessDetailContainer = (
     right: ["n", "e"],
   };
 
-  const stationCode = props.screens[0].station_code!;
-  const leftScreens = props.screens.filter((screen) =>
-    zonePositions.left.includes(screen.zone!)
+  const stationCode = props.screens[0].station_code;
+  const leftScreens = props.screens.filter(
+    (screen) => screen.zone != null && zonePositions.left.includes(screen.zone)
   );
-  const centerScreens = props.screens.filter((screen) =>
-    zonePositions.center.includes(screen.zone!)
+  const centerScreens = props.screens.filter(
+    (screen) =>
+      screen.zone != null && zonePositions.center.includes(screen.zone)
   );
-  const rightScreens = props.screens.filter((screen) =>
-    zonePositions.right.includes(screen.zone!)
+  const rightScreens = props.screens.filter(
+    (screen) => screen.zone != null && zonePositions.right.includes(screen.zone)
   );
 
   return (
@@ -36,14 +37,18 @@ const PaessDetailContainer = (
       >
         {leftScreens.length > 0 && (
           <div>
-            {leftScreens.map((screen) => (
-              <PaessScreenDetail
-                key={`${screen.station_code!}-${screen.zone!}`}
-                stationCode={screen.station_code!}
-                zone={screen.zone!}
-                label={screen.label}
-              />
-            ))}
+            {leftScreens.map(
+              (screen) =>
+                screen.station_code != null &&
+                screen.zone != null && (
+                  <PaessScreenDetail
+                    key={`${screen.station_code}-${screen.zone}`}
+                    stationCode={screen.station_code}
+                    zone={screen.zone}
+                    label={screen.label}
+                  />
+                )
+            )}
           </div>
         )}
       </Col>
@@ -54,14 +59,18 @@ const PaessDetailContainer = (
       >
         {centerScreens.length > 0 && (
           <div>
-            {centerScreens.map((screen) => (
-              <PaessScreenDetail
-                key={`${screen.station_code!}-${screen.zone!}`}
-                stationCode={screen.station_code!}
-                zone={screen.zone!}
-                label={screen.label}
-              />
-            ))}
+            {centerScreens.map(
+              (screen) =>
+                screen.station_code != null &&
+                screen.zone != null && (
+                  <PaessScreenDetail
+                    key={`${screen.station_code}-${screen.zone}`}
+                    stationCode={screen.station_code}
+                    zone={screen.zone}
+                    label={screen.label}
+                  />
+                )
+            )}
           </div>
         )}
       </Col>
@@ -72,14 +81,18 @@ const PaessDetailContainer = (
       >
         {rightScreens.length > 0 && (
           <div>
-            {rightScreens.map((screen) => (
-              <PaessScreenDetail
-                key={`${screen.station_code!}-${screen.zone!}`}
-                stationCode={screen.station_code!}
-                zone={screen.zone!}
-                label={screen.label}
-              />
-            ))}
+            {rightScreens.map(
+              (screen) =>
+                screen.station_code != null &&
+                screen.zone != null && (
+                  <PaessScreenDetail
+                    key={`${screen.station_code}-${screen.zone}`}
+                    stationCode={screen.station_code}
+                    zone={screen.zone}
+                    label={screen.label}
+                  />
+                )
+            )}
           </div>
         )}
       </Col>

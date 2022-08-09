@@ -6,7 +6,7 @@ interface PaessScreenDetailProps {
   label?: string;
 }
 
-function PaessScreenDetail(props: PaessScreenDetailProps): JSX.Element {
+const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
   const generateSource = () => {
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
@@ -44,6 +44,6 @@ function PaessScreenDetail(props: PaessScreenDetailProps): JSX.Element {
       />
     </div>
   );
-}
+};
 
 export default PaessScreenDetail;
