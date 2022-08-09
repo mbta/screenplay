@@ -29,7 +29,7 @@ const PaessDetailContainer = (
   );
 
   return (
-    <Row className="h-100" md={3}>
+    <Row className="h-100" lg={3}>
       <Col
         key={`${stationCode}-left`}
         className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}

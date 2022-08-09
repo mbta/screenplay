@@ -17,14 +17,32 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 
   const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
 
-  const getPaessRoute = () => {
+  const getPaessRouteLetter = () => {
     return props.screens[0].station_code
       ? props.screens[0].station_code.charAt(0).toLowerCase()
       : "";
   };
 
-  const getScreenLocation = () =>
-    props.screens[0].location ? `/ ${props.screens[0].location}` : "";
+  const getPaessRoute = (routeLetter: string) => {
+    switch (routeLetter) {
+      case "g":
+        return "GREEN LINE";
+      case "r":
+        return "RED LINE";
+      case "b":
+        return "BLUE LINE";
+      case "o":
+        return "ORANGE LINE";
+      case "s":
+        return "BUS";
+    }
+  };
+
+  const getScreenLocation = () => {
+    if (isPaess) {
+      return `/ ${getPaessRoute(getPaessRouteLetter())}`;
+    } else props.screens[0].location ? `/ ${props.screens[0].location}` : "";
+  };
 
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
@@ -52,22 +70,26 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   return (
     <div
       className={`screen-detail__container${
-        isPaess ? ` screen-detail__container--paess-${getPaessRoute()}` : ""
+        isPaess
+          ? ` screen-detail__container--paess-${getPaessRouteLetter()}`
+          : ""
       }`}
     >
       <div className="screen-detail__header">
         <div
           className={`screen-detail__screen-type-location${
-            isPaess && getPaessRoute() == "s"
+            isPaess && getPaessRouteLetter() == "s"
               ? " screen-detail__screen-type-location--paess-s"
               : ""
           }`}
         >
           {translateScreenType()} {getScreenLocation()}
         </div>
-        <div className="screen-detail__report-a-problem-button">
-          <ReportAProblemButton />
-        </div>
+        {!isPaess && (
+          <div className="screen-detail__report-a-problem-button">
+            <ReportAProblemButton />
+          </div>
+        )}
       </div>
       {props.isOpen &&
         (isPaess ? (

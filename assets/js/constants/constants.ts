@@ -37,7 +37,7 @@ export const SCREEN_TYPES = [
   },
   { label: "Elevator", ids: ["elevator"] },
   { label: "Outfront Media", ids: ["ofm"] },
-  { label: "PA/ESS", ids: ["pa_ess"] },
+  { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
   { label: "Solari", ids: ["solari"] },
 ];

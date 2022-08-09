@@ -89,23 +89,29 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       .map((screen) => [screen]);
 
     if (paEssScreens.length > 0) {
-      const paEssGroupedByRoute = new Map<string, Screen[]>();
-      paEssScreens.map((paEssScreen) => {
-        if (paEssScreen.station_code) {
-          const routeLetter = paEssScreen.station_code.charAt(0);
-
-          paEssGroupedByRoute.has(routeLetter)
-            ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
-            : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
-        }
-      });
-
-      paEssGroupedByRoute.forEach((screens) => {
-        groupedScreens.push(screens);
-      });
+      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
     }
 
     return groupedScreens;
+  };
+
+  const groupPaEssScreensbyRoute = (
+    paEssScreens: Screen[],
+    groupedScreens: Screen[][]
+  ) => {
+    const paEssGroupedByRoute = new Map<string, Screen[]>();
+    paEssScreens.map((paEssScreen) => {
+      if (paEssScreen.station_code) {
+        const routeLetter = paEssScreen.station_code.charAt(0);
+
+        paEssGroupedByRoute.has(routeLetter)
+          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
+          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
+      }
+    });
+    paEssGroupedByRoute.forEach((screens) => {
+      groupedScreens.push(screens);
+    });
   };
 
   const renderModesAndLinesIcons = () => {

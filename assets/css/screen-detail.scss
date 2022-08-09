@@ -6,29 +6,29 @@
   &--paess-g {
     background: linear-gradient(
       to bottom,
-      $mbta-green 70px,
-      $cool-gray-40 70px
+      $mbta-green 40px,
+      $cool-gray-40 40px
     );
   }
 
   &--paess-r {
-    background: linear-gradient(to bottom, $mbta-red 70px, $cool-gray-40 70px);
+    background: linear-gradient(to bottom, $mbta-red 40px, $cool-gray-40 40px);
   }
 
   &--paess-b {
-    background: linear-gradient(to bottom, $mbta-blue 70px, $cool-gray-40 70px);
+    background: linear-gradient(to bottom, $mbta-blue 40px, $cool-gray-40 40px);
   }
 
   &--paess-o {
     background: linear-gradient(
       to bottom,
-      $mbta-orange 70px,
-      $cool-gray-40 70px
+      $mbta-orange 40px,
+      $cool-gray-40 40px
     );
   }
 
   &--paess-s {
-    background: linear-gradient(to bottom, $mbta-bus 70px, $cool-gray-40 70px);
+    background: linear-gradient(to bottom, $mbta-bus 40px, $cool-gray-40 40px);
   }
 
   &:not(:last-child) {
@@ -47,6 +47,10 @@
   font-size: 20px;
   line-height: 24px;
   color: white;
+
+  &--paess {
+    margin: 8px 16px;
+  }
 
   &--paess-s {
     color: black;
