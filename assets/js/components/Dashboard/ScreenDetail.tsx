@@ -57,11 +57,10 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     >
       <div className="screen-detail__header">
         <div
-          className={`screen-detail__screen-type-location${
-            isPaess && getPaessRoute() == "s"
-              ? " screen-detail__screen-type-location--paess-s"
-              : ""
-          }`}
+          className={classNames("screen-detail__screen-type-location", {
+            "screen-detail__screen-type-location--paess-s":
+              isPaess && getPaessRoute() == "s",
+          })}
         >
           {translateScreenType()} {getScreenLocation()}
         </div>
