@@ -51,9 +51,9 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 
   return (
     <div
-      className={`screen-detail__container${
-        isPaess ? ` screen-detail__container--paess-${getPaessRoute()}` : ""
-      }`}
+      className={classNames("screen-detail__container", {
+        [`screen-detail__container--paess-${getPaessRoute()}`]: isPaess,
+      })}
     >
       <div className="screen-detail__header">
         <div
