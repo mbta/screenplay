@@ -30,6 +30,8 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         return "GREEN LINE";
       case "r":
         return "RED LINE";
+      case "m":
+        return "MATTAPAN";
       case "b":
         return "BLUE LINE";
       case "o":
