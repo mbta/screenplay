@@ -15,7 +15,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       ?.label;
   };
 
-  const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
+  const isPaess = props.screens.every((screen) => screen.type === "pa_ess");
 
   const getPaessRoute = () => {
     return props.screens[0].station_code
