@@ -11,27 +11,13 @@ beforeAll(() => {
 });
 
 describe("PaessDetailContainer", () => {
-  test("Renders screens in columns", async () => {
+  test("Renders all columns", async () => {
     const screens: Screen[] = [
       {
         id: "test_mezzanine",
         station_code: "ABCD",
         type: "pa_ess",
         zone: "m",
-        disabled: false,
-      },
-      {
-        id: "test_northbound",
-        station_code: "ABCD",
-        type: "pa_ess",
-        zone: "n",
-        disabled: false,
-      },
-      {
-        id: "test_southbound",
-        station_code: "ABCD",
-        type: "pa_ess",
-        zone: "s",
         disabled: false,
       },
     ];
@@ -43,7 +29,7 @@ describe("PaessDetailContainer", () => {
     expect(getByTestId("paess-col-right")).toBeVisible();
   });
 
-  test("Renders only one column", async () => {
+  test("Label passed to screen", async () => {
     const screens: Screen[] = [
       {
         id: "test_mezzanine",
@@ -51,15 +37,14 @@ describe("PaessDetailContainer", () => {
         type: "pa_ess",
         zone: "m",
         disabled: false,
+        label: "Test Label",
       },
     ];
 
-    const { getByTestId, queryByTestId } = render(
+    const { getByTestId, getByText } = render(
       <PaessDetailContainer screens={screens} />
     );
 
-    expect(queryByTestId("paess-col-left")).toBeNull();
-    expect(queryByTestId("paess-col-right")).toBeNull();
-    expect(getByTestId("paess-col-center")).toBeVisible();
+    expect(getByText("Test Label")).toBeInTheDocument();
   });
 });
