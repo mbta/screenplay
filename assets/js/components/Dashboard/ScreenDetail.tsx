@@ -3,6 +3,7 @@ import { Screen } from "../../models/screen";
 import ReportAProblemButton from "./ReportAProblemButton";
 import { SCREEN_TYPES } from "../../constants/constants";
 import PaessDetailContainer from "./PaessDetailContainer";
+import classNames from "classnames";
 
 interface ScreenDetailProps {
   screens: Screen[];
@@ -15,7 +16,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
       ?.label;
   };
 
-  const isPaess = props.screens.some((screen) => screen.type === "pa_ess");
+  const isPaess = props.screens.every((screen) => screen.type === "pa_ess");
 
   const getPaessRouteLetter = () => {
     return props.screens[0].station_code
@@ -69,19 +70,18 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 
   return (
     <div
-      className={`screen-detail__container${
-        isPaess
-          ? ` screen-detail__container--paess-${getPaessRouteLetter()}`
-          : ""
-      }`}
+      className={classNames("screen-detail__container", {
+        [`screen-detail__container--paess screen-detail__container--paess-${getPaessRouteLetter()}`]:
+          isPaess,
+      })}
     >
       <div className="screen-detail__header">
         <div
-          className={`screen-detail__screen-type-location${
-            isPaess && getPaessRouteLetter() == "s"
-              ? " screen-detail__screen-type-location--paess-s"
-              : ""
-          }`}
+          className={classNames("screen-detail__screen-type-location", {
+            "screen-detail__screen-type-location--paess-s":
+              isPaess && getPaessRouteLetter() == "s",
+            "screen-detail__screen-type-location--paess": isPaess,
+          })}
         >
           {translateScreenType()} {getScreenLocation()}
         </div>

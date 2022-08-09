@@ -3,6 +3,10 @@
   border-radius: 8px;
   padding: 24px 16px;
 
+  &--paess {
+    padding: 0px 0px 16px;
+  }
+
   &--paess-g {
     background: linear-gradient(
       to bottom,
@@ -28,6 +32,8 @@
   }
 
   &--paess-s {
+    padding: 0px 0px;
+    padding-bottom: 16px;
     background: linear-gradient(to bottom, $mbta-bus 40px, $cool-gray-40 40px);
   }
 
