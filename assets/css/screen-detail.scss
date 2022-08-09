@@ -4,7 +4,11 @@
   padding: 24px 16px;
 
   &--paess-g {
-    background: linear-gradient(to bottom, $mbta-green 70px, $cool-gray-40 70px);
+    background: linear-gradient(
+      to bottom,
+      $mbta-green 70px,
+      $cool-gray-40 70px
+    );
   }
 
   &--paess-r {
@@ -16,13 +20,16 @@
   }
 
   &--paess-o {
-    background: linear-gradient(to bottom, $mbta-orange 70px, $cool-gray-40 70px);
+    background: linear-gradient(
+      to bottom,
+      $mbta-orange 70px,
+      $cool-gray-40 70px
+    );
   }
 
   &--paess-s {
     background: linear-gradient(to bottom, $mbta-bus 70px, $cool-gray-40 70px);
   }
-
 
   &:not(:last-child) {
     margin-bottom: 4px;
@@ -42,7 +49,7 @@
   color: white;
 
   &--paess-s {
-    color:black
+    color: black;
   }
 }
 
