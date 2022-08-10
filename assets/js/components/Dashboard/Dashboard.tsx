@@ -59,8 +59,9 @@ const Dashboard = (props: { page: string }): JSX.Element => {
 
   const handleModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
-    if (selectedFilter) {
+    if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
       setModeLineFilterValue(selectedFilter);
+      setSortDirection(0);
     }
   };
 
@@ -135,6 +136,14 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     });
 
     return reverse ? places.reverse() : places;
+  };
+
+  const isFiltered = () => {
+    return (
+      modeLineFilterValue !== MODES_AND_LINES[0] ||
+      statusFilterValue !== STATUSES[0] ||
+      screenTypeFilterValue !== SCREEN_TYPES[0]
+    );
   };
 
   const isOnlyFilteredByRoute = () => {
@@ -218,6 +227,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                 place={place}
                 eventKey={index.toString()}
                 onClick={handleAccordionClick}
+                isFiltered={isFiltered()}
                 filteredLine={
                   isOnlyFilteredByRoute() ? getFilteredLine() : null
                 }
