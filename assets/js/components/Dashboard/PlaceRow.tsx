@@ -116,7 +116,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
     return newRoutes.map((route) => (
       <img
-        className="place-mode-line-icon"
+        className="place-row__mode-line-icon"
         key={route}
         src={`/images/pills/${route.toLowerCase()}.png`}
         alt={route}
@@ -145,10 +145,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     >
       <Container fluid>
         <Row className="align-items-center text-white">
-          <Col
-            lg={4}
-            className="d-flex align-items-center place-row__toggle-name-map-group"
-          >
+          <Col lg={4} className="d-flex align-items-center">
             <div
               className={classNames("place-row__toggle", {
                 "hidden-toggle": !hasScreens,
@@ -159,13 +156,16 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
             {props.filteredLine && (
               <div
                 className={classNames(
-                  "place-row__map-segment-container map-segment-container",
-                  `map-segment-container__${props.filteredLine}`,
-                  { "map-segment-container__flipped": !props.defaultSort }
+                  "place-row__map-segment-container",
+                  `place-row__map-segment-container--${props.filteredLine}`,
+                  {
+                    "place-row__map-segment-container--flipped":
+                      !props.defaultSort,
+                  }
                 )}
               >
                 <img
-                  className="map-segment"
+                  className="place-row__map-segment"
                   src={`/images/inline-maps/${getInlineMap(
                     props.place,
                     STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
@@ -174,7 +174,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                 />
               </div>
             )}
-            <div className="place-name" data-testid="place-name">
+            <div className="place-row__name" data-testid="place-name">
               {name}
             </div>
           </Col>
@@ -183,19 +183,19 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           </Col>
           <Col
             lg={3}
-            className="place-screen-types pe-5"
+            className="place-row__screen-types pe-5"
             data-testid="place-screen-types"
           >
             {formatScreenTypes()}
           </Col>
-          <Col lg={2} className="place-status" data-testid="place-status">
+          <Col lg={2} className="place-row__status" data-testid="place-status">
             {hasScreens ? "Auto" : "—"}
           </Col>
         </Row>
       </Container>
       <Accordion.Collapse eventKey={props.eventKey}>
         <>
-          <div className="screen-preview-container">
+          <div className="place-row__screen-preview-container">
             {hasScreens &&
               filterAndGroupScreens(sortScreens()).map((screens, index) => (
                 <ScreenDetail
