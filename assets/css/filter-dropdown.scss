@@ -22,7 +22,6 @@
 }
 
 .filter-dropdown__dropdown-button {
-  min-width: 188px;
   height: 36px;
   font-size: 16px;
   line-height: 24px;
@@ -38,10 +37,6 @@
   &:hover {
     opacity: 0.6;
   }
-}
-
-.filter-dropdown__button-group {
-  margin-left: 16px;
 }
 
 .filter-dropdown__dropdown-menu {

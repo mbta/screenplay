@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import FilterDropdown from "./FilterDropdown";
-import { Accordion, Container } from "react-bootstrap";
+import { Accordion, Col, Container, Row } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
@@ -186,31 +186,42 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     default:
       header = "Places";
       content = (
-        <Container fluid>
-          <div className="place-list__header-row">
-            <div
-              className="place-list__sort-label d-flex align-items-center"
-              onClick={sortLabelOnClick}
-              data-testid="sort-label"
-            >
-              {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
-            </div>
-            <FilterDropdown
-              list={MODES_AND_LINES}
-              onSelect={(value: any) => handleModeOrLineSelect(value)}
-              selectedValue={modeLineFilterValue}
-            />
-            <FilterDropdown
-              list={SCREEN_TYPES}
-              onSelect={(value: any) => handleScreenTypeSelect(value)}
-              selectedValue={screenTypeFilterValue}
-            />
-            <FilterDropdown
-              list={STATUSES}
-              onSelect={(value: any) => handleStatusSelect(value)}
-              selectedValue={statusFilterValue}
-            />
-          </div>
+        <>
+          <Container fluid>
+            <Row className="place-list__header-row">
+              <Col lg={4}>
+                <div
+                  className="place-list__sort-label d-flex align-items-center"
+                  onClick={sortLabelOnClick}
+                  data-testid="sort-label"
+                >
+                  {sortLabel}{" "}
+                  {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+                </div>
+              </Col>
+              <Col lg={3} className="d-flex justify-content-end pe-5">
+                <FilterDropdown
+                  list={MODES_AND_LINES}
+                  onSelect={(value: any) => handleModeOrLineSelect(value)}
+                  selectedValue={modeLineFilterValue}
+                />
+              </Col>
+              <Col lg={3} className="place-screen-types pe-5">
+                <FilterDropdown
+                  list={SCREEN_TYPES}
+                  onSelect={(value: any) => handleScreenTypeSelect(value)}
+                  selectedValue={screenTypeFilterValue}
+                />
+              </Col>
+              <Col lg={2}>
+                <FilterDropdown
+                  list={STATUSES}
+                  onSelect={(value: any) => handleStatusSelect(value)}
+                  selectedValue={statusFilterValue}
+                />
+              </Col>
+            </Row>
+          </Container>
           <Accordion flush alwaysOpen activeKey={activeEventKeys}>
             {sortPlaces(filterPlaces()).map((place: Place, index) => (
               <PlaceRow
@@ -225,7 +236,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               />
             ))}
           </Accordion>
-        </Container>
+        </>
       );
   }
 

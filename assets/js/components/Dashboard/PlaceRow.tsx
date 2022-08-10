@@ -146,34 +146,37 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       <Container fluid>
         <Row className="align-items-center text-white">
           <Col
-            lg="auto"
-            className={classNames({
-              "hidden-toggle": !hasScreens,
-            })}
+            lg={4}
+            className="d-flex align-items-center place-row__toggle-name-map-group"
           >
-            {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-          </Col>
-          {props.filteredLine && (
-            <Col
-              lg="auto"
-              className={classNames(
-                "map-segment-container",
-                `map-segment-container__${props.filteredLine}`,
-                { "map-segment-container__flipped": !props.defaultSort }
-              )}
+            <div
+              className={classNames("place-row__toggle", {
+                "hidden-toggle": !hasScreens,
+              })}
             >
-              <img
-                className="map-segment"
-                src={`/images/inline-maps/${getInlineMap(
-                  props.place,
-                  STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
-                )}.png`}
-                alt=""
-              />
-            </Col>
-          )}
-          <Col lg={3} className="place-name" data-testid="place-name">
-            {name}
+              {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+            </div>
+            {props.filteredLine && (
+              <div
+                className={classNames(
+                  "place-row__map-segment-container map-segment-container",
+                  `map-segment-container__${props.filteredLine}`,
+                  { "map-segment-container__flipped": !props.defaultSort }
+                )}
+              >
+                <img
+                  className="map-segment"
+                  src={`/images/inline-maps/${getInlineMap(
+                    props.place,
+                    STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
+                  )}.png`}
+                  alt=""
+                />
+              </div>
+            )}
+            <div className="place-name" data-testid="place-name">
+              {name}
+            </div>
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-5">
             {renderModesAndLinesIcons()}
