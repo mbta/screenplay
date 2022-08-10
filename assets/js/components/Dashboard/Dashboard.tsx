@@ -189,7 +189,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         <>
           <Container fluid>
             <Row className="place-list__header-row">
-              <Col lg={4}>
+              <Col lg={3}>
                 <div
                   className="place-list__sort-label d-flex align-items-center"
                   onClick={sortLabelOnClick}
@@ -213,7 +213,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   selectedValue={screenTypeFilterValue}
                 />
               </Col>
-              <Col lg={2}>
+              <Col lg={3}>
                 <FilterDropdown
                   list={STATUSES}
                   onSelect={(value: any) => handleStatusSelect(value)}

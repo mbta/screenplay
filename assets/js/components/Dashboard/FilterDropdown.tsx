@@ -66,7 +66,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           <XCircleFill size={16} className="m-0" style={{ color: color }} />
         </Button>
       )}
-      <Dropdown onSelect={onSelect} as={ButtonGroup}>
+      <Dropdown onSelect={onSelect}>
         <Dropdown.Toggle
           className={classNames(
             "filter-dropdown__dropdown-button d-flex justify-content-between",
