@@ -225,7 +225,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               <PlaceRow
                 key={place.id}
                 place={place}
-                eventKey={index.toString()}
+                eventKey={place.id}
                 onClick={handleAccordionClick}
                 isFiltered={isFiltered()}
                 filteredLine={
