@@ -88,10 +88,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
         : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
     } else if (
-      // This catches on Silver Line, which we haven't really discussed how it should be treated.
-      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
-      // It should probably treated as a bus route, but still a question for Adam.
-      modeLineFilterValue.label.includes("Line")
+      modeLineFilterValue.label.includes("Line") ||
+      modeLineFilterValue.label === "Mattapan"
     ) {
       return sortByStationOrder(places, sortDirection === 1);
     }
@@ -116,7 +114,6 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         );
       });
     }
-    // Can add additional filtering in if statements here.
 
     return filteredPlaces;
   };
@@ -146,7 +143,10 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   };
 
   const getFilteredLine = () => {
-    if (modeLineFilterValue.label.includes("Line")) {
+    if (
+      modeLineFilterValue.label.includes("Line") ||
+      modeLineFilterValue.label === "Mattapan"
+    ) {
       return modeLineFilterValue.label === "Green Line"
         ? "Green"
         : modeLineFilterValue.ids[0];
