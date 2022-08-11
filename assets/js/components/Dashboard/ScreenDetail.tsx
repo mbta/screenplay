@@ -51,6 +51,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
+
     let baseUrl;
     if (environmentName === "dev") {
       baseUrl = "https://screens-dev.mbtace.com";
@@ -65,6 +66,9 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     }
     if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
       return `${baseUrl}/screen/${id}`;
+    }
+    if (type === "dup") {
+      return `${baseUrl}/screen/${id}/simulation`;
     }
 
     return "";
@@ -87,6 +91,11 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         >
           {translateScreenType()} {getScreenLocation()}
         </div>
+        {props.screens[0].type === "dup" && (
+          <div className="screen-detail__dup-ad-text">
+            Cycle in the ad loop for 7.5 seconds every 45 seconds
+          </div>
+        )}
         {!isPaess && (
           <div className="screen-detail__report-a-problem-button">
             <ReportAProblemButton />

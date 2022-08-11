@@ -95,6 +95,10 @@
     height: 344px;
   }
 
+  &--dup {
+    width: 832px;
+  }
+
   &--pa_ess {
     min-height: 100px;
     display: flex;
@@ -129,9 +133,22 @@
       transform-origin: top left;
     }
 
+    &--dup {
+      height: 160px;
+    }
+
     &--pa_ess {
       height: 80px;
       width: 250px;
     }
   }
+}
+
+.screen-detail__dup-ad-text {
+  font-size: 14px;
+  line-height: 17px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+  flex-grow: 2;
+  margin-right: 16px;
 }
