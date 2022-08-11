@@ -25,6 +25,7 @@ export const SORT_LABELS_BY_LINE: Record<string, [string, string]> = {
   Green: ["WESTBOUND", "EASTBOUND"],
   Orange: ["SOUTHBOUND", "NORTHBOUND"],
   Red: ["SOUTHBOUND", "NORTHBOUND"],
+  Mattapan: ["OUTBOUND", "INBOUND"],
 };
 
 export const SCREEN_TYPES = [

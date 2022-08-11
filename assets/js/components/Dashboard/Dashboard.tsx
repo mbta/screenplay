@@ -147,7 +147,10 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   };
 
   const getFilteredLine = () => {
-    if (modeLineFilterValue.label.includes("Line")) {
+    if (
+      modeLineFilterValue.label.includes("Line") ||
+      modeLineFilterValue.label === "Mattapan"
+    ) {
       return modeLineFilterValue.label === "Green Line"
         ? "Green"
         : modeLineFilterValue.ids[0];

@@ -881,7 +881,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     },
     {
       name: "Mattapan",
-      inlineMap: "Red-Trunk-Middle",
+      inlineMap: "Red-Trunk-Bottom",
     }
   ],
 };
