@@ -64,7 +64,9 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     if (type.includes("v2")) {
       return `${baseUrl}/v2/screen/${id}/simulation`;
     }
-    if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
+    if (
+      ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
+    ) {
       return `${baseUrl}/screen/${id}`;
     }
     if (type === "dup") {
