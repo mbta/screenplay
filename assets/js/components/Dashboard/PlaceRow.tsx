@@ -33,7 +33,8 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     props.onClick(props.eventKey)
   );
   const isOpen = activeEventKey?.includes(props.eventKey);
-  const hasScreens = screens.length !== 0;
+  const hasScreens =
+    screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
 
   const formatScreenTypes = () => {
     if (!hasScreens) {
@@ -78,16 +79,39 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     );
   };
 
-  const groupScreens = (screens: Screen[]) => {
-    const paEssScreens = screens.filter((screen) => screen.type === "pa_ess");
-    const groupedScreens = screens
+  const filterAndGroupScreens = (screens: Screen[]) => {
+    const visibleScreens = screens.filter((screen) => !screen.hidden);
+    const paEssScreens = visibleScreens.filter(
+      (screen) => screen.type === "pa_ess"
+    );
+    const groupedScreens = visibleScreens
       .filter((screen) => screen.type !== "pa_ess")
       .map((screen) => [screen]);
 
     if (paEssScreens.length > 0) {
-      groupedScreens.push(paEssScreens);
+      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
     }
+
     return groupedScreens;
+  };
+
+  const groupPaEssScreensbyRoute = (
+    paEssScreens: Screen[],
+    groupedScreens: Screen[][]
+  ) => {
+    const paEssGroupedByRoute = new Map<string, Screen[]>();
+    paEssScreens.map((paEssScreen) => {
+      if (paEssScreen.station_code) {
+        const routeLetter = paEssScreen.station_code.charAt(0);
+
+        paEssGroupedByRoute.has(routeLetter)
+          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
+          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
+      }
+    });
+    paEssGroupedByRoute.forEach((screens) => {
+      groupedScreens.push(screens);
+    });
   };
 
   const renderModesAndLinesIcons = () => {
@@ -189,7 +213,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         <>
           <div className="screen-preview-container">
             {hasScreens &&
-              groupScreens(sortScreens()).map((screens, index) => (
+              filterAndGroupScreens(sortScreens()).map((screens, index) => (
                 <ScreenDetail
                   key={index}
                   screens={screens}

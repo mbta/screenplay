@@ -46,7 +46,7 @@ describe("Dashboard", () => {
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
-        fireEvent.click(await findByRole("button", { name: "PA/ESS" }));
+        fireEvent.click(await findByRole("button", { name: "PA ESS" }));
         await waitFor(() => {
           expect(getByText("Davis")).toBeInTheDocument();
           expect(getByText("Alewife")).toBeInTheDocument();
@@ -146,15 +146,23 @@ describe("Dashboard", () => {
         expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
         fireEvent.click(getByTestId("sort-label"));
         await waitFor(() => {
-          expect(getByTestId("sort-label").textContent?.trim()).toBe("ZXY");
+          expect(getByTestId("sort-label").textContent?.trim()).toBe("ZYX");
         });
 
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Red Line" }));
-        fireEvent.click(getByTestId("sort-label"));
+        // sortDirection is maintained, so we expect the filtered list to
+        // still be sorted in "reverse" order initially
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
             "NORTHBOUND"
+          );
+        });
+        fireEvent.click(getByTestId("sort-label"));
+        // now, we've switched it back to "forward" order: sortDirection = 0
+        await waitFor(() => {
+          expect(getByTestId("sort-label").textContent?.trim()).toBe(
+            "SOUTHBOUND"
           );
         });
 

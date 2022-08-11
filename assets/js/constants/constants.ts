@@ -19,6 +19,13 @@ export const MODES_AND_LINES = [
   { label: "Access", ids: ["Access"], color: "#165C96" },
 ];
 
+export const SORT_LABELS_BY_LINE: Record<string, [string, string]> = {
+  Blue: ["WESTBOUND", "EASTBOUND"],
+  Green: ["WESTBOUND", "EASTBOUND"],
+  Orange: ["SOUTHBOUND", "NORTHBOUND"],
+  Red: ["SOUTHBOUND", "NORTHBOUND"],
+};
+
 export const SCREEN_TYPES = [
   { label: "All SCREEN TYPES", ids: ["All"] },
   { label: "Bus Shelter", ids: ["bus_shelter_v2"] },
@@ -30,7 +37,7 @@ export const SCREEN_TYPES = [
   },
   { label: "Elevator", ids: ["elevator"] },
   { label: "Outfront Media", ids: ["ofm"] },
-  { label: "PA/ESS", ids: ["pa_ess"] },
+  { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
   { label: "Solari", ids: ["solari"] },
 ];

@@ -38,7 +38,7 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
         {/* This button slightly different to trigger a reload */}
         <Button href="/" className="takeover-button">
           <ExclamationTriangleFill size={20} />
-          <span className="nav-link__name">Emergency T</span>
+          <span className="nav-link__name">Outfront Emergency Takeover</span>
         </Button>
       </nav>
       {/* User info */}
