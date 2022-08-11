@@ -12,6 +12,7 @@ export const MODES_AND_LINES = [
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
   { label: "Green Line E", ids: ["Green-E"], color: "#00843D" },
   { label: "Blue Line", ids: ["Blue"], color: "#003DA5" },
+  { label: "Mattapan", ids: ["Mattapan"], color: "#DA291C" },
   { label: "Silver Line", ids: ["Silver"], color: "#7C878E" },
   { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
   { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
