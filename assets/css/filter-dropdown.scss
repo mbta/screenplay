@@ -1,7 +1,5 @@
 .filter-dropdown__button-group {
   .btn-group .btn {
-    border-radius: 6px;
-
     & .btn {
       background-color: #165c96 !important;
       border-color: #165c96 !important;
@@ -18,11 +16,18 @@
     &:hover {
       opacity: 0.6;
     }
+
     height: 36px;
     line-height: 0;
   }
 
   .filter-dropdown__dropdown {
+    border-radius: 6px;
+
+    &:not(:only-child) > .filter-dropdown__dropdown-button {
+      border-radius: 0 6px 6px 0 !important;
+    }
+
     &--modes-and-lines {
       width: 188px;
 
