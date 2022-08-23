@@ -12,6 +12,7 @@ export const MODES_AND_LINES = [
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
   { label: "Green Line E", ids: ["Green-E"], color: "#00843D" },
   { label: "Blue Line", ids: ["Blue"], color: "#003DA5" },
+  { label: "Mattapan", ids: ["Mattapan"], color: "#DA291C" },
   { label: "Silver Line", ids: ["Silver"], color: "#7C878E" },
   { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
   { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
@@ -24,6 +25,7 @@ export const SORT_LABELS_BY_LINE: Record<string, [string, string]> = {
   Green: ["WESTBOUND", "EASTBOUND"],
   Orange: ["SOUTHBOUND", "NORTHBOUND"],
   Red: ["SOUTHBOUND", "NORTHBOUND"],
+  Mattapan: ["OUTBOUND", "INBOUND"],
 };
 
 export const SCREEN_TYPES = [
@@ -37,7 +39,7 @@ export const SCREEN_TYPES = [
   },
   { label: "Elevator", ids: ["elevator"] },
   { label: "Outfront Media", ids: ["ofm"] },
-  { label: "PA/ESS", ids: ["pa_ess"] },
+  { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
   { label: "Solari", ids: ["solari"] },
 ];
