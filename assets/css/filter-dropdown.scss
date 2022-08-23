@@ -24,29 +24,26 @@
 
   .filter-dropdown__dropdown {
     &--modes-and-lines {
+      width: 188px;
+
       &:not(:only-child) {
         width: 154px;
-      }
-      &:only-child {
-        width: 188px;
       }
     }
 
     &--screen-types {
+      width: 244px;
+
       &:not(:only-child) {
         width: 210px;
-      }
-      &:only-child {
-        width: 244px;
       }
     }
 
     &--statuses {
+      width: 228px;
+
       &:not(:only-child) {
         width: 194px;
-      }
-      &:only-child {
-        width: 228px;
       }
     }
 
