@@ -49,7 +49,7 @@ export const STATUSES = [
   { label: "Auto", ids: ["Auto"] },
   { label: "Headway mode", ids: ["Headway"] },
   { label: "Overrides", ids: ["Overrides"] },
-  { label: "Emergency takeovers", ids: ["Takeovers"] },
+  { label: "Emergency", ids: ["Takeovers"] },
   { label: "Errors", ids: ["Errors"] },
   { label: "Screen off", ids: ["Off"] },
 ];
