@@ -3,6 +3,7 @@ import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { Check, XCircleFill } from "react-bootstrap-icons";
 import classNames from "classnames";
 import { defaultButtonColor } from "../../constants/misc";
+import { classWithModifier } from "../../util";
 
 interface FilterDropdownItem {
   label: string;
@@ -13,6 +14,7 @@ interface FilterDropdownProps {
   list: FilterDropdownItem[];
   onSelect: (eventKey: string | null) => void;
   selectedValue: FilterDropdownItem;
+  className: string;
 }
 
 interface CustomMenuProps {
@@ -52,7 +54,12 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
   const color = selectedValue.label === "Bus" ? "black" : "white";
 
   return (
-    <ButtonGroup className="filter-dropdown__button-group">
+    <ButtonGroup
+      className={classWithModifier(
+        "filter-dropdown__button-group",
+        props.className
+      )}
+    >
       {!isDefault() && (
         <Button
           onClick={() => onSelect(list[0].label)}
@@ -66,7 +73,13 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           <XCircleFill size={16} className="m-0" style={{ color: color }} />
         </Button>
       )}
-      <Dropdown onSelect={onSelect}>
+      <Dropdown
+        onSelect={onSelect}
+        className={classWithModifier(
+          "filter-dropdown__dropdown",
+          props.className
+        )}
+      >
         <Dropdown.Toggle
           className={classNames(
             "filter-dropdown__dropdown-button d-flex justify-content-between",

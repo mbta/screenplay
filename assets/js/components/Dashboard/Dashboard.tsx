@@ -204,6 +204,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   list={MODES_AND_LINES}
                   onSelect={(value: any) => handleModeOrLineSelect(value)}
                   selectedValue={modeLineFilterValue}
+                  className="modes-and-lines"
                 />
               </Col>
               <Col lg={3} className="place-screen-types pe-5">
@@ -211,6 +212,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   list={SCREEN_TYPES}
                   onSelect={(value: any) => handleScreenTypeSelect(value)}
                   selectedValue={screenTypeFilterValue}
+                  className="screen-types"
                 />
               </Col>
               <Col lg={3}>
@@ -218,6 +220,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   list={STATUSES}
                   onSelect={(value: any) => handleStatusSelect(value)}
                   selectedValue={statusFilterValue}
+                  className="statuses"
                 />
               </Col>
             </Row>
