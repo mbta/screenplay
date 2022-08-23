@@ -69,3 +69,7 @@ export const getMessageString = (message: CannedMessage | CustomMessage) => {
   // @ts-ignore
   else return message.text;
 };
+
+export const classWithModifier = (baseClass: string, modifier: string) => {
+  return `${baseClass} ${baseClass}--${modifier}`;
+};
