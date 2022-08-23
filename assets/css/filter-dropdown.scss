@@ -18,6 +18,7 @@
     }
 
     height: 36px;
+    width: 34px;
     line-height: 0;
   }
 
@@ -29,10 +30,10 @@
     }
 
     &--modes-and-lines {
-      width: 188px;
+      width: 196px;
 
       &:not(:only-child) {
-        width: 154px;
+        width: 162px;
       }
     }
 
@@ -57,14 +58,12 @@
       height: 36px;
       font-size: 16px;
       line-height: 24px;
+      padding-left: 8px;
+      padding-right: 8px;
 
       font-family: "Inter", sans-serif;
       font-weight: 500;
       align-items: center;
-
-      &--small {
-        min-width: 152px;
-      }
 
       &:hover {
         opacity: 0.6;
