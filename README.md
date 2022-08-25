@@ -13,4 +13,6 @@ To start your Phoenix server:
   * Install Node.js dependencies by running `npm run install`
   * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+If you want to develop on Screenplay with a local version of the Screens app, just spin up Screens (which will be at http://localhost:4000) and change the dev baseUrl in ScreenDetail.tsx to use that port 4000 url.
+
+Now you can visit [`localhost:4444`](http://localhost:4444) from your browser.
