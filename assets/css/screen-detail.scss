@@ -69,6 +69,9 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 22px;
+
+  // The below values are "height of the iframe's container", which is different than the iframe content
+  // Keeping this value as the original smaller value to eliminate excessive padding
   &--bus_shelter_v2 {
     height: 344px;
   }
@@ -95,10 +98,6 @@
     height: 344px;
   }
 
-  &--dup {
-    width: 832px;
-  }
-
   &--pa_ess {
     min-height: 100px;
     display: flex;
@@ -115,12 +114,12 @@
 
     &--bus_shelter_v2,
     &--pre_fare_v2 {
-      height: 344px;
+      height: 367px;
     }
 
     &--bus_eink_v2,
     &--gl_eink_v2 {
-      height: 480px;
+      height: 503px;
     }
 
     &--bus_eink,
@@ -139,7 +138,7 @@
     }
 
     &--dup {
-      height: 160px;
+      height: 180px;
     }
 
     &--pa_ess {
