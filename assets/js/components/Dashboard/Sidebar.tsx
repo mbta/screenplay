@@ -27,12 +27,10 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link to="/dashboard/alerts">
-          <Button
-            className={pathname === "/dashboard/alerts" ? "selected" : ""}
-          >
+        <Link className="disabled-link" to="/dashboard/alerts">
+          <Button className="disabled-button">
             <ExclamationTriangleFill size={20} />
-            <span className="nav-link__name">Posted Alerts</span>
+            <span className="nav-link__name">Posted Alerts (coming soon)</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}
