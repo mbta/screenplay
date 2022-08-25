@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Screen } from "../../models/screen";
 import ReportAProblemButton from "./ReportAProblemButton";
 import { SCREEN_TYPES } from "../../constants/constants";
@@ -82,6 +82,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         [`screen-detail__container--paess screen-detail__container--paess-${getPaessRouteLetter()}`]:
           isPaess,
       })}
+      onClick={(e: SyntheticEvent) => e.stopPropagation()}
     >
       <div className="screen-detail__header">
         <div
