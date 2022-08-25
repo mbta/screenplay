@@ -15,6 +15,7 @@ interface FilterDropdownProps {
   onSelect: (eventKey: string | null) => void;
   selectedValue: FilterDropdownItem;
   className: string;
+  disabled?: boolean;
 }
 
 interface CustomMenuProps {
@@ -55,9 +56,9 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
 
   return (
     <ButtonGroup
-      className={classWithModifier(
-        "filter-dropdown__button-group",
-        props.className
+      className={classNames(
+        classWithModifier("filter-dropdown__button-group", props.className),
+        { disabled: props.disabled }
       )}
     >
       {!isDefault() && (

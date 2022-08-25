@@ -12,6 +12,11 @@
     }
   }
 
+  &.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
   .filter-dropdown__clear-button {
     &:hover {
       opacity: 0.6;
