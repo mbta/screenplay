@@ -199,7 +199,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
                 </div>
               </Col>
-              <Col lg={3} className="d-flex justify-content-end pe-5">
+              <Col lg={3} className="d-flex justify-content-end pe-3">
                 <FilterDropdown
                   list={MODES_AND_LINES}
                   onSelect={(value: any) => handleModeOrLineSelect(value)}
@@ -207,7 +207,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   className="modes-and-lines"
                 />
               </Col>
-              <Col lg={3} className="place-screen-types pe-5">
+              <Col lg={3} className="place-screen-types pe-3">
                 <FilterDropdown
                   list={SCREEN_TYPES}
                   onSelect={(value: any) => handleScreenTypeSelect(value)}

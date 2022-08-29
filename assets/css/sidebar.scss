@@ -1,5 +1,5 @@
 .sidebar-container {
-  min-width: 250px;
+  max-width: 260px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -31,11 +31,17 @@
   button,
   .takeover-button {
     border: none;
-    height: 40px;
+    height: fit-content;
     margin-bottom: 8px;
     width: 100%;
     text-align: left;
     font-weight: 500;
+    white-space: normal;
+    display: flex;
+    align-items: center;
+    > svg {
+      flex-shrink: 0;
+    }
   }
   button {
     background-color: unset;
@@ -50,8 +56,6 @@
   .takeover-button {
     background-color: #be185d99;
     margin-top: 60px;
-    display: flex;
-    align-items: center;
     &:hover {
       background: $pink-700;
     }
@@ -74,8 +78,11 @@
   }
 }
 
-.disabled-link {
-  pointer-events: none;
+.sidebar-link {
+  text-decoration: none;
+  &.disabled {
+    pointer-events: none;
+  }
 }
 
 .disabled-button {
