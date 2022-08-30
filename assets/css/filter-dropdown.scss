@@ -46,6 +46,10 @@
       &:hover {
         opacity: 0.6;
       }
+
+      &.disabled {
+        opacity: 0.4;
+      }
     }
 
     .filter-dropdown__dropdown-menu {

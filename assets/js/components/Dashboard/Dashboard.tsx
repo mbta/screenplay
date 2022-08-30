@@ -221,6 +221,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
                   onSelect={(value: any) => handleStatusSelect(value)}
                   selectedValue={statusFilterValue}
                   className="statuses"
+                  disabled
                 />
               </Col>
             </Row>

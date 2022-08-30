@@ -15,6 +15,7 @@ interface FilterDropdownProps {
   onSelect: (eventKey: string | null) => void;
   selectedValue: FilterDropdownItem;
   className: string;
+  disabled?: boolean;
 }
 
 interface CustomMenuProps {
@@ -53,6 +54,27 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
     : defaultButtonColor;
   const color = selectedValue.label === "Bus" ? "black" : "white";
 
+  const FilterDropdownButton = (
+    <Dropdown.Toggle
+      className={classNames(
+        "filter-dropdown__dropdown-button d-flex justify-content-between",
+        {
+          "filter-dropdown__dropdown-button--small": !isDefault(),
+          disabled: props.disabled,
+        }
+      )}
+      title={props.disabled ? "Coming Soon!" : selectedValue.label}
+      data-testid="filter-dropdown-button"
+      style={{
+        background: backgroundColor,
+        border: backgroundColor,
+        color: color,
+      }}
+    >
+      {selectedValue.label}
+    </Dropdown.Toggle>
+  );
+
   return (
     <ButtonGroup
       className={classWithModifier(
@@ -80,23 +102,11 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           props.className
         )}
       >
-        <Dropdown.Toggle
-          className={classNames(
-            "filter-dropdown__dropdown-button d-flex justify-content-between",
-            {
-              "filter-dropdown__dropdown-button--small": !isDefault(),
-            }
-          )}
-          title={selectedValue.label}
-          data-testid="filter-dropdown-button"
-          style={{
-            background: backgroundColor,
-            border: backgroundColor,
-            color: color,
-          }}
-        >
-          {selectedValue.label}
-        </Dropdown.Toggle>
+        {props.disabled ? (
+          <span title="Coming Soon!">{FilterDropdownButton}</span>
+        ) : (
+          FilterDropdownButton
+        )}
         <Dropdown.Menu
           as={CustomMenu}
           className="filter-dropdown__dropdown-menu"
