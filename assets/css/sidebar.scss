@@ -73,3 +73,11 @@
     color: white;
   }
 }
+
+.disabled-link {
+  pointer-events: none;
+}
+
+.disabled-button {
+  opacity: 0.4;
+}
