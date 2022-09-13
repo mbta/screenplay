@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
+import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
 import { Accordion, Container } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
@@ -40,8 +41,26 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const [screenTypeFilterValue, setScreenTypeFilterValue] = useState(
     SCREEN_TYPES[0]
   );
+  const [showScreenlessPlaces, setShowScreenlessPlaces] = useState(true);
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
   const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
+
+  const resetFilters = () => {
+    setModeLineFilterValue(MODES_AND_LINES[0]);
+    setScreenTypeFilterValue(SCREEN_TYPES[0]);
+    setStatusFilterValue(STATUSES[0]);
+    setShowScreenlessPlaces(true);
+  };
+
+  const goToHome = () => {
+    // This approach is difficult to maintain--every time we add new state values,
+    // we need to remember to add a line here to "reset" it.
+    // TODO: Should the home button simply be a link to /dashboard? That would reload the page,
+    // ensuring we start with fresh state.
+    setSortDirection(0);
+    setActiveEventKeys([]);
+    resetFilters();
+  };
 
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
@@ -103,7 +122,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const filterPlaces = () => {
     let filteredPlaces = places;
     if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
-      filteredPlaces = places.filter((place) => {
+      filteredPlaces = filteredPlaces.filter((place) => {
         return place.screens.some((screen) =>
           screenTypeFilterValue.ids.includes(screen.type)
         );
@@ -117,9 +136,19 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         );
       });
     }
+
+    const filteredPlacesHaveScreenlessPlaces = filteredPlaces.some(
+      (place) => place.screens.length === 0
+    );
+
+    if (!showScreenlessPlaces) {
+      filteredPlaces = filteredPlaces.filter(
+        (place) => place.screens.length > 0
+      );
+    }
     // Can add additional filtering in if statements here.
 
-    return filteredPlaces;
+    return { filteredPlaces, filteredPlacesHaveScreenlessPlaces };
   };
 
   const sortByStationOrder = (places: Place[], reverse?: boolean) => {
@@ -138,22 +167,6 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     return reverse ? places.reverse() : places;
   };
 
-  const isFiltered = () => {
-    return (
-      modeLineFilterValue !== MODES_AND_LINES[0] ||
-      statusFilterValue !== STATUSES[0] ||
-      screenTypeFilterValue !== SCREEN_TYPES[0]
-    );
-  };
-
-  const isOnlyFilteredByRoute = () => {
-    return (
-      modeLineFilterValue !== MODES_AND_LINES[0] &&
-      statusFilterValue === STATUSES[0] &&
-      screenTypeFilterValue === SCREEN_TYPES[0]
-    );
-  };
-
   const getFilteredLine = () => {
     if (modeLineFilterValue.label.includes("Line")) {
       return modeLineFilterValue.label === "Green Line"
@@ -164,19 +177,16 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     return "";
   };
 
-  const goToHome = () => {
-    setModeLineFilterValue(MODES_AND_LINES[0]);
-    setScreenTypeFilterValue(SCREEN_TYPES[0]);
-    setStatusFilterValue(STATUSES[0]);
-    setSortDirection(0);
-  };
-
   const handleAccordionClick = (eventKey: string) => {
     if (activeEventKeys.includes(eventKey)) {
       setActiveEventKeys(activeEventKeys.filter((e) => e !== eventKey));
     } else {
       setActiveEventKeys([...activeEventKeys, eventKey]);
     }
+  };
+
+  const handleClickToggleScreenlessPlaces = () => {
+    setShowScreenlessPlaces((prevValue) => !prevValue);
   };
 
   let header, content;
@@ -193,6 +203,21 @@ const Dashboard = (props: { page: string }): JSX.Element => {
       content = null;
       break;
     default:
+      const { filteredPlaces, filteredPlacesHaveScreenlessPlaces } =
+        filterPlaces();
+      const sortedFilteredPlaces = sortPlaces(filteredPlaces);
+
+      const isFiltered =
+        modeLineFilterValue !== MODES_AND_LINES[0] ||
+        statusFilterValue !== STATUSES[0] ||
+        screenTypeFilterValue !== SCREEN_TYPES[0];
+
+      const isOnlyFilteredByRoute =
+        modeLineFilterValue !== MODES_AND_LINES[0] &&
+        statusFilterValue === STATUSES[0] &&
+        screenTypeFilterValue === SCREEN_TYPES[0] &&
+        (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
+
       header = "Places";
       content = (
         <Container fluid>
@@ -220,17 +245,24 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               selectedValue={statusFilterValue}
             />
           </div>
+          {isFiltered && (
+            <PlacesActionBar
+              places={sortedFilteredPlaces}
+              hasScreenlessPlaces={filteredPlacesHaveScreenlessPlaces}
+              showScreenlessPlaces={showScreenlessPlaces}
+              onClickResetFilters={resetFilters}
+              onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
+            />
+          )}
           <Accordion flush alwaysOpen activeKey={activeEventKeys}>
-            {sortPlaces(filterPlaces()).map((place: Place, index) => (
+            {sortedFilteredPlaces.map((place: Place) => (
               <PlaceRow
                 key={place.id}
                 place={place}
                 eventKey={place.id}
                 onClick={handleAccordionClick}
-                isFiltered={isFiltered()}
-                filteredLine={
-                  isOnlyFilteredByRoute() ? getFilteredLine() : null
-                }
+                isFiltered={isFiltered}
+                filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
                 defaultSort={sortDirection === 0}
               />
             ))}

@@ -18,9 +18,9 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   onClick: (eventKey: string) => void;
-  isFiltered: boolean;
+  isFiltered?: boolean;
   filteredLine?: string | null;
-  defaultSort: boolean;
+  defaultSort?: boolean;
 }
 
 /**
@@ -158,7 +158,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       className={classNames("place-row", {
         open: isOpen,
         disabled: !hasScreens,
-        "filtered": props.isFiltered,
+        filtered: !!props.isFiltered,
       })}
       data-testid="place-row"
     >
