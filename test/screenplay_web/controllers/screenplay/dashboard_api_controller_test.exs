@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.Controllers.DashboardApiControllerTest do
+defmodule ScreenplayWeb.Screenplay.DashboardApiControllerTest do
   use ScreenplayWeb.ConnCase
 
   describe "index/2" do
