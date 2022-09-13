@@ -10,7 +10,6 @@ import TSquare from "../../../static/images/t-square.svg";
 
 const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
   const pathname = useLocation().pathname;
-  console.log(pathname);
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
 

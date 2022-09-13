@@ -20,12 +20,13 @@ export const MODES_AND_LINES = [
   { label: "Access", ids: ["Access"], color: "#165C96" },
 ];
 
-export const SORT_LABELS_BY_LINE: Record<string, [string, string]> = {
+export const SORT_LABELS: Record<string, [string, string]> = {
   Blue: ["WESTBOUND", "EASTBOUND"],
   Green: ["WESTBOUND", "EASTBOUND"],
   Orange: ["SOUTHBOUND", "NORTHBOUND"],
   Red: ["SOUTHBOUND", "NORTHBOUND"],
   Mattapan: ["OUTBOUND", "INBOUND"],
+  Alerts: ["END", "START"],
 };
 
 export const SCREEN_TYPES = [

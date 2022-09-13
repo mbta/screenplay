@@ -9,7 +9,7 @@ import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import Sidebar from "./Sidebar";
 import {
   MODES_AND_LINES,
-  SORT_LABELS_BY_LINE,
+  SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
@@ -18,15 +18,19 @@ type DirectionID = 0 | 1;
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
+  page: string,
   sortDirection: DirectionID
 ) => {
-  const line = modeLineFilterValue.label.split(" ")[0];
-  const sortLabels = SORT_LABELS_BY_LINE[line];
-
-  if (sortLabels) {
+  if (page === "alerts") {
+    const sortLabels = SORT_LABELS["Alerts"];
     return sortLabels[sortDirection];
   } else {
-    return ["ABC", "ZYX"][sortDirection];
+    const line = modeLineFilterValue.label.split(" ")[0];
+    const sortLabels = SORT_LABELS[line];
+
+    return sortLabels
+      ? sortLabels[sortDirection]
+      : ["ABC", "ZYX"][sortDirection];
   }
 };
 
@@ -43,7 +47,11 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
   const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
 
-  const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
+  const sortLabel = getSortLabel(
+    modeLineFilterValue,
+    props.page,
+    sortDirection
+  );
 
   useEffect(() => {
     fetch("/api/dashboard")
@@ -176,7 +184,44 @@ const Dashboard = (props: { page: string }): JSX.Element => {
     case "alerts":
       header = "Posted Alerts";
       content = (
-        <div style={{ color: "white" }}>This will be posted alerts</div>
+        <Container fluid>
+          <Row className="place-list__header-row">
+            <Col lg={3}>
+              <div
+                className="place-list__sort-label d-flex align-items-center"
+                onClick={sortLabelOnClick}
+                data-testid="sort-label"
+              >
+                {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+              </div>
+            </Col>
+            <Col lg={3} className="d-flex justify-content-end pe-3">
+              <FilterDropdown
+                list={MODES_AND_LINES}
+                onSelect={(value: any) => handleModeOrLineSelect(value)}
+                selectedValue={modeLineFilterValue}
+                className="modes-and-lines"
+              />
+            </Col>
+            <Col lg={3} className="place-screen-types pe-3">
+              <FilterDropdown
+                list={SCREEN_TYPES}
+                onSelect={(value: any) => handleScreenTypeSelect(value)}
+                selectedValue={screenTypeFilterValue}
+                className="screen-types"
+              />
+            </Col>
+            <Col lg={3}>
+              <FilterDropdown
+                list={STATUSES}
+                onSelect={(value: any) => handleStatusSelect(value)}
+                selectedValue={statusFilterValue}
+                className="statuses"
+                disabled
+              />
+            </Col>
+          </Row>
+        </Container>
       );
       break;
     case "overrides":
