@@ -81,9 +81,9 @@ const ActionBarStats: React.ComponentType<StatsProps> = ({
   return (
     <span className="places-action-bar__stats">
       <span className="places-action-bar__stats__number">{placeCount}</span>{" "}
-      stations ·{" "}
+      {placeCount == 1 ? "station" : "stations"} ·{" "}
       <span className="places-action-bar__stats__number">{screenCount}</span>{" "}
-      screens
+      {screenCount == 1 ? "screen" : "screens"}
     </span>
   );
 };
