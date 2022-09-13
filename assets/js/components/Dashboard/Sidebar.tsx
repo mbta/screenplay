@@ -10,6 +10,7 @@ import TSquare from "../../../static/images/t-square.svg";
 
 const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
   const pathname = useLocation().pathname;
+  console.log(pathname);
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
 
@@ -27,10 +28,12 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link className="sidebar-link disabled" to="/dashboard/alerts">
-          <Button className="disabled-button">
+        <Link className="sidebar-link" to="/dashboard/alerts">
+          <Button
+            className={pathname === "/dashboard/alerts" ? "selected" : ""}
+          >
             <ExclamationTriangleFill size={20} />
-            <span className="nav-link__name">Posted Alerts (coming soon)</span>
+            <span className="nav-link__name">Posted Alerts</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}
