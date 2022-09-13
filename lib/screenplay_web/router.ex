@@ -50,7 +50,7 @@ defmodule ScreenplayWeb.Router do
     get("/emergency-takeover", PageController, :index)
   end
 
-  scope "/", ScreenplayWeb do
+  scope "/", ScreenplayWeb.Screenplay do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardController, :index)
@@ -58,7 +58,7 @@ defmodule ScreenplayWeb.Router do
     get("/unauthorized", UnauthorizedController, :index)
   end
 
-  scope "/api", ScreenplayWeb do
+  scope "/api", ScreenplayWeb.Screenplay do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardApiController, :index)

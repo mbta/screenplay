@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.UnauthorizedController do
+defmodule ScreenplayWeb.Screenplay.UnauthorizedController do
   use ScreenplayWeb, :controller
 
   def index(conn, _params) do

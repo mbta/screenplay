@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.DashboardController do
+defmodule ScreenplayWeb.Screenplay.DashboardController do
   use ScreenplayWeb, :controller
 
   alias Screenplay.Util
