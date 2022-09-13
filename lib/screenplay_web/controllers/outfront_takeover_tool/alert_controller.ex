@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.AlertController do
+defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
   alias Screenplay.Alerts.{Alert, State}

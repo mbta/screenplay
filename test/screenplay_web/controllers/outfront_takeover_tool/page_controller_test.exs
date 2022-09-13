@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.Controllers.PageControllerTest do
+defmodule ScreenplayWeb.OutfrontTakeoverTool.PageControllerTest do
   use ScreenplayWeb.ConnCase
 
   describe "index/2" do

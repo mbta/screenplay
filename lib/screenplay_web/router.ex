@@ -37,7 +37,7 @@ defmodule ScreenplayWeb.Router do
     get "/_health", HealthController, :index
   end
 
-  scope "/", ScreenplayWeb do
+  scope "/", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
       :redirect_prod_http,
       :browser,
@@ -72,7 +72,7 @@ defmodule ScreenplayWeb.Router do
     get("/:provider/logout", AuthController, :logout)
   end
 
-  scope "/api", ScreenplayWeb do
+  scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
       :redirect_prod_http,
       :api,
