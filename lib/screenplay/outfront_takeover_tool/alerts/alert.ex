@@ -1,9 +1,9 @@
-defmodule Screenplay.Alerts.Alert do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.Alert do
   @moduledoc """
   Represents a single Outfront Takeover Alert.
   """
 
-  alias Screenplay.Alerts.State
+  alias Screenplay.OutfrontTakeoverTool.Alerts.State
   alias Screenplay.Util
 
   @enforce_keys [

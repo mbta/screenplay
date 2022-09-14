@@ -1,7 +1,7 @@
-defmodule Screenplay.Alerts.LocalFetch do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.LocalFetch do
   @moduledoc false
 
-  alias Screenplay.Alerts.State
+  alias Screenplay.OutfrontTakeoverTool.Alerts.State
 
   @spec get_state() :: {:ok, State.t()} | :error
   def get_state do
