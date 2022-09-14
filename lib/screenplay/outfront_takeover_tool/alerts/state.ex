@@ -1,11 +1,11 @@
-defmodule Screenplay.Alerts.State do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.State do
   @moduledoc """
   Keeps an internal state of all the Outfront Takeover Alerts which currently exist.
   """
 
   use GenServer
 
-  alias Screenplay.Alerts.{Alert, State}
+  alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
 
   @enforce_keys [:alerts, :cleared_alerts]
   defstruct @enforce_keys

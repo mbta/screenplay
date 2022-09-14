@@ -1,7 +1,7 @@
-defmodule Screenplay.Alerts.AlertTest do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.AlertTest do
   use ExUnit.Case
 
-  alias Screenplay.Alerts.Alert
+  alias Screenplay.OutfrontTakeoverTool.Alerts.Alert
 
   describe "new/4" do
     test "creates a new alert with the specified values" do
