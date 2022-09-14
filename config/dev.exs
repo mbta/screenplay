@@ -78,7 +78,9 @@ config :screenplay,
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
   config_fetcher: Screenplay.Config.LocalFetch,
   local_config_file_spec: {:priv, "places_and_screens.json"},
-  local_locations_file_spec: {:priv, "screen_locations.json"}
+  local_locations_file_spec: {:priv, "screen_locations.json"},
+  api_v3_key: System.get_env("API_V3_KEY"),
+  default_api_v3_url: System.get_env("API_V3_URL", "https://api-v3.mbta.com/")
 
 config :ueberauth, Ueberauth,
   providers: [
