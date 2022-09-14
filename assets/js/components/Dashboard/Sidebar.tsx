@@ -21,18 +21,16 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
       </Link>
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
-        <Link to="/dashboard">
+        <Link className="sidebar-link" to="/dashboard">
           <Button className={pathname === "/dashboard" ? "selected" : ""}>
             <CollectionFill size={20} />
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link to="/dashboard/alerts">
-          <Button
-            className={pathname === "/dashboard/alerts" ? "selected" : ""}
-          >
+        <Link className="sidebar-link disabled" to="/dashboard/alerts">
+          <Button className="disabled-button">
             <ExclamationTriangleFill size={20} />
-            <span className="nav-link__name">Posted Alerts</span>
+            <span className="nav-link__name">Posted Alerts (coming soon)</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}

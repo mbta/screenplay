@@ -69,6 +69,9 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 22px;
+
+  // The below values are "height of the iframe's container", which is different than the iframe content
+  // Keeping this value as the original smaller value to eliminate excessive padding
   &--bus_shelter_v2 {
     height: 344px;
   }
@@ -101,17 +104,22 @@
     justify-content: center;
   }
 
+  &--solari {
+    height: 344px;
+    width: 194px;
+  }
+
   .screen-detail__iframe {
     width: 100%;
 
     &--bus_shelter_v2,
     &--pre_fare_v2 {
-      height: 344px;
+      height: 367px;
     }
 
     &--bus_eink_v2,
     &--gl_eink_v2 {
-      height: 480px;
+      height: 503px;
     }
 
     &--bus_eink,
@@ -129,9 +137,29 @@
       transform-origin: top left;
     }
 
+    &--dup {
+      height: 180px;
+    }
+
     &--pa_ess {
       height: 80px;
       width: 250px;
     }
+
+    &--solari {
+      height: 1920px;
+      width: 1080px;
+      transform: scale(17.92%);
+      transform-origin: top left;
+    }
   }
+}
+
+.screen-detail__dup-ad-text {
+  font-size: 14px;
+  line-height: 17px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+  flex-grow: 2;
+  margin-right: 16px;
 }

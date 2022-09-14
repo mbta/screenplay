@@ -850,6 +850,40 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       inlineMap: "Green-E-Trunk-Bottom",
     },
   ],
+  mattapan: [
+    {
+      name: "Ashmont",
+      inlineMap: "Red-Trunk-Top",
+    },
+    {
+      name: "Cedar Grove",
+      inlineMap: "Red-Trunk-Middle",
+    },
+    {
+      name: "Butler",
+      inlineMap: "Red-Trunk-Middle",
+    },
+    {
+      name: "Milton",
+      inlineMap: "Red-Trunk-Middle",
+    },
+    {
+      name: "Central Avenue",
+      inlineMap: "Red-Trunk-Middle",
+    },
+    {
+      name: "Valley Road",
+      inlineMap: "Red-Trunk-Middle",
+    },
+    {
+      name: "Capen Street",
+      inlineMap: "Red-Trunk-Middle",
+    },
+    {
+      name: "Mattapan",
+      inlineMap: "Red-Trunk-Bottom",
+    },
+  ],
 };
 
 export default STATION_ORDER_BY_LINE;

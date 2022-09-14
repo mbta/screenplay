@@ -11,8 +11,8 @@ const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
     return environmentName === "dev" || environmentName === "dev-green"
-      ? `http://signs-dev.mbtace.com/${props.stationCode}/${props.zone}`
-      : `http://signs.mbta.com/${props.stationCode}/${props.zone}`;
+      ? `https://signs-dev.mbtace.com/${props.stationCode}/${props.zone}`
+      : `https://signs.mbta.com/${props.stationCode}/${props.zone}`;
   };
 
   function getZoneLabel(zone: string) {

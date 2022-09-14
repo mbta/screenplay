@@ -14,6 +14,7 @@ describe("FilterDropdown", () => {
         list={list}
         onSelect={() => null}
         selectedValue={list[1]}
+        className="test"
       />
     );
 
@@ -38,6 +39,7 @@ describe("FilterDropdown", () => {
         list={list}
         onSelect={onSelect}
         selectedValue={selectedValue}
+        className="test"
       />
     );
 
@@ -48,6 +50,7 @@ describe("FilterDropdown", () => {
         list={list}
         onSelect={onSelect}
         selectedValue={selectedValue}
+        className="test"
       />
     );
     expect(queryByTestId("filter-dropdown-clear-button")).toBeNull();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
-import { Accordion, Container } from "react-bootstrap";
+import { Accordion, Col, Container, Row } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
@@ -108,10 +108,8 @@ const Dashboard = (props: { page: string }): JSX.Element => {
         ? places.sort((a: Place, b: Place) => (a.name > b.name ? 1 : -1))
         : places.sort((a: Place, b: Place) => (a.name < b.name ? 1 : -1));
     } else if (
-      // This catches on Silver Line, which we haven't really discussed how it should be treated.
-      // Right now, the places list for SL is empty because its screens are all getting listed as buses.
-      // It should probably treated as a bus route, but still a question for Adam.
-      modeLineFilterValue.label.includes("Line")
+      modeLineFilterValue.label.includes("Line") ||
+      modeLineFilterValue.label === "Mattapan"
     ) {
       return sortByStationOrder(places, sortDirection === 1);
     }
@@ -168,7 +166,10 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   };
 
   const getFilteredLine = () => {
-    if (modeLineFilterValue.label.includes("Line")) {
+    if (
+      modeLineFilterValue.label.includes("Line") ||
+      modeLineFilterValue.label === "Mattapan"
+    ) {
       return modeLineFilterValue.label === "Green Line"
         ? "Green"
         : modeLineFilterValue.ids[0];
@@ -220,31 +221,46 @@ const Dashboard = (props: { page: string }): JSX.Element => {
 
       header = "Places";
       content = (
-        <Container fluid>
-          <div className="place-list__header-row">
-            <div
-              className="place-list__sort-label d-flex align-items-center"
-              onClick={sortLabelOnClick}
-              data-testid="sort-label"
-            >
-              {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
-            </div>
-            <FilterDropdown
-              list={MODES_AND_LINES}
-              onSelect={(value: any) => handleModeOrLineSelect(value)}
-              selectedValue={modeLineFilterValue}
-            />
-            <FilterDropdown
-              list={SCREEN_TYPES}
-              onSelect={(value: any) => handleScreenTypeSelect(value)}
-              selectedValue={screenTypeFilterValue}
-            />
-            <FilterDropdown
-              list={STATUSES}
-              onSelect={(value: any) => handleStatusSelect(value)}
-              selectedValue={statusFilterValue}
-            />
-          </div>
+        <>
+          <Container fluid>
+            <Row className="place-list__header-row">
+              <Col lg={3}>
+                <div
+                  className="place-list__sort-label d-flex align-items-center"
+                  onClick={sortLabelOnClick}
+                  data-testid="sort-label"
+                >
+                  {sortLabel}{" "}
+                  {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+                </div>
+              </Col>
+              <Col lg={3} className="d-flex justify-content-end pe-3">
+                <FilterDropdown
+                  list={MODES_AND_LINES}
+                  onSelect={(value: any) => handleModeOrLineSelect(value)}
+                  selectedValue={modeLineFilterValue}
+                  className="modes-and-lines"
+                />
+              </Col>
+              <Col lg={3} className="place-screen-types pe-3">
+                <FilterDropdown
+                  list={SCREEN_TYPES}
+                  onSelect={(value: any) => handleScreenTypeSelect(value)}
+                  selectedValue={screenTypeFilterValue}
+                  className="screen-types"
+                />
+              </Col>
+              <Col lg={3}>
+                <FilterDropdown
+                  list={STATUSES}
+                  onSelect={(value: any) => handleStatusSelect(value)}
+                  selectedValue={statusFilterValue}
+                  className="statuses"
+                  disabled
+                />
+              </Col>
+            </Row>
+          </Container>
           {isFiltered && (
             <PlacesActionBar
               places={sortedFilteredPlaces}
@@ -267,7 +283,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
               />
             ))}
           </Accordion>
-        </Container>
+        </>
       );
   }
 

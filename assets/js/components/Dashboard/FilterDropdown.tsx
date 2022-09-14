@@ -3,6 +3,7 @@ import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { Check, XCircleFill } from "react-bootstrap-icons";
 import classNames from "classnames";
 import { defaultButtonColor } from "../../constants/misc";
+import { classWithModifier } from "../../util";
 
 interface FilterDropdownItem {
   label: string;
@@ -13,6 +14,8 @@ interface FilterDropdownProps {
   list: FilterDropdownItem[];
   onSelect: (eventKey: string | null) => void;
   selectedValue: FilterDropdownItem;
+  className: string;
+  disabled?: boolean;
 }
 
 interface CustomMenuProps {
@@ -51,8 +54,34 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
     : defaultButtonColor;
   const color = selectedValue.label === "Bus" ? "black" : "white";
 
+  const FilterDropdownButton = (
+    <Dropdown.Toggle
+      className={classNames(
+        "filter-dropdown__dropdown-button d-flex justify-content-between",
+        {
+          "filter-dropdown__dropdown-button--small": !isDefault(),
+          disabled: props.disabled,
+        }
+      )}
+      title={props.disabled ? "Coming Soon!" : selectedValue.label}
+      data-testid="filter-dropdown-button"
+      style={{
+        background: backgroundColor,
+        border: backgroundColor,
+        color: color,
+      }}
+    >
+      {selectedValue.label}
+    </Dropdown.Toggle>
+  );
+
   return (
-    <ButtonGroup className="filter-dropdown__button-group">
+    <ButtonGroup
+      className={classWithModifier(
+        "filter-dropdown__button-group",
+        props.className
+      )}
+    >
       {!isDefault() && (
         <Button
           onClick={() => onSelect(list[0].label)}
@@ -66,24 +95,18 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           <XCircleFill size={16} className="m-0" style={{ color: color }} />
         </Button>
       )}
-      <Dropdown onSelect={onSelect} as={ButtonGroup}>
-        <Dropdown.Toggle
-          className={classNames(
-            "filter-dropdown__dropdown-button d-flex justify-content-between",
-            {
-              "filter-dropdown__dropdown-button--small": !isDefault(),
-            }
-          )}
-          title={selectedValue.label}
-          data-testid="filter-dropdown-button"
-          style={{
-            background: backgroundColor,
-            border: backgroundColor,
-            color: color,
-          }}
-        >
-          {selectedValue.label}
-        </Dropdown.Toggle>
+      <Dropdown
+        onSelect={onSelect}
+        className={classWithModifier(
+          "filter-dropdown__dropdown",
+          props.className
+        )}
+      >
+        {props.disabled ? (
+          <span title="Coming Soon!">{FilterDropdownButton}</span>
+        ) : (
+          FilterDropdownButton
+        )}
         <Dropdown.Menu
           as={CustomMenu}
           className="filter-dropdown__dropdown-menu"

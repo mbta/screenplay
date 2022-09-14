@@ -12,6 +12,7 @@ export const MODES_AND_LINES = [
   { label: "Green Line D", ids: ["Green-D"], color: "#00843D" },
   { label: "Green Line E", ids: ["Green-E"], color: "#00843D" },
   { label: "Blue Line", ids: ["Blue"], color: "#003DA5" },
+  { label: "Mattapan", ids: ["Mattapan"], color: "#DA291C" },
   { label: "Silver Line", ids: ["Silver"], color: "#7C878E" },
   { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
   { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
@@ -24,6 +25,7 @@ export const SORT_LABELS_BY_LINE: Record<string, [string, string]> = {
   Green: ["WESTBOUND", "EASTBOUND"],
   Orange: ["SOUTHBOUND", "NORTHBOUND"],
   Red: ["SOUTHBOUND", "NORTHBOUND"],
+  Mattapan: ["OUTBOUND", "INBOUND"],
 };
 
 export const SCREEN_TYPES = [
@@ -47,7 +49,7 @@ export const STATUSES = [
   { label: "Auto", ids: ["Auto"] },
   { label: "Headway mode", ids: ["Headway"] },
   { label: "Overrides", ids: ["Overrides"] },
-  { label: "Emergency takeovers", ids: ["Takeovers"] },
+  { label: "Emergency", ids: ["Takeovers"] },
   { label: "Errors", ids: ["Errors"] },
   { label: "Screen off", ids: ["Off"] },
 ];
