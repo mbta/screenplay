@@ -54,7 +54,7 @@ defmodule ScreenplayWeb.Router do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardController, :index)
-    get("/dashboard/alerts", DashboardController, :index)
+    get("/alerts", AlertsController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
