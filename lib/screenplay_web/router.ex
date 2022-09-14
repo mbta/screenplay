@@ -62,6 +62,7 @@ defmodule ScreenplayWeb.Router do
     pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardApiController, :index)
+    get("/alerts", AlertsApiController, :index)
   end
 
   scope "/auth", ScreenplayWeb do
