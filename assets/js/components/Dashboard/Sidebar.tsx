@@ -12,25 +12,26 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
   const pathname = useLocation().pathname;
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
+  console.log(pathname);
 
-  return pathname.includes("dashboard") ? (
+  return !pathname.includes("emergency-takeover") ? (
     <div className="sidebar-container">
-      <Link to="/dashboard" className="sidebar-brand" onClick={props.goToHome}>
+      <Link to="/dashboard/" className="sidebar-brand" onClick={props.goToHome}>
         <img src={TSquare} alt="Screenplay Logo" />
         <div className="sidebar-brand__text">Screenplay</div>
       </Link>
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
-        <Link className="sidebar-link" to="/dashboard">
-          <Button className={pathname === "/dashboard" ? "selected" : ""}>
+        <Link className="sidebar-link" to="/dashboard/">
+          <Button className={pathname === "/dashboard/" ? "selected" : ""}>
             <CollectionFill size={20} />
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link className="sidebar-link disabled" to="/dashboard/alerts">
-          <Button className="disabled-button">
+        <Link className="sidebar-link" to="/alerts/">
+          <Button className={pathname === "/alerts/" ? "selected" : ""}>
             <ExclamationTriangleFill size={20} />
-            <span className="nav-link__name">Posted Alerts (coming soon)</span>
+            <span className="nav-link__name">Posted Alerts</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}
