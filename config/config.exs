@@ -17,7 +17,8 @@ config :screenplay, ScreenplayWeb.Endpoint,
 
 config :screenplay,
   config_fetcher: Screenplay.Config.S3Fetch,
-  config_s3_bucket: "mbta-ctd-config"
+  config_s3_bucket: "mbta-ctd-config",
+  default_api_v3_url: "https://api-v3.mbta.com/"
 
 # Configures Elixir's Logger
 config :logger, :console,
