@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.Screenplay.DashboardApiController do
+defmodule ScreenplayWeb.DashboardApiController do
   use ScreenplayWeb, :controller
 
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)

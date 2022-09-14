@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.Screenplay.UnauthorizedControllerTest do
+defmodule ScreenplayWeb.Controllers.UnauthorizedControllerTest do
   use ScreenplayWeb.ConnCase
 
   import ScreenplayWeb.Router.Helpers
