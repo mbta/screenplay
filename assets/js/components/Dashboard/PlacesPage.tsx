@@ -30,12 +30,12 @@ const getSortLabel = (
   }
 };
 
-interface PlacesPageProps {
+interface Props {
   places: Place[];
   isVisible: boolean;
 }
 
-const PlacesPage: ComponentType<PlacesPageProps> = (props) => {
+const PlacesPage: ComponentType<Props> = (props: Props) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
@@ -175,8 +175,7 @@ const PlacesPage: ComponentType<PlacesPageProps> = (props) => {
     setShowScreenlessPlaces((prevValue) => !prevValue);
   };
 
-  const { filteredPlaces, filteredPlacesHaveScreenlessPlaces } =
-    filterPlaces();
+  const { filteredPlaces, filteredPlacesHaveScreenlessPlaces } = filterPlaces();
   const sortedFilteredPlaces = sortPlaces(filteredPlaces);
 
   const isFiltered =
@@ -191,7 +190,11 @@ const PlacesPage: ComponentType<PlacesPageProps> = (props) => {
     (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
 
   return (
-    <div className={classNames("places-page", { "places-page--hidden": !props.isVisible })}>
+    <div
+      className={classNames("places-page", {
+        "places-page--hidden": !props.isVisible,
+      })}
+    >
       <div className="page-content__header">Places</div>
       <div className="page-content__body">
         <Container fluid>
@@ -202,8 +205,7 @@ const PlacesPage: ComponentType<PlacesPageProps> = (props) => {
                 onClick={handleClickSortLabel}
                 data-testid="sort-label"
               >
-                {sortLabel}{" "}
-                {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+                {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
               </div>
             </Col>
             <Col lg={3} className="d-flex justify-content-end pe-3">

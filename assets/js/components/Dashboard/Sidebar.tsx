@@ -8,9 +8,7 @@ import {
 } from "react-bootstrap-icons";
 import TSquare from "../../../static/images/t-square.svg";
 
-interface Props { }
-
-const Sidebar: ComponentType<Props> = () => {
+const Sidebar: ComponentType = () => {
   const pathname = useLocation().pathname;
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;

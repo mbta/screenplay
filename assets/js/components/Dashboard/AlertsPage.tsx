@@ -5,9 +5,13 @@ interface Props {
   isVisible: boolean;
 }
 
-const AlertsPage: ComponentType<Props> = (props) => {
+const AlertsPage: ComponentType<Props> = (props: Props) => {
   return (
-    <div className={classNames("alerts-page", { "alerts-page--hidden": !props.isVisible })}>
+    <div
+      className={classNames("alerts-page", {
+        "alerts-page--hidden": !props.isVisible,
+      })}
+    >
       <div className="page-content__header">Posted Alerts</div>
       <div className="page-content__body">
         <div style={{ color: "white" }}>This will be posted alerts</div>

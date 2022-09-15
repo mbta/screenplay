@@ -10,7 +10,7 @@ interface Props {
   page: "places" | "alerts" | "overrides";
 }
 
-const Dashboard: ComponentType<Props> = (props) => {
+const Dashboard: ComponentType<Props> = (props: Props) => {
   const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {

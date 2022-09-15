@@ -39,7 +39,7 @@ const PlacesActionBar: React.ComponentType<Props> = ({
   hasScreenlessPlaces,
   showScreenlessPlaces,
   onClickToggleScreenlessPlaces,
-}) => {
+}: Props) => {
   return (
     <div className="places-action-bar">
       <ActionBarStats
@@ -77,7 +77,7 @@ interface StatsProps {
 const ActionBarStats: React.ComponentType<StatsProps> = ({
   placeCount,
   screenCount,
-}) => {
+}: StatsProps) => {
   return (
     <span className="places-action-bar__stats">
       <span className="places-action-bar__stats__number">{placeCount}</span>{" "}
@@ -88,13 +88,7 @@ const ActionBarStats: React.ComponentType<StatsProps> = ({
   );
 };
 
-interface ButtonProps {
-  disabled?: boolean;
-  onClick?: () => void;
-  IconComponent?: Icon;
-}
-
-const noop = () => {};
+const noop = () => undefined;
 
 const sharedIconProps = {
   size: 16,
@@ -102,12 +96,19 @@ const sharedIconProps = {
   color: "white",
 };
 
+interface ButtonProps {
+  disabled?: boolean;
+  onClick?: () => void;
+  IconComponent?: Icon;
+  children?: React.ReactNode;
+}
+
 const ActionBarButton: React.ComponentType<ButtonProps> = ({
   disabled = false,
   onClick = noop,
   IconComponent,
   children,
-}) => {
+}: ButtonProps) => {
   return (
     <Button
       className="places-action-bar__button"
