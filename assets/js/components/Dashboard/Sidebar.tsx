@@ -8,21 +8,30 @@ import {
 } from "react-bootstrap-icons";
 import TSquare from "../../../static/images/t-square.svg";
 
-const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
+const Sidebar = (props: {
+  handlePageChange: (page: string) => void;
+}): JSX.Element => {
   const pathname = useLocation().pathname;
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
 
+  const goToHome = () => {
+    window.location.assign("/dashboard");
+  };
+
   return pathname.includes("dashboard") ? (
     <div className="sidebar-container">
-      <Link to="/dashboard" className="sidebar-brand" onClick={props.goToHome}>
+      <Link to="/dashboard" className="sidebar-brand" onClick={goToHome}>
         <img src={TSquare} alt="Screenplay Logo" />
         <div className="sidebar-brand__text">Screenplay</div>
       </Link>
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
         <Link className="sidebar-link" to="/dashboard">
-          <Button className={pathname === "/dashboard" ? "selected" : ""}>
+          <Button
+            className={pathname === "/dashboard" ? "selected" : ""}
+            onClick={() => props.handlePageChange("places")}
+          >
             <CollectionFill size={20} />
             <span className="nav-link__name">Places</span>
           </Button>
@@ -30,6 +39,7 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
         <Link className="sidebar-link" to="/dashboard/alerts">
           <Button
             className={pathname === "/dashboard/alerts" ? "selected" : ""}
+            onClick={() => props.handlePageChange("alerts")}
           >
             <ExclamationTriangleFill size={20} />
             <span className="nav-link__name">Posted Alerts</span>

@@ -26,7 +26,7 @@ export const SORT_LABELS: Record<string, [string, string]> = {
   Orange: ["SOUTHBOUND", "NORTHBOUND"],
   Red: ["SOUTHBOUND", "NORTHBOUND"],
   Mattapan: ["OUTBOUND", "INBOUND"],
-  Alerts: ["END", "START"],
+  Alerts: ["END", "END"],
 };
 
 export const SCREEN_TYPES = [
@@ -54,3 +54,5 @@ export const STATUSES = [
   { label: "Errors", ids: ["Errors"] },
   { label: "Screen off", ids: ["Off"] },
 ];
+
+export type DirectionID = 0 | 1;
