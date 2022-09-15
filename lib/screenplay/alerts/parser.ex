@@ -1,13 +1,15 @@
 defmodule Screenplay.Alerts.Parser do
   @moduledoc false
 
-  def parse_result(%{"data" => data}) when is_list(data) do
+  def parse_result(%{"data" => data, "included" => included}) when is_list(data) do
     data
-    |> Enum.map(&parse_alert/1)
+    |> Enum.map(&parse_alert(&1, included))
     |> Enum.reject(&is_nil/1)
   end
 
-  def parse_alert(%{"id" => id, "attributes" => attributes}) do
+  def parse_alert(%{"id" => id, "attributes" => attributes} = alert, included) do
+    relationships = Map.get(alert, "relationships")
+
     case attributes do
       %{
         "active_period" => active_period,
@@ -36,7 +38,8 @@ defmodule Screenplay.Alerts.Parser do
           created_at: parse_time(created_at),
           updated_at: parse_time(updated_at),
           url: url,
-          description: description
+          description: description,
+          affected_list: get_affected_list(relationships, included)
         }
 
       _ ->
@@ -87,5 +90,27 @@ defmodule Screenplay.Alerts.Parser do
   defp parse_time(s) do
     {:ok, time, _} = DateTime.from_iso8601(s)
     time
+  end
+
+  defp get_affected_list(nil, _), do: [:access]
+
+  defp get_affected_list(%{"routes" => %{"data" => routes}}, included) do
+    route_map =
+      Enum.map(included, fn %{"id" => id, "attributes" => %{"type" => route_type}} ->
+        {id, route_type}
+      end)
+      |> Enum.into(%{})
+
+    Enum.map(routes, fn %{"id" => id} ->
+      case Map.get(route_map, id) do
+        nil -> nil
+        2 -> :cr
+        3 -> :bus
+        4 -> :ferry
+        _ -> String.to_atom(String.downcase(id))
+      end
+    end)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.uniq()
   end
 end
