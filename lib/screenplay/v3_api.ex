@@ -62,7 +62,7 @@ defmodule Screenplay.V3Api do
   end
 
   defp build_url(route, params) when map_size(params) == 0 do
-    (base_url() <> route) |> IO.inspect()
+    base_url() <> route
   end
 
   defp build_url(route, params) do

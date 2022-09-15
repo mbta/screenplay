@@ -12,7 +12,6 @@ const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
   const pathname = useLocation().pathname;
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
-  console.log(pathname);
 
   return !pathname.includes("emergency-takeover") ? (
     <div className="sidebar-container">

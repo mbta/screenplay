@@ -1,0 +1,90 @@
+.alert-card {
+  height: 164px;
+  overflow: hidden;
+  display: flex;
+  border-radius: 8px;
+
+  &__alert-details {
+    padding-top: 16px;
+    padding-left: 16px;
+    padding-bottom: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    max-width: 75%;
+    max-height: 100%;
+
+    &__effect {
+      font-family: Inter, sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0px;
+    }
+
+    &__header {
+      margin-top: 16px;
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: 0px;
+    }
+
+    &__active-period {
+      margin-top: 52px;
+      text-align: right;
+      &-start,
+      &-end {
+        font-family: Inter;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+        letter-spacing: 0px;
+        text-align: right;
+      }
+
+      &__to {
+        font-weight: 500;
+      }
+    }
+  }
+
+  &__place-details {
+    background-color: $cool-gray-40;
+    color: #ffffff;
+    padding-top: 16px;
+    padding-left: 16px;
+    width: 25%;
+
+    &__alert-id {
+      font-family: Inter, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    &__place-count,
+    &__screen-count {
+      &__number {
+        font-family: Inter, sans-serif;
+        font-style: normal;
+        font-weight: 900;
+        font-size: 24px;
+        line-height: 32px;
+        margin-top: 16px;
+      }
+
+      &__text {
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 32px;
+        letter-spacing: 0px;
+      }
+    }
+
+    &__place-count {
+      margin-top: 16px;
+    }
+  }
+}
