@@ -1,6 +1,7 @@
 import moment from "moment";
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { ChevronRight } from "react-bootstrap-icons";
 import { ActivePeriod, Alert } from "../../models/alert";
 
 interface AlertCardProps {
@@ -105,6 +106,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
             screens
           </span>
         </div>
+        <ChevronRight className="alert-card__place-details__icon" />
       </div>
     </div>
   );

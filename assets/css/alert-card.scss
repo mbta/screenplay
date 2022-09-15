@@ -86,5 +86,11 @@
     &__place-count {
       margin-top: 16px;
     }
+
+    &__icon {
+      position: absolute;
+      top: 50%;
+      right: 16px;
+    }
   }
 }
