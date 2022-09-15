@@ -17,7 +17,8 @@ defmodule Screenplay.Alerts.Alert do
             created_at: nil,
             updated_at: nil,
             url: nil,
-            description: nil
+            description: nil,
+            affected_list: nil
 
   @type informed_entity :: %{
           stop: String.t() | nil,
@@ -37,11 +38,14 @@ defmodule Screenplay.Alerts.Alert do
           timeframe: String.t(),
           created_at: DateTime.t(),
           updated_at: DateTime.t(),
-          description: String.t()
+          description: String.t(),
+          affected_list: list(atom())
         }
 
-  def fetch(get_json_fn \\ &V3Api.get_json/1) do
-    case get_json_fn.("alerts") do
+  def fetch(get_json_fn \\ &V3Api.get_json/2) do
+    case get_json_fn.("alerts", %{
+           "include" => "routes"
+         }) do
       {:ok, result} ->
         {:ok, Screenplay.Alerts.Parser.parse_result(result)}
 
@@ -63,7 +67,8 @@ defmodule Screenplay.Alerts.Alert do
       lifecycle: alert.lifecycle,
       timeframe: alert.timeframe,
       created_at: DateTime.to_iso8601(alert.created_at),
-      updated_at: DateTime.to_iso8601(alert.updated_at)
+      updated_at: DateTime.to_iso8601(alert.updated_at),
+      affected_list: alert.affected_list
     }
   end
 
