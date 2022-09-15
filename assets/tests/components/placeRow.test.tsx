@@ -39,7 +39,8 @@ describe("PlaceRow", () => {
     );
 
     expect(getByTestId("place-row").className).toBe("place-row");
-    fireEvent.click(getByTestId("place-row"));
+    fireEvent.click(getByTestId("place-row-header"));
+    expect(handleClick).toHaveBeenCalled();
     expect(getByTestId("place-row").className).toBe("place-row open");
     expect(getByTestId("place-screen-types").textContent).toBe(
       "DUP · Bus Shelter · Solari"

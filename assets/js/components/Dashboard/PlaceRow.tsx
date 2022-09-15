@@ -166,6 +166,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         <Row
           onClick={hasScreens ? rowOnClick : () => undefined}
           className="align-items-center text-white"
+          data-testid="place-row-header"
         >
           <Col lg={3} className="d-flex align-items-center">
             <div
