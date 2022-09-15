@@ -61,7 +61,7 @@ defmodule Screenplay.Alerts.Alert do
     %{
       id: alert.id,
       effect: alert.effect,
-      severity: alert.severity,
+      severity: interpret_severity(alert.severity),
       header: alert.header,
       informed_entities: alert.informed_entities,
       active_period: aps,
@@ -83,5 +83,23 @@ defmodule Screenplay.Alerts.Alert do
 
   def ap_to_map({start_t, end_t}) do
     %{"start" => DateTime.to_iso8601(start_t), "end" => DateTime.to_iso8601(end_t)}
+  end
+
+  # information -> 1
+  # up to 10 minutes -> 3
+  # up to 15 minutes -> 4
+  # up to 20 minutes -> 5
+  # up to 25 minutes -> 6
+  # up to 30 minutes -> 7
+  # more than 30 minutes -> 8
+  # more than an hour -> 9
+  # High priority (deliver to T-Alert subscribers immediately) -> 10
+  def interpret_severity(severity) do
+    cond do
+      severity < 3 -> "up to 10 minutes"
+      severity > 9 -> "more than 60 minutes"
+      severity >= 8 -> "more than #{30 * (severity - 7)} minutes"
+      true -> "up to #{5 * (severity - 1)} minutes"
+    end
   end
 end
