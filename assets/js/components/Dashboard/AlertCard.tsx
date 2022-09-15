@@ -72,8 +72,17 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
     <div className="alert-card">
       <Container fluid className="alert-card__alert-details">
         <Row>
-          <Col lg="auto">Icon</Col>
-          <Col lg={8}>
+          <Col lg="auto">
+            {alert.affected_list.map((icon: string) => (
+              <img
+                className="alert-card__alert-details__pill"
+                key={`${alert.id}-${icon}`}
+                src={`/images/pills/${icon.toLowerCase()}.png`}
+                alt={icon}
+              />
+            ))}
+          </Col>
+          <Col className="p-0" lg={7}>
             <div className="alert-card__alert-details__effect">
               {renderEffect(alert.effect, alert.severity)}
             </div>
@@ -81,7 +90,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
               {alert.header}
             </div>
           </Col>
-          <Col lg="auto">
+          <Col className="pl-0" lg={4}>
             <div className="alert-card__alert-details__active-period">
               {renderActivePeriod(alert.active_period)}
             </div>

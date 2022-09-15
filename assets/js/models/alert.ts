@@ -20,4 +20,5 @@ export interface Alert {
   timeframe: string;
   created_at: string;
   updated_at: string;
+  affected_list: string[];
 }

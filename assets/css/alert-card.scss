@@ -12,6 +12,11 @@
     max-width: 75%;
     max-height: 100%;
 
+    &__pill {
+      width: 38px;
+      height: 20px;
+    }
+
     &__effect {
       font-family: Inter, sans-serif;
       font-size: 20px;
