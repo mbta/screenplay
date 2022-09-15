@@ -13,6 +13,7 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
+import PostedAlerts from "./PostedAlerts";
 
 type DirectionID = 0 | 1;
 
@@ -175,9 +176,7 @@ const Dashboard = (props: { page: string }): JSX.Element => {
   switch (props.page) {
     case "alerts":
       header = "Posted Alerts";
-      content = (
-        <div style={{ color: "white" }}>This will be posted alerts</div>
-      );
+      content = <PostedAlerts />;
       break;
     case "overrides":
       header = "Overrides";
