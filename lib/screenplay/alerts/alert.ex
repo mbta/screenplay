@@ -1,6 +1,7 @@
 defmodule Screenplay.Alerts.Alert do
   @moduledoc false
 
+  alias Screenplay.Alerts.Parser
   alias Screenplay.V3Api
 
   @derive Jason.Encoder
@@ -47,7 +48,7 @@ defmodule Screenplay.Alerts.Alert do
            "include" => "routes"
          }) do
       {:ok, result} ->
-        {:ok, Screenplay.Alerts.Parser.parse_result(result)}
+        {:ok, Parser.parse_result(result)}
 
       _ ->
         :error

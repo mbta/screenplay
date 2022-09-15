@@ -1,8 +1,8 @@
 defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
   alias Screenplay.Outfront.SFTP
+  alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
   alias ScreenplayWeb.UserActionLogger
 
   def create(

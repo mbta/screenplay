@@ -7,7 +7,7 @@ defmodule Screenplay.Alerts.Parser do
     |> Enum.reject(&is_nil/1)
   end
 
-  def parse_alert(%{"id" => id, "attributes" => attributes} = alert, included) do
+  def parse_alert(alert = %{"id" => id, "attributes" => attributes}, included) do
     relationships = Map.get(alert, "relationships")
 
     case attributes do

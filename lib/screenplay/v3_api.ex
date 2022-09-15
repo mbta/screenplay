@@ -51,7 +51,7 @@ defmodule Screenplay.V3Api do
     end
   end
 
-  defp log_api_error({error_type, _error_data} = error, extra_fields \\ []) do
+  defp log_api_error(error = {error_type, _error_data}, extra_fields \\ []) do
     extra_fields
     |> Enum.map_join(" ", fn {label, value} -> "#{label}=\"#{value}\"" end)
     |> then(fn fields ->
