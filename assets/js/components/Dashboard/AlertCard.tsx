@@ -10,14 +10,22 @@ interface AlertCardProps {
 const AlertCard = (props: AlertCardProps): JSX.Element => {
   const { alert } = props;
 
+  const formatEffect = (effect: string) => {
+    return effect
+      .toLowerCase()
+      .replace("_", " ")
+      .split(" ")
+      .map((str: string) => str[0].toUpperCase() + str.substring(1))
+      .join(" ");
+  };
+
   const renderEffect = (effect: string, severity: string) => {
+    const formattedEffect = formatEffect(effect);
     if (effect.toLowerCase() === "delay") {
-      //TODO Fix severity
-      //TODO Translate effect
-      return `${effect}—${severity}`;
+      return `${formattedEffect}—${severity}`;
     }
 
-    return effect;
+    return formattedEffect;
   };
 
   const renderActivePeriod = (activePeriod: ActivePeriod[]) => {
