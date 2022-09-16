@@ -16,8 +16,6 @@ export interface Alert {
   header: string;
   informed_entities: InformedEntity[];
   active_period: ActivePeriod[];
-  lifecycle: string;
-  timeframe: string;
   created_at: string;
   updated_at: string;
   affected_list: string[];
