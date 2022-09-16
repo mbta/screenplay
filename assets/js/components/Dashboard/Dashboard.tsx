@@ -93,6 +93,10 @@ const dummyAlerts: Alert[] = [
           route: "Blue",
           route_type: 1,
         },
+        {
+          route: "Boat",
+          route_type: 4,
+        },
       ],
     },
   },

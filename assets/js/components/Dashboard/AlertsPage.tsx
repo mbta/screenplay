@@ -65,24 +65,32 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   const filterAlerts = () => {
     let filteredAlerts = props.alerts;
     if (alertModeLineFilterValue !== MODES_AND_LINES[0]) {
-      filteredAlerts = filteredAlerts.filter((alert) => {
-        return alert.attributes.informed_entity.some((informedEntity) => {
-          switch (alertModeLineFilterValue.label) {
-            case "Commuter Rail":
-              return informedEntity.route_type === 2;
-            case "Bus":
-              return informedEntity.route_type === 3;
-            case "Ferry":
-              return informedEntity.route_type === 4;
-            default:
-              return alertModeLineFilterValue.ids.includes(
-                informedEntity.route
-              );
-          }
-        });
-      });
+      filteredAlerts = filterAlertsByModeOrLine(
+        filteredAlerts,
+        alertModeLineFilterValue
+      );
     }
     return filteredAlerts;
+  };
+
+  const filterAlertsByModeOrLine = (
+    alerts: Alert[],
+    { label, ids }: { label: string; ids: string[] }
+  ) => {
+    return alerts.filter((alert) => {
+      return alert.attributes.informed_entity.some((informedEntity) => {
+        switch (label) {
+          case "Commuter Rail":
+            return informedEntity.route_type === 2;
+          case "Bus":
+            return informedEntity.route_type === 3;
+          case "Ferry":
+            return informedEntity.route_type === 4;
+          default:
+            return ids.includes(informedEntity.route);
+        }
+      });
+    });
   };
 
   const sortAlerts = (alerts: Alert[]) => {
@@ -108,10 +116,8 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
       // Fall back to start time
       return Date.parse(start1) - Date.parse(start2);
     } else if (!end1) {
-      // 1 sorts after 2
       return 1;
     } else if (!end2) {
-      // 1 sorts before 2
       return -1;
     }
     return Date.parse(end1) - Date.parse(end2);
