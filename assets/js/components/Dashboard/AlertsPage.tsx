@@ -20,11 +20,11 @@ const getAlertSortLabel = (sortDirection: DirectionID) => {
 };
 
 interface Props {
+  alerts: Alert[];
   isVisible: boolean;
 }
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
-  const [alerts, setAlerts] = useState<Alert[]>(sampleAlerts);
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
@@ -63,7 +63,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   };
 
   const filterAlerts = () => {
-    let filteredAlerts = alerts;
+    let filteredAlerts = props.alerts;
     if (alertModeLineFilterValue !== MODES_AND_LINES[0]) {
       filteredAlerts = filteredAlerts.filter((alert) => {
         return alert.attributes.informed_entity.some((informedEntity) => {
@@ -87,48 +87,34 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
 
   const sortAlerts = (alerts: Alert[]) => {
     alerts.sort((a: Alert, b: Alert) => {
-      return compareAlerts(a, b, alertSortDirection);
+      return alertSortDirection === 0
+        ? compareAlerts(a, b)
+        : compareAlerts(b, a);
     });
     return alerts;
   };
 
-  const compareAlerts = (a: Alert, b: Alert, sortDirection: DirectionID) => {
-    const active_period_a = a.attributes.active_period;
-    const active_period_b = b.attributes.active_period;
+  const compareAlerts = (alert1: Alert, alert2: Alert) => {
+    const active_period_1 = alert1.attributes.active_period;
+    const active_period_2 = alert2.attributes.active_period;
     // Get the soonest start time
-    const { start: startA } = active_period_a[0];
-    const { start: startB } = active_period_b[0];
+    const { start: start1 } = active_period_1[0];
+    const { start: start2 } = active_period_2[0];
     // Get the latest end time
-    const { end: endA } = active_period_a[active_period_a.length - 1];
-    const { end: endB } = active_period_b[active_period_b.length - 1];
+    const { end: end1 } = active_period_1[active_period_1.length - 1];
+    const { end: end2 } = active_period_2[active_period_2.length - 1];
 
-    if (sortDirection == 0) {
-      // Sort as soonest end first
-      if (endA === endB) {
-        // Fall back to soonest start first
-        return Date.parse(startA) > Date.parse(startB) ? 1 : -1;
-      } else if (!endA) {
-        // A sorts after B
-        return 1;
-      } else if (!endB) {
-        // A sorts before B
-        return -1;
-      }
-      return Date.parse(endA) > Date.parse(endB) ? 1 : -1;
-    } else {
-      // Sort as soonest end last
-      if (endA === endB) {
-        // Fall back to soonest start last
-        return Date.parse(startA) > Date.parse(startB) ? -1 : 1;
-      } else if (!endA) {
-        // A sorts before B
-        return -1;
-      } else if (!endB) {
-        // A sorts after B
-        return 1;
-      }
-      return Date.parse(endA) > Date.parse(endB) ? -1 : 1;
+    if (end1 === end2) {
+      // Fall back to start time
+      return Date.parse(start1) - Date.parse(start2);
+    } else if (!end1) {
+      // 1 sorts after 2
+      return 1;
+    } else if (!end2) {
+      // 1 sorts before 2
+      return -1;
     }
+    return Date.parse(end1) - Date.parse(end2);
   };
 
   return (
@@ -194,246 +180,5 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     </div>
   );
 };
-
-const sampleAlerts: Alert[] = [
-  {
-    id: "1",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-10-29T02:30:00-04:00",
-          start: "2022-08-28T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Orange",
-          route_type: 1,
-        },
-      ],
-    },
-  },
-  {
-    id: "2",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-10-30T02:30:00-04:00",
-          start: "2022-08-28T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Red",
-          route_type: 1,
-        },
-        {
-          route: "Mattapan",
-          route_type: 0,
-        },
-      ],
-    },
-  },
-  {
-    id: "3",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-10-28T02:30:00-04:00",
-          start: "2022-08-27T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Blue",
-          route_type: 1,
-        },
-      ],
-    },
-  },
-  {
-    id: "4",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-10-28T02:30:00-04:00",
-          start: "2022-08-27T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Green-B",
-          route_type: 0,
-        },
-      ],
-    },
-  },
-  {
-    id: "5",
-    attributes: {
-      active_period: [
-        {
-          end: null,
-          start: "2022-08-29T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Green-C",
-          route_type: 0,
-        },
-      ],
-    },
-  },
-  {
-    id: "6",
-    attributes: {
-      active_period: [
-        {
-          end: null,
-          start: "2022-07-29T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Green-D",
-          route_type: 0,
-        },
-      ],
-    },
-  },
-  {
-    id: "7",
-    attributes: {
-      active_period: [
-        {
-          end: null,
-          start: "2022-09-29T04:30:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Green-E",
-          route_type: 0,
-        },
-      ],
-    },
-  },
-  {
-    id: "8",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-09-17T02:30:00-04:00",
-          start: "2022-09-16T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-18T02:30:00-04:00",
-          start: "2022-09-17T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-19T02:30:00-04:00",
-          start: "2022-09-18T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-24T02:30:00-04:00",
-          start: "2022-09-23T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-25T02:30:00-04:00",
-          start: "2022-09-24T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-26T02:30:00-04:00",
-          start: "2022-09-25T23:00:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Green-B",
-          route_type: 0,
-        },
-        {
-          route: "Green-C",
-          route_type: 0,
-        },
-        {
-          route: "Green-D",
-          route_type: 0,
-        },
-        {
-          route: "Green-E",
-          route_type: 0,
-        },
-      ],
-    },
-  },
-  {
-    id: "9",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-09-17T02:30:00-04:00",
-          start: "2022-09-16T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-18T02:30:00-04:00",
-          start: "2022-09-17T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-19T02:30:00-04:00",
-          start: "2022-09-18T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-24T02:30:00-04:00",
-          start: "2022-09-23T23:00:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Orange",
-          route_type: 1,
-        },
-        {
-          route: "CR-something",
-          route_type: 2,
-        },
-      ],
-    },
-  },
-  {
-    id: "10",
-    attributes: {
-      active_period: [
-        {
-          end: "2022-09-17T02:30:00-04:00",
-          start: "2022-08-16T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-18T02:30:00-04:00",
-          start: "2022-09-17T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-19T02:30:00-04:00",
-          start: "2022-09-18T23:00:00-04:00",
-        },
-        {
-          end: "2022-09-24T02:30:00-04:00",
-          start: "2022-09-23T23:00:00-04:00",
-        },
-      ],
-      informed_entity: [
-        {
-          route: "Red",
-          route_type: 1,
-        },
-        {
-          route: "100",
-          route_type: 3,
-        },
-      ],
-    },
-  },
-];
 
 export default AlertsPage;
