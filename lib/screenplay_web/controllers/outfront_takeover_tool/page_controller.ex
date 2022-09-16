@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.PageController do
+defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
   use ScreenplayWeb, :controller
 
   def index(conn, _params) do
