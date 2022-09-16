@@ -13,10 +13,6 @@ const Sidebar: ComponentType = () => {
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
 
-  const goToHome = () => {
-    window.location.assign("/dashboard");
-  };
-
   return pathname.includes("dashboard") ? (
     <div className="sidebar-container">
       {/*
@@ -30,10 +26,7 @@ const Sidebar: ComponentType = () => {
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
         <Link className="sidebar-link" to="/dashboard">
-          <Button
-            className={pathname === "/dashboard" ? "selected" : ""}
-            onClick={() => props.handlePageChange("places")}
-          >
+          <Button className={pathname === "/dashboard" ? "selected" : ""}>
             <CollectionFill size={20} />
             <span className="nav-link__name">Places</span>
           </Button>
@@ -41,7 +34,6 @@ const Sidebar: ComponentType = () => {
         <Link className="sidebar-link" to="/dashboard/alerts">
           <Button
             className={pathname === "/dashboard/alerts" ? "selected" : ""}
-            onClick={() => props.handlePageChange("alerts")}
           >
             <ExclamationTriangleFill size={20} />
             <span className="nav-link__name">Posted Alerts</span>
