@@ -56,6 +56,29 @@ const Alerts = (): JSX.Element => {
     }
   };
 
+  const filterAlerts = () => {
+    let filteredAlerts = alerts;
+    if (alertModeLineFilterValue !== MODES_AND_LINES[0]) {
+      filteredAlerts = filteredAlerts.filter((alert) => {
+        return alert.attributes.informed_entity.some((informedEntity) => {
+          switch (alertModeLineFilterValue.label) {
+            case "Commuter Rail":
+              return informedEntity.route_type === 2;
+            case "Bus":
+              return informedEntity.route_type === 3;
+            case "Ferry":
+              return informedEntity.route_type === 4;
+            default:
+              return alertModeLineFilterValue.ids.includes(
+                informedEntity.route
+              );
+          }
+        });
+      });
+    }
+    return filteredAlerts;
+  };
+
   const sortAlerts = (alerts: Alert[]) => {
     alerts.sort((a: Alert, b: Alert) => {
       return compareAlerts(a, b, alertSortDirection);
@@ -64,12 +87,14 @@ const Alerts = (): JSX.Element => {
   };
 
   const compareAlerts = (a: Alert, b: Alert, sortDirection: DirectionID) => {
+    const active_period_a = a.attributes.active_period;
+    const active_period_b = b.attributes.active_period;
     // Get the soonest start time
-    const { start: startA } = a.active_period[0];
-    const { start: startB } = b.active_period[0];
+    const { start: startA } = active_period_a[0];
+    const { start: startB } = active_period_b[0];
     // Get the latest end time
-    const { end: endA } = a.active_period[a.active_period.length - 1];
-    const { end: endB } = b.active_period[b.active_period.length - 1];
+    const { end: endA } = active_period_a[active_period_a.length - 1];
+    const { end: endB } = active_period_b[active_period_b.length - 1];
 
     if (sortDirection == 0) {
       // Sort as soonest end first
@@ -141,11 +166,16 @@ const Alerts = (): JSX.Element => {
           </Col>
         </Row>
       </Container>
-      {sortAlerts(alerts).map((alert: Alert) => (
+      {sortAlerts(filterAlerts()).map((alert: Alert) => (
         <div key={alert.id} style={{ color: "white" }}>
           id: {alert.id} {"End: "}
-          {alert.active_period[alert.active_period.length - 1].end} {"Start: "}
-          {alert.active_period[0].start}
+          {
+            alert.attributes.active_period[
+              alert.attributes.active_period.length - 1
+            ].end
+          }{" "}
+          {"Start: "}
+          {alert.attributes.active_period[0].start}
         </div>
       ))}
     </>
@@ -155,137 +185,241 @@ const Alerts = (): JSX.Element => {
 const sampleAlerts: Alert[] = [
   {
     id: "1",
-    active_period: [
-      {
-        end: "2022-10-29T02:30:00-04:00",
-        start: "2022-08-28T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-10-29T02:30:00-04:00",
+          start: "2022-08-28T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Orange",
+          route_type: 1,
+        },
+      ],
+    },
   },
   {
     id: "2",
-    active_period: [
-      {
-        end: "2022-10-30T02:30:00-04:00",
-        start: "2022-08-28T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-10-30T02:30:00-04:00",
+          start: "2022-08-28T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Red",
+          route_type: 1,
+        },
+        {
+          route: "Mattapan",
+          route_type: 0,
+        },
+      ],
+    },
   },
   {
     id: "3",
-    active_period: [
-      {
-        end: "2022-10-28T02:30:00-04:00",
-        start: "2022-08-27T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-10-28T02:30:00-04:00",
+          start: "2022-08-27T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Blue",
+          route_type: 1,
+        },
+      ],
+    },
   },
   {
     id: "4",
-    active_period: [
-      {
-        end: "2022-10-28T02:30:00-04:00",
-        start: "2022-08-27T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-10-28T02:30:00-04:00",
+          start: "2022-08-27T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Green-B",
+          route_type: 0,
+        },
+      ],
+    },
   },
   {
     id: "5",
-    active_period: [
-      {
-        end: null,
-        start: "2022-08-29T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: null,
+          start: "2022-08-29T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Green-C",
+          route_type: 0,
+        },
+      ],
+    },
   },
   {
     id: "6",
-    active_period: [
-      {
-        end: null,
-        start: "2022-07-29T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: null,
+          start: "2022-07-29T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Green-D",
+          route_type: 0,
+        },
+      ],
+    },
   },
   {
     id: "7",
-    active_period: [
-      {
-        end: null,
-        start: "2022-09-29T04:30:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: null,
+          start: "2022-09-29T04:30:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Green-E",
+          route_type: 0,
+        },
+      ],
+    },
   },
   {
     id: "8",
-    active_period: [
-      {
-        end: "2022-09-17T02:30:00-04:00",
-        start: "2022-09-16T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-18T02:30:00-04:00",
-        start: "2022-09-17T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-19T02:30:00-04:00",
-        start: "2022-09-18T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-24T02:30:00-04:00",
-        start: "2022-09-23T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-25T02:30:00-04:00",
-        start: "2022-09-24T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-26T02:30:00-04:00",
-        start: "2022-09-25T23:00:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-09-17T02:30:00-04:00",
+          start: "2022-09-16T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-18T02:30:00-04:00",
+          start: "2022-09-17T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-19T02:30:00-04:00",
+          start: "2022-09-18T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-24T02:30:00-04:00",
+          start: "2022-09-23T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-25T02:30:00-04:00",
+          start: "2022-09-24T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-26T02:30:00-04:00",
+          start: "2022-09-25T23:00:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Green-B",
+          route_type: 0,
+        },
+        {
+          route: "Green-C",
+          route_type: 0,
+        },
+        {
+          route: "Green-D",
+          route_type: 0,
+        },
+        {
+          route: "Green-E",
+          route_type: 0,
+        },
+      ],
+    },
   },
   {
     id: "9",
-    active_period: [
-      {
-        end: "2022-09-17T02:30:00-04:00",
-        start: "2022-09-16T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-18T02:30:00-04:00",
-        start: "2022-09-17T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-19T02:30:00-04:00",
-        start: "2022-09-18T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-24T02:30:00-04:00",
-        start: "2022-09-23T23:00:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-09-17T02:30:00-04:00",
+          start: "2022-09-16T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-18T02:30:00-04:00",
+          start: "2022-09-17T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-19T02:30:00-04:00",
+          start: "2022-09-18T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-24T02:30:00-04:00",
+          start: "2022-09-23T23:00:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Orange",
+          route_type: 1,
+        },
+        {
+          route: "CR-something",
+          route_type: 2,
+        },
+      ],
+    },
   },
   {
     id: "10",
-    active_period: [
-      {
-        end: "2022-09-17T02:30:00-04:00",
-        start: "2022-08-16T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-18T02:30:00-04:00",
-        start: "2022-09-17T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-19T02:30:00-04:00",
-        start: "2022-09-18T23:00:00-04:00",
-      },
-      {
-        end: "2022-09-24T02:30:00-04:00",
-        start: "2022-09-23T23:00:00-04:00",
-      },
-    ],
+    attributes: {
+      active_period: [
+        {
+          end: "2022-09-17T02:30:00-04:00",
+          start: "2022-08-16T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-18T02:30:00-04:00",
+          start: "2022-09-17T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-19T02:30:00-04:00",
+          start: "2022-09-18T23:00:00-04:00",
+        },
+        {
+          end: "2022-09-24T02:30:00-04:00",
+          start: "2022-09-23T23:00:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          route: "Red",
+          route_type: 1,
+        },
+        {
+          route: "100",
+          route_type: 3,
+        },
+      ],
+    },
   },
 ];
 

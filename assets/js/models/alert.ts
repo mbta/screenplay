@@ -13,5 +13,4 @@ interface ActivePeriod {
 interface InformedEntity {
   route: string;
   route_type: number;
-  stop: string;
 }
