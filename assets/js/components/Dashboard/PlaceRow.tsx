@@ -151,6 +151,25 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     )?.inlineMap;
   };
 
+  const formatStationName = (stationName: string) => {
+    let isTerminalStop = false;
+    if (props.filteredLine && props.filteredLine !== null) {
+      const line = STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()];
+      const terminalStops = line.filter((line) => line.isTerminalStop);
+      isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
+    } else {
+      isTerminalStop = Object.keys(STATION_ORDER_BY_LINE)
+        .filter((key) => !["silver", "mattapan"].includes(key))
+        .some((key) => {
+          const line = STATION_ORDER_BY_LINE[key];
+          const terminalStops = line.filter((line) => line.isTerminalStop);
+          return terminalStops.some((stop) => stationName === stop.name);
+        });
+    }
+
+    return isTerminalStop ? stationName.toUpperCase() : stationName;
+  };
+
   return (
     <div
       key={props.eventKey}
@@ -194,7 +213,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
               </div>
             )}
             <div className="place-row__name" data-testid="place-name">
-              {name}
+              {formatStationName(name)}
             </div>
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">
