@@ -23,7 +23,6 @@ const getPlaceCount = (places: Place[]) => {
 
 const getScreenCount = (places: Place[]) => {
   // Get all screens within the filtered places.
-  // TODO: Should we also limit the count to only include screens of the filtered screen type, when that filter is selected?
   const screenIDs = places
     .flatMap((place) => place.screens)
     .map((screen) => screen.id);
