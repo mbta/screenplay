@@ -8,3 +8,4 @@
 # export SFTP_LOCAL_PATH=
 # export SECRET_KEY_BASE=
 # export GUARDIAN_SECRET_KEY=
+# export API_V3_KEY=
