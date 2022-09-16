@@ -8,19 +8,20 @@ import {
   SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
-  DirectionID,
 } from "../../constants/constants";
 import { Alert } from "../../models/alert";
 import classNames from "classnames";
 
-interface Props {
-  isVisible: boolean;
-}
+type DirectionID = 0 | 1;
 
 const getAlertSortLabel = (sortDirection: DirectionID) => {
   const sortLabels = SORT_LABELS["Alerts"];
   return sortLabels[sortDirection];
 };
+
+interface Props {
+  isVisible: boolean;
+}
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
   const [alerts, setAlerts] = useState<Alert[]>(sampleAlerts);

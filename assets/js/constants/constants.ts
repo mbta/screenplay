@@ -54,5 +54,3 @@ export const STATUSES = [
   { label: "Errors", ids: ["Errors"] },
   { label: "Screen off", ids: ["Off"] },
 ];
-
-export type DirectionID = 0 | 1;
