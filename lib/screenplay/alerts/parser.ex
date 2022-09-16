@@ -107,7 +107,7 @@ defmodule Screenplay.Alerts.Parser do
         2 -> :cr
         3 -> :bus
         4 -> :ferry
-        _ -> String.to_atom(String.downcase(id))
+        _ -> String.to_existing_atom(String.downcase(id))
       end
     end)
     |> Enum.reject(&is_nil/1)
