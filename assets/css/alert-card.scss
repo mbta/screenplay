@@ -1,5 +1,4 @@
 .alert-card {
-  height: 164px;
   overflow: hidden;
   display: flex;
   border-radius: 8px;
@@ -58,6 +57,7 @@
     color: #ffffff;
     padding-top: 16px;
     padding-left: 16px;
+    padding-bottom: 16px;
     width: 25%;
 
     &__alert-id {
