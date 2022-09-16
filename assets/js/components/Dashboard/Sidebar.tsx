@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ComponentType } from "react";
 import { Button } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -8,17 +8,21 @@ import {
 } from "react-bootstrap-icons";
 import TSquare from "../../../static/images/t-square.svg";
 
-const Sidebar = (props: { goToHome: () => void }): JSX.Element => {
+const Sidebar: ComponentType = () => {
   const pathname = useLocation().pathname;
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
 
   return pathname.includes("dashboard") ? (
     <div className="sidebar-container">
-      <Link to="/dashboard" className="sidebar-brand" onClick={props.goToHome}>
+      {/*
+        We use a regular web link for this rather than a React-Router Link,
+        so that the page reloads with fresh state.
+      */}
+      <a href="/dashboard" className="sidebar-brand">
         <img src={TSquare} alt="Screenplay Logo" />
         <div className="sidebar-brand__text">Screenplay</div>
-      </Link>
+      </a>
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
         <Link className="sidebar-link" to="/dashboard">

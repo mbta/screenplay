@@ -18,8 +18,9 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   onClick: (eventKey: string) => void;
+  isFiltered?: boolean;
   filteredLine?: string | null;
-  defaultSort: boolean;
+  defaultSort?: boolean;
 }
 
 /**
@@ -154,16 +155,19 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   return (
     <div
       key={props.eventKey}
-      onClick={hasScreens ? rowOnClick : () => undefined}
       className={classNames("place-row", {
         open: isOpen,
         disabled: !hasScreens,
-        "filtered-by-route": props.filteredLine,
+        filtered: !!props.isFiltered,
       })}
       data-testid="place-row"
     >
       <Container fluid>
-        <Row className="align-items-center text-white">
+        <Row
+          onClick={hasScreens ? rowOnClick : () => undefined}
+          className="align-items-center text-white"
+          data-testid="place-row-header"
+        >
           <Col lg={3} className="d-flex align-items-center">
             <div
               className={classNames("place-row__toggle", {
