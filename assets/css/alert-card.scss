@@ -4,12 +4,10 @@
   border-radius: 8px;
 
   &__alert-details {
-    padding-top: 16px;
-    padding-left: 16px;
-    padding-bottom: 16px;
     background: rgba(255, 255, 255, 0.8);
     max-width: 75%;
     max-height: 100%;
+    padding: 16px;
 
     &__pill {
       width: 38px;
@@ -34,7 +32,7 @@
     }
 
     &__active-period {
-      margin-top: 52px;
+      margin-top: 36px;
       text-align: right;
       &-start,
       &-end {
@@ -55,10 +53,8 @@
   &__place-details {
     background-color: $cool-gray-40;
     color: #ffffff;
-    padding-top: 16px;
-    padding-left: 16px;
-    padding-bottom: 16px;
     width: 25%;
+    padding: 16px;
 
     &__alert-id {
       font-family: Inter, sans-serif;
