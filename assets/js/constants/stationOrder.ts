@@ -246,10 +246,12 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Union Square",
       inlineMap: "Green-D-Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Lechmere",
       inlineMap: "Green-Trunk-Middle",
+      isTerminalStop: true,
     },
     {
       name: "Science Park/West End",
@@ -266,6 +268,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Government Center",
       inlineMap: "Green-Trunk-Middle",
+      isTerminalStop: true,
     },
     {
       name: "Park Street",
@@ -326,6 +329,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Heath Street",
       inlineMap: "Green-E-Branch-Bottom",
+      isTerminalStop: true,
     },
     {
       name: "Hynes Convention Center",
@@ -398,6 +402,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Boston College",
       inlineMap: "Green-B-Branch-Bottom",
+      isTerminalStop: true,
     },
     {
       name: "Saint Mary's Street",
@@ -450,6 +455,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Cleveland Circle",
       inlineMap: "Green-C-Branch-Bottom",
+      isTerminalStop: true,
     },
     {
       name: "Fenway",
@@ -502,6 +508,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Riverside",
       inlineMap: "Green-D-Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
   "green-b": [
@@ -869,6 +876,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Heath Street",
       inlineMap: "Green-E-Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
   mattapan: [
@@ -903,7 +911,6 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Mattapan",
       inlineMap: "Red-Trunk-Bottom",
-      isTerminalStop: true,
     },
   ],
 };
