@@ -1,6 +1,5 @@
 defmodule ScreenplayWeb.Controllers.AuthControllerTest do
   use ScreenplayWeb.ConnCase
-  import Test.Support.Helpers
 
   alias ScreenplayWeb.Router.Helpers
 
