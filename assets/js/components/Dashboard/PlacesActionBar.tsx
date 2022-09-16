@@ -41,7 +41,7 @@ const PlacesActionBar: React.ComponentType<Props> = ({
   onClickToggleScreenlessPlaces,
 }: Props) => {
   return (
-    <div className="places-action-bar">
+    <div className="places-action-bar" data-testid="places-action-bar">
       <ActionBarStats
         placeCount={getPlaceCount(places)}
         screenCount={getScreenCount(places)}
@@ -51,16 +51,22 @@ const PlacesActionBar: React.ComponentType<Props> = ({
           <ActionBarButton
             onClick={onClickToggleScreenlessPlaces}
             IconComponent={showScreenlessPlaces ? EyeFill : EyeSlashFill}
+            testID="places-action-bar-screenless-places-button"
           >
             Screenless places
           </ActionBarButton>
         )}
-        <ActionBarButton disabled IconComponent={ListCheck}>
+        <ActionBarButton
+          disabled
+          IconComponent={ListCheck}
+          testID="places-action-bar-bulk-edit-button"
+        >
           Bulk edit
         </ActionBarButton>
         <ActionBarButton
           onClick={onClickResetFilters}
           IconComponent={XCircleFill}
+          testID="places-action-bar-reset-filters-button"
         >
           Reset filters
         </ActionBarButton>
@@ -79,10 +85,23 @@ const ActionBarStats: React.ComponentType<StatsProps> = ({
   screenCount,
 }: StatsProps) => {
   return (
-    <span className="places-action-bar__stats">
-      <span className="places-action-bar__stats__number">{placeCount}</span>{" "}
+    <span
+      className="places-action-bar__stats"
+      data-testid="places-action-bar-stats"
+    >
+      <span
+        className="places-action-bar__stats__number"
+        data-testid="places-action-bar-stats-place-count"
+      >
+        {placeCount}
+      </span>{" "}
       {placeCount == 1 ? "station" : "stations"} ·{" "}
-      <span className="places-action-bar__stats__number">{screenCount}</span>{" "}
+      <span
+        className="places-action-bar__stats__number"
+        data-testid="places-action-bar-stats-screen-count"
+      >
+        {screenCount}
+      </span>{" "}
       {screenCount == 1 ? "screen" : "screens"}
     </span>
   );
@@ -101,6 +120,7 @@ interface ButtonProps {
   onClick?: () => void;
   IconComponent?: Icon;
   children?: React.ReactNode;
+  testID: string;
 }
 
 const ActionBarButton: React.ComponentType<ButtonProps> = ({
@@ -108,12 +128,14 @@ const ActionBarButton: React.ComponentType<ButtonProps> = ({
   onClick = noop,
   IconComponent,
   children,
+  testID,
 }: ButtonProps) => {
   return (
     <Button
       className="places-action-bar__button"
       disabled={disabled}
       onClick={onClick}
+      data-testid={testID}
     >
       {IconComponent && (
         <div className="places-action-bar__button__icon-container">
