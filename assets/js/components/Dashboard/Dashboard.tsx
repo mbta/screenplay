@@ -1,39 +1,39 @@
-import React, { useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import "../../../css/screenplay.scss";
+import { Place } from "../../models/place";
 import Sidebar from "./Sidebar";
-import Places from "./Places";
-import Alerts from "./Alerts";
-import classNames from "classnames";
+import PlacesPage from "./PlacesPage";
+import AlertsPage from "./AlertsPage";
+import OverridesPage from "./OverridesPage";
 
-const Dashboard = (): JSX.Element => {
-  const [page, setPage] = useState<string>("places");
+interface Props {
+  page: "places" | "alerts" | "overrides";
+}
 
-  const handlePageChange = (pageName: string) => {
-    setPage(pageName);
+const Dashboard: ComponentType<Props> = (props: Props) => {
+  const [places, setPlaces] = useState<Place[]>([]);
+
+  useEffect(() => {
+    fetch("/api/dashboard")
+      .then((response) => response.json())
+      .then((placeList: []) => {
+        setPlaces(placeList);
+      });
+  }, []);
+
+  const visible = {
+    places: props.page === "places",
+    alerts: props.page === "alerts",
+    overrides: props.page === "overrides",
   };
 
   return (
     <div className="screenplay-container">
-      <Sidebar handlePageChange={handlePageChange} />
-      <div
-        className={classNames("page-content", {
-          "page-content__hidden": page !== "places",
-        })}
-      >
-        <div className="page-content__header">Places</div>
-        <div className="page-content__body">
-          <Places />
-        </div>
-      </div>
-      <div
-        className={classNames("page-content", {
-          "page-content__hidden": page !== "alerts",
-        })}
-      >
-        <div className="page-content__header">Posted Alerts</div>
-        <div className="page-content__body">
-          <Alerts />
-        </div>
+      <Sidebar />
+      <div className="page-content">
+        <PlacesPage places={places} isVisible={visible.places} />
+        <AlertsPage isVisible={visible.alerts} />
+        <OverridesPage isVisible={visible.overrides} />
       </div>
     </div>
   );
