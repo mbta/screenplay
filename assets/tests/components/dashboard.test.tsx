@@ -273,11 +273,6 @@ describe("Dashboard", () => {
 
         fireEvent.click(getByTestId("sort-label"));
         await waitFor(() => {
-          console.log(
-            getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
-          );
           expect(
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
