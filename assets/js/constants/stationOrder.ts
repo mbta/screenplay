@@ -692,13 +692,9 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
   ],
   "green-d": [
     {
-      name: "Union Square",
-      inlineMap: "Green-D-Trunk-Top",
-      isTerminalStop: true,
-    },
-    {
       name: "Lechmere",
       inlineMap: "Green-D-Trunk-Middle",
+      isTerminalStop: true,
     },
     {
       name: "Science Park/West End",

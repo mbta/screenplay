@@ -261,7 +261,7 @@ describe("Dashboard", () => {
             )
           ).toStrictEqual([
             "UNION SQUARE",
-            "LECHMERE",
+            "Lechmere",
             "Science Park/West End",
             "North Station",
             "Haymarket",
@@ -289,7 +289,7 @@ describe("Dashboard", () => {
             "Haymarket",
             "North Station",
             "Science Park/West End",
-            "LECHMERE",
+            "Lechmere",
             "UNION SQUARE",
           ]);
         });
