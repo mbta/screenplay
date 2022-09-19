@@ -18,8 +18,9 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   onClick: (eventKey: string) => void;
+  isFiltered?: boolean;
   filteredLine?: string | null;
-  defaultSort: boolean;
+  defaultSort?: boolean;
 }
 
 /**
@@ -173,17 +174,20 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   return (
     <div
       key={props.eventKey}
-      onClick={hasScreens ? rowOnClick : () => undefined}
       className={classNames("place-row", {
         open: isOpen,
         disabled: !hasScreens,
-        "filtered-by-route": props.filteredLine,
+        filtered: !!props.isFiltered,
       })}
       data-testid="place-row"
     >
       <Container fluid>
-        <Row className="align-items-center text-white">
-          <Col lg={3} className="d-flex align-items-center">
+        <Row
+          onClick={hasScreens ? rowOnClick : () => undefined}
+          className="align-items-center text-white"
+          data-testid="place-row-header"
+        >
+          <Col lg={5} className="d-flex align-items-center">
             <div
               className={classNames("place-row__toggle", {
                 "hidden-toggle": !hasScreens,
@@ -216,12 +220,12 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
               {formatStationName(name)}
             </div>
           </Col>
-          <Col lg={3} className="d-flex justify-content-end pe-3">
+          <Col lg={1} className="d-flex justify-content-end">
             {renderModesAndLinesIcons()}
           </Col>
           <Col
             lg={3}
-            className="place-row__screen-types pe-3"
+            className="place-row__screen-types"
             data-testid="place-screen-types"
           >
             {formatScreenTypes()}

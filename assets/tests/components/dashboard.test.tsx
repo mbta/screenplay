@@ -151,18 +151,18 @@ describe("Dashboard", () => {
 
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Red Line" }));
-        // sortDirection is maintained, so we expect the filtered list to
-        // still be sorted in "reverse" order initially
         await waitFor(() => {
+          // When a mode or line is selected, sort direction resets to 0.
+          // If not, we would have expected the label to still be that
+          // of the "reverse" direction for the Red Line: "NORTHBOUND"
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "NORTHBOUND"
+            "SOUTHBOUND"
           );
         });
         fireEvent.click(getByTestId("sort-label"));
-        // now, we've switched it back to "forward" order: sortDirection = 0
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "SOUTHBOUND"
+            "NORTHBOUND"
           );
         });
 

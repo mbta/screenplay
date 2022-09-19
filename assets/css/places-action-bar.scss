@@ -1,0 +1,57 @@
+.places-action-bar {
+  box-sizing: border-box;
+  width: 100%;
+  height: 68px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  background: $cool-gray-40;
+
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px 8px 0 0;
+
+  & &__buttons-container {
+    float: right;
+  }
+
+  & &__button {
+    box-sizing: border-box;
+    height: 36px;
+    vertical-align: top;
+    margin-top: 16px;
+    margin-left: 16px;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    color: white;
+    font-size: 16px;
+
+    background-color: $cool-gray-30;
+    border: 1px solid rgba(23, 31, 38, 0.3);
+    border-radius: 6px;
+  }
+
+  & &__button__icon-container {
+    display: inline-block;
+    margin-right: 10px;
+    transform: translateY(-3px);
+  }
+
+  & &__button__text {
+    display: inline-block;
+    transform: translateY(-1px);
+  }
+
+  & &__stats {
+    color: white;
+    font-family: "Inter", sans-serif;
+    line-height: 68px;
+  }
+
+  & &__stats__number {
+    font-weight: 900;
+    font-size: 32px;
+  }
+}

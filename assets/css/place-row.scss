@@ -5,6 +5,10 @@
   margin-bottom: 2px;
   border-bottom: 0px;
 
+  &:hover:not(.disabled):not(.open) {
+    background-color: $cool-gray-40;
+  }
+
   &.open {
     background-color: $cool-gray-20;
     padding: 0px 0px 16px;
@@ -18,7 +22,7 @@
     }
   }
 
-  &.filtered-by-route {
+  &.filtered {
     margin-bottom: 0;
     border-radius: 0;
     border-left: 1px solid $cool-gray-40;
