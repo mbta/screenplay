@@ -36,26 +36,18 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const hasScreens =
     screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
 
-  const formatScreenTypes = () => {
-    if (!hasScreens) {
-      return "no screens";
-    }
 
-    const typeMap: Record<string, string> = {
-      pa_ess: "PA",
-      bus_shelter_v2: "Bus Shelter",
-      pre_fare_v2: "Prefare",
-      dup: "DUP",
-      gl_eink_single: "GL E-Ink",
-      gl_eink_double: "GL E-Ink",
-      gl_eink_v2: "GL E-Ink",
-      bus_eink: "Bus E-Ink",
-      bus_eink_v2: "Bus E-Ink",
-      solari: "Solari",
-    };
-
-    const types = new Set(sortScreens().map((screen) => typeMap[screen.type]));
-    return Array.from(types).join(" · ");
+  const typeMap: Record<string, string> = {
+    pa_ess: "PA",
+    bus_shelter_v2: "Bus Shelter",
+    pre_fare_v2: "Prefare",
+    dup: "DUP",
+    gl_eink_single: "GL E-Ink",
+    gl_eink_double: "GL E-Ink",
+    gl_eink_v2: "GL E-Ink",
+    bus_eink: "Bus E-Ink",
+    bus_eink_v2: "Bus E-Ink",
+    solari: "Solari",
   };
 
   const sortScreens = (screenList: Screen[] = screens) => {
@@ -78,6 +70,8 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         : -1
     );
   };
+  
+  const screenTypes = !hasScreens ? ["no screens"] : Array.from(new Set(sortScreens().map((screen) => typeMap[screen.type])))
 
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
@@ -205,7 +199,9 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
             className="place-row__screen-types pe-3"
             data-testid="place-screen-types"
           >
-            {formatScreenTypes()}
+            {screenTypes.map((type, index) => index < (screenTypes.length - 1)
+              ? <span key={index}>{type}<span className="spacer">·</span></span>
+              : type)}
           </Col>
           <Col lg={3} className="place-row__status" data-testid="place-status">
             {hasScreens ? "Auto" : "—"}
