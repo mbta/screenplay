@@ -1,6 +1,6 @@
 # Script to gather screenplay places and screens.
 #
-# Example usage: API_V3_KEY=<your_key_here> mix run scripts/places_and_screens.exs --environment prod
+# Example usage: API_V3_KEY=<your_key_here> mix run scripts/fetch_places_and_screens.exs --environment prod
 
 {opts, _, _} =
   System.argv()
@@ -76,6 +76,9 @@ parsed = Jason.decode!(file)
 
 formatted_screens =
   parsed["screens"]
+  # Certain screens (test screens, ones we've configured for non-MBTA locations) are intentionally not included in Screenplay,
+  # and marked as such with the `hidden_from_screenplay` boolean field.
+  |> Enum.reject(&match?({_id, %{"hidden_from_screenplay" => true}}, &1))
   # This reduce allows us to split out a single config into multiple places.
   # Only splits out DUPs, but can be modified to work with other screen types.
   |> Enum.reduce(
