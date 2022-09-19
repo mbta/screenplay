@@ -154,7 +154,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   const formatStationName = (stationName: string) => {
     let isTerminalStop = false;
-    if (props.filteredLine && props.filteredLine !== null) {
+    if (props.filteredLine) {
       const line = STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()];
       const terminalStops = line.filter((line) => line.isTerminalStop);
       isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
