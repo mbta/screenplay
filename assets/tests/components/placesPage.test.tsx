@@ -1,8 +1,8 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import Dashboard from "../../js/components/Dashboard/Dashboard";
-import { MemoryRouter } from "react-router-dom";
 import placesAndScreens from "../places_and_screens.test.json";
+import { Place } from "../../js/models/place";
+import PlacesPage from "../../js/components/Dashboard/PlacesPage";
 
 beforeAll(() => {
   const app = document.createElement("div");
@@ -11,27 +11,11 @@ beforeAll(() => {
   document.body.appendChild(app);
 });
 
-describe("Dashboard", () => {
-  let originalFetch: any;
-
-  beforeEach(() => {
-    originalFetch = global.fetch;
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(placesAndScreens),
-      })
-    ) as jest.Mock;
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-  });
-
+describe("Places Page", () => {
   describe("filtering", () => {
     test("filters places by screen type", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -67,8 +51,7 @@ describe("Dashboard", () => {
 
     test("filters places by mode and route", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -106,8 +89,7 @@ describe("Dashboard", () => {
   describe("sorting", () => {
     test("sort label changes depending on filter selected", async () => {
       const { getByTestId, getByRole, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -138,8 +120,7 @@ describe("Dashboard", () => {
 
     test("sort label changes when clicked", async () => {
       const { getByTestId, getByRole, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -179,8 +160,7 @@ describe("Dashboard", () => {
 
     test("sort order changes for RL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -207,8 +187,7 @@ describe("Dashboard", () => {
 
     test("sort order changes for OL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -247,8 +226,7 @@ describe("Dashboard", () => {
 
     test("sort order changes for GL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -293,8 +271,7 @@ describe("Dashboard", () => {
 
     test("sort order changes for BL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {

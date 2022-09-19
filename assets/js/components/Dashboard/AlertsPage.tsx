@@ -171,7 +171,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
           </Row>
         </Container>
         {sortAlerts(filterAlerts()).map((alert: Alert) => (
-          <div key={alert.id} style={{ color: "white" }}>
+          <div key={alert.id} style={{ color: "white" }} data-testid={alert.id}>
             id: {alert.id} {"End: "}
             {
               alert.attributes.active_period[
