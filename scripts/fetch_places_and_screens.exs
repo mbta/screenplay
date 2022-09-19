@@ -404,6 +404,7 @@ merged_paess =
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
 
+# Now do busways and Silver Line
 contents_bus_silver = contents |> Enum.filter(fn %{id: id, routes: routes} ->
   # Exclude ids that are integers because there are no countdown clocks at normal bus stops
   ("Bus" in routes or "Silver" in routes) and Integer.parse(id) == :error
