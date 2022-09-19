@@ -329,39 +329,6 @@ contents =
     (String.starts_with?(id, "place-CM-") or cr_or_bus_only?.(routes)) and length(screens) == 0
   end)
 
-contents_bus_silver = contents |> Enum.filter(fn %{id: id, routes: routes} ->
-  # Exclude ids that are integers because there are no countdown clocks at normal bus stops
-  ("Bus" in routes or "Silver" in routes) and Integer.parse(id) == :error
-end)
-
-# Use Signs UI config for Bus/Silver Line PAESS ARINC to realtime signs id mapping
-url = "https://api.github.com/repos/mbta/signs_ui/contents/priv/arinc_to_realtime.json"
-%{status_code: 200, body: body} = HTTPoison.get!(url, headers)
-gh_response = Jason.decode!(body)
-
-%{"content" => signs_json_file} = gh_response
-parsed = signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
-
-pa_ess_bus_silver = parsed |> Enum.filter(fn {_, realtime_id} -> realtime_id =~ "bus." or realtime_id =~ "Silver_Line" end)
-  |> Enum.map(fn {station_code_zone, realtime_id} ->
-    [station_code, zone] = String.split(station_code_zone, "-")
-    %{id: realtime_id, station_code: station_code, zone: zone, type: "pa_ess"}
-  end)
-
-places_bus_silver =
-  contents_bus_silver
-  |> Enum.map(fn %{id: id, name: name} ->
-    pa_ess_here = Enum.filter(pa_ess_bus_silver, fn %{id: realtime_id} ->
-      [_, realtime_id_no_prefix] = String.split(realtime_id, ".")
-      [name_start | _] = String.split(realtime_id_no_prefix, "_")
-      name =~ name_start
-    end)
-    if pa_ess_here != [], do: %{id => pa_ess_here}, else: []
-  end)
-  |> Enum.filter(fn place ->
-      is_map(place)
-    end)
-
 # Because the realtime_signs config lives in the realtime_signs repo, go get it so we are always reading the latest.
 url = "https://api.github.com/repos/mbta/realtime_signs/contents/priv/signs.json"
 %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
@@ -431,13 +398,49 @@ pa_ess_screens =
   )
   |> Enum.into(%{})
 
-  # IO.inspect(pa_ess_screens)
-
 # Merge screens and pa/ess
-merged =
+merged_paess =
   Enum.map(contents, fn %{id: id, screens: screens} = place ->
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
+
+contents_bus_silver = contents |> Enum.filter(fn %{id: id, routes: routes} ->
+  # Exclude ids that are integers because there are no countdown clocks at normal bus stops
+  ("Bus" in routes or "Silver" in routes) and Integer.parse(id) == :error
+end)
+
+# Use Signs UI config for Bus/Silver Line PAESS ARINC to realtime signs id mapping
+url = "https://api.github.com/repos/mbta/signs_ui/contents/priv/arinc_to_realtime.json"
+%{status_code: 200, body: body} = HTTPoison.get!(url, headers)
+gh_response = Jason.decode!(body)
+
+%{"content" => signs_json_file} = gh_response
+parsed = signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
+
+bus_silver_configs = parsed |> Enum.filter(fn {_, realtime_id} -> realtime_id =~ "bus." or realtime_id =~ "Silver_Line" end)
+  |> Enum.map(fn {station_code_zone, realtime_id} ->
+    [station_code, zone] = String.split(station_code_zone, "-")
+    %{id: realtime_id, station_code: station_code, zone: zone, type: "pa_ess"}
+  end)
+
+place_to_config_mapping =
+  contents_bus_silver
+  |> Enum.map(fn %{id: id, name: name} ->
+    pa_ess_here = Enum.filter(bus_silver_configs, fn %{id: realtime_id} ->
+      [_, realtime_id_no_prefix] = String.split(realtime_id, ".")
+      [name_start | _] = String.split(realtime_id_no_prefix, "_")
+      name =~ name_start
+    end)
+    if pa_ess_here != [], do: %{id => pa_ess_here}, else: nil
+  end)
+  |> Enum.filter(fn place -> is_map(place) end)
+  |> Enum.reduce(&Map.merge/2)
+
+# Merge in bus and Silver Line PAESS configs
+merged_final =
+  Enum.map(merged_paess, fn %{id: id, screens: screens} = place ->
+    Map.put(place, :screens, screens ++ (place_to_config_mapping[id] || []))
+  end)
   |> Enum.sort_by(& &1.name)
 
-# File.write!("priv/places_and_screens.json", Jason.encode!(merged), [:binary])
+File.write!("priv/places_and_screens.json", Jason.encode!(merged_final), [:binary])
