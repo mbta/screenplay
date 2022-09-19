@@ -5,7 +5,7 @@
   margin-bottom: 2px;
   border-bottom: 0px;
 
-  &:hover:not(.disabled) {
+  &:hover:not(.disabled .open) {
     background-color: $cool-gray-40;
   }
 
