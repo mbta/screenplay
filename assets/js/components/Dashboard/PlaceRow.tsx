@@ -168,7 +168,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
           className="align-items-center text-white"
           data-testid="place-row-header"
         >
-          <Col lg={3} className="d-flex align-items-center">
+          <Col lg={5} className="d-flex align-items-center">
             <div
               className={classNames("place-row__toggle", {
                 "hidden-toggle": !hasScreens,
@@ -201,12 +201,12 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
               {name}
             </div>
           </Col>
-          <Col lg={3} className="d-flex justify-content-end pe-3">
+          <Col lg={1} className="d-flex justify-content-end">
             {renderModesAndLinesIcons()}
           </Col>
           <Col
             lg={3}
-            className="place-row__screen-types pe-3"
+            className="place-row__screen-types"
             data-testid="place-screen-types"
           >
             {formatScreenTypes()}

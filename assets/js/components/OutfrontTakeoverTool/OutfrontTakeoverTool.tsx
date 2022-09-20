@@ -63,6 +63,10 @@ class OutfrontTakeoverTool extends React.Component<
     this.toggleModal = this.toggleModal.bind(this);
   }
 
+  componentDidMount(): void {
+    document.title = "Outfront Media · Emergency Takeover";
+  }
+
   toggleAlertWizard() {
     this.setState((state) => ({
       alertWizardOpen: !state.alertWizardOpen,
