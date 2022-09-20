@@ -3,6 +3,9 @@
   .filter-dropdown__dropdown {
     .filter-dropdown__dropdown-button {
       border-color: transparent;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
 
       &--large {
         &:hover,
@@ -40,7 +43,7 @@
       line-height: 24px;
       padding-left: 6px 8px;
 
-      font-family: "Inter", sans-serif;
+      font-family: Inter, sans-serif;
       font-weight: 500;
       align-items: center;
 
