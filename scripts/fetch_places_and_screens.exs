@@ -369,6 +369,9 @@ platform_to_stop_map =
   end)
   |> Enum.into(%{})
 
+{:ok, labels} = File.read("scripts/paess_labels.json")
+labels = Jason.decode!(labels)
+
 # Get all countdown clocks
 pa_ess_screens =
   parsed
@@ -393,7 +396,7 @@ pa_ess_screens =
          "pa_ess_loc" => station_code,
          "text_zone" => zone
        } ->
-      %{id: id, station_code: station_code, zone: zone, type: "pa_ess"}
+      %{id: id, station_code: station_code, zone: zone, type: "pa_ess", label: labels["#{station_code}-#{zone}"]}
     end
   )
   |> Enum.into(%{})
@@ -421,7 +424,7 @@ parsed = signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jaso
 bus_silver_configs = parsed |> Enum.filter(fn {_, realtime_id} -> realtime_id =~ "bus." or realtime_id =~ "Silver_Line" end)
   |> Enum.map(fn {station_code_zone, realtime_id} ->
     [station_code, zone] = String.split(station_code_zone, "-")
-    %{id: realtime_id, station_code: station_code, zone: zone, type: "pa_ess"}
+    %{id: realtime_id, station_code: station_code, zone: zone, type: "pa_ess", label: labels[station_code_zone]}
   end)
 
 place_to_config_mapping =
