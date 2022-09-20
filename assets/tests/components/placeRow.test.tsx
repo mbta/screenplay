@@ -39,7 +39,8 @@ describe("PlaceRow", () => {
     );
 
     expect(getByTestId("place-row").className).toBe("place-row");
-    fireEvent.click(getByTestId("place-row"));
+    fireEvent.click(getByTestId("place-row-header"));
+    expect(handleClick).toHaveBeenCalled();
     expect(getByTestId("place-row").className).toBe("place-row open");
     expect(getByTestId("place-screen-types").textContent).toBe(
       "DUP · Bus Shelter · Solari"
@@ -74,10 +75,31 @@ describe("PlaceRow", () => {
     expect(getByTestId("place-row").className).toBe("place-row disabled");
     fireEvent.click(getByTestId("place-row"));
     expect(getByTestId("place-row").className).not.toContain("open");
+    expect(getByTestId("place-row").className).not.toContain("filtered");
     expect(getByTestId("place-screen-types").textContent).toBe("no screens");
     expect(getByTestId("place-status").textContent).toBe("—");
     expect(getByAltText("Green")).toBeInTheDocument();
     expect(queryByAltText("Green-B")).toBeNull();
     expect(queryByAltText("Green-C")).toBeNull();
+  });
+
+  test("adds `filtered` class when isFiltered=true", async () => {
+    const place: Place = {
+      id: "place-stop1",
+      name: "Place Name1",
+      routes: ["CR", "Red", "Green-B", "Green-C"],
+      status: "Auto",
+      screens: [],
+    };
+
+    const handleClick = jest.fn();
+
+    const { getByTestId } = render(
+      <Accordion>
+        <PlaceRow place={place} eventKey="0" onClick={handleClick} isFiltered />
+      </Accordion>
+    );
+
+    expect(getByTestId("place-row").className).toContain("filtered");
   });
 });

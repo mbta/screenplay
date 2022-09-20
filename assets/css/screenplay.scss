@@ -1,7 +1,11 @@
 @import "~bootstrap/scss/bootstrap";
 @import "colors.scss";
 @import "dashboard.scss";
+@import "dashboard/places-page.scss";
+@import "dashboard/alerts-page.scss";
+@import "dashboard/overrides-page.scss";
 @import "place-row.scss";
+@import "places-action-bar.scss";
 @import "filter-dropdown.scss";
 @import "sidebar.scss";
 @import "screenplay-container.scss";
@@ -15,6 +19,7 @@ $body-bg: $cool-gray-30;
 html {
   font-size: 16px;
 }
+
 body {
   font-family: "Inter", sans-serif;
 }
