@@ -93,6 +93,8 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     });
   };
 
+  const filterAlertsByScreenType = (alerts: Alert[]) => {};
+
   const sortAlerts = (alerts: Alert[]) => {
     alerts.sort((a: Alert, b: Alert) => {
       return alertSortDirection === 0
