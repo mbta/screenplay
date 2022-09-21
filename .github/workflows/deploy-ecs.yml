@@ -1,4 +1,4 @@
-name: Deploy ${{ github.ref_name }} to ${{ github.event.inputs.environment }} ECS
+name: Deploy to ECS
 
 on:
   workflow_dispatch:
