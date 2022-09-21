@@ -101,16 +101,27 @@ defmodule Screenplay.Alerts.Parser do
       end)
       |> Enum.into(%{})
 
-    Enum.map(routes, fn %{"id" => id} ->
-      case Map.get(route_map, id) do
-        nil -> nil
-        2 -> :cr
-        3 -> :bus
-        4 -> :ferry
-        _ -> String.to_existing_atom(String.downcase(id))
-      end
-    end)
-    |> Enum.reject(&is_nil/1)
-    |> Enum.uniq()
+    affected_list =
+      Enum.map(routes, fn %{"id" => id} ->
+        case Map.get(route_map, id) do
+          nil -> nil
+          2 -> "cr"
+          3 -> "bus"
+          4 -> "ferry"
+          _ -> String.downcase(id)
+        end
+      end)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.uniq()
+
+    # If all GL branches are affected, replace with string for entire GL.
+    if MapSet.subset?(
+         MapSet.new(["green-b", "green-c", "green-d", "green-e"]),
+         MapSet.new(affected_list)
+       ) do
+      Enum.reject(affected_list, &String.starts_with?(&1, "green-")) ++ ["green"]
+    else
+      affected_list
+    end
   end
 end
