@@ -25,14 +25,14 @@ const Sidebar: ComponentType = () => {
       </a>
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
-        <Link className="sidebar-link" to="/dashboard/">
-          <Button className={pathname === "/dashboard/" ? "selected" : ""}>
+        <Link className="sidebar-link" to="/dashboard">
+          <Button className={pathname === "/dashboard" ? "selected" : ""}>
             <CollectionFill size={20} />
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link className="sidebar-link" to="/alerts/">
-          <Button className={pathname === "/alerts/" ? "selected" : ""}>
+        <Link className="sidebar-link" to="/alerts">
+          <Button className={pathname === "/alerts" ? "selected" : ""}>
             <ExclamationTriangleFill size={20} />
             <span className="nav-link__name">Posted Alerts</span>
           </Button>
