@@ -11,6 +11,7 @@ interface ActivePeriod {
 }
 
 interface InformedEntity {
-  route: string;
-  route_type: number;
+  route?: string;
+  route_type?: number;
+  facility?: string;
 }

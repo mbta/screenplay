@@ -86,8 +86,10 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
             return informedEntity.route_type === 3;
           case "Ferry":
             return informedEntity.route_type === 4;
+          case "Access":
+            return "facility" in informedEntity;
           default:
-            return ids.includes(informedEntity.route);
+            return ids.includes(informedEntity.route as string);
         }
       });
     });

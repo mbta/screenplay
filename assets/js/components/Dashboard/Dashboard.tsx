@@ -283,6 +283,22 @@ const dummyAlerts: Alert[] = [
       ],
     },
   },
+  {
+    id: "11",
+    attributes: {
+      active_period: [
+        {
+          end: "2022-09-17T02:30:00-04:00",
+          start: "2022-08-16T23:00:00-04:00",
+        },
+      ],
+      informed_entity: [
+        {
+          facility: "807",
+        },
+      ],
+    },
+  },
 ];
 
 export default Dashboard;
