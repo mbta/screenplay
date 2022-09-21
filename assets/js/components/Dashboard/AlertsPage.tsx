@@ -106,9 +106,10 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     return alerts;
   };
 
-  const compareAlerts = (alert1: Alert, alert2: Alert) => {
-    const active_period_1 = alert1.attributes.active_period;
-    const active_period_2 = alert2.attributes.active_period;
+  const compareAlerts = (
+    { attributes: { active_period: active_period_1 } }: Alert,
+    { attributes: { active_period: active_period_2 } }: Alert
+  ) => {
     // Get the soonest start time
     const { start: start1 } = active_period_1[0];
     const { start: start2 } = active_period_2[0];
