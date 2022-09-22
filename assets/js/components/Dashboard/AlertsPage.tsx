@@ -10,12 +10,14 @@ interface Props {
 const AlertsPage: ComponentType<Props> = (props: Props) => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   useEffect(() => {
+    if (!props.isVisible) return;
+
     fetch("/api/alerts")
       .then((response) => response.json())
       .then((alertsList: []) => {
         setAlerts(alertsList);
       });
-  }, []);
+  }, [props.isVisible]);
 
   return (
     <div
