@@ -36,7 +36,6 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const hasScreens =
     screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
 
-
   const typeMap: Record<string, string> = {
     pa_ess: "PA",
     bus_shelter_v2: "Bus Shelter",
@@ -70,8 +69,10 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         : -1
     );
   };
-  
-  const screenTypes = !hasScreens ? ["no screens"] : Array.from(new Set(sortScreens().map((screen) => typeMap[screen.type])))
+
+  const screenTypes = !hasScreens
+    ? ["no screens"]
+    : Array.from(new Set(sortScreens().map((screen) => typeMap[screen.type])));
 
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
@@ -199,9 +200,16 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
             className="place-row__screen-types pe-3"
             data-testid="place-screen-types"
           >
-            {screenTypes.map((type, index) => index < (screenTypes.length - 1)
-              ? <span key={index}>{type}<span className="spacer">·</span></span>
-              : type)}
+            {screenTypes.map((type, index) =>
+              index < screenTypes.length - 1 ? (
+                <span key={index}>
+                  {type}
+                  <span className="spacer">·</span>
+                </span>
+              ) : (
+                type
+              )
+            )}
           </Col>
           <Col lg={3} className="place-row__status" data-testid="place-status">
             {hasScreens ? "Auto" : "—"}
