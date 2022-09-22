@@ -5,7 +5,6 @@
 
   &__alert-details {
     background: rgba(255, 255, 255, 0.8);
-    max-width: 75vh;
     padding: 16px;
 
     &__pill {
@@ -52,7 +51,7 @@
   &__place-details {
     background-color: $cool-gray-40;
     color: #ffffff;
-    width: 25%;
+    min-width: 228px;
     padding: 16px;
 
     &__alert-id {
