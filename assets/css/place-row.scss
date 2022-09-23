@@ -94,8 +94,14 @@
     }
   }
 
-  .place-row__mode-line-icon:not(:last-child) {
-    margin-right: 8px;
+  .place-row__mode-line-icon {
+    &--blue,
+    &--bus {
+      box-shadow: 0px 0px 2px 0px #2e3e4d66;
+    }
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 }
 
