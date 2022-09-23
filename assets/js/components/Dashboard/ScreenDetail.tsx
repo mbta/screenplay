@@ -51,6 +51,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
+    const queryParams = "source=screenplay";
 
     let baseUrl;
     if (environmentName === "dev") {
@@ -62,15 +63,15 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     }
 
     if (type.includes("v2")) {
-      return `${baseUrl}/v2/screen/${id}/simulation`;
+      return `${baseUrl}/v2/screen/${id}/simulation?${queryParams}`;
     }
     if (
       ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
     ) {
-      return `${baseUrl}/screen/${id}`;
+      return `${baseUrl}/screen/${id}?${queryParams}`;
     }
     if (type === "dup") {
-      return `${baseUrl}/screen/${id}/simulation`;
+      return `${baseUrl}/screen/${id}/simulation?${queryParams}`;
     }
 
     return "";
