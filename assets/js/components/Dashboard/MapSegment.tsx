@@ -35,7 +35,6 @@ const MapSegment = ({ station, line }: MapSegmentProps): JSX.Element => {
   if (!station.inlineMap) return <></>;
 
   const Segment = Map[station.inlineMap];
-  console.log(station.inlineMap);
   return (
     <Segment
       className={classWithModifier("map-segment", line)}
