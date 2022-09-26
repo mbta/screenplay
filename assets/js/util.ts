@@ -17,6 +17,8 @@ export const color = (line: string) => {
       return "#7C878E";
     case "green":
       return "#00843D";
+    default:
+      return "#FFFFFF";
   }
 };
 
