@@ -152,13 +152,19 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     )?.inlineMap;
   };
 
+  // Function to capitalize terminal stops according to STATION_ORDER_BY_LINE
   const formatStationName = (stationName: string) => {
     let isTerminalStop = false;
+    // If a filter is present, only look at stations for that filter.
+    // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
     if (props.filteredLine) {
       const line = STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()];
       const terminalStops = line.filter((line) => line.isTerminalStop);
       isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
-    } else {
+    }
+    // If there is no filtered line, look through all lines to find terminal stops.
+    // If a station is a terminal stop for any line, it will be capitalized.
+    else {
       isTerminalStop = Object.keys(STATION_ORDER_BY_LINE)
         .filter((key) => !["silver", "mattapan"].includes(key))
         .some((key) => {
