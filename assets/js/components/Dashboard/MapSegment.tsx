@@ -15,12 +15,17 @@ interface MapSegmentProps {
   line: string;
 }
 
-// interface SvgComponentProps {
-//   className?: string;
-//   colorHex: string;
-// }
+interface SvgProps {
+  className?: string;
+  colorHex: string;
+  branch?: string;
+}
 
-const Map = {
+interface SvgToComponentMap {
+  [key: string]: ComponentType<SvgProps>;
+}
+
+const Map: SvgToComponentMap = {
   "Trunk-Top": TrunkTop,
   "Trunk-Middle": TrunkMiddle,
   "Trunk-Bottom": TrunkBottom,
