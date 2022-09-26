@@ -47,30 +47,10 @@
     position: relative;
     overflow: hidden;
     height: 56px;
-
-    &--Red,
-    &--Green,
-    &--Green-B,
-    &--Green-C,
-    &--Green-D,
-    &--Green-E {
-      width: 44px;
-    }
-
-    &--Orange,
-    &--Blue {
-      width: 20px;
-    }
+    width: 44px;
 
     &--flipped {
       transform: scaleY(-1);
-    }
-
-    .place-row__map-segment {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translateY(-50%) translateX(-50%);
     }
   }
 
