@@ -75,7 +75,7 @@ describe("Dashboard", () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Blue Line" }));
         await waitFor(() => {
-          expect(getByText("Wonderland")).toBeInTheDocument();
+          expect(getByText("WONDERLAND")).toBeInTheDocument();
           expect(queryByText("ALEWIFE")).not.toBeInTheDocument();
           expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
         });
@@ -86,7 +86,7 @@ describe("Dashboard", () => {
         fireEvent.click(await findByRole("button", { name: "Red Line" }));
         await waitFor(() => {
           expect(getByText("ALEWIFE")).toBeInTheDocument();
-          expect(queryByText("Wonderland")).not.toBeInTheDocument();
+          expect(queryByText("WONDERLAND")).not.toBeInTheDocument();
           expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
         });
       });
@@ -97,7 +97,7 @@ describe("Dashboard", () => {
         await waitFor(() => {
           expect(getByText("Columbus Ave @ Bray St")).toBeInTheDocument();
           expect(getByText("ALEWIFE")).toBeInTheDocument();
-          expect(getByText("Wonderland")).toBeInTheDocument();
+          expect(getByText("WONDERLAND")).toBeInTheDocument();
         });
       });
     });
@@ -306,7 +306,7 @@ describe("Dashboard", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
-            "Wonderland",
+            "WONDERLAND",
             "Revere Beach",
             "Beachmont",
             "Government Center",
@@ -323,7 +323,7 @@ describe("Dashboard", () => {
             "Government Center",
             "Beachmont",
             "Revere Beach",
-            "Wonderland",
+            "WONDERLAND",
           ]);
         });
       });
