@@ -2,6 +2,7 @@ export interface Station {
   name: string;
   inlineMap?: string;
   branch?: string;
+  isTerminalStop?: boolean;
 }
 
 interface StationsByLine {
@@ -14,6 +15,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Alewife",
       inlineMap: "Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Davis",
@@ -80,8 +82,9 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       inlineMap: "Branch-Middle",
     },
     {
-      name: "BRAINTREE",
+      name: "Braintree",
       inlineMap: "Branch-Bottom",
+      isTerminalStop: true,
     },
     {
       name: "Savin Hill",
@@ -96,14 +99,16 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       inlineMap: "Trunk-Middle",
     },
     {
-      name: "ASHMONT",
+      name: "Ashmont",
       inlineMap: "Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
   orange: [
     {
       name: "Oak Grove",
       inlineMap: "Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Malden Center",
@@ -180,12 +185,14 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Forest Hills",
       inlineMap: "Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
   blue: [
     {
       name: "Wonderland",
       inlineMap: "Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Revere Beach",
@@ -230,6 +237,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Bowdoin",
       inlineMap: "Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
   silver: [
@@ -242,6 +250,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Union Square",
       inlineMap: "Trunk-Top",
       branch: "D",
+      isTerminalStop: true,
     },
     {
       name: "Lechmere",
@@ -262,6 +271,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Government Center",
       inlineMap: "Trunk-Middle",
+      isTerminalStop: true,
     },
     {
       name: "Park Street",
@@ -333,6 +343,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Heath Street",
       inlineMap: "Branch-Bottom",
       branch: "E",
+      isTerminalStop: true,
     },
     {
       name: "Hynes Convention Center",
@@ -421,6 +432,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Boston College",
       inlineMap: "Branch-Bottom",
       branch: "B",
+      isTerminalStop: true,
     },
     {
       name: "Saint Mary's Street",
@@ -486,6 +498,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Cleveland Circle",
       inlineMap: "Branch-Bottom",
       branch: "C",
+      isTerminalStop: true,
     },
     {
       name: "Fenway",
@@ -551,6 +564,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Riverside",
       inlineMap: "Trunk-Bottom",
       branch: "D",
+      isTerminalStop: true,
     },
   ],
   "green-b": [
@@ -558,6 +572,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Government Center",
       inlineMap: "Trunk-Top",
       branch: "B",
+      isTerminalStop: true,
     },
     {
       name: "Park Street",
@@ -668,6 +683,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Boston College",
       inlineMap: "Trunk-Bottom",
       branch: "B",
+      isTerminalStop: true,
     },
   ],
   "green-c": [
@@ -675,6 +691,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Government Center",
       inlineMap: "Trunk-Top",
       branch: "C",
+      isTerminalStop: true,
     },
     {
       name: "Park Street",
@@ -770,12 +787,29 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Cleveland Circle",
       inlineMap: "Trunk-Bottom",
       branch: "C",
+      isTerminalStop: true,
     },
   ],
   "green-d": [
     {
-      name: "North Station",
+      name: "Union Square",
       inlineMap: "Trunk-Top",
+      branch: "D",
+      isTerminalStop: true,
+    },
+    {
+      name: "Lechmere",
+      inlineMap: "Trunk-Middle",
+      branch: "D",
+    },
+    {
+      name: "Science Park/West End",
+      inlineMap: "Trunk-Middle",
+      branch: "D",
+    },
+    {
+      name: "North Station",
+      inlineMap: "Trunk-Middle",
       branch: "D",
     },
     {
@@ -882,18 +916,15 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Riverside",
       inlineMap: "Trunk-Bottom",
       branch: "D",
+      isTerminalStop: true,
     },
   ],
   "green-e": [
     {
-      name: "Union Square",
+      name: "Lechmere",
       inlineMap: "Trunk-Top",
       branch: "E",
-    },
-    {
-      name: "Lechmere",
-      inlineMap: "Trunk-Middle",
-      branch: "E",
+      isTerminalStop: true,
     },
     {
       name: "Science Park/West End",
@@ -989,6 +1020,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Heath Street",
       inlineMap: "Trunk-Bottom",
       branch: "E",
+      isTerminalStop: true,
     },
   ],
   mattapan: [
