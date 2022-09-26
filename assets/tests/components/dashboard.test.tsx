@@ -39,7 +39,7 @@ describe("Dashboard", () => {
         fireEvent.click(await findByRole("button", { name: "DUP" }));
         await waitFor(() => {
           expect(getByText("Davis")).toBeInTheDocument();
-          expect(queryByText("Alewife")).not.toBeInTheDocument();
+          expect(queryByText("ALEWIFE")).not.toBeInTheDocument();
           expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
         });
       });
@@ -49,7 +49,7 @@ describe("Dashboard", () => {
         fireEvent.click(await findByRole("button", { name: "PA ESS" }));
         await waitFor(() => {
           expect(getByText("Davis")).toBeInTheDocument();
-          expect(getByText("Alewife")).toBeInTheDocument();
+          expect(getByText("ALEWIFE")).toBeInTheDocument();
           expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
         });
       });
@@ -59,7 +59,7 @@ describe("Dashboard", () => {
         fireEvent.click(await findByRole("button", { name: "Bus Shelter" }));
         await waitFor(() => {
           expect(queryByText("Davis")).not.toBeInTheDocument();
-          expect(queryByText("Alewife")).not.toBeInTheDocument();
+          expect(queryByText("ALEWIFE")).not.toBeInTheDocument();
           expect(getByText("Columbus Ave @ Bray St")).toBeInTheDocument();
         });
       });
@@ -75,8 +75,8 @@ describe("Dashboard", () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Blue Line" }));
         await waitFor(() => {
-          expect(getByText("Wonderland")).toBeInTheDocument();
-          expect(queryByText("Alewife")).not.toBeInTheDocument();
+          expect(getByText("WONDERLAND")).toBeInTheDocument();
+          expect(queryByText("ALEWIFE")).not.toBeInTheDocument();
           expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
         });
       });
@@ -85,8 +85,8 @@ describe("Dashboard", () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Red Line" }));
         await waitFor(() => {
-          expect(getByText("Alewife")).toBeInTheDocument();
-          expect(queryByText("Wonderland")).not.toBeInTheDocument();
+          expect(getByText("ALEWIFE")).toBeInTheDocument();
+          expect(queryByText("WONDERLAND")).not.toBeInTheDocument();
           expect(queryByText("Columbus Ave @ Bray St")).not.toBeInTheDocument();
         });
       });
@@ -96,8 +96,8 @@ describe("Dashboard", () => {
         fireEvent.click(await findByRole("button", { name: "Bus" }));
         await waitFor(() => {
           expect(getByText("Columbus Ave @ Bray St")).toBeInTheDocument();
-          expect(getByText("Alewife")).toBeInTheDocument();
-          expect(getByText("Wonderland")).toBeInTheDocument();
+          expect(getByText("ALEWIFE")).toBeInTheDocument();
+          expect(getByText("WONDERLAND")).toBeInTheDocument();
         });
       });
     });
@@ -191,7 +191,7 @@ describe("Dashboard", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["Alewife", "Davis", "Porter", "Park Street"]);
+          ).toStrictEqual(["ALEWIFE", "Davis", "Porter", "Park Street"]);
         });
 
         fireEvent.click(getByTestId("sort-label"));
@@ -200,7 +200,7 @@ describe("Dashboard", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["Park Street", "Porter", "Davis", "Alewife"]);
+          ).toStrictEqual(["Park Street", "Porter", "Davis", "ALEWIFE"]);
         });
       });
     });
@@ -220,7 +220,7 @@ describe("Dashboard", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
-            "Oak Grove",
+            "OAK GROVE",
             "Malden Center",
             "Wellington",
             "North Station",
@@ -239,7 +239,7 @@ describe("Dashboard", () => {
             "North Station",
             "Wellington",
             "Malden Center",
-            "Oak Grove",
+            "OAK GROVE",
           ]);
         });
       });
@@ -260,12 +260,12 @@ describe("Dashboard", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
-            "Union Square",
+            "UNION SQUARE",
             "Lechmere",
             "Science Park/West End",
             "North Station",
             "Haymarket",
-            "Government Center",
+            "GOVERNMENT CENTER",
             "Park Street",
             "Boylston",
           ]);
@@ -280,12 +280,12 @@ describe("Dashboard", () => {
           ).toStrictEqual([
             "Boylston",
             "Park Street",
-            "Government Center",
+            "GOVERNMENT CENTER",
             "Haymarket",
             "North Station",
             "Science Park/West End",
             "Lechmere",
-            "Union Square",
+            "UNION SQUARE",
           ]);
         });
       });
@@ -306,7 +306,7 @@ describe("Dashboard", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
-            "Wonderland",
+            "WONDERLAND",
             "Revere Beach",
             "Beachmont",
             "Government Center",
@@ -323,7 +323,7 @@ describe("Dashboard", () => {
             "Government Center",
             "Beachmont",
             "Revere Beach",
-            "Wonderland",
+            "WONDERLAND",
           ]);
         });
       });
