@@ -191,6 +191,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Wonderland",
       inlineMap: "Blue-Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Revere Beach",
@@ -235,6 +236,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Bowdoin",
       inlineMap: "Blue-Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
   silver: [
