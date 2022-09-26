@@ -3,9 +3,14 @@ import React, { ComponentType } from "react";
 interface Props {
   className?: string;
   colorHex: string;
+  branch?: string;
 }
 
-const TrunkTop: ComponentType<Props> = ({ className, colorHex }: Props) => (
+const TrunkTop: ComponentType<Props> = ({
+  className,
+  colorHex,
+  branch,
+}: Props) => (
   <svg
     className={className}
     width="44"
@@ -23,6 +28,23 @@ const TrunkTop: ComponentType<Props> = ({ className, colorHex }: Props) => (
         strokeLinejoin="round"
       />
       <circle cx="10" cy="44" r="8" stroke={colorHex} strokeWidth="4" />
+      {branch && (
+        <>
+          <circle cx="10" cy="44" r="8" fill="#00843D" />
+          <text
+            fill="white"
+            xmlSpace="preserve"
+            fontFamily="Inter"
+            fontSize="10"
+            fontWeight="bold"
+            letterSpacing="0.416667px"
+          >
+            <tspan x="6.4502" y="47.67">
+              {branch}
+            </tspan>
+          </text>
+        </>
+      )}
     </g>
     <defs>
       <clipPath id="clip0_3_380">
