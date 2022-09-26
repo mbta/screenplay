@@ -25,6 +25,7 @@
 
   &.filtered {
     &:not(.disabled) {
+      // Render border-top as a pseudo-element to allow map segments to display over it.
       &::before {
         content: "";
         position: absolute;
