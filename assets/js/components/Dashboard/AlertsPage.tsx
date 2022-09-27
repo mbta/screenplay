@@ -14,11 +14,6 @@ import classNames from "classnames";
 
 type DirectionID = 0 | 1;
 
-const getAlertSortLabel = (sortDirection: DirectionID) => {
-  const sortLabels = SORT_LABELS["Alerts"];
-  return sortLabels[sortDirection];
-};
-
 interface Props {
   alerts: Alert[];
   isVisible: boolean;
@@ -97,15 +92,6 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
 
   // const filterAlertsByScreenType = (alerts: Alert[]) => {};
 
-  const sortAlerts = (alerts: Alert[]) => {
-    alerts.sort((a: Alert, b: Alert) => {
-      return alertSortDirection === 0
-        ? compareAlerts(a, b)
-        : compareAlerts(b, a);
-    });
-    return alerts;
-  };
-
   const compareAlerts = (
     { attributes: { active_period: active_period_1 } }: Alert,
     { attributes: { active_period: active_period_2 } }: Alert
@@ -144,7 +130,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
                 onClick={sortLabelOnClick}
                 data-testid="sort-label"
               >
-                {alertSortLabel}{" "}
+                {alertSortLabel}
                 {alertSortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
               </div>
             </Col>
@@ -176,19 +162,27 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
           </Row>
         </Container>
         {filterAlerts()
-            .sort(alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a))
-            .map((alert: Alert) => (
-          <div key={alert.id} style={{ color: "white" }} data-testid={alert.id}>
-            id: {alert.id} {"End: "}
-            {
-              alert.attributes.active_period[
-                alert.attributes.active_period.length - 1
-              ].end
-            }{" "}
-            {"Start: "}
-            {alert.attributes.active_period[0].start}
-          </div>
-        ))}
+          .sort((a: Alert, b: Alert) => {
+            return alertSortDirection === 0
+              ? compareAlerts(a, b)
+              : compareAlerts(b, a);
+          })
+          .map((alert: Alert) => (
+            <div
+              key={alert.id}
+              style={{ color: "white" }}
+              data-testid={alert.id}
+            >
+              id: {alert.id} {"End: "}
+              {
+                alert.attributes.active_period[
+                  alert.attributes.active_period.length - 1
+                ].end
+              }{" "}
+              {"Start: "}
+              {alert.attributes.active_period[0].start}
+            </div>
+          ))}
       </div>
     </div>
   );
