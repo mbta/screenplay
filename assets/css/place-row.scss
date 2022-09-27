@@ -10,6 +10,7 @@
   box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.25);
   margin-bottom: 2px;
   border-bottom: 0px;
+  position: relative;
 
   &:hover:not(.disabled):not(.open) {
     background-color: $cool-gray-40;
@@ -29,11 +30,24 @@
   }
 
   &.filtered {
+    &:not(.disabled) {
+      // Render border-top as a pseudo-element to allow map segments to display over it.
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        border-top: 1px solid $cool-gray-40;
+      }
+    }
+
+    border-left: 1px solid $cool-gray-40;
+    border-right: 1px solid $cool-gray-40;
     margin-bottom: 0;
     border-radius: 0;
-    border-left: 1px solid $cool-gray-40;
-    border-bottom: 1px solid $cool-gray-40;
-    border-right: 1px solid $cool-gray-40;
 
     &:last-child {
       border-radius: 0 0 8px 8px;
@@ -48,31 +62,12 @@
     margin-right: 16px;
     position: relative;
     overflow: hidden;
+
     height: 56px;
-
-    &--Red,
-    &--Green,
-    &--Green-B,
-    &--Green-C,
-    &--Green-D,
-    &--Green-E {
-      width: 44px;
-    }
-
-    &--Orange,
-    &--Blue {
-      width: 20px;
-    }
+    width: 44px;
 
     &--flipped {
       transform: scaleY(-1);
-    }
-
-    .place-row__map-segment {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translateY(-50%) translateX(-50%);
     }
   }
 
