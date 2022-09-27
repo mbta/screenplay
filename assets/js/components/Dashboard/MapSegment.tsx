@@ -1,6 +1,6 @@
 import React, { ComponentType } from "react";
 import { Station } from "../../constants/stationOrder";
-import { classWithModifier, color } from "../../util";
+import { classWithModifier } from "../../util";
 import TrunkTop from "./bundled_svg/TrunkTop";
 import TrunkMiddle from "./bundled_svg/TrunkMiddle";
 import TrunkBottom from "./bundled_svg/TrunkBottom";
@@ -36,6 +36,28 @@ const Map: SvgToComponentMap = {
   "Branch-Fork-Down": BranchForkDown,
 };
 
+const getSegmentColorHex = (line: string) => {
+  switch (line) {
+    case "red":
+    case "mattapan":
+      return "#DA291C";
+    case "orange":
+      return "#ED8B00";
+    case "blue":
+      return "#004BCC";
+    case "silver":
+      return "#7C878E";
+    case "green":
+    case "green-b":
+    case "green-c":
+    case "green-d":
+    case "green-e":
+      return "#00843D";
+    default:
+      return "#FFFFFF";
+  }
+};
+
 const MapSegment = ({ station, line }: MapSegmentProps): JSX.Element => {
   if (!station.inlineMap) return <></>;
 
@@ -43,7 +65,7 @@ const MapSegment = ({ station, line }: MapSegmentProps): JSX.Element => {
   return (
     <Segment
       className={classWithModifier("map-segment", line)}
-      colorHex={color(line)}
+      colorHex={getSegmentColorHex(line)}
       branch={station.branch}
     />
   );
