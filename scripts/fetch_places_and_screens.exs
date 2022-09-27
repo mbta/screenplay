@@ -76,10 +76,12 @@ parsed = Jason.decode!(file)
 
 formatted_screens =
   parsed["screens"]
-  # This reduce allows us to split out a single config into multiple places.
+  # Certain screens (test screens, ones we've configured for non-MBTA locations) are intentionally not included in Screenplay,
+  # and marked as such with the `hidden_from_screenplay` boolean field.
+  |> Enum.reject(&match?({_id, %{"hidden_from_screenplay" => true}}, &1))
+  # This flat_map allows us to split out a single config into multiple places.
   # Only splits out DUPs, but can be modified to work with other screen types.
-  |> Enum.reduce(
-    [],
+  |> Enum.flat_map(
     fn
       {id,
        %{
@@ -88,14 +90,13 @@ formatted_screens =
            "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
            "secondary" => %{"sections" => []}
          }
-       } = stuff},
-      acc ->
+       } = stuff} ->
         primary =
           Enum.map(primary_stop_ids, fn stop_id ->
             {id, Map.put(stuff, "stop", stop_id)}
           end)
 
-        acc ++ primary
+        primary
 
       {id,
        %{
@@ -104,8 +105,7 @@ formatted_screens =
            "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
            "secondary" => %{"sections" => [%{"stop_ids" => secondary_stop_ids} | _]}
          }
-       } = stuff},
-      acc ->
+       } = stuff} ->
         primary =
           Enum.map(primary_stop_ids, fn stop_id ->
             {id, Map.put(stuff, "stop", stop_id)}
@@ -116,7 +116,7 @@ formatted_screens =
             {id, Map.put(stuff, "stop", stop_id)}
           end)
 
-        acc ++ primary ++ secondary
+        primary ++ secondary
 
       {id,
        %{
@@ -124,8 +124,7 @@ formatted_screens =
          "app_params" => %{
            "sections" => sections
          }
-       } = stuff},
-      acc ->
+       } = stuff} ->
         stops =
           Enum.flat_map(sections, fn %{"query" => %{"params" => %{"stop_ids" => stop_ids}}} ->
             stop_ids
@@ -134,10 +133,10 @@ formatted_screens =
             {id, Map.put(stuff, "stop", stop_id)}
           end)
 
-        acc ++ stops
+        stops
 
-      screen, acc ->
-        acc ++ [screen]
+      screen ->
+        [screen]
     end
   )
 
