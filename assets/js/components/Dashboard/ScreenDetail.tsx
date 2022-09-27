@@ -32,7 +32,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
     ? screens[0].station_code.charAt(0).toLowerCase()
     : "";
 
-  const translateScreenType = SCREEN_TYPES.find(({ ids }) =>
+  const translatedScreenType = SCREEN_TYPES.find(({ ids }) =>
     ids.includes(screens[0].type)
   )?.label;
 
@@ -105,7 +105,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
             "screen-detail__screen-type-location--paess": isPaess,
           })}
         >
-          {translateScreenType} {getScreenLocation}
+          {translatedScreenType} {getScreenLocation}
         </div>
         {screens[0].type === "dup" && (
           <div className="screen-detail__dup-ad-text">
