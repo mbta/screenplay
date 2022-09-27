@@ -41,7 +41,7 @@ const getSegmentColorHex = (line: string) => {
     case "blue":
       return "#004BCC";
     default:
-      color(line);
+      return color(line);
   }
 };
 
