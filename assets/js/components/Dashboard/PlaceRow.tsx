@@ -77,12 +77,17 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
+    const solariScreens = visibleScreens.filter(
+      (screen) => screen.type === "solari"
+    );
     const paEssScreens = visibleScreens.filter(
       (screen) => screen.type === "pa_ess"
     );
     const groupedScreens = visibleScreens
-      .filter((screen) => screen.type !== "pa_ess")
+      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
       .map((screen) => [screen]);
+
+    groupedScreens.push(solariScreens);
 
     if (paEssScreens.length > 0) {
       groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
