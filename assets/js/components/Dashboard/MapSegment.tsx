@@ -1,6 +1,6 @@
 import React, { ComponentType } from "react";
 import { Station } from "../../constants/stationOrder";
-import { classWithModifier } from "../../util";
+import { classWithModifier, color } from "../../util";
 import TrunkTop from "./bundled_svg/TrunkTop";
 import TrunkMiddle from "./bundled_svg/TrunkMiddle";
 import TrunkBottom from "./bundled_svg/TrunkBottom";
@@ -38,23 +38,10 @@ const Map: SvgToComponentMap = {
 
 const getSegmentColorHex = (line: string) => {
   switch (line) {
-    case "red":
-    case "mattapan":
-      return "#DA291C";
-    case "orange":
-      return "#ED8B00";
     case "blue":
       return "#004BCC";
-    case "silver":
-      return "#7C878E";
-    case "green":
-    case "green-b":
-    case "green-c":
-    case "green-d":
-    case "green-e":
-      return "#00843D";
     default:
-      return "#FFFFFF";
+      color(line);
   }
 };
 
