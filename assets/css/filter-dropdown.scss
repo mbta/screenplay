@@ -26,10 +26,10 @@
 
   .filter-dropdown__dropdown {
     flex-grow: 1;
-    border-radius: 6px;
 
     &:not(:only-child) > .filter-dropdown__dropdown-button {
-      border-radius: 0 6px 6px 0 !important;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
     .filter-dropdown__dropdown-button {
@@ -54,7 +54,6 @@
 
     .filter-dropdown__dropdown-menu {
       padding: 8px 8px 0 8px;
-      border-radius: 6px;
 
       & > ul {
         padding-left: 0;
@@ -62,7 +61,7 @@
     }
 
     .filter-dropdown__dropdown-item {
-      border-radius: 6px;
+      border-radius: 0.25rem;
       padding: 6px 16px;
 
       &:not(.active) {
