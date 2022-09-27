@@ -36,7 +36,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     STATUSES[0]
   );
 
-  const alertSortLabel = getAlertSortLabel(alertSortDirection);
+  const alertSortLabel = SORT_LABELS["Alerts"][alertSortDirection];
   const sortLabelOnClick = () => {
     setAlertSortDirection((1 - alertSortDirection) as DirectionID);
   };
