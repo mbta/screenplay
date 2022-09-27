@@ -13,28 +13,28 @@ interface ScreenDetailProps {
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   const isSolari = props.screens.every((screen) => screen.type === "solari");
 
-  return (
-    isSolari
-    ? <div className="screen-detail__solari-layout">
+  return isSolari ? (
+    <div className="screen-detail__solari-layout">
       {props.screens.map((screens, index) => (
-        <ScreenCard
-          {...props}
-          key={index}
-          screens={[screens]}
-        />
+        <ScreenCard {...props} key={index} screens={[screens]} />
       ))}
     </div>
-    : <ScreenCard {...props}/>
+  ) : (
+    <ScreenCard {...props} />
   );
 };
 
 const ScreenCard = (props: ScreenDetailProps) => {
-  const {screens, isOpen} = props
+  const { screens, isOpen } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
   const isSolari = screens.every((screen) => screen.type === "solari");
-  const paessRouteLetter = screens[0].station_code ? screens[0].station_code.charAt(0).toLowerCase() : "";
+  const paessRouteLetter = screens[0].station_code
+    ? screens[0].station_code.charAt(0).toLowerCase()
+    : "";
 
-  const translateScreenType = SCREEN_TYPES.find(({ ids }) => ids.includes(screens[0].type))?.label;
+  const translateScreenType = SCREEN_TYPES.find(({ ids }) =>
+    ids.includes(screens[0].type)
+  )?.label;
 
   const getPaessRoute = (routeLetter: string) => {
     switch (routeLetter) {
@@ -53,7 +53,11 @@ const ScreenCard = (props: ScreenDetailProps) => {
     }
   };
 
-  const getScreenLocation = isPaess ? `/ ${getPaessRoute(paessRouteLetter)}` : screens[0].location ? `/ ${screens[0].location}` : ""
+  const getScreenLocation = isPaess
+    ? `/ ${getPaessRoute(paessRouteLetter)}`
+    : screens[0].location
+    ? `/ ${screens[0].location}`
+    : "";
 
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
@@ -89,8 +93,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
       className={classNames("screen-detail__container", {
         [`screen-detail__container--paess screen-detail__container--paess-${paessRouteLetter}`]:
           isPaess,
-        [`screen-detail__container--solari`]:
-          isSolari,
+        [`screen-detail__container--solari`]: isSolari,
       })}
       onClick={(e: SyntheticEvent) => e.stopPropagation()}
     >
@@ -136,7 +139,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
           ))
         ))}
     </div>
-  )
-}
+  );
+};
 
 export default ScreenDetail;

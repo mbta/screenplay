@@ -87,8 +87,8 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
       .map((screen) => [screen]);
 
-    groupedScreens.push(solariScreens)
-    
+    groupedScreens.push(solariScreens);
+
     if (paEssScreens.length > 0) {
       groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
     }
