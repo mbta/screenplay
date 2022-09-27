@@ -1,7 +1,7 @@
 .screen-detail__container {
   background-color: $cool-gray-40;
   border-radius: 8px;
-  padding: 24px 16px;
+  padding: 16px;
 
   &--paess {
     padding: 0px 0px 16px;
@@ -68,34 +68,25 @@
 .screen-detail__iframe-container {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 22px;
+  margin-top: 16px;
 
   // The below values are "height of the iframe's container", which is different than the iframe content
-  // Keeping this value as the original smaller value to eliminate excessive padding
-  &--bus_shelter_v2 {
-    height: 344px;
-  }
-
-  &--bus_eink_v2,
-  &--gl_eink_v2 {
-    height: 480px;
-  }
+  
+  // V2 apps don't need the height set
 
   &--bus_eink,
   &--gl_eink_double {
     height: 480px;
     width: 180px;
     background-color: white;
+    margin-bottom: 12px;
   }
 
   &--gl_eink_single {
     height: 240px;
     width: 180px;
     background-color: white;
-  }
-
-  &--pre_fare_v2 {
-    height: 344px;
+    margin-bottom: 12px;
   }
 
   &--pa_ess {
@@ -107,19 +98,22 @@
   &--solari {
     height: 344px;
     width: 194px;
+    margin-bottom: 12px;
   }
 
   .screen-detail__iframe {
+    // DUP, PreFare, Bus Shelter, and Eink v2s all could have scrollbars,
+    // so height adjusted to fit
     width: 100%;
 
     &--bus_shelter_v2,
     &--pre_fare_v2 {
-      height: 367px;
+      height: 379px;
     }
 
     &--bus_eink_v2,
     &--gl_eink_v2 {
-      height: 503px;
+      height: 515px;
     }
 
     &--bus_eink,
@@ -138,7 +132,7 @@
     }
 
     &--dup {
-      height: 180px;
+      height: 195px;
     }
 
     &--pa_ess {
