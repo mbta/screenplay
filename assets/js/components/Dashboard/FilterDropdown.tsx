@@ -60,6 +60,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
         "filter-dropdown__dropdown-button d-flex justify-content-between",
         {
           "filter-dropdown__dropdown-button--small": !isDefault(),
+          "filter-dropdown__dropdown-button--large": isDefault(),
           disabled: props.disabled,
         }
       )}
@@ -67,7 +68,6 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
       data-testid="filter-dropdown-button"
       style={{
         background: backgroundColor,
-        border: backgroundColor,
         color: color,
       }}
     >
@@ -89,7 +89,6 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           className="filter-dropdown__clear-button"
           style={{
             background: backgroundColor,
-            border: backgroundColor,
           }}
         >
           <XCircleFill size={16} className="m-0" style={{ color: color }} />
