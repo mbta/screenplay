@@ -186,10 +186,10 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         filtered: !!props.isFiltered,
       })}
       data-testid="place-row"
+      onClick={hasScreens ? rowOnClick : () => undefined}
     >
       <Container fluid>
         <Row
-          onClick={hasScreens ? rowOnClick : () => undefined}
           className="align-items-center text-white"
           data-testid="place-row-header"
         >
