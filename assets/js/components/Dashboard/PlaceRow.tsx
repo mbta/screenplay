@@ -212,8 +212,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                   }
                 )}
               >
-                {props.filteredLine &&
-                  getInlineMap(props.place, props.filteredLine.toLowerCase())}
+                {getInlineMap(props.place, props.filteredLine.toLowerCase())}
               </div>
             )}
             <div className="place-row__name" data-testid="place-name">
