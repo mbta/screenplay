@@ -64,6 +64,10 @@
     .filter-dropdown__dropdown-item {
       border-radius: 6px;
       padding: 6px 16px;
+
+      &:not(.active) {
+        color: $main-blue;
+      }
     }
   }
 }
