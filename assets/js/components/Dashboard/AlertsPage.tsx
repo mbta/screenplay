@@ -166,11 +166,9 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
           </Row>
         </Container>
         {filterAlerts()
-          .sort((a: Alert, b: Alert) => {
-            return alertSortDirection === 0
-              ? compareAlerts(a, b)
-              : compareAlerts(b, a);
-          })
+          .sort((a: Alert, b: Alert) =>
+            alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
+          )
           .map((alert: Alert) => (
             <div
               key={alert.id}
