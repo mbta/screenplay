@@ -175,7 +175,9 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
             </Col>
           </Row>
         </Container>
-        {sortAlerts(filterAlerts()).map((alert: Alert) => (
+        {filterAlerts()
+            .sort(alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a))
+            .map((alert: Alert) => (
           <div key={alert.id} style={{ color: "white" }} data-testid={alert.id}>
             id: {alert.id} {"End: "}
             {
