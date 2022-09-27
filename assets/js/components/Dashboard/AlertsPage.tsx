@@ -8,6 +8,7 @@ import {
   SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
+  SILVER_LINE_ROUTES,
 } from "../../constants/constants";
 import { Alert } from "../../models/alert";
 import classNames from "classnames";
@@ -78,7 +79,10 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
           case "Commuter Rail":
             return informedEntity.route_type === 2;
           case "Bus":
-            return informedEntity.route_type === 3;
+            return (
+              informedEntity.route_type === 3 &&
+              !SILVER_LINE_ROUTES.includes(informedEntity.route as string)
+            );
           case "Ferry":
             return informedEntity.route_type === 4;
           case "Access":

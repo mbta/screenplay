@@ -1,3 +1,4 @@
+export const SILVER_LINE_ROUTES = ["741", "742", "743", "746", "749", "751"];
 export const MODES_AND_LINES = [
   { label: "All MODES", ids: ["All"] },
   { label: "Red Line", ids: ["Red"], color: "#DA291C" },
@@ -13,7 +14,11 @@ export const MODES_AND_LINES = [
   { label: "Green Line E", ids: ["Green-E"], color: "#00843D" },
   { label: "Blue Line", ids: ["Blue"], color: "#003DA5" },
   { label: "Mattapan", ids: ["Mattapan"], color: "#DA291C" },
-  { label: "Silver Line", ids: ["Silver"], color: "#7C878E" },
+  {
+    ids: ["Silver", ...SILVER_LINE_ROUTES],
+    label: "Silver Line",
+    color: "#7C878E",
+  },
   { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
   { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
   { label: "Ferry", ids: ["Ferry"], color: "#008EAA" },

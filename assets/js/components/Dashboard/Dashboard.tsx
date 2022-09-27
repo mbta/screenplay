@@ -296,6 +296,10 @@ const dummyAlerts: Alert[] = [
         {
           facility: "807",
         },
+        {
+          route: "741",
+          route_type: 3,
+        },
       ],
     },
   },
