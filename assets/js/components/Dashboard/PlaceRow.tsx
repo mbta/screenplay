@@ -12,7 +12,8 @@ import classNames from "classnames";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import ScreenDetail from "./ScreenDetail";
-import STATION_ORDER_BY_LINE, { Station } from "../../constants/stationOrder";
+import MapSegment from "./MapSegment";
+import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import { classWithModifier } from "../../util";
 
 interface PlaceRowProps {
@@ -78,12 +79,17 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
+    const solariScreens = visibleScreens.filter(
+      (screen) => screen.type === "solari"
+    );
     const paEssScreens = visibleScreens.filter(
       (screen) => screen.type === "pa_ess"
     );
     const groupedScreens = visibleScreens
-      .filter((screen) => screen.type !== "pa_ess")
+      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
       .map((screen) => [screen]);
+
+    groupedScreens.push(solariScreens);
 
     if (paEssScreens.length > 0) {
       groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
@@ -143,10 +149,39 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     ));
   };
 
-  const getInlineMap = (place: Place, stationOrder: Station[]) => {
-    return stationOrder.find(
+  const getInlineMap = (place: Place, line: string) => {
+    const station = STATION_ORDER_BY_LINE[line].find(
       (station) => station.name.toLowerCase() === place.name.toLowerCase()
-    )?.inlineMap;
+    );
+
+    if (!station) return;
+
+    return <MapSegment station={station} line={line} />;
+  };
+
+  // Function to capitalize terminal stops according to STATION_ORDER_BY_LINE
+  const formatStationName = (stationName: string) => {
+    let isTerminalStop = false;
+    // If a filter is present, only look at stations for that filter.
+    // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
+    if (props.filteredLine) {
+      const line = STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()];
+      const terminalStops = line.filter((line) => line.isTerminalStop);
+      isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
+    }
+    // If there is no filtered line, look through all lines to find terminal stops.
+    // If a station is a terminal stop for any line, it will be capitalized.
+    else {
+      isTerminalStop = Object.keys(STATION_ORDER_BY_LINE)
+        .filter((key) => !["silver", "mattapan"].includes(key))
+        .some((key) => {
+          const line = STATION_ORDER_BY_LINE[key];
+          const terminalStops = line.filter((line) => line.isTerminalStop);
+          return terminalStops.some((stop) => stationName === stop.name);
+        });
+    }
+
+    return isTerminalStop ? stationName.toUpperCase() : stationName;
   };
 
   return (
@@ -158,10 +193,10 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         filtered: !!props.isFiltered,
       })}
       data-testid="place-row"
+      onClick={hasScreens ? rowOnClick : () => undefined}
     >
       <Container fluid>
         <Row
-          onClick={hasScreens ? rowOnClick : () => undefined}
           className="align-items-center text-white"
           data-testid="place-row-header"
         >
@@ -184,18 +219,11 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                   }
                 )}
               >
-                <img
-                  className="place-row__map-segment"
-                  src={`/images/inline-maps/${getInlineMap(
-                    props.place,
-                    STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
-                  )}.png`}
-                  alt=""
-                />
+                {getInlineMap(props.place, props.filteredLine.toLowerCase())}
               </div>
             )}
             <div className="place-row__name" data-testid="place-name">
-              {name}
+              {formatStationName(name)}
             </div>
           </Col>
           <Col lg={1} className="d-flex justify-content-end">

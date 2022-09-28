@@ -8,6 +8,7 @@ import STATIONS_BY_LINE from "./constants/stations";
 export const color = (line: string) => {
   switch (line) {
     case "red":
+    case "mattapan":
       return "#DA291C";
     case "orange":
       return "#ED8B00";
@@ -16,7 +17,13 @@ export const color = (line: string) => {
     case "silver":
       return "#7C878E";
     case "green":
+    case "green-b":
+    case "green-c":
+    case "green-d":
+    case "green-e":
       return "#00843D";
+    default:
+      return "#FFFFFF";
   }
 };
 
