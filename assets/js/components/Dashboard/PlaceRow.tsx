@@ -14,6 +14,7 @@ import { Screen } from "../../models/screen";
 import ScreenDetail from "./ScreenDetail";
 import MapSegment from "./MapSegment";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
+import { classWithModifier } from "../../util";
 
 interface PlaceRowProps {
   place: Place;
@@ -137,12 +138,13 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
     return newRoutes.map((route) => (
       <img
-        className="place-row__mode-line-icon"
+        className={classWithModifier(
+          "place-row__mode-line-icon",
+          route.toLowerCase()
+        )}
         key={route}
-        src={`/images/pills/${route.toLowerCase()}.png`}
+        src={`/images/pills/${route.toLowerCase()}.svg`}
         alt={route}
-        width={38}
-        height={20}
       />
     ));
   };
