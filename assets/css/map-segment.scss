@@ -1,0 +1,11 @@
+.map-segment {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  z-index: 999;
+
+  &--blue {
+    filter: drop-shadow(0px 0px 8px rgba(46, 62, 77, 0.4));
+  }
+}
