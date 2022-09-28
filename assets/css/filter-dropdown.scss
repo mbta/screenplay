@@ -1,5 +1,6 @@
 .filter-dropdown__button-group {
   width: 100%;
+
   .filter-dropdown__dropdown {
     .filter-dropdown__dropdown-button {
       border-color: transparent;
@@ -26,9 +27,11 @@
   .filter-dropdown__clear-button {
     border: transparent;
     border-radius: 6px 0 0 6px !important;
+
     &:hover {
       opacity: 0.6;
     }
+
     flex-grow: 0;
     height: 36px;
     min-width: 34px;
@@ -40,8 +43,8 @@
     flex-grow: 1;
 
     &:not(:only-child) > .filter-dropdown__dropdown-button {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
     }
 
     .filter-dropdown__dropdown-button {
