@@ -1,5 +1,6 @@
 .filter-dropdown__button-group {
   width: 100%;
+
   .filter-dropdown__dropdown {
     .filter-dropdown__dropdown-button {
       border-color: transparent;
@@ -8,27 +9,31 @@
       line-height: 24px;
 
       &--large {
+
         &:hover,
         &:focus {
-          background-color: $main-blue !important;
+          background-color: $main-blue  !important;
         }
       }
     }
   }
 
   &:not(.filter-dropdown__button-group--modes-and-lines) {
+
     .filter-dropdown__clear-button,
-    .filter-dropdown__dropdown > .filter-dropdown__dropdown-button--small {
-      background-color: $main-blue !important;
+    .filter-dropdown__dropdown>.filter-dropdown__dropdown-button--small {
+      background-color: $main-blue  !important;
     }
   }
 
   .filter-dropdown__clear-button {
     border: transparent;
     border-radius: 6px 0 0 6px !important;
+
     &:hover {
       opacity: 0.6;
     }
+
     flex-grow: 0;
     height: 36px;
     min-width: 34px;
@@ -39,9 +44,9 @@
   .filter-dropdown__dropdown {
     flex-grow: 1;
 
-    &:not(:only-child) > .filter-dropdown__dropdown-button {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+    &:not(:only-child)>.filter-dropdown__dropdown-button {
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
     }
 
     .filter-dropdown__dropdown-button {
@@ -71,7 +76,7 @@
     .filter-dropdown__dropdown-menu {
       padding: 8px 8px 0 8px;
 
-      & > ul {
+      &>ul {
         padding-left: 0;
       }
     }
