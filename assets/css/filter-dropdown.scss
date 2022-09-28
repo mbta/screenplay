@@ -16,6 +16,13 @@
     }
   }
 
+  &:not(.filter-dropdown__button-group--modes-and-lines) {
+    .filter-dropdown__clear-button,
+    .filter-dropdown__dropdown > .filter-dropdown__dropdown-button--small {
+      background-color: $main-blue !important;
+    }
+  }
+
   .filter-dropdown__clear-button {
     border: transparent;
     border-radius: 6px 0 0 6px !important;
