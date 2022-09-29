@@ -70,6 +70,7 @@ sort_routes = fn routes ->
   )
 end
 
+# If a place shows Ferry departures, add it here.
 add_routes_to_stops = fn
   routes, %{id: "place-aqucl"} = stop ->
     Map.put(stop, :routes, routes ++ ["Ferry"])
