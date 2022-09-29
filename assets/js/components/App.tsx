@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import * as Sentry from "@sentry/react";
 
@@ -32,13 +32,13 @@ class AppRoutes extends React.Component {
 
 const App = (): ReactElement<HTMLDivElement> => {
   const sentryDsn = document.getElementById("app")?.dataset.sentry;
-  useEffect(() => {
-    if (sentryDsn) {
-      Sentry.init({
-        dsn: sentryDsn,
-      });
-    }
-  }, [sentryDsn]);
+
+  if (sentryDsn) {
+    console.log(sentryDsn);
+    Sentry.init({
+      dsn: sentryDsn,
+    });
+  }
 
   return (
     <BrowserRouter>
