@@ -17,7 +17,6 @@ export const MODES_AND_LINES = [
   { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
   { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
   { label: "Ferry", ids: ["Ferry"], color: "#008EAA" },
-  { label: "Access", ids: ["Access"], color: "#165C96" },
 ];
 
 export const SORT_LABELS_BY_LINE: Record<string, [string, string]> = {
@@ -38,7 +37,6 @@ export const SCREEN_TYPES = [
     ids: ["gl_eink_single", "gl_eink_double", "gl_eink_v2"],
   },
   { label: "Elevator", ids: ["elevator"] },
-  { label: "Outfront Media", ids: ["ofm"] },
   { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
   { label: "Solari", ids: ["solari"] },
