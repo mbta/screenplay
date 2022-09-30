@@ -7,7 +7,7 @@ defmodule ScreenplayWeb.DashboardController do
   plug(:environment_name)
 
   def index(conn, _params) do
-    render(conn, "index.html")
+    render(conn, "index.html", clarity_tag: System.get_env("CLARITY_TAG"))
   end
 
   defp username(conn, _) do
