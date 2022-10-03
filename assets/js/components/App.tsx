@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { initClarityAnalytics } from "../utils/clarityInit.js";
+import { initClarityAnalytics } from "../utils/clarityInit";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
