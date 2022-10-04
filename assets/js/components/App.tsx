@@ -1,6 +1,5 @@
 import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import * as Sentry from "@sentry/react";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
@@ -31,19 +30,6 @@ class AppRoutes extends React.Component {
 }
 
 const App = (): ReactElement<HTMLDivElement> => {
-  const sentryDsn = document.getElementById("app")?.dataset.sentry;
-  const username = document.getElementById("app")?.dataset.username;
-
-  if (sentryDsn) {
-    Sentry.init({
-      dsn: sentryDsn,
-    });
-
-    if (username) {
-      Sentry.setUser({ username: username });
-    }
-  }
-
   return (
     <BrowserRouter>
       <AppRoutes />
