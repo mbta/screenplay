@@ -18,5 +18,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import App from "./components/App";
+import * as Sentry from "@sentry/react";
+
+const sentryDsn = document.getElementById("app")?.dataset.sentry;
+const username = document.getElementById("app")?.dataset.username;
+
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+  });
+
+  if (username) {
+    Sentry.setUser({ username: username });
+  }
+}
 
 ReactDOM.render(<App />, document.getElementById("app"));
