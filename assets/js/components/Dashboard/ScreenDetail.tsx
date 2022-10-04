@@ -11,18 +11,30 @@ interface ScreenDetailProps {
 }
 
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
-  const translateScreenType = () => {
-    return SCREEN_TYPES.find(({ ids }) => ids.includes(props.screens[0].type))
-      ?.label;
-  };
+  const isSolari = props.screens.every((screen) => screen.type === "solari");
 
-  const isPaess = props.screens.every((screen) => screen.type === "pa_ess");
+  return isSolari ? (
+    <div className="screen-detail__solari-layout">
+      {props.screens.map((screens, index) => (
+        <ScreenCard {...props} key={index} screens={[screens]} />
+      ))}
+    </div>
+  ) : (
+    <ScreenCard {...props} />
+  );
+};
 
-  const getPaessRouteLetter = () => {
-    return props.screens[0].station_code
-      ? props.screens[0].station_code.charAt(0).toLowerCase()
-      : "";
-  };
+const ScreenCard = (props: ScreenDetailProps) => {
+  const { screens, isOpen } = props;
+  const isPaess = screens.every((screen) => screen.type === "pa_ess");
+  const isSolari = screens.every((screen) => screen.type === "solari");
+  const paessRouteLetter = screens[0].station_code
+    ? screens[0].station_code.charAt(0).toLowerCase()
+    : "";
+
+  const translatedScreenType = SCREEN_TYPES.find(({ ids }) =>
+    ids.includes(screens[0].type)
+  )?.label;
 
   const getPaessRoute = (routeLetter: string) => {
     switch (routeLetter) {
@@ -41,16 +53,17 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     }
   };
 
-  const getScreenLocation = () => {
-    if (isPaess) {
-      return `/ ${getPaessRoute(getPaessRouteLetter())}`;
-    } else props.screens[0].location ? `/ ${props.screens[0].location}` : "";
-  };
+  const getScreenLocation = isPaess
+    ? `/ ${getPaessRoute(paessRouteLetter)}`
+    : screens[0].location
+    ? `/ ${screens[0].location}`
+    : "";
 
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
+    const queryParams = "source=screenplay";
 
     let baseUrl;
     if (environmentName === "dev") {
@@ -62,15 +75,15 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
     }
 
     if (type.includes("v2")) {
-      return `${baseUrl}/v2/screen/${id}/simulation`;
+      return `${baseUrl}/v2/screen/${id}/simulation?${queryParams}`;
     }
     if (
       ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
     ) {
-      return `${baseUrl}/screen/${id}`;
+      return `${baseUrl}/screen/${id}?${queryParams}`;
     }
     if (type === "dup") {
-      return `${baseUrl}/screen/${id}/simulation`;
+      return `${baseUrl}/screen/${id}/simulation?${queryParams}`;
     }
 
     return "";
@@ -79,8 +92,9 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   return (
     <div
       className={classNames("screen-detail__container", {
-        [`screen-detail__container--paess screen-detail__container--paess-${getPaessRouteLetter()}`]:
+        [`screen-detail__container--paess screen-detail__container--paess-${paessRouteLetter}`]:
           isPaess,
+        [`screen-detail__container--solari`]: isSolari,
       })}
       onClick={(e: SyntheticEvent) => e.stopPropagation()}
     >
@@ -88,13 +102,13 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
         <div
           className={classNames("screen-detail__screen-type-location", {
             "screen-detail__screen-type-location--paess-s":
-              isPaess && getPaessRouteLetter() == "s",
+              isPaess && paessRouteLetter == "s",
             "screen-detail__screen-type-location--paess": isPaess,
           })}
         >
-          {translateScreenType()} {getScreenLocation()}
+          {translatedScreenType} {getScreenLocation}
         </div>
-        {props.screens[0].type === "dup" && (
+        {screens[0].type === "dup" && (
           <div className="screen-detail__dup-ad-text">
             Cycle in the ad loop for 7.5 seconds every 45 seconds
           </div>
@@ -105,14 +119,14 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
           </div>
         )}
       </div>
-      {props.isOpen &&
+      {isOpen &&
         (isPaess ? (
           <PaessDetailContainer
-            key={props.screens[0].station_code}
-            screens={props.screens}
+            key={screens[0].station_code}
+            screens={screens}
           ></PaessDetailContainer>
         ) : (
-          props.screens.map((screen) => (
+          screens.map((screen) => (
             <div
               key={screen.id}
               className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}

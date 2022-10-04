@@ -62,9 +62,6 @@ describe("PlacesActionBar", () => {
       queryByTestId("places-action-bar-screenless-places-button")
     ).not.toBeInTheDocument();
     expect(
-      getByTestId("places-action-bar-bulk-edit-button")
-    ).toBeInTheDocument();
-    expect(
       getByTestId("places-action-bar-reset-filters-button")
     ).toBeInTheDocument();
     expect(
@@ -94,9 +91,6 @@ describe("PlacesActionBar", () => {
     expect(getByTestId("places-action-bar")).toBeInTheDocument();
     expect(
       getByTestId("places-action-bar-screenless-places-button")
-    ).toBeInTheDocument();
-    expect(
-      getByTestId("places-action-bar-bulk-edit-button")
     ).toBeInTheDocument();
     expect(
       getByTestId("places-action-bar-reset-filters-button")
