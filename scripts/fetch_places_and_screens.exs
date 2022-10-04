@@ -245,11 +245,22 @@ bus_stops_parsed = Jason.decode!(body)
 # Transform data into model we need
 bus_stops =
   bus_data
-  |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
-    {_, screens_at_stop} =
-      Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
+  |> Enum.map(fn
+    %{
+      "id" => id,
+      "attributes" => %{"name" => name},
+      "relationships" => %{"parent_station" => %{"data" => %{"id" => parent_stop_id}}}
+    } ->
+      {_, screens_at_stop} =
+        Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
 
-    %{id: id, name: name, screens: screens_at_stop}
+      %{id: parent_stop_id, name: name, screens: screens_at_stop}
+
+    %{"id" => id, "attributes" => %{"name" => name}} ->
+      {_, screens_at_stop} =
+        Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
+
+      %{id: id, name: name, screens: screens_at_stop}
   end)
 
 # Go get all parent stations
@@ -273,12 +284,12 @@ contents =
   end)
   # Add on bus stops
   |> Enum.concat(bus_stops)
-  |> Enum.group_by(fn %{name: name} -> name end)
+  |> Enum.group_by(fn %{id: id} -> id end)
   |> Enum.map(fn
-    {_name, [place]} ->
+    {_id, [place]} ->
       place
 
-    {name, places} ->
+    {_id, places} ->
       # Combine entries that reference the same stop by merging their list of screens.
       Enum.reduce(places, fn x, y ->
         Map.merge(x, y, fn
@@ -292,8 +303,8 @@ contents =
           :id, v1, _v2 ->
             v1
 
-          :name, _, _ ->
-            name
+          :name, v1, _ ->
+            v1
 
           # Combine the list of screens
           :screens, v1, v2 ->
@@ -304,8 +315,6 @@ contents =
         end)
       end)
   end)
-  # Just in case
-  |> Enum.uniq_by(fn %{name: name} -> name end)
   # Get the routes at each stop
   |> Enum.map(fn %{id: id} = stop ->
     # Not a big fan of this. Goes through each station one by one.
