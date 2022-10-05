@@ -10,3 +10,4 @@
 # export GUARDIAN_SECRET_KEY=
 # export API_V3_KEY=
 # export CLARITY_TAG=
+# export ENVIRONMENT_NAME=
