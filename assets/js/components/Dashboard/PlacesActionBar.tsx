@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import {
-  ListCheck,
   XCircleFill,
   EyeFill,
   EyeSlashFill,
@@ -55,13 +54,6 @@ const PlacesActionBar: React.ComponentType<Props> = ({
             Screenless places
           </ActionBarButton>
         )}
-        <ActionBarButton
-          disabled
-          IconComponent={ListCheck}
-          testID="places-action-bar-bulk-edit-button"
-        >
-          Bulk edit
-        </ActionBarButton>
         <ActionBarButton
           onClick={onClickResetFilters}
           IconComponent={XCircleFill}

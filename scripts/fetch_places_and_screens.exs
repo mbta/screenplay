@@ -70,6 +70,15 @@ sort_routes = fn routes ->
   )
 end
 
+# If a place's stop shows Ferry departures from a separate nearby stop, add it here.
+add_routes_to_stops = fn
+  routes, %{id: "place-aqucl"} = stop ->
+    Map.put(stop, :routes, routes ++ ["Ferry"])
+
+  routes, stop ->
+    Map.put(stop, :routes, routes)
+end
+
 # Get live config from S3
 {:ok, file} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
 parsed = Jason.decode!(file)
@@ -80,65 +89,62 @@ formatted_screens =
   # and marked as such with the `hidden_from_screenplay` boolean field.
   |> Enum.reject(&match?({_id, %{"hidden_from_screenplay" => true}}, &1))
   # This flat_map allows us to split out a single config into multiple places.
-  # Only splits out DUPs, but can be modified to work with other screen types.
-  |> Enum.flat_map(
-    fn
-      {id,
-       %{
-         "app_id" => "dup",
-         "app_params" => %{
-           "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
-           "secondary" => %{"sections" => []}
-         }
-       } = stuff} ->
-        primary =
-          Enum.map(primary_stop_ids, fn stop_id ->
-            {id, Map.put(stuff, "stop", stop_id)}
-          end)
+  |> Enum.flat_map(fn
+    {id,
+     %{
+       "app_id" => "dup",
+       "app_params" => %{
+         "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
+         "secondary" => %{"sections" => []}
+       }
+     } = stuff} ->
+      primary =
+        Enum.map(primary_stop_ids, fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
 
-        primary
+      primary
 
-      {id,
-       %{
-         "app_id" => "dup",
-         "app_params" => %{
-           "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
-           "secondary" => %{"sections" => [%{"stop_ids" => secondary_stop_ids} | _]}
-         }
-       } = stuff} ->
-        primary =
-          Enum.map(primary_stop_ids, fn stop_id ->
-            {id, Map.put(stuff, "stop", stop_id)}
-          end)
+    {id,
+     %{
+       "app_id" => "dup",
+       "app_params" => %{
+         "primary" => %{"sections" => [%{"stop_ids" => primary_stop_ids} | _]},
+         "secondary" => %{"sections" => [%{"stop_ids" => secondary_stop_ids} | _]}
+       }
+     } = stuff} ->
+      primary =
+        Enum.map(primary_stop_ids, fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
 
-        secondary =
-          Enum.map(secondary_stop_ids, fn stop_id ->
-            {id, Map.put(stuff, "stop", stop_id)}
-          end)
+      secondary =
+        Enum.map(secondary_stop_ids, fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
 
-        primary ++ secondary
+      primary ++ secondary
 
-      {id,
-       %{
-         "app_id" => "solari",
-         "app_params" => %{
-           "sections" => sections
-         }
-       } = stuff} ->
-        stops =
-          Enum.flat_map(sections, fn %{"query" => %{"params" => %{"stop_ids" => stop_ids}}} ->
-            stop_ids
-          end)
-          |> Enum.map(fn stop_id ->
-            {id, Map.put(stuff, "stop", stop_id)}
-          end)
+    {id,
+     %{
+       "app_id" => "solari",
+       "app_params" => %{
+         "sections" => sections
+       }
+     } = stuff} ->
+      stops =
+        Enum.flat_map(sections, fn %{"query" => %{"params" => %{"stop_ids" => stop_ids}}} ->
+          stop_ids
+        end)
+        |> Enum.map(fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
 
-        stops
+      stops
 
-      screen ->
-        [screen]
-    end
-  )
+    screen ->
+      [screen]
+  end)
 
 # Most screen types store their stop_id in a different place. Broke all types out in case anything changes.
 live_screens =
@@ -308,20 +314,18 @@ contents =
     %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
     %{"data" => data} = Jason.decode!(body)
 
-    routes =
-      data
-      |> Enum.map(fn
-        %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
-        %{"id" => "CR-" <> _} -> "CR"
-        # Bus edge case I found in the data.
-        %{"id" => "34E"} -> "Bus"
-        %{"id" => route_id} -> route_id
-      end)
-      |> format_bus_routes.()
-      |> Enum.dedup()
-      |> sort_routes.()
-
-    Map.put(stop, :routes, routes)
+    data
+    |> Enum.map(fn
+      %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
+      %{"id" => "CR-" <> _} -> "CR"
+      # Bus edge case I found in the data.
+      %{"id" => "34E"} -> "Bus"
+      %{"id" => route_id} -> route_id
+    end)
+    |> format_bus_routes.()
+    |> Enum.dedup()
+    |> sort_routes.()
+    |> add_routes_to_stops.(stop)
   end)
   # Get rid of CR stops with no screens
   |> Enum.reject(fn %{id: id, routes: routes, screens: screens} ->
@@ -395,7 +399,13 @@ pa_ess_screens =
          "pa_ess_loc" => station_code,
          "text_zone" => zone
        } ->
-      %{id: id, station_code: station_code, zone: zone, type: "pa_ess", label: labels["#{station_code}-#{zone}"]}
+      %{
+        id: id,
+        station_code: station_code,
+        zone: zone,
+        type: "pa_ess",
+        label: labels["#{station_code}-#{zone}"]
+      }
     end
   )
   |> Enum.into(%{})
@@ -407,10 +417,12 @@ merged_paess =
   end)
 
 # Now do busways and Silver Line
-contents_bus_silver = contents |> Enum.filter(fn %{id: id, routes: routes} ->
-  # Exclude ids that are integers because there are no countdown clocks at normal bus stops
-  ("Bus" in routes or "Silver" in routes) and Integer.parse(id) == :error
-end)
+contents_bus_silver =
+  contents
+  |> Enum.filter(fn %{id: id, routes: routes} ->
+    # Exclude ids that are integers because there are no countdown clocks at normal bus stops
+    ("Bus" in routes or "Silver" in routes) and Integer.parse(id) == :error
+  end)
 
 # Use Signs UI config for Bus/Silver Line PAESS ARINC to realtime signs id mapping
 url = "https://api.github.com/repos/mbta/signs_ui/contents/priv/arinc_to_realtime.json"
@@ -420,20 +432,31 @@ gh_response = Jason.decode!(body)
 %{"content" => signs_json_file} = gh_response
 parsed = signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
 
-bus_silver_configs = parsed |> Enum.filter(fn {_, realtime_id} -> realtime_id =~ "bus." or realtime_id =~ "Silver_Line" end)
+bus_silver_configs =
+  parsed
+  |> Enum.filter(fn {_, realtime_id} -> realtime_id =~ "bus." or realtime_id =~ "Silver_Line" end)
   |> Enum.map(fn {station_code_zone, realtime_id} ->
     [station_code, zone] = String.split(station_code_zone, "-")
-    %{id: realtime_id, station_code: station_code, zone: zone, type: "pa_ess", label: labels[station_code_zone]}
+
+    %{
+      id: realtime_id,
+      station_code: station_code,
+      zone: zone,
+      type: "pa_ess",
+      label: labels[station_code_zone]
+    }
   end)
 
 place_to_config_mapping =
   contents_bus_silver
   |> Enum.map(fn %{id: id, name: name} ->
-    pa_ess_here = Enum.filter(bus_silver_configs, fn %{id: realtime_id} ->
-      [_, realtime_id_no_prefix] = String.split(realtime_id, ".")
-      [name_start | _] = String.split(realtime_id_no_prefix, "_")
-      name =~ name_start
-    end)
+    pa_ess_here =
+      Enum.filter(bus_silver_configs, fn %{id: realtime_id} ->
+        [_, realtime_id_no_prefix] = String.split(realtime_id, ".")
+        [name_start | _] = String.split(realtime_id_no_prefix, "_")
+        name =~ name_start
+      end)
+
     if pa_ess_here != [], do: %{id => pa_ess_here}, else: nil
   end)
   |> Enum.filter(fn place -> is_map(place) end)

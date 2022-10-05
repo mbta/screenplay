@@ -12,7 +12,9 @@ import classNames from "classnames";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import ScreenDetail from "./ScreenDetail";
-import STATION_ORDER_BY_LINE, { Station } from "../../constants/stationOrder";
+import MapSegment from "./MapSegment";
+import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
+import { classWithModifier } from "../../util";
 
 interface PlaceRowProps {
   place: Place;
@@ -136,20 +138,25 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
     return newRoutes.map((route) => (
       <img
-        className="place-row__mode-line-icon"
+        className={classWithModifier(
+          "place-row__mode-line-icon",
+          route.toLowerCase()
+        )}
         key={route}
-        src={`/images/pills/${route.toLowerCase()}.png`}
+        src={`/images/pills/${route.toLowerCase()}.svg`}
         alt={route}
-        width={38}
-        height={20}
       />
     ));
   };
 
-  const getInlineMap = (place: Place, stationOrder: Station[]) => {
-    return stationOrder.find(
+  const getInlineMap = (place: Place, line: string) => {
+    const station = STATION_ORDER_BY_LINE[line].find(
       (station) => station.name.toLowerCase() === place.name.toLowerCase()
-    )?.inlineMap;
+    );
+
+    if (!station) return;
+
+    return <MapSegment station={station} line={line} />;
   };
 
   // Function to capitalize terminal stops according to STATION_ORDER_BY_LINE
@@ -186,10 +193,10 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         filtered: !!props.isFiltered,
       })}
       data-testid="place-row"
+      onClick={hasScreens ? rowOnClick : () => undefined}
     >
       <Container fluid>
         <Row
-          onClick={hasScreens ? rowOnClick : () => undefined}
           className="align-items-center text-white"
           data-testid="place-row-header"
         >
@@ -212,14 +219,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                   }
                 )}
               >
-                <img
-                  className="place-row__map-segment"
-                  src={`/images/inline-maps/${getInlineMap(
-                    props.place,
-                    STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()]
-                  )}.png`}
-                  alt=""
-                />
+                {getInlineMap(props.place, props.filteredLine.toLowerCase())}
               </div>
             )}
             <div className="place-row__name" data-testid="place-name">

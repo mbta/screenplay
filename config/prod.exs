@@ -17,7 +17,8 @@ config :screenplay, ScreenplayWeb.Endpoint,
 
 config :screenplay,
   alerts_fetch_module: Screenplay.Alerts.S3Fetch,
-  alerts_s3_bucket: "mbta-ctd-config"
+  alerts_s3_bucket: "mbta-ctd-config",
+  record_sentry: true
 
 # Do not print debug messages in production
 config :logger, level: :info

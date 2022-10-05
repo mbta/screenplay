@@ -1,5 +1,6 @@
 .filter-dropdown__button-group {
   width: 100%;
+
   .filter-dropdown__dropdown {
     .filter-dropdown__dropdown-button {
       border-color: transparent;
@@ -16,12 +17,21 @@
     }
   }
 
+  &:not(.filter-dropdown__button-group--modes-and-lines) {
+    .filter-dropdown__clear-button,
+    .filter-dropdown__dropdown > .filter-dropdown__dropdown-button--small {
+      background-color: $main-blue !important;
+    }
+  }
+
   .filter-dropdown__clear-button {
     border: transparent;
     border-radius: 6px 0 0 6px !important;
+
     &:hover {
       opacity: 0.6;
     }
+
     flex-grow: 0;
     height: 36px;
     min-width: 34px;
@@ -33,7 +43,8 @@
     flex-grow: 1;
 
     &:not(:only-child) > .filter-dropdown__dropdown-button {
-      border-radius: 0 6px 6px 0 !important;
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
     }
 
     .filter-dropdown__dropdown-button {
@@ -62,7 +73,6 @@
 
     .filter-dropdown__dropdown-menu {
       padding: 8px 8px 0 8px;
-      border-radius: 6px;
 
       & > ul {
         padding-left: 0;
@@ -70,7 +80,7 @@
     }
 
     .filter-dropdown__dropdown-item {
-      border-radius: 6px;
+      border-radius: 0.25rem;
       padding: 6px 16px;
 
       &:not(.active) {
