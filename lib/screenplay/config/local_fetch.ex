@@ -6,9 +6,11 @@ defmodule Screenplay.Config.LocalFetch do
   def get_config do
     with {:ok, config_contents} <- do_get(:local_config_file_spec),
          {:ok, location_contents} <- do_get(:local_locations_file_spec),
+         {:ok, description_contents} <- do_get(:local_descriptions_file_spec),
          {:ok, config_json} <- Jason.decode(config_contents),
-         {:ok, location_json} <- Jason.decode(location_contents) do
-      {:ok, config_json, location_json}
+         {:ok, location_json} <- Jason.decode(location_contents),
+         {:ok, description_json} <- Jason.decode(description_contents) do
+      {:ok, config_json, location_json, description_json}
     else
       _ -> :error
     end

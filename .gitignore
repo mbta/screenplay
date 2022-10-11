@@ -38,5 +38,6 @@ npm-debug.log
 /priv/alerts.json
 /priv/places_and_screens.json
 /priv/screen_locations.json
+/priv/place_descriptions.json
 
 .envrc
