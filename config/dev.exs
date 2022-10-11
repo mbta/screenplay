@@ -79,7 +79,7 @@ config :screenplay,
   config_fetcher: Screenplay.Config.LocalFetch,
   local_config_file_spec: {:priv, "places_and_screens.json"},
   local_locations_file_spec: {:priv, "screen_locations.json"},
-  local_descriptions_file_spec: {:priv, "place_descriptions.json"}
+  local_place_descriptions_file_spec: {:priv, "place_descriptions.json"}
 
 config :ueberauth, Ueberauth,
   providers: [
