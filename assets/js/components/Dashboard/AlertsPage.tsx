@@ -11,12 +11,17 @@ import {
   SILVER_LINE_ROUTES,
 } from "../../constants/constants";
 import { Alert } from "../../models/alert";
+import { Place } from "../../models/place";
+import { Screen } from "../../models/screen";
+import { ScreensByAlert } from "../../models/screensByAlert";
 import classNames from "classnames";
 
 type DirectionID = 0 | 1;
 
 interface Props {
   alerts: Alert[];
+  places: Place[];
+  screensByAlertId: ScreensByAlert;
   isVisible: boolean;
 }
 
@@ -60,6 +65,13 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
 
   const filterAlerts = () => {
     let filteredAlerts = props.alerts;
+    if (alertScreenTypeFilterValue !== SCREEN_TYPES[0]) {
+      filteredAlerts = filterAlertsByScreenType(
+        filteredAlerts,
+        alertScreenTypeFilterValue
+      );
+    }
+
     if (alertModeLineFilterValue !== MODES_AND_LINES[0]) {
       filteredAlerts = filterAlertsByModeOrLine(
         filteredAlerts,
@@ -94,7 +106,35 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     });
   };
 
-  // const filterAlertsByScreenType = (alerts: Alert[]) => {};
+  // Get a mapping of screen ids => screen metadata (namely 'type') to use in filterAlertsByScreenType()
+  const getScreenMetaDataById = () => {
+    const screenMetaData: { [id: string]: Screen } = {};
+    props.places.forEach((place) => {
+      place.screens.forEach((screenData) => {
+        screenMetaData[screenData.id] = screenData;
+      });
+    });
+    return screenMetaData;
+  };
+
+  const screenMetaData = getScreenMetaDataById();
+
+  const filterAlertsByScreenType = (
+    alerts: Alert[],
+    { ids }: { label: string; ids: string[] }
+  ) => {
+    return alerts.filter((alert) => {
+      // Get this alert's list of affected screens.
+      // Later should be replaced with a call to memcached?
+      const screensWithAlert = props.screensByAlertId[alert.id];
+
+      return screensWithAlert
+        ? screensWithAlert.find((screen_id) =>
+            ids.includes(screenMetaData[screen_id].type)
+          )
+        : false;
+    });
+  };
 
   const compareAlerts = (
     { attributes: { active_period: active_period_1 } }: Alert,
