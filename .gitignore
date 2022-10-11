@@ -34,10 +34,8 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
-# Local storage of takeover messages
-/priv/alerts.json
-/priv/places_and_screens.json
-/priv/screen_locations.json
-/priv/place_descriptions.json
+# All files in /priv/ are going to be for local development
+# so do not need to be tracked.
+/priv/*
 
 .envrc
