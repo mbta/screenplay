@@ -4,8 +4,14 @@ defmodule ScreenplayWeb.DashboardApiController do
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   def index(conn, _params) do
-    {:ok, config, locations} = @config_fetcher.get_config()
-    json(conn, update_config_with_locations(config, locations))
+    {:ok, config, locations, descriptions} = @config_fetcher.get_config()
+
+    updated_config =
+      config
+      |> update_config_with_locations(locations)
+      |> update_config_with_place_descriptions(descriptions)
+
+    json(conn, updated_config)
   end
 
   defp update_config_with_locations(config, locations) do
@@ -20,6 +26,16 @@ defmodule ScreenplayWeb.DashboardApiController do
           Access.filter(&match?(%{"id" => ^id}, &1))
         ],
         &Map.put(&1, "location", location)
+      )
+    end)
+  end
+
+  defp update_config_with_place_descriptions(config, descriptions) do
+    Enum.reduce(descriptions, config, fn %{"id" => id, "description" => description}, acc ->
+      update_in(
+        acc,
+        [Access.filter(&match?(%{"id" => ^id}, &1))],
+        &Map.put(&1, "description", description)
       )
     end)
   end
