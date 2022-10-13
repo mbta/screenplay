@@ -9,7 +9,7 @@ import { Place } from "../../models/place";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import {
   MODES_AND_LINES,
-  SORT_LABELS_BY_LINE,
+  SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
@@ -21,7 +21,7 @@ const getSortLabel = (
   sortDirection: DirectionID
 ) => {
   const line = modeLineFilterValue.label.split(" ")[0];
-  const sortLabels = SORT_LABELS_BY_LINE[line];
+  const sortLabels = SORT_LABELS[line];
 
   if (sortLabels) {
     return sortLabels[sortDirection];
