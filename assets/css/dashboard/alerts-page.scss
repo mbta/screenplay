@@ -1,3 +1,23 @@
+.alerts-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .alerts-page.alerts-page--hidden {
   display: none;
+}
+
+.alerts-page .back-button {
+  height: 40px;
+  font-weight: 500;
+  margin-right: 24px;
+  background: $main-blue;
+  border: 1px solid rgba(23, 31, 38, 0.3);
+}
+
+.alerts-page .external-link {
+  margin-left: 24px;
+  background: unset;
+  border: 1px solid rgba(23, 31, 38, 0.3);
 }

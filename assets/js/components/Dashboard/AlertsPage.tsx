@@ -1,7 +1,7 @@
-import React, { ComponentType, useState } from "react";
+import React, { ComponentType, Dispatch, SetStateAction, useState } from "react";
 import FilterDropdown from "./FilterDropdown";
-import { Col, Container, Row } from "react-bootstrap";
-import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import { ArrowDown, ArrowLeft, ArrowUp, ArrowUpRight } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import {
   MODES_AND_LINES,
@@ -15,6 +15,7 @@ import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import classNames from "classnames";
+import { PlacesList } from "./PlacesPage";
 
 type DirectionID = 0 | 1;
 
@@ -25,7 +26,54 @@ interface Props {
   isVisible: boolean;
 }
 
-const AlertsPage: ComponentType<Props> = (props: Props) => {
+const AlertsPage: ComponentType<Props> = (props) => {
+  const {alerts, places, screensByAlertId, isVisible} = props
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(alerts[0])
+
+  const placesWithSelectedAlert = selectedAlert ? places.filter(place =>
+      place.screens.some((screen: Screen) => screensByAlertId[selectedAlert.id].includes(screen.id))
+    ) : []
+
+  const alertsWithPlaces = alerts.filter(alert => screensByAlertId[alert.id])
+
+  const alertsUiUrl = document.getElementById("app")?.dataset.alertsUiUrl
+
+  return (
+    <div
+      className={classNames("alerts-page", {
+        "alerts-page--hidden": !isVisible,
+      })}
+    >
+      <div className="page-content__header">
+        { selectedAlert ?
+          <div>
+            <Button className="back-button" onClick={() => setSelectedAlert(null)}>
+              <ArrowLeft /> Back
+            </Button>
+            Service Change #{selectedAlert.id}
+            <Button href={alertsUiUrl + `/edit/${selectedAlert.id}`} target="_blank" className="external-link">
+              Edit Alert <ArrowUpRight />
+            </Button>
+          </div>
+          : "Posted Alerts"
+        }
+      </div>
+      <div className="page-content__body">
+        { selectedAlert
+          ? <PlacesList places={placesWithSelectedAlert} noModeFilter isAlertPlacesList />
+          : <AlertsList {...props} alerts={alertsWithPlaces} selectAlert={setSelectedAlert}/>
+        }
+        
+      </div>
+    </div>
+  );
+};
+
+interface AlertsListProps extends Props {
+  selectAlert: Dispatch<SetStateAction<Alert | null>>
+}
+
+const AlertsList: ComponentType<AlertsListProps> = (props) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
@@ -159,75 +207,69 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   };
 
   return (
-    <div
-      className={classNames("alerts-page", {
-        "alerts-page--hidden": !props.isVisible,
-      })}
-    >
-      <div className="page-content__header">Posted Alerts</div>
-      <div className="page-content__body">
-        <Container fluid>
-          <Row className="place-list__header-row">
-            <Col lg={3}>
-              <div
-                className="place-list__sort-label d-flex align-items-center"
-                onClick={sortLabelOnClick}
-                data-testid="sort-label"
-              >
-                {alertSortLabel}
-                {alertSortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
-              </div>
-            </Col>
-            <Col lg={3} className="d-flex justify-content-end pe-3">
-              <FilterDropdown
-                list={MODES_AND_LINES}
-                onSelect={(value: any) => handleAlertModeOrLineSelect(value)}
-                selectedValue={alertModeLineFilterValue}
-                className="modes-and-lines"
-              />
-            </Col>
-            <Col lg={3} className="place-screen-types pe-3">
-              <FilterDropdown
-                list={SCREEN_TYPES}
-                onSelect={(value: any) => handleAlertScreenTypeSelect(value)}
-                selectedValue={alertScreenTypeFilterValue}
-                className="screen-types"
-              />
-            </Col>
-            <Col lg={3}>
-              <FilterDropdown
-                list={STATUSES}
-                onSelect={(value: any) => handleAlertStatusSelect(value)}
-                selectedValue={alertStatusFilterValue}
-                className="statuses"
-                disabled
-              />
-            </Col>
-          </Row>
-        </Container>
-        {filterAlerts()
-          .sort((a: Alert, b: Alert) =>
-            alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
-          )
-          .map((alert: Alert) => (
+    <>
+      <Container fluid>
+        <Row className="place-list__header-row">
+          <Col lg={3}>
             <div
-              key={alert.id}
-              style={{ color: "white" }}
-              data-testid={alert.id}
+              className="place-list__sort-label d-flex align-items-center"
+              onClick={sortLabelOnClick}
+              data-testid="sort-label"
             >
-              id: {alert.id} {"End: "}
-              {
-                alert.attributes.active_period[
-                  alert.attributes.active_period.length - 1
-                ].end
-              }{" "}
-              {"Start: "}
-              {alert.attributes.active_period[0].start}
+              {alertSortLabel}
+              {alertSortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
             </div>
-          ))}
-      </div>
-    </div>
-  );
-};
+          </Col>
+          <Col lg={3} className="d-flex justify-content-end pe-3">
+            <FilterDropdown
+              list={MODES_AND_LINES}
+              onSelect={(value: any) => handleAlertModeOrLineSelect(value)}
+              selectedValue={alertModeLineFilterValue}
+              className="modes-and-lines"
+            />
+          </Col>
+          <Col lg={3} className="place-screen-types pe-3">
+            <FilterDropdown
+              list={SCREEN_TYPES}
+              onSelect={(value: any) => handleAlertScreenTypeSelect(value)}
+              selectedValue={alertScreenTypeFilterValue}
+              className="screen-types"
+            />
+          </Col>
+          <Col lg={3}>
+            <FilterDropdown
+              list={STATUSES}
+              onSelect={(value: any) => handleAlertStatusSelect(value)}
+              selectedValue={alertStatusFilterValue}
+              className="statuses"
+              disabled
+            />
+          </Col>
+        </Row>
+      </Container>
+      {filterAlerts()
+        .sort((a: Alert, b: Alert) =>
+          alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
+        )
+        .map((alert: Alert) => (
+          <div
+            onClick={() => props.selectAlert(alert)}
+            key={alert.id}
+            style={{ color: "white" }}
+            data-testid={alert.id}
+          >
+            id: {alert.id} {"End: "}
+            {
+              alert.attributes.active_period[
+                alert.attributes.active_period.length - 1
+              ].end
+            }{" "}
+            {"Start: "}
+            {alert.attributes.active_period[0].start}
+          </div>
+        ))}
+    </>
+  )
+}
 
 export default AlertsPage;

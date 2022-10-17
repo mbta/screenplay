@@ -28,4 +28,5 @@ config :screenplay,
   pio_slack_group_id: System.get_env("PIO_SLACK_USERGROUP_ID"),
   slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL"),
   environment_name: System.get_env("ENVIRONMENT_NAME", "dev"),
-  sentry_frontend_dsn: System.get_env("SENTRY_DSN")
+  sentry_frontend_dsn: System.get_env("SENTRY_DSN"),
+  alerts_ui_url: System.get_env("ALERTS_UI_URL")
