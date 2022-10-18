@@ -69,7 +69,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   };
 
   return (
-    <div className="alert-card">
+    <div className="alert-card" data-testid={alert.id}>
       <Container fluid className="alert-card__alert-details">
         <Row>
           <Col lg="auto">
