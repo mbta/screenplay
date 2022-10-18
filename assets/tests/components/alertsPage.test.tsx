@@ -1,6 +1,5 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import { Alert } from "../../js/models/alert";
 import { Place } from "../../js/models/place";
 import { ScreensByAlert } from "../../js/models/screensByAlert";
 import alerts from "../alerts.test.json";
