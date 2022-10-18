@@ -24,8 +24,8 @@ import { Alert } from "../../models/alert";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
-import classNames from "classnames";
 import { PlacesList } from "./PlacesPage";
+import classNames from "classnames";
 
 type DirectionID = 0 | 1;
 
