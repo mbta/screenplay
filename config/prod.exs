@@ -16,7 +16,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json"
 
 config :screenplay,
-  alerts_fetch_module: Screenplay.Alerts.S3Fetch,
+  alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.S3Fetch,
   alerts_s3_bucket: "mbta-ctd-config",
   record_sentry: true
 

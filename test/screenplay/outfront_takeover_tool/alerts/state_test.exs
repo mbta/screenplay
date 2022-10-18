@@ -1,7 +1,7 @@
-defmodule Screenplay.Alerts.StateTest do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.StateTest do
   use ExUnit.Case
 
-  alias Screenplay.Alerts.{Alert, State}
+  alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
 
   describe "get_active_alerts/1" do
     test "returns all active alerts" do

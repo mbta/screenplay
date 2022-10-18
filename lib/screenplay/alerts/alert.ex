@@ -1,204 +1,103 @@
 defmodule Screenplay.Alerts.Alert do
-  @moduledoc """
-  Represents a single Outfront Takeover Alert.
-  """
+  @moduledoc false
 
-  alias Screenplay.Alerts.State
-  alias Screenplay.Util
+  alias Screenplay.Alerts.Parser
+  alias Screenplay.V3Api
 
-  @enforce_keys [
-    :id,
-    :message,
-    :stations,
-    :schedule,
-    :created_by,
-    :edited_by,
-    :cleared_at,
-    :cleared_by
-  ]
-  defstruct @enforce_keys
+  defstruct id: nil,
+            cause: nil,
+            effect: nil,
+            severity: nil,
+            header: nil,
+            informed_entities: nil,
+            active_period: nil,
+            lifecycle: nil,
+            timeframe: nil,
+            created_at: nil,
+            updated_at: nil,
+            url: nil,
+            description: nil,
+            affected_list: nil
 
-  @type id :: String.t()
-
-  @type canned_message :: %{
-          type: :canned,
-          id: non_neg_integer()
-        }
-
-  @type custom_message :: %{
-          type: :custom,
-          text: String.t()
-        }
-
-  @type station :: String.t()
-
-  @type schedule :: %{
-          start: DateTime.t(),
-          end: DateTime.t() | nil
-        }
-
-  @type user :: String.t()
-
-  @type update_map :: %{
-          optional(:message) => canned_message() | custom_message(),
-          optional(:stations) => list(station),
-          optional(:schedule) => schedule()
+  @type informed_entity :: %{
+          stop: String.t() | nil,
+          route: String.t() | nil,
+          route_type: non_neg_integer() | nil
         }
 
   @type t :: %__MODULE__{
-          id: id(),
-          message: canned_message() | custom_message(),
-          stations: list(station()),
-          schedule: schedule(),
-          created_by: user(),
-          edited_by: user(),
-          cleared_at: DateTime.t() | nil,
-          cleared_by: user() | nil
+          id: String.t(),
+          cause: String.t(),
+          effect: String.t(),
+          severity: integer,
+          header: String.t(),
+          informed_entities: list(informed_entity()),
+          active_period: list(),
+          lifecycle: String.t(),
+          timeframe: String.t(),
+          created_at: DateTime.t(),
+          updated_at: DateTime.t(),
+          description: String.t(),
+          affected_list: list(atom())
         }
 
-  @spec random_id :: id()
-  def random_id do
-    length = 16
-    length |> :crypto.strong_rand_bytes() |> Base.url_encode64()
+  def fetch(get_json_fn \\ &V3Api.get_json/2) do
+    case get_json_fn.("alerts", %{
+           "include" => "routes"
+         }) do
+      {:ok, result} ->
+        {:ok, Parser.parse_result(result)}
+
+      _ ->
+        :error
+    end
   end
 
-  @spec new(canned_message() | custom_message(), list(station()), schedule(), user()) :: t()
-  def new(message, stations, schedule, user) do
-    %__MODULE__{
-      id: State.get_unused_alert_id(),
-      message: message,
-      stations: stations,
-      schedule: schedule,
-      created_by: Util.trim_username(user),
-      edited_by: Util.trim_username(user),
-      cleared_at: nil,
-      cleared_by: nil
-    }
-  end
+  def to_full_map(alert) do
+    aps = Enum.map(alert.active_period, &ap_to_map/1)
 
-  @spec update(t(), update_map(), user()) :: t()
-  def update(alert, changes_map, user) do
-    # Drop nil values from changes_map
-    changes_map = changes_map |> Enum.filter(fn {_, v} -> v != nil end) |> Enum.into(%{})
-
-    merged = Map.merge(alert, changes_map)
-    %{merged | edited_by: Util.trim_username(user)}
-  end
-
-  @spec clear(t(), user()) :: t()
-  def clear(alert, user) do
-    %{alert | cleared_by: user, cleared_at: DateTime.utc_now()}
-  end
-
-  @spec to_json(t()) :: map()
-  def to_json(%__MODULE__{
-        id: id,
-        message: message,
-        stations: stations,
-        schedule: schedule,
-        created_by: created_by,
-        edited_by: edited_by,
-        cleared_at: cleared_at,
-        cleared_by: cleared_by
-      }) do
     %{
-      "id" => id,
-      "message" => message_to_json(message),
-      "stations" => stations_to_json(stations),
-      "schedule" => schedule_to_json(schedule),
-      "created_by" => Util.trim_username(created_by),
-      "edited_by" => Util.trim_username(edited_by),
-      "cleared_at" => serialize_datetime(cleared_at),
-      "cleared_by" => Util.trim_username(cleared_by)
+      id: alert.id,
+      effect: alert.effect,
+      severity: interpret_severity(alert.severity),
+      header: alert.header,
+      informed_entities: alert.informed_entities,
+      active_period: aps,
+      lifecycle: alert.lifecycle,
+      timeframe: alert.timeframe,
+      created_at: DateTime.to_iso8601(alert.created_at),
+      updated_at: DateTime.to_iso8601(alert.updated_at),
+      affected_list: alert.affected_list
     }
   end
 
-  @spec from_json(map()) :: t()
-  def from_json(%{
-        "id" => id,
-        "message" => message_json,
-        "stations" => stations_json,
-        "schedule" => schedule_json,
-        "created_by" => created_by,
-        "edited_by" => edited_by,
-        "cleared_at" => cleared_at,
-        "cleared_by" => cleared_by
-      }) do
-    %__MODULE__{
-      id: id,
-      message: message_from_json(message_json),
-      stations: stations_from_json(stations_json),
-      schedule: schedule_from_json(schedule_json),
-      created_by: Util.trim_username(created_by),
-      edited_by: Util.trim_username(edited_by),
-      cleared_at: parse_datetime(cleared_at),
-      cleared_by: Util.trim_username(cleared_by)
-    }
+  def ap_to_map({nil, end_t}) do
+    %{"start" => nil, "end" => DateTime.to_iso8601(end_t)}
   end
 
-  def from_json(%{
-        "id" => id,
-        "message" => message_json,
-        "stations" => stations_json,
-        "schedule" => schedule_json,
-        "created_by" => created_by,
-        "edited_by" => edited_by
-      }) do
-    %__MODULE__{
-      id: id,
-      message: message_from_json(message_json),
-      stations: stations_from_json(stations_json),
-      schedule: schedule_from_json(schedule_json),
-      created_by: Util.trim_username(created_by),
-      edited_by: Util.trim_username(edited_by),
-      cleared_at: nil,
-      cleared_by: nil
-    }
+  def ap_to_map({start_t, nil}) do
+    %{"start" => DateTime.to_iso8601(start_t), "end" => nil}
   end
 
-  defp message_to_json(%{type: :canned, id: id}) do
-    %{"type" => "canned", "id" => id}
+  def ap_to_map({start_t, end_t}) do
+    %{"start" => DateTime.to_iso8601(start_t), "end" => DateTime.to_iso8601(end_t)}
   end
 
-  defp message_to_json(%{type: :custom, text: text}) do
-    %{"type" => "custom", "text" => text}
-  end
-
-  def message_from_json(%{"type" => "canned", "id" => id}) do
-    %{type: :canned, id: id}
-  end
-
-  def message_from_json(%{"type" => "custom", "text" => text}) do
-    %{type: :custom, text: text}
-  end
-
-  defp station_to_json(station), do: station
-
-  defp station_from_json(station), do: station
-
-  defp stations_to_json(stations) do
-    Enum.map(stations, &station_to_json/1)
-  end
-
-  defp stations_from_json(stations_json) do
-    Enum.map(stations_json, &station_from_json/1)
-  end
-
-  defp schedule_to_json(%{start: start_dt, end: end_dt}) do
-    %{"start" => serialize_datetime(start_dt), "end" => serialize_datetime(end_dt)}
-  end
-
-  defp schedule_from_json(%{"start" => start_json, "end" => end_json}) do
-    %{start: parse_datetime(start_json), end: parse_datetime(end_json)}
-  end
-
-  defp serialize_datetime(nil), do: nil
-  defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
-
-  defp parse_datetime(nil), do: nil
-
-  defp parse_datetime(json) do
-    {:ok, dt, _offset} = DateTime.from_iso8601(json)
-    dt
+  # information -> 1
+  # up to 10 minutes -> 3
+  # up to 15 minutes -> 4
+  # up to 20 minutes -> 5
+  # up to 25 minutes -> 6
+  # up to 30 minutes -> 7
+  # more than 30 minutes -> 8
+  # more than an hour -> 9
+  # High priority (deliver to T-Alert subscribers immediately) -> 10
+  def interpret_severity(severity) do
+    cond do
+      severity < 3 -> "up to 10 minutes"
+      severity > 9 -> "more than 60 minutes"
+      severity >= 8 -> "more than #{30 * (severity - 7)} minutes"
+      true -> "up to #{5 * (severity - 1)} minutes"
+    end
   end
 end

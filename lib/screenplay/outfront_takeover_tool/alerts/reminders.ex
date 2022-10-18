@@ -1,11 +1,11 @@
-defmodule Screenplay.Alerts.Reminders do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
   @moduledoc """
   Runs every minute and sends slack reminders to @pios in #ctd-pio-livepa if outdated alerts are still active.
   """
   require Logger
   use GenServer
 
-  alias Screenplay.Alerts.{Alert, State}
+  alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
 
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, %{})
