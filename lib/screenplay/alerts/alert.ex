@@ -4,8 +4,6 @@ defmodule Screenplay.Alerts.Alert do
   alias Screenplay.Alerts.Parser
   alias Screenplay.V3Api
 
-  @derive Jason.Encoder
-
   defstruct id: nil,
             cause: nil,
             effect: nil,
