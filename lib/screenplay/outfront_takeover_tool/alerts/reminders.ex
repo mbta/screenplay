@@ -22,7 +22,7 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
     schedule_work()
 
     if url == "" do
-      # Logger.info("No Slack Webhook URL found")
+      Logger.info("No Slack Webhook URL found")
     else
       case State.get_outdated_alerts() do
         [] ->
