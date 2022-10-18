@@ -27,6 +27,6 @@ config :screenplay,
   outfront_sftp_domain: System.get_env("OUTFRONT_SFTP_DOMAIN"),
   pio_slack_group_id: System.get_env("PIO_SLACK_USERGROUP_ID"),
   slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL"),
-  api_v3_key: System.get_env("API_V3_KEY"),
-  environment_name: System.get_env("ENVIRONMENT_NAME", "dev"),
-  sentry_frontend_dsn: System.get_env("SENTRY_DSN")
+  environment_name: System.get_env("ENVIRONMENT_NAME"),
+  sentry_frontend_dsn: System.get_env("SENTRY_DSN"),
+  api_v3_key: System.get_env("API_V3_KEY")

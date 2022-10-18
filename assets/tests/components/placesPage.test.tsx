@@ -1,8 +1,8 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import placesAndScreens from "../places_and_screens.test.json";
-import PlacesPage from "../../js/components/Dashboard/PlacesPage";
 import { Place } from "../../js/models/place";
+import PlacesPage from "../../js/components/Dashboard/PlacesPage";
 
 beforeAll(() => {
   const app = document.createElement("div");
