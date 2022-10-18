@@ -56,13 +56,15 @@ const PlacesActionBar: React.ComponentType<Props> = ({
             Screenless places
           </ActionBarButton>
         )}
-        {showResetFiltersButton && <ActionBarButton
-          onClick={onClickResetFilters}
-          IconComponent={XCircleFill}
-          testID="places-action-bar-reset-filters-button"
-        >
-          Reset filters
-        </ActionBarButton> }
+        {showResetFiltersButton && (
+          <ActionBarButton
+            onClick={onClickResetFilters}
+            IconComponent={XCircleFill}
+            testID="places-action-bar-reset-filters-button"
+          >
+            Reset filters
+          </ActionBarButton>
+        )}
       </span>
     </div>
   );

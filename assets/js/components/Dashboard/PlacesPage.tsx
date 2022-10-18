@@ -36,25 +36,29 @@ interface Props {
 }
 
 const PlacesPage: ComponentType<Props> = (props: Props) => (
-    <div
-      className={classNames("places-page", {
-        "places-page--hidden": !props.isVisible,
-      })}
-    >
-      <div className="page-content__header">Places</div>
-      <div className="page-content__body">
-        <PlacesList places={props.places} />
-      </div>
+  <div
+    className={classNames("places-page", {
+      "places-page--hidden": !props.isVisible,
+    })}
+  >
+    <div className="page-content__header">Places</div>
+    <div className="page-content__body">
+      <PlacesList places={props.places} />
     </div>
+  </div>
 );
 
 interface PlacesListProps {
-  places: Place[]
-  noModeFilter?: boolean
-  isAlertPlacesList?: boolean
+  places: Place[];
+  noModeFilter?: boolean;
+  isAlertPlacesList?: boolean;
 }
 
-const PlacesList: ComponentType<PlacesListProps> = ({places, noModeFilter, isAlertPlacesList}) => {
+const PlacesList: ComponentType<PlacesListProps> = ({
+  places,
+  noModeFilter,
+  isAlertPlacesList,
+}) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
@@ -222,12 +226,14 @@ const PlacesList: ComponentType<PlacesListProps> = ({places, noModeFilter, isAle
             </div>
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">
-            { !noModeFilter && <FilterDropdown
-              list={MODES_AND_LINES}
-              onSelect={(value: any) => handleSelectModeOrLine(value)}
-              selectedValue={modeLineFilterValue}
-              className="modes-and-lines"
-            /> }
+            {!noModeFilter && (
+              <FilterDropdown
+                list={MODES_AND_LINES}
+                onSelect={(value: any) => handleSelectModeOrLine(value)}
+                selectedValue={modeLineFilterValue}
+                className="modes-and-lines"
+              />
+            )}
           </Col>
           <Col lg={3} className="place-screen-types pe-3">
             <FilterDropdown
@@ -273,8 +279,8 @@ const PlacesList: ComponentType<PlacesListProps> = ({places, noModeFilter, isAle
         ))}
       </Accordion>
     </>
-  )
-}
+  );
+};
 
 export default PlacesPage;
 export { PlacesList };

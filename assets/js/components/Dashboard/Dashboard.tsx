@@ -51,6 +51,20 @@ const dummyScreensByAlertId: ScreensByAlert = {
   "2": ["PRE-105"],
   "3": ["MUL-101"],
   "4": ["PRE-112", "DUP-BackBay", "BUS-104"],
+  // Let's say we have an alert that affects the C and D branches
+  "11": [
+    "PRE-103",
+    "DUP-Kenmore",
+    "EIG-543",
+    "EIG-541",
+    "EIG-544",
+    "EIG-542",
+    "DUP-Haymarket",
+    "MUL-114",
+    "MUL-113",
+    "PRE-102",
+    "PRE-103",
+  ],
 };
 
 const dummyAlerts: Alert[] = [

@@ -1,7 +1,17 @@
-import React, { ComponentType, Dispatch, SetStateAction, useState } from "react";
+import React, {
+  ComponentType,
+  Dispatch,
+  SetStateAction,
+  useState,
+} from "react";
 import FilterDropdown from "./FilterDropdown";
 import { Button, Col, Container, Row } from "react-bootstrap";
-import { ArrowDown, ArrowLeft, ArrowUp, ArrowUpRight } from "react-bootstrap-icons";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  ArrowUpRight,
+} from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import {
   MODES_AND_LINES,
@@ -27,16 +37,20 @@ interface Props {
 }
 
 const AlertsPage: ComponentType<Props> = (props) => {
-  const {alerts, places, screensByAlertId, isVisible} = props
-  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(alerts[0])
+  const { alerts, places, screensByAlertId, isVisible } = props;
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
-  const placesWithSelectedAlert = selectedAlert ? places.filter(place =>
-      place.screens.some((screen: Screen) => screensByAlertId[selectedAlert.id].includes(screen.id))
-    ) : []
+  const placesWithSelectedAlert = selectedAlert
+    ? places.filter((place) =>
+        place.screens.some((screen: Screen) =>
+          screensByAlertId[selectedAlert.id].includes(screen.id)
+        )
+      )
+    : [];
 
-  const alertsWithPlaces = alerts.filter(alert => screensByAlertId[alert.id])
+  const alertsWithPlaces = alerts.filter((alert) => screensByAlertId[alert.id]);
 
-  const alertsUiUrl = document.getElementById("app")?.dataset.alertsUiUrl
+  const alertsUiUrl = document.getElementById("app")?.dataset.alertsUiUrl;
 
   return (
     <div
@@ -45,32 +59,48 @@ const AlertsPage: ComponentType<Props> = (props) => {
       })}
     >
       <div className="page-content__header">
-        { selectedAlert ?
+        {selectedAlert ? (
           <div>
-            <Button className="back-button" onClick={() => setSelectedAlert(null)}>
+            <Button
+              className="back-button"
+              onClick={() => setSelectedAlert(null)}
+            >
               <ArrowLeft /> Back
             </Button>
             Service Change #{selectedAlert.id}
-            <Button href={alertsUiUrl + `/edit/${selectedAlert.id}`} target="_blank" className="external-link">
+            <Button
+              href={alertsUiUrl + `/edit/${selectedAlert.id}`}
+              target="_blank"
+              className="external-link"
+            >
               Edit Alert <ArrowUpRight />
             </Button>
           </div>
-          : "Posted Alerts"
-        }
+        ) : (
+          "Posted Alerts"
+        )}
       </div>
       <div className="page-content__body">
-        { selectedAlert
-          ? <PlacesList places={placesWithSelectedAlert} noModeFilter isAlertPlacesList />
-          : <AlertsList {...props} alerts={alertsWithPlaces} selectAlert={setSelectedAlert}/>
-        }
-        
+        {selectedAlert ? (
+          <PlacesList
+            places={placesWithSelectedAlert}
+            noModeFilter
+            isAlertPlacesList
+          />
+        ) : (
+          <AlertsList
+            {...props}
+            alerts={alertsWithPlaces}
+            selectAlert={setSelectedAlert}
+          />
+        )}
       </div>
     </div>
   );
 };
 
 interface AlertsListProps extends Props {
-  selectAlert: Dispatch<SetStateAction<Alert | null>>
+  selectAlert: Dispatch<SetStateAction<Alert | null>>;
 }
 
 const AlertsList: ComponentType<AlertsListProps> = (props) => {
@@ -269,7 +299,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props) => {
           </div>
         ))}
     </>
-  )
-}
+  );
+};
 
 export default AlertsPage;
