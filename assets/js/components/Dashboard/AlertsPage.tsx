@@ -63,11 +63,12 @@ const AlertsPage: ComponentType<Props> = (props) => {
           <div>
             <Button
               className="back-button"
+              data-testid="places-list-back-button"
               onClick={() => setSelectedAlert(null)}
             >
               <ArrowLeft /> Back
             </Button>
-            Service Change #{selectedAlert.id}
+            <span>Service Change #{selectedAlert.id}</span>
             <Button
               href={alertsUiUrl + `/edit/${selectedAlert.id}`}
               target="_blank"

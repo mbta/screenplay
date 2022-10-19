@@ -20,7 +20,7 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   onClick: (eventKey: string) => void;
-  classes: string;
+  classes?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
 }

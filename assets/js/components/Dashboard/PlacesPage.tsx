@@ -262,7 +262,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
           onClickResetFilters={handleClickResetFilters}
           onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
           // Only show reset filters if NOT isAlertPlacesList, OR if isAlertPlacesList and isFiltered
-          showResetFiltersButton={!isAlertPlacesList || isFiltered}
+          hideResetFiltersButton={isAlertPlacesList && !isFiltered}
         />
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>

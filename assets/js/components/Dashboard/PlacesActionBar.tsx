@@ -14,7 +14,7 @@ interface Props {
   showScreenlessPlaces: boolean;
   onClickResetFilters: () => void;
   onClickToggleScreenlessPlaces: () => void;
-  showResetFiltersButton: boolean;
+  hideResetFiltersButton?: boolean;
 }
 
 const getPlaceCount = (places: Place[]) => {
@@ -38,7 +38,7 @@ const PlacesActionBar: React.ComponentType<Props> = ({
   hasScreenlessPlaces,
   showScreenlessPlaces,
   onClickToggleScreenlessPlaces,
-  showResetFiltersButton,
+  hideResetFiltersButton,
 }: Props) => {
   return (
     <div className="places-action-bar" data-testid="places-action-bar">
@@ -56,7 +56,7 @@ const PlacesActionBar: React.ComponentType<Props> = ({
             Screenless places
           </ActionBarButton>
         )}
-        {showResetFiltersButton && (
+        {!hideResetFiltersButton && (
           <ActionBarButton
             onClick={onClickResetFilters}
             IconComponent={XCircleFill}
