@@ -77,7 +77,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
               <img
                 className="alert-card__alert-details__pill"
                 key={`${alert.id}-${icon}`}
-                src={`/images/pills/${icon.toLowerCase()}.png`}
+                src={`/images/pills/${icon.toLowerCase()}.svg`}
                 alt={icon}
               />
             ))}
