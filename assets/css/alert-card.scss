@@ -8,7 +8,16 @@
     background: rgba(255, 255, 255, 0.8);
     padding: 16px;
 
+    &__pill-container {
+      display: flex;
+      flex-direction: column;
+    }
+
     &__pill {
+      &:not(:first-child) {
+        margin-top: 8px;
+      }
+
       width: 38px;
       height: 20px;
     }

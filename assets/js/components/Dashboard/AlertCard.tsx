@@ -71,7 +71,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
     <div className="alert-card" data-testid={alert.id}>
       <Container fluid className="alert-card__alert-details">
         <Row>
-          <Col lg="auto">
+          <Col lg="auto" className="alert-card__alert-details__pill-container">
             {alert.affected_list.map((icon: string) => (
               <img
                 className="alert-card__alert-details__pill"
