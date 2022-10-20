@@ -14,8 +14,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   const formatEffect = (effect: string) => {
     return effect
       .toLowerCase()
-      .replace("_", " ")
-      .split(" ")
+      .split("_")
       .map((str: string) => str[0].toUpperCase() + str.substring(1))
       .join(" ");
   };
