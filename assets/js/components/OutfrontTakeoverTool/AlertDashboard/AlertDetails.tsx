@@ -65,7 +65,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   );
 
   return (
-    <div className="alert-card">
+    <div className="oft-alert-card">
       <div className="alert-preview">
         {message.id === undefined ? (
           <SVGPreviews showText={true} message={messageString} />
