@@ -497,9 +497,7 @@
   {
     "id": "1722",
     "name": "1624 Blue Hill Ave @ Mattapan Sq",
-    "routes": [
-      "Bus"
-    ],
+    "routes": ["Bus"],
     "screens": [
       {
         "disabled": false,
@@ -511,9 +509,7 @@
   {
     "id": "place-bland",
     "name": "Blandford Street",
-    "routes": [
-      "Green-B"
-    ],
+    "routes": ["Green-B"],
     "screens": [
       {
         "disabled": true,
@@ -540,11 +536,7 @@
   {
     "id": "place-asmnl",
     "name": "Ashmont",
-    "routes": [
-      "Bus",
-      "Mattapan",
-      "Red"
-    ],
+    "routes": ["Bus", "Mattapan", "Red"],
     "screens": [
       {
         "disabled": false,

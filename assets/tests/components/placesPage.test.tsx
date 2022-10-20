@@ -94,7 +94,9 @@ describe("Places Page", () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Blue Line" }));
         await waitFor(() => {
-          expect(getAllByTestId("place-row")[0].className).toContain("filtered");
+          expect(getAllByTestId("place-row")[0].className).toContain(
+            "filtered"
+          );
         });
       });
     });
@@ -112,7 +114,7 @@ describe("Places Page", () => {
           expect(getByText("ALEWIFE")).toBeInTheDocument();
         });
       });
-    })
+    });
   });
 
   describe("sorting", () => {
@@ -200,7 +202,13 @@ describe("Places Page", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["ALEWIFE", "Davis", "Porter", "Park Street", "ASHMONT"]);
+          ).toStrictEqual([
+            "ALEWIFE",
+            "Davis",
+            "Porter",
+            "Park Street",
+            "ASHMONT",
+          ]);
         });
 
         fireEvent.click(getByTestId("sort-label"));
@@ -209,7 +217,13 @@ describe("Places Page", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["ASHMONT", "Park Street", "Porter", "Davis", "ALEWIFE"]);
+          ).toStrictEqual([
+            "ASHMONT",
+            "Park Street",
+            "Porter",
+            "Davis",
+            "ALEWIFE",
+          ]);
         });
       });
     });

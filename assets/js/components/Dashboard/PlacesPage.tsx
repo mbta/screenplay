@@ -58,7 +58,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   places,
   noModeFilter,
   isAlertPlacesList,
-}) => {
+}: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState(

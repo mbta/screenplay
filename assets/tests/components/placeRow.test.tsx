@@ -82,5 +82,4 @@ describe("PlaceRow", () => {
     expect(queryByAltText("Green-B")).toBeNull();
     expect(queryByAltText("Green-C")).toBeNull();
   });
-
 });

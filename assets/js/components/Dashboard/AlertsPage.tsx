@@ -36,7 +36,7 @@ interface Props {
   isVisible: boolean;
 }
 
-const AlertsPage: ComponentType<Props> = (props) => {
+const AlertsPage: ComponentType<Props> = (props: Props) => {
   const { alerts, places, screensByAlertId, isVisible } = props;
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
@@ -104,7 +104,7 @@ interface AlertsListProps extends Props {
   selectAlert: Dispatch<SetStateAction<Alert | null>>;
 }
 
-const AlertsList: ComponentType<AlertsListProps> = (props) => {
+const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]

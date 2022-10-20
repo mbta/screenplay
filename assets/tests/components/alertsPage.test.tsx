@@ -30,7 +30,7 @@ describe("Alerts Page", () => {
       // First, verify expired alerts are not visible
       // It's possible this filtering will get done in Christian's branch; check
       // expect(queryByTestId("9")).not.toBeInTheDocument();
-      
+
       // Verify alerts not present on a screen are not visible
       expect(queryByTestId("5")).not.toBeInTheDocument();
 
