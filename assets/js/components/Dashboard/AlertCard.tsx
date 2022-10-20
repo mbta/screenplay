@@ -21,7 +21,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
 
   const renderEffect = (effect: string, severity: string) => {
     const formattedEffect = formatEffect(effect);
-    if (effect === "Delay") {
+    if (formattedEffect === "Delay") {
       return `${formattedEffect}—${severity}`;
     }
 
