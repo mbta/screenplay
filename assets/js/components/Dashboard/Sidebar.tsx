@@ -13,7 +13,7 @@ const Sidebar: ComponentType = () => {
   // @ts-ignore Suppressing "object could be null" warning
   const username = document.getElementById("app").dataset.username;
 
-  return pathname.includes("dashboard") ? (
+  return !pathname.includes("emergency-takeover") ? (
     <div className="sidebar-container">
       {/*
         We use a regular web link for this rather than a React-Router Link,
@@ -31,10 +31,8 @@ const Sidebar: ComponentType = () => {
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link className="sidebar-link" to="/dashboard/alerts">
-          <Button
-            className={pathname === "/dashboard/alerts" ? "selected" : ""}
-          >
+        <Link className="sidebar-link" to="/alerts">
+          <Button className={pathname === "/alerts" ? "selected" : ""}>
             <ExclamationTriangleFill size={20} />
             <span className="nav-link__name">Posted Alerts</span>
           </Button>

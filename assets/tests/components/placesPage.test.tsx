@@ -11,11 +11,26 @@ beforeAll(() => {
   document.body.appendChild(app);
 });
 
-describe("Places Page", () => {
+describe("PlacesPage", () => {
+  let originalFetch: any;
+
+  beforeEach(() => {
+    originalFetch = global.fetch;
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(placesAndScreens),
+      })
+    ) as jest.Mock;
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
   describe("filtering", () => {
     test("filters places by screen type", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -51,7 +66,7 @@ describe("Places Page", () => {
 
     test("filters places by mode and route", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -89,7 +104,7 @@ describe("Places Page", () => {
   describe("sorting", () => {
     test("sort label changes depending on filter selected", async () => {
       const { getByTestId, getByRole, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -120,7 +135,7 @@ describe("Places Page", () => {
 
     test("sort label changes when clicked", async () => {
       const { getByTestId, getByRole, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -160,7 +175,7 @@ describe("Places Page", () => {
 
     test("sort order changes for RL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -187,7 +202,7 @@ describe("Places Page", () => {
 
     test("sort order changes for OL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -226,7 +241,7 @@ describe("Places Page", () => {
 
     test("sort order changes for GL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {
@@ -271,7 +286,7 @@ describe("Places Page", () => {
 
     test("sort order changes for BL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <PlacesPage places={placesAndScreens as Place[]} isVisible />
       );
 
       await act(async () => {

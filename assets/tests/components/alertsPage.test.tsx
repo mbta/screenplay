@@ -1,6 +1,5 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import { Alert } from "../../js/models/alert";
 import { Place } from "../../js/models/place";
 import { ScreensByAlert } from "../../js/models/screensByAlert";
 import alerts from "../alerts.test.json";
@@ -16,12 +15,26 @@ beforeAll(() => {
 });
 
 describe("Alerts Page", () => {
+  let originalFetch: any;
+
+  beforeEach(() => {
+    originalFetch = global.fetch;
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve(alerts),
+      })
+    ) as jest.Mock;
+  });
+
+  afterEach(() => {
+    global.fetch = originalFetch;
+  });
+
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
       const { getByRole, findByRole, getByTestId } = render(
         <AlertsPage
           places={placesAndScreens as Place[]}
-          alerts={alerts as Alert[]}
           screensByAlertId={alertsOnScreens as ScreensByAlert}
           isVisible={true}
         />
@@ -60,7 +73,6 @@ describe("Alerts Page", () => {
         <AlertsPage
           places={placesAndScreens as Place[]}
           screensByAlertId={alertsOnScreens as ScreensByAlert}
-          alerts={alerts as Alert[]}
           isVisible={true}
         />
       );

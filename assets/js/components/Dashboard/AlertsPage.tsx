@@ -1,4 +1,4 @@
-import React, { ComponentType, useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import FilterDropdown from "./FilterDropdown";
 import { Col, Container, Row } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
@@ -15,17 +15,28 @@ import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import classNames from "classnames";
+import AlertCard from "./AlertCard";
 
 type DirectionID = 0 | 1;
 
 interface Props {
-  alerts: Alert[];
   places: Place[];
   screensByAlertId: ScreensByAlert;
   isVisible: boolean;
 }
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  useEffect(() => {
+    if (!props.isVisible) return;
+
+    fetch("/api/alerts")
+      .then((response) => response.json())
+      .then((alertsList: []) => {
+        setAlerts(alertsList);
+      });
+  }, [props.isVisible]);
+
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
@@ -38,6 +49,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   );
 
   const alertSortLabel = SORT_LABELS["Alerts"][alertSortDirection];
+
   const sortLabelOnClick = () => {
     setAlertSortDirection((1 - alertSortDirection) as DirectionID);
   };
@@ -64,7 +76,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   };
 
   const filterAlerts = () => {
-    let filteredAlerts = props.alerts;
+    let filteredAlerts = alerts;
     if (alertScreenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredAlerts = filterAlertsByScreenType(
         filteredAlerts,
@@ -86,7 +98,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     { label, ids }: { label: string; ids: string[] }
   ) => {
     return alerts.filter((alert) => {
-      return alert.attributes.informed_entity.some((informedEntity) => {
+      return alert.informed_entities.some((informedEntity) => {
         switch (label) {
           case "Commuter Rail":
             return informedEntity.route_type === 2;
@@ -137,8 +149,8 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   };
 
   const compareAlerts = (
-    { attributes: { active_period: active_period_1 } }: Alert,
-    { attributes: { active_period: active_period_2 } }: Alert
+    { active_period: active_period_1 }: Alert,
+    { active_period: active_period_2 }: Alert
   ) => {
     // Get the soonest start time
     const { start: start1 } = active_period_1[0];
@@ -210,20 +222,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
             alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
           )
           .map((alert: Alert) => (
-            <div
-              key={alert.id}
-              style={{ color: "white" }}
-              data-testid={alert.id}
-            >
-              id: {alert.id} {"End: "}
-              {
-                alert.attributes.active_period[
-                  alert.attributes.active_period.length - 1
-                ].end
-              }{" "}
-              {"Start: "}
-              {alert.attributes.active_period[0].start}
-            </div>
+            <AlertCard key={alert.id} alert={alert} />
           ))}
       </div>
     </div>
