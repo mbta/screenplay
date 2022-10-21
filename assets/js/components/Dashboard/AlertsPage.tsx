@@ -39,7 +39,7 @@ interface Props {
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
   const { places, screensByAlertId, isVisible } = props;
-  
+
   const [alerts, setAlerts] = useState<Alert[]>([]);
   useEffect(() => {
     if (!props.isVisible) return;
@@ -50,7 +50,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
         setAlerts(alertsList);
       });
   }, [props.isVisible]);
-  
+
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
   const placesWithSelectedAlert = selectedAlert
@@ -97,7 +97,11 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
       <div className="page-content__body">
         {selectedAlert ? (
           <>
-            <AlertCard key={selectedAlert.id} alert={selectedAlert} classNames="selected-alert"/>
+            <AlertCard
+              key={selectedAlert.id}
+              alert={selectedAlert}
+              classNames="selected-alert"
+            />
             <PlacesList
               places={placesWithSelectedAlert}
               noModeFilter
@@ -121,7 +125,12 @@ interface AlertsListProps extends Props {
   selectAlert: Dispatch<SetStateAction<Alert | null>>;
 }
 
-const AlertsList: ComponentType<AlertsListProps> = ({alerts, selectAlert, places, screensByAlertId}: AlertsListProps) => {
+const AlertsList: ComponentType<AlertsListProps> = ({
+  alerts,
+  selectAlert,
+  places,
+  screensByAlertId,
+}: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
@@ -301,7 +310,11 @@ const AlertsList: ComponentType<AlertsListProps> = ({alerts, selectAlert, places
           alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
         )
         .map((alert: Alert) => (
-          <AlertCard key={alert.id} alert={alert} selectAlert={() => selectAlert(alert)}/>
+          <AlertCard
+            key={alert.id}
+            alert={alert}
+            selectAlert={() => selectAlert(alert)}
+          />
         ))}
     </>
   );

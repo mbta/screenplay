@@ -71,7 +71,11 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   };
 
   return (
-    <div className={classNames("alert-card", { selected: !props.selectAlert })} data-testid={alert.id} onClick={props.selectAlert ? props.selectAlert : undefined}>
+    <div
+      className={classNames("alert-card", { selected: !props.selectAlert })}
+      data-testid={alert.id}
+      onClick={props.selectAlert ? props.selectAlert : undefined}
+    >
       <Container fluid className="alert-card__alert-details">
         <div className="alert-card__alert-details__pill-container">
           {alert.affected_list.map((icon: string) => (
@@ -95,10 +99,12 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
           {renderActivePeriod(alert.active_period)}
         </div>
       </Container>
-      {props.selectAlert ?
+      {props.selectAlert ? (
         <div className="alert-card__place-details">
           <div>
-            <div className="alert-card__place-details__alert-id">ID {alert.id}</div>
+            <div className="alert-card__place-details__alert-id">
+              ID {alert.id}
+            </div>
             <div className="alert-card__place-details__place-count">
               <span className="alert-card__place-details__place-count__number">
                 XX
@@ -117,7 +123,8 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
             </div>
           </div>
           <ChevronRight className="alert-card__place-details__icon" />
-        </div> : null }
+        </div>
+      ) : null}
     </div>
   );
 };
