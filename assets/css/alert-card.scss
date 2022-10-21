@@ -7,8 +7,15 @@
   &__alert-details {
     background: rgba(255, 255, 255, 0.8);
     padding: 16px;
+    display: flex;
+
+    &__main-body {
+      margin: 0 auto 0 16px;
+      padding-right: 24px;
+    }
 
     &__pill-container {
+      min-width: 38px;
       display: flex;
       flex-direction: column;
     }
@@ -40,6 +47,7 @@
     }
 
     &__active-period {
+      white-space: nowrap;
       margin-top: 36px;
       text-align: right;
       &-start,
@@ -63,6 +71,7 @@
     color: #ffffff;
     min-width: 228px;
     padding: 16px;
+    display: flex;
 
     &__alert-id {
       font-family: Inter, sans-serif;
@@ -97,9 +106,7 @@
     }
 
     &__icon {
-      position: absolute;
-      top: 50%;
-      right: 16px;
+      margin: auto 0 auto auto;
     }
   }
 }
