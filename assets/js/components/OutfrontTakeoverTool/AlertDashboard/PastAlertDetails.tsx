@@ -27,7 +27,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   const messageString = getMessageString(message);
 
   return (
-    <div className="oft-alert-card">
+    <div className="alert-card">
       <div className="alert-details past-alert">
         <div className="alert-header compact">
           <StackedStationCards
