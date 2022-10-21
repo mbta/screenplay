@@ -30,7 +30,7 @@ interface PlaceRowProps {
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
 const PlaceRow = (props: PlaceRowProps): JSX.Element => {
-  const { routes, name, screens } = props.place;
+  const { routes, name, description, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey, () =>
     props.onClick(props.eventKey)
@@ -159,9 +159,9 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     return <MapSegment station={station} line={line} />;
   };
 
-  // Function to capitalize terminal stops according to STATION_ORDER_BY_LINE
-  const formatStationName = (stationName: string) => {
+  const capitalizeTerminalStops = (stationName: string) => {
     let isTerminalStop = false;
+
     // If a filter is present, only look at stations for that filter.
     // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
     if (props.filteredLine) {
@@ -182,6 +182,15 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     }
 
     return isTerminalStop ? stationName.toUpperCase() : stationName;
+  };
+
+  // Function to add optional description and capitalize terminal stops according to STATION_ORDER_BY_LINE
+  const formatStationName = (stationName: string, description?: string) => {
+    if (description) {
+      stationName = `${stationName} ${description}`;
+    }
+
+    return capitalizeTerminalStops(stationName);
   };
 
   return (
@@ -222,7 +231,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
               </div>
             )}
             <div className="place-row__name" data-testid="place-name">
-              {formatStationName(name)}
+              {formatStationName(name, description)}
             </div>
           </Col>
           <Col lg={1} className="d-flex justify-content-end">

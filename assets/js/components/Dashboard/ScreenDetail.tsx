@@ -63,7 +63,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
     const { environmentName } = document.getElementById("app").dataset;
-    const queryParams = "source=screenplay";
+    const queryParams = "requestor=screenplay";
 
     let baseUrl;
     if (environmentName === "dev") {

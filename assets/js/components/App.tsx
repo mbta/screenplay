@@ -27,10 +27,7 @@ class AppRoutes extends React.Component {
             path="/dashboard"
             element={<Dashboard page="places" />}
           ></Route>
-          <Route
-            path="/dashboard/alerts"
-            element={<Dashboard page="alerts" />}
-          ></Route>
+          <Route path="/alerts" element={<Dashboard page="alerts" />}></Route>
         </Routes>
       </React.Suspense>
     );

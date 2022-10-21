@@ -2,6 +2,7 @@ import React, {
   ComponentType,
   Dispatch,
   SetStateAction,
+  useEffect,
   useState,
 } from "react";
 import FilterDropdown from "./FilterDropdown";
@@ -26,18 +27,30 @@ import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import { PlacesList } from "./PlacesPage";
 import classNames from "classnames";
+import AlertCard from "./AlertCard";
 
 type DirectionID = 0 | 1;
 
 interface Props {
-  alerts: Alert[];
   places: Place[];
   screensByAlertId: ScreensByAlert;
   isVisible: boolean;
 }
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
-  const { alerts, places, screensByAlertId, isVisible } = props;
+  const { places, screensByAlertId, isVisible } = props;
+  
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  useEffect(() => {
+    if (!props.isVisible) return;
+
+    fetch("/api/alerts")
+      .then((response) => response.json())
+      .then((alertsList: []) => {
+        setAlerts(alertsList);
+      });
+  }, [props.isVisible]);
+  
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
   const placesWithSelectedAlert = selectedAlert
@@ -101,10 +114,11 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
 };
 
 interface AlertsListProps extends Props {
+  alerts: Alert[];
   selectAlert: Dispatch<SetStateAction<Alert | null>>;
 }
 
-const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
+const AlertsList: ComponentType<AlertsListProps> = ({alerts, selectAlert, places, screensByAlertId}: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
@@ -117,6 +131,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   );
 
   const alertSortLabel = SORT_LABELS["Alerts"][alertSortDirection];
+
   const sortLabelOnClick = () => {
     setAlertSortDirection((1 - alertSortDirection) as DirectionID);
   };
@@ -143,7 +158,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   };
 
   const filterAlerts = () => {
-    let filteredAlerts = props.alerts;
+    let filteredAlerts = alerts;
     if (alertScreenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredAlerts = filterAlertsByScreenType(
         filteredAlerts,
@@ -165,7 +180,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
     { label, ids }: { label: string; ids: string[] }
   ) => {
     return alerts.filter((alert) => {
-      return alert.attributes.informed_entity.some((informedEntity) => {
+      return alert.informed_entities.some((informedEntity) => {
         switch (label) {
           case "Commuter Rail":
             return informedEntity.route_type === 2;
@@ -188,7 +203,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   // Get a mapping of screen ids => screen metadata (namely 'type') to use in filterAlertsByScreenType()
   const getScreenMetaDataById = () => {
     const screenMetaData: { [id: string]: Screen } = {};
-    props.places.forEach((place) => {
+    places.forEach((place) => {
       place.screens.forEach((screenData) => {
         screenMetaData[screenData.id] = screenData;
       });
@@ -205,7 +220,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
     return alerts.filter((alert) => {
       // Get this alert's list of affected screens.
       // Later should be replaced with a call to memcached?
-      const screensWithAlert = props.screensByAlertId[alert.id];
+      const screensWithAlert = screensByAlertId[alert.id];
 
       return screensWithAlert
         ? screensWithAlert.find((screen_id) =>
@@ -216,8 +231,8 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   };
 
   const compareAlerts = (
-    { attributes: { active_period: active_period_1 } }: Alert,
-    { attributes: { active_period: active_period_2 } }: Alert
+    { active_period: active_period_1 }: Alert,
+    { active_period: active_period_2 }: Alert
   ) => {
     // Get the soonest start time
     const { start: start1 } = active_period_1[0];
@@ -283,21 +298,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
           alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
         )
         .map((alert: Alert) => (
-          <div
-            onClick={() => props.selectAlert(alert)}
-            key={alert.id}
-            style={{ color: "white" }}
-            data-testid={alert.id}
-          >
-            id: {alert.id} {"End: "}
-            {
-              alert.attributes.active_period[
-                alert.attributes.active_period.length - 1
-              ].end
-            }{" "}
-            {"Start: "}
-            {alert.attributes.active_period[0].start}
-          </div>
+          <AlertCard key={alert.id} alert={alert} selectAlert={() => selectAlert(alert)}/>
         ))}
     </>
   );
