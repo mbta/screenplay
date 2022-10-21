@@ -272,7 +272,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
             place={place}
             eventKey={place.id}
             onClick={handleClickAccordion}
-            classes={isFiltered || isAlertPlacesList ? "filtered" : ""}
+            classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
             filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
             defaultSort={sortDirection === 0}
           />

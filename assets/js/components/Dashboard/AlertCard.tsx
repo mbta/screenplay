@@ -1,12 +1,14 @@
 import moment from "moment";
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 import { ActivePeriod, Alert } from "../../models/alert";
+import classNames from "classnames";
 
 interface AlertCardProps {
   alert: Alert;
-  selectAlert: () => void;
+  selectAlert?: () => void;
+  classNames?: string;
 }
 
 const AlertCard = (props: AlertCardProps): JSX.Element => {
@@ -69,7 +71,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   };
 
   return (
-    <div className="alert-card" data-testid={alert.id} onClick={props.selectAlert}>
+    <div className={classNames("alert-card", { selected: !props.selectAlert })} data-testid={alert.id} onClick={props.selectAlert ? props.selectAlert : undefined}>
       <Container fluid className="alert-card__alert-details">
         <div className="alert-card__alert-details__pill-container">
           {alert.affected_list.map((icon: string) => (
@@ -93,28 +95,29 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
           {renderActivePeriod(alert.active_period)}
         </div>
       </Container>
-      <div className="alert-card__place-details">
-        <div>
-          <div className="alert-card__place-details__alert-id">ID {alert.id}</div>
-          <div className="alert-card__place-details__place-count">
-            <span className="alert-card__place-details__place-count__number">
-              XX
-            </span>{" "}
-            <span className="alert-card__place-details__place-count__text">
-              places
-            </span>
+      {props.selectAlert ?
+        <div className="alert-card__place-details">
+          <div>
+            <div className="alert-card__place-details__alert-id">ID {alert.id}</div>
+            <div className="alert-card__place-details__place-count">
+              <span className="alert-card__place-details__place-count__number">
+                XX
+              </span>{" "}
+              <span className="alert-card__place-details__place-count__text">
+                places
+              </span>
+            </div>
+            <div className="alert-card__place-details__screen-count">
+              <span className="alert-card__place-details__screen-count__number">
+                XX
+              </span>{" "}
+              <span className="alert-card__place-details__screen-count__text">
+                screens
+              </span>
+            </div>
           </div>
-          <div className="alert-card__place-details__screen-count">
-            <span className="alert-card__place-details__screen-count__number">
-              XX
-            </span>{" "}
-            <span className="alert-card__place-details__screen-count__text">
-              screens
-            </span>
-          </div>
-        </div>
-        <ChevronRight className="alert-card__place-details__icon" />
-      </div>
+          <ChevronRight className="alert-card__place-details__icon" />
+        </div> : null }
     </div>
   );
 };

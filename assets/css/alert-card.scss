@@ -3,6 +3,12 @@
   display: flex;
   border-radius: 8px;
   margin-top: 8px;
+  cursor: pointer;
+
+  &.selected {
+    cursor: auto;
+    margin-bottom: 24px;
+  }
 
   &__alert-details {
     background: rgba(255, 255, 255, 0.8);
@@ -48,7 +54,7 @@
 
     &__active-period {
       white-space: nowrap;
-      margin-top: 36px;
+      align-self: center;
       text-align: right;
       &-start,
       &-end {

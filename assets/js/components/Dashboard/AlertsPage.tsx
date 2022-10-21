@@ -96,11 +96,14 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
       </div>
       <div className="page-content__body">
         {selectedAlert ? (
-          <PlacesList
-            places={placesWithSelectedAlert}
-            noModeFilter
-            isAlertPlacesList
-          />
+          <>
+            <AlertCard key={selectedAlert.id} alert={selectedAlert} classNames="selected-alert"/>
+            <PlacesList
+              places={placesWithSelectedAlert}
+              noModeFilter
+              isAlertPlacesList
+            />
+          </>
         ) : (
           <AlertsList
             {...props}

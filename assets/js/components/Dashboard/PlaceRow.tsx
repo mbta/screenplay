@@ -20,7 +20,7 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   onClick: (eventKey: string) => void;
-  classes?: string;
+  classNames?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
 }
@@ -196,7 +196,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   return (
     <div
       key={props.eventKey}
-      className={classNames("place-row", props.classes, {
+      className={classNames("place-row", props.classNames, {
         open: isOpen,
         disabled: !hasScreens,
       })}
