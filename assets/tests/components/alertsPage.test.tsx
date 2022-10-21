@@ -85,7 +85,6 @@ describe("Alerts Page", () => {
       const { getByRole, findByRole, getByTestId, queryAllByTestId } = render(
         <AlertsPage
           places={placesAndScreens as Place[]}
-          alerts={alerts as Alert[]}
           screensByAlertId={alertsOnScreens as ScreensByAlert}
           isVisible={true}
         />
@@ -144,7 +143,6 @@ describe("Alerts Page", () => {
         <AlertsPage
           places={placesAndScreens as Place[]}
           screensByAlertId={alertsOnScreens as ScreensByAlert}
-          alerts={alerts as Alert[]}
           isVisible={true}
         />
       );
