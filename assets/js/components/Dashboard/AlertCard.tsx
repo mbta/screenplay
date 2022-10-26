@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 import { ActivePeriod, Alert } from "../../models/alert";
 import classNames from "classnames";
+import { formatEffect } from "../../util";
 
 interface AlertCardProps {
   alert: Alert;
@@ -13,14 +14,6 @@ interface AlertCardProps {
 
 const AlertCard = (props: AlertCardProps): JSX.Element => {
   const { alert } = props;
-
-  const formatEffect = (effect: string) => {
-    return effect
-      .toLowerCase()
-      .split("_")
-      .map((str: string) => str[0].toUpperCase() + str.substring(1))
-      .join(" ");
-  };
 
   const renderEffect = (effect: string, severity: string) => {
     const formattedEffect = formatEffect(effect);

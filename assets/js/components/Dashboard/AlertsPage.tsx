@@ -28,6 +28,7 @@ import { ScreensByAlert } from "../../models/screensByAlert";
 import { PlacesList } from "./PlacesPage";
 import classNames from "classnames";
 import AlertCard from "./AlertCard";
+import { formatEffect } from "../../util";
 
 type DirectionID = 0 | 1;
 
@@ -81,7 +82,9 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
             >
               <ArrowLeft /> Back
             </Button>
-            <span>Service Change #{selectedAlert.id}</span>
+            <span>
+              {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
+            </span>
             <Button
               href={alertsUiUrl + `/edit/${selectedAlert.id}`}
               target="_blank"
@@ -267,10 +270,10 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   return (
     <>
       <Container fluid>
-        <Row className="place-list__header-row">
+        <Row className="filterable-list__header-row">
           <Col lg={3}>
             <div
-              className="place-list__sort-label d-flex align-items-center"
+              className="filterable-list__sort-label d-flex align-items-center"
               onClick={sortLabelOnClick}
               data-testid="sort-label"
             >

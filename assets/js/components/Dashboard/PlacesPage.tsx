@@ -215,10 +215,10 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   return (
     <>
       <Container fluid>
-        <Row className="place-list__header-row">
+        <Row className="filterable-list__header-row">
           <Col lg={3}>
             <div
-              className="place-list__sort-label d-flex align-items-center"
+              className="filterable-list__sort-label d-flex align-items-center"
               onClick={handleClickSortLabel}
               data-testid="sort-label"
             >
