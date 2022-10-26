@@ -40,12 +40,13 @@ describe("Alerts Page", () => {
         />
       );
 
-      // First, verify expired alerts are not visible
-      // It's possible this filtering will get done in Christian's branch; check
-      // expect(queryByTestId("9")).not.toBeInTheDocument();
-
-      // Verify alerts not present on a screen are not visible
-      expect(queryByTestId("5")).not.toBeInTheDocument();
+      await act(async () => {
+        await waitFor(() => {
+          expect(queryByTestId("1")).toBeInTheDocument();
+          // Verify alerts not present on a screen are not visible
+          expect(queryByTestId("5")).not.toBeInTheDocument();
+        });
+      });
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -139,7 +140,7 @@ describe("Alerts Page", () => {
 
   describe("Alert Places List", () => {
     test("navigating to / from the places list for an alert", async () => {
-      const { getByText, getByTestId, queryByText } = render(
+      const { getByTestId, getByText, queryByTestId, queryByText } = render(
         <AlertsPage
           places={placesAndScreens as Place[]}
           screensByAlertId={alertsOnScreens as ScreensByAlert}
@@ -148,13 +149,12 @@ describe("Alerts Page", () => {
       );
 
       await act(async () => {
-        fireEvent.click(getByTestId("10"));
         await waitFor(() => {
-          expect(getByText(/service change/i)).toBeInTheDocument();
-        });
-        fireEvent.click(getByTestId("places-list-back-button"));
-        await waitFor(() => {
-          expect(queryByText(/service change/i)).not.toBeInTheDocument();
+          expect(queryByTestId("10")).toBeInTheDocument();
+          fireEvent.click(getByTestId("10"));
+          expect(getByText(/delay #10/i)).toBeInTheDocument();
+          fireEvent.click(getByTestId("places-list-back-button"));
+          expect(queryByText(/delay #10/i)).not.toBeInTheDocument();
         });
       });
     });
