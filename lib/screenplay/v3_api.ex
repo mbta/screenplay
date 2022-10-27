@@ -66,22 +66,11 @@ defmodule Screenplay.V3Api do
   end
 
   defp build_url(route, params) do
-    "#{base_url()}#{route}?#{URI.encode_query(params)}"
+    "#{base_url()}/#{route}?#{URI.encode_query(params)}"
   end
 
   defp base_url do
-    :screenplay
-    |> Application.get_env(:environment_name)
-    |> base_url_for_environment()
-  end
-
-  defp base_url_for_environment(environment_name) do
-    case environment_name do
-      "prod" -> "https://api-v3.mbta.com/"
-      "dev" -> "https://api-dev.mbtace.com/"
-      "dev-green" -> "https://api-dev-green.mbtace.com/"
-      _ -> Application.get_env(:screenplay, :default_api_v3_url)
-    end
+    Application.get_env(:screenplay, :api_v3_url)
   end
 
   defp api_key_headers(nil), do: []
