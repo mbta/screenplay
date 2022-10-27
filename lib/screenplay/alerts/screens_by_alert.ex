@@ -1,4 +1,7 @@
 defmodule Screenplay.Alerts.ScreensByAlert do
+  @moduledoc """
+  Module used to get ScreensByAlert data from the Screens app.
+  """
   require Logger
 
   def get_screens_by_alert(alert_ids) do
