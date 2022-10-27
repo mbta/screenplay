@@ -178,6 +178,22 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     return Date.parse(end1) - Date.parse(end2);
   };
 
+  const getNumberOfAffectedPlaces = (screensByAlert: string[]) => {
+    // Using a Set so we don't have to worry about counting a place more than once.
+    const placesCounted = new Set();
+
+    props.places.forEach((place) => {
+      if (
+        place.screens.filter((screen) => screensByAlert.includes(screen.id))
+          .length > 0
+      ) {
+        placesCounted.add(place.id);
+      }
+    });
+
+    return placesCounted.size;
+  };
+
   return (
     <div
       className={classNames("alerts-page", {
@@ -229,9 +245,25 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
           .sort((a: Alert, b: Alert) =>
             alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
           )
-          .map((alert: Alert) => (
-            <AlertCard key={alert.id} alert={alert} />
-          ))}
+          .map((alert: Alert) => {
+            const screensByAlert = screensByAlertMap[alert.id];
+            let numPlaces = 0;
+            let numScreens = 0;
+
+            if (screensByAlert) {
+              numScreens = screensByAlert.length;
+              numPlaces = getNumberOfAffectedPlaces(screensByAlert);
+            }
+
+            return (
+              <AlertCard
+                key={alert.id}
+                alert={alert}
+                numberOfScreens={numScreens}
+                numberOfPlaces={numPlaces}
+              />
+            );
+          })}
       </div>
     </div>
   );
