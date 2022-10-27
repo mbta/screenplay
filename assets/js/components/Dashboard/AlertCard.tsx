@@ -6,10 +6,12 @@ import { ActivePeriod, Alert } from "../../models/alert";
 
 interface AlertCardProps {
   alert: Alert;
+  numberOfScreens: number;
+  numberOfPlaces: number;
 }
 
 const AlertCard = (props: AlertCardProps): JSX.Element => {
-  const { alert } = props;
+  const { alert, numberOfPlaces, numberOfScreens } = props;
 
   const formatEffect = (effect: string) => {
     return effect
@@ -100,7 +102,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
         <div className="alert-card__place-details__alert-id">ID {alert.id}</div>
         <div className="alert-card__place-details__place-count">
           <span className="alert-card__place-details__place-count__number">
-            XX
+            {numberOfPlaces}
           </span>{" "}
           <span className="alert-card__place-details__place-count__text">
             places
@@ -108,7 +110,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
         </div>
         <div className="alert-card__place-details__screen-count">
           <span className="alert-card__place-details__screen-count__number">
-            XX
+            {numberOfScreens}
           </span>{" "}
           <span className="alert-card__place-details__screen-count__text">
             screens
