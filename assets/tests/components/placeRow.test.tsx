@@ -7,7 +7,6 @@ import { Place } from "../../js/models/place";
 beforeAll(() => {
   const app = document.createElement("div");
   app.id = "app";
-  app.dataset.environmentName = "dev";
   document.body.appendChild(app);
 });
 

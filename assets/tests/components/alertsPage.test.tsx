@@ -1,7 +1,6 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import { Place } from "../../js/models/place";
-import { ScreensByAlert } from "../../js/models/screensByAlert";
 import alerts from "../alerts.test.json";
 import placesAndScreens from "../places_and_screens.test.json";
 import alertsOnScreens from "../alerts_on_screens.test.json";
@@ -21,7 +20,8 @@ describe("Alerts Page", () => {
     originalFetch = global.fetch;
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve(alerts),
+        json: () =>
+          Promise.resolve({ alerts, screens_by_alert: alertsOnScreens }),
       })
     ) as jest.Mock;
   });
@@ -33,11 +33,7 @@ describe("Alerts Page", () => {
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
       const { getByRole, findByRole, getByTestId } = render(
-        <AlertsPage
-          places={placesAndScreens as Place[]}
-          screensByAlertId={alertsOnScreens as ScreensByAlert}
-          isVisible={true}
-        />
+        <AlertsPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
@@ -70,11 +66,7 @@ describe("Alerts Page", () => {
   describe("sorting", () => {
     test("sort label when clicked", async () => {
       const { getByTestId } = render(
-        <AlertsPage
-          places={placesAndScreens as Place[]}
-          screensByAlertId={alertsOnScreens as ScreensByAlert}
-          isVisible={true}
-        />
+        <AlertsPage places={placesAndScreens as Place[]} isVisible={true} />
       );
 
       await act(async () => {
