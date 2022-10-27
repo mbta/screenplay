@@ -30,4 +30,6 @@ config :screenplay,
   environment_name: System.get_env("ENVIRONMENT_NAME"),
   sentry_frontend_dsn: System.get_env("SENTRY_DSN"),
   api_v3_key: System.get_env("API_V3_KEY"),
-  screens_url: System.get_env("SCREENS_URL")
+  api_v3_url: System.get_env("API_V3_URL"),
+  screens_url: System.get_env("SCREENS_URL"),
+  signs_ui_url: System.get_env("SIGNS_UI_URL")
