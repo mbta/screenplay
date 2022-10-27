@@ -145,7 +145,6 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   ) => {
     return alerts.filter((alert) => {
       // Get this alert's list of affected screens.
-      // Later should be replaced with a call to memcached?
       const screensWithAlert = screensByAlertMap[alert.id];
 
       return screensWithAlert
