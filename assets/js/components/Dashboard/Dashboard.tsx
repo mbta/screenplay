@@ -1,7 +1,6 @@
 import React, { ComponentType, useEffect, useState } from "react";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
-import { ScreensByAlert } from "../../models/screensByAlert";
 import Sidebar from "./Sidebar";
 import PlacesPage from "./PlacesPage";
 import AlertsPage from "./AlertsPage";
@@ -33,22 +32,11 @@ const Dashboard: ComponentType<Props> = (props: Props) => {
       <Sidebar />
       <div className="page-content">
         <PlacesPage places={places} isVisible={visible.places} />
-        <AlertsPage
-          places={places}
-          screensByAlertId={dummyScreensByAlertId}
-          isVisible={visible.alerts}
-        />
+        <AlertsPage places={places} isVisible={visible.alerts} />
         <OverridesPage isVisible={visible.overrides} />
       </div>
     </div>
   );
-};
-
-const dummyScreensByAlertId: ScreensByAlert = {
-  "1": ["EIB-101", "EIG-404"],
-  "2": ["PRE-105"],
-  "3": ["MUL-101"],
-  "4": ["PRE-112", "DUP-BackBay", "BUS-104"],
 };
 
 export default Dashboard;

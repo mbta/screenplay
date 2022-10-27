@@ -19,21 +19,29 @@ import AlertCard from "./AlertCard";
 
 type DirectionID = 0 | 1;
 
+interface AlertsResponse {
+  alerts: Alert[];
+  screens_by_alert: ScreensByAlert;
+}
+
 interface Props {
   places: Place[];
-  screensByAlertId: ScreensByAlert;
   isVisible: boolean;
 }
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
+    {}
+  );
   useEffect(() => {
     if (!props.isVisible) return;
 
     fetch("/api/alerts")
       .then((response) => response.json())
-      .then((alertsList: []) => {
-        setAlerts(alertsList);
+      .then(({ alerts, screens_by_alert }: AlertsResponse) => {
+        setAlerts(alerts);
+        setScreensByAlertMap(screens_by_alert);
       });
   }, [props.isVisible]);
 
@@ -138,7 +146,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     return alerts.filter((alert) => {
       // Get this alert's list of affected screens.
       // Later should be replaced with a call to memcached?
-      const screensWithAlert = props.screensByAlertId[alert.id];
+      const screensWithAlert = screensByAlertMap[alert.id];
 
       return screensWithAlert
         ? screensWithAlert.find((screen_id) =>
