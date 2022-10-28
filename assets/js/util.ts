@@ -80,3 +80,11 @@ export const getMessageString = (message: CannedMessage | CustomMessage) => {
 export const classWithModifier = (baseClass: string, modifier: string) => {
   return `${baseClass} ${baseClass}--${modifier}`;
 };
+
+export const formatEffect = (effect: string) => {
+  return effect
+    .toLowerCase()
+    .split("_")
+    .map((str: string) => str[0].toUpperCase() + str.substring(1))
+    .join(" ");
+};

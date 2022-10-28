@@ -45,10 +45,25 @@ const Dashboard: ComponentType<Props> = (props: Props) => {
 };
 
 const dummyScreensByAlertId: ScreensByAlert = {
-  "1": ["EIB-101", "EIG-404"],
-  "2": ["PRE-105"],
-  "3": ["MUL-101"],
-  "4": ["PRE-112", "DUP-BackBay", "BUS-104"],
+  "122434": ["EIB-101", "EIG-404"],
+  "124598": ["PRE-105"],
+  "134080": ["MUL-101"],
+  "133934": ["PRE-112", "DUP-BackBay", "BUS-104"],
+  "134367": ["PRE-108"],
+  // Let's say we have an alert that affects the C and D branches
+  "134076": [
+    "PRE-103",
+    "DUP-Kenmore",
+    "EIG-543",
+    "EIG-541",
+    "EIG-544",
+    "EIG-542",
+    "DUP-Haymarket",
+    "MUL-114",
+    "MUL-113",
+    "PRE-102",
+    "PRE-103",
+  ],
 };
 
 export default Dashboard;

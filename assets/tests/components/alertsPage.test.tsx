@@ -32,13 +32,21 @@ describe("Alerts Page", () => {
 
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
-      const { getByRole, findByRole, getByTestId } = render(
+      const { getByRole, findByRole, getByTestId, queryByTestId } = render(
         <AlertsPage
           places={placesAndScreens as Place[]}
           screensByAlertId={alertsOnScreens as ScreensByAlert}
           isVisible={true}
         />
       );
+
+      await act(async () => {
+        await waitFor(() => {
+          expect(queryByTestId("1")).toBeInTheDocument();
+          // Verify alerts not present on a screen are not visible
+          expect(queryByTestId("5")).not.toBeInTheDocument();
+        });
+      });
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -64,6 +72,49 @@ describe("Alerts Page", () => {
           expect(getByTestId("10")).toBeInTheDocument();
         });
       });
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Commuter Rail" }));
+        await waitFor(() => {
+          expect(getByTestId("9")).toBeInTheDocument();
+        });
+      });
+    });
+
+    test("filters places by screen type", async () => {
+      const { getByRole, findByRole, getByTestId, queryAllByTestId } = render(
+        <AlertsPage
+          places={placesAndScreens as Place[]}
+          screensByAlertId={alertsOnScreens as ScreensByAlert}
+          isVisible={true}
+        />
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
+        fireEvent.click(await findByRole("button", { name: "Bus Shelter" }));
+        await waitFor(() => {
+          expect(getByTestId("4")).toBeInTheDocument();
+          expect(getByTestId("6")).toBeInTheDocument();
+        });
+      });
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
+        fireEvent.click(await findByRole("button", { name: "Pre Fare Duo" }));
+        await waitFor(() => {
+          expect(getByTestId("2")).toBeInTheDocument();
+        });
+      });
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
+        fireEvent.click(await findByRole("button", { name: "PA ESS" }));
+        await waitFor(() => {
+          expect(queryAllByTestId("place-row")).toStrictEqual([]);
+        });
+      });
     });
   });
 
@@ -82,6 +133,28 @@ describe("Alerts Page", () => {
         fireEvent.click(getByTestId("sort-label"));
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe("END");
+        });
+      });
+    });
+  });
+
+  describe("Alert Places List", () => {
+    test("navigating to / from the places list for an alert", async () => {
+      const { getByTestId, getByText, queryByTestId, queryByText } = render(
+        <AlertsPage
+          places={placesAndScreens as Place[]}
+          screensByAlertId={alertsOnScreens as ScreensByAlert}
+          isVisible={true}
+        />
+      );
+
+      await act(async () => {
+        await waitFor(() => {
+          expect(queryByTestId("10")).toBeInTheDocument();
+          fireEvent.click(getByTestId("10"));
+          expect(getByText(/delay #10/i)).toBeInTheDocument();
+          fireEvent.click(getByTestId("places-list-back-button"));
+          expect(queryByText(/delay #10/i)).not.toBeInTheDocument();
         });
       });
     });

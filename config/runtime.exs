@@ -29,4 +29,5 @@ config :screenplay,
   slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL"),
   environment_name: System.get_env("ENVIRONMENT_NAME"),
   sentry_frontend_dsn: System.get_env("SENTRY_DSN"),
-  api_v3_key: System.get_env("API_V3_KEY")
+  api_v3_key: System.get_env("API_V3_KEY"),
+  alerts_ui_url: System.get_env("ALERTS_UI_URL")

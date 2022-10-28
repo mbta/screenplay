@@ -3,4 +3,5 @@
     data-username="<%= @username %>"
     data-environment-name="<%= @environment_name %>"
     data-sentry="<%= @sentry_frontend_dsn %>"
+    data-alerts-ui-url="<%= @alerts_ui_url %>"
 ></div>

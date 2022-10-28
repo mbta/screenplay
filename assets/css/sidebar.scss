@@ -49,6 +49,7 @@
     &.selected {
       background-color: $main-blue;
       font-weight: 800;
+      border: 1px solid rgba(23, 31, 38, 0.3);
     }
     &:hover {
       background-color: #0075db66;
