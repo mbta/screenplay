@@ -3,25 +3,18 @@ defmodule ScreenplayWeb.DashboardController do
 
   alias Screenplay.Util
 
-  plug(:username)
-  plug(:sentry_dsn)
-  plug(:screens_url)
-  plug(:signs_ui_url)
+  plug(:env_vars)
 
   def index(conn, _params) do
     render(conn, "index.html", clarity_tag: System.get_env("CLARITY_TAG"))
   end
 
-  defp username(conn, _) do
+  defp env_vars(conn, _) do
     username =
       conn
       |> get_session("username")
       |> Util.trim_username()
 
-    assign(conn, :username, username)
-  end
-
-  defp sentry_dsn(conn, _) do
     dsn =
       if Application.get_env(:screenplay, :record_sentry, false) do
         Application.get_env(:screenplay, :sentry_frontend_dsn)
@@ -29,14 +22,12 @@ defmodule ScreenplayWeb.DashboardController do
         ""
       end
 
-    assign(conn, :sentry_frontend_dsn, dsn)
-  end
-
-  defp screens_url(conn, _) do
-    assign(conn, :screens_url, Application.get_env(:screenplay, :screens_url))
-  end
-
-  defp signs_ui_url(conn, _) do
-    assign(conn, :signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
+    conn
+    |> assign(:username, username)
+    |> assign(:environment_name, Application.get_env(:screenplay, :environment_name, "dev"))
+    |> assign(:sentry_frontend_dsn, dsn)
+    |> assign(:alerts_ui_url, Application.get_env(:screenplay, :alerts_ui_url))
+    |> assign(:screens_url, Application.get_env(:screenplay, :screens_url))
+    |> assign(:signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
   end
 end

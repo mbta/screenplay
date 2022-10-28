@@ -4,4 +4,5 @@
     data-sentry="<%= @sentry_frontend_dsn %>"
     data-screens-url="<%= @screens_url %>"
     data-signs-ui-url="<%= @signs_ui_url %>"
+    data-alerts-ui-url="<%= @alerts_ui_url %>"
 ></div>

@@ -3,12 +3,25 @@
   display: flex;
   border-radius: 8px;
   margin-top: 8px;
+  cursor: pointer;
+
+  &.selected {
+    cursor: auto;
+    margin-bottom: 24px;
+  }
 
   &__alert-details {
     background: rgba(255, 255, 255, 0.8);
     padding: 16px;
+    display: flex;
+
+    &__main-body {
+      margin: 0 auto 0 16px;
+      padding-right: 24px;
+    }
 
     &__pill-container {
+      min-width: 38px;
       display: flex;
       flex-direction: column;
     }
@@ -40,7 +53,8 @@
     }
 
     &__active-period {
-      margin-top: 36px;
+      white-space: nowrap;
+      align-self: center;
       text-align: right;
       &-start,
       &-end {
@@ -63,6 +77,9 @@
     color: #ffffff;
     min-width: 228px;
     padding: 16px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 
     &__alert-id {
       font-family: Inter, sans-serif;
@@ -98,8 +115,8 @@
 
     &__icon {
       position: absolute;
-      top: 50%;
       right: 16px;
+      top: 50%;
     }
   }
 }

@@ -99,6 +99,37 @@ describe("PlacesPage", () => {
         });
       });
     });
+
+    test("adds `filtered` class to PlaceRow when filtered", async () => {
+      const { findByRole, getByRole, getAllByTestId } = render(
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        await waitFor(() => {
+          expect(getAllByTestId("place-row")[0].className).toContain(
+            "filtered"
+          );
+        });
+      });
+    });
+
+    test("reset button clears filters", async () => {
+      const { findByRole, getByRole, getByTestId, getByText } = render(
+        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+      );
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        fireEvent.click(getByTestId("places-action-bar-reset-filters-button"));
+        await waitFor(() => {
+          expect(getByText("ALEWIFE")).toBeInTheDocument();
+        });
+      });
+    });
   });
 
   describe("sorting", () => {
@@ -186,7 +217,13 @@ describe("PlacesPage", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["ALEWIFE", "Davis", "Porter", "Park Street"]);
+          ).toStrictEqual([
+            "ALEWIFE",
+            "Davis",
+            "Porter",
+            "Park Street",
+            "ASHMONT",
+          ]);
         });
 
         fireEvent.click(getByTestId("sort-label"));
@@ -195,7 +232,13 @@ describe("PlacesPage", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["Park Street", "Porter", "Davis", "ALEWIFE"]);
+          ).toStrictEqual([
+            "ASHMONT",
+            "Park Street",
+            "Porter",
+            "Davis",
+            "ALEWIFE",
+          ]);
         });
       });
     });
@@ -261,6 +304,7 @@ describe("PlacesPage", () => {
             "GOVERNMENT CENTER",
             "Park Street",
             "Boylston",
+            "Blandford Street",
           ]);
         });
 
@@ -271,6 +315,7 @@ describe("PlacesPage", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
+            "Blandford Street",
             "Boylston",
             "Park Street",
             "GOVERNMENT CENTER",

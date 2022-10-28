@@ -1,7 +1,18 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, {
+  ComponentType,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import FilterDropdown from "./FilterDropdown";
-import { Col, Container, Row } from "react-bootstrap";
-import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  ArrowUpRight,
+} from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import {
   MODES_AND_LINES,
@@ -14,8 +25,10 @@ import { Alert } from "../../models/alert";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
+import { PlacesList } from "./PlacesPage";
 import classNames from "classnames";
 import AlertCard from "./AlertCard";
+import { formatEffect } from "../../util";
 
 type DirectionID = 0 | 1;
 
@@ -30,6 +43,8 @@ interface Props {
 }
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
+  const { places, isVisible } = props;
+
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
     {}
@@ -45,6 +60,92 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
       });
   }, [props.isVisible]);
 
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+
+  const placesWithSelectedAlert = selectedAlert
+    ? places.filter((place) =>
+        place.screens.some((screen: Screen) =>
+          screensByAlertMap[selectedAlert.id].includes(screen.id)
+        )
+      )
+    : [];
+
+  const alertsWithPlaces = alerts.filter(
+    (alert) => screensByAlertMap[alert.id]
+  );
+
+  const alertsUiUrl = document.getElementById("app")?.dataset.alertsUiUrl;
+
+  return (
+    <div
+      className={classNames("alerts-page", {
+        "alerts-page--hidden": !isVisible,
+      })}
+    >
+      <div className="page-content__header">
+        {selectedAlert ? (
+          <div>
+            <Button
+              className="back-button"
+              data-testid="places-list-back-button"
+              onClick={() => setSelectedAlert(null)}
+            >
+              <ArrowLeft /> Back
+            </Button>
+            <span>
+              {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
+            </span>
+            <Button
+              href={alertsUiUrl + `/edit/${selectedAlert.id}`}
+              target="_blank"
+              className="external-link"
+            >
+              Edit Alert <ArrowUpRight />
+            </Button>
+          </div>
+        ) : (
+          "Posted Alerts"
+        )}
+      </div>
+      <div className="page-content__body">
+        {selectedAlert ? (
+          <>
+            <AlertCard
+              key={selectedAlert.id}
+              alert={selectedAlert}
+              classNames="selected-alert"
+            />
+            <PlacesList
+              places={placesWithSelectedAlert}
+              noModeFilter
+              isAlertPlacesList
+            />
+          </>
+        ) : (
+          <AlertsList
+            {...props}
+            alerts={alertsWithPlaces}
+            selectAlert={setSelectedAlert}
+            screensByAlertMap={screensByAlertMap}
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+interface AlertsListProps extends Props {
+  alerts: Alert[];
+  selectAlert: Dispatch<SetStateAction<Alert | null>>;
+  screensByAlertMap: ScreensByAlert;
+}
+
+const AlertsList: ComponentType<AlertsListProps> = ({
+  alerts,
+  selectAlert,
+  places,
+  screensByAlertMap,
+}: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
@@ -129,7 +230,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   // Get a mapping of screen ids => screen metadata (namely 'type') to use in filterAlertsByScreenType()
   const getScreenMetaDataById = () => {
     const screenMetaData: { [id: string]: Screen } = {};
-    props.places.forEach((place) => {
+    places.forEach((place) => {
       place.screens.forEach((screenData) => {
         screenMetaData[screenData.id] = screenData;
       });
@@ -181,7 +282,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     // Using a Set so we don't have to worry about counting a place more than once.
     const placesCounted = new Set();
 
-    props.places.forEach((place) => {
+    places.forEach((place) => {
       if (
         place.screens.filter((screen) => screensByAlert.includes(screen.id))
           .length > 0
@@ -194,77 +295,71 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   };
 
   return (
-    <div
-      className={classNames("alerts-page", {
-        "alerts-page--hidden": !props.isVisible,
-      })}
-    >
-      <div className="page-content__header">Posted Alerts</div>
-      <div className="page-content__body">
-        <Container fluid>
-          <Row className="place-list__header-row">
-            <Col lg={3}>
-              <div
-                className="place-list__sort-label d-flex align-items-center"
-                onClick={sortLabelOnClick}
-                data-testid="sort-label"
-              >
-                {alertSortLabel}
-                {alertSortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
-              </div>
-            </Col>
-            <Col lg={3} className="d-flex justify-content-end pe-3">
-              <FilterDropdown
-                list={MODES_AND_LINES}
-                onSelect={(value: any) => handleAlertModeOrLineSelect(value)}
-                selectedValue={alertModeLineFilterValue}
-                className="modes-and-lines"
-              />
-            </Col>
-            <Col lg={3} className="place-screen-types pe-3">
-              <FilterDropdown
-                list={SCREEN_TYPES}
-                onSelect={(value: any) => handleAlertScreenTypeSelect(value)}
-                selectedValue={alertScreenTypeFilterValue}
-                className="screen-types"
-              />
-            </Col>
-            <Col lg={3}>
-              <FilterDropdown
-                list={STATUSES}
-                onSelect={(value: any) => handleAlertStatusSelect(value)}
-                selectedValue={alertStatusFilterValue}
-                className="statuses"
-                disabled
-              />
-            </Col>
-          </Row>
-        </Container>
-        {filterAlerts()
-          .sort((a: Alert, b: Alert) =>
-            alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
-          )
-          .map((alert: Alert) => {
-            const screensByAlert = screensByAlertMap[alert.id];
-            let numPlaces = 0;
-            let numScreens = 0;
+    <>
+      <Container fluid>
+        <Row className="filterable-list__header-row">
+          <Col lg={3}>
+            <div
+              className="filterable-list__sort-label d-flex align-items-center"
+              onClick={sortLabelOnClick}
+              data-testid="sort-label"
+            >
+              {alertSortLabel}
+              {alertSortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+            </div>
+          </Col>
+          <Col lg={3} className="d-flex justify-content-end pe-3">
+            <FilterDropdown
+              list={MODES_AND_LINES}
+              onSelect={(value: any) => handleAlertModeOrLineSelect(value)}
+              selectedValue={alertModeLineFilterValue}
+              className="modes-and-lines"
+            />
+          </Col>
+          <Col lg={3} className="place-screen-types pe-3">
+            <FilterDropdown
+              list={SCREEN_TYPES}
+              onSelect={(value: any) => handleAlertScreenTypeSelect(value)}
+              selectedValue={alertScreenTypeFilterValue}
+              className="screen-types"
+            />
+          </Col>
+          <Col lg={3}>
+            <FilterDropdown
+              list={STATUSES}
+              onSelect={(value: any) => handleAlertStatusSelect(value)}
+              selectedValue={alertStatusFilterValue}
+              className="statuses"
+              disabled
+            />
+          </Col>
+        </Row>
+      </Container>
+      {filterAlerts()
+        .sort((a: Alert, b: Alert) =>
+          alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
+        )
+        .map((alert: Alert) => {
+          const screensByAlert = screensByAlertMap[alert.id];
+          let numPlaces = 0;
+          let numScreens = 0;
 
-            if (screensByAlert) {
-              numScreens = screensByAlert.length;
-              numPlaces = getNumberOfAffectedPlaces(screensByAlert);
-            }
+          if (screensByAlert) {
+            numScreens = screensByAlert.length;
+            numPlaces = getNumberOfAffectedPlaces(screensByAlert);
+          }
 
-            return (
-              <AlertCard
-                key={alert.id}
-                alert={alert}
-                numberOfScreens={numScreens}
-                numberOfPlaces={numPlaces}
-              />
-            );
-          })}
-      </div>
-    </div>
+          return (
+            <AlertCard
+              key={alert.id}
+              alert={alert}
+              selectAlert={() => selectAlert(alert)}
+              numberOfScreens={numScreens}
+              numberOfPlaces={numPlaces}
+            />
+          );
+        })}
+    </>
   );
 };
 

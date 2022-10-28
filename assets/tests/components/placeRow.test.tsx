@@ -81,24 +81,4 @@ describe("PlaceRow", () => {
     expect(queryByAltText("Green-B")).toBeNull();
     expect(queryByAltText("Green-C")).toBeNull();
   });
-
-  test("adds `filtered` class when isFiltered=true", async () => {
-    const place: Place = {
-      id: "place-stop1",
-      name: "Place Name1",
-      routes: ["CR", "Red", "Green-B", "Green-C"],
-      status: "Auto",
-      screens: [],
-    };
-
-    const handleClick = jest.fn();
-
-    const { getByTestId } = render(
-      <Accordion>
-        <PlaceRow place={place} eventKey="0" onClick={handleClick} isFiltered />
-      </Accordion>
-    );
-
-    expect(getByTestId("place-row").className).toContain("filtered");
-  });
 });

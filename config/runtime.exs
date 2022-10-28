@@ -32,4 +32,5 @@ config :screenplay,
   api_v3_key: System.get_env("API_V3_KEY"),
   api_v3_url: System.get_env("API_V3_URL"),
   screens_url: System.get_env("SCREENS_URL"),
-  signs_ui_url: System.get_env("SIGNS_UI_URL")
+  signs_ui_url: System.get_env("SIGNS_UI_URL"),
+  alerts_ui_url: System.get_env("ALERTS_UI_URL")

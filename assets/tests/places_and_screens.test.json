@@ -493,5 +493,80 @@
       { "disabled": false, "id": "BUS-104", "type": "bus_shelter_v2" },
       { "disabled": false, "id": "1401", "type": "bus_shelter_v2" }
     ]
+  },
+  {
+    "id": "1722",
+    "name": "1624 Blue Hill Ave @ Mattapan Sq",
+    "routes": ["Bus"],
+    "screens": [
+      {
+        "disabled": false,
+        "id": "EIB-101",
+        "type": "bus_eink"
+      }
+    ]
+  },
+  {
+    "id": "place-bland",
+    "name": "Blandford Street",
+    "routes": ["Green-B"],
+    "screens": [
+      {
+        "disabled": true,
+        "id": "EIG-401",
+        "type": "gl_eink_single"
+      },
+      {
+        "disabled": false,
+        "id": "EIG-404",
+        "type": "gl_eink_single"
+      },
+      {
+        "disabled": true,
+        "id": "EIG-403",
+        "type": "gl_eink_single"
+      },
+      {
+        "disabled": true,
+        "id": "EIG-402",
+        "type": "gl_eink_single"
+      }
+    ]
+  },
+  {
+    "id": "place-asmnl",
+    "name": "Ashmont",
+    "routes": ["Bus", "Mattapan", "Red"],
+    "screens": [
+      {
+        "disabled": false,
+        "id": "MUL-101",
+        "type": "solari"
+      },
+      {
+        "disabled": false,
+        "id": "PRE-105",
+        "type": "pre_fare_v2"
+      },
+      {
+        "disabled": false,
+        "id": "PRE-106",
+        "type": "pre_fare_v2"
+      },
+      {
+        "id": "ashmont_mezzanine",
+        "label": null,
+        "station_code": "RASH",
+        "type": "pa_ess",
+        "zone": "m"
+      },
+      {
+        "id": "red_ashmont_northbound",
+        "label": null,
+        "station_code": "RASH",
+        "type": "pa_ess",
+        "zone": "n"
+      }
+    ]
   }
 ]
