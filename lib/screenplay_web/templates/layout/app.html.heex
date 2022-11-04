@@ -4,8 +4,23 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <%= if @conn.assigns[:clarity_tag] do %>
+    <%= if @clarity_tag do %>
       <meta name="clarity-tag" content={@clarity_tag}>
+    <% end %>
+    <%= if @username do %>
+        <meta name="username" content={@username}>
+    <% end %>
+    <%= if @sentry_frontend_dsn do %>
+        <meta name="sentry" content={@sentry_frontend_dsn}>
+    <% end %>
+    <%= if @screens_url do %>
+        <meta name="screens-url" content={@screens_url}>
+    <% end %>
+    <%= if @signs_ui_url do %>
+        <meta name="signs-ui-url" content={@signs_ui_url}>
+    <% end %>
+    <%= if @alerts_ui_url do %>
+        <meta name="alerts-ui-url" content={@alerts_ui_url}>
     <% end %>
     <%= csrf_meta_tag() %>
     <title>Screenplay</title>
