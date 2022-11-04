@@ -17,17 +17,19 @@ defmodule Screenplay.Alerts.ScreensByAlert do
       {:http_request, e} ->
         {:error, httpoison_error} = e
         log_api_error({:http_fetch_error, e}, message: Exception.message(httpoison_error))
+        :error
 
       {:response_success, %{status_code: status_code, body: body}} = response ->
         _ = log_api_error({:bad_response_code, response}, status_code: status_code, body: body)
-
-        :bad_response_code
+        :error
 
       {:parse, {:error, e}} ->
         log_api_error({:parse_error, e})
+        :error
 
       e ->
         log_api_error({:error, e})
+        :error
     end
   end
 

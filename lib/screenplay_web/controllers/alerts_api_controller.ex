@@ -7,8 +7,13 @@ defmodule ScreenplayWeb.AlertsApiController do
   def index(conn, _params) do
     {:ok, alerts} = Alert.fetch()
 
-    {:ok, screens_by_alerts} =
-      alerts |> Enum.map(& &1.id) |> ScreensByAlert.get_screens_by_alert()
+    alert_ids = Enum.map(alerts, & &1.id)
+
+    screens_by_alerts =
+      case ScreensByAlert.get_screens_by_alert(alert_ids) do
+        {:ok, screens_by_alerts} -> screens_by_alerts
+        _ -> Map.new(alert_ids, fn alert_id -> {alert_id, []} end)
+      end
 
     json(conn, %{
       alerts: Enum.map(alerts, &Alert.to_full_map/1),
