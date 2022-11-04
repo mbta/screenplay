@@ -62,13 +62,15 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
 
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
-  const placesWithSelectedAlert = selectedAlert
-    ? places.filter((place) =>
-        place.screens.some((screen: Screen) =>
-          screensByAlertMap[selectedAlert.id].includes(screen.id)
+  const placesWithSelectedAlert = (alert: Alert | null) => {
+    return alert
+      ? places.filter((place) =>
+          place.screens.some((screen: Screen) =>
+            screensByAlertMap[alert.id].includes(screen.id)
+          )
         )
-      )
-    : [];
+      : [];
+  };
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id]
@@ -116,7 +118,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
               classNames="selected-alert"
             />
             <PlacesList
-              places={placesWithSelectedAlert}
+              places={placesWithSelectedAlert(selectedAlert)}
               noModeFilter
               isAlertPlacesList
             />
@@ -127,6 +129,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
             alerts={alertsWithPlaces}
             selectAlert={setSelectedAlert}
             screensByAlertMap={screensByAlertMap}
+            placesWithSelectedAlert={placesWithSelectedAlert}
           />
         )}
       </div>
@@ -138,6 +141,7 @@ interface AlertsListProps extends Props {
   alerts: Alert[];
   selectAlert: Dispatch<SetStateAction<Alert | null>>;
   screensByAlertMap: ScreensByAlert;
+  placesWithSelectedAlert: (alert: Alert | null) => Place[];
 }
 
 const AlertsList: ComponentType<AlertsListProps> = ({
@@ -145,6 +149,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   selectAlert,
   places,
   screensByAlertMap,
+  placesWithSelectedAlert,
 }: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
@@ -278,22 +283,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     return Date.parse(end1) - Date.parse(end2);
   };
 
-  const getNumberOfAffectedPlaces = (screensByAlert: string[]) => {
-    // Using a Set so we don't have to worry about counting a place more than once.
-    const placesCounted = new Set();
-
-    places.forEach((place) => {
-      if (
-        place.screens.filter((screen) => screensByAlert.includes(screen.id))
-          .length > 0
-      ) {
-        placesCounted.add(place.id);
-      }
-    });
-
-    return placesCounted.size;
-  };
-
   return (
     <>
       <Container fluid>
@@ -346,7 +335,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
           if (screensByAlert) {
             numScreens = screensByAlert.length;
-            numPlaces = getNumberOfAffectedPlaces(screensByAlert);
+            numPlaces = placesWithSelectedAlert(alert).length;
           }
 
           return (
