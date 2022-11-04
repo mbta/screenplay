@@ -78,6 +78,8 @@
     min-width: 228px;
     padding: 16px;
     display: flex;
+    flex-direction: column;
+    position: relative;
 
     &__alert-id {
       font-family: Inter, sans-serif;
@@ -112,7 +114,9 @@
     }
 
     &__icon {
-      margin: auto 0 auto auto;
+      position: absolute;
+      right: 16px;
+      top: 50%;
     }
   }
 }

@@ -17,7 +17,9 @@ describe("AlertCard", () => {
       affected_list: ["red"],
     };
 
-    const { getByText } = render(<AlertCard alert={alert} />);
+    const { getByText } = render(
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+    );
 
     expect(getByText("Station Closure")).toBeInTheDocument();
   });
@@ -35,7 +37,9 @@ describe("AlertCard", () => {
       affected_list: ["red"],
     };
 
-    const { getByText } = render(<AlertCard alert={alert} />);
+    const { getByText } = render(
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+    );
 
     expect(getByText("Delay—up to 15 minutes")).toBeInTheDocument();
   });
@@ -58,7 +62,9 @@ describe("AlertCard", () => {
       affected_list: ["red"],
     };
 
-    const { getByText } = render(<AlertCard alert={alert} />);
+    const { getByText } = render(
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+    );
 
     expect(getByText("9/16/2022 · 5:00 AM")).toBeInTheDocument();
     expect(getByText("9/16/2022 · 6:00 AM")).toBeInTheDocument();
@@ -82,7 +88,9 @@ describe("AlertCard", () => {
       affected_list: ["red"],
     };
 
-    const { getByText } = render(<AlertCard alert={alert} />);
+    const { getByText } = render(
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+    );
 
     expect(getByText("9/16/2022 · 5:00 AM")).toBeInTheDocument();
     expect(getByText("Until further notice")).toBeInTheDocument();

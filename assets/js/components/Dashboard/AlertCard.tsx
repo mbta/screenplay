@@ -8,12 +8,14 @@ import { formatEffect } from "../../util";
 
 interface AlertCardProps {
   alert: Alert;
+  numberOfScreens?: number;
+  numberOfPlaces?: number;
   selectAlert?: () => void;
   classNames?: string;
 }
 
 const AlertCard = (props: AlertCardProps): JSX.Element => {
-  const { alert } = props;
+  const { alert, numberOfPlaces, numberOfScreens } = props;
 
   const renderEffect = (effect: string, severity: string) => {
     const formattedEffect = formatEffect(effect);
@@ -94,26 +96,24 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
       </Container>
       {props.selectAlert ? (
         <div className="alert-card__place-details">
-          <div>
-            <div className="alert-card__place-details__alert-id">
-              ID {alert.id}
-            </div>
-            <div className="alert-card__place-details__place-count">
-              <span className="alert-card__place-details__place-count__number">
-                XX
-              </span>{" "}
-              <span className="alert-card__place-details__place-count__text">
-                places
-              </span>
-            </div>
-            <div className="alert-card__place-details__screen-count">
-              <span className="alert-card__place-details__screen-count__number">
-                XX
-              </span>{" "}
-              <span className="alert-card__place-details__screen-count__text">
-                screens
-              </span>
-            </div>
+          <div className="alert-card__place-details__alert-id">
+            ID {alert.id}
+          </div>
+          <div className="alert-card__place-details__place-count">
+            <span className="alert-card__place-details__place-count__number">
+              {numberOfPlaces}
+            </span>{" "}
+            <span className="alert-card__place-details__place-count__text">
+              places
+            </span>
+          </div>
+          <div className="alert-card__place-details__screen-count">
+            <span className="alert-card__place-details__screen-count__number">
+              {numberOfScreens}
+            </span>{" "}
+            <span className="alert-card__place-details__screen-count__text">
+              screens
+            </span>
           </div>
           <ChevronRight className="alert-card__place-details__icon" />
         </div>

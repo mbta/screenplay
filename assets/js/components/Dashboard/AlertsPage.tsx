@@ -32,37 +32,49 @@ import { formatEffect } from "../../util";
 
 type DirectionID = 0 | 1;
 
+interface AlertsResponse {
+  alerts: Alert[];
+  screens_by_alert: ScreensByAlert;
+}
+
 interface Props {
   places: Place[];
-  screensByAlertId: ScreensByAlert;
   isVisible: boolean;
 }
 
 const AlertsPage: ComponentType<Props> = (props: Props) => {
-  const { places, screensByAlertId, isVisible } = props;
+  const { places, isVisible } = props;
 
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
+    {}
+  );
   useEffect(() => {
     if (!props.isVisible) return;
 
     fetch("/api/alerts")
       .then((response) => response.json())
-      .then((alertsList: []) => {
-        setAlerts(alertsList);
+      .then(({ alerts, screens_by_alert }: AlertsResponse) => {
+        setAlerts(alerts);
+        setScreensByAlertMap(screens_by_alert);
       });
   }, [props.isVisible]);
 
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
-  const placesWithSelectedAlert = selectedAlert
-    ? places.filter((place) =>
-        place.screens.some((screen: Screen) =>
-          screensByAlertId[selectedAlert.id].includes(screen.id)
+  const placesWithSelectedAlert = (alert: Alert | null) => {
+    return alert
+      ? places.filter((place) =>
+          place.screens.some((screen: Screen) =>
+            screensByAlertMap[alert.id].includes(screen.id)
+          )
         )
-      )
-    : [];
+      : [];
+  };
 
-  const alertsWithPlaces = alerts.filter((alert) => screensByAlertId[alert.id]);
+  const alertsWithPlaces = alerts.filter(
+    (alert) => screensByAlertMap[alert.id]
+  );
 
   const alertsUiUrl = document.getElementById("app")?.dataset.alertsUiUrl;
 
@@ -106,7 +118,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
               classNames="selected-alert"
             />
             <PlacesList
-              places={placesWithSelectedAlert}
+              places={placesWithSelectedAlert(selectedAlert)}
               noModeFilter
               isAlertPlacesList
             />
@@ -116,6 +128,8 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
             {...props}
             alerts={alertsWithPlaces}
             selectAlert={setSelectedAlert}
+            screensByAlertMap={screensByAlertMap}
+            placesWithSelectedAlert={placesWithSelectedAlert}
           />
         )}
       </div>
@@ -126,13 +140,16 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
 interface AlertsListProps extends Props {
   alerts: Alert[];
   selectAlert: Dispatch<SetStateAction<Alert | null>>;
+  screensByAlertMap: ScreensByAlert;
+  placesWithSelectedAlert: (alert: Alert | null) => Place[];
 }
 
 const AlertsList: ComponentType<AlertsListProps> = ({
   alerts,
   selectAlert,
   places,
-  screensByAlertId,
+  screensByAlertMap,
+  placesWithSelectedAlert,
 }: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
@@ -234,8 +251,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   ) => {
     return alerts.filter((alert) => {
       // Get this alert's list of affected screens.
-      // Later should be replaced with a call to memcached?
-      const screensWithAlert = screensByAlertId[alert.id];
+      const screensWithAlert = screensByAlertMap[alert.id];
 
       return screensWithAlert
         ? screensWithAlert.find((screen_id) =>
@@ -312,13 +328,26 @@ const AlertsList: ComponentType<AlertsListProps> = ({
         .sort((a: Alert, b: Alert) =>
           alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
         )
-        .map((alert: Alert) => (
-          <AlertCard
-            key={alert.id}
-            alert={alert}
-            selectAlert={() => selectAlert(alert)}
-          />
-        ))}
+        .map((alert: Alert) => {
+          const screensByAlert = screensByAlertMap[alert.id];
+          let numPlaces = 0;
+          let numScreens = 0;
+
+          if (screensByAlert) {
+            numScreens = screensByAlert.length;
+            numPlaces = placesWithSelectedAlert(alert).length;
+          }
+
+          return (
+            <AlertCard
+              key={alert.id}
+              alert={alert}
+              selectAlert={() => selectAlert(alert)}
+              numberOfScreens={numScreens}
+              numberOfPlaces={numPlaces}
+            />
+          );
+        })}
     </>
   );
 };

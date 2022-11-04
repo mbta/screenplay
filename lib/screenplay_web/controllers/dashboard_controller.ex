@@ -27,5 +27,7 @@ defmodule ScreenplayWeb.DashboardController do
     |> assign(:environment_name, Application.get_env(:screenplay, :environment_name, "dev"))
     |> assign(:sentry_frontend_dsn, dsn)
     |> assign(:alerts_ui_url, Application.get_env(:screenplay, :alerts_ui_url))
+    |> assign(:screens_url, Application.get_env(:screenplay, :screens_url))
+    |> assign(:signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
   end
 end
