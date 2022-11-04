@@ -62,7 +62,9 @@ const ScreenCard = (props: ScreenDetailProps) => {
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
-    const { screensUrl } = document.getElementById("app").dataset;
+    const screensUrl = document
+      .querySelector("meta[name=screens-url]")
+      ?.getAttribute("content");
     const queryParams = "requestor=screenplay";
 
     if (type.includes("v2")) {
