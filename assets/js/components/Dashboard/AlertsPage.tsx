@@ -76,7 +76,9 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     (alert) => screensByAlertMap[alert.id]
   );
 
-  const alertsUiUrl = document.getElementById("app")?.dataset.alertsUiUrl;
+  const alertsUiUrl = document
+    .querySelector("meta[name=alerts-ui-url]")
+    ?.getAttribute("content");
 
   return (
     <div

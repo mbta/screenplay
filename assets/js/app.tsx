@@ -20,8 +20,12 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import * as Sentry from "@sentry/react";
 
-const sentryDsn = document.getElementById("app")?.dataset.sentry;
-const username = document.getElementById("app")?.dataset.username;
+const sentryDsn = document
+  .querySelector("meta[name=sentry]")
+  ?.getAttribute("content");
+const username = document
+  .querySelector("meta[name=username]")
+  ?.getAttribute("content");
 
 if (sentryDsn) {
   Sentry.init({
