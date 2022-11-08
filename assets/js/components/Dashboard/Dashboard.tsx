@@ -9,6 +9,7 @@ import Sidebar from "./Sidebar";
 import { useInterval } from "../../hooks/useInterval";
 import moment from "moment";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
+import AlertBanner from "./AlertBanner";
 
 type ContextType = {
   places: Place[];
@@ -22,7 +23,7 @@ const SIGNIFICANT_ALERT_EFFECTS = [
   "STOP_CLOSURE",
   "SUSPENSION",
   "DETOUR",
-  "STOP_MOVED",
+  "STOP_MOVE",
   "SNOW_ROUTE",
 ];
 
@@ -88,7 +89,7 @@ const Dashboard: ComponentType = () => {
     <div className="screenplay-container">
       <Sidebar />
       <div className="page-content">
-        {bannerAlert && <div>{bannerAlert?.id}</div>}
+        {bannerAlert && <AlertBanner alert={bannerAlert} />}
         <Outlet context={{ places, alerts, screensByAlertMap }} />
       </div>
     </div>
