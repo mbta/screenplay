@@ -6,6 +6,12 @@ import { Alert } from "../../models/alert";
 import { Place } from "../../models/place";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import Sidebar from "./Sidebar";
+import { useInterval } from "../../hooks/useInterval";
+
+interface AlertsResponse {
+  alerts: Alert[];
+  screens_by_alert: ScreensByAlert;
+}
 
 interface AlertsResponse {
   alerts: Alert[];
@@ -24,14 +30,14 @@ const Dashboard: ComponentType = () => {
     {}
   );
 
-  useEffect(() => {
+  useInterval(() => {
     fetch("/api/alerts")
       .then((response) => response.json())
       .then(({ alerts, screens_by_alert }: AlertsResponse) => {
         setAlerts(alerts);
         setScreensByAlertMap(screens_by_alert);
       });
-  }, []);
+  }, 4000);
 
   useEffect(() => {
     fetch("/api/dashboard")
