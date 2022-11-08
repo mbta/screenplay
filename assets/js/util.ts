@@ -46,6 +46,46 @@ export const abbreviation = (line: string) => {
   }
 };
 
+export const translateRouteID = (id: string) => {
+  switch (id) {
+    case "red":
+      return "Red Line";
+    case "mattapan":
+      return "Mattapan";
+    case "orange":
+      return "Orange Line";
+    case "blue":
+      return "Blue Line";
+    case "silver":
+      return "Silver Line";
+    case "green":
+    case "green-b":
+    case "green-c":
+    case "green-d":
+    case "green-e":
+      return "Green Line";
+    case "bus":
+      return "Bus";
+    case "cr":
+      return "Commuter Rail";
+    default:
+      return "";
+  }
+};
+
+export const convertArrayToListString = (array: string[]) => {
+  if (array.length === 1) {
+    return array[0];
+  } else if (array.length === 2) {
+    return `${array[0]} and ${array[1]}`;
+  } else {
+    return (
+      array.slice(0, array.length - 1).join(", ") +
+      `and ${array[array.length - 1]}`
+    );
+  }
+};
+
 const ALL_STATIONS = ["blue", "green", "orange", "red", "silver"].flatMap(
   (line) => STATIONS_BY_LINE[line]
 );
