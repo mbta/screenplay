@@ -40,6 +40,7 @@ const Dashboard: ComponentType = () => {
 
     fetchAlerts().then(({ alerts, screens_by_alert }) => {
       setAlerts(alerts);
+      setBannerAlert(getAlertForBanner(alerts));
       setScreensByAlertMap(screens_by_alert);
     });
   }, []);
@@ -48,13 +49,10 @@ const Dashboard: ComponentType = () => {
   useInterval(() => {
     fetchAlerts().then(({ alerts, screens_by_alert }) => {
       setAlerts(alerts);
+      setBannerAlert(getAlertForBanner(alerts));
       setScreensByAlertMap(screens_by_alert);
     });
   }, 4000);
-
-  useEffect(() => {
-    setBannerAlert(getAlertForBanner(alerts));
-  }, [alerts]);
 
   const getAlertForBanner = (alerts: Alert[]) => {
     const now = moment().utc();
