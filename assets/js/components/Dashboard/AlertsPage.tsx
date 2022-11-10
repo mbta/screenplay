@@ -29,6 +29,7 @@ import { PlacesList } from "./PlacesPage";
 import classNames from "classnames";
 import AlertCard from "./AlertCard";
 import { formatEffect } from "../../util";
+import { usePlaces } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
@@ -37,28 +38,21 @@ interface AlertsResponse {
   screens_by_alert: ScreensByAlert;
 }
 
-interface Props {
-  places: Place[];
-  isVisible: boolean;
-}
-
-const AlertsPage: ComponentType<Props> = (props: Props) => {
-  const { places, isVisible } = props;
+const AlertsPage: ComponentType = () => {
+  const { places } = usePlaces();
 
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
     {}
   );
   useEffect(() => {
-    if (!props.isVisible) return;
-
     fetch("/api/alerts")
       .then((response) => response.json())
       .then(({ alerts, screens_by_alert }: AlertsResponse) => {
         setAlerts(alerts);
         setScreensByAlertMap(screens_by_alert);
       });
-  }, [props.isVisible]);
+  }, []);
 
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
 
@@ -81,11 +75,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     ?.getAttribute("content");
 
   return (
-    <div
-      className={classNames("alerts-page", {
-        "alerts-page--hidden": !isVisible,
-      })}
-    >
+    <div className={classNames("alerts-page")}>
       <div className="page-content__header">
         {selectedAlert ? (
           <div>
@@ -127,7 +117,7 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
           </>
         ) : (
           <AlertsList
-            {...props}
+            places={places}
             alerts={alertsWithPlaces}
             selectAlert={setSelectedAlert}
             screensByAlertMap={screensByAlertMap}
@@ -139,11 +129,12 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
   );
 };
 
-interface AlertsListProps extends Props {
+interface AlertsListProps {
   alerts: Alert[];
   selectAlert: Dispatch<SetStateAction<Alert | null>>;
   screensByAlertMap: ScreensByAlert;
   placesWithSelectedAlert: (alert: Alert | null) => Place[];
+  places: Place[];
 }
 
 const AlertsList: ComponentType<AlertsListProps> = ({

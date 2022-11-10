@@ -13,6 +13,7 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
+import { usePlaces } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
@@ -30,23 +31,18 @@ const getSortLabel = (
   }
 };
 
-interface Props {
-  places: Place[];
-  isVisible: boolean;
-}
+const PlacesPage: ComponentType = () => {
+  const { places } = usePlaces();
 
-const PlacesPage: ComponentType<Props> = (props: Props) => (
-  <div
-    className={classNames("places-page", {
-      "places-page--hidden": !props.isVisible,
-    })}
-  >
-    <div className="page-content__header">Places</div>
-    <div className="page-content__body">
-      <PlacesList places={props.places} />
+  return (
+    <div className={classNames("places-page")}>
+      <div className="page-content__header">Places</div>
+      <div className="page-content__body">
+        <PlacesList places={places} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 interface PlacesListProps {
   places: Place[];
