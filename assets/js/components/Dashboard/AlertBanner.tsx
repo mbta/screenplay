@@ -39,11 +39,11 @@ const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
       <div className="alert-banner__text">
         <span className="bold">
           A {getAffectedListString()} {formatEffect(alert.effect)} alert was
-          just {wasCreated ? "posted" : "edited"}.
+          just {isClosedAlert ? "closed" : wasCreated ? "posted" : "edited"}.
         </span>{" "}
         {getInfoSentence()} It could take up to{" "}
         <span className="bold">2 minutes</span> for any impacted screens to
-        update.{" "}
+        update.
       </div>
     </div>
   );
