@@ -5,9 +5,10 @@ import { formatEffect, translateRouteID } from "../../util";
 
 interface Props {
   alert: Alert;
+  isClosedAlert: boolean;
 }
 
-const AlertBanner: ComponentType<Props> = ({ alert }: Props) => {
+const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
   const wasCreated = alert.created_at === alert.updated_at;
 
   const getAffectedListString = () => {
