@@ -1,5 +1,5 @@
 import React, { ComponentType, useEffect, useState } from "react";
-import { Outlet, useOutletContext } from "react-router";
+import { Outlet } from "react-router";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import Sidebar from "./Sidebar";
@@ -24,9 +24,5 @@ const Dashboard: ComponentType = () => {
     </div>
   );
 };
-
-export function usePlaces() {
-  return useOutletContext<{ places: Place[] }>();
-}
 
 export default Dashboard;

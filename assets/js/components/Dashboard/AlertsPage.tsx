@@ -29,7 +29,7 @@ import { PlacesList } from "./PlacesPage";
 import classNames from "classnames";
 import AlertCard from "./AlertCard";
 import { formatEffect } from "../../util";
-import { usePlaces } from "./Dashboard";
+import { useOutletContext } from "react-router";
 
 type DirectionID = 0 | 1;
 
@@ -39,7 +39,7 @@ interface AlertsResponse {
 }
 
 const AlertsPage: ComponentType = () => {
-  const { places } = usePlaces();
+  const { places } = useOutletContext<{ places: Place[] }>();
 
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
