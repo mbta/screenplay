@@ -69,7 +69,7 @@ defmodule ScreenplayWeb.Router do
 
     get("/:provider", AuthController, :request)
     get("/:provider/callback", AuthController, :callback)
-    get("/:provider/logout", AuthController, :logout)
+    # get("/:provider/logout", AuthController, :logout)
   end
 
   scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
