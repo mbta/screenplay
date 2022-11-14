@@ -1,8 +1,11 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
 import placesAndScreens from "../places_and_screens.test.json";
-import { Place } from "../../js/models/place";
 import PlacesPage from "../../js/components/Dashboard/PlacesPage";
+import {
+  mockOutletContextData,
+  RenderRouteWithOutletContext,
+} from "../utils/RenderRouteWithOutletContext";
 
 beforeAll(() => {
   const app = document.createElement("div");
@@ -30,7 +33,9 @@ describe("PlacesPage", () => {
   describe("filtering", () => {
     test("filters places by screen type", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -66,7 +71,9 @@ describe("PlacesPage", () => {
 
     test("filters places by mode and route", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -102,7 +109,9 @@ describe("PlacesPage", () => {
 
     test("adds `filtered` class to PlaceRow when filtered", async () => {
       const { findByRole, getByRole, getAllByTestId } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -118,7 +127,9 @@ describe("PlacesPage", () => {
 
     test("reset button clears filters", async () => {
       const { findByRole, getByRole, getByTestId, getByText } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible={true} />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -135,7 +146,9 @@ describe("PlacesPage", () => {
   describe("sorting", () => {
     test("sort label changes depending on filter selected", async () => {
       const { getByTestId, getByRole, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -166,7 +179,9 @@ describe("PlacesPage", () => {
 
     test("sort label changes when clicked", async () => {
       const { getByTestId, getByRole, findByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -206,7 +221,9 @@ describe("PlacesPage", () => {
 
     test("sort order changes for RL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -245,7 +262,9 @@ describe("PlacesPage", () => {
 
     test("sort order changes for OL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -284,7 +303,9 @@ describe("PlacesPage", () => {
 
     test("sort order changes for GL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -331,7 +352,9 @@ describe("PlacesPage", () => {
 
     test("sort order changes for BL", async () => {
       const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <PlacesPage places={placesAndScreens as Place[]} isVisible />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <PlacesPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
