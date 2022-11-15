@@ -33,46 +33,16 @@ import { useOutletContext } from "react-router";
 
 type DirectionID = 0 | 1;
 
-interface AlertsResponse {
-  alerts: Alert[];
-  screens_by_alert: ScreensByAlert;
-}
-
 const AlertsPage: ComponentType = () => {
-  const { places } = useOutletContext<{ places: Place[] }>();
-
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
-    {}
-  );
-  useEffect(() => {
-    fetch("/api/alerts")
-      .then((response) => response.json())
-      .then(({ alerts, screens_by_alert }: AlertsResponse) => {
-        setAlerts(alerts);
-        setScreensByAlertMap(screens_by_alert);
-      });
-  }, []);
-
-  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
-
-  const placesWithSelectedAlert = (alert: Alert | null) => {
-    return alert
-      ? places.filter((place) =>
-          place.screens.some((screen: Screen) =>
-            screensByAlertMap[alert.id].includes(screen.id)
-          )
-        )
-      : [];
-  };
+  const { places, alerts, screensByAlertMap } = useOutletContext<{
+    places: Place[];
+    alerts: Alert[];
+    screensByAlertMap: ScreensByAlert;
+  }>();
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id]
   );
-
-  const alertsUiUrl = document
-    .querySelector("meta[name=alerts-ui-url]")
-    ?.getAttribute("content");
 
   return (
     <div className={classNames("alerts-page")}>
