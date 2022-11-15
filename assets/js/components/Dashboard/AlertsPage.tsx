@@ -6,12 +6,13 @@ import React, {
   useState,
 } from "react";
 import FilterDropdown from "./FilterDropdown";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import {
   ArrowDown,
   ArrowLeft,
   ArrowUp,
   ArrowUpRight,
+  SlashCircleFill,
 } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import {
@@ -80,7 +81,13 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
     .querySelector("meta[name=alerts-ui-url]")
     ?.getAttribute("content");
 
+  const [show, setShow] = useState(true);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
+    <>
     <div
       className={classNames("alerts-page", {
         "alerts-page--hidden": !isVisible,
@@ -136,6 +143,23 @@ const AlertsPage: ComponentType<Props> = (props: Props) => {
         )}
       </div>
     </div>
+    <Modal className="alert-not-found" backdropClassName="alert-not-found" show={show} onHide={handleClose}>
+      <Modal.Body>
+        <SlashCircleFill className="modal-icon"/>
+        <div className="modal-text">
+          <div className="modal-title">This alert was closed</div>
+          <p className="modal-detail">
+            THIS EFFECT alert THIS ID was just closed in Alerts UI.
+            If this alert was previously showing on any screens, it has since been removed.
+          </p>
+          <Button className="screenplay-button modal-button" variant="primary" onClick={handleClose}>
+            <ArrowLeft className="modal-button__icon"/>Go to Posted Alerts
+          </Button>
+        </div>
+        
+      </Modal.Body>
+    </Modal>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@
 @import "paess.scss";
 @import "alert-card.scss";
 @import "map-segment.scss";
+@import "modal.scss";
 
 $body-bg: $cool-gray-30;
 
@@ -40,4 +41,10 @@ body {
     cursor: pointer;
     width: fit-content;
   }
+}
+
+.screenplay-button {
+  background: $main-blue;
+  border: 1px solid rgba(23, 31, 38, 0.3);
+  border-radius: 6px;
 }
