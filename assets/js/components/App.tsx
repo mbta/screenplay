@@ -8,6 +8,7 @@ const OutfrontTakeoverTool = React.lazy(
 const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
 const PlacesPage = React.lazy(() => import("./Dashboard/PlacesPage"));
 const AlertsPage = React.lazy(() => import("./Dashboard/AlertsPage"));
+const AlertDetails = React.lazy(() => import("./Dashboard/AlertDetails"));
 const clarityTag = document
   .querySelector("meta[name=clarity-tag]")
   ?.getAttribute("content");
@@ -28,6 +29,7 @@ class AppRoutes extends React.Component {
           <Route path="*" element={<Dashboard />}>
             <Route path="dashboard" element={<PlacesPage />}></Route>
             <Route path="alerts" element={<AlertsPage />}></Route>
+            <Route path="alerts/:id" element={<AlertDetails />}></Route>
           </Route>
         </Routes>
       </React.Suspense>
