@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import AlertCard from "./AlertCard";
 import { PlacesList } from "./PlacesPage";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
@@ -16,15 +16,18 @@ const AlertDetails: ComponentType = () => {
     screensByAlertMap: ScreensByAlert;
   }>();
   const { id } = useParams();
-  const selectedAlert = alerts.find((alert) => alert.id === id);
+  const [selectedAlert, setSelectedAlert] = useState<Alert>();
+
   const alertsUiUrl = document
     .querySelector("meta[name=alerts-ui-url]")
     ?.getAttribute("content");
   const navigate = useNavigate();
 
-  if (!selectedAlert) {
-    navigate("/alerts", { replace: true });
-  }
+  useEffect(() => {
+    const selectedAlert = alerts.find((alert) => alert.id === id);
+
+    setSelectedAlert(selectedAlert);
+  }, [alerts]);
 
   return selectedAlert ? (
     <div className="alert-details">
@@ -33,7 +36,7 @@ const AlertDetails: ComponentType = () => {
           <Button
             className="alert-details__back-button"
             data-testid="alert-details-back-button"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/alerts", { replace: true })}
           >
             <ArrowLeft /> Back
           </Button>
