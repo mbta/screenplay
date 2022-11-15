@@ -1,6 +1,5 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import placesAndScreens from "../places_and_screens.test.json";
 import PlacesPage from "../../js/components/Dashboard/PlacesPage";
 import {
   mockOutletContextData,
@@ -15,21 +14,6 @@ beforeAll(() => {
 });
 
 describe("PlacesPage", () => {
-  let originalFetch: any;
-
-  beforeEach(() => {
-    originalFetch = global.fetch;
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(placesAndScreens),
-      })
-    ) as jest.Mock;
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-  });
-
   describe("filtering", () => {
     test("filters places by screen type", async () => {
       const { getByRole, getByText, queryByText, findByRole } = render(
