@@ -1,5 +1,4 @@
 import React, { ComponentType, useEffect, useState } from "react";
-import classNames from "classnames";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -35,7 +34,7 @@ const PlacesPage: ComponentType = () => {
   const { places } = useOutletContext<{ places: Place[] }>();
 
   return (
-    <div className={classNames("places-page")}>
+    <div className="places-page">
       <div className="page-content__header">Places</div>
       <div className="page-content__body">
         <PlacesList places={places} />

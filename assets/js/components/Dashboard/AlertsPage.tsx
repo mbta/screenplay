@@ -26,7 +26,6 @@ import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import { PlacesList } from "./PlacesPage";
-import classNames from "classnames";
 import AlertCard from "./AlertCard";
 import { formatEffect } from "../../util";
 import { useOutletContext } from "react-router";
@@ -75,7 +74,7 @@ const AlertsPage: ComponentType = () => {
     ?.getAttribute("content");
 
   return (
-    <div className={classNames("alerts-page")}>
+    <div className="alerts-page">
       <div className="page-content__header">
         {selectedAlert ? (
           <div>
