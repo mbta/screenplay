@@ -20,9 +20,15 @@ const AlertDetails: ComponentType = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const selectedAlert = alerts.find((alert) => alert.id === id);
-
-    setSelectedAlert(selectedAlert);
+    // If the alerts fetch has finished and the ID in the URL does not exist in the list, go back to the Posted Alerts page.
+    if (alerts) {
+      const selectedAlert = alerts.find((alert) => alert.id === id);
+      if (!selectedAlert) {
+        navigate("/alerts", { replace: true });
+      } else {
+        setSelectedAlert(selectedAlert);
+      }
+    }
   }, [alerts]);
 
   return selectedAlert ? (
