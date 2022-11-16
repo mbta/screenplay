@@ -1,5 +1,4 @@
 import React, { ComponentType, useEffect, useState } from "react";
-import classNames from "classnames";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -13,7 +12,7 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
-import { useOutletContext } from "react-router";
+import { useDashboardContext } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
@@ -32,10 +31,10 @@ const getSortLabel = (
 };
 
 const PlacesPage: ComponentType = () => {
-  const { places } = useOutletContext<{ places: Place[] }>();
+  const { places } = useDashboardContext();
 
   return (
-    <div className={classNames("places-page")}>
+    <div className="places-page">
       <div className="page-content__header">Places</div>
       <div className="page-content__body">
         <PlacesList places={places} />

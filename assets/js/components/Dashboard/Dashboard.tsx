@@ -1,5 +1,6 @@
 import React, { ComponentType, useEffect, useState } from "react";
 import { Outlet } from "react-router";
+import { useOutletContext } from "react-router-dom";
 import "../../../css/screenplay.scss";
 import { Alert } from "../../models/alert";
 import { Place } from "../../models/place";
@@ -10,6 +11,11 @@ interface AlertsResponse {
   alerts: Alert[];
   screens_by_alert: ScreensByAlert;
 }
+type ContextType = {
+  places: Place[];
+  alerts: Alert[];
+  screensByAlertMap: ScreensByAlert;
+};
 
 const Dashboard: ComponentType = () => {
   const [places, setPlaces] = useState<Place[]>([]);
@@ -43,6 +49,10 @@ const Dashboard: ComponentType = () => {
       </div>
     </div>
   );
+};
+
+export const useDashboardContext = () => {
+  return useOutletContext<ContextType>();
 };
 
 export default Dashboard;

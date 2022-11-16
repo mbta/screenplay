@@ -16,18 +16,14 @@ import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import classNames from "classnames";
 import AlertCard from "./AlertCard";
-import { useOutletContext } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
+import { useDashboardContext } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
 const AlertsPage: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useOutletContext<{
-    places: Place[];
-    alerts: Alert[];
-    screensByAlertMap: ScreensByAlert;
-  }>();
+  const { places, alerts, screensByAlertMap } = useDashboardContext();
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id]
