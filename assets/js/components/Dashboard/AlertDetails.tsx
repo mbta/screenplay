@@ -1,26 +1,22 @@
 import React, { ComponentType, useEffect, useState } from "react";
 import AlertCard from "./AlertCard";
 import { PlacesList } from "./PlacesPage";
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Alert } from "../../models/alert";
-import { Place } from "../../models/place";
 import { Button } from "react-bootstrap";
 import { ArrowLeft, ArrowUpRight } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
-import { ScreensByAlert } from "../../models/screensByAlert";
+import { useDashboardContext } from "./Dashboard";
 
 const AlertDetails: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useOutletContext<{
-    places: Place[];
-    alerts: Alert[];
-    screensByAlertMap: ScreensByAlert;
-  }>();
+  const { places, alerts, screensByAlertMap } = useDashboardContext();
   const { id } = useParams();
   const [selectedAlert, setSelectedAlert] = useState<Alert>();
 
   const alertsUiUrl = document
     .querySelector("meta[name=alerts-ui-url]")
     ?.getAttribute("content");
+
   const navigate = useNavigate();
 
   useEffect(() => {
