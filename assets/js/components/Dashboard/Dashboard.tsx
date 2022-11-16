@@ -1,8 +1,11 @@
 import React, { ComponentType, useEffect, useState } from "react";
 import { Outlet } from "react-router";
+import { useOutletContext } from "react-router-dom";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import Sidebar from "./Sidebar";
+
+type ContextType = { places: Place[] };
 
 const Dashboard: ComponentType = () => {
   const [places, setPlaces] = useState<Place[]>([]);
@@ -23,6 +26,10 @@ const Dashboard: ComponentType = () => {
       </div>
     </div>
   );
+};
+
+export const usePlaces = () => {
+  return useOutletContext<ContextType>();
 };
 
 export default Dashboard;

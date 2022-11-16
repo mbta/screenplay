@@ -12,7 +12,7 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
-import { useOutletContext } from "react-router";
+import { usePlaces } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
@@ -31,7 +31,7 @@ const getSortLabel = (
 };
 
 const PlacesPage: ComponentType = () => {
-  const { places } = useOutletContext<{ places: Place[] }>();
+  const { places } = usePlaces();
 
   return (
     <div className="places-page">
