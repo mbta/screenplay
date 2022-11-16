@@ -1,16 +1,13 @@
 import React, { ComponentType, useEffect, useState } from "react";
+import { Outlet } from "react-router";
+import { useOutletContext } from "react-router-dom";
 import "../../../css/screenplay.scss";
 import { Place } from "../../models/place";
 import Sidebar from "./Sidebar";
-import PlacesPage from "./PlacesPage";
-import AlertsPage from "./AlertsPage";
-import OverridesPage from "./OverridesPage";
 
-interface Props {
-  page: "places" | "alerts" | "overrides";
-}
+type ContextType = { places: Place[] };
 
-const Dashboard: ComponentType<Props> = (props: Props) => {
+const Dashboard: ComponentType = () => {
   const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
@@ -21,22 +18,18 @@ const Dashboard: ComponentType<Props> = (props: Props) => {
       });
   }, []);
 
-  const visible = {
-    places: props.page === "places",
-    alerts: props.page === "alerts",
-    overrides: props.page === "overrides",
-  };
-
   return (
     <div className="screenplay-container">
       <Sidebar />
       <div className="page-content">
-        <PlacesPage places={places} isVisible={visible.places} />
-        <AlertsPage places={places} isVisible={visible.alerts} />
-        <OverridesPage isVisible={visible.overrides} />
+        <Outlet context={{ places }} />
       </div>
     </div>
   );
+};
+
+export const usePlaces = () => {
+  return useOutletContext<ContextType>();
 };
 
 export default Dashboard;

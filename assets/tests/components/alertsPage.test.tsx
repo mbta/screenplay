@@ -1,10 +1,12 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import { Place } from "../../js/models/place";
 import alerts from "../alerts.test.json";
-import placesAndScreens from "../places_and_screens.test.json";
 import alertsOnScreens from "../alerts_on_screens.test.json";
 import AlertsPage from "../../js/components/Dashboard/AlertsPage";
+import {
+  mockOutletContextData,
+  RenderRouteWithOutletContext,
+} from "../utils/RenderRouteWithOutletContext";
 
 beforeAll(() => {
   const app = document.createElement("div");
@@ -33,7 +35,9 @@ describe("Alerts Page", () => {
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
       const { getByRole, findByRole, getByTestId, queryByTestId } = render(
-        <AlertsPage places={placesAndScreens as Place[]} isVisible={true} />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <AlertsPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -80,7 +84,9 @@ describe("Alerts Page", () => {
 
     test("filters places by screen type", async () => {
       const { getByRole, findByRole, getByTestId, queryAllByTestId } = render(
-        <AlertsPage places={placesAndScreens as Place[]} isVisible={true} />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <AlertsPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -113,7 +119,9 @@ describe("Alerts Page", () => {
   describe("sorting", () => {
     test("sort label when clicked", async () => {
       const { getByTestId } = render(
-        <AlertsPage places={placesAndScreens as Place[]} isVisible={true} />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <AlertsPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
@@ -129,7 +137,9 @@ describe("Alerts Page", () => {
   describe("Alert Places List", () => {
     test("navigating to / from the places list for an alert", async () => {
       const { getByTestId, getByText, queryByTestId, queryByText } = render(
-        <AlertsPage places={placesAndScreens as Place[]} isVisible={true} />
+        <RenderRouteWithOutletContext context={mockOutletContextData}>
+          <AlertsPage />
+        </RenderRouteWithOutletContext>
       );
 
       await act(async () => {
