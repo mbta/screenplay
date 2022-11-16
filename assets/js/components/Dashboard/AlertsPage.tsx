@@ -14,7 +14,6 @@ import { Alert } from "../../models/alert";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
-import classNames from "classnames";
 import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
@@ -30,7 +29,7 @@ const AlertsPage: ComponentType = () => {
   );
 
   return (
-    <div className={classNames("alerts-page")}>
+    <div className="alerts-page">
       <div className="page-content__header">Posted Alerts</div>
       <div className="page-content__body">
         <AlertsList
