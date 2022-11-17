@@ -10,6 +10,7 @@ import { useInterval } from "../../hooks/useInterval";
 import moment from "moment";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
+import { getModeFromAffectedList } from "../../util";
 
 type ContextType = {
   places: Place[];
@@ -17,15 +18,12 @@ type ContextType = {
   screensByAlertMap: ScreensByAlert;
 };
 
-const SIGNIFICANT_ALERT_EFFECTS = [
-  "SHUTTLE",
-  "STATION_CLOSURE",
-  "STOP_CLOSURE",
-  "SUSPENSION",
-  "DETOUR",
-  "STOP_MOVE",
-  "SNOW_ROUTE",
-];
+const SIGNIFICANT_ALERT_EFFECTS: {
+  [mode: string]: string[];
+} = {
+  subway: ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION"],
+  bus: ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"],
+};
 
 interface BannerAlert {
   alert?: Alert;
@@ -104,7 +102,9 @@ const Dashboard: ComponentType = () => {
       .find(
         (alert) =>
           alert !== undefined &&
-          SIGNIFICANT_ALERT_EFFECTS.includes(alert.effect)
+          SIGNIFICANT_ALERT_EFFECTS[
+            getModeFromAffectedList(alert.affected_list)
+          ].includes(alert.effect)
       );
   };
 
@@ -120,7 +120,9 @@ const Dashboard: ComponentType = () => {
           const updatedAt = moment(alert.updated_at).utc();
 
           return (
-            SIGNIFICANT_ALERT_EFFECTS.includes(alert.effect) &&
+            SIGNIFICANT_ALERT_EFFECTS[
+              getModeFromAffectedList(alert.affected_list)
+            ].includes(alert.effect) &&
             (createdAt.isBetween(twoMinutesAgo, now) ||
               updatedAt.isBetween(twoMinutesAgo, now))
           );
