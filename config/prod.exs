@@ -58,7 +58,11 @@ config :ueberauth, Ueberauth,
 # We also recommend setting `force_ssl` in your endpoint, ensuring
 # no data is ever sent via http, always redirecting to https:
 
-config :screenplay, ScreenplayWeb.Endpoint,
-  force_ssl: [hsts: true]
+unless System.get_env("PORT") do
+  config :screenplay, SiteWeb.Endpoint, url: [scheme: "https", port: 443]
+
+  config :screenplay, :secure_pipeline,
+    force_ssl: [host nil, rewrite_on: [:x_forwarded_proto]]
+end
 
 # Check `Plug.SSL` for all available options in `force_ssl`.

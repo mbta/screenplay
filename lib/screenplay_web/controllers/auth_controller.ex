@@ -37,7 +37,7 @@ defmodule ScreenplayWeb.AuthController do
     |> Plug.Conn.put_session(:username, name || username)
     # Redirect to whatever page they came from
     # Commenting out this line breaks everything
-    # |> redirect(to: previous_path)
+    |> redirect(to: previous_path)
   end
 
   def callback(
