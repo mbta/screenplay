@@ -13,7 +13,9 @@ config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   http: [:inet6, port: 4000],
   server: true,
-  url: [port: 80]
+  url: [port: 443],
+  https: [port: 443],
+  force_ssl: [hsts: true]
 
 config :screenplay,
   alerts_fetch_module: Screenplay.Alerts.S3Fetch,
@@ -57,12 +59,9 @@ config :ueberauth, Ueberauth,
 #
 # We also recommend setting `force_ssl` in your endpoint, ensuring
 # no data is ever sent via http, always redirecting to https:
-
-unless System.get_env("PORT") do
-  config :screenplay, SiteWeb.Endpoint, url: [scheme: "https", port: 443]
-
-  config :screenplay, :secure_pipeline,
-    force_ssl: [host: nil, rewrite_on: [:x_forwarded_proto]]
-end
+#
+#     config :screenplay, ScreenplayWeb.Endpoint,
+#       force_ssl: [hsts: true]
+#
 
 # Check `Plug.SSL` for all available options in `force_ssl`.
