@@ -71,10 +71,9 @@ const Dashboard: ComponentType = () => {
     if (closedAlert) {
       setBannerAlert({ alert: closedAlert, closedAt: now });
     }
-    // If there is not a closed alert but
-    // the current bannerAlert does not have a defined closedAt OR
-    //
-    // the closedAt has passed its two minute limit
+    // If there is not a new closed alert but
+    // the current bannerAlert does not have a defined closedAt
+    // (meaning there isn't a current banner alert or it is a posted/edited alert)
     else if (!bannerAlert?.closedAt) {
       setBannerAlert({ alert: postedOrEditedAlert });
     }
@@ -92,7 +91,7 @@ const Dashboard: ComponentType = () => {
     }
     // If no other alert is eligible to be the bannerAlert, expire the current bannerAlert if two minutes have passed since it started displaying.
     else if (
-      moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(1, "minutes"))
+      moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(2, "minutes"))
     ) {
       setBannerAlert(undefined);
     }
