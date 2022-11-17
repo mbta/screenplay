@@ -73,6 +73,25 @@ export const translateRouteID = (id: string) => {
   }
 };
 
+export const getModeFromAffectedList = (affectedList: string[]) => {
+  if (
+    [
+      "red",
+      "orange",
+      "blue",
+      "green",
+      "green-b",
+      "green-c",
+      "green-d",
+      "green-e",
+    ].filter((value) => affectedList.includes(value))
+  ) {
+    return "subway";
+  } else {
+    return affectedList[0];
+  }
+};
+
 export const convertArrayToListString = (array: string[]) => {
   if (array.length === 1) {
     return array[0];
