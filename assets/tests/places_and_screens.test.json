@@ -348,7 +348,7 @@
   {
     "id": "place-unsqu",
     "name": "Union Square",
-    "routes": ["Green-E"],
+    "routes": ["Green-D"],
     "screens": [
       {
         "id": "union_sq_track_one",
@@ -373,7 +373,7 @@
   {
     "id": "place-lech",
     "name": "Lechmere",
-    "routes": ["Bus", "Green-E"],
+    "routes": ["Bus", "Green-D", "Green-E"],
     "screens": [
       {
         "id": "lechmere_green_line_eastbound",
@@ -398,7 +398,7 @@
   {
     "id": "place-spmnl",
     "name": "Science Park/West End",
-    "routes": ["Green-E"],
+    "routes": ["Green-D", "Green-E"],
     "screens": [
       {
         "id": "science_park_eastbound",
@@ -419,6 +419,36 @@
         "zone": "m"
       }
     ]
+  },
+  {
+    "id": "place-esomr",
+    "name": "East Somerville",
+    "routes": ["Green-E"],
+    "screens": []
+  },
+  {
+    "id": "place-gilmn",
+    "name": "Gilman Square",
+    "routes": ["Green-E"],
+    "screens": []
+  },
+  {
+    "id": "place-mgngl",
+    "name": "Magoun Square",
+    "routes": ["Green-E"],
+    "screens": []
+  },
+  {
+    "id": "place-balsq",
+    "name": "Ball Square",
+    "routes": ["Green-E"],
+    "screens": []
+  },
+  {
+    "id": "place-mdftf",
+    "name": "Medford / Tufts",
+    "routes": ["Green-E"],
+    "screens": []
   },
   {
     "id": "place-wondl",
