@@ -21,7 +21,7 @@ const AlertDetails: ComponentType = () => {
 
   useEffect(() => {
     // If the alerts fetch has finished and the ID in the URL does not exist in the list, go back to the Posted Alerts page.
-    if (alerts) {
+    if (alerts.length) {
       const selectedAlert = alerts.find((alert) => alert.id === id);
       if (!selectedAlert) {
         navigate("/alerts", { replace: true });
