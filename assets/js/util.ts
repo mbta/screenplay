@@ -165,3 +165,21 @@ export const placesWithSelectedAlert = (
       )
     : [];
 };
+
+const SIGNIFICANT_ALERT_EFFECTS: {
+  [mode: string]: string[];
+} = {
+  subway: ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
+  bus: ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"],
+};
+
+export const isSignificantAlert = (alert: Alert) => {
+  console.log(alert.severity);
+  if (alert.effect === "DELAY") {
+    return Number(alert.severity) > 3;
+  } else {
+    return SIGNIFICANT_ALERT_EFFECTS[
+      getModeFromAffectedList(alert.affected_list)
+    ].includes(alert.effect);
+  }
+};
