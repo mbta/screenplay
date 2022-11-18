@@ -12,7 +12,7 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
-import { usePlaces } from "./Dashboard";
+import { useDashboardContext } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
@@ -31,7 +31,7 @@ const getSortLabel = (
 };
 
 const PlacesPage: ComponentType = () => {
-  const { places } = usePlaces();
+  const { places } = useDashboardContext();
 
   return (
     <div className="places-page">

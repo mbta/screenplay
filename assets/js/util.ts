@@ -4,6 +4,10 @@ import {
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
 import STATIONS_BY_LINE from "./constants/stations";
+import { Alert } from "./models/alert";
+import { Place } from "./models/place";
+import { ScreensByAlert } from "./models/screensByAlert";
+import { Screen } from "./models/screen";
 
 export const color = (line: string) => {
   switch (line) {
@@ -87,4 +91,18 @@ export const formatEffect = (effect: string) => {
     .split("_")
     .map((str: string) => str[0].toUpperCase() + str.substring(1))
     .join(" ");
+};
+
+export const placesWithSelectedAlert = (
+  alert: Alert | null,
+  places: Place[],
+  screensByAlertMap: ScreensByAlert
+) => {
+  return alert
+    ? places.filter((place) =>
+        place.screens.some((screen: Screen) =>
+          screensByAlertMap[alert.id].includes(screen.id)
+        )
+      )
+    : [];
 };

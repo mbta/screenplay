@@ -1,7 +1,5 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import alerts from "../alerts.test.json";
-import alertsOnScreens from "../alerts_on_screens.test.json";
 import AlertsPage from "../../js/components/Dashboard/AlertsPage";
 import {
   mockOutletContextData,
@@ -16,22 +14,6 @@ beforeAll(() => {
 });
 
 describe("Alerts Page", () => {
-  let originalFetch: any;
-
-  beforeEach(() => {
-    originalFetch = global.fetch;
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () =>
-          Promise.resolve({ alerts, screens_by_alert: alertsOnScreens }),
-      })
-    ) as jest.Mock;
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-  });
-
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
       const { getByRole, findByRole, getByTestId, queryByTestId } = render(
@@ -129,26 +111,6 @@ describe("Alerts Page", () => {
         fireEvent.click(getByTestId("sort-label"));
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe("END");
-        });
-      });
-    });
-  });
-
-  describe("Alert Places List", () => {
-    test("navigating to / from the places list for an alert", async () => {
-      const { getByTestId, getByText, queryByTestId, queryByText } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <AlertsPage />
-        </RenderRouteWithOutletContext>
-      );
-
-      await act(async () => {
-        await waitFor(() => {
-          expect(queryByTestId("10")).toBeInTheDocument();
-          fireEvent.click(getByTestId("10"));
-          expect(getByText(/delay #10/i)).toBeInTheDocument();
-          fireEvent.click(getByTestId("places-list-back-button"));
-          expect(queryByText(/delay #10/i)).not.toBeInTheDocument();
         });
       });
     });
