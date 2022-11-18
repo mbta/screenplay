@@ -25,6 +25,14 @@ const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
     }
   };
 
+  const aOrAn = (route: string) => {
+    if (route === "Orange Line") {
+      return "An";
+    } else {
+      return "A";
+    }
+  };
+
   const getBannerText = () => {
     const route = params["*"] || "";
 
@@ -38,7 +46,9 @@ const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
         return (
           <>
             <span className="bold">
-              {`A ${affectedListString} ${formatEffect(alert.effect)}
+              {`${aOrAn(
+                affectedListString
+              )} ${affectedListString} ${formatEffect(alert.effect)}
               alert was just closed.`}
             </span>{" "}
             Closing an alert may cause others to appear on more screens. It
