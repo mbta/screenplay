@@ -39,7 +39,7 @@ defmodule ScreenplayWeb.AuthController do
   end
 
   def callback(
-        %{assigns: %{ueberauth_failure: %Ueberauth.Failure{errors: errors}}} = conn,
+        conn = %{assigns: %{ueberauth_failure: %Ueberauth.Failure{errors: errors}}},
         _params
       ) do
     error_messages =
