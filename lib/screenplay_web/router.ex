@@ -1,8 +1,6 @@
 defmodule ScreenplayWeb.Router do
   use ScreenplayWeb, :router
 
-  require Logger
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -14,12 +12,6 @@ defmodule ScreenplayWeb.Router do
   pipeline :api do
     plug :accepts, ["json"]
   end
-
-  # pipeline :redirect_prod_http do
-  #   if Application.get_env(:screenplay, :redirect_http?) do
-  #     plug(Plug.SSL, rewrite_on: [:x_forwarded_proto])
-  #   end
-  # end
 
   pipeline :auth do
     plug(ScreenplayWeb.AuthManager.Pipeline)
@@ -41,7 +33,6 @@ defmodule ScreenplayWeb.Router do
 
   scope "/", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
-      # :redirect_prod_http,
       :browser,
       :auth,
       :ensure_auth,
@@ -76,7 +67,6 @@ defmodule ScreenplayWeb.Router do
 
   scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
-      # :redirect_prod_http,
       :api,
       :browser,
       :auth,

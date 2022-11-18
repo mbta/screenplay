@@ -5,10 +5,10 @@ defmodule ScreenplayWeb.AuthController do
 
   plug Ueberauth
 
-  # @spec request(Plug.Conn.t(), any) :: Plug.Conn.t()
-  # def request(conn, %{"provider" => provider}) when provider != "cognito" do
-  #   send_resp(conn, 404, "Not Found")
-  # end
+  @spec request(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def request(conn, %{"provider" => provider}) when provider != "cognito" do
+    send_resp(conn, 404, "Not Found")
+  end
 
   @spec callback(Plug.Conn.t(), any) :: Plug.Conn.t()
   def callback(conn, %{"provider" => provider}) when provider != "cognito" do
@@ -24,7 +24,6 @@ defmodule ScreenplayWeb.AuthController do
     current_time = System.system_time(:second)
 
     previous_path = Plug.Conn.get_session(conn, :previous_path)
-    IO.inspect(previous_path, label: "from path")
     Plug.Conn.delete_session(conn, :previous_path)
 
     conn
@@ -36,7 +35,6 @@ defmodule ScreenplayWeb.AuthController do
     )
     |> Plug.Conn.put_session(:username, name || username)
     # Redirect to whatever page they came from
-    # Commenting out this line breaks everything
     |> redirect(to: previous_path)
   end
 
