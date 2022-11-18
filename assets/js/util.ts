@@ -174,7 +174,6 @@ const SIGNIFICANT_ALERT_EFFECTS: {
 };
 
 export const isSignificantAlert = (alert: Alert) => {
-  console.log(alert.severity);
   if (alert.effect === "DELAY") {
     return Number(alert.severity) > 3;
   } else {
