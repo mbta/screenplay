@@ -25,13 +25,7 @@ const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
     }
   };
 
-  const aOrAn = (route: string) => {
-    if (route === "Orange Line") {
-      return "An";
-    } else {
-      return "A";
-    }
-  };
+  const aOrAn = (route: string) => (route === "Orange Line" ? "An" : "A");
 
   const getBannerText = () => {
     const route = params["*"] || "";
