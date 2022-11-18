@@ -295,7 +295,7 @@ describe("Dashboard", () => {
             "Gilman Square",
             "Magoun Square",
             "Ball Square",
-            "MEDFORD/TUFTS"
+            "MEDFORD/TUFTS",
           ]);
         });
       });
