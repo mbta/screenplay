@@ -1,8 +1,6 @@
 defmodule ScreenplayWeb.AuthController do
   use ScreenplayWeb, :controller
 
-  require Logger
-
   plug Ueberauth
 
   # @spec request(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -36,7 +34,6 @@ defmodule ScreenplayWeb.AuthController do
     )
     |> Plug.Conn.put_session(:username, name || username)
     # Redirect to whatever page they came from
-    # Commenting out this line breaks everything
     # |> redirect(to: previous_path)
   end
 
