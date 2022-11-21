@@ -67,6 +67,7 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 config :screenplay,
+  redirect_http?: false,
   sftp_host: System.get_env("SFTP_HOST"),
   sftp_user: System.get_env("SFTP_USER"),
   sftp_password: System.get_env("SFTP_PASSWORD"),
