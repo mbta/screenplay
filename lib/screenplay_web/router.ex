@@ -16,7 +16,9 @@ defmodule ScreenplayWeb.Router do
   end
 
   pipeline :redirect_prod_http do
+    Logger.debug("running the redirect_prod_http pipeline")
     if Application.get_env(:screenplay, :redirect_http?) do
+      Logger.debug("running the redirect")
       plug(Plug.SSL, rewrite_on: [:x_forwarded_proto])
     end
   end
