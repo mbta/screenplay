@@ -7,7 +7,6 @@ config :screenplay, ScreenplayWeb.Endpoint,
   server: false
 
 config :screenplay,
-  redirect_http?: false,
   alerts_fetch_module: Screenplay.Alerts.LocalFetch,
   local_alerts_path_spec: {:test, "alerts.json"},
   config_fetcher: Screenplay.Config.LocalFetch
