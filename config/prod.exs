@@ -12,6 +12,7 @@ import Config
 config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   http: [:inet6, port: 4000],
+  redirect_http?: true,
   server: true,
   url: [port: 80]
 
