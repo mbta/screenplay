@@ -13,6 +13,12 @@ defmodule ScreenplayWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :redirect_prod_http do
+    if Application.get_env(:screenplay, :redirect_http?) do
+      plug(Plug.SSL, rewrite_on: [:x_forwarded_proto])
+    end
+  end
+
   pipeline :auth do
     plug(ScreenplayWeb.AuthManager.Pipeline)
   end
@@ -33,6 +39,7 @@ defmodule ScreenplayWeb.Router do
 
   scope "/", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
+      :redirect_prod_http,
       :browser,
       :auth,
       :ensure_auth,
@@ -44,7 +51,7 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/", ScreenplayWeb do
-    pipe_through [:browser, :auth, :ensure_auth]
+    pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardController, :index)
     get("/dashboard/alerts", DashboardController, :index)
@@ -52,20 +59,22 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/api", ScreenplayWeb do
-    pipe_through [:browser, :auth, :ensure_auth]
+    pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardApiController, :index)
   end
 
   scope "/auth", ScreenplayWeb do
-    pipe_through([:browser])
+    pipe_through([:redirect_prod_http, :browser])
 
     get("/:provider", AuthController, :request)
     get("/:provider/callback", AuthController, :callback)
+    get("/:provider/logout", AuthController, :logout)
   end
 
   scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
+      :redirect_prod_http,
       :api,
       :browser,
       :auth,
