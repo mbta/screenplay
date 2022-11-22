@@ -13,9 +13,13 @@ config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   http: [:inet6, port: 4000],
   server: true,
-  url: [port: 443],
-  https: [port: 443],
-  force_ssl: [hsts: true]
+  url: [scheme: "https", port: 443],
+  
+config :screenplay, :secure_pipeline
+  force_ssl: [
+    host: nil,
+    rewrite_on: [:x_forwarded_proto]
+  ]
 
 config :screenplay,
   alerts_fetch_module: Screenplay.Alerts.S3Fetch,

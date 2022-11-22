@@ -9,6 +9,12 @@ defmodule ScreenplayWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :secure do
+    if force_ssl = Application.get_env(:site, :secure_pipeline)[:force_ssl] do
+      plug(Plug.SSL, force_ssl)
+    end
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -33,6 +39,7 @@ defmodule ScreenplayWeb.Router do
 
   scope "/", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
+      :secure,
       :browser,
       :auth,
       :ensure_auth,
@@ -44,7 +51,7 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/", ScreenplayWeb do
-    pipe_through [:browser, :auth, :ensure_auth]
+    pipe_through [:secure, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardController, :index)
     get("/dashboard/alerts", DashboardController, :index)
@@ -52,13 +59,13 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/api", ScreenplayWeb do
-    pipe_through [:browser, :auth, :ensure_auth]
+    pipe_through [:secure, :browser, :auth, :ensure_auth]
 
     get("/dashboard", DashboardApiController, :index)
   end
 
   scope "/auth", ScreenplayWeb do
-    pipe_through([:browser])
+    pipe_through([:secure, :browser])
 
     get("/:provider", AuthController, :request)
     get("/:provider/callback", AuthController, :callback)
@@ -67,6 +74,7 @@ defmodule ScreenplayWeb.Router do
 
   scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through [
+      :secure,
       :api,
       :browser,
       :auth,
