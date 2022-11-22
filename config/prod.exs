@@ -15,7 +15,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
   server: true,
   url: [scheme: "https", port: 443],
   
-config :screenplay, :secure_pipeline
+config :screenplay, :secure_pipeline,
   force_ssl: [
     host: nil,
     rewrite_on: [:x_forwarded_proto]
