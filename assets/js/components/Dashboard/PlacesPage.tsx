@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useContext, useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -12,7 +12,7 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
-import { useDashboardContext } from "./Dashboard";
+import { ScreenplayContext } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
@@ -31,7 +31,7 @@ const getSortLabel = (
 };
 
 const PlacesPage: ComponentType = () => {
-  const { places } = useDashboardContext();
+  const { places } = useContext(ScreenplayContext);
 
   return (
     <div className="places-page">
