@@ -34,6 +34,10 @@ interface StateContextType {
   alerts: Alert[];
   screensByAlertMap: ScreensByAlert;
   placesPageDirectionId: DirectionID;
+  placesPage: PageProps & {
+    showScreenlessPlaces: boolean;
+    activeEventKeys: string[];
+  };
   alertsPage: PageProps;
 }
 
@@ -49,7 +53,10 @@ const reducer = (state: any, action: any) => {
       if (action.page === "PLACES") {
         return {
           ...state,
-          placesPageDirectionId: action.sortDirection as DirectionID,
+          placesPage: {
+            ...state.placesPage,
+            sortDirection: action.sortDirection as DirectionID,
+          },
         };
       } else if (action.page === "ALERTS") {
         return {
@@ -63,7 +70,15 @@ const reducer = (state: any, action: any) => {
 
       return state;
     case "SET_MODE_LINE_FILTER":
-      if (action.page === "ALERTS") {
+      if (action.page === "PLACES") {
+        return {
+          ...state,
+          placesPage: {
+            ...state.placesPage,
+            modeLineFilterValue: action.filterValue,
+          },
+        };
+      } else if (action.page === "ALERTS") {
         return {
           ...state,
           alertsPage: {
@@ -75,7 +90,15 @@ const reducer = (state: any, action: any) => {
 
       return state;
     case "SET_SCREEN_TYPE_FILTER":
-      if (action.page === "ALERTS") {
+      if (action.page === "PLACES") {
+        return {
+          ...state,
+          placesPage: {
+            ...state.placesPage,
+            screenTypeFilterValue: action.filterValue,
+          },
+        };
+      } else if (action.page === "ALERTS") {
         return {
           ...state,
           alertsPage: {
@@ -87,13 +110,54 @@ const reducer = (state: any, action: any) => {
 
       return state;
     case "SET_STATUS_FILTER":
-      if (action.page === "ALERTS") {
+      if (action.page === "PLACES") {
+        return {
+          ...state,
+          placesPage: {
+            ...state.placesPage,
+            statusFilterValue: action.filterValue,
+          },
+        };
+      } else if (action.page === "ALERTS") {
         return {
           ...state,
           alertsPage: {
             ...state.alertsPage,
             statusFilterValue: action.filterValue,
           },
+        };
+      }
+
+      return state;
+    case "SET_SHOW_SCREENLESS_PLACES":
+      if (action.page === "PLACES") {
+        return {
+          ...state,
+          placesPage: {
+            ...state.placesPage,
+            showScreenlessPlaces: action.show,
+          },
+        };
+      }
+
+      return state;
+    case "SET_ACTIVE_EVENT_KEYS":
+      if (action.page === "PLACES") {
+        return {
+          ...state,
+          placesPage: {
+            ...state.placesPage,
+            activeEventKeys: action.eventKeys,
+          },
+        };
+      }
+
+      return state;
+    case "RESET_STATE":
+      if (action.page === "PLACES") {
+        return {
+          ...state,
+          placesPage: initialState.placesPage,
         };
       }
 
@@ -107,7 +171,14 @@ const initialState = {
   places: [] as Place[],
   alerts: [] as Alert[],
   screensByAlertMap: {} as ScreensByAlert,
-  placesPageDirectionId: 0 as DirectionID,
+  placesPage: {
+    sortDirection: 0 as DirectionID,
+    modeLineFilterValue: MODES_AND_LINES[0],
+    screenTypeFilterValue: SCREEN_TYPES[0],
+    statusFilterValue: STATUSES[0],
+    showScreenlessPlaces: true,
+    activeEventKeys: [],
+  },
   alertsPage: {
     sortDirection: 0 as DirectionID,
     modeLineFilterValue: MODES_AND_LINES[0],

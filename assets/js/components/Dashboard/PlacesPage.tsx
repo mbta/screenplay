@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -58,35 +58,37 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   isAlertPlacesList,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
-  const { placesPageDirectionId: sortDirection } = useScreenplayContext();
+  const {
+    placesPage: {
+      sortDirection,
+      modeLineFilterValue,
+      screenTypeFilterValue,
+      statusFilterValue,
+      showScreenlessPlaces,
+      activeEventKeys,
+    },
+  } = useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
-  const [modeLineFilterValue, setModeLineFilterValue] = useState(
-    MODES_AND_LINES[0]
-  );
-  const [screenTypeFilterValue, setScreenTypeFilterValue] = useState(
-    SCREEN_TYPES[0]
-  );
-  const [showScreenlessPlaces, setShowScreenlessPlaces] = useState(true);
-  const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
-  const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
 
   const handleClickResetFilters = () => {
-    setModeLineFilterValue(MODES_AND_LINES[0]);
-    setScreenTypeFilterValue(SCREEN_TYPES[0]);
-    setStatusFilterValue(STATUSES[0]);
-    setShowScreenlessPlaces(true);
+    dispatch({ type: "RESET_STATE", page: "PLACES" });
   };
 
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
   useEffect(() => {
-    setActiveEventKeys([]);
+    dispatch({ type: "SET_ACTIVE_EVENT_KEYS", page: "PLACES", eventKeys: [] });
+    console.log(modeLineFilterValue);
   }, [modeLineFilterValue, screenTypeFilterValue, statusFilterValue]);
 
   const handleSelectModeOrLine = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
-      setModeLineFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_MODE_LINE_FILTER",
+        page: "PLACES",
+        filterValue: selectedFilter,
+      });
       dispatch({
         type: "SET_SORT_DIRECTION",
         page: "PLACES",
@@ -98,14 +100,22 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   const handleSelectScreenType = (value: string) => {
     const selectedFilter = SCREEN_TYPES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setScreenTypeFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_SCREEN_TYPE_FILTER",
+        page: "PLACES",
+        filterValue: selectedFilter,
+      });
     }
   };
 
   const handleSelectStatus = (value: string) => {
     const selectedFilter = STATUSES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setStatusFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_STATUS_FILTER",
+        page: "PLACES",
+        filterValue: selectedFilter,
+      });
     }
   };
 
@@ -195,14 +205,26 @@ const PlacesList: ComponentType<PlacesListProps> = ({
 
   const handleClickAccordion = (eventKey: string) => {
     if (activeEventKeys.includes(eventKey)) {
-      setActiveEventKeys(activeEventKeys.filter((e) => e !== eventKey));
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        page: "PLACES",
+        eventKeys: activeEventKeys.filter((e) => e !== eventKey),
+      });
     } else {
-      setActiveEventKeys([...activeEventKeys, eventKey]);
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        page: "PLACES",
+        eventKeys: [...activeEventKeys, eventKey],
+      });
     }
   };
 
   const handleClickToggleScreenlessPlaces = () => {
-    setShowScreenlessPlaces((prevValue) => !prevValue);
+    dispatch({
+      type: "SET_SHOW_SCREENLESS_PLACES",
+      page: "PLACES",
+      show: !showScreenlessPlaces,
+    });
   };
 
   const { filteredPlaces, filteredPlacesHaveScreenlessPlaces } = filterPlaces();
