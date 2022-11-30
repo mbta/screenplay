@@ -1,15 +1,17 @@
 import React, { ComponentType } from "react";
-import { Alert } from "../../models/alert";
 import { ArrowRepeat } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
+import { BannerAlert } from "./Dashboard";
 
 interface Props {
-  alert: Alert;
-  isClosedAlert: boolean;
+  bannerAlert: BannerAlert;
 }
 
-const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
+const AlertBanner: ComponentType<Props> = ({ bannerAlert }: Props) => {
+  const { alert, closedAt } = bannerAlert;
+  if (!alert) return null;
+
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();
 
@@ -36,7 +38,7 @@ const AlertBanner: ComponentType<Props> = ({ alert, isClosedAlert }: Props) => {
       ["dashboard", "alerts"].includes(route) ||
       (params.id && params.id !== alert.id)
     ) {
-      if (isClosedAlert) {
+      if (closedAt) {
         return (
           <>
             <span className="bold">

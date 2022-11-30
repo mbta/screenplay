@@ -128,12 +128,7 @@ const Dashboard: ComponentType = () => {
     <div className="screenplay-container">
       <Sidebar />
       <div className="page-content">
-        {bannerAlert?.alert && (
-          <AlertBanner
-            alert={bannerAlert.alert}
-            isClosedAlert={bannerAlert.closedAt !== undefined}
-          />
-        )}
+        {bannerAlert?.alert && <AlertBanner bannerAlert={bannerAlert} />}
         <Outlet context={{ places, alerts, screensByAlertMap }} />
       </div>
     </div>
@@ -144,4 +139,5 @@ export const useDashboardContext = () => {
   return useOutletContext<ContextType>();
 };
 
+export { BannerAlert };
 export default Dashboard;
