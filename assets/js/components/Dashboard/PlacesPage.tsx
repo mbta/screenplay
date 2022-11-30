@@ -1,4 +1,4 @@
-import React, { ComponentType, useContext, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -12,7 +12,10 @@ import {
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
-import { ScreenplayContext } from "./Dashboard";
+import {
+  useScreenplayContext,
+  useScreenplayDispatchContext,
+} from "../../hooks/useScreenplayContext";
 
 type DirectionID = 0 | 1;
 
@@ -31,7 +34,7 @@ const getSortLabel = (
 };
 
 const PlacesPage: ComponentType = () => {
-  const { places } = useContext(ScreenplayContext);
+  const { places } = useScreenplayContext();
 
   return (
     <div className="places-page">
@@ -55,7 +58,8 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   isAlertPlacesList,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
-  const [sortDirection, setSortDirection] = useState<DirectionID>(0);
+  const { placesPageDirectionId: sortDirection } = useScreenplayContext();
+  const dispatch = useScreenplayDispatchContext();
   const [modeLineFilterValue, setModeLineFilterValue] = useState(
     MODES_AND_LINES[0]
   );
@@ -83,7 +87,11 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
       setModeLineFilterValue(selectedFilter);
-      setSortDirection(0);
+      dispatch({
+        type: "SET_SORT_DIRECTION",
+        page: "PLACES",
+        sortDirection: 0,
+      });
     }
   };
 
@@ -102,7 +110,11 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   };
 
   const handleClickSortLabel = () => {
-    setSortDirection((1 - sortDirection) as DirectionID);
+    dispatch({
+      type: "SET_SORT_DIRECTION",
+      page: "PLACES",
+      sortDirection: 1 - sortDirection,
+    });
   };
 
   const sortPlaces = (places: Place[]) => {

@@ -1,4 +1,4 @@
-import React, { ComponentType, useContext, useState } from "react";
+import React, { ComponentType, useState } from "react";
 import FilterDropdown from "./FilterDropdown";
 import { Col, Container, Row } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
@@ -17,12 +17,12 @@ import { ScreensByAlert } from "../../models/screensByAlert";
 import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
-import { ScreenplayContext } from "./Dashboard";
+import { useScreenplayContext } from "../../hooks/useScreenplayContext";
 
 type DirectionID = 0 | 1;
 
 const AlertsPage: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useContext(ScreenplayContext);
+  const { places, alerts, screensByAlertMap } = useScreenplayContext();
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id]

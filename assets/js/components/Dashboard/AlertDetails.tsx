@@ -1,4 +1,4 @@
-import React, { ComponentType, useContext, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import AlertCard from "./AlertCard";
 import { PlacesList } from "./PlacesPage";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,10 +6,10 @@ import { Alert } from "../../models/alert";
 import { Button } from "react-bootstrap";
 import { ArrowLeft, ArrowUpRight } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
-import { ScreenplayContext } from "./Dashboard";
+import { useScreenplayContext } from "../../hooks/useScreenplayContext";
 
 const AlertDetails: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useContext(ScreenplayContext);
+  const { places, alerts, screensByAlertMap } = useScreenplayContext();
   const { id } = useParams();
   const [selectedAlert, setSelectedAlert] = useState<Alert>();
 
