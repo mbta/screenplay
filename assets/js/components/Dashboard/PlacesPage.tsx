@@ -78,7 +78,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
 
   useEffect(() => {
     dispatch({ type: "SET_ACTIVE_EVENT_KEYS", page: "PLACES", eventKeys: [] });
-    console.log(modeLineFilterValue);
   }, [modeLineFilterValue, screenTypeFilterValue, statusFilterValue]);
 
   const handleSelectModeOrLine = (value: string) => {
