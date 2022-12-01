@@ -18,7 +18,7 @@ const Dashboard: ComponentType = () => {
   const dispatch = useScreenplayDispatchContext();
 
   useEffect(() => {
-    fetchAlerts().then(({ alerts: newAlerts, screens_by_alert }) => {
+    fetchAlerts((newAlerts, screens_by_alert) => {
       findAndSetBannerAlert(alerts, newAlerts);
       dispatch({ type: "SET_ALERTS", alerts: newAlerts });
       dispatch({
@@ -27,14 +27,14 @@ const Dashboard: ComponentType = () => {
       });
     });
 
-    fetchPlaces().then((placesList) =>
+    fetchPlaces((placesList) =>
       dispatch({ type: "SET_PLACES", places: placesList })
     );
   }, []);
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
-    fetchAlerts().then(({ alerts: newAlerts, screens_by_alert }) => {
+    fetchAlerts((newAlerts, screens_by_alert) => {
       findAndSetBannerAlert(alerts, newAlerts);
       dispatch({ type: "SET_ALERTS", alerts: newAlerts });
       dispatch({
