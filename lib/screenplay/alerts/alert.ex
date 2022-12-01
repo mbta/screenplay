@@ -59,7 +59,8 @@ defmodule Screenplay.Alerts.Alert do
     %{
       id: alert.id,
       effect: alert.effect,
-      severity: interpret_severity(alert.severity),
+      severity: alert.severity,
+      severity_string: interpret_severity(alert.severity),
       header: alert.header,
       informed_entities: alert.informed_entities,
       active_period: aps,

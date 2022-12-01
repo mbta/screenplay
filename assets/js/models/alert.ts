@@ -13,6 +13,7 @@ export interface Alert {
   id: string;
   effect: string;
   severity: string;
+  severity_string: string;
   header: string;
   informed_entities: InformedEntity[];
   active_period: ActivePeriod[];

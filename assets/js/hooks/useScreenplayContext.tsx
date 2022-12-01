@@ -3,12 +3,13 @@ import { createGenericContext } from "../utils/createGenericContext";
 import { Place } from "../models/place";
 import { Alert } from "../models/alert";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import {
   MODES_AND_LINES,
   SCREEN_TYPES,
   STATUSES,
 } from "../constants/constants";
+import { BannerAlert } from "../components/Dashboard/AlertBanner";
 
 interface Props {
   children: React.ReactNode;
@@ -39,6 +40,7 @@ interface StateContextType {
     activeEventKeys: string[];
   };
   alertsPage: PageProps;
+  bannerAlert?: BannerAlert;
 }
 
 const reducer = (state: any, action: any) => {
@@ -157,6 +159,11 @@ const reducer = (state: any, action: any) => {
       }
 
       return state;
+    case "SET_BANNER_ALERT":
+      return {
+        ...state,
+        bannerAlert: action.bannerAlert,
+      };
     case "RESET_STATE":
       if (action.page === "PLACES") {
         return {
@@ -175,6 +182,7 @@ const initialState = {
   places: [] as Place[],
   alerts: [] as Alert[],
   screensByAlertMap: {} as ScreensByAlert,
+  bannerAlert: undefined,
   placesPage: {
     sortDirection: 0 as DirectionID,
     modeLineFilterValue: MODES_AND_LINES[0],

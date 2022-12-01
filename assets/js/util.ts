@@ -46,6 +46,65 @@ export const abbreviation = (line: string) => {
   }
 };
 
+export const translateRouteID = (id: string) => {
+  switch (id) {
+    case "red":
+      return "Red Line";
+    case "mattapan":
+      return "Mattapan";
+    case "orange":
+      return "Orange Line";
+    case "blue":
+      return "Blue Line";
+    case "silver":
+      return "Silver Line";
+    case "green":
+    case "green-b":
+    case "green-c":
+    case "green-d":
+    case "green-e":
+      return "Green Line";
+    case "bus":
+      return "Bus";
+    case "cr":
+      return "Commuter Rail";
+    default:
+      return "";
+  }
+};
+
+export const getModeFromAffectedList = (affectedList: string[]) => {
+  if (
+    [
+      "red",
+      "orange",
+      "blue",
+      "green",
+      "green-b",
+      "green-c",
+      "green-d",
+      "green-e",
+    ].filter((value) => affectedList.includes(value))
+  ) {
+    return "subway";
+  } else {
+    return affectedList[0];
+  }
+};
+
+export const convertArrayToListString = (array: string[]) => {
+  if (array.length === 1) {
+    return array[0];
+  } else if (array.length === 2) {
+    return `${array[0]} and ${array[1]}`;
+  } else {
+    return (
+      array.slice(0, array.length - 1).join(", ") +
+      `and ${array[array.length - 1]}`
+    );
+  }
+};
+
 const ALL_STATIONS = ["blue", "green", "orange", "red", "silver"].flatMap(
   (line) => STATIONS_BY_LINE[line]
 );
@@ -105,4 +164,21 @@ export const placesWithSelectedAlert = (
         )
       )
     : [];
+};
+
+const SIGNIFICANT_ALERT_EFFECTS: {
+  [mode: string]: string[];
+} = {
+  subway: ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
+  bus: ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"],
+};
+
+export const isSignificantAlert = (alert: Alert) => {
+  if (alert.effect === "DELAY") {
+    return Number(alert.severity) > 3;
+  } else {
+    return SIGNIFICANT_ALERT_EFFECTS[
+      getModeFromAffectedList(alert.affected_list)
+    ].includes(alert.effect);
+  }
 };

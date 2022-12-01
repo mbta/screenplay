@@ -8,7 +8,8 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "STATION_CLOSURE",
-      severity: "up to 15 minutes",
+      severity: "4",
+      severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
       active_period: [{ start: "2022-09-16T10:00:00Z", end: "" }],
@@ -28,7 +29,8 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "DELAY",
-      severity: "up to 15 minutes",
+      severity: "4",
+      severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
       active_period: [{ start: "2022-09-16T10:00:00Z", end: "" }],
@@ -48,7 +50,8 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "DELAY",
-      severity: "up to 15 minutes",
+      severity: "4",
+      severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
       active_period: [
@@ -74,7 +77,8 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "DELAY",
-      severity: "up to 15 minutes",
+      severity: "4",
+      severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
       active_period: [
