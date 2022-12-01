@@ -3,7 +3,7 @@ import { createGenericContext } from "../utils/createGenericContext";
 import { Place } from "../models/place";
 import { Alert } from "../models/alert";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import {
   MODES_AND_LINES,
   SCREEN_TYPES,
@@ -76,6 +76,7 @@ const reducer = (state: any, action: any) => {
           placesPage: {
             ...state.placesPage,
             modeLineFilterValue: action.filterValue,
+            activeEventKeys: [],
           },
         };
       } else if (action.page === "ALERTS") {
@@ -96,6 +97,7 @@ const reducer = (state: any, action: any) => {
           placesPage: {
             ...state.placesPage,
             screenTypeFilterValue: action.filterValue,
+            activeEventKeys: [],
           },
         };
       } else if (action.page === "ALERTS") {
@@ -116,6 +118,7 @@ const reducer = (state: any, action: any) => {
           placesPage: {
             ...state.placesPage,
             statusFilterValue: action.filterValue,
+            activeEventKeys: [],
           },
         };
       } else if (action.page === "ALERTS") {
@@ -136,6 +139,7 @@ const reducer = (state: any, action: any) => {
           placesPage: {
             ...state.placesPage,
             showScreenlessPlaces: action.show,
+            activeEventKeys: [],
           },
         };
       }
@@ -196,7 +200,6 @@ const [useScreenplayDispatchContext, ScreenplayDispatchContextProvider] =
 
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
-  //   const state = useScreenplayContext();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (

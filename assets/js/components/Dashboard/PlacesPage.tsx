@@ -76,10 +76,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
 
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
-  useEffect(() => {
-    dispatch({ type: "SET_ACTIVE_EVENT_KEYS", page: "PLACES", eventKeys: [] });
-  }, [modeLineFilterValue, screenTypeFilterValue, statusFilterValue]);
-
   const handleSelectModeOrLine = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
