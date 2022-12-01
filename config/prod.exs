@@ -13,7 +13,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   http: [:inet6, port: 4000],
   server: true,
-  url: [scheme: "https", port: 443],
+  url: [scheme: "https", port: 443]
   
 config :screenplay, :secure_pipeline,
   force_ssl: [
