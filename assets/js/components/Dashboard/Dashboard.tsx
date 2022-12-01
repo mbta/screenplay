@@ -19,7 +19,7 @@ const Dashboard: ComponentType = () => {
 
   useEffect(() => {
     fetchAlerts().then(({ alerts: newAlerts, screens_by_alert }) => {
-      console.log(newAlerts);
+      findAndSetBannerAlert(alerts, newAlerts);
       dispatch({ type: "SET_ALERTS", alerts: newAlerts });
       dispatch({
         type: "SET_SCREENS_BY_ALERT",
