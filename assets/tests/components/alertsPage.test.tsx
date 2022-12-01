@@ -1,26 +1,13 @@
 import React from "react";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 import AlertsPage from "../../js/components/Dashboard/AlertsPage";
-import {
-  mockOutletContextData,
-  RenderRouteWithOutletContext,
-} from "../utils/RenderRouteWithOutletContext";
-
-beforeAll(() => {
-  const app = document.createElement("div");
-  app.id = "app";
-  app.dataset.username = "test";
-  document.body.appendChild(app);
-});
+import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvider";
 
 describe("Alerts Page", () => {
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
-      const { getByRole, findByRole, getByTestId, queryByTestId } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <AlertsPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByRole, findByRole, getByTestId, queryByTestId } =
+        renderWithScreenplayProvider(<AlertsPage />);
 
       await act(async () => {
         await waitFor(() => {
@@ -65,11 +52,8 @@ describe("Alerts Page", () => {
     });
 
     test("filters places by screen type", async () => {
-      const { getByRole, findByRole, getByTestId, queryAllByTestId } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <AlertsPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByRole, findByRole, getByTestId, queryAllByTestId } =
+        renderWithScreenplayProvider(<AlertsPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
@@ -100,11 +84,7 @@ describe("Alerts Page", () => {
 
   describe("sorting", () => {
     test("sort label when clicked", async () => {
-      const { getByTestId } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <AlertsPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId } = renderWithScreenplayProvider(<AlertsPage />);
 
       await act(async () => {
         expect(getByTestId("sort-label").textContent?.trim()).toBe("END");
