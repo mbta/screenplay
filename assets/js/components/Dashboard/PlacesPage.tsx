@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect } from "react";
+import React, { ComponentType } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
