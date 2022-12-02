@@ -11,7 +11,7 @@ import Config
 # before starting your production server.
 config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
-  http: [:inet6, port: 4000],
+  # http: [:inet6, port: 4000],
   redirect_http?: true,
   server: true,
   url: [port: 80]

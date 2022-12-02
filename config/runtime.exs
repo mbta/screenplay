@@ -4,6 +4,8 @@ config :screenplay, ScreenplayWeb.AuthManager, secret_key: System.get_env("GUARD
 
 config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: System.get_env("HOST"), port: 80],
+  redirect_http?: true,
+  http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
 config :ueberauth, Ueberauth.Strategy.Cognito,
