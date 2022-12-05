@@ -15,6 +15,40 @@ interface Props {
   children: React.ReactNode;
 }
 
+type ReducerAction =
+  | {
+      type: "SET_PLACES";
+      places: Place[];
+    }
+  | {
+      type: "SET_ALERTS";
+      alerts: Alert[];
+    }
+  | {
+      type: "SET_SCREENS_BY_ALERT";
+      screensByAlertMap: ScreensByAlert;
+    }
+  | { type: "SET_SORT_DIRECTION"; page: string; sortDirection: DirectionID }
+  | {
+      type:
+        | "SET_MODE_LINE_FILTER"
+        | "SET_SCREEN_TYPE_FILTER"
+        | "SET_STATUS_FILTER";
+      page: string;
+      filterValue: FilterValue;
+    }
+  | {
+      type: "SET_SHOW_SCREENLESS_PLACES";
+      page: string;
+      show: boolean;
+    }
+  | { type: "SET_ACTIVE_EVENT_KEYS"; page: string; eventKeys: string[] }
+  | {
+      type: "SET_BANNER_ALERT";
+      bannerAlert: BannerAlert;
+    }
+  | { type: "RESET_STATE"; page: string };
+
 type DirectionID = 0 | 1;
 
 interface FilterValue {
@@ -34,16 +68,15 @@ interface StateContextType {
   places: Place[];
   alerts: Alert[];
   screensByAlertMap: ScreensByAlert;
-  placesPageDirectionId: DirectionID;
+  bannerAlert?: BannerAlert;
   placesPage: PageProps & {
     showScreenlessPlaces: boolean;
     activeEventKeys: string[];
   };
   alertsPage: PageProps;
-  bannerAlert?: BannerAlert;
 }
 
-const reducer = (state: any, action: any) => {
+const reducer = (state: StateContextType, action: ReducerAction) => {
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
@@ -173,12 +206,10 @@ const reducer = (state: any, action: any) => {
       }
 
       return state;
-    default:
-      throw new Error(`No case for type ${action.type} found in reducer.`);
   }
 };
 
-const initialState = {
+const initialState: StateContextType = {
   places: [] as Place[],
   alerts: [] as Alert[],
   screensByAlertMap: {} as ScreensByAlert,
