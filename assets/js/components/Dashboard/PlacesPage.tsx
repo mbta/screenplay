@@ -13,8 +13,9 @@ import {
   STATUSES,
 } from "../../constants/constants";
 import {
+  usePlacesPageContext,
+  usePlacesPageDispatchContext,
   useScreenplayContext,
-  useScreenplayDispatchContext,
 } from "../../hooks/useScreenplayContext";
 
 type DirectionID = 0 | 1;
@@ -59,16 +60,14 @@ const PlacesList: ComponentType<PlacesListProps> = ({
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
-    placesPage: {
-      sortDirection,
-      modeLineFilterValue,
-      screenTypeFilterValue,
-      statusFilterValue,
-      showScreenlessPlaces,
-      activeEventKeys,
-    },
-  } = useScreenplayContext();
-  const dispatch = useScreenplayDispatchContext();
+    sortDirection,
+    modeLineFilterValue,
+    screenTypeFilterValue,
+    statusFilterValue,
+    showScreenlessPlaces,
+    activeEventKeys,
+  } = usePlacesPageContext();
+  const dispatch = usePlacesPageDispatchContext();
 
   const handleClickResetFilters = () => {
     dispatch({ type: "RESET_STATE", page: "PLACES" });

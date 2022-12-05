@@ -28,26 +28,36 @@ type ReducerAction =
       type: "SET_SCREENS_BY_ALERT";
       screensByAlertMap: ScreensByAlert;
     }
-  | { type: "SET_SORT_DIRECTION"; page: string; sortDirection: DirectionID }
+  | {
+      type: "SET_BANNER_ALERT";
+      bannerAlert: BannerAlert;
+    };
+
+type AlertsPageReducerAction =
+  | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
   | {
       type:
         | "SET_MODE_LINE_FILTER"
         | "SET_SCREEN_TYPE_FILTER"
         | "SET_STATUS_FILTER";
-      page: string;
+      filterValue: FilterValue;
+    };
+
+type PlacesPageReducerAction =
+  | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
+  | {
+      type:
+        | "SET_MODE_LINE_FILTER"
+        | "SET_SCREEN_TYPE_FILTER"
+        | "SET_STATUS_FILTER";
       filterValue: FilterValue;
     }
   | {
       type: "SET_SHOW_SCREENLESS_PLACES";
-      page: string;
       show: boolean;
     }
-  | { type: "SET_ACTIVE_EVENT_KEYS"; page: string; eventKeys: string[] }
-  | {
-      type: "SET_BANNER_ALERT";
-      bannerAlert: BannerAlert;
-    }
-  | { type: "RESET_STATE"; page: string };
+  | { type: "SET_ACTIVE_EVENT_KEYS"; eventKeys: string[] }
+  | { type: "RESET_STATE" };
 
 type DirectionID = 0 | 1;
 
@@ -57,26 +67,30 @@ interface FilterValue {
   color?: string;
 }
 
-interface PageProps {
+interface PlacesPageState {
+  sortDirection: DirectionID;
+  modeLineFilterValue: FilterValue;
+  screenTypeFilterValue: FilterValue;
+  statusFilterValue: FilterValue;
+  showScreenlessPlaces: boolean;
+  activeEventKeys: string[];
+}
+
+interface AlertsPageState {
   sortDirection: DirectionID;
   modeLineFilterValue: FilterValue;
   screenTypeFilterValue: FilterValue;
   statusFilterValue: FilterValue;
 }
 
-interface StateContextType {
+interface ScreenplayState {
   places: Place[];
   alerts: Alert[];
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
-  placesPage: PageProps & {
-    showScreenlessPlaces: boolean;
-    activeEventKeys: string[];
-  };
-  alertsPage: PageProps;
 }
 
-const reducer = (state: StateContextType, action: ReducerAction) => {
+const reducer = (state: ScreenplayState, action: ReducerAction) => {
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
@@ -84,167 +98,155 @@ const reducer = (state: StateContextType, action: ReducerAction) => {
       return { ...state, alerts: action.alerts };
     case "SET_SCREENS_BY_ALERT":
       return { ...state, screensByAlertMap: action.screensByAlertMap };
-    case "SET_SORT_DIRECTION":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: {
-            ...state.placesPage,
-            sortDirection: action.sortDirection as DirectionID,
-          },
-        };
-      } else if (action.page === "ALERTS") {
-        return {
-          ...state,
-          alertsPage: {
-            ...state.alertsPage,
-            sortDirection: action.sortDirection as DirectionID,
-          },
-        };
-      }
-
-      return state;
-    case "SET_MODE_LINE_FILTER":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: {
-            ...state.placesPage,
-            modeLineFilterValue: action.filterValue,
-            activeEventKeys: [],
-          },
-        };
-      } else if (action.page === "ALERTS") {
-        return {
-          ...state,
-          alertsPage: {
-            ...state.alertsPage,
-            modeLineFilterValue: action.filterValue,
-          },
-        };
-      }
-
-      return state;
-    case "SET_SCREEN_TYPE_FILTER":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: {
-            ...state.placesPage,
-            screenTypeFilterValue: action.filterValue,
-            activeEventKeys: [],
-          },
-        };
-      } else if (action.page === "ALERTS") {
-        return {
-          ...state,
-          alertsPage: {
-            ...state.alertsPage,
-            screenTypeFilterValue: action.filterValue,
-          },
-        };
-      }
-
-      return state;
-    case "SET_STATUS_FILTER":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: {
-            ...state.placesPage,
-            statusFilterValue: action.filterValue,
-            activeEventKeys: [],
-          },
-        };
-      } else if (action.page === "ALERTS") {
-        return {
-          ...state,
-          alertsPage: {
-            ...state.alertsPage,
-            statusFilterValue: action.filterValue,
-          },
-        };
-      }
-
-      return state;
-    case "SET_SHOW_SCREENLESS_PLACES":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: {
-            ...state.placesPage,
-            showScreenlessPlaces: action.show,
-            activeEventKeys: [],
-          },
-        };
-      }
-
-      return state;
-    case "SET_ACTIVE_EVENT_KEYS":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: {
-            ...state.placesPage,
-            activeEventKeys: action.eventKeys,
-          },
-        };
-      }
-
-      return state;
     case "SET_BANNER_ALERT":
       return {
         ...state,
         bannerAlert: action.bannerAlert,
       };
-    case "RESET_STATE":
-      if (action.page === "PLACES") {
-        return {
-          ...state,
-          placesPage: initialState.placesPage,
-        };
-      }
-
-      return state;
   }
 };
 
-const initialState: StateContextType = {
+const placesPageReducer = (
+  state: PlacesPageState,
+  action: PlacesPageReducerAction
+) => {
+  switch (action.type) {
+    case "SET_SORT_DIRECTION":
+      return {
+        ...state,
+        sortDirection: action.sortDirection as DirectionID,
+      };
+    case "SET_MODE_LINE_FILTER":
+      return {
+        ...state,
+        modeLineFilterValue: action.filterValue,
+        activeEventKeys: [],
+      };
+    case "SET_SCREEN_TYPE_FILTER":
+      return {
+        ...state,
+        screenTypeFilterValue: action.filterValue,
+        activeEventKeys: [],
+      };
+    case "SET_STATUS_FILTER":
+      return {
+        ...state,
+        statusFilterValue: action.filterValue,
+        activeEventKeys: [],
+      };
+    case "SET_SHOW_SCREENLESS_PLACES":
+      return {
+        ...state,
+        showScreenlessPlaces: action.show,
+        activeEventKeys: [],
+      };
+    case "SET_ACTIVE_EVENT_KEYS":
+      return {
+        ...state,
+        activeEventKeys: action.eventKeys,
+      };
+    case "RESET_STATE":
+      return initialPlacesPageState;
+  }
+};
+
+const alertsReducer = (
+  state: AlertsPageState,
+  action: AlertsPageReducerAction
+) => {
+  switch (action.type) {
+    case "SET_SORT_DIRECTION":
+      return {
+        ...state,
+        sortDirection: action.sortDirection as DirectionID,
+      };
+    case "SET_MODE_LINE_FILTER":
+      return {
+        ...state,
+        modeLineFilterValue: action.filterValue,
+      };
+    case "SET_SCREEN_TYPE_FILTER":
+      return {
+        ...state,
+        screenTypeFilterValue: action.filterValue,
+      };
+    case "SET_STATUS_FILTER":
+      return {
+        ...state,
+        statusFilterValue: action.filterValue,
+      };
+  }
+};
+
+const initialState: ScreenplayState = {
   places: [] as Place[],
   alerts: [] as Alert[],
   screensByAlertMap: {} as ScreensByAlert,
   bannerAlert: undefined,
-  placesPage: {
-    sortDirection: 0 as DirectionID,
-    modeLineFilterValue: MODES_AND_LINES[0],
-    screenTypeFilterValue: SCREEN_TYPES[0],
-    statusFilterValue: STATUSES[0],
-    showScreenlessPlaces: true,
-    activeEventKeys: [],
-  },
-  alertsPage: {
-    sortDirection: 0 as DirectionID,
-    modeLineFilterValue: MODES_AND_LINES[0],
-    screenTypeFilterValue: SCREEN_TYPES[0],
-    statusFilterValue: STATUSES[0],
-  },
+};
+
+const initialPlacesPageState: PlacesPageState = {
+  sortDirection: 0 as DirectionID,
+  modeLineFilterValue: MODES_AND_LINES[0],
+  screenTypeFilterValue: SCREEN_TYPES[0],
+  statusFilterValue: STATUSES[0],
+  showScreenlessPlaces: true,
+  activeEventKeys: [],
+};
+
+const initialAlertsPageState: AlertsPageState = {
+  sortDirection: 0 as DirectionID,
+  modeLineFilterValue: MODES_AND_LINES[0],
+  screenTypeFilterValue: SCREEN_TYPES[0],
+  statusFilterValue: STATUSES[0],
 };
 
 // Generate context
 const [useScreenplayContext, ScreenplayContextProvider] =
-  createGenericContext<StateContextType>();
+  createGenericContext<ScreenplayState>();
 
 const [useScreenplayDispatchContext, ScreenplayDispatchContextProvider] =
   createGenericContext<React.Dispatch<any>>();
 
+const [usePlacesPageContext, PlacesPageContextProvider] =
+  createGenericContext<PlacesPageState>();
+
+const [usePlacesPageDispatchContext, PlacesPageDispatchContextProvider] =
+  createGenericContext<React.Dispatch<any>>();
+
+const [useAlertsPageContext, AlertsPageContextProvider] =
+  createGenericContext<AlertsPageState>();
+
+const [useAlertsPageDispatchContext, AlertsPageDispatchContextProvider] =
+  createGenericContext<React.Dispatch<any>>();
+
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [screenplayState, screenplayDispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  const [placesPageState, placesPageDispatch] = useReducer(
+    placesPageReducer,
+    initialPlacesPageState
+  );
+  const [alertsPageState, alertsPageDispatch] = useReducer(
+    alertsReducer,
+    initialAlertsPageState
+  );
 
   return (
-    <ScreenplayContextProvider value={state}>
-      <ScreenplayDispatchContextProvider value={dispatch}>
-        {children}
+    <ScreenplayContextProvider value={screenplayState}>
+      <ScreenplayDispatchContextProvider value={screenplayDispatch}>
+        <PlacesPageContextProvider value={placesPageState}>
+          <PlacesPageDispatchContextProvider value={placesPageDispatch}>
+            <AlertsPageContextProvider value={alertsPageState}>
+              <AlertsPageDispatchContextProvider value={alertsPageDispatch}>
+                {children}
+              </AlertsPageDispatchContextProvider>
+            </AlertsPageContextProvider>
+          </PlacesPageDispatchContextProvider>
+        </PlacesPageContextProvider>
       </ScreenplayDispatchContextProvider>
     </ScreenplayContextProvider>
   );
@@ -253,5 +255,9 @@ const ScreenplayProvider = ({ children }: Props) => {
 export {
   useScreenplayContext,
   useScreenplayDispatchContext,
+  usePlacesPageContext,
+  usePlacesPageDispatchContext,
+  useAlertsPageContext,
+  useAlertsPageDispatchContext,
   ScreenplayProvider,
 };

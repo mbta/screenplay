@@ -18,8 +18,9 @@ import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
+  useAlertsPageContext,
+  useAlertsPageDispatchContext,
   useScreenplayContext,
-  useScreenplayDispatchContext,
 } from "../../hooks/useScreenplayContext";
 
 const AlertsPage: ComponentType = () => {
@@ -55,14 +56,12 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   screensByAlertMap,
 }: AlertsListProps) => {
   const {
-    alertsPage: {
-      sortDirection,
-      modeLineFilterValue,
-      screenTypeFilterValue,
-      statusFilterValue,
-    },
-  } = useScreenplayContext();
-  const dispatch = useScreenplayDispatchContext();
+    sortDirection,
+    modeLineFilterValue,
+    screenTypeFilterValue,
+    statusFilterValue,
+  } = useAlertsPageContext();
+  const dispatch = useAlertsPageDispatchContext();
   const navigate = useNavigate();
 
   const alertSortLabel = SORT_LABELS["Alerts"][sortDirection];
