@@ -1,10 +1,4 @@
-import React, {
-  ComponentType,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { ComponentType, useState } from "react";
 import FilterDropdown from "./FilterDropdown";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import {
@@ -26,156 +20,62 @@ import { Alert } from "../../models/alert";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import { ScreensByAlert } from "../../models/screensByAlert";
-import { PlacesList } from "./PlacesPage";
-import classNames from "classnames";
 import AlertCard from "./AlertCard";
-import { formatEffect } from "../../util";
+import { useNavigate } from "react-router-dom";
+import { placesWithSelectedAlert } from "../../util";
+import { useDashboardContext } from "./Dashboard";
 
 type DirectionID = 0 | 1;
 
-interface AlertsResponse {
-  alerts: Alert[];
-  screens_by_alert: ScreensByAlert;
-}
-
-interface Props {
-  places: Place[];
-  isVisible: boolean;
-}
-
-const AlertsPage: ComponentType<Props> = (props: Props) => {
-  const { places, isVisible } = props;
-
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
-    {}
-  );
-  useEffect(() => {
-    if (!props.isVisible) return;
-
-    fetch("/api/alerts")
-      .then((response) => response.json())
-      .then(({ alerts, screens_by_alert }: AlertsResponse) => {
-        setAlerts(alerts);
-        setScreensByAlertMap(screens_by_alert);
-      });
-  }, [props.isVisible]);
-
-  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
-
-  const placesWithSelectedAlert = (alert: Alert | null) => {
-    return alert
-      ? places.filter((place) =>
-          place.screens.some((screen: Screen) =>
-            screensByAlertMap[alert.id].includes(screen.id)
-          )
-        )
-      : [];
-  };
+const AlertsPage: ComponentType = () => {
+  const { places, alerts, screensByAlertMap } = useDashboardContext();
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id]
   );
 
-  const alertsUiUrl = document
-    .querySelector("meta[name=alerts-ui-url]")
-    ?.getAttribute("content");
-
-  const [show, setShow] = useState(true);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   return (
     <>
-    <div
-      className={classNames("alerts-page", {
-        "alerts-page--hidden": !isVisible,
-      })}
-    >
-      <div className="page-content__header">
-        {selectedAlert ? (
-          <div>
-            <Button
-              className="back-button"
-              data-testid="places-list-back-button"
-              onClick={() => setSelectedAlert(null)}
-            >
-              <ArrowLeft /> Back
-            </Button>
-            <span>
-              {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
-            </span>
-            <Button
-              href={alertsUiUrl + `/edit/${selectedAlert.id}`}
-              target="_blank"
-              className="external-link"
-            >
-              Edit Alert <ArrowUpRight />
+      <div className="alerts-page">
+        <div className="page-content__header">Posted Alerts</div>
+        <div className="page-content__body">
+          <AlertsList
+            places={places}
+            alerts={alertsWithPlaces}
+            screensByAlertMap={screensByAlertMap}
+          />
+        </div>
+      </div>
+      <Modal className="alert-not-found" backdropClassName="alert-not-found" show={show} onHide={handleClose}>
+        <Modal.Body>
+          <SlashCircleFill className="modal-icon"/>
+          <div className="modal-text">
+            <div className="modal-title">This alert was closed</div>
+            <p className="modal-detail">
+              THIS EFFECT alert THIS ID was just closed in Alerts UI.
+              If this alert was previously showing on any screens, it has since been removed.
+            </p>
+            <Button className="screenplay-button modal-button" variant="primary" onClick={handleClose}>
+              <ArrowLeft className="modal-button__icon"/>Go to Posted Alerts
             </Button>
           </div>
-        ) : (
-          "Posted Alerts"
-        )}
-      </div>
-      <div className="page-content__body">
-        {selectedAlert ? (
-          <>
-            <AlertCard
-              key={selectedAlert.id}
-              alert={selectedAlert}
-              classNames="selected-alert"
-            />
-            <PlacesList
-              places={placesWithSelectedAlert(selectedAlert)}
-              noModeFilter
-              isAlertPlacesList
-            />
-          </>
-        ) : (
-          <AlertsList
-            {...props}
-            alerts={alertsWithPlaces}
-            selectAlert={setSelectedAlert}
-            screensByAlertMap={screensByAlertMap}
-            placesWithSelectedAlert={placesWithSelectedAlert}
-          />
-        )}
-      </div>
-    </div>
-    <Modal className="alert-not-found" backdropClassName="alert-not-found" show={show} onHide={handleClose}>
-      <Modal.Body>
-        <SlashCircleFill className="modal-icon"/>
-        <div className="modal-text">
-          <div className="modal-title">This alert was closed</div>
-          <p className="modal-detail">
-            THIS EFFECT alert THIS ID was just closed in Alerts UI.
-            If this alert was previously showing on any screens, it has since been removed.
-          </p>
-          <Button className="screenplay-button modal-button" variant="primary" onClick={handleClose}>
-            <ArrowLeft className="modal-button__icon"/>Go to Posted Alerts
-          </Button>
-        </div>
-        
-      </Modal.Body>
-    </Modal>
+          
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
 
-interface AlertsListProps extends Props {
+interface AlertsListProps {
   alerts: Alert[];
-  selectAlert: Dispatch<SetStateAction<Alert | null>>;
   screensByAlertMap: ScreensByAlert;
-  placesWithSelectedAlert: (alert: Alert | null) => Place[];
+  places: Place[];
 }
 
 const AlertsList: ComponentType<AlertsListProps> = ({
   alerts,
-  selectAlert,
   places,
   screensByAlertMap,
-  placesWithSelectedAlert,
 }: AlertsListProps) => {
   const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
   const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
@@ -187,6 +87,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   const [alertStatusFilterValue, setAlertStatusFilterValue] = useState(
     STATUSES[0]
   );
+  const navigate = useNavigate();
 
   const alertSortLabel = SORT_LABELS["Alerts"][alertSortDirection];
 
@@ -361,14 +262,20 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
           if (screensByAlert) {
             numScreens = screensByAlert.length;
-            numPlaces = placesWithSelectedAlert(alert).length;
+            numPlaces = placesWithSelectedAlert(
+              alert,
+              places,
+              screensByAlertMap
+            ).length;
           }
 
           return (
             <AlertCard
               key={alert.id}
               alert={alert}
-              selectAlert={() => selectAlert(alert)}
+              selectAlert={() => {
+                navigate(`/alerts/${alert.id}`);
+              }}
               numberOfScreens={numScreens}
               numberOfPlaces={numPlaces}
             />

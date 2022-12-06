@@ -84,7 +84,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
         </div>
         <div className="alert-card__alert-details__main-body">
           <div className="alert-card__alert-details__effect">
-            {renderEffect(alert.effect, alert.severity)}
+            {renderEffect(alert.effect, alert.severity_string)}
           </div>
           <div className="alert-card__alert-details__header">
             {alert.header}
