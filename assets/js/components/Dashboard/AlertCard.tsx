@@ -85,7 +85,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   return (
     <div style={{ position: "relative" }}>
       <Fade in={showAnimation}>
-        <div className="showAnimation"></div>
+        <div className="animation"></div>
       </Fade>
       <div
         className={classNames("alert-card", {
