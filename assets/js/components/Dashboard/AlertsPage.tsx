@@ -1,4 +1,4 @@
-import React, { ComponentType, useState } from "react";
+import React, { ComponentType } from "react";
 import FilterDropdown from "./FilterDropdown";
 import { Button, Col, Container, Modal, Row } from "react-bootstrap";
 import {
@@ -23,12 +23,14 @@ import { ScreensByAlert } from "../../models/screensByAlert";
 import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
-import { useDashboardContext } from "./Dashboard";
-
-type DirectionID = 0 | 1;
+import {
+  useAlertsPageContext,
+  useAlertsPageDispatchContext,
+  useScreenplayContext,
+} from "../../hooks/useScreenplayContext";
 
 const AlertsPage: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useDashboardContext();
+  const { places, alerts, screensByAlertMap } = useScreenplayContext();
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id]
@@ -77,58 +79,71 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   places,
   screensByAlertMap,
 }: AlertsListProps) => {
-  const [alertSortDirection, setAlertSortDirection] = useState<DirectionID>(0);
-  const [alertModeLineFilterValue, setAlertModeLineFilterValue] = useState(
-    MODES_AND_LINES[0]
-  );
-  const [alertScreenTypeFilterValue, setAlertScreenTypeFilterValue] = useState(
-    SCREEN_TYPES[0]
-  );
-  const [alertStatusFilterValue, setAlertStatusFilterValue] = useState(
-    STATUSES[0]
-  );
+  const {
+    sortDirection,
+    modeLineFilterValue,
+    screenTypeFilterValue,
+    statusFilterValue,
+  } = useAlertsPageContext();
+  const dispatch = useAlertsPageDispatchContext();
   const navigate = useNavigate();
 
-  const alertSortLabel = SORT_LABELS["Alerts"][alertSortDirection];
+  const alertSortLabel = SORT_LABELS["Alerts"][sortDirection];
 
   const sortLabelOnClick = () => {
-    setAlertSortDirection((1 - alertSortDirection) as DirectionID);
+    dispatch({
+      type: "SET_SORT_DIRECTION",
+      page: "ALERTS",
+      sortDirection: 1 - sortDirection,
+    });
   };
 
   const handleAlertModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setAlertModeLineFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_MODE_LINE_FILTER",
+        page: "ALERTS",
+        filterValue: selectedFilter,
+      });
     }
   };
 
   const handleAlertScreenTypeSelect = (value: string) => {
     const selectedFilter = SCREEN_TYPES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setAlertScreenTypeFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_SCREEN_TYPE_FILTER",
+        page: "ALERTS",
+        filterValue: selectedFilter,
+      });
     }
   };
 
   const handleAlertStatusSelect = (value: string) => {
     const selectedFilter = STATUSES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setAlertStatusFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_STATUS_FILTER",
+        page: "ALERTS",
+        filterValue: selectedFilter,
+      });
     }
   };
 
   const filterAlerts = () => {
     let filteredAlerts = alerts;
-    if (alertScreenTypeFilterValue !== SCREEN_TYPES[0]) {
+    if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredAlerts = filterAlertsByScreenType(
         filteredAlerts,
-        alertScreenTypeFilterValue
+        screenTypeFilterValue
       );
     }
 
-    if (alertModeLineFilterValue !== MODES_AND_LINES[0]) {
+    if (modeLineFilterValue !== MODES_AND_LINES[0]) {
       filteredAlerts = filterAlertsByModeOrLine(
         filteredAlerts,
-        alertModeLineFilterValue
+        modeLineFilterValue
       );
     }
     return filteredAlerts;
@@ -221,14 +236,14 @@ const AlertsList: ComponentType<AlertsListProps> = ({
               data-testid="sort-label"
             >
               {alertSortLabel}
-              {alertSortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+              {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
             </div>
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">
             <FilterDropdown
               list={MODES_AND_LINES}
               onSelect={(value: any) => handleAlertModeOrLineSelect(value)}
-              selectedValue={alertModeLineFilterValue}
+              selectedValue={modeLineFilterValue}
               className="modes-and-lines"
             />
           </Col>
@@ -236,7 +251,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
             <FilterDropdown
               list={SCREEN_TYPES}
               onSelect={(value: any) => handleAlertScreenTypeSelect(value)}
-              selectedValue={alertScreenTypeFilterValue}
+              selectedValue={screenTypeFilterValue}
               className="screen-types"
             />
           </Col>
@@ -244,7 +259,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
             <FilterDropdown
               list={STATUSES}
               onSelect={(value: any) => handleAlertStatusSelect(value)}
-              selectedValue={alertStatusFilterValue}
+              selectedValue={statusFilterValue}
               className="statuses"
               disabled
             />
@@ -253,7 +268,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
       </Container>
       {filterAlerts()
         .sort((a: Alert, b: Alert) =>
-          alertSortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
+          sortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
         )
         .map((alert: Alert) => {
           const screensByAlert = screensByAlertMap[alert.id];

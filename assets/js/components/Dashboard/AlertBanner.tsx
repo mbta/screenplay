@@ -2,15 +2,19 @@ import React, { ComponentType } from "react";
 import { ArrowRepeat } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
-import { BannerAlert } from "./Dashboard";
+import { useScreenplayContext } from "../../hooks/useScreenplayContext";
+import { Alert } from "../../models/alert";
 
-interface Props {
-  bannerAlert: BannerAlert;
+interface BannerAlert {
+  alert: Alert;
+  closedAt?: string;
 }
 
-const AlertBanner: ComponentType<Props> = ({ bannerAlert }: Props) => {
-  const { alert, closedAt } = bannerAlert;
-  if (!alert) return null;
+const AlertBanner: ComponentType = () => {
+  const { bannerAlert } = useScreenplayContext();
+  if (!bannerAlert) return null;
+
+  const { alert, closedAt } = bannerAlert as BannerAlert;
 
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();
@@ -19,7 +23,9 @@ const AlertBanner: ComponentType<Props> = ({ bannerAlert }: Props) => {
     if (alert.affected_list.length === 1) {
       return translateRouteID(alert.affected_list[0]);
     } else if (
-      alert.affected_list.every((routeId) => routeId.startsWith("green"))
+      alert.affected_list.every((routeId: string) =>
+        routeId.startsWith("green")
+      )
     ) {
       return "Green Line";
     } else {
@@ -109,4 +115,5 @@ const AlertBanner: ComponentType<Props> = ({ bannerAlert }: Props) => {
   );
 };
 
+export { BannerAlert };
 export default AlertBanner;

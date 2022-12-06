@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import { initClarityAnalytics } from "../utils/clarityInit";
 
 const OutfrontTakeoverTool = React.lazy(
@@ -26,7 +27,14 @@ class AppRoutes extends React.Component {
             path="/emergency-takeover"
             element={<OutfrontTakeoverTool />}
           ></Route>
-          <Route path="*" element={<Dashboard />}>
+          <Route
+            path="*"
+            element={
+              <ScreenplayProvider>
+                <Dashboard />
+              </ScreenplayProvider>
+            }
+          >
             <Route path="dashboard" element={<PlacesPage />}></Route>
             <Route path="alerts" element={<AlertsPage />}></Route>
             <Route path="alerts/:id" element={<AlertDetails />}></Route>

@@ -6,10 +6,10 @@ import { Alert } from "../../models/alert";
 import { Button } from "react-bootstrap";
 import { ArrowLeft, ArrowUpRight } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
-import { useDashboardContext } from "./Dashboard";
+import { useScreenplayContext } from "../../hooks/useScreenplayContext";
 
 const AlertDetails: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useDashboardContext();
+  const { places, alerts, screensByAlertMap } = useScreenplayContext();
   const { id } = useParams();
   const [selectedAlert, setSelectedAlert] = useState<Alert>();
 

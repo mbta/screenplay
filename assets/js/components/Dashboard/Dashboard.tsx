@@ -1,56 +1,46 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect } from "react";
 import { Outlet } from "react-router";
-import { useOutletContext } from "react-router-dom";
 import "../../../css/screenplay.scss";
 import { Alert } from "../../models/alert";
-import { Place } from "../../models/place";
-import { ScreensByAlert } from "../../models/screensByAlert";
 import Sidebar from "./Sidebar";
+import {
+  useScreenplayContext,
+  useScreenplayDispatchContext,
+} from "../../hooks/useScreenplayContext";
 import { useInterval } from "../../hooks/useInterval";
 import moment from "moment";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
 import { isSignificantAlert } from "../../util";
 
-type ContextType = {
-  places: Place[];
-  alerts: Alert[];
-  screensByAlertMap: ScreensByAlert;
-};
-
-interface BannerAlert {
-  alert?: Alert;
-  closedAt?: string;
-}
-
 const Dashboard: ComponentType = () => {
-  const [places, setPlaces] = useState<Place[]>([]);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
-    {}
-  );
-  const [bannerAlert, setBannerAlert] = useState<BannerAlert>();
+  const { alerts, bannerAlert } = useScreenplayContext();
+  const dispatch = useScreenplayDispatchContext();
 
   useEffect(() => {
-    fetchPlaces().then((placesList) => setPlaces(placesList));
-
-    fetchAlerts().then(({ alerts: newAlerts, screens_by_alert }) => {
-      setAlerts((oldAlerts) => {
-        findAndSetBannerAlert(oldAlerts, newAlerts);
-        return newAlerts;
+    fetchAlerts((newAlerts, screens_by_alert) => {
+      findAndSetBannerAlert(alerts, newAlerts);
+      dispatch({ type: "SET_ALERTS", alerts: newAlerts });
+      dispatch({
+        type: "SET_SCREENS_BY_ALERT",
+        screensByAlertMap: screens_by_alert,
       });
-      setScreensByAlertMap(screens_by_alert);
     });
+
+    fetchPlaces((placesList) =>
+      dispatch({ type: "SET_PLACES", places: placesList })
+    );
   }, []);
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
-    fetchAlerts().then(({ alerts: newAlerts, screens_by_alert }) => {
-      setAlerts((oldAlerts) => {
-        findAndSetBannerAlert(oldAlerts, newAlerts);
-        return newAlerts;
+    fetchAlerts((newAlerts, screens_by_alert) => {
+      findAndSetBannerAlert(alerts, newAlerts);
+      dispatch({ type: "SET_ALERTS", alerts: newAlerts });
+      dispatch({
+        type: "SET_SCREENS_BY_ALERT",
+        screensByAlertMap: screens_by_alert,
       });
-      setScreensByAlertMap(screens_by_alert);
     });
   }, 4000);
 
@@ -60,13 +50,19 @@ const Dashboard: ComponentType = () => {
     const postedOrEditedAlert = getPostedOrEditedAlert(newAlerts);
     // If there is a closed alert, just show it and save when it was closed.
     if (closedAlert) {
-      setBannerAlert({ alert: closedAlert, closedAt: now });
+      dispatch({
+        type: "SET_BANNER_ALERT",
+        bannerAlert: { alert: closedAlert, closedAt: now },
+      });
     }
     // If there is not a new closed alert but
     // the current bannerAlert does not have a defined closedAt
     // (meaning there isn't a current banner alert or it is a posted/edited alert)
     else if (!bannerAlert?.closedAt) {
-      setBannerAlert({ alert: postedOrEditedAlert });
+      dispatch({
+        type: "SET_BANNER_ALERT",
+        bannerAlert: { alert: postedOrEditedAlert },
+      });
     }
     // If the current bannerAlert has a closedAt but a recent posted/edited alert came after the closed bannerAlert
     else if (
@@ -78,13 +74,16 @@ const Dashboard: ComponentType = () => {
           )
       )
     ) {
-      setBannerAlert({ alert: postedOrEditedAlert });
+      dispatch({
+        type: "SET_BANNER_ALERT",
+        bannerAlert: { alert: postedOrEditedAlert },
+      });
     }
     // If no other alert is eligible to be the bannerAlert, expire the current bannerAlert if two minutes have passed since it started displaying.
     else if (
       moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(2, "minutes"))
     ) {
-      setBannerAlert(undefined);
+      dispatch({ type: "SET_BANNER_ALERT", bannerAlert: undefined });
     }
   };
 
@@ -128,16 +127,11 @@ const Dashboard: ComponentType = () => {
     <div className="screenplay-container">
       <Sidebar />
       <div className="page-content">
-        {bannerAlert?.alert && <AlertBanner bannerAlert={bannerAlert} />}
-        <Outlet context={{ places, alerts, screensByAlertMap }} />
+        {bannerAlert?.alert && <AlertBanner />}
+        <Outlet />
       </div>
     </div>
   );
 };
 
-export const useDashboardContext = () => {
-  return useOutletContext<ContextType>();
-};
-
-export { BannerAlert };
 export default Dashboard;
