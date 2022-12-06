@@ -1,6 +1,6 @@
 import moment from "moment";
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Container, Fade } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 import { ActivePeriod, Alert } from "../../models/alert";
 import classNames from "classnames";
@@ -16,6 +16,23 @@ interface AlertCardProps {
 
 const AlertCard = (props: AlertCardProps): JSX.Element => {
   const { alert, numberOfPlaces, numberOfScreens } = props;
+  const [showAnimation, setShowAnimation] = useState(false);
+
+  const firstUpdate = useRef(true);
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    setShowAnimation(true);
+    setTimeout(() => setShowAnimation(false), 2000);
+  }, [
+    alert.header,
+    JSON.stringify(alert.active_period),
+    numberOfPlaces,
+    numberOfScreens,
+  ]);
 
   const renderEffect = (effect: string, severity: string) => {
     const formattedEffect = formatEffect(effect);
@@ -66,58 +83,65 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   };
 
   return (
-    <div
-      className={classNames("alert-card", { selected: !props.selectAlert })}
-      data-testid={alert.id}
-      onClick={props.selectAlert ? props.selectAlert : undefined}
-    >
-      <Container fluid className="alert-card__alert-details">
-        <div className="alert-card__alert-details__pill-container">
-          {alert.affected_list.map((icon: string) => (
-            <img
-              className="alert-card__alert-details__pill"
-              key={`${alert.id}-${icon}`}
-              src={`/images/pills/${icon.toLowerCase()}.svg`}
-              alt={icon}
-            />
-          ))}
-        </div>
-        <div className="alert-card__alert-details__main-body">
-          <div className="alert-card__alert-details__effect">
-            {renderEffect(alert.effect, alert.severity_string)}
+    <div style={{ position: "relative" }}>
+      <Fade in={showAnimation}>
+        <div className="showAnimation"></div>
+      </Fade>
+      <div
+        className={classNames("alert-card", {
+          selected: !props.selectAlert,
+        })}
+        data-testid={alert.id}
+        onClick={props.selectAlert ? props.selectAlert : undefined}
+      >
+        <Container fluid className="alert-card__alert-details">
+          <div className="alert-card__alert-details__pill-container">
+            {alert.affected_list.map((icon: string) => (
+              <img
+                className="alert-card__alert-details__pill"
+                key={`${alert.id}-${icon}`}
+                src={`/images/pills/${icon.toLowerCase()}.svg`}
+                alt={icon}
+              />
+            ))}
           </div>
-          <div className="alert-card__alert-details__header">
-            {alert.header}
+          <div className="alert-card__alert-details__main-body">
+            <div className="alert-card__alert-details__effect">
+              {renderEffect(alert.effect, alert.severity_string)}
+            </div>
+            <div className="alert-card__alert-details__header">
+              {alert.header}
+            </div>
           </div>
-        </div>
-        <div className="alert-card__alert-details__active-period">
-          {renderActivePeriod(alert.active_period)}
-        </div>
-      </Container>
-      {props.selectAlert ? (
-        <div className="alert-card__place-details">
-          <div className="alert-card__place-details__alert-id">
-            ID {alert.id}
+          <div className="alert-card__alert-details__active-period">
+            {renderActivePeriod(alert.active_period)}
           </div>
-          <div className="alert-card__place-details__place-count">
-            <span className="alert-card__place-details__place-count__number">
-              {numberOfPlaces}
-            </span>{" "}
-            <span className="alert-card__place-details__place-count__text">
-              places
-            </span>
+        </Container>
+        {props.selectAlert ? (
+          <div className="alert-card__place-details">
+            <div className="alert-card__place-details__alert-id">
+              ID {alert.id}
+            </div>
+            <div className="alert-card__place-details__place-count">
+              <span className="alert-card__place-details__place-count__number">
+                {numberOfPlaces}
+              </span>{" "}
+              <span className="alert-card__place-details__place-count__text">
+                places
+              </span>
+            </div>
+            <div className="alert-card__place-details__screen-count">
+              <span className="alert-card__place-details__screen-count__number">
+                {numberOfScreens}
+              </span>{" "}
+              <span className="alert-card__place-details__screen-count__text">
+                screens
+              </span>
+            </div>
+            <ChevronRight className="alert-card__place-details__icon" />
           </div>
-          <div className="alert-card__place-details__screen-count">
-            <span className="alert-card__place-details__screen-count__number">
-              {numberOfScreens}
-            </span>{" "}
-            <span className="alert-card__place-details__screen-count__text">
-              screens
-            </span>
-          </div>
-          <ChevronRight className="alert-card__place-details__icon" />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 };
