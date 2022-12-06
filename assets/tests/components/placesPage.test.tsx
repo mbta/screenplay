@@ -1,26 +1,13 @@
 import React from "react";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 import PlacesPage from "../../js/components/Dashboard/PlacesPage";
-import {
-  mockOutletContextData,
-  RenderRouteWithOutletContext,
-} from "../utils/RenderRouteWithOutletContext";
-
-beforeAll(() => {
-  const app = document.createElement("div");
-  app.id = "app";
-  app.dataset.username = "test";
-  document.body.appendChild(app);
-});
+import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvider";
 
 describe("PlacesPage", () => {
   describe("filtering", () => {
     test("filters places by screen type", async () => {
-      const { getByRole, getByText, queryByText, findByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByRole, getByText, queryByText, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
@@ -54,11 +41,8 @@ describe("PlacesPage", () => {
     });
 
     test("filters places by mode and route", async () => {
-      const { getByRole, getByText, queryByText, findByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByRole, getByText, queryByText, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -92,11 +76,8 @@ describe("PlacesPage", () => {
     });
 
     test("adds `filtered` class to PlaceRow when filtered", async () => {
-      const { findByRole, getByRole, getAllByTestId } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { findByRole, getByRole, getAllByTestId } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -110,11 +91,8 @@ describe("PlacesPage", () => {
     });
 
     test("reset button clears filters", async () => {
-      const { findByRole, getByRole, getByTestId, getByText } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { findByRole, getByRole, getByTestId, getByText } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -129,11 +107,8 @@ describe("PlacesPage", () => {
 
   describe("sorting", () => {
     test("sort label changes depending on filter selected", async () => {
-      const { getByTestId, getByRole, findByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId, getByRole, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
@@ -162,11 +137,8 @@ describe("PlacesPage", () => {
     });
 
     test("sort label changes when clicked", async () => {
-      const { getByTestId, getByRole, findByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId, getByRole, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
@@ -204,11 +176,8 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for RL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -245,11 +214,8 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for OL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -286,11 +252,8 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for GL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -335,11 +298,8 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for BL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <RenderRouteWithOutletContext context={mockOutletContextData}>
-          <PlacesPage />
-        </RenderRouteWithOutletContext>
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
