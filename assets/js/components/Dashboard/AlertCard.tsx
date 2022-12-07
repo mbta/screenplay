@@ -1,10 +1,11 @@
 import moment from "moment";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Fade } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 import { ActivePeriod, Alert } from "../../models/alert";
 import classNames from "classnames";
 import { formatEffect } from "../../util";
+import { usePrevious } from "../../hooks/usePrevious";
 
 interface AlertCardProps {
   alert: Alert;
@@ -17,16 +18,18 @@ interface AlertCardProps {
 const AlertCard = (props: AlertCardProps): JSX.Element => {
   const { alert, numberOfPlaces, numberOfScreens } = props;
   const [showAnimation, setShowAnimation] = useState(false);
+  const prevAlert = usePrevious(alert);
 
-  const firstUpdate = useRef(true);
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
+    // Prevents animation on page load.
+    if (!prevAlert) {
       return;
     }
 
     setShowAnimation(true);
-    setTimeout(() => setShowAnimation(false), 2000);
+    const timer = setTimeout(() => setShowAnimation(false), 2000);
+
+    return () => clearTimeout(timer);
   }, [
     alert.header,
     JSON.stringify(alert.active_period),
