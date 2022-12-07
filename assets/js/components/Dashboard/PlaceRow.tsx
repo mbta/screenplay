@@ -38,7 +38,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const rowOnClick = useAccordionButton(props.eventKey, () =>
     props.onClick(props.eventKey)
   );
-  const { showAnimation } = useUpdateAnimation([], null, true);
+  const { showAnimation } = useUpdateAnimation([], null, props.showAnimation);
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens =
     screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
