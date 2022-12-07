@@ -16,6 +16,7 @@ import ScreenDetail from "./ScreenDetail";
 import MapSegment from "./MapSegment";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import { classWithModifier } from "../../util";
+import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
 
 interface PlaceRowProps {
   place: Place;
@@ -37,6 +38,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const rowOnClick = useAccordionButton(props.eventKey, () =>
     props.onClick(props.eventKey)
   );
+  const { showAnimation } = useUpdateAnimation([], null, true);
   const isOpen = activeEventKey?.includes(props.eventKey);
   const hasScreens =
     screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
@@ -197,8 +199,8 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   return (
     <div style={{ position: "relative" }}>
-      <Fade appear in={props.showAnimation}>
-        <div className="animation"></div>
+      <Fade appear in={showAnimation}>
+        <div className="update-animation"></div>
       </Fade>
       <div
         key={props.eventKey}

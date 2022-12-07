@@ -1,11 +1,12 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Container, Fade } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
 import { ActivePeriod, Alert } from "../../models/alert";
 import classNames from "classnames";
 import { formatEffect } from "../../util";
 import { usePrevious } from "../../hooks/usePrevious";
+import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
 
 interface AlertCardProps {
   alert: Alert;
@@ -13,34 +14,24 @@ interface AlertCardProps {
   numberOfPlaces?: number;
   selectAlert?: () => void;
   classNames?: string;
+  showAnimationOnMount?: boolean;
 }
 
 const AlertCard = (props: AlertCardProps): JSX.Element => {
-  const { alert, numberOfPlaces, numberOfScreens } = props;
-  const [showAnimation, setShowAnimation] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
+  const { alert, numberOfPlaces, numberOfScreens, showAnimationOnMount } =
+    props;
   const prevAlert = usePrevious(alert);
 
-  useEffect(() => {
-    // Prevents animation on page load.
-    if (!prevAlert || timer) {
-      return;
-    }
-
-    setShowAnimation(true);
-    const newTimer = setTimeout(() => {
-      setTimer(undefined);
-      setShowAnimation(false);
-    }, 2000);
-    setTimer(newTimer);
-
-    return () => clearTimeout(newTimer);
-  }, [
-    alert.header,
-    JSON.stringify(alert.active_period),
-    numberOfPlaces,
-    numberOfScreens,
-  ]);
+  const { showAnimation } = useUpdateAnimation(
+    [
+      alert.header,
+      JSON.stringify(alert.active_period),
+      numberOfPlaces,
+      numberOfScreens,
+    ],
+    prevAlert,
+    showAnimationOnMount
+  );
 
   const renderEffect = (effect: string, severity: string) => {
     const formattedEffect = formatEffect(effect);
@@ -93,7 +84,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   return (
     <div style={{ position: "relative" }}>
       <Fade in={showAnimation}>
-        <div className="animation"></div>
+        <div className="update-animation"></div>
       </Fade>
       <div
         className={classNames("alert-card", {
