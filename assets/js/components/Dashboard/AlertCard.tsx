@@ -18,18 +18,23 @@ interface AlertCardProps {
 const AlertCard = (props: AlertCardProps): JSX.Element => {
   const { alert, numberOfPlaces, numberOfScreens } = props;
   const [showAnimation, setShowAnimation] = useState(false);
+  const [timer, setTimer] = useState<NodeJS.Timeout>();
   const prevAlert = usePrevious(alert);
 
   useEffect(() => {
     // Prevents animation on page load.
-    if (!prevAlert) {
+    if (!prevAlert || timer) {
       return;
     }
 
     setShowAnimation(true);
-    const timer = setTimeout(() => setShowAnimation(false), 2000);
+    const newTimer = setTimeout(() => {
+      setTimer(undefined);
+      setShowAnimation(false);
+    }, 2000);
+    setTimer(newTimer);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(newTimer);
   }, [
     alert.header,
     JSON.stringify(alert.active_period),
