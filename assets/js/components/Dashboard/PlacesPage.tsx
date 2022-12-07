@@ -302,7 +302,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
               classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               defaultSort={sortDirection === 0}
-              showAnimation={!prevPlaceIds.includes(place.id)}
+              showAnimation={!prevPlaceIds?.includes(place.id)}
             />
           );
         })}
