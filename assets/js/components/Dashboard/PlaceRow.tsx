@@ -6,6 +6,7 @@ import {
   Row,
   useAccordionButton,
   AccordionContext,
+  Fade,
 } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
@@ -23,6 +24,7 @@ interface PlaceRowProps {
   classNames?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
+  showAnimation?: boolean;
 }
 
 /**
@@ -194,84 +196,97 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   };
 
   return (
-    <div
-      key={props.eventKey}
-      className={classNames("place-row", props.classNames, {
-        open: isOpen,
-        disabled: !hasScreens,
-      })}
-      data-testid="place-row"
-      onClick={hasScreens ? rowOnClick : () => undefined}
-    >
-      <Container fluid>
-        <Row
-          className="align-items-center text-white"
-          data-testid="place-row-header"
-        >
-          <Col lg={5} className="d-flex align-items-center">
-            <div
-              className={classNames("place-row__toggle", {
-                "hidden-toggle": !hasScreens,
-              })}
-            >
-              {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-            </div>
-            {props.filteredLine && (
-              <div
-                className={classNames(
-                  "place-row__map-segment-container",
-                  `place-row__map-segment-container--${props.filteredLine}`,
-                  {
-                    "place-row__map-segment-container--flipped":
-                      !props.defaultSort,
-                  }
-                )}
-              >
-                {getInlineMap(props.place, props.filteredLine.toLowerCase())}
-              </div>
-            )}
-            <div className="place-row__name" data-testid="place-name">
-              {formatStationName(name, description)}
-            </div>
-          </Col>
-          <Col lg={1} className="d-flex justify-content-end">
-            {renderModesAndLinesIcons()}
-          </Col>
-          <Col
-            lg={3}
-            className="place-row__screen-types"
-            data-testid="place-screen-types"
+    <div style={{ position: "relative" }}>
+      <Fade appear in={props.showAnimation}>
+        <div className="animation"></div>
+      </Fade>
+      <div
+        key={props.eventKey}
+        className={classNames("place-row", props.classNames, {
+          open: isOpen,
+          disabled: !hasScreens,
+        })}
+        data-testid="place-row"
+        onClick={hasScreens ? rowOnClick : () => undefined}
+      >
+        <Container fluid>
+          <Row
+            className="align-items-center text-white"
+            data-testid="place-row-header"
           >
-            {screenTypes.map((type, index) =>
-              index < screenTypes.length - 1 ? (
-                <span key={index}>
-                  {type}
-                  <span className="spacer">·</span>
-                </span>
-              ) : (
-                type
-              )
-            )}
-          </Col>
-          <Col lg={3} className="place-row__status" data-testid="place-status">
-            {hasScreens ? "Auto" : "—"}
-          </Col>
-        </Row>
-      </Container>
-      <Accordion.Collapse eventKey={props.eventKey}>
-        <>
-          <div className="place-row__screen-preview-container">
-            {hasScreens &&
-              filterAndGroupScreens(sortScreens()).map((screens, index) => (
-                <ScreenDetail
-                  key={index}
-                  screens={screens}
-                  isOpen={isOpen ?? false}
-                />
-              ))}
-          </div>
-        </>
-      </Accordion.Collapse>
+            <Col lg={5} className="d-flex align-items-center">
+              <div
+                className={classNames("place-row__toggle", {
+                  "hidden-toggle": !hasScreens,
+                })}
+              >
+                {isOpen ? (
+                  <ChevronDown size={16} />
+                ) : (
+                  <ChevronRight size={16} />
+                )}
+              </div>
+              {props.filteredLine && (
+                <div
+                  className={classNames(
+                    "place-row__map-segment-container",
+                    `place-row__map-segment-container--${props.filteredLine}`,
+                    {
+                      "place-row__map-segment-container--flipped":
+                        !props.defaultSort,
+                    }
+                  )}
+                >
+                  {getInlineMap(props.place, props.filteredLine.toLowerCase())}
+                </div>
+              )}
+              <div className="place-row__name" data-testid="place-name">
+                {formatStationName(name, description)}
+              </div>
+            </Col>
+            <Col lg={1} className="d-flex justify-content-end">
+              {renderModesAndLinesIcons()}
+            </Col>
+            <Col
+              lg={3}
+              className="place-row__screen-types"
+              data-testid="place-screen-types"
+            >
+              {screenTypes.map((type, index) =>
+                index < screenTypes.length - 1 ? (
+                  <span key={index}>
+                    {type}
+                    <span className="spacer">·</span>
+                  </span>
+                ) : (
+                  type
+                )
+              )}
+            </Col>
+            <Col
+              lg={3}
+              className="place-row__status"
+              data-testid="place-status"
+            >
+              {hasScreens ? "Auto" : "—"}
+            </Col>
+          </Row>
+        </Container>
+        <Accordion.Collapse eventKey={props.eventKey}>
+          <>
+            <div className="place-row__screen-preview-container">
+              {hasScreens &&
+                filterAndGroupScreens(sortScreens()).map((screens, index) => (
+                  <ScreenDetail
+                    key={index}
+                    screens={screens}
+                    isOpen={isOpen ?? false}
+                  />
+                ))}
+            </div>
+          </>
+        </Accordion.Collapse>
+      </div>
     </div>
   );
 };

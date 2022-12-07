@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -17,6 +17,7 @@ import {
   usePlacesPageDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
+import { usePrevious } from "../../hooks/usePrevious";
 
 type DirectionID = 0 | 1;
 
@@ -51,6 +52,7 @@ interface PlacesListProps {
   places: Place[];
   noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
+  showAnimationForNewPlaces?: boolean;
 }
 
 const PlacesList: ComponentType<PlacesListProps> = ({
@@ -68,6 +70,21 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     activeEventKeys,
   } = usePlacesPageContext();
   const dispatch = usePlacesPageDispatchContext();
+  const prevPlaces = usePrevious(places);
+  const [newPlaceIds, setNewPlaceIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (prevPlaces) {
+      const placeIds = places
+        .filter((place) => !prevPlaces.includes(place))
+        .map((place) => place.id);
+
+      setNewPlaceIds(placeIds);
+      const timer = setTimeout(() => setNewPlaceIds([]), 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [JSON.stringify(places)]);
 
   const handleClickResetFilters = () => {
     dispatch({ type: "RESET_STATE", page: "PLACES" });
@@ -289,17 +306,20 @@ const PlacesList: ComponentType<PlacesListProps> = ({
         />
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>
-        {sortedFilteredPlaces.map((place: Place) => (
-          <PlaceRow
-            key={place.id}
-            place={place}
-            eventKey={place.id}
-            onClick={handleClickAccordion}
-            classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
-            filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
-            defaultSort={sortDirection === 0}
-          />
-        ))}
+        {sortedFilteredPlaces.map((place: Place) => {
+          return (
+            <PlaceRow
+              key={place.id}
+              place={place}
+              eventKey={place.id}
+              onClick={handleClickAccordion}
+              classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
+              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
+              defaultSort={sortDirection === 0}
+              showAnimation={newPlaceIds.includes(place.id)}
+            />
+          );
+        })}
       </Accordion>
     </>
   );
