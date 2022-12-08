@@ -47,7 +47,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group
+      :ensure_screenplay_admin_group,
+      :metadata
     ])
 
     get("/", PageController, :takeover_redirect)
