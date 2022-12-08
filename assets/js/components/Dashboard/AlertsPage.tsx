@@ -38,32 +38,16 @@ const AlertsPage: ComponentType = () => {
 
   return (
     <>
-      <div className="alerts-page">
-        <div className="page-content__header">Posted Alerts</div>
-        <div className="page-content__body">
-          <AlertsList
-            places={places}
-            alerts={alertsWithPlaces}
-            screensByAlertMap={screensByAlertMap}
-          />
-        </div>
+    <div className="alerts-page">
+      <div className="page-content__header">Posted Alerts</div>
+      <div className="page-content__body">
+        <AlertsList
+          places={places}
+          alerts={alertsWithPlaces}
+          screensByAlertMap={screensByAlertMap}
+        />
       </div>
-      <Modal className="alert-not-found" backdropClassName="alert-not-found" show={show} onHide={handleClose}>
-        <Modal.Body>
-          <SlashCircleFill className="modal-icon"/>
-          <div className="modal-text">
-            <div className="modal-title">This alert was closed</div>
-            <p className="modal-detail">
-              THIS EFFECT alert THIS ID was just closed in Alerts UI.
-              If this alert was previously showing on any screens, it has since been removed.
-            </p>
-            <Button className="screenplay-button modal-button" variant="primary" onClick={handleClose}>
-              <ArrowLeft className="modal-button__icon"/>Go to Posted Alerts
-            </Button>
-          </div>
-          
-        </Modal.Body>
-      </Modal>
+    </div>
     </>
   );
 };
