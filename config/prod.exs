@@ -12,11 +12,11 @@ import Config
 config :screenplay, ScreenplayWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   http: [:inet6, port: 4000],
-  redirect_http?: true,
   server: true,
   url: [port: 80]
 
 config :screenplay,
+  redirect_http?: true,
   alerts_fetch_module: Screenplay.Alerts.S3Fetch,
   alerts_s3_bucket: "mbta-ctd-config",
   record_sentry: true
