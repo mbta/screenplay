@@ -203,13 +203,13 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
         open: isOpen,
         disabled: !hasScreens,
       })}
+      data-testid="place-row"
     >
       <Fade appear in={showAnimation}>
         <div className="update-animation"></div>
       </Fade>
       <div
         key={props.eventKey}
-        data-testid="place-row"
         onClick={hasScreens ? rowOnClick : () => undefined}
       >
         <Container fluid>
