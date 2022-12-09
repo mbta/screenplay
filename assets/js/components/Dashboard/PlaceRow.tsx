@@ -198,16 +198,17 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div
+      className={classNames("place-row", props.classNames, {
+        open: isOpen,
+        disabled: !hasScreens,
+      })}
+    >
       <Fade appear in={showAnimation}>
         <div className="update-animation"></div>
       </Fade>
       <div
         key={props.eventKey}
-        className={classNames("place-row", props.classNames, {
-          open: isOpen,
-          disabled: !hasScreens,
-        })}
         data-testid="place-row"
         onClick={hasScreens ? rowOnClick : () => undefined}
       >

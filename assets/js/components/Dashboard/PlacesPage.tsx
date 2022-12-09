@@ -59,6 +59,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   places,
   noModeFilter,
   isAlertPlacesList,
+  showAnimationForNewPlaces,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
@@ -303,7 +304,9 @@ const PlacesList: ComponentType<PlacesListProps> = ({
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               defaultSort={sortDirection === 0}
               showAnimation={
-                prevPlaceIds !== undefined && !prevPlaceIds.includes(place.id)
+                showAnimationForNewPlaces &&
+                prevPlaceIds !== undefined &&
+                !prevPlaceIds.includes(place.id)
               }
             />
           );
