@@ -12,6 +12,7 @@ const ReportAProblemButton = (): JSX.Element => {
   return (
     <div className="report-a-problem-button">
       <Button
+        data-testid="report-a-problem"
         href={link}
         onClick={(e: SyntheticEvent) => e.stopPropagation()}
         target="_blank"
