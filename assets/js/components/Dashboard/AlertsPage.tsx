@@ -37,7 +37,6 @@ const AlertsPage: ComponentType = () => {
   );
 
   return (
-    <>
     <div className="alerts-page">
       <div className="page-content__header">Posted Alerts</div>
       <div className="page-content__body">
@@ -48,7 +47,6 @@ const AlertsPage: ComponentType = () => {
         />
       </div>
     </div>
-    </>
   );
 };
 
