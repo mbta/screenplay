@@ -1,13 +1,7 @@
 import React, { ComponentType } from "react";
 import FilterDropdown from "./FilterDropdown";
-import { Button, Col, Container, Modal, Row } from "react-bootstrap";
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowUp,
-  ArrowUpRight,
-  SlashCircleFill,
-} from "react-bootstrap-icons";
+import { Col, Container, Row } from "react-bootstrap";
+import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import {
   MODES_AND_LINES,
