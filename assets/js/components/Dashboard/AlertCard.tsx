@@ -82,7 +82,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="alert-card-container">
       <Fade in={showAnimation}>
         <div className="update-animation"></div>
       </Fade>
