@@ -22,6 +22,9 @@
     <%= if @alerts_ui_url do %>
         <meta name="alerts-ui-url" content={@alerts_ui_url}>
     <% end %>
+    <%= if @is_admin do %>
+        <meta name="is-admin" content={@is_admin}>
+    <% end %>
     <%= csrf_meta_tag() %>
     <title>Screenplay</title>
     <link rel="stylesheet" href={Routes.static_path(@conn, "/css/app.css")}/>
