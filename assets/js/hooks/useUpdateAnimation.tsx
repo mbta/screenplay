@@ -20,7 +20,7 @@ export const useUpdateAnimation = (
     }, 2000);
     setTimer(newTimer);
 
-    // Cancel timer is component unmounts.
+    // Cancel timer if component unmounts.
     return () => clearTimeout(newTimer);
   }, deps);
 
