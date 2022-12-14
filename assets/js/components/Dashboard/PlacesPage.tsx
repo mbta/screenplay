@@ -71,7 +71,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     activeEventKeys,
   } = usePlacesPageContext();
   const dispatch = usePlacesPageDispatchContext();
-  const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
+  const prevPlaceIds = usePrevious(places)?.map((place) => place.id) ?? [];
 
   const handleClickResetFilters = () => {
     dispatch({ type: "RESET_STATE", page: "PLACES" });
@@ -304,9 +304,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               defaultSort={sortDirection === 0}
               showAnimation={
-                showAnimationForNewPlaces &&
-                prevPlaceIds !== undefined &&
-                !prevPlaceIds.includes(place.id)
+                showAnimationForNewPlaces && !prevPlaceIds.includes(place.id)
               }
             />
           );
