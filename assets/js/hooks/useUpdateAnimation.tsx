@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useUpdateAnimation = (
   deps: any[],
@@ -6,23 +6,24 @@ export const useUpdateAnimation = (
   showAnimationOnMount?: boolean
 ) => {
   const [showAnimation, setShowAnimation] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout>();
+  const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
     // Prevents animation when already showing and on page load.
-    if (timer || (!showAnimationOnMount && prevValue !== undefined)) {
+    if (timer.current !== undefined || (!showAnimationOnMount && !prevValue)) {
       return;
     }
 
     setShowAnimation(true);
-    const newTimer = setTimeout(() => {
-      setTimer(undefined);
+    timer.current = setTimeout(() => {
+      timer.current = undefined;
       setShowAnimation(false);
     }, 2000);
-    setTimer(newTimer);
-
-    // Cancel timer if component unmounts.
-    return () => clearTimeout(newTimer);
   }, deps);
+
+  // Cancel timer if component unmounts.
+  useEffect(() => {
+    return () => clearTimeout(timer.current);
+  }, []);
 
   return { showAnimation };
 };
