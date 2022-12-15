@@ -64,7 +64,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   } = useAlertsPageContext();
   const dispatch = useAlertsPageDispatchContext();
   const navigate = useNavigate();
-  const prevAlertIds = usePrevious(alerts)?.map((alert) => alert.id) ?? [];
+  const prevAlertIds = usePrevious(alerts)?.map((alert) => alert.id);
 
   const alertSortLabel = SORT_LABELS["Alerts"][sortDirection];
 
@@ -262,7 +262,10 @@ const AlertsList: ComponentType<AlertsListProps> = ({
             ).length;
           }
 
-          const showAnimationOnMount = !prevAlertIds.includes(alert.id);
+          let showAnimationOnMount = false;
+          if (prevAlertIds?.length) {
+            showAnimationOnMount = !prevAlertIds.includes(alert.id);
+          }
 
           return (
             <AlertCard
