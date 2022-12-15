@@ -25,8 +25,7 @@ const AlertDetails: ComponentType = () => {
 
   const navigate = useNavigate();
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const selectedAlert = screenplayContext.alerts.length
@@ -36,9 +35,9 @@ const AlertDetails: ComponentType = () => {
     if (selectedAlert) {
       setContextState(screenplayContext);
       setSelectedAlert(selectedAlert);
-      setShow(false);
+      setShowModal(false);
     } else {
-      setShow(true);
+      setShowModal(true);
     }
   }, [screenplayContext]);
 
@@ -84,8 +83,7 @@ const AlertDetails: ComponentType = () => {
       <Modal
         className="alert-not-found"
         backdropClassName="alert-not-found"
-        show={show}
-        onHide={handleClose}
+        show={showModal}
       >
         <Modal.Body>
           <SlashCircleFill className="modal-icon" />
