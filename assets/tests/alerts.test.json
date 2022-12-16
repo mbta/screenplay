@@ -1,0 +1,254 @@
+[
+  {
+    "description_for_test": "Current, affects 1 subway line",
+    "id": "1",
+    "active_period": [
+      {
+        "end": "2042-10-29T02:30:00-04:00",
+        "start": "2022-08-28T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Orange",
+        "route_type": 1
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Current, affects 2 lines: Red / Mattapan",
+    "id": "2",
+    "active_period": [
+      {
+        "end": "2042-10-30T02:30:00-04:00",
+        "start": "2022-08-28T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Red",
+        "route_type": 1
+      },
+      {
+        "route": "Mattapan",
+        "route_type": 0
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Current, affects 2 lines: Blue / Ferry",
+    "id": "3",
+    "active_period": [
+      {
+        "end": "2042-10-28T02:30:00-04:00",
+        "start": "2022-08-27T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Blue",
+        "route_type": 1
+      },
+      {
+        "route": "Boat",
+        "route_type": 4
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Current, affects Green-B",
+    "id": "4",
+    "active_period": [
+      {
+        "end": "2042-10-28T02:30:00-04:00",
+        "start": "2022-08-27T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Green-B",
+        "route_type": 0
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Current, affects Green-C",
+    "id": "5",
+    "active_period": [
+      {
+        "end": null,
+        "start": "2022-08-29T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Green-C",
+        "route_type": 0
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Current, affects Green-D",
+    "id": "6",
+    "active_period": [
+      {
+        "end": null,
+        "start": "2022-07-29T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Green-D",
+        "route_type": 0
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Current, affects Green-E",
+    "id": "7",
+    "active_period": [
+      {
+        "end": null,
+        "start": "2022-09-29T04:30:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Green-E",
+        "route_type": 0
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Several active periods, the latest is still ongoing",
+    "id": "8",
+    "active_period": [
+      {
+        "end": "2022-09-17T02:30:00-04:00",
+        "start": "2022-09-16T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-18T02:30:00-04:00",
+        "start": "2022-09-17T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-19T02:30:00-04:00",
+        "start": "2022-09-18T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-24T02:30:00-04:00",
+        "start": "2022-09-23T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-25T02:30:00-04:00",
+        "start": "2022-09-24T23:00:00-04:00"
+      },
+      {
+        "end": null,
+        "start": "2022-09-25T23:00:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Green-B",
+        "route_type": 0
+      },
+      {
+        "route": "Green-C",
+        "route_type": 0
+      },
+      {
+        "route": "Green-D",
+        "route_type": 0
+      },
+      {
+        "route": "Green-E",
+        "route_type": 0
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Several active periods, the latest is expired",
+    "id": "9",
+    "active_period": [
+      {
+        "end": "2022-09-17T02:30:00-04:00",
+        "start": "2022-09-16T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-18T02:30:00-04:00",
+        "start": "2022-09-17T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-19T02:30:00-04:00",
+        "start": "2022-09-18T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-24T02:30:00-04:00",
+        "start": "2022-09-23T23:00:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Orange",
+        "route_type": 1
+      },
+      {
+        "route": "CR-something",
+        "route_type": 2
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  },
+  {
+    "description_for_test": "Several active periods, the latest is still ongoing",
+    "id": "10",
+    "active_period": [
+      {
+        "end": "2022-09-17T02:30:00-04:00",
+        "start": "2022-08-16T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-18T02:30:00-04:00",
+        "start": "2022-09-17T23:00:00-04:00"
+      },
+      {
+        "end": "2022-09-19T02:30:00-04:00",
+        "start": "2022-09-18T23:00:00-04:00"
+      },
+      {
+        "end": "2042-09-24T02:30:00-04:00",
+        "start": "2022-09-23T23:00:00-04:00"
+      }
+    ],
+    "informed_entities": [
+      {
+        "route": "Red",
+        "route_type": 1
+      },
+      {
+        "route": "100",
+        "route_type": 3
+      }
+    ],
+    "affected_list": ["Green"],
+    "effect": "delay"
+  }
+]

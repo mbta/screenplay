@@ -8,4 +8,10 @@
 # export SFTP_LOCAL_PATH=
 # export SECRET_KEY_BASE=
 # export GUARDIAN_SECRET_KEY=
+# export API_V3_KEY=
+# export API_V3_URL=
 # export CLARITY_TAG=
+# export ENVIRONMENT_NAME=
+# export SCREENS_URL=
+# export SIGNS_UI_URL=
+# export ALERTS_UI_URL=

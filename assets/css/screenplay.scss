@@ -1,9 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
-@import "colors.scss";
+@import "variables.scss";
 @import "dashboard.scss";
 @import "dashboard/places-page.scss";
 @import "dashboard/alerts-page.scss";
 @import "dashboard/overrides-page.scss";
+@import "dashboard/alert-details.scss";
 @import "place-row.scss";
 @import "places-action-bar.scss";
 @import "filter-dropdown.scss";
@@ -12,7 +13,11 @@
 @import "screen-detail.scss";
 @import "report-a-problem-button.scss";
 @import "paess.scss";
+@import "alert-card.scss";
 @import "map-segment.scss";
+@import "modal.scss";
+@import "alert-banner.scss";
+@import "animation.scss";
 
 $body-bg: $cool-gray-30;
 
@@ -22,4 +27,27 @@ html {
 
 body {
   font-family: "Inter", sans-serif;
+}
+
+.filterable-list__header-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .filterable-list__sort-label {
+    color: white;
+    font-weight: 900;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: 1px;
+    margin-right: auto;
+    cursor: pointer;
+    width: fit-content;
+  }
+}
+
+.screenplay-button {
+  background: $main-blue;
+  border: 1px solid rgba(23, 31, 38, 0.3);
+  border-radius: 6px;
 }

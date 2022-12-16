@@ -9,10 +9,10 @@ interface PaessScreenDetailProps {
 const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
   const generateSource = () => {
     // @ts-ignore Suppressing "object could be null" warning
-    const { environmentName } = document.getElementById("app").dataset;
-    return environmentName === "dev" || environmentName === "dev-green"
-      ? `https://signs-dev.mbtace.com/${props.stationCode}/${props.zone}`
-      : `https://signs.mbta.com/${props.stationCode}/${props.zone}`;
+    const signsUiUrl = document
+      .querySelector("meta[name=signs-ui-url]")
+      ?.getAttribute("content");
+    return `${signsUiUrl}/${props.stationCode}/${props.zone}`;
   };
 
   function getZoneLabel(zone: string) {

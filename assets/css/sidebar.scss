@@ -1,5 +1,6 @@
 .sidebar-container {
-  max-width: 260px;
+  width: $sidebar-width;
+  flex-shrink: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -48,6 +49,7 @@
     &.selected {
       background-color: $main-blue;
       font-weight: 800;
+      border: 1px solid rgba(23, 31, 38, 0.3);
     }
     &:hover {
       background-color: #0075db66;

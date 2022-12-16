@@ -1,5 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
-import classNames from "classnames";
+import React, { ComponentType } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
@@ -9,10 +8,16 @@ import { Place } from "../../models/place";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import {
   MODES_AND_LINES,
-  SORT_LABELS_BY_LINE,
+  SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
+import {
+  usePlacesPageContext,
+  usePlacesPageDispatchContext,
+  useScreenplayContext,
+} from "../../hooks/useScreenplayContext";
+import { usePrevious } from "../../hooks/usePrevious";
 
 type DirectionID = 0 | 1;
 
@@ -21,7 +26,7 @@ const getSortLabel = (
   sortDirection: DirectionID
 ) => {
   const line = modeLineFilterValue.label.split(" ")[0];
-  const sortLabels = SORT_LABELS_BY_LINE[line];
+  const sortLabels = SORT_LABELS[line];
 
   if (sortLabels) {
     return sortLabels[sortDirection];
@@ -30,61 +35,94 @@ const getSortLabel = (
   }
 };
 
-interface Props {
+const PlacesPage: ComponentType = () => {
+  const { places } = useScreenplayContext();
+
+  return (
+    <div className="places-page">
+      <div className="page-content__header">Places</div>
+      <div className="page-content__body">
+        <PlacesList places={places} />
+      </div>
+    </div>
+  );
+};
+
+interface PlacesListProps {
   places: Place[];
-  isVisible: boolean;
+  noModeFilter?: boolean;
+  isAlertPlacesList?: boolean;
+  showAnimationForNewPlaces?: boolean;
 }
 
-const PlacesPage: ComponentType<Props> = (props: Props) => {
+const PlacesList: ComponentType<PlacesListProps> = ({
+  places,
+  noModeFilter,
+  isAlertPlacesList,
+  showAnimationForNewPlaces,
+}: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
-  const [sortDirection, setSortDirection] = useState<DirectionID>(0);
-  const [modeLineFilterValue, setModeLineFilterValue] = useState(
-    MODES_AND_LINES[0]
-  );
-  const [screenTypeFilterValue, setScreenTypeFilterValue] = useState(
-    SCREEN_TYPES[0]
-  );
-  const [showScreenlessPlaces, setShowScreenlessPlaces] = useState(true);
-  const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
-  const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
+  const {
+    sortDirection,
+    modeLineFilterValue,
+    screenTypeFilterValue,
+    statusFilterValue,
+    showScreenlessPlaces,
+    activeEventKeys,
+  } = usePlacesPageContext();
+  const dispatch = usePlacesPageDispatchContext();
+  const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
 
   const handleClickResetFilters = () => {
-    setModeLineFilterValue(MODES_AND_LINES[0]);
-    setScreenTypeFilterValue(SCREEN_TYPES[0]);
-    setStatusFilterValue(STATUSES[0]);
-    setShowScreenlessPlaces(true);
+    dispatch({ type: "RESET_STATE", page: "PLACES" });
   };
 
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
-  useEffect(() => {
-    setActiveEventKeys([]);
-  }, [modeLineFilterValue, screenTypeFilterValue, statusFilterValue]);
-
   const handleSelectModeOrLine = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
-      setModeLineFilterValue(selectedFilter);
-      setSortDirection(0);
+      dispatch({
+        type: "SET_MODE_LINE_FILTER",
+        page: "PLACES",
+        filterValue: selectedFilter,
+      });
+      dispatch({
+        type: "SET_SORT_DIRECTION",
+        page: "PLACES",
+        sortDirection: 0,
+      });
     }
   };
 
   const handleSelectScreenType = (value: string) => {
     const selectedFilter = SCREEN_TYPES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setScreenTypeFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_SCREEN_TYPE_FILTER",
+        page: "PLACES",
+        filterValue: selectedFilter,
+      });
     }
   };
 
   const handleSelectStatus = (value: string) => {
     const selectedFilter = STATUSES.find(({ label }) => label === value);
     if (selectedFilter) {
-      setStatusFilterValue(selectedFilter);
+      dispatch({
+        type: "SET_STATUS_FILTER",
+        page: "PLACES",
+        filterValue: selectedFilter,
+      });
     }
   };
 
   const handleClickSortLabel = () => {
-    setSortDirection((1 - sortDirection) as DirectionID);
+    dispatch({
+      type: "SET_SORT_DIRECTION",
+      page: "PLACES",
+      sortDirection: 1 - sortDirection,
+    });
   };
 
   const sortPlaces = (places: Place[]) => {
@@ -103,7 +141,7 @@ const PlacesPage: ComponentType<Props> = (props: Props) => {
   };
 
   const filterPlaces = () => {
-    let filteredPlaces = props.places;
+    let filteredPlaces = places;
     if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredPlaces = filteredPlaces.filter((place) => {
         return place.screens.some((screen) =>
@@ -165,14 +203,26 @@ const PlacesPage: ComponentType<Props> = (props: Props) => {
 
   const handleClickAccordion = (eventKey: string) => {
     if (activeEventKeys.includes(eventKey)) {
-      setActiveEventKeys(activeEventKeys.filter((e) => e !== eventKey));
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        page: "PLACES",
+        eventKeys: activeEventKeys.filter((e) => e !== eventKey),
+      });
     } else {
-      setActiveEventKeys([...activeEventKeys, eventKey]);
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        page: "PLACES",
+        eventKeys: [...activeEventKeys, eventKey],
+      });
     }
   };
 
   const handleClickToggleScreenlessPlaces = () => {
-    setShowScreenlessPlaces((prevValue) => !prevValue);
+    dispatch({
+      type: "SET_SHOW_SCREENLESS_PLACES",
+      page: "PLACES",
+      show: !showScreenlessPlaces,
+    });
   };
 
   const { filteredPlaces, filteredPlacesHaveScreenlessPlaces } = filterPlaces();
@@ -190,76 +240,81 @@ const PlacesPage: ComponentType<Props> = (props: Props) => {
     (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
 
   return (
-    <div
-      className={classNames("places-page", {
-        "places-page--hidden": !props.isVisible,
-      })}
-    >
-      <div className="page-content__header">Places</div>
-      <div className="page-content__body">
-        <Container fluid>
-          <Row className="place-list__header-row">
-            <Col lg={3}>
-              <div
-                className="place-list__sort-label d-flex align-items-center"
-                onClick={handleClickSortLabel}
-                data-testid="sort-label"
-              >
-                {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
-              </div>
-            </Col>
-            <Col lg={3} className="d-flex justify-content-end pe-3">
+    <>
+      <Container fluid>
+        <Row className="filterable-list__header-row">
+          <Col lg={3}>
+            <div
+              className="filterable-list__sort-label d-flex align-items-center"
+              onClick={handleClickSortLabel}
+              data-testid="sort-label"
+            >
+              {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+            </div>
+          </Col>
+          <Col lg={3} className="d-flex justify-content-end pe-3">
+            {!noModeFilter && (
               <FilterDropdown
                 list={MODES_AND_LINES}
                 onSelect={(value: any) => handleSelectModeOrLine(value)}
                 selectedValue={modeLineFilterValue}
                 className="modes-and-lines"
               />
-            </Col>
-            <Col lg={3} className="place-screen-types pe-3">
-              <FilterDropdown
-                list={SCREEN_TYPES}
-                onSelect={(value: any) => handleSelectScreenType(value)}
-                selectedValue={screenTypeFilterValue}
-                className="screen-types"
-              />
-            </Col>
-            <Col lg={3}>
-              <FilterDropdown
-                list={STATUSES}
-                onSelect={(value: any) => handleSelectStatus(value)}
-                selectedValue={statusFilterValue}
-                className="statuses"
-                disabled
-              />
-            </Col>
-          </Row>
-        </Container>
-        {isFiltered && (
-          <PlacesActionBar
-            places={sortedFilteredPlaces}
-            hasScreenlessPlaces={filteredPlacesHaveScreenlessPlaces}
-            showScreenlessPlaces={showScreenlessPlaces}
-            onClickResetFilters={handleClickResetFilters}
-            onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
-          />
-        )}
-        <Accordion flush alwaysOpen activeKey={activeEventKeys}>
-          {sortedFilteredPlaces.map((place: Place) => (
+            )}
+          </Col>
+          <Col lg={3} className="place-screen-types pe-3">
+            <FilterDropdown
+              list={SCREEN_TYPES}
+              onSelect={(value: any) => handleSelectScreenType(value)}
+              selectedValue={screenTypeFilterValue}
+              className="screen-types"
+            />
+          </Col>
+          <Col lg={3}>
+            <FilterDropdown
+              list={STATUSES}
+              onSelect={(value: any) => handleSelectStatus(value)}
+              selectedValue={statusFilterValue}
+              className="statuses"
+              disabled
+            />
+          </Col>
+        </Row>
+      </Container>
+      {(isFiltered || isAlertPlacesList) && (
+        <PlacesActionBar
+          places={sortedFilteredPlaces}
+          hasScreenlessPlaces={filteredPlacesHaveScreenlessPlaces}
+          showScreenlessPlaces={showScreenlessPlaces}
+          onClickResetFilters={handleClickResetFilters}
+          onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
+          // Only show reset filters if NOT isAlertPlacesList, OR if isAlertPlacesList and isFiltered
+          hideResetFiltersButton={isAlertPlacesList && !isFiltered}
+        />
+      )}
+      <Accordion flush alwaysOpen activeKey={activeEventKeys}>
+        {sortedFilteredPlaces.map((place: Place) => {
+          return (
             <PlaceRow
               key={place.id}
               place={place}
               eventKey={place.id}
               onClick={handleClickAccordion}
-              isFiltered={isFiltered}
+              classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               defaultSort={sortDirection === 0}
+              showAnimation={
+                showAnimationForNewPlaces &&
+                prevPlaceIds !== undefined &&
+                !prevPlaceIds.includes(place.id)
+              }
             />
-          ))}
-        </Accordion>
-      </div>
-    </div>
+          );
+        })}
+      </Accordion>
+    </>
   );
 };
 
 export default PlacesPage;
+export { PlacesList };

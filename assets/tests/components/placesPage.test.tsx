@@ -1,38 +1,13 @@
 import React from "react";
-import { act, fireEvent, render, waitFor } from "@testing-library/react";
-import Dashboard from "../../js/components/Dashboard/Dashboard";
-import { MemoryRouter } from "react-router-dom";
-import placesAndScreens from "../places_and_screens.test.json";
+import { act, fireEvent, waitFor } from "@testing-library/react";
+import PlacesPage from "../../js/components/Dashboard/PlacesPage";
+import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvider";
 
-beforeAll(() => {
-  const app = document.createElement("div");
-  app.id = "app";
-  app.dataset.username = "test";
-  document.body.appendChild(app);
-});
-
-describe("Dashboard", () => {
-  let originalFetch: any;
-
-  beforeEach(() => {
-    originalFetch = global.fetch;
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () => Promise.resolve(placesAndScreens),
-      })
-    ) as jest.Mock;
-  });
-
-  afterEach(() => {
-    global.fetch = originalFetch;
-  });
-
+describe("PlacesPage", () => {
   describe("filtering", () => {
     test("filters places by screen type", async () => {
-      const { getByRole, getByText, queryByText, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByRole, getByText, queryByText, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
@@ -66,10 +41,8 @@ describe("Dashboard", () => {
     });
 
     test("filters places by mode and route", async () => {
-      const { getByRole, getByText, queryByText, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByRole, getByText, queryByText, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -101,14 +74,41 @@ describe("Dashboard", () => {
         });
       });
     });
+
+    test("adds `filtered` class to PlaceRow when filtered", async () => {
+      const { findByRole, getByRole, getAllByTestId } =
+        renderWithScreenplayProvider(<PlacesPage />);
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        await waitFor(() => {
+          expect(getAllByTestId("place-row")[0].className).toContain(
+            "filtered"
+          );
+        });
+      });
+    });
+
+    test("reset button clears filters", async () => {
+      const { findByRole, getByRole, getByTestId, getByText } =
+        renderWithScreenplayProvider(<PlacesPage />);
+
+      await act(async () => {
+        fireEvent.click(getByRole("button", { name: "All MODES" }));
+        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
+        fireEvent.click(getByTestId("places-action-bar-reset-filters-button"));
+        await waitFor(() => {
+          expect(getByText("ALEWIFE")).toBeInTheDocument();
+        });
+      });
+    });
   });
 
   describe("sorting", () => {
     test("sort label changes depending on filter selected", async () => {
-      const { getByTestId, getByRole, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByTestId, getByRole, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
@@ -137,10 +137,8 @@ describe("Dashboard", () => {
     });
 
     test("sort label changes when clicked", async () => {
-      const { getByTestId, getByRole, findByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByTestId, getByRole, findByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         expect(getByTestId("sort-label").textContent?.trim()).toBe("ABC");
@@ -178,10 +176,8 @@ describe("Dashboard", () => {
     });
 
     test("sort order changes for RL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -191,7 +187,13 @@ describe("Dashboard", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["ALEWIFE", "Davis", "Porter", "Park Street"]);
+          ).toStrictEqual([
+            "ALEWIFE",
+            "Davis",
+            "Porter",
+            "Park Street",
+            "ASHMONT",
+          ]);
         });
 
         fireEvent.click(getByTestId("sort-label"));
@@ -200,16 +202,20 @@ describe("Dashboard", () => {
             getAllByTestId("place-name").map(
               (placeName) => placeName.textContent
             )
-          ).toStrictEqual(["Park Street", "Porter", "Davis", "ALEWIFE"]);
+          ).toStrictEqual([
+            "ASHMONT",
+            "Park Street",
+            "Porter",
+            "Davis",
+            "ALEWIFE",
+          ]);
         });
       });
     });
 
     test("sort order changes for OL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -246,10 +252,8 @@ describe("Dashboard", () => {
     });
 
     test("sort order changes for GL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
@@ -273,6 +277,7 @@ describe("Dashboard", () => {
             "GOVERNMENT CENTER",
             "Park Street",
             "Boylston",
+            "Blandford Street",
           ]);
         });
 
@@ -283,6 +288,7 @@ describe("Dashboard", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
+            "Blandford Street",
             "Boylston",
             "Park Street",
             "GOVERNMENT CENTER",
@@ -302,10 +308,8 @@ describe("Dashboard", () => {
     });
 
     test("sort order changes for BL", async () => {
-      const { getByTestId, getAllByTestId, findByRole, getByRole } = render(
-        <Dashboard page="places" />,
-        { wrapper: MemoryRouter }
-      );
+      const { getByTestId, getAllByTestId, findByRole, getByRole } =
+        renderWithScreenplayProvider(<PlacesPage />);
 
       await act(async () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));

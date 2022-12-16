@@ -1,9 +1,9 @@
-defmodule Screenplay.Alerts.S3Fetch do
+defmodule Screenplay.OutfrontTakeoverTool.Alerts.S3Fetch do
   @moduledoc false
 
   require Logger
 
-  alias Screenplay.Alerts.State
+  alias Screenplay.OutfrontTakeoverTool.Alerts.State
 
   @spec get_state() :: {:ok, State.t()} | :error
   def get_state do

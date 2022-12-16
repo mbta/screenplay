@@ -11,9 +11,11 @@ import TSquare from "../../../static/images/t-square.svg";
 const Sidebar: ComponentType = () => {
   const pathname = useLocation().pathname;
   // @ts-ignore Suppressing "object could be null" warning
-  const username = document.getElementById("app").dataset.username;
+  const username = document
+    .querySelector("meta[name=username]")
+    ?.getAttribute("content");
 
-  return pathname.includes("dashboard") ? (
+  return !pathname.includes("emergency-takeover") ? (
     <div className="sidebar-container">
       {/*
         We use a regular web link for this rather than a React-Router Link,
@@ -31,10 +33,10 @@ const Sidebar: ComponentType = () => {
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
-        <Link className="sidebar-link disabled" to="/dashboard/alerts">
-          <Button className="disabled-button">
+        <Link className="sidebar-link" to="/alerts">
+          <Button className={pathname === "/alerts" ? "selected" : ""}>
             <ExclamationTriangleFill size={20} />
-            <span className="nav-link__name">Posted Alerts (coming soon)</span>
+            <span className="nav-link__name">Posted Alerts</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}

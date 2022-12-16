@@ -1,0 +1,19 @@
+.alert-details {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &__back-button {
+    height: 40px;
+    font-weight: 500;
+    margin-right: 24px;
+    background: $main-blue;
+    border: 1px solid rgba(23, 31, 38, 0.3);
+  }
+
+  &__external-link {
+    margin-left: 24px;
+    background: unset;
+    border: 1px solid rgba(23, 31, 38, 0.3);
+  }
+}

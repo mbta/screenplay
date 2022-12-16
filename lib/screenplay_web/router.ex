@@ -2,15 +2,19 @@ defmodule ScreenplayWeb.Router do
   use ScreenplayWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+  end
+
+  pipeline :metadata do
+    plug(ScreenplayWeb.Plugs.Metadata)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   pipeline :redirect_prod_http do
@@ -34,34 +38,36 @@ defmodule ScreenplayWeb.Router do
   # Load balancer health check
   # Exempt from auth checks and SSL redirects
   scope "/", ScreenplayWeb do
-    get "/_health", HealthController, :index
+    get("/_health", HealthController, :index)
   end
 
   scope "/", ScreenplayWeb.OutfrontTakeoverTool do
-    pipe_through [
+    pipe_through([
       :redirect_prod_http,
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group
-    ]
+      :ensure_screenplay_admin_group,
+      :metadata
+    ])
 
     get("/", PageController, :takeover_redirect)
     get("/emergency-takeover", PageController, :index)
   end
 
   scope "/", ScreenplayWeb do
-    pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
+    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth, :metadata])
 
     get("/dashboard", DashboardController, :index)
-    get("/dashboard/alerts", DashboardController, :index)
+    get("/alerts/*id", AlertsController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
   scope "/api", ScreenplayWeb do
-    pipe_through [:redirect_prod_http, :browser, :auth, :ensure_auth]
+    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth])
 
     get("/dashboard", DashboardApiController, :index)
+    get("/alerts", AlertsApiController, :index)
   end
 
   scope "/auth", ScreenplayWeb do
@@ -73,14 +79,14 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
-    pipe_through [
+    pipe_through([
       :redirect_prod_http,
       :api,
       :browser,
       :auth,
       :ensure_auth,
       :ensure_screenplay_admin_group
-    ]
+    ])
 
     post("/create", AlertController, :create)
     post("/edit", AlertController, :edit)
@@ -101,8 +107,8 @@ defmodule ScreenplayWeb.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/" do
-      pipe_through :browser
-      live_dashboard "/telemetry_dashboard", metrics: ScreenplayWeb.Telemetry
+      pipe_through(:browser)
+      live_dashboard("/telemetry_dashboard", metrics: ScreenplayWeb.Telemetry)
     end
   end
 end

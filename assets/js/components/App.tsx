@@ -1,11 +1,15 @@
 import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import { initClarityAnalytics } from "../utils/clarityInit";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
 );
 const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
+const PlacesPage = React.lazy(() => import("./Dashboard/PlacesPage"));
+const AlertsPage = React.lazy(() => import("./Dashboard/AlertsPage"));
+const AlertDetails = React.lazy(() => import("./Dashboard/AlertDetails"));
 const clarityTag = document
   .querySelector("meta[name=clarity-tag]")
   ?.getAttribute("content");
@@ -24,13 +28,17 @@ class AppRoutes extends React.Component {
             element={<OutfrontTakeoverTool />}
           ></Route>
           <Route
-            path="/dashboard"
-            element={<Dashboard page="places" />}
-          ></Route>
-          <Route
-            path="/dashboard/alerts"
-            element={<Dashboard page="alerts" />}
-          ></Route>
+            path="*"
+            element={
+              <ScreenplayProvider>
+                <Dashboard />
+              </ScreenplayProvider>
+            }
+          >
+            <Route path="dashboard" element={<PlacesPage />}></Route>
+            <Route path="alerts" element={<AlertsPage />}></Route>
+            <Route path="alerts/:id" element={<AlertDetails />}></Route>
+          </Route>
         </Routes>
       </React.Suspense>
     );

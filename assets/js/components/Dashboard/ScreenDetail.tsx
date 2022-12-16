@@ -62,28 +62,21 @@ const ScreenCard = (props: ScreenDetailProps) => {
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
-    const { environmentName } = document.getElementById("app").dataset;
+    const screensUrl = document
+      .querySelector("meta[name=screens-url]")
+      ?.getAttribute("content");
     const queryParams = "requestor=screenplay";
 
-    let baseUrl;
-    if (environmentName === "dev") {
-      baseUrl = "https://screens-dev.mbtace.com";
-    } else if (environmentName === "dev-green") {
-      baseUrl = "https://screens-dev-green.mbtace.com";
-    } else {
-      baseUrl = "https://screens.mbta.com";
-    }
-
     if (type.includes("v2")) {
-      return `${baseUrl}/v2/screen/${id}/simulation?${queryParams}`;
+      return `${screensUrl}/v2/screen/${id}/simulation?${queryParams}`;
     }
     if (
       ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
     ) {
-      return `${baseUrl}/screen/${id}?${queryParams}`;
+      return `${screensUrl}/screen/${id}?${queryParams}`;
     }
     if (type === "dup") {
-      return `${baseUrl}/screen/${id}/simulation?${queryParams}`;
+      return `${screensUrl}/screen/${id}/simulation?${queryParams}`;
     }
 
     return "";
