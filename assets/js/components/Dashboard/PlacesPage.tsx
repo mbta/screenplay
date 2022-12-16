@@ -17,6 +17,7 @@ import {
   usePlacesPageDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
+import { usePrevious } from "../../hooks/usePrevious";
 
 type DirectionID = 0 | 1;
 
@@ -51,12 +52,14 @@ interface PlacesListProps {
   places: Place[];
   noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
+  showAnimationForNewPlaces?: boolean;
 }
 
 const PlacesList: ComponentType<PlacesListProps> = ({
   places,
   noModeFilter,
   isAlertPlacesList,
+  showAnimationForNewPlaces,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
@@ -68,6 +71,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     activeEventKeys,
   } = usePlacesPageContext();
   const dispatch = usePlacesPageDispatchContext();
+  const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
 
   const handleClickResetFilters = () => {
     dispatch({ type: "RESET_STATE", page: "PLACES" });
@@ -289,17 +293,24 @@ const PlacesList: ComponentType<PlacesListProps> = ({
         />
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>
-        {sortedFilteredPlaces.map((place: Place) => (
-          <PlaceRow
-            key={place.id}
-            place={place}
-            eventKey={place.id}
-            onClick={handleClickAccordion}
-            classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
-            filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
-            defaultSort={sortDirection === 0}
-          />
-        ))}
+        {sortedFilteredPlaces.map((place: Place) => {
+          return (
+            <PlaceRow
+              key={place.id}
+              place={place}
+              eventKey={place.id}
+              onClick={handleClickAccordion}
+              classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
+              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
+              defaultSort={sortDirection === 0}
+              showAnimation={
+                showAnimationForNewPlaces &&
+                prevPlaceIds !== undefined &&
+                !prevPlaceIds.includes(place.id)
+              }
+            />
+          );
+        })}
       </Accordion>
     </>
   );

@@ -22,6 +22,7 @@ import {
   useAlertsPageDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
+import { usePrevious } from "../../hooks/usePrevious";
 
 const AlertsPage: ComponentType = () => {
   const { places, alerts, screensByAlertMap } = useScreenplayContext();
@@ -63,6 +64,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   } = useAlertsPageContext();
   const dispatch = useAlertsPageDispatchContext();
   const navigate = useNavigate();
+  const prevAlertIds = usePrevious(alerts)?.map((alert) => alert.id);
 
   const alertSortLabel = SORT_LABELS["Alerts"][sortDirection];
 
@@ -260,6 +262,11 @@ const AlertsList: ComponentType<AlertsListProps> = ({
             ).length;
           }
 
+          let showAnimationOnMount = false;
+          if (prevAlertIds?.length) {
+            showAnimationOnMount = !prevAlertIds.includes(alert.id);
+          }
+
           return (
             <AlertCard
               key={alert.id}
@@ -269,6 +276,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
               }}
               numberOfScreens={numScreens}
               numberOfPlaces={numPlaces}
+              showAnimationOnMount={showAnimationOnMount}
             />
           );
         })}

@@ -76,6 +76,7 @@ const AlertDetails: ComponentType = () => {
               )}
               noModeFilter
               isAlertPlacesList
+              showAnimationForNewPlaces
             />
           </div>
         )}
