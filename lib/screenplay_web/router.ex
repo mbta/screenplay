@@ -7,6 +7,9 @@ defmodule ScreenplayWeb.Router do
     plug(:fetch_flash)
     plug(:protect_from_forgery)
     plug(:put_secure_browser_headers)
+  end
+
+  pipeline :metadata do
     plug(ScreenplayWeb.Plugs.Metadata)
   end
 
@@ -44,7 +47,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group
+      :ensure_screenplay_admin_group,
+      :metadata
     ])
 
     get("/", PageController, :takeover_redirect)
@@ -52,7 +56,7 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth])
+    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth, :metadata])
 
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)

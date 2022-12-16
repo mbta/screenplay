@@ -1,5 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
-@import "colors.scss";
+@import "variables.scss";
 @import "dashboard.scss";
 @import "dashboard/places-page.scss";
 @import "dashboard/alerts-page.scss";
@@ -15,6 +15,7 @@
 @import "paess.scss";
 @import "alert-card.scss";
 @import "map-segment.scss";
+@import "modal.scss";
 @import "alert-banner.scss";
 @import "animation.scss";
 
@@ -43,4 +44,10 @@ body {
     cursor: pointer;
     width: fit-content;
   }
+}
+
+.screenplay-button {
+  background: $main-blue;
+  border: 1px solid rgba(23, 31, 38, 0.3);
+  border-radius: 6px;
 }
