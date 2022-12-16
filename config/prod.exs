@@ -10,12 +10,13 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :screenplay, ScreenplayWeb.Endpoint,
-  url: [port: 80],
+  cache_static_manifest: "priv/static/cache_manifest.json",
   http: [:inet6, port: 4000],
   server: true,
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  url: [port: 80]
 
 config :screenplay,
+  redirect_http?: true,
   alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.S3Fetch,
   alerts_s3_bucket: "mbta-ctd-config",
   record_sentry: true

@@ -247,14 +247,39 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
   ],
   green: [
     {
-      name: "Union Square",
+      name: "Medford/Tufts",
       inlineMap: "Trunk-Top",
-      branch: "D",
+      branch: "E",
       isTerminalStop: true,
     },
     {
-      name: "Lechmere",
+      name: "Ball Square",
       inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "Magoun Square",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "Gilman Square",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "East Somerville",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "Union Square",
+      inlineMap: "Branch-Top",
+      branch: "D",
+    },
+    {
+      name: "Lechmere",
+      inlineMap: "Fork-Up",
     },
     {
       name: "Science Park/West End",
@@ -921,10 +946,35 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
   ],
   "green-e": [
     {
-      name: "Lechmere",
+      name: "Medford/Tufts",
       inlineMap: "Trunk-Top",
       branch: "E",
       isTerminalStop: true,
+    },
+    {
+      name: "Ball Square",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "Magoun Square",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "Gilman Square",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "East Somerville",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
+    },
+    {
+      name: "Lechmere",
+      inlineMap: "Trunk-Middle",
+      branch: "E",
     },
     {
       name: "Science Park/West End",

@@ -264,7 +264,12 @@ describe("PlacesPage", () => {
               (placeName) => placeName.textContent
             )
           ).toStrictEqual([
-            "UNION SQUARE",
+            "MEDFORD/TUFTS",
+            "Ball Square",
+            "Magoun Square",
+            "Gilman Square",
+            "East Somerville",
+            "Union Square",
             "Lechmere",
             "Science Park/West End",
             "North Station",
@@ -291,7 +296,12 @@ describe("PlacesPage", () => {
             "North Station",
             "Science Park/West End",
             "Lechmere",
-            "UNION SQUARE",
+            "Union Square",
+            "East Somerville",
+            "Gilman Square",
+            "Magoun Square",
+            "Ball Square",
+            "MEDFORD/TUFTS",
           ]);
         });
       });
