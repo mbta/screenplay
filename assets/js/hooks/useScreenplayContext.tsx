@@ -260,4 +260,6 @@ export {
   useAlertsPageContext,
   useAlertsPageDispatchContext,
   ScreenplayProvider,
+  FilterValue,
+  DirectionID,
 };

@@ -10,7 +10,15 @@ import {
   SlashCircleFill,
 } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
-import { useScreenplayContext } from "../../hooks/useScreenplayContext";
+import {
+  DirectionID,
+  useScreenplayContext,
+} from "../../hooks/useScreenplayContext";
+import {
+  MODES_AND_LINES,
+  SCREEN_TYPES,
+  STATUSES,
+} from "../../constants/constants";
 
 const AlertDetails: ComponentType = () => {
   const screenplayContext = useScreenplayContext();
@@ -26,6 +34,44 @@ const AlertDetails: ComponentType = () => {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
+  const [sortDirection, setSortDirection] = useState(0 as DirectionID);
+  const [modeLineFilterValue, setModeLineFilterValue] = useState(
+    MODES_AND_LINES[0]
+  );
+  const [screenTypeFilterValue, setScreenTypeFilterValue] = useState(
+    SCREEN_TYPES[0]
+  );
+  const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
+  const [activeEventKeys, setActiveEventKeys] = useState([]);
+
+  const dispatch = (action: any) => {
+    switch (action.type) {
+      case "SET_SORT_DIRECTION":
+        setSortDirection(action.sortDirection);
+        break;
+      case "SET_MODE_LINE_FILTER":
+        setModeLineFilterValue(action.filterValue);
+        setActiveEventKeys([]);
+        break;
+      case "SET_SCREEN_TYPE_FILTER":
+        setScreenTypeFilterValue(action.filterValue);
+        setActiveEventKeys([]);
+        break;
+      case "SET_STATUS_FILTER":
+        setStatusFilterValue(action.filterValue);
+        setActiveEventKeys([]);
+        break;
+      case "SET_ACTIVE_EVENT_KEYS":
+        setActiveEventKeys(action.eventKeys);
+        break;
+      case "RESET_STATE":
+        setSortDirection(0 as DirectionID);
+        setModeLineFilterValue(MODES_AND_LINES[0]);
+        setScreenTypeFilterValue(SCREEN_TYPES[0]);
+        setStatusFilterValue(STATUSES[0]);
+        setActiveEventKeys([]);
+    }
+  };
 
   useEffect(() => {
     const selectedAlert = screenplayContext.alerts.length
@@ -74,9 +120,17 @@ const AlertDetails: ComponentType = () => {
                 places,
                 screensByAlertMap
               )}
+              dispatch={dispatch}
               noModeFilter
               isAlertPlacesList
               showAnimationForNewPlaces
+              stateValues={{
+                sortDirection,
+                modeLineFilterValue,
+                screenTypeFilterValue,
+                statusFilterValue,
+                activeEventKeys,
+              }}
             />
           </div>
         )}
