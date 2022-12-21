@@ -79,9 +79,9 @@ const Dashboard: ComponentType = () => {
         bannerAlert: { alert: postedOrEditedAlert },
       });
     }
-    // If no other alert is eligible to be the bannerAlert, expire the current bannerAlert if two minutes have passed since it started displaying.
+    // If no other alert is eligible to be the bannerAlert, expire the current bannerAlert if 40 seconds have passed since it started displaying.
     else if (
-      moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(2, "minutes"))
+      moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(40, "seconds"))
     ) {
       dispatch({ type: "SET_BANNER_ALERT", bannerAlert: undefined });
     }
@@ -96,7 +96,7 @@ const Dashboard: ComponentType = () => {
 
   const getPostedOrEditedAlert = (alerts: Alert[]) => {
     const now = moment().utc();
-    const twoMinutesAgo = moment().subtract(2, "minutes").utc();
+    const fortySecondsAgo = moment().subtract(40, "seconds").utc();
 
     return (
       alerts
@@ -107,8 +107,8 @@ const Dashboard: ComponentType = () => {
 
           return (
             isSignificantAlert(alert) &&
-            (createdAt.isBetween(twoMinutesAgo, now) ||
-              updatedAt.isBetween(twoMinutesAgo, now))
+            (createdAt.isBetween(fortySecondsAgo, now) ||
+              updatedAt.isBetween(fortySecondsAgo, now))
           );
         })
         // sort them in descending order to get the most recently created or updated alert
