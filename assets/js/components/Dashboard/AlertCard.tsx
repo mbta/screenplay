@@ -126,7 +126,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
                 {numberOfPlaces}
               </span>{" "}
               <span className="alert-card__place-details__place-count__text">
-                places
+                {numberOfPlaces == 1 ? "place" : "places"}
               </span>
             </div>
             <div className="alert-card__place-details__screen-count">
@@ -134,7 +134,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
                 {numberOfScreens}
               </span>{" "}
               <span className="alert-card__place-details__screen-count__text">
-                screens
+                {numberOfScreens == 1 ? "screen" : "screens"}
               </span>
             </div>
             <ChevronRight className="alert-card__place-details__icon" />
