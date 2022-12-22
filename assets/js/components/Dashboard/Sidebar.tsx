@@ -9,7 +9,7 @@ import {
 import TSquare from "../../../static/images/t-square.svg";
 
 const Sidebar: ComponentType = () => {
-  const pathname = useLocation().pathname;
+  const pathname = useLocation().pathname.replace(/\//g, "");
   // @ts-ignore Suppressing "object could be null" warning
   const username = document
     .querySelector("meta[name=username]")
@@ -28,13 +28,13 @@ const Sidebar: ComponentType = () => {
       {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
       <nav>
         <Link className="sidebar-link" to="/dashboard">
-          <Button className={pathname === "/dashboard" ? "selected" : ""}>
+          <Button className={pathname === "dashboard" ? "selected" : ""}>
             <CollectionFill size={20} />
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
         <Link className="sidebar-link" to="/alerts">
-          <Button className={pathname === "/alerts" ? "selected" : ""}>
+          <Button className={pathname === "alerts" ? "selected" : ""}>
             <ExclamationTriangleFill size={20} />
             <span className="nav-link__name">Posted Alerts</span>
           </Button>
