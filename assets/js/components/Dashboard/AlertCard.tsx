@@ -25,7 +25,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
   const { showAnimation } = useUpdateAnimation(
     [
       alert.header,
-      JSON.stringify(alert.active_period),
+      alert.active_period[0].start,
       numberOfPlaces,
       numberOfScreens,
     ],
