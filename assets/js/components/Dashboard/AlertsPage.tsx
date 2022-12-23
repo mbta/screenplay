@@ -23,6 +23,7 @@ import {
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
 import { usePrevious } from "../../hooks/usePrevious";
+import moment from "moment";
 
 const AlertsPage: ComponentType = () => {
   const { places, alerts, screensByAlertMap } = useScreenplayContext();
@@ -186,21 +187,22 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     { active_period: active_period_2 }: Alert
   ) => {
     // Get the soonest start time
-    const { start: start1 } = active_period_1[0];
-    const { start: start2 } = active_period_2[0];
+    const start1 = moment(active_period_1[0].start);
+    const start2 = moment(active_period_2[0].start);
     // Get the latest end time
-    const { end: end1 } = active_period_1[active_period_1.length - 1];
-    const { end: end2 } = active_period_2[active_period_2.length - 1];
+    const end1 = moment(active_period_1[0].end);
+    const end2 = moment(active_period_2[0].end);
 
-    if (end1 === end2) {
+    if (end1.isSame(end2)) {
       // Fall back to start time
-      return Date.parse(start1) - Date.parse(start2);
-    } else if (!end1) {
+      return start1.isBefore(start2) ? 1 : -1;
+    } else if (!end1.isValid()) {
       return 1;
-    } else if (!end2) {
+    } else if (!end2.isValid()) {
       return -1;
+    } else {
+      return end1.isBefore(end2) ? -1 : 1;
     }
-    return Date.parse(end1) - Date.parse(end2);
   };
 
   return (
