@@ -84,7 +84,7 @@ export const getModeFromAffectedList = (affectedList: string[]) => {
       "green-c",
       "green-d",
       "green-e",
-    ].filter((value) => affectedList.includes(value))
+    ].filter((value) => affectedList.includes(value)).length
   ) {
     return "subway";
   } else {
@@ -174,11 +174,13 @@ const SIGNIFICANT_ALERT_EFFECTS: {
 };
 
 export const isSignificantAlert = (alert: Alert) => {
-  if (alert.effect === "DELAY") {
+  const mode = getModeFromAffectedList(alert.affected_list);
+
+  if (!Object.keys(SIGNIFICANT_ALERT_EFFECTS).includes(mode)) return;
+
+  if (alert.effect === "DELAY" && mode === "subway") {
     return Number(alert.severity) > 3;
   } else {
-    return SIGNIFICANT_ALERT_EFFECTS[
-      getModeFromAffectedList(alert.affected_list)
-    ].includes(alert.effect);
+    return SIGNIFICANT_ALERT_EFFECTS[mode].includes(alert.effect);
   }
 };
