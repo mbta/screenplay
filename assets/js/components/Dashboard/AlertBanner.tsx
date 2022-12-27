@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import { ArrowRepeat } from "react-bootstrap-icons";
+import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
 import {
@@ -58,7 +58,9 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
         5000
       );
 
-      return "Screens and places have finished updating";
+      return (
+        <span className="bold">Screens and places have finished updating</span>
+      );
     }
 
     const route = (params["*"] || "").replace(/\//g, "");
@@ -133,7 +135,11 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
   return (
     <div className="alert-banner">
       <div className="alert-banner__icon-container">
-        <ArrowRepeat />
+        {isDone ? (
+          <CheckCircleFill className="alert-banner__check-icon" />
+        ) : (
+          <ArrowRepeat />
+        )}
       </div>
       <div className="alert-banner__text">{getBannerText()}</div>
     </div>
