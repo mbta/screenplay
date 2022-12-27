@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import "../../../css/screenplay.scss";
 import { Alert } from "../../models/alert";
@@ -16,6 +16,7 @@ import { isSignificantAlert } from "../../util";
 const Dashboard: ComponentType = () => {
   const { alerts, bannerAlert } = useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
+  const [bannerDone, setBannerDone] = useState(false);
 
   useEffect(() => {
     fetchAlerts((newAlerts, screens_by_alert) => {
@@ -50,19 +51,27 @@ const Dashboard: ComponentType = () => {
     const postedOrEditedAlert = getPostedOrEditedAlert(newAlerts);
     // If there is a closed alert, just show it and save when it was closed.
     if (closedAlert) {
+      setBannerDone(false);
       dispatch({
         type: "SET_BANNER_ALERT",
         bannerAlert: { alert: closedAlert, closedAt: now },
       });
     }
+    // If there is currently a banner alert and no postedOrEditedAlert or closedAlert exists to take its place, queue expiration
+    else if (bannerAlert && !postedOrEditedAlert) {
+      setBannerDone(true);
+    }
     // If there is not a new closed alert but
     // the current bannerAlert does not have a defined closedAt
     // (meaning there isn't a current banner alert or it is a posted/edited alert)
     else if (!bannerAlert?.closedAt) {
-      dispatch({
-        type: "SET_BANNER_ALERT",
-        bannerAlert: { alert: postedOrEditedAlert },
-      });
+      if (postedOrEditedAlert) {
+        setBannerDone(false);
+        dispatch({
+          type: "SET_BANNER_ALERT",
+          bannerAlert: { alert: postedOrEditedAlert },
+        });
+      }
     }
     // If the current bannerAlert has a closedAt but a recent posted/edited alert came after the closed bannerAlert
     else if (
@@ -74,16 +83,18 @@ const Dashboard: ComponentType = () => {
           )
       )
     ) {
+      setBannerDone(false);
       dispatch({
         type: "SET_BANNER_ALERT",
         bannerAlert: { alert: postedOrEditedAlert },
       });
     }
-    // If no other alert is eligible to be the bannerAlert, expire the current bannerAlert if 40 seconds have passed since it started displaying.
+    // If no other alert is eligible to be the bannerAlert and it has been 40 seconds since it started displaying,
+    // queue expiration of the bannerAlert.
     else if (
       moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(40, "seconds"))
     ) {
-      dispatch({ type: "SET_BANNER_ALERT", bannerAlert: undefined });
+      setBannerDone(true);
     }
   };
 
@@ -127,7 +138,7 @@ const Dashboard: ComponentType = () => {
     <div className="screenplay-container">
       <Sidebar />
       <div className="page-content">
-        {bannerAlert?.alert && <AlertBanner />}
+        {bannerAlert?.alert && <AlertBanner isDone={bannerDone} />}
         <Outlet />
       </div>
     </div>

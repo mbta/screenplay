@@ -2,7 +2,10 @@ import React, { ComponentType } from "react";
 import { ArrowRepeat } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
-import { useScreenplayContext } from "../../hooks/useScreenplayContext";
+import {
+  useScreenplayContext,
+  useScreenplayDispatchContext,
+} from "../../hooks/useScreenplayContext";
 import { Alert } from "../../models/alert";
 
 interface BannerAlert {
@@ -10,8 +13,15 @@ interface BannerAlert {
   closedAt?: string;
 }
 
-const AlertBanner: ComponentType = () => {
+interface AlertBannerProps {
+  isDone: boolean;
+}
+
+const AlertBanner: ComponentType<AlertBannerProps> = ({
+  isDone,
+}: AlertBannerProps) => {
   const { bannerAlert } = useScreenplayContext();
+  const dispatch = useScreenplayDispatchContext();
   if (!bannerAlert) return null;
 
   const { alert, closedAt } = bannerAlert as BannerAlert;
@@ -36,6 +46,21 @@ const AlertBanner: ComponentType = () => {
   const aOrAn = (route: string) => (route === "Orange Line" ? "An" : "A");
 
   const getBannerText = () => {
+    // When isDone is true, banner should show a "Finished Updating" state for 5 seconds.
+    // After the 5 seconds is up, close the banner.
+    if (isDone) {
+      setTimeout(
+        () =>
+          dispatch({
+            type: "SET_BANNER_ALERT",
+            bannerAlert: undefined,
+          }),
+        5000
+      );
+
+      return "Screens and places have finished updating";
+    }
+
     const route = (params["*"] || "").replace(/\//g, "");
 
     const affectedListString = getAffectedListString();
