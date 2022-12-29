@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import { ArrowRepeat } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
@@ -15,6 +15,28 @@ const AlertBanner: ComponentType = () => {
   if (!bannerAlert) return null;
 
   const { alert, closedAt } = bannerAlert as BannerAlert;
+
+  const [timeLeft, setTimeLeft] = useState(40);
+  
+  // Banner should expire 40s after the most recent alert change (closed/updated)
+  useEffect(() => {
+    const bannerExpireTime = (closedAt ? new Date(closedAt) : new Date(alert.updated_at)).getTime() + 40 * 1000
+    const now = new Date().getTime();
+    const secondsLeft = Math.floor(((bannerExpireTime - now) % (1000 * 60)) / 1000)
+
+    setTimeLeft(secondsLeft);
+  }, [bannerAlert])
+
+  // Every second, decrement the seconds left
+  useEffect(() => {
+    if (!timeLeft) return;
+
+    const intervalId = setInterval(() => {
+      setTimeLeft(timeLeft - 1)
+    }, 1000);
+
+    return () => { clearInterval(intervalId); }
+  }, [timeLeft]);
 
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();
@@ -54,7 +76,7 @@ const AlertBanner: ComponentType = () => {
               alert was just closed.`}
             </span>{" "}
             Closing an alert may cause others to appear on more screens. It
-            could take up to 40 seconds for any impacted screens to update.
+            could take up to {timeLeft} seconds for any impacted screens to update.
           </>
         );
       } else if (wasPosted) {
@@ -65,7 +87,7 @@ const AlertBanner: ComponentType = () => {
               alert was just posted.`}
             </span>{" "}
             Posting a new alert may cause others to appear on fewer screens. It
-            could take up to 40 seconds for any impacted screens to update.
+            could take up to {timeLeft} seconds for any impacted screens to update.
           </>
         );
       } else {
@@ -76,7 +98,7 @@ const AlertBanner: ComponentType = () => {
               alert was just edited.`}
             </span>{" "}
             Some edits may cause other alerts to appear on different screens
-            than before. It could take up to 40 seconds for any impacted screens
+            than before. It could take up to {timeLeft} seconds for any impacted screens
             to update.
           </>
         );
@@ -86,7 +108,7 @@ const AlertBanner: ComponentType = () => {
         return (
           <>
             <span className="bold">This alert was just posted.</span> It could
-            take up to 40 seconds for the alert to be shown all relevant
+            take up to {timeLeft} seconds for the alert to be shown all relevant
             screens, and for its list of places to be updated.
           </>
         );
@@ -97,7 +119,7 @@ const AlertBanner: ComponentType = () => {
               This alert was just edited in Alerts UI.
             </span>{" "}
             Some edits may cause this alert or others to appear on different
-            screens than before. It could take up to 40 seconds for any impacted
+            screens than before. It could take up to {timeLeft} seconds for any impacted
             screens to update.
           </>
         );
