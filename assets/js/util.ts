@@ -84,7 +84,7 @@ export const getModeFromAffectedList = (affectedList: string[]) => {
       "green-c",
       "green-d",
       "green-e",
-    ].some(line => affectedList.includes(line))
+    ].some((line) => affectedList.includes(line))
   ) {
     return "subway";
   } else {
