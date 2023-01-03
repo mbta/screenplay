@@ -101,7 +101,7 @@ const Dashboard: ComponentType = () => {
   const getFirstClosedAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
     const newAlertIds = newAlerts.map((alert) => alert.id);
     return oldAlerts
-      .filter((alert) => newAlertIds.indexOf(alert.id) < 0)
+      .filter((alert) => newAlertIds.includes(alert.id))
       .find((alert) => alert !== undefined && isSignificantAlert(alert));
   };
 
@@ -111,23 +111,18 @@ const Dashboard: ComponentType = () => {
 
     return (
       alerts
-        // filter out alerts that have a create_at or updated_at older than two minutes ago
+        // filter out alerts that have a updated_at older than two minutes ago
         .filter((alert) => {
-          const createdAt = moment(alert.created_at).utc();
           const updatedAt = moment(alert.updated_at).utc();
 
           return (
             isSignificantAlert(alert) &&
-            (createdAt.isBetween(fortySecondsAgo, now) ||
-              updatedAt.isBetween(fortySecondsAgo, now))
+            updatedAt.isBetween(fortySecondsAgo, now)
           );
         })
         // sort them in descending order to get the most recently created or updated alert
         .sort((a1, a2) =>
-          moment(a1.created_at).isBefore(a2.created_at) ||
-          moment(a1.updated_at).isBefore(a2.updated_at)
-            ? 1
-            : -1
+          moment(a1.updated_at).isBefore(a2.updated_at) ? 1 : -1
         )
         // get the first alert in the list or underfined if there are none
         .find((alert) => alert !== undefined)
