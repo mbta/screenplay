@@ -97,7 +97,7 @@ const Dashboard: ComponentType = () => {
   const getFirstClosedAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
     const newAlertIds = newAlerts.map((alert) => alert.id);
     return oldAlerts
-      .filter((alert) => newAlertIds.includes(alert.id))
+      .filter((alert) => !newAlertIds.includes(alert.id))
       .find((alert) => alert !== undefined && isSignificantAlert(alert));
   };
 
