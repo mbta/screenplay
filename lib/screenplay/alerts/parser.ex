@@ -113,7 +113,9 @@ defmodule Screenplay.Alerts.Parser do
           2 -> "cr"
           3 -> "bus"
           4 -> "ferry"
-          route_type -> String.downcase(route_type)
+          # Edge case for SL. SL is classified as route_type=3 which is actually bus.
+          # We need to know if it is actually SL for icon purposes.
+          route_type when route_type == "silver" -> String.downcase(route_type)
         end
       end)
       |> Enum.reject(&is_nil/1)
