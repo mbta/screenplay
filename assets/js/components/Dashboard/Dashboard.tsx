@@ -57,10 +57,6 @@ const Dashboard: ComponentType = () => {
         bannerAlert: { alert: closedAlert, closedAt: now },
       });
     }
-    // If there is currently a banner alert and no postedOrEditedAlert or closedAlert exists to take its place, queue expiration
-    else if (bannerAlert && !postedOrEditedAlert) {
-      setBannerDone(true);
-    }
     // If there is not a new closed alert but
     // the current bannerAlert does not have a defined closedAt
     // (meaning there isn't a current banner alert or it is a posted/edited alert)
