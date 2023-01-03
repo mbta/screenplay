@@ -92,7 +92,8 @@ const AlertDetails: ComponentType = () => {
             <div className="modal-title">This alert was closed</div>
             <p className="modal-detail">
               This {formatEffect(selectedAlert.effect)} alert was just closed.
-              If it was previously showing on any screens, it has since been removed.
+              If it was previously showing on any screens, it has since been
+              removed.
             </p>
             <Button
               className="screenplay-button modal-button"
