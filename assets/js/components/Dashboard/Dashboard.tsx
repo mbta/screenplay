@@ -98,7 +98,7 @@ const Dashboard: ComponentType = () => {
     const newAlertIds = newAlerts.map((alert) => alert.id);
     return oldAlerts
       .filter((alert) => !newAlertIds.includes(alert.id))
-      .find((alert) => alert !== undefined && isSignificantAlert(alert));
+      .find((alert) => alert && isSignificantAlert(alert));
   };
 
   const getPostedOrEditedAlert = (alerts: Alert[]) => {
@@ -121,7 +121,7 @@ const Dashboard: ComponentType = () => {
           moment(a1.updated_at).isBefore(a2.updated_at) ? 1 : -1
         )
         // get the first alert in the list or underfined if there are none
-        .find((alert) => alert !== undefined)
+        .find((alert) => alert)
     );
   };
 
