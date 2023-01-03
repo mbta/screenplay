@@ -97,8 +97,8 @@ defmodule Screenplay.Alerts.Parser do
   defp get_affected_list(%{"routes" => %{"data" => routes}}, included) do
     route_map =
       Enum.map(included, fn
-        %{"id" => id, "attributes" => %{"short_name" => "SL" <> _}} ->
-          {id, "silver"}
+        %{"id" => id, "attributes" => %{"short_name" => "SL" <> _ = short_name}} ->
+          {id, short_name}
 
         %{"id" => id, "attributes" => %{"type" => route_type}} ->
           {id, route_type}
@@ -115,7 +115,7 @@ defmodule Screenplay.Alerts.Parser do
           4 -> "ferry"
           # Edge case for SL. SL is classified as route_type=3 which is actually bus.
           # We need to know if it is actually SL for icon purposes.
-          route_type when route_type == "silver" -> String.downcase(route_type)
+          "SL" <> _ = route_type -> String.downcase(route_type)
         end
       end)
       |> Enum.reject(&is_nil/1)
