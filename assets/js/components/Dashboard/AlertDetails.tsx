@@ -97,7 +97,6 @@ const AlertDetails: ComponentType = () => {
             </p>
             <Button
               className="screenplay-button modal-button"
-              variant="primary"
               onClick={() => navigate("/alerts", { replace: true })}
             >
               <ArrowLeft className="modal-button__icon" />
