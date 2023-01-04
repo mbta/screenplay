@@ -54,41 +54,35 @@ const Dashboard: ComponentType = () => {
       setBannerDone(false);
       dispatch({
         type: "SET_BANNER_ALERT",
-        bannerAlert: { alert: closedAlert, closedAt: now },
+        bannerAlert: { alert: closedAlert, type: "closed", startedAt: now },
       });
     }
-    // If there is not a new closed alert but
-    // the current bannerAlert does not have a defined closedAt
-    // (meaning there isn't a current banner alert or it is a posted/edited alert)
-    else if (!bannerAlert?.closedAt) {
-      if (postedOrEditedAlert) {
-        setBannerDone(false);
-        dispatch({
-          type: "SET_BANNER_ALERT",
-          bannerAlert: { alert: postedOrEditedAlert },
-        });
-      }
-    }
-    // If the current bannerAlert has a closedAt but a recent posted/edited alert came after the closed bannerAlert
+    // If there a recent postedOrEditedAlert AND
+    // there is not a current bannerAlert OR
+    // and alert was posted or edited after the current bannerAlert started displaying
     else if (
       postedOrEditedAlert &&
-      moment(postedOrEditedAlert.created_at).isAfter(
-        moment(bannerAlert.closedAt) ||
-          moment(postedOrEditedAlert.updated_at).isAfter(
-            moment(bannerAlert.closedAt)
-          )
-      )
+      (bannerAlert === undefined ||
+        moment(postedOrEditedAlert.updated_at).isAfter(
+          moment(bannerAlert.startedAt)
+        ))
     ) {
       setBannerDone(false);
       dispatch({
         type: "SET_BANNER_ALERT",
-        bannerAlert: { alert: postedOrEditedAlert },
+        bannerAlert: {
+          alert: postedOrEditedAlert,
+          type: "postedOrEdited",
+          startedAt: postedOrEditedAlert.updated_at,
+        },
       });
     }
     // If no other alert is eligible to be the bannerAlert and it has been 40 seconds since it started displaying,
     // queue expiration of the bannerAlert.
     else if (
-      moment(now).isSameOrAfter(moment(bannerAlert.closedAt).add(40, "seconds"))
+      moment(now).isSameOrAfter(
+        moment(bannerAlert?.startedAt).add(40, "seconds")
+      )
     ) {
       setBannerDone(true);
     }

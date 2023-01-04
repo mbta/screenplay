@@ -10,7 +10,8 @@ import { Alert } from "../../models/alert";
 
 interface BannerAlert {
   alert: Alert;
-  closedAt?: string;
+  type: "postedOrEdited" | "closed";
+  startedAt: string;
 }
 
 interface AlertBannerProps {
@@ -24,7 +25,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
   const dispatch = useScreenplayDispatchContext();
   if (!bannerAlert) return null;
 
-  const { alert, closedAt } = bannerAlert as BannerAlert;
+  const { alert, type } = bannerAlert as BannerAlert;
 
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();
@@ -71,7 +72,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
       ["dashboard", "alerts"].includes(route) ||
       (params.id && params.id !== alert.id)
     ) {
-      if (closedAt) {
+      if (type === "closed") {
         return (
           <>
             <span className="bold">

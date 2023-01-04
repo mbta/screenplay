@@ -30,7 +30,7 @@ type ReducerAction =
     }
   | {
       type: "SET_BANNER_ALERT";
-      bannerAlert: BannerAlert;
+      bannerAlert: BannerAlert | undefined;
     };
 
 type AlertsPageReducerAction =
@@ -206,19 +206,19 @@ const [useScreenplayContext, ScreenplayContextProvider] =
   createGenericContext<ScreenplayState>();
 
 const [useScreenplayDispatchContext, ScreenplayDispatchContextProvider] =
-  createGenericContext<React.Dispatch<any>>();
+  createGenericContext<React.Dispatch<ReducerAction>>();
 
 const [usePlacesPageContext, PlacesPageContextProvider] =
   createGenericContext<PlacesPageState>();
 
 const [usePlacesPageDispatchContext, PlacesPageDispatchContextProvider] =
-  createGenericContext<React.Dispatch<any>>();
+  createGenericContext<React.Dispatch<PlacesPageReducerAction>>();
 
 const [useAlertsPageContext, AlertsPageContextProvider] =
   createGenericContext<AlertsPageState>();
 
 const [useAlertsPageDispatchContext, AlertsPageDispatchContextProvider] =
-  createGenericContext<React.Dispatch<any>>();
+  createGenericContext<React.Dispatch<AlertsPageReducerAction>>();
 
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
