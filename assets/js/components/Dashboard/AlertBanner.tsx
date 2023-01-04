@@ -36,7 +36,7 @@ const AlertBanner: ComponentType = () => {
   const aOrAn = (route: string) => (route === "Orange Line" ? "An" : "A");
 
   const getBannerText = () => {
-    const route = params["*"] || "";
+    const route = (params["*"] || "").replace(/\//g, "");
 
     const affectedListString = getAffectedListString();
 

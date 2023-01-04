@@ -9,11 +9,23 @@
     margin-right: 24px;
     background: $main-blue;
     border: 1px solid rgba(23, 31, 38, 0.3);
+    border-radius: 6px;
+
+    &:hover {
+      background: rgba(0, 117, 219, 0.6);
+      border: 1px solid rgba(23, 31, 38, 0.3);
+    }
   }
 
   &__external-link {
     margin-left: 24px;
-    background: unset;
+    background: $cool-gray-30;
     border: 1px solid rgba(23, 31, 38, 0.3);
+    border-radius: 6px;
+
+    &:hover {
+      background: rgba(23, 31, 38, 0.3);
+      border: 1px solid transparent;
+    }
   }
 }

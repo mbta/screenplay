@@ -90,7 +90,7 @@ const ActionBarStats: React.ComponentType<StatsProps> = ({
       >
         {placeCount}
       </span>{" "}
-      {placeCount == 1 ? "station" : "stations"} ·{" "}
+      {placeCount == 1 ? "place" : "places"} ·{" "}
       <span
         className="places-action-bar__stats__number"
         data-testid="places-action-bar-stats-screen-count"

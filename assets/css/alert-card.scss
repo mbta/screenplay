@@ -25,18 +25,16 @@
     }
 
     &__pill-container {
-      min-width: 38px;
+      min-width: 42px;
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
 
     &__pill {
       &:not(:first-child) {
         margin-top: 8px;
       }
-
-      width: 38px;
-      height: 20px;
     }
 
     &__effect {
