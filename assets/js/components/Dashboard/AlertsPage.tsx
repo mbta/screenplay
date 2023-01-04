@@ -18,6 +18,7 @@ import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
+  DirectionID,
   useAlertsPageContext,
   useAlertsPageDispatchContext,
   useScreenplayContext,
@@ -71,8 +72,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   const sortLabelOnClick = () => {
     dispatch({
       type: "SET_SORT_DIRECTION",
-      page: "ALERTS",
-      sortDirection: 1 - sortDirection,
+      sortDirection: (1 - sortDirection) as DirectionID,
     });
   };
 
@@ -81,7 +81,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_MODE_LINE_FILTER",
-        page: "ALERTS",
         filterValue: selectedFilter,
       });
     }
@@ -92,7 +91,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_SCREEN_TYPE_FILTER",
-        page: "ALERTS",
         filterValue: selectedFilter,
       });
     }
@@ -103,7 +101,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_STATUS_FILTER",
-        page: "ALERTS",
         filterValue: selectedFilter,
       });
     }
