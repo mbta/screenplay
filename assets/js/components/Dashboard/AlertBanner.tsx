@@ -68,6 +68,8 @@ const AlertBanner: ComponentType = () => {
 
     const affectedListString = getAffectedListString();
 
+    const plural = timeLeft === 1 ? "second" : "seconds";
+
     if (
       ["dashboard", "alerts"].includes(route) ||
       (params.id && params.id !== alert.id)
@@ -82,7 +84,7 @@ const AlertBanner: ComponentType = () => {
               alert was just closed.`}
             </span>{" "}
             Closing an alert may cause others to appear on more screens. It
-            could take up to {timeLeft} seconds for any impacted screens to
+            could take up to {timeLeft} {plural} for any impacted screens to
             update.
           </>
         );
@@ -94,7 +96,7 @@ const AlertBanner: ComponentType = () => {
               alert was just posted.`}
             </span>{" "}
             Posting a new alert may cause others to appear on fewer screens. It
-            could take up to {timeLeft} seconds for any impacted screens to
+            could take up to {timeLeft} {plural} for any impacted screens to
             update.
           </>
         );
@@ -106,8 +108,8 @@ const AlertBanner: ComponentType = () => {
               alert was just edited.`}
             </span>{" "}
             Some edits may cause other alerts to appear on different screens
-            than before. It could take up to {timeLeft} seconds for any impacted
-            screens to update.
+            than before. It could take up to {timeLeft} {plural} for any
+            impacted screens to update.
           </>
         );
       }
@@ -116,8 +118,8 @@ const AlertBanner: ComponentType = () => {
         return (
           <>
             <span className="bold">This alert was just posted.</span> It could
-            take up to {timeLeft} seconds for the alert to be shown all relevant
-            screens, and for its list of places to be updated.
+            take up to {timeLeft} {plural} for the alert to be shown all
+            relevant screens, and for its list of places to be updated.
           </>
         );
       } else {
@@ -127,7 +129,7 @@ const AlertBanner: ComponentType = () => {
               This alert was just edited in Alerts UI.
             </span>{" "}
             Some edits may cause this alert or others to appear on different
-            screens than before. It could take up to {timeLeft} seconds for any
+            screens than before. It could take up to {timeLeft} {plural} for any
             impacted screens to update.
           </>
         );
