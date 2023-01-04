@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useReducer, useState } from "react";
 import AlertCard from "./AlertCard";
 import { PlacesList } from "./PlacesPage";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,14 +11,12 @@ import {
 } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
 import {
-  DirectionID,
+  PlacesListContextProvider,
+  PlacesListDispatchContextProvider,
+  placesListReducer,
   useScreenplayContext,
+  initialPlacesListState,
 } from "../../hooks/useScreenplayContext";
-import {
-  MODES_AND_LINES,
-  SCREEN_TYPES,
-  STATUSES,
-} from "../../constants/constants";
 
 const AlertDetails: ComponentType = () => {
   const screenplayContext = useScreenplayContext();
@@ -34,44 +32,6 @@ const AlertDetails: ComponentType = () => {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
-  const [sortDirection, setSortDirection] = useState(0 as DirectionID);
-  const [modeLineFilterValue, setModeLineFilterValue] = useState(
-    MODES_AND_LINES[0]
-  );
-  const [screenTypeFilterValue, setScreenTypeFilterValue] = useState(
-    SCREEN_TYPES[0]
-  );
-  const [statusFilterValue, setStatusFilterValue] = useState(STATUSES[0]);
-  const [activeEventKeys, setActiveEventKeys] = useState([]);
-
-  const dispatch = (action: any) => {
-    switch (action.type) {
-      case "SET_SORT_DIRECTION":
-        setSortDirection(action.sortDirection);
-        break;
-      case "SET_MODE_LINE_FILTER":
-        setModeLineFilterValue(action.filterValue);
-        setActiveEventKeys([]);
-        break;
-      case "SET_SCREEN_TYPE_FILTER":
-        setScreenTypeFilterValue(action.filterValue);
-        setActiveEventKeys([]);
-        break;
-      case "SET_STATUS_FILTER":
-        setStatusFilterValue(action.filterValue);
-        setActiveEventKeys([]);
-        break;
-      case "SET_ACTIVE_EVENT_KEYS":
-        setActiveEventKeys(action.eventKeys);
-        break;
-      case "RESET_STATE":
-        setSortDirection(0 as DirectionID);
-        setModeLineFilterValue(MODES_AND_LINES[0]);
-        setScreenTypeFilterValue(SCREEN_TYPES[0]);
-        setStatusFilterValue(STATUSES[0]);
-        setActiveEventKeys([]);
-    }
-  };
 
   useEffect(() => {
     const selectedAlert = screenplayContext.alerts.length
@@ -87,80 +47,79 @@ const AlertDetails: ComponentType = () => {
     }
   }, [screenplayContext]);
 
+  const [placesListState, placesListDispatch] = useReducer(
+    placesListReducer,
+    initialPlacesListState
+  );
+
   return selectedAlert ? (
-    <>
-      <div className="alert-details">
-        <div className="page-content__header">
-          <div>
-            <Button
-              className="alert-details__back-button"
-              data-testid="alert-details-back-button"
-              onClick={() => navigate("/alerts", { replace: true })}
-            >
-              <ArrowLeft /> Back
-            </Button>
-            <span>
-              {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
-            </span>
-            <Button
-              href={alertsUiUrl + `/edit/${selectedAlert.id}`}
-              target="_blank"
-              className="alert-details__external-link"
-            >
-              Edit Alert <ArrowUpRight />
-            </Button>
+    <PlacesListContextProvider value={placesListState}>
+      <PlacesListDispatchContextProvider value={placesListDispatch}>
+        <div className="alert-details">
+          <div className="page-content__header">
+            <div>
+              <Button
+                className="alert-details__back-button"
+                data-testid="alert-details-back-button"
+                onClick={() => navigate("/alerts", { replace: true })}
+              >
+                <ArrowLeft /> Back
+              </Button>
+              <span>
+                {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
+              </span>
+              <Button
+                href={alertsUiUrl + `/edit/${selectedAlert.id}`}
+                target="_blank"
+                className="alert-details__external-link"
+              >
+                Edit Alert <ArrowUpRight />
+              </Button>
+            </div>
           </div>
+          {Object.keys(screensByAlertMap).length !== 0 && (
+            <div className="page-content__body">
+              <AlertCard alert={selectedAlert} classNames="selected-alert" />
+              <PlacesList
+                places={placesWithSelectedAlert(
+                  selectedAlert,
+                  places,
+                  screensByAlertMap
+                )}
+                noModeFilter
+                isAlertPlacesList
+                showAnimationForNewPlaces
+              />
+            </div>
+          )}
         </div>
-        {Object.keys(screensByAlertMap).length !== 0 && (
-          <div className="page-content__body">
-            <AlertCard alert={selectedAlert} classNames="selected-alert" />
-            <PlacesList
-              places={placesWithSelectedAlert(
-                selectedAlert,
-                places,
-                screensByAlertMap
-              )}
-              dispatch={dispatch}
-              noModeFilter
-              isAlertPlacesList
-              showAnimationForNewPlaces
-              stateValues={{
-                sortDirection,
-                modeLineFilterValue,
-                screenTypeFilterValue,
-                statusFilterValue,
-                activeEventKeys,
-              }}
-            />
-          </div>
-        )}
-      </div>
-      <Modal
-        className="alert-not-found"
-        backdropClassName="alert-not-found"
-        show={showModal}
-      >
-        <Modal.Body>
-          <SlashCircleFill className="modal-icon" />
-          <div className="modal-text">
-            <div className="modal-title">This alert was closed</div>
-            <p className="modal-detail">
-              This {formatEffect(selectedAlert.effect)} alert was just closed.
-              If it was previously showing on any screens, it has since been
-              removed.
-            </p>
-            <Button
-              className="screenplay-button modal-button"
-              variant="primary"
-              onClick={() => navigate("/alerts", { replace: true })}
-            >
-              <ArrowLeft className="modal-button__icon" />
-              Go to Posted Alerts
-            </Button>
-          </div>
-        </Modal.Body>
-      </Modal>
-    </>
+        <Modal
+          className="alert-not-found"
+          backdropClassName="alert-not-found"
+          show={showModal}
+        >
+          <Modal.Body>
+            <SlashCircleFill className="modal-icon" />
+            <div className="modal-text">
+              <div className="modal-title">This alert was closed</div>
+              <p className="modal-detail">
+                This {formatEffect(selectedAlert.effect)} alert was just closed.
+                If it was previously showing on any screens, it has since been
+                removed.
+              </p>
+              <Button
+                className="screenplay-button modal-button"
+                variant="primary"
+                onClick={() => navigate("/alerts", { replace: true })}
+              >
+                <ArrowLeft className="modal-button__icon" />
+                Go to Posted Alerts
+              </Button>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </PlacesListDispatchContextProvider>
+    </PlacesListContextProvider>
   ) : (
     <></>
   );
