@@ -15,8 +15,8 @@ import {
 import {
   DirectionID,
   FilterValue,
-  usePlacesPageContext,
-  usePlacesPageDispatchContext,
+  usePlacesListContext,
+  usePlacesListDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
 import { usePrevious } from "../../hooks/usePrevious";
@@ -37,7 +37,7 @@ const getSortLabel = (
 
 const PlacesPage: ComponentType = () => {
   const { places } = useScreenplayContext();
-  const dispatch = usePlacesPageDispatchContext();
+  const dispatch = usePlacesListDispatchContext();
 
   return (
     <div className="places-page">
@@ -46,7 +46,7 @@ const PlacesPage: ComponentType = () => {
         <PlacesList
           places={places}
           dispatch={dispatch}
-          stateValues={usePlacesPageContext()}
+          stateValues={usePlacesListContext()}
         />
       </div>
     </div>
