@@ -33,7 +33,7 @@ type ReducerAction =
       bannerAlert: BannerAlert;
     };
 
-type AlertsPageReducerAction =
+type AlertsListReducerAction =
   | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
   | {
       type:
@@ -76,7 +76,7 @@ interface PlacesListState {
   activeEventKeys: string[];
 }
 
-interface AlertsPageState {
+interface AlertsListState {
   sortDirection: DirectionID;
   modeLineFilterValue: FilterValue;
   screenTypeFilterValue: FilterValue;
@@ -151,8 +151,8 @@ const placesListReducer = (
 };
 
 const alertsReducer = (
-  state: AlertsPageState,
-  action: AlertsPageReducerAction
+  state: AlertsListState,
+  action: AlertsListReducerAction
 ) => {
   switch (action.type) {
     case "SET_SORT_DIRECTION":
@@ -194,7 +194,7 @@ const initialPlacesListState: PlacesListState = {
   activeEventKeys: [],
 };
 
-const initialAlertsPageState: AlertsPageState = {
+const initialAlertsListState: AlertsListState = {
   sortDirection: 0 as DirectionID,
   modeLineFilterValue: MODES_AND_LINES[0],
   screenTypeFilterValue: SCREEN_TYPES[0],
@@ -214,10 +214,10 @@ const [usePlacesListContext, PlacesListContextProvider] =
 const [usePlacesListDispatchContext, PlacesListDispatchContextProvider] =
   createGenericContext<React.Dispatch<any>>();
 
-const [useAlertsPageContext, AlertsPageContextProvider] =
-  createGenericContext<AlertsPageState>();
+const [useAlertsListContext, AlertsListContextProvider] =
+  createGenericContext<AlertsListState>();
 
-const [useAlertsPageDispatchContext, AlertsPageDispatchContextProvider] =
+const [useAlertsListDispatchContext, AlertsListDispatchContextProvider] =
   createGenericContext<React.Dispatch<any>>();
 
 // Generate provider
@@ -230,9 +230,9 @@ const ScreenplayProvider = ({ children }: Props) => {
     placesListReducer,
     initialPlacesListState
   );
-  const [alertsPageState, alertsPageDispatch] = useReducer(
+  const [alertsListState, alertsListDispatch] = useReducer(
     alertsReducer,
-    initialAlertsPageState
+    initialAlertsListState
   );
 
   return (
@@ -240,11 +240,11 @@ const ScreenplayProvider = ({ children }: Props) => {
       <ScreenplayDispatchContextProvider value={screenplayDispatch}>
         <PlacesListContextProvider value={placesListState}>
           <PlacesListDispatchContextProvider value={placesListDispatch}>
-            <AlertsPageContextProvider value={alertsPageState}>
-              <AlertsPageDispatchContextProvider value={alertsPageDispatch}>
+            <AlertsListContextProvider value={alertsListState}>
+              <AlertsListDispatchContextProvider value={alertsListDispatch}>
                 {children}
-              </AlertsPageDispatchContextProvider>
-            </AlertsPageContextProvider>
+              </AlertsListDispatchContextProvider>
+            </AlertsListContextProvider>
           </PlacesListDispatchContextProvider>
         </PlacesListContextProvider>
       </ScreenplayDispatchContextProvider>
@@ -257,8 +257,8 @@ export {
   useScreenplayDispatchContext,
   usePlacesListContext,
   usePlacesListDispatchContext,
-  useAlertsPageContext,
-  useAlertsPageDispatchContext,
+  useAlertsListContext,
+  useAlertsListDispatchContext,
   ScreenplayProvider,
   FilterValue,
   DirectionID,
