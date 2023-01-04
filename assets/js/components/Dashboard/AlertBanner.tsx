@@ -11,7 +11,7 @@ import { Alert } from "../../models/alert";
 interface BannerAlert {
   alert: Alert;
   type: "postedOrEdited" | "closed";
-  startedAt: string;
+  startedAt: Date;
 }
 
 interface AlertBannerProps {
