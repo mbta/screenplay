@@ -53,6 +53,7 @@ const AlertDetails: ComponentType = () => {
   );
 
   return selectedAlert ? (
+    // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
     <PlacesListContextProvider value={placesListState}>
       <PlacesListDispatchContextProvider value={placesListDispatch}>
         <div className="alert-details">
