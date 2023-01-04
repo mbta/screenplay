@@ -1,5 +1,8 @@
 .modal-backdrop.alert-not-found {
   left: $sidebar-width;
+  opacity: 1;
+  background-color: rgba(15, 21, 26, 0.9);
+  backdrop-filter: blur(4px);
 }
 .modal.alert-not-found {
   left: $sidebar-width/2;
@@ -7,6 +10,7 @@
 
   .modal-dialog {
     max-width: 600px;
+    box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.36);
   }
   .modal-content {
     background-color: $cool-gray-40;
