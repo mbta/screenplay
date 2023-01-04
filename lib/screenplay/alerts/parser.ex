@@ -96,8 +96,12 @@ defmodule Screenplay.Alerts.Parser do
 
   defp get_affected_list(%{"routes" => %{"data" => routes}}, included) do
     route_map =
-      Enum.map(included, fn %{"id" => id, "attributes" => %{"type" => route_type}} ->
-        {id, route_type}
+      Enum.map(included, fn
+        %{"id" => id, "attributes" => %{"short_name" => "SL" <> _ = short_name}} ->
+          {id, short_name}
+
+        %{"id" => id, "attributes" => %{"type" => route_type}} ->
+          {id, route_type}
       end)
       |> Enum.into(%{})
 
@@ -105,10 +109,13 @@ defmodule Screenplay.Alerts.Parser do
       Enum.map(routes, fn %{"id" => id} ->
         case Map.get(route_map, id) do
           nil -> nil
+          route_type when route_type in [0, 1] -> String.downcase(id)
           2 -> "cr"
           3 -> "bus"
           4 -> "ferry"
-          _ -> String.downcase(id)
+          # Edge case for SL. SL is classified as route_type=3 which is actually bus.
+          # We need to know if it is actually SL for icon purposes.
+          "SL" <> _ = route_type -> String.downcase(route_type)
         end
       end)
       |> Enum.reject(&is_nil/1)
