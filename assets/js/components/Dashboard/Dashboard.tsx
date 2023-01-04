@@ -51,6 +51,7 @@ const Dashboard: ComponentType = () => {
     const existingStartAtOrNull = bannerAlert
       ? new Date(bannerAlert.startedAt)
       : null;
+
     // If there is a closed alert, just show it and save when it was closed.
     if (closedAlert) {
       setBannerDone(false);
@@ -74,7 +75,7 @@ const Dashboard: ComponentType = () => {
         bannerAlert: {
           alert: postedOrEditedAlert,
           type: "postedOrEdited",
-          startedAt: new Date(postedOrEditedAlert.updated_at),
+          startedAt: now,
         },
       });
     }
