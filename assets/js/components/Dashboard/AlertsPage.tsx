@@ -72,7 +72,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   const sortLabelOnClick = () => {
     dispatch({
       type: "SET_SORT_DIRECTION",
-      page: "ALERTS",
       sortDirection: 1 - sortDirection,
     });
   };
@@ -82,7 +81,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_MODE_LINE_FILTER",
-        page: "ALERTS",
         filterValue: selectedFilter,
       });
     }
@@ -93,7 +91,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_SCREEN_TYPE_FILTER",
-        page: "ALERTS",
         filterValue: selectedFilter,
       });
     }
@@ -104,7 +101,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_STATUS_FILTER",
-        page: "ALERTS",
         filterValue: selectedFilter,
       });
     }

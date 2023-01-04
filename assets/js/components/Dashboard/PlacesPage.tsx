@@ -73,7 +73,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
 
   const handleClickResetFilters = () => {
-    dispatch({ type: "RESET_STATE", page: "PLACES" });
+    dispatch({ type: "RESET_STATE" });
   };
 
   const handleSelectModeOrLine = (value: string) => {
@@ -81,12 +81,10 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
       dispatch({
         type: "SET_MODE_LINE_FILTER",
-        page: "PLACES",
         filterValue: selectedFilter,
       });
       dispatch({
         type: "SET_SORT_DIRECTION",
-        page: "PLACES",
         sortDirection: 0,
       });
     }
@@ -97,7 +95,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_SCREEN_TYPE_FILTER",
-        page: "PLACES",
         filterValue: selectedFilter,
       });
     }
@@ -108,7 +105,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_STATUS_FILTER",
-        page: "PLACES",
         filterValue: selectedFilter,
       });
     }
@@ -117,7 +113,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   const handleClickSortLabel = () => {
     dispatch({
       type: "SET_SORT_DIRECTION",
-      page: "PLACES",
       sortDirection: 1 - sortDirection,
     });
   };
@@ -126,13 +121,11 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (activeEventKeys.includes(eventKey)) {
       dispatch({
         type: "SET_ACTIVE_EVENT_KEYS",
-        page: "PLACES",
         eventKeys: activeEventKeys.filter((e: string) => e !== eventKey),
       });
     } else {
       dispatch({
         type: "SET_ACTIVE_EVENT_KEYS",
-        page: "PLACES",
         eventKeys: [...activeEventKeys, eventKey],
       });
     }
@@ -219,7 +212,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   const handleClickToggleScreenlessPlaces = () => {
     dispatch({
       type: "SET_SHOW_SCREENLESS_PLACES",
-      page: "PLACES",
       show: !showScreenlessPlaces,
     });
   };
