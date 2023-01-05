@@ -19,8 +19,8 @@ import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
   DirectionID,
-  useAlertsPageContext,
-  useAlertsPageDispatchContext,
+  useAlertsListContext,
+  useAlertsListDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
 import { usePrevious } from "../../hooks/usePrevious";
@@ -63,8 +63,8 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     modeLineFilterValue,
     screenTypeFilterValue,
     statusFilterValue,
-  } = useAlertsPageContext();
-  const dispatch = useAlertsPageDispatchContext();
+  } = useAlertsListContext();
+  const dispatch = useAlertsListDispatchContext();
   const navigate = useNavigate();
   const prevAlertIds = usePrevious(alerts)?.map((alert) => alert.id);
 

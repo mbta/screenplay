@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useReducer, useState } from "react";
 import AlertCard from "./AlertCard";
 import { PlacesList } from "./PlacesPage";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,7 +10,11 @@ import {
   SlashCircleFill,
 } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
-import { useScreenplayContext } from "../../hooks/useScreenplayContext";
+import {
+  placesListReducer,
+  useScreenplayContext,
+  initialPlacesListState,
+} from "../../hooks/useScreenplayContext";
 
 const AlertDetails: ComponentType = () => {
   const screenplayContext = useScreenplayContext();
@@ -41,7 +45,13 @@ const AlertDetails: ComponentType = () => {
     }
   }, [screenplayContext]);
 
+  const [placesListState, placesListDispatch] = useReducer(
+    placesListReducer,
+    initialPlacesListState
+  );
+
   return selectedAlert ? (
+    // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
     <>
       <div className="alert-details">
         <div className="page-content__header">
@@ -77,6 +87,8 @@ const AlertDetails: ComponentType = () => {
               noModeFilter
               isAlertPlacesList
               showAnimationForNewPlaces
+              dispatch={placesListDispatch}
+              stateValues={placesListState}
             />
           </div>
         )}
