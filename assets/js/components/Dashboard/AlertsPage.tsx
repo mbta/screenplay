@@ -172,7 +172,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
       return screensWithAlert
         ? screensWithAlert.find((screen_id) =>
-            ids.includes(screenMetaData[screen_id]?.type)
+            ids.includes(screenMetaData[screen_id].type)
           )
         : false;
     });
