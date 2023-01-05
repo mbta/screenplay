@@ -11,8 +11,6 @@ import {
 } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
 import {
-  PlacesListContextProvider,
-  PlacesListDispatchContextProvider,
   placesListReducer,
   useScreenplayContext,
   initialPlacesListState,
@@ -54,73 +52,73 @@ const AlertDetails: ComponentType = () => {
 
   return selectedAlert ? (
     // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
-    <PlacesListContextProvider value={placesListState}>
-      <PlacesListDispatchContextProvider value={placesListDispatch}>
-        <div className="alert-details">
-          <div className="page-content__header">
-            <div>
-              <Button
-                className="alert-details__back-button"
-                data-testid="alert-details-back-button"
-                onClick={() => navigate("/alerts", { replace: true })}
-              >
-                <ArrowLeft /> Back
-              </Button>
-              <span>
-                {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
-              </span>
-              <Button
-                href={alertsUiUrl + `/edit/${selectedAlert.id}`}
-                target="_blank"
-                className="alert-details__external-link"
-              >
-                Edit Alert <ArrowUpRight />
-              </Button>
-            </div>
+    <>
+      <div className="alert-details">
+        <div className="page-content__header">
+          <div>
+            <Button
+              className="alert-details__back-button"
+              data-testid="alert-details-back-button"
+              onClick={() => navigate("/alerts", { replace: true })}
+            >
+              <ArrowLeft /> Back
+            </Button>
+            <span>
+              {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
+            </span>
+            <Button
+              href={alertsUiUrl + `/edit/${selectedAlert.id}`}
+              target="_blank"
+              className="alert-details__external-link"
+            >
+              Edit Alert <ArrowUpRight />
+            </Button>
           </div>
-          {Object.keys(screensByAlertMap).length !== 0 && (
-            <div className="page-content__body">
-              <AlertCard alert={selectedAlert} classNames="selected-alert" />
-              <PlacesList
-                places={placesWithSelectedAlert(
-                  selectedAlert,
-                  places,
-                  screensByAlertMap
-                )}
-                noModeFilter
-                isAlertPlacesList
-                showAnimationForNewPlaces
-              />
-            </div>
-          )}
         </div>
-        <Modal
-          className="alert-not-found"
-          backdropClassName="alert-not-found"
-          show={showModal}
-        >
-          <Modal.Body>
-            <SlashCircleFill className="modal-icon" />
-            <div className="modal-text">
-              <div className="modal-title">This alert was closed</div>
-              <p className="modal-detail">
-                This {formatEffect(selectedAlert.effect)} alert was just closed.
-                If it was previously showing on any screens, it has since been
-                removed.
-              </p>
-              <Button
-                className="screenplay-button modal-button"
-                variant="primary"
-                onClick={() => navigate("/alerts", { replace: true })}
-              >
-                <ArrowLeft className="modal-button__icon" />
-                Go to Posted Alerts
-              </Button>
-            </div>
-          </Modal.Body>
-        </Modal>
-      </PlacesListDispatchContextProvider>
-    </PlacesListContextProvider>
+        {Object.keys(screensByAlertMap).length !== 0 && (
+          <div className="page-content__body">
+            <AlertCard alert={selectedAlert} classNames="selected-alert" />
+            <PlacesList
+              places={placesWithSelectedAlert(
+                selectedAlert,
+                places,
+                screensByAlertMap
+              )}
+              noModeFilter
+              isAlertPlacesList
+              showAnimationForNewPlaces
+              dispatch={placesListDispatch}
+              stateValues={placesListState}
+            />
+          </div>
+        )}
+      </div>
+      <Modal
+        className="alert-not-found"
+        backdropClassName="alert-not-found"
+        show={showModal}
+      >
+        <Modal.Body>
+          <SlashCircleFill className="modal-icon" />
+          <div className="modal-text">
+            <div className="modal-title">This alert was closed</div>
+            <p className="modal-detail">
+              This {formatEffect(selectedAlert.effect)} alert was just closed.
+              If it was previously showing on any screens, it has since been
+              removed.
+            </p>
+            <Button
+              className="screenplay-button modal-button"
+              variant="primary"
+              onClick={() => navigate("/alerts", { replace: true })}
+            >
+              <ArrowLeft className="modal-button__icon" />
+              Go to Posted Alerts
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
+    </>
   ) : (
     <></>
   );

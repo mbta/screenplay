@@ -14,6 +14,8 @@ import {
 } from "../../constants/constants";
 import {
   DirectionID,
+  PlacesListReducerAction,
+  PlacesListState,
   usePlacesListContext,
   usePlacesListDispatchContext,
   useScreenplayContext,
@@ -36,12 +38,18 @@ const getSortLabel = (
 
 const PlacesPage: ComponentType = () => {
   const { places } = useScreenplayContext();
+  const stateValues = usePlacesListContext();
+  const dispatch = usePlacesListDispatchContext();
 
   return (
     <div className="places-page">
       <div className="page-content__header">Places</div>
       <div className="page-content__body">
-        <PlacesList places={places} />
+        <PlacesList
+          places={places}
+          dispatch={dispatch}
+          stateValues={stateValues}
+        />
       </div>
     </div>
   );
@@ -52,6 +60,8 @@ interface PlacesListProps {
   noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
   showAnimationForNewPlaces?: boolean;
+  dispatch: React.Dispatch<PlacesListReducerAction>;
+  stateValues: PlacesListState;
 }
 
 const PlacesList: ComponentType<PlacesListProps> = ({
@@ -59,6 +69,8 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   noModeFilter,
   isAlertPlacesList,
   showAnimationForNewPlaces,
+  dispatch,
+  stateValues,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
@@ -68,8 +80,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     statusFilterValue,
     showScreenlessPlaces,
     activeEventKeys,
-  } = usePlacesListContext();
-  const dispatch = usePlacesListDispatchContext();
+  } = stateValues;
   const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
 
   const handleClickResetFilters = () => {
@@ -113,7 +124,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   const handleClickSortLabel = () => {
     dispatch({
       type: "SET_SORT_DIRECTION",
-      sortDirection: 1 - sortDirection,
+      sortDirection: (1 - sortDirection) as DirectionID,
     });
   };
 

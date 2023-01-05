@@ -262,8 +262,8 @@ export {
   ScreenplayProvider,
   FilterValue,
   DirectionID,
-  PlacesListContextProvider,
-  PlacesListDispatchContextProvider,
   placesListReducer,
   initialPlacesListState,
+  PlacesListReducerAction,
+  PlacesListState,
 };
