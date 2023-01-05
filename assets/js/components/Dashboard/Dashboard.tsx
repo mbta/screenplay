@@ -51,6 +51,7 @@ const Dashboard: ComponentType = () => {
     const existingStartAtOrNull = bannerAlert
       ? new Date(bannerAlert.startedAt)
       : null;
+
     // If there is a closed alert, just show it and save when it was closed.
     if (closedAlert) {
       setBannerDone(false);
@@ -121,11 +122,27 @@ const Dashboard: ComponentType = () => {
     );
   };
 
+  const queueBannerAlertExpiration = () => {
+    setTimeout(
+      () =>
+        dispatch({
+          type: "SET_BANNER_ALERT",
+          bannerAlert: undefined,
+        }),
+      5000
+    );
+  };
+
   return (
     <div className="screenplay-container">
       <Sidebar />
       <div className="page-content">
-        {bannerAlert?.alert && <AlertBanner isDone={bannerDone} />}
+        {bannerAlert?.alert && (
+          <AlertBanner
+            isDone={bannerDone}
+            queueExpiration={queueBannerAlertExpiration}
+          />
+        )}
         <Outlet />
       </div>
     </div>

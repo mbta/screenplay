@@ -16,13 +16,14 @@ interface BannerAlert {
 
 interface AlertBannerProps {
   isDone: boolean;
+  queueExpiration: () => void;
 }
 
 const AlertBanner: ComponentType<AlertBannerProps> = ({
   isDone,
+  queueExpiration,
 }: AlertBannerProps) => {
   const { bannerAlert } = useScreenplayContext();
-  const dispatch = useScreenplayDispatchContext();
   if (!bannerAlert) return null;
 
   const { alert, type, startedAt } = bannerAlert as BannerAlert;
@@ -76,14 +77,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
     // When isDone is true, banner should show a "Finished Updating" state for 5 seconds.
     // After the 5 seconds is up, close the banner.
     if (isDone) {
-      setTimeout(
-        () =>
-          dispatch({
-            type: "SET_BANNER_ALERT",
-            bannerAlert: undefined,
-          }),
-        5000
-      );
+      queueExpiration();
 
       return (
         <span className="bold">Screens and places have finished updating</span>
