@@ -252,6 +252,10 @@ const ScreenplayProvider = ({ children }: Props) => {
   );
 };
 
+// Types & Interfaces
+export { FilterValue, DirectionID, PlacesListReducerAction, PlacesListState };
+
+// Values
 export {
   useScreenplayContext,
   useScreenplayDispatchContext,
@@ -260,10 +264,6 @@ export {
   useAlertsListContext,
   useAlertsListDispatchContext,
   ScreenplayProvider,
-  FilterValue,
-  DirectionID,
   placesListReducer,
   initialPlacesListState,
-  PlacesListReducerAction,
-  PlacesListState,
 };
