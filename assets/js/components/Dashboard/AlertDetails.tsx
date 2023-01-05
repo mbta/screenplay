@@ -51,7 +51,7 @@ const AlertDetails: ComponentType = () => {
               data-testid="alert-details-back-button"
               onClick={() => navigate("/alerts", { replace: true })}
             >
-              <ArrowLeft /> Back
+              <ArrowLeft className="bootstrap-line-icon" /> Back
             </Button>
             <span>
               {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
@@ -61,7 +61,7 @@ const AlertDetails: ComponentType = () => {
               target="_blank"
               className="alert-details__external-link"
             >
-              Edit Alert <ArrowUpRight />
+              Edit Alert <ArrowUpRight className="bootstrap-line-icon" />
             </Button>
           </div>
         </div>
@@ -87,7 +87,10 @@ const AlertDetails: ComponentType = () => {
         show={showModal}
       >
         <Modal.Body>
-          <SlashCircleFill className="modal-icon" />
+          <SlashCircleFill
+            size={24}
+            className="bootstrap-line-icon modal-icon"
+          />
           <div className="modal-text">
             <div className="modal-title">This alert was closed</div>
             <p className="modal-detail">

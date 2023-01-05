@@ -224,9 +224,9 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                 })}
               >
                 {isOpen ? (
-                  <ChevronDown size={16} />
+                  <ChevronDown size={16} className="bootstrap-line-icon" />
                 ) : (
-                  <ChevronRight size={16} />
+                  <ChevronRight size={16} className="bootstrap-line-icon" />
                 )}
               </div>
               {props.filteredLine && (

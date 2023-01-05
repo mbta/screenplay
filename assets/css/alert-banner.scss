@@ -15,6 +15,16 @@
     margin-right: 28px;
   }
 
+  &__icon {
+    animation: rotate 1s linear infinite;
+  }
+
+  @keyframes rotate {
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+
   &__text {
     font-family: Inter;
     font-size: 14px;

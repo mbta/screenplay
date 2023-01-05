@@ -29,19 +29,19 @@ const Sidebar: ComponentType = () => {
       <nav>
         <Link className="sidebar-link" to="/dashboard">
           <Button className={pathname === "dashboard" ? "selected" : ""}>
-            <CollectionFill size={20} />
+            <CollectionFill size={20} className="sidebar-link__icon" />
             <span className="nav-link__name">Places</span>
           </Button>
         </Link>
         <Link className="sidebar-link" to="/alerts">
           <Button className={pathname === "alerts" ? "selected" : ""}>
-            <ExclamationTriangleFill size={20} />
+            <ExclamationTriangleFill size={20} className="sidebar-link__icon" />
             <span className="nav-link__name">Posted Alerts</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}
         <Button href="/" className="takeover-button">
-          <ExclamationTriangleFill size={20} />
+          <ExclamationTriangleFill size={20} className="sidebar-link__icon" />
           <span className="nav-link__name">Outfront Emergency Takeover</span>
         </Button>
       </nav>
