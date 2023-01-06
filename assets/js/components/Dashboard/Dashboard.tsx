@@ -60,9 +60,9 @@ const Dashboard: ComponentType = () => {
         bannerAlert: { alert: closedAlert, type: "closed", startedAt: now },
       });
     }
-    // If there a recent postedOrEditedAlert AND
+    // If there's a recent postedOrEditedAlert AND:
     // there is not a current bannerAlert OR
-    // and alert was posted or edited after the current bannerAlert started displaying
+    // an alert was posted or edited after the current bannerAlert started displaying
     else if (
       postedOrEditedAlert &&
       (bannerAlert === undefined ||
