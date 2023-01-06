@@ -103,7 +103,7 @@ const Dashboard: ComponentType = () => {
 
     return (
       alerts
-        // filter out alerts that have a updated_at older than two minutes ago
+        // filter out alerts that have an updated_at older than forty seconds ago
         .filter((alert) => {
           const updatedAt = new Date(alert.updated_at);
 
