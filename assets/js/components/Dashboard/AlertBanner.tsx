@@ -1,5 +1,5 @@
 import React, { ComponentType, useEffect, useState } from "react";
-import { ArrowRepeat } from "react-bootstrap-icons";
+import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
 import { useScreenplayContext } from "../../hooks/useScreenplayContext";
@@ -7,22 +7,29 @@ import { Alert } from "../../models/alert";
 
 interface BannerAlert {
   alert: Alert;
-  closedAt?: string;
+  type: "postedOrEdited" | "closed";
+  startedAt: Date;
 }
 
-const AlertBanner: ComponentType = () => {
+interface AlertBannerProps {
+  isDone: boolean;
+  queueExpiration: () => void;
+}
+
+const AlertBanner: ComponentType<AlertBannerProps> = ({
+  isDone,
+  queueExpiration,
+}: AlertBannerProps) => {
   const { bannerAlert } = useScreenplayContext();
   if (!bannerAlert) return null;
 
-  const { alert, closedAt } = bannerAlert as BannerAlert;
+  const { alert, type, startedAt } = bannerAlert as BannerAlert;
 
   const [timeLeft, setTimeLeft] = useState(40);
 
   // Banner should expire 40s after the most recent alert change (closed/updated)
   useEffect(() => {
-    const bannerExpireTime =
-      (closedAt ? new Date(closedAt) : new Date(alert.updated_at)).getTime() +
-      40 * 1000;
+    const bannerExpireTime = new Date(startedAt).getTime() + 40 * 1000;
     const now = new Date().getTime();
     const secondsLeft = Math.floor(
       ((bannerExpireTime - now) % (1000 * 60)) / 1000
@@ -64,6 +71,16 @@ const AlertBanner: ComponentType = () => {
   const aOrAn = (route: string) => (route === "Orange Line" ? "An" : "A");
 
   const getBannerText = () => {
+    // When isDone is true, banner should show a "Finished Updating" state for 5 seconds.
+    // After the 5 seconds is up, close the banner.
+    if (isDone) {
+      queueExpiration();
+
+      return (
+        <span className="bold">Screens and places have finished updating</span>
+      );
+    }
+
     const route = (params["*"] || "").replace(/\//g, "");
 
     const affectedListString = getAffectedListString();
@@ -74,7 +91,7 @@ const AlertBanner: ComponentType = () => {
       ["dashboard", "alerts"].includes(route) ||
       (params.id && params.id !== alert.id)
     ) {
-      if (closedAt) {
+      if (type === "closed") {
         return (
           <>
             <span className="bold">
@@ -140,7 +157,11 @@ const AlertBanner: ComponentType = () => {
   return (
     <div className="alert-banner">
       <div className="alert-banner__icon-container">
-        <ArrowRepeat size={24} className="alert-banner__spin-icon" />
+        {isDone ? (
+          <CheckCircleFill className="alert-banner__check-icon" />
+        ) : (
+          <ArrowRepeat size={24} className="alert-banner__spin-icon" />
+        )}
       </div>
       <div className="alert-banner__text">{getBannerText()}</div>
     </div>

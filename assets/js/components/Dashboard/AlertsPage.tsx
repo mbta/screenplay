@@ -18,6 +18,7 @@ import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
+  DirectionID,
   useAlertsListContext,
   useAlertsListDispatchContext,
   useScreenplayContext,
@@ -72,7 +73,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   const sortLabelOnClick = () => {
     dispatch({
       type: "SET_SORT_DIRECTION",
-      sortDirection: 1 - sortDirection,
+      sortDirection: (1 - sortDirection) as DirectionID,
     });
   };
 
