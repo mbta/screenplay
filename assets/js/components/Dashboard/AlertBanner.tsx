@@ -140,7 +140,7 @@ const AlertBanner: ComponentType = () => {
   return (
     <div className="alert-banner">
       <div className="alert-banner__icon-container">
-        <ArrowRepeat size={24} className="alert-banner__icon" />
+        <ArrowRepeat size={24} className="alert-banner__spin-icon" />
       </div>
       <div className="alert-banner__text">{getBannerText()}</div>
     </div>
