@@ -13,13 +13,14 @@ import {
   STATUSES,
 } from "../../constants/constants";
 import {
-  usePlacesPageContext,
-  usePlacesPageDispatchContext,
+  DirectionID,
+  PlacesListReducerAction,
+  PlacesListState,
+  usePlacesListContext,
+  usePlacesListDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
 import { usePrevious } from "../../hooks/usePrevious";
-
-type DirectionID = 0 | 1;
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
@@ -37,12 +38,18 @@ const getSortLabel = (
 
 const PlacesPage: ComponentType = () => {
   const { places } = useScreenplayContext();
+  const stateValues = usePlacesListContext();
+  const dispatch = usePlacesListDispatchContext();
 
   return (
     <div className="places-page">
       <div className="page-content__header">Places</div>
       <div className="page-content__body">
-        <PlacesList places={places} />
+        <PlacesList
+          places={places}
+          dispatch={dispatch}
+          stateValues={stateValues}
+        />
       </div>
     </div>
   );
@@ -53,6 +60,8 @@ interface PlacesListProps {
   noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
   showAnimationForNewPlaces?: boolean;
+  dispatch: React.Dispatch<PlacesListReducerAction>;
+  stateValues: PlacesListState;
 }
 
 const PlacesList: ComponentType<PlacesListProps> = ({
@@ -60,6 +69,8 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   noModeFilter,
   isAlertPlacesList,
   showAnimationForNewPlaces,
+  dispatch,
+  stateValues,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
@@ -69,27 +80,22 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     statusFilterValue,
     showScreenlessPlaces,
     activeEventKeys,
-  } = usePlacesPageContext();
-  const dispatch = usePlacesPageDispatchContext();
+  } = stateValues;
   const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
 
   const handleClickResetFilters = () => {
-    dispatch({ type: "RESET_STATE", page: "PLACES" });
+    dispatch({ type: "RESET_STATE" });
   };
-
-  const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
   const handleSelectModeOrLine = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
       dispatch({
         type: "SET_MODE_LINE_FILTER",
-        page: "PLACES",
         filterValue: selectedFilter,
       });
       dispatch({
         type: "SET_SORT_DIRECTION",
-        page: "PLACES",
         sortDirection: 0,
       });
     }
@@ -100,7 +106,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_SCREEN_TYPE_FILTER",
-        page: "PLACES",
         filterValue: selectedFilter,
       });
     }
@@ -111,7 +116,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (selectedFilter) {
       dispatch({
         type: "SET_STATUS_FILTER",
-        page: "PLACES",
         filterValue: selectedFilter,
       });
     }
@@ -120,10 +124,25 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   const handleClickSortLabel = () => {
     dispatch({
       type: "SET_SORT_DIRECTION",
-      page: "PLACES",
-      sortDirection: 1 - sortDirection,
+      sortDirection: (1 - sortDirection) as DirectionID,
     });
   };
+
+  const handleClickAccordion = (eventKey: string) => {
+    if (activeEventKeys.includes(eventKey)) {
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        eventKeys: activeEventKeys.filter((e: string) => e !== eventKey),
+      });
+    } else {
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        eventKeys: [...activeEventKeys, eventKey],
+      });
+    }
+  };
+
+  const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
   const sortPlaces = (places: Place[]) => {
     if (["ABC", "ZYX"].includes(sortLabel)) {
@@ -201,26 +220,9 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     return "";
   };
 
-  const handleClickAccordion = (eventKey: string) => {
-    if (activeEventKeys.includes(eventKey)) {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        page: "PLACES",
-        eventKeys: activeEventKeys.filter((e) => e !== eventKey),
-      });
-    } else {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        page: "PLACES",
-        eventKeys: [...activeEventKeys, eventKey],
-      });
-    }
-  };
-
   const handleClickToggleScreenlessPlaces = () => {
     dispatch({
       type: "SET_SHOW_SCREENLESS_PLACES",
-      page: "PLACES",
       show: !showScreenlessPlaces,
     });
   };
@@ -290,7 +292,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
         <PlacesActionBar
           places={sortedFilteredPlaces}
           hasScreenlessPlaces={filteredPlacesHaveScreenlessPlaces}
-          showScreenlessPlaces={showScreenlessPlaces}
+          showScreenlessPlaces={showScreenlessPlaces ?? false}
           onClickResetFilters={handleClickResetFilters}
           onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
           // Only show reset filters if NOT isAlertPlacesList, OR if isAlertPlacesList and isFiltered

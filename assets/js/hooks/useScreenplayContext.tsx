@@ -33,7 +33,7 @@ type ReducerAction =
       bannerAlert: BannerAlert;
     };
 
-type AlertsPageReducerAction =
+type AlertsListReducerAction =
   | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
   | {
       type:
@@ -43,7 +43,7 @@ type AlertsPageReducerAction =
       filterValue: FilterValue;
     };
 
-type PlacesPageReducerAction =
+type PlacesListReducerAction =
   | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
   | {
       type:
@@ -67,7 +67,7 @@ interface FilterValue {
   color?: string;
 }
 
-interface PlacesPageState {
+interface PlacesListState {
   sortDirection: DirectionID;
   modeLineFilterValue: FilterValue;
   screenTypeFilterValue: FilterValue;
@@ -76,7 +76,7 @@ interface PlacesPageState {
   activeEventKeys: string[];
 }
 
-interface AlertsPageState {
+interface AlertsListState {
   sortDirection: DirectionID;
   modeLineFilterValue: FilterValue;
   screenTypeFilterValue: FilterValue;
@@ -106,9 +106,9 @@ const reducer = (state: ScreenplayState, action: ReducerAction) => {
   }
 };
 
-const placesPageReducer = (
-  state: PlacesPageState,
-  action: PlacesPageReducerAction
+const placesListReducer = (
+  state: PlacesListState,
+  action: PlacesListReducerAction
 ) => {
   switch (action.type) {
     case "SET_SORT_DIRECTION":
@@ -146,13 +146,13 @@ const placesPageReducer = (
         activeEventKeys: action.eventKeys,
       };
     case "RESET_STATE":
-      return initialPlacesPageState;
+      return initialPlacesListState;
   }
 };
 
 const alertsReducer = (
-  state: AlertsPageState,
-  action: AlertsPageReducerAction
+  state: AlertsListState,
+  action: AlertsListReducerAction
 ) => {
   switch (action.type) {
     case "SET_SORT_DIRECTION":
@@ -185,7 +185,7 @@ const initialState: ScreenplayState = {
   bannerAlert: undefined,
 };
 
-const initialPlacesPageState: PlacesPageState = {
+const initialPlacesListState: PlacesListState = {
   sortDirection: 0 as DirectionID,
   modeLineFilterValue: MODES_AND_LINES[0],
   screenTypeFilterValue: SCREEN_TYPES[0],
@@ -194,7 +194,7 @@ const initialPlacesPageState: PlacesPageState = {
   activeEventKeys: [],
 };
 
-const initialAlertsPageState: AlertsPageState = {
+const initialAlertsListState: AlertsListState = {
   sortDirection: 0 as DirectionID,
   modeLineFilterValue: MODES_AND_LINES[0],
   screenTypeFilterValue: SCREEN_TYPES[0],
@@ -208,16 +208,16 @@ const [useScreenplayContext, ScreenplayContextProvider] =
 const [useScreenplayDispatchContext, ScreenplayDispatchContextProvider] =
   createGenericContext<React.Dispatch<any>>();
 
-const [usePlacesPageContext, PlacesPageContextProvider] =
-  createGenericContext<PlacesPageState>();
+const [usePlacesListContext, PlacesListContextProvider] =
+  createGenericContext<PlacesListState>();
 
-const [usePlacesPageDispatchContext, PlacesPageDispatchContextProvider] =
+const [usePlacesListDispatchContext, PlacesListDispatchContextProvider] =
   createGenericContext<React.Dispatch<any>>();
 
-const [useAlertsPageContext, AlertsPageContextProvider] =
-  createGenericContext<AlertsPageState>();
+const [useAlertsListContext, AlertsListContextProvider] =
+  createGenericContext<AlertsListState>();
 
-const [useAlertsPageDispatchContext, AlertsPageDispatchContextProvider] =
+const [useAlertsListDispatchContext, AlertsListDispatchContextProvider] =
   createGenericContext<React.Dispatch<any>>();
 
 // Generate provider
@@ -226,38 +226,44 @@ const ScreenplayProvider = ({ children }: Props) => {
     reducer,
     initialState
   );
-  const [placesPageState, placesPageDispatch] = useReducer(
-    placesPageReducer,
-    initialPlacesPageState
+  const [placesListState, placesListDispatch] = useReducer(
+    placesListReducer,
+    initialPlacesListState
   );
-  const [alertsPageState, alertsPageDispatch] = useReducer(
+  const [alertsListState, alertsListDispatch] = useReducer(
     alertsReducer,
-    initialAlertsPageState
+    initialAlertsListState
   );
 
   return (
     <ScreenplayContextProvider value={screenplayState}>
       <ScreenplayDispatchContextProvider value={screenplayDispatch}>
-        <PlacesPageContextProvider value={placesPageState}>
-          <PlacesPageDispatchContextProvider value={placesPageDispatch}>
-            <AlertsPageContextProvider value={alertsPageState}>
-              <AlertsPageDispatchContextProvider value={alertsPageDispatch}>
+        <PlacesListContextProvider value={placesListState}>
+          <PlacesListDispatchContextProvider value={placesListDispatch}>
+            <AlertsListContextProvider value={alertsListState}>
+              <AlertsListDispatchContextProvider value={alertsListDispatch}>
                 {children}
-              </AlertsPageDispatchContextProvider>
-            </AlertsPageContextProvider>
-          </PlacesPageDispatchContextProvider>
-        </PlacesPageContextProvider>
+              </AlertsListDispatchContextProvider>
+            </AlertsListContextProvider>
+          </PlacesListDispatchContextProvider>
+        </PlacesListContextProvider>
       </ScreenplayDispatchContextProvider>
     </ScreenplayContextProvider>
   );
 };
 
+// Types & Interfaces
+export { FilterValue, DirectionID, PlacesListReducerAction, PlacesListState };
+
+// Values
 export {
   useScreenplayContext,
   useScreenplayDispatchContext,
-  usePlacesPageContext,
-  usePlacesPageDispatchContext,
-  useAlertsPageContext,
-  useAlertsPageDispatchContext,
+  usePlacesListContext,
+  usePlacesListDispatchContext,
+  useAlertsListContext,
+  useAlertsListDispatchContext,
   ScreenplayProvider,
+  placesListReducer,
+  initialPlacesListState,
 };
