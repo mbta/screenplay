@@ -213,7 +213,11 @@ const AlertsList: ComponentType<AlertsListProps> = ({
               data-testid="sort-label"
             >
               {alertSortLabel}
-              {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+              {sortDirection === 0 ? (
+                <ArrowDown className="bootstrap-line-icon" />
+              ) : (
+                <ArrowUp className="bootstrap-line-icon" />
+              )}
             </div>
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">

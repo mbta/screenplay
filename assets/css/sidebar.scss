@@ -44,12 +44,20 @@
       flex-shrink: 0;
     }
   }
+
+  .sidebar-link__icon {
+    opacity: 0.4;
+  }
+
   button {
     background-color: unset;
     &.selected {
       background-color: $main-blue;
       font-weight: 800;
       border: 1px solid rgba(23, 31, 38, 0.3);
+      .sidebar-link__icon {
+        opacity: 1;
+      }
     }
     &:hover {
       background-color: #0075db66;
@@ -60,6 +68,9 @@
     margin-top: 60px;
     &:hover {
       background: $pink-700;
+      .sidebar-link__icon {
+        opacity: 1;
+      }
     }
   }
 }

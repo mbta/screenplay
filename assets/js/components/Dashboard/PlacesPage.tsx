@@ -251,7 +251,12 @@ const PlacesList: ComponentType<PlacesListProps> = ({
               onClick={handleClickSortLabel}
               data-testid="sort-label"
             >
-              {sortLabel} {sortDirection === 0 ? <ArrowDown /> : <ArrowUp />}
+              {sortLabel}{" "}
+              {sortDirection === 0 ? (
+                <ArrowDown className="bootstrap-line-icon" />
+              ) : (
+                <ArrowUp className="bootstrap-line-icon" />
+              )}
             </div>
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">

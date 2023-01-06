@@ -137,7 +137,10 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
                 {numberOfScreens == 1 ? "screen" : "screens"}
               </span>
             </div>
-            <ChevronRight className="alert-card__place-details__icon" />
+            <ChevronRight
+              size={24}
+              className="bootstrap-line-icon alert-card__place-details__icon"
+            />
           </div>
         ) : null}
       </div>

@@ -16,6 +16,16 @@
     margin-right: 28px;
   }
 
+  &__spin-icon {
+    animation: rotate 1s linear infinite;
+  }
+
+  @keyframes rotate {
+    100% {
+      transform: rotate(180deg);
+    }
+  }
+
   &__check-icon {
     height: 24px;
     width: 24px;

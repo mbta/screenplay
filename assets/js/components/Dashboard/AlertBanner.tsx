@@ -160,7 +160,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
         {isDone ? (
           <CheckCircleFill className="alert-banner__check-icon" />
         ) : (
-          <ArrowRepeat />
+          <ArrowRepeat size={24} className="alert-banner__spin-icon" />
         )}
       </div>
       <div className="alert-banner__text">{getBannerText()}</div>
