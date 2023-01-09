@@ -59,3 +59,8 @@ body {
 .bootstrap-line-icon {
   stroke: white;
 }
+
+button,
+input[type="button"] {
+  letter-spacing: 0.5px;
+}
