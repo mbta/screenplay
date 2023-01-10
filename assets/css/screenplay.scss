@@ -50,7 +50,6 @@ body {
   background: $main-blue;
   border: 1px solid rgba(23, 31, 38, 0.3);
   border-radius: 6px;
-  letter-spacing: 1px;
   &:hover {
     background: $hover-blue;
   }
@@ -58,4 +57,9 @@ body {
 
 .bootstrap-line-icon {
   stroke: white;
+}
+
+button,
+input[type="button"] {
+  letter-spacing: 0.5px;
 }
