@@ -84,6 +84,7 @@ const AlertDetails: ComponentType = () => {
                 places,
                 screensByAlertMap
               )}
+              screenCountOverride={screensByAlertMap[selectedAlert.id].length}
               noModeFilter
               isAlertPlacesList
               showAnimationForNewPlaces
