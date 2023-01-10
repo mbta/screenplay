@@ -7,7 +7,6 @@ import STATIONS_BY_LINE from "./constants/stations";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
 import { ScreensByAlert } from "./models/screensByAlert";
-import { Screen } from "./models/screen";
 
 export const color = (line: string) => {
   switch (line) {
@@ -152,17 +151,22 @@ export const formatEffect = (effect: string) => {
     .join(" ");
 };
 
+// Filters out screens that don't have the alert, then filters out places with empty
+// screens array
 export const placesWithSelectedAlert = (
   alert: Alert | null,
   places: Place[],
   screensByAlertMap: ScreensByAlert
 ) => {
   return alert
-    ? places.filter((place) =>
-        place.screens.some((screen: Screen) =>
-          screensByAlertMap[alert.id].includes(screen.id)
-        )
-      )
+    ? places
+        .map((place) => ({
+          ...place,
+          screens: place.screens.filter((screen) =>
+            screensByAlertMap[alert.id].includes(screen.id)
+          ),
+        }))
+        .filter((place) => place.screens.length > 0)
     : [];
 };
 
