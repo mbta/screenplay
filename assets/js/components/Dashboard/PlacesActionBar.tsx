@@ -40,13 +40,15 @@ const PlacesActionBar: React.ComponentType<Props> = ({
   showScreenlessPlaces,
   onClickToggleScreenlessPlaces,
   hideResetFiltersButton,
-  screenCountOverride
+  screenCountOverride,
 }: Props) => {
   return (
     <div className="places-action-bar" data-testid="places-action-bar">
       <ActionBarStats
         placeCount={getPlaceCount(places)}
-        screenCount={screenCountOverride ? screenCountOverride : getScreenCount(places)}
+        screenCount={
+          screenCountOverride ? screenCountOverride : getScreenCount(places)
+        }
       />
       <span className="places-action-bar__buttons-container">
         {hasScreenlessPlaces && (
