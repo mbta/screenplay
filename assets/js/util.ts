@@ -7,7 +7,6 @@ import STATIONS_BY_LINE from "./constants/stations";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
 import { ScreensByAlert } from "./models/screensByAlert";
-import { Screen } from "./models/screen";
 
 export const color = (line: string) => {
   switch (line) {
@@ -160,10 +159,14 @@ export const placesWithSelectedAlert = (
   screensByAlertMap: ScreensByAlert
 ) => {
   return alert
-    ? places.map(place =>(
-      {...place, screens: place.screens.filter(screen => screensByAlertMap[alert.id].includes(screen.id))}
-    ))
-      .filter(place => place.screens.length > 0)
+    ? places
+        .map((place) => ({
+          ...place,
+          screens: place.screens.filter((screen) =>
+            screensByAlertMap[alert.id].includes(screen.id)
+          ),
+        }))
+        .filter((place) => place.screens.length > 0)
     : [];
 };
 
