@@ -57,7 +57,6 @@ const PlacesPage: ComponentType = () => {
 
 interface PlacesListProps {
   places: Place[];
-  screenCountOverride?: number;
   noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
   showAnimationForNewPlaces?: boolean;
@@ -67,7 +66,6 @@ interface PlacesListProps {
 
 const PlacesList: ComponentType<PlacesListProps> = ({
   places,
-  screenCountOverride,
   noModeFilter,
   isAlertPlacesList,
   showAnimationForNewPlaces,
@@ -299,7 +297,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
           onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
           // Only show reset filters if NOT isAlertPlacesList, OR if isAlertPlacesList and isFiltered
           hideResetFiltersButton={isAlertPlacesList && !isFiltered}
-          screenCountOverride={screenCountOverride}
         />
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>
