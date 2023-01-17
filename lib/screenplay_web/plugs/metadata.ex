@@ -34,6 +34,7 @@ defmodule ScreenplayWeb.Plugs.Metadata do
     |> assign(:screens_url, Application.get_env(:screenplay, :screens_url))
     |> assign(:signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
     |> assign(:is_admin, is_admin?(conn))
+    |> assign(:fullstory_org_id, Application.get_env(:screenplay, :fullstory_org_id))
   end
 
   defp is_admin?(conn) do
