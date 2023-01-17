@@ -27,7 +27,6 @@ defmodule ScreenplayWeb.Plugs.Metadata do
 
     conn
     |> assign(:username, username)
-    |> assign(:clarity_tag, System.get_env("CLARITY_TAG"))
     |> assign(:environment_name, Application.get_env(:screenplay, :environment_name, "dev"))
     |> assign(:sentry_frontend_dsn, dsn)
     |> assign(:alerts_ui_url, Application.get_env(:screenplay, :alerts_ui_url))
