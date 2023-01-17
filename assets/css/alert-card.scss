@@ -58,18 +58,23 @@
       white-space: nowrap;
       align-self: center;
       text-align: right;
-      &-start,
-      &-end {
-        font-family: Inter;
-        font-size: 16px;
+      font-family: Inter;
+      font-size: 16px;
+      letter-spacing: 0px;
+      text-align: right;
+      &__range {
         font-weight: 700;
         line-height: 24px;
-        letter-spacing: 0px;
-        text-align: right;
       }
 
       &__to {
         font-weight: 500;
+      }
+
+      &__recurring {
+        font-weight: 500;
+        line-height: 16px;
+        margin-bottom: 16px;
       }
     }
   }
