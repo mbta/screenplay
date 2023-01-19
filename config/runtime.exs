@@ -33,4 +33,5 @@ config :screenplay,
   api_v3_url: System.get_env("API_V3_URL"),
   screens_url: System.get_env("SCREENS_URL"),
   signs_ui_url: System.get_env("SIGNS_UI_URL"),
-  alerts_ui_url: System.get_env("ALERTS_UI_URL")
+  alerts_ui_url: System.get_env("ALERTS_UI_URL"),
+  fullstory_org_id: System.get_env("FULLSTORY_ORG_ID")

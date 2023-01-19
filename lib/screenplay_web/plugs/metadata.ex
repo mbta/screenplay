@@ -27,13 +27,13 @@ defmodule ScreenplayWeb.Plugs.Metadata do
 
     conn
     |> assign(:username, username)
-    |> assign(:clarity_tag, System.get_env("CLARITY_TAG"))
     |> assign(:environment_name, Application.get_env(:screenplay, :environment_name, "dev"))
     |> assign(:sentry_frontend_dsn, dsn)
     |> assign(:alerts_ui_url, Application.get_env(:screenplay, :alerts_ui_url))
     |> assign(:screens_url, Application.get_env(:screenplay, :screens_url))
     |> assign(:signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
     |> assign(:is_admin, is_admin?(conn))
+    |> assign(:fullstory_org_id, Application.get_env(:screenplay, :fullstory_org_id))
   end
 
   defp is_admin?(conn) do
