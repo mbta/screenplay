@@ -61,7 +61,7 @@ export const translateRouteID = (id: string) => {
     case "sl4":
     case "sl5":
     case "slw":
-      return "Silver Line"
+      return "Silver Line";
     case "green":
     case "green-b":
     case "green-c":
@@ -174,4 +174,3 @@ export const placesWithSelectedAlert = (
         .filter((place) => place.screens.length > 0)
     : [];
 };
-

@@ -13,7 +13,7 @@ defmodule ScreenplayWeb.AlertsApiController do
     "green-b",
     "green-c",
     "green-d",
-    "green-e",
+    "green-e"
   ]
 
   @significant_alert_effects %{
@@ -26,7 +26,10 @@ defmodule ScreenplayWeb.AlertsApiController do
     {:ok, alerts} = Alert.fetch()
 
     # Filter down by relevance to Screenplay
-    relevant_alerts = Enum.filter(alerts, fn alert -> is_significant_alert?(alert) and Util.happening_now?(alert) end)
+    relevant_alerts =
+      Enum.filter(alerts, fn alert ->
+        is_significant_alert?(alert) and Util.happening_now?(alert)
+      end)
 
     # Makes it a list of ids only
     alert_ids = Enum.map(relevant_alerts, & &1.id)
