@@ -32,6 +32,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
     prevAlert,
     showAnimationOnMount
   );
+  const isRecurring = alert.active_period.length > 1;
 
   const renderEffect = (effect: string, severity: string) => {
     const formattedEffect = formatEffect(effect);
@@ -47,15 +48,18 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
     let result;
 
     const startDateHtml = (
-      <div className="alert-card__alert-details__active-period-start">
-        {startDate.format("l")} · {startDate.format("LT")}
-      </div>
+      <>
+        {isRecurring && <div>Current effect period:</div>}
+        <div className="alert-card__alert-details__active-period-start">
+          {startDate.format("l")} · {startDate.format("LT")}
+        </div>
+      </>
     );
 
     if (activePeriod[0].end) {
       const endDate = moment(activePeriod[0].end);
       result = (
-        <>
+        <div className="alert-card__alert-details__active-period__range">
           {startDateHtml}
           <div className="alert-card__alert-details__active-period-end">
             <span className="alert-card__alert-details__active-period__to">
@@ -65,16 +69,16 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
               {endDate.format("l")} · {endDate.format("LT")}
             </span>
           </div>
-        </>
+        </div>
       );
     } else {
       result = (
-        <>
+        <div className="alert-card__alert-details__active-period__range">
           {startDateHtml}
           <div className="alert-card__alert-details__active-period-end">
             Until further notice
           </div>
-        </>
+        </div>
       );
     }
 
@@ -113,6 +117,11 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
             </div>
           </div>
           <div className="alert-card__alert-details__active-period">
+            {isRecurring && (
+              <div className="alert-card__alert-details__active-period__recurring">
+                Recurring alert
+              </div>
+            )}
             {renderActivePeriod(alert.active_period)}
           </div>
         </Container>
