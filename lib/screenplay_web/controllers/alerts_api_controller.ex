@@ -48,7 +48,7 @@ defmodule ScreenplayWeb.AlertsApiController do
     })
   end
 
-  @spec is_significant_alert?(Alert) :: boolean()
+  @spec is_significant_alert?(Alert.t()) :: boolean()
   def is_significant_alert?(alert = %{affected_list: affected_list}) do
     mode = primary_affected_mode(affected_list)
 
