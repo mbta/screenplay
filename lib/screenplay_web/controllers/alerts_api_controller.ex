@@ -59,7 +59,7 @@ defmodule ScreenplayWeb.AlertsApiController do
     end
   end
 
-  def primary_affected_mode(affected_list) do
+  defp primary_affected_mode(affected_list) do
     if Enum.any?(affected_list, fn mode -> mode in @subway_ids end) do
       :subway
     else
