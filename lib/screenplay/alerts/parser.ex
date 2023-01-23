@@ -39,7 +39,7 @@ defmodule Screenplay.Alerts.Parser do
           updated_at: parse_time(updated_at),
           url: url,
           description: description,
-          affected_list: get_affected_list(relationships, included)
+          affected_list: get_affected_list(relationships, included, effect)
         }
 
       _ ->
@@ -92,9 +92,13 @@ defmodule Screenplay.Alerts.Parser do
     time
   end
 
-  defp get_affected_list(nil, _), do: [:access]
+  defp get_affected_list(relationships, included, effect)
 
-  defp get_affected_list(%{"routes" => %{"data" => routes}}, included) do
+  defp get_affected_list(_, _, "ELEVATOR_CLOSURE"), do: [:access]
+
+  defp get_affected_list(nil, _, _), do: [:alert]
+
+  defp get_affected_list(%{"routes" => %{"data" => routes}}, included, _) do
     route_map =
       Enum.map(included, fn
         %{"id" => id, "attributes" => %{"short_name" => "SL" <> _ = short_name}} ->

@@ -13,6 +13,7 @@
     "check": "npm run lint:check && npm run format:check"
   },
   "dependencies": {
+    "@fullstory/browser": "^1.6.2",
     "@heroicons/react": "^1.0.4",
     "@sentry/react": "^7.14.0",
     "bootstrap": "^5.1.0",

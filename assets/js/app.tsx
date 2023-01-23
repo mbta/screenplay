@@ -19,6 +19,7 @@ import ReactDOM from "react-dom";
 
 import App from "./components/App";
 import * as Sentry from "@sentry/react";
+import * as FullStory from "@fullstory/browser";
 
 const sentryDsn = document
   .querySelector("meta[name=sentry]")
@@ -35,6 +36,14 @@ if (sentryDsn) {
   if (username) {
     Sentry.setUser({ username: username });
   }
+}
+
+const fullstoryOrgId = document
+  .querySelector("meta[name=fullstory-org-id]")
+  ?.getAttribute("content");
+
+if (fullstoryOrgId && !FullStory.isInitialized()) {
+  FullStory.init({ orgId: fullstoryOrgId });
 }
 
 ReactDOM.render(<App />, document.getElementById("app"));
