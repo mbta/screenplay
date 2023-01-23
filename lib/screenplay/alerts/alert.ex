@@ -4,6 +4,22 @@ defmodule Screenplay.Alerts.Alert do
   alias Screenplay.Alerts.Parser
   alias Screenplay.V3Api
 
+  @subway_ids [
+    "red",
+    "orange",
+    "blue",
+    "green",
+    "green-b",
+    "green-c",
+    "green-d",
+    "green-e"
+  ]
+
+  @significant_alert_effects %{
+    :subway => ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
+    :bus => ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"]
+  }
+
   defstruct id: nil,
             cause: nil,
             effect: nil,
@@ -100,5 +116,48 @@ defmodule Screenplay.Alerts.Alert do
       severity >= 8 -> "more than #{30 * (severity - 7)} minutes"
       true -> "up to #{5 * (severity - 1)} minutes"
     end
+  end
+
+  # Check if alert is one of the chosen effect types + happening now
+  @spec is_significant_alert?(t()) :: boolean()
+  def is_significant_alert?(alert = %{affected_list: affected_list}) do
+    mode = primary_affected_mode(affected_list)
+
+    cond do
+      is_nil(mode) -> false
+      alert.effect === "DELAY" and mode === :subway -> alert.severity > 3
+      true -> alert.effect in @significant_alert_effects[mode]
+    end
+  end
+
+  defp primary_affected_mode(affected_list) do
+    if Enum.any?(affected_list, fn mode -> mode in @subway_ids end) do
+      :subway
+    else
+      case affected_list do
+        ["bus" | _] -> :bus
+        ["sl" <> _ | _] -> :bus
+        _ -> nil
+      end
+    end
+  end
+
+  # Determine whether an alert is currently active
+  @spec happening_now?(t(), DateTime.t() | nil) :: boolean()
+  def happening_now?(%{active_period: aps}, now \\ DateTime.utc_now()) do
+    Enum.any?(aps, &in_active_period(&1, now))
+  end
+
+  @spec in_active_period({DateTime.t() | nil, DateTime.t() | nil}, DateTime.t()) :: boolean()
+  def in_active_period({nil, end_t}, t) do
+    DateTime.compare(t, end_t) in [:lt, :eq]
+  end
+
+  def in_active_period({start_t, nil}, t) do
+    DateTime.compare(t, start_t) in [:gt, :eq]
+  end
+
+  def in_active_period({start_t, end_t}, t) do
+    DateTime.compare(t, start_t) in [:gt, :eq] && DateTime.compare(t, end_t) in [:lt, :eq]
   end
 end

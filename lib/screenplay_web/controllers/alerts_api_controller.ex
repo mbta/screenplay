@@ -3,23 +3,6 @@ defmodule ScreenplayWeb.AlertsApiController do
 
   alias Screenplay.Alerts.Alert
   alias Screenplay.Alerts.ScreensByAlert
-  alias Screenplay.Util
-
-  @subway_ids [
-    "red",
-    "orange",
-    "blue",
-    "green",
-    "green-b",
-    "green-c",
-    "green-d",
-    "green-e"
-  ]
-
-  @significant_alert_effects %{
-    :subway => ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
-    :bus => ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"]
-  }
 
   def index(conn, _params) do
     # We get all alerts from the API; unfortunately can't filter it down by effect (doesn't exist) or datetime (buggy)
@@ -28,7 +11,7 @@ defmodule ScreenplayWeb.AlertsApiController do
     # Filter down by relevance to Screenplay
     relevant_alerts =
       Enum.filter(alerts, fn alert ->
-        is_significant_alert?(alert) and Util.happening_now?(alert)
+        Alert.is_significant_alert?(alert) and Alert.happening_now?(alert)
       end)
 
     # Makes it a list of ids only
@@ -46,28 +29,5 @@ defmodule ScreenplayWeb.AlertsApiController do
       alerts: Enum.map(relevant_alerts, &Alert.to_full_map/1),
       screens_by_alert: screens_by_alerts
     })
-  end
-
-  @spec is_significant_alert?(Alert.t()) :: boolean()
-  def is_significant_alert?(alert = %{affected_list: affected_list}) do
-    mode = primary_affected_mode(affected_list)
-
-    cond do
-      is_nil(mode) -> false
-      alert.effect === "DELAY" and mode === :subway -> alert.severity > 3
-      true -> alert.effect in @significant_alert_effects[mode]
-    end
-  end
-
-  defp primary_affected_mode(affected_list) do
-    if Enum.any?(affected_list, fn mode -> mode in @subway_ids end) do
-      :subway
-    else
-      case affected_list do
-        ["bus" | _] -> :bus
-        ["sl" <> _ | _] -> :bus
-        _ -> nil
-      end
-    end
   end
 end
