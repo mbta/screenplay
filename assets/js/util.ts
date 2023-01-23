@@ -55,7 +55,12 @@ export const translateRouteID = (id: string) => {
       return "Orange Line";
     case "blue":
       return "Blue Line";
-    case "silver":
+    case "sl1":
+    case "sl2":
+    case "sl3":
+    case "sl4":
+    case "sl5":
+    case "slw":
       return "Silver Line";
     case "green":
     case "green-b":
@@ -168,23 +173,4 @@ export const placesWithSelectedAlert = (
         }))
         .filter((place) => place.screens.length > 0)
     : [];
-};
-
-const SIGNIFICANT_ALERT_EFFECTS: {
-  [mode: string]: string[];
-} = {
-  subway: ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
-  bus: ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"],
-};
-
-export const isSignificantAlert = (alert: Alert) => {
-  const mode = getModeFromAffectedList(alert.affected_list);
-
-  if (!Object.keys(SIGNIFICANT_ALERT_EFFECTS).includes(mode)) return;
-
-  if (alert.effect === "DELAY" && mode === "subway") {
-    return Number(alert.severity) > 3;
-  } else {
-    return SIGNIFICANT_ALERT_EFFECTS[mode].includes(alert.effect);
-  }
 };

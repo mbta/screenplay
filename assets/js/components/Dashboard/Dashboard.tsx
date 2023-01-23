@@ -10,7 +10,6 @@ import {
 import { useInterval } from "../../hooks/useInterval";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
-import { isSignificantAlert } from "../../util";
 
 const Dashboard: ComponentType = () => {
   const { alerts, bannerAlert } = useScreenplayContext();
@@ -92,9 +91,7 @@ const Dashboard: ComponentType = () => {
 
   const getFirstClosedAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
     const newAlertIds = newAlerts.map((alert) => alert.id);
-    return oldAlerts
-      .filter((alert) => !newAlertIds.includes(alert.id))
-      .find((alert) => alert && isSignificantAlert(alert));
+    return oldAlerts.filter((alert) => !newAlertIds.includes(alert.id))[0];
   };
 
   const getPostedOrEditedAlert = (alerts: Alert[]) => {
@@ -108,7 +105,6 @@ const Dashboard: ComponentType = () => {
           const updatedAt = new Date(alert.updated_at);
 
           return (
-            isSignificantAlert(alert) &&
             updatedAt.getTime() > fortySecondsAgo.getTime() &&
             updatedAt.getTime() < now.getTime()
           );
