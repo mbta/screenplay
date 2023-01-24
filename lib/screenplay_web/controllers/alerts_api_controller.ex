@@ -3,7 +3,6 @@ defmodule ScreenplayWeb.AlertsApiController do
 
   alias Screenplay.Alerts.Alert
   alias Screenplay.Alerts.ScreensByAlert
-  alias Screenplay.Util
 
   def index(conn, _params) do
     # We get all alerts from the API; unfortunately can't filter it down by effect (doesn't exist) or datetime (buggy)
@@ -27,6 +26,7 @@ defmodule ScreenplayWeb.AlertsApiController do
       end
 
     json(conn, %{
+      all_alert_ids: Enum.map(alerts, & &1.id),
       alerts: Enum.map(relevant_alerts, &Alert.to_full_map/1),
       screens_by_alert: screens_by_alerts
     })
