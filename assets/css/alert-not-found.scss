@@ -1,0 +1,61 @@
+.modal-backdrop.alert-not-found {
+  left: $sidebar-width;
+  opacity: 1;
+  background-color: rgba(15, 21, 26, 0.9);
+  backdrop-filter: blur(4px);
+}
+
+.alert-not-found {
+  left: $sidebar-width/2;
+  // top: 150px;
+
+  .alert-not-found_icon {
+    flex-shrink: 0;
+    margin: 4px 26px 0 5px;
+  }
+  .alert-not-found_title {
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 17px;
+  }
+  .alert-not-found_detail {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .alert-not-found_button {
+    text-align: left;
+    height: 40px;
+    width: 228px;
+    &__icon {
+      margin-right: 11px;
+    }
+  }
+
+  /* Styles exclusively for the modal version */
+  .modal-dialog {
+    max-width: 600px;
+    box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.36);
+  }
+  .modal-content {
+    background-color: $cool-gray-40;
+    color: $gray-50;
+  }
+  .modal-body {
+    display: flex;
+  }
+  &.modal {
+    top: 150px;
+  }
+
+  /* Styles exclusively for the page version */
+  &_page {
+    color: white;
+    display: flex;
+    height: 100%;
+    background-color: $cool-gray-20;
+    padding: 120px 0 0 120px;
+    .alert-not-found_detail {
+      width: 640px;
+    }
+  }
+}
