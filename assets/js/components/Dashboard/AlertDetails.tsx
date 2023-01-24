@@ -5,7 +5,11 @@ import { PlacesList } from "./PlacesPage";
 import { useNavigate, useParams } from "react-router-dom";
 import { Alert } from "../../models/alert";
 import { Button, Modal } from "react-bootstrap";
-import { ArrowLeft, ArrowUpRight, SlashCircleFill } from "react-bootstrap-icons";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  SlashCircleFill,
+} from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
 import {
   placesListReducer,
@@ -39,9 +43,9 @@ const AlertDetails: ComponentType = () => {
       setSelectedAlert(newSelectedAlert);
       setShowModal(false);
     } else if (selectedAlert) {
-      // We're on an alert details page, and the alert has been closed while 
+      // We're on an alert details page, and the alert has been closed while
       // we've been on the page
-      setShowModal(true)
+      setShowModal(true);
     } else {
       // We loaded an alert details page that doesn't match any alert
       setContextState(screenplayContext);
@@ -54,8 +58,8 @@ const AlertDetails: ComponentType = () => {
   );
 
   const validAlertId = contextState.allAPIAlertIds.length
-  ? contextState.allAPIAlertIds.find((alert) => alert === id)
-  : undefined
+    ? contextState.allAPIAlertIds.find((alert) => alert === id)
+    : undefined;
 
   return selectedAlert ? (
     // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
@@ -106,10 +110,7 @@ const AlertDetails: ComponentType = () => {
         show={showModal}
       >
         <Modal.Body>
-          <SlashCircleFill
-            size={24}
-            className="alert-not-found_icon"
-          />
+          <SlashCircleFill size={24} className="alert-not-found_icon" />
           <div>
             <div className="alert-not-found_title">This alert was closed</div>
             <p className="alert-not-found_detail">
@@ -128,7 +129,7 @@ const AlertDetails: ComponentType = () => {
       </Modal>
     </>
   ) : (
-    <AlertNotFoundPage validAlertId={validAlertId}/>
+    <AlertNotFoundPage validAlertId={validAlertId} />
   );
 };
 
