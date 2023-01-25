@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AlertNotFoundPage = (props: { validAlertId: string | undefined }) => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const AlertNotFoundPage = (props: { validAlertId: string | undefined }) => {
             : `We couldn’t find the alert you’re looking for in Screenplay. This could be \
             because the alert has been closed, or because an alert with that ID \
             (#${
-              window.location.pathname.split("/").slice(-1)[0]
+              useLocation().pathname.split("/").slice(-1)[0]
             }) doesn’t exist. You may want to check the Posted Alerts list for it, or double-check the URL. `}
         </p>
         <Button

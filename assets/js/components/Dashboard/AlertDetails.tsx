@@ -57,9 +57,9 @@ const AlertDetails: ComponentType = () => {
     initialPlacesListState
   );
 
-  const validAlertId = contextState.allAPIAlertIds.length
-    ? contextState.allAPIAlertIds.find((alert) => alert === id)
-    : undefined;
+  const validAlertId = contextState.allAPIAlertIds.find(
+    (alert) => alert === id
+  );
 
   return selectedAlert ? (
     // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
