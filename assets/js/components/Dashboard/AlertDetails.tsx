@@ -1,5 +1,6 @@
 import React, { ComponentType, useEffect, useReducer, useState } from "react";
 import AlertCard from "./AlertCard";
+import AlertNotFoundPage from "./AlertNotFoundPage";
 import { PlacesList } from "./PlacesPage";
 import { useNavigate, useParams } from "react-router-dom";
 import { Alert } from "../../models/alert";
@@ -32,22 +33,32 @@ const AlertDetails: ComponentType = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const selectedAlert = screenplayContext.alerts.length
+    const newSelectedAlert = screenplayContext.alerts.length
       ? screenplayContext.alerts.find((alert) => alert.id === id)
       : null;
 
-    if (selectedAlert) {
+    if (newSelectedAlert) {
+      // We are on an active alert details page
       setContextState(screenplayContext);
-      setSelectedAlert(selectedAlert);
+      setSelectedAlert(newSelectedAlert);
       setShowModal(false);
-    } else {
+    } else if (selectedAlert) {
+      // We're on an alert details page, and the alert has been closed while
+      // we've been on the page
       setShowModal(true);
+    } else {
+      // We loaded an alert details page that doesn't match any alert
+      setContextState(screenplayContext);
     }
   }, [screenplayContext]);
 
   const [placesListState, placesListDispatch] = useReducer(
     placesListReducer,
     initialPlacesListState
+  );
+
+  const validAlertId = contextState.allAPIAlertIds.find(
+    (alert) => alert === id
   );
 
   return selectedAlert ? (
@@ -99,22 +110,18 @@ const AlertDetails: ComponentType = () => {
         show={showModal}
       >
         <Modal.Body>
-          <SlashCircleFill
-            size={24}
-            className="bootstrap-line-icon modal-icon"
-          />
-          <div className="modal-text">
-            <div className="modal-title">This alert was closed</div>
-            <p className="modal-detail">
+          <SlashCircleFill size={24} className="alert-not-found_icon" />
+          <div>
+            <div className="alert-not-found_title">This alert was closed</div>
+            <p className="alert-not-found_detail">
               This {formatEffect(selectedAlert.effect)} alert was just closed.
               If it was previously showing on any screens, it has since been
               removed.
             </p>
             <Button
-              className="screenplay-button modal-button"
+              className="screenplay-button alert-not-found_button"
               onClick={() => navigate("/alerts", { replace: true })}
             >
-              <ArrowLeft className="modal-button__icon" />
               Go to Posted Alerts
             </Button>
           </div>
@@ -122,7 +129,7 @@ const AlertDetails: ComponentType = () => {
       </Modal>
     </>
   ) : (
-    <></>
+    <AlertNotFoundPage validAlertId={validAlertId} />
   );
 };
 

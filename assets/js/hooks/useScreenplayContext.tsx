@@ -23,6 +23,8 @@ type ReducerAction =
   | {
       type: "SET_ALERTS";
       alerts: Alert[];
+      allAPIAlertIds: string[];
+      screensByAlertMap: ScreensByAlert;
     }
   | {
       type: "SET_SCREENS_BY_ALERT";
@@ -86,6 +88,7 @@ interface AlertsListState {
 interface ScreenplayState {
   places: Place[];
   alerts: Alert[];
+  allAPIAlertIds: string[];
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
 }
@@ -95,14 +98,19 @@ const reducer = (state: ScreenplayState, action: ReducerAction) => {
     case "SET_PLACES":
       return { ...state, places: action.places };
     case "SET_ALERTS":
-      return { ...state, alerts: action.alerts };
-    case "SET_SCREENS_BY_ALERT":
-      return { ...state, screensByAlertMap: action.screensByAlertMap };
+      return {
+        ...state,
+        alerts: action.alerts,
+        allAPIAlertIds: action.allAPIAlertIds,
+        screensByAlertMap: action.screensByAlertMap,
+      };
     case "SET_BANNER_ALERT":
       return {
         ...state,
         bannerAlert: action.bannerAlert,
       };
+    default:
+      throw new Error();
   }
 };
 
@@ -181,6 +189,7 @@ const alertsReducer = (
 const initialState: ScreenplayState = {
   places: [] as Place[],
   alerts: [] as Alert[],
+  allAPIAlertIds: [] as string[],
   screensByAlertMap: {} as ScreensByAlert,
   bannerAlert: undefined,
 };

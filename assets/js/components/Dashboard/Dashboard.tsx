@@ -17,12 +17,13 @@ const Dashboard: ComponentType = () => {
   const [bannerDone, setBannerDone] = useState(false);
 
   useEffect(() => {
-    fetchAlerts((newAlerts, screens_by_alert) => {
+    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
       findAndSetBannerAlert(alerts, newAlerts);
-      dispatch({ type: "SET_ALERTS", alerts: newAlerts });
       dispatch({
-        type: "SET_SCREENS_BY_ALERT",
-        screensByAlertMap: screens_by_alert,
+        type: "SET_ALERTS",
+        alerts: newAlerts,
+        allAPIAlertIds: allAPIalertIds,
+        screensByAlertMap: screensByAlertMap,
       });
     });
 
@@ -33,12 +34,13 @@ const Dashboard: ComponentType = () => {
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
-    fetchAlerts((newAlerts, screens_by_alert) => {
+    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
       findAndSetBannerAlert(alerts, newAlerts);
-      dispatch({ type: "SET_ALERTS", alerts: newAlerts });
       dispatch({
-        type: "SET_SCREENS_BY_ALERT",
-        screensByAlertMap: screens_by_alert,
+        type: "SET_ALERTS",
+        alerts: newAlerts,
+        allAPIAlertIds: allAPIalertIds,
+        screensByAlertMap: screensByAlertMap,
       });
     });
   }, 4000);
