@@ -1,11 +1,9 @@
 import React, { ComponentType } from "react";
 import FilterDropdown from "./FilterDropdown";
 import { Col, Container, Row } from "react-bootstrap";
-import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import "../../../css/screenplay.scss";
 import {
   MODES_AND_LINES,
-  SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
   SILVER_LINE_ROUTES,
@@ -18,7 +16,6 @@ import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
-  DirectionID,
   useAlertsListContext,
   useAlertsListDispatchContext,
   useScreenplayContext,
@@ -58,24 +55,11 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   places,
   screensByAlertMap,
 }: AlertsListProps) => {
-  const {
-    sortDirection,
-    modeLineFilterValue,
-    screenTypeFilterValue,
-    statusFilterValue,
-  } = useAlertsListContext();
+  const { modeLineFilterValue, screenTypeFilterValue, statusFilterValue } =
+    useAlertsListContext();
   const dispatch = useAlertsListDispatchContext();
   const navigate = useNavigate();
   const prevAlertIds = usePrevious(alerts)?.map((alert) => alert.id);
-
-  const alertSortLabel = SORT_LABELS["Alerts"][sortDirection];
-
-  const sortLabelOnClick = () => {
-    dispatch({
-      type: "SET_SORT_DIRECTION",
-      sortDirection: (1 - sortDirection) as DirectionID,
-    });
-  };
 
   const handleAlertModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
@@ -206,20 +190,6 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     <>
       <Container fluid>
         <Row className="filterable-list__header-row">
-          <Col lg={3}>
-            <div
-              className="filterable-list__sort-label d-flex align-items-center"
-              onClick={sortLabelOnClick}
-              data-testid="sort-label"
-            >
-              {alertSortLabel}
-              {sortDirection === 0 ? (
-                <ArrowDown className="bootstrap-line-icon" />
-              ) : (
-                <ArrowUp className="bootstrap-line-icon" />
-              )}
-            </div>
-          </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">
             <FilterDropdown
               list={MODES_AND_LINES}

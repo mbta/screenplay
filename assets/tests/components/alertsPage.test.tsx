@@ -81,18 +81,4 @@ describe("Alerts Page", () => {
       });
     });
   });
-
-  describe("sorting", () => {
-    test("sort label when clicked", async () => {
-      const { getByTestId } = renderWithScreenplayProvider(<AlertsPage />);
-
-      await act(async () => {
-        expect(getByTestId("sort-label").textContent?.trim()).toBe("END");
-        fireEvent.click(getByTestId("sort-label"));
-        await waitFor(() => {
-          expect(getByTestId("sort-label").textContent?.trim()).toBe("END");
-        });
-      });
-    });
-  });
 });

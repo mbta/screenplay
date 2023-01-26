@@ -35,15 +35,10 @@ type ReducerAction =
       bannerAlert: BannerAlert | undefined;
     };
 
-type AlertsListReducerAction =
-  | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
-  | {
-      type:
-        | "SET_MODE_LINE_FILTER"
-        | "SET_SCREEN_TYPE_FILTER"
-        | "SET_STATUS_FILTER";
-      filterValue: FilterValue;
-    };
+type AlertsListReducerAction = {
+  type: "SET_MODE_LINE_FILTER" | "SET_SCREEN_TYPE_FILTER" | "SET_STATUS_FILTER";
+  filterValue: FilterValue;
+};
 
 type PlacesListReducerAction =
   | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
@@ -163,11 +158,6 @@ const alertsReducer = (
   action: AlertsListReducerAction
 ) => {
   switch (action.type) {
-    case "SET_SORT_DIRECTION":
-      return {
-        ...state,
-        sortDirection: action.sortDirection as DirectionID,
-      };
     case "SET_MODE_LINE_FILTER":
       return {
         ...state,
