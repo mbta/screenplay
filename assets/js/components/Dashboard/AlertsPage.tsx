@@ -91,6 +91,54 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     }
   };
 
+  const renderAlerts = () => {
+    const allAlerts = filterAlerts();
+    const alertsOnScreens = allAlerts
+      .filter((alert: Alert) => screensByAlertMap[alert.id].length)
+      .sort((a: Alert, b: Alert) => compareAlerts(a, b))
+      .map((alert: Alert) => getAlertCardFromAlert(alert));
+
+    const alertsNotOnScreens = allAlerts
+      .filter((alert: Alert) => !screensByAlertMap[alert.id].length)
+      .sort((a: Alert, b: Alert) => compareAlerts(a, b))
+      .map((alert: Alert) => getAlertCardFromAlert(alert));
+
+    return alertsOnScreens.concat(alertsNotOnScreens);
+  };
+
+  const getAlertCardFromAlert = (alert: Alert) => {
+    const screensByAlert = screensByAlertMap[alert.id];
+    let numPlaces = 0;
+    let numScreens = 0;
+
+    if (screensByAlert) {
+      numScreens = screensByAlert.length;
+      numPlaces = placesWithSelectedAlert(
+        alert,
+        places,
+        screensByAlertMap
+      ).length;
+    }
+
+    let showAnimationOnMount = false;
+    if (prevAlertIds?.length) {
+      showAnimationOnMount = !prevAlertIds.includes(alert.id);
+    }
+
+    return (
+      <AlertCard
+        key={alert.id}
+        alert={alert}
+        selectAlert={() => {
+          navigate(`/alerts/${alert.id}`);
+        }}
+        numberOfScreens={numScreens}
+        numberOfPlaces={numPlaces}
+        showAnimationOnMount={showAnimationOnMount}
+      />
+    );
+  };
+
   const filterAlerts = () => {
     let filteredAlerts = alerts;
     if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
@@ -217,42 +265,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
           </Col>
         </Row>
       </Container>
-      {filterAlerts()
-        .sort((a: Alert, b: Alert) =>
-          sortDirection === 0 ? compareAlerts(a, b) : compareAlerts(b, a)
-        )
-        .map((alert: Alert) => {
-          const screensByAlert = screensByAlertMap[alert.id];
-          let numPlaces = 0;
-          let numScreens = 0;
-
-          if (screensByAlert) {
-            numScreens = screensByAlert.length;
-            numPlaces = placesWithSelectedAlert(
-              alert,
-              places,
-              screensByAlertMap
-            ).length;
-          }
-
-          let showAnimationOnMount = false;
-          if (prevAlertIds?.length) {
-            showAnimationOnMount = !prevAlertIds.includes(alert.id);
-          }
-
-          return (
-            <AlertCard
-              key={alert.id}
-              alert={alert}
-              selectAlert={() => {
-                navigate(`/alerts/${alert.id}`);
-              }}
-              numberOfScreens={numScreens}
-              numberOfPlaces={numPlaces}
-              showAnimationOnMount={showAnimationOnMount}
-            />
-          );
-        })}
+      {renderAlerts()}
     </>
   );
 };
