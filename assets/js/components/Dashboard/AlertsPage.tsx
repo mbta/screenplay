@@ -237,7 +237,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   return (
     <>
       <Container fluid>
-        <Row className="filterable-list__header-row">
+        <Row className="filterable-list__header-row justify-content-end">
           <Col lg={3} className="d-flex justify-content-end pe-3">
             <FilterDropdown
               list={MODES_AND_LINES}
