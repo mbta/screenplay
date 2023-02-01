@@ -34,7 +34,7 @@ const username = document
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    environment: environment
+    environment: environment,
   });
 
   if (username) {
