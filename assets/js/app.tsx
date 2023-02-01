@@ -21,6 +21,9 @@ import App from "./components/App";
 import * as Sentry from "@sentry/react";
 import * as FullStory from "@fullstory/browser";
 
+const environment = document
+  .querySelector("meta[name=environment-name]")
+  ?.getAttribute("content") as string;
 const sentryDsn = document
   .querySelector("meta[name=sentry]")
   ?.getAttribute("content");
@@ -31,6 +34,7 @@ const username = document
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
+    environment: environment
   });
 
   if (username) {

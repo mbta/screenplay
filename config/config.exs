@@ -21,6 +21,16 @@ config :screenplay,
   record_sentry: false,
   default_api_v3_url: "https://api-v3.mbta.com/"
 
+# Include 2 logger backends
+config :logger,
+  backends: [:console, Sentry.LoggerBackend]
+
+# Do not send local errors to Sentry
+config :sentry,
+  dsn: "",
+  environment_name: "dev",
+  included_environments: []
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
