@@ -7,12 +7,11 @@ defmodule Screenplay.Config.LocalFetch do
     with {:ok, config_contents} <- do_get(:local_config_file_spec),
          {:ok, location_contents} <- do_get(:local_locations_file_spec),
          {:ok, place_description_contents} <- do_get(:local_place_descriptions_file_spec),
-         {:ok, config_json} <- Jason.decode(config_contents),
-         {:ok, location_json} <- Jason.decode(location_contents),
-         {:ok, place_description_json} <- Jason.decode(place_description_contents) do
+         {:ok, config_json} <- do_decode(config_contents, :local_config_file_spec),
+         {:ok, location_json} <- do_decode(location_contents, :local_locations_file_spec),
+         {:ok, place_description_json} <-
+           do_decode(place_description_contents, :local_place_descriptions_file_spec) do
       {:ok, config_json, location_json, place_description_json}
-    else
-      _ -> :error
     end
   end
 
@@ -21,8 +20,27 @@ defmodule Screenplay.Config.LocalFetch do
     path = local_path(file_spec)
 
     case File.read(path) do
-      {:ok, contents} -> {:ok, contents}
-      _ -> :error
+      {:ok, contents} ->
+        {:ok, contents}
+
+      {:error, reason_atom} ->
+        "Couldn't read local file #{path} for spec #{inspect(file_spec)}. Error reported: #{inspect(reason_atom)}"
+        |> IO.warn()
+
+        :error
+    end
+  end
+
+  defp do_decode(json_string, file_spec) do
+    case Jason.decode(json_string) do
+      {:ok, data} ->
+        {:ok, data}
+
+      {:error, jason_error} ->
+        "Couldn't decode JSON for spec #{inspect(file_spec)}. Error reported: #{Exception.message(jason_error)}. File contents:\n#{json_string}"
+        |> IO.warn()
+
+        :error
     end
   end
 
