@@ -7,19 +7,19 @@ import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import { Place } from "../../models/place";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import {
-  MODES_AND_LINES,
+  PLACES_PAGE_MODES_AND_LINES as MODES_AND_LINES,
   SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
 } from "../../constants/constants";
 import {
-  DirectionID,
   PlacesListReducerAction,
   PlacesListState,
   usePlacesListContext,
   usePlacesListDispatchContext,
   useScreenplayContext,
 } from "../../hooks/useScreenplayContext";
+import { DirectionID } from "../../models/direction_id";
 import { usePrevious } from "../../hooks/usePrevious";
 
 const getSortLabel = (

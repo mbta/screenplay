@@ -3,14 +3,15 @@ import FilterDropdown from "./FilterDropdown";
 import { Col, Container, Row } from "react-bootstrap";
 import "../../../css/screenplay.scss";
 import {
-  MODES_AND_LINES,
+  ALERTS_PAGE_MODES_AND_LINES as MODES_AND_LINES,
   SCREEN_TYPES,
   STATUSES,
   SILVER_LINE_ROUTES,
 } from "../../constants/constants";
-import { Alert } from "../../models/alert";
+import { Alert, InformedEntity } from "../../models/alert";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
+import { RouteType } from "../../models/route_type";
 import { ScreensByAlert } from "../../models/screensByAlert";
 import AlertCard from "./AlertCard";
 import { useNavigate } from "react-router-dom";
@@ -161,25 +162,24 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     alerts: Alert[],
     { label, ids }: { label: string; ids: string[] }
   ) => {
-    return alerts.filter((alert) => {
-      return alert.informed_entities.some((informedEntity) => {
-        switch (label) {
-          case "Commuter Rail":
-            return informedEntity.route_type === 2;
-          case "Bus":
-            return (
-              informedEntity.route_type === 3 &&
-              !SILVER_LINE_ROUTES.includes(informedEntity.route as string)
-            );
-          case "Ferry":
-            return informedEntity.route_type === 4;
-          case "Access":
-            return "facility" in informedEntity;
-          default:
-            return ids.includes(informedEntity.route as string);
-        }
-      });
-    });
+    const isRelevantIE: (ie: InformedEntity) => boolean = (() => {
+      switch (label) {
+        case "Commuter Rail":
+          return (ie) => ie.route_type === RouteType.Rail;
+        case "Bus":
+          return (ie) =>
+            ie.route_type === RouteType.Bus &&
+            !SILVER_LINE_ROUTES.includes(ie.route as string);
+        case "Ferry":
+          return (ie) => ie.route_type === RouteType.Ferry;
+        case "Access":
+          return (ie) => ie.facility != null;
+        default:
+          return (ie) => ids.includes(ie.route as string);
+      }
+    })();
+
+    return alerts.filter((alert) => alert.informed_entities.some(isRelevantIE));
   };
 
   // Get a mapping of screen ids => screen metadata (namely 'type') to use in filterAlertsByScreenType()

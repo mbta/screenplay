@@ -1,5 +1,6 @@
 export const SILVER_LINE_ROUTES = ["741", "742", "743", "746", "749", "751"];
-export const MODES_AND_LINES = [
+
+const BASE_MODES_AND_LINES = [
   { label: "All MODES", ids: ["All"] },
   { label: "Red Line", ids: ["Red"], color: "#DA291C" },
   { label: "Orange Line", ids: ["Orange"], color: "#ED8B00" },
@@ -22,6 +23,13 @@ export const MODES_AND_LINES = [
   { label: "Bus", ids: ["Bus"], color: "#FFC72C" },
   { label: "Commuter Rail", ids: ["CR"], color: "#80276C" },
   { label: "Ferry", ids: ["Ferry"], color: "#008EAA" },
+];
+
+export const PLACES_PAGE_MODES_AND_LINES = BASE_MODES_AND_LINES;
+
+export const ALERTS_PAGE_MODES_AND_LINES = [
+  ...BASE_MODES_AND_LINES,
+  { label: "Access", ids: ["Access"], color: "#165C96" },
 ];
 
 export const SORT_LABELS: Record<string, [string, string]> = {

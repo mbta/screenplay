@@ -2,10 +2,12 @@ import * as React from "react";
 import { createGenericContext } from "../utils/createGenericContext";
 import { Place } from "../models/place";
 import { Alert } from "../models/alert";
+import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { useReducer } from "react";
 import {
-  MODES_AND_LINES,
+  PLACES_PAGE_MODES_AND_LINES,
+  ALERTS_PAGE_MODES_AND_LINES,
   SCREEN_TYPES,
   STATUSES,
 } from "../constants/constants";
@@ -55,8 +57,6 @@ type PlacesListReducerAction =
     }
   | { type: "SET_ACTIVE_EVENT_KEYS"; eventKeys: string[] }
   | { type: "RESET_STATE" };
-
-type DirectionID = 0 | 1;
 
 interface FilterValue {
   label: string;
@@ -186,7 +186,7 @@ const initialState: ScreenplayState = {
 
 const initialPlacesListState: PlacesListState = {
   sortDirection: 0 as DirectionID,
-  modeLineFilterValue: MODES_AND_LINES[0],
+  modeLineFilterValue: PLACES_PAGE_MODES_AND_LINES[0],
   screenTypeFilterValue: SCREEN_TYPES[0],
   statusFilterValue: STATUSES[0],
   showScreenlessPlaces: true,
@@ -195,7 +195,7 @@ const initialPlacesListState: PlacesListState = {
 
 const initialAlertsListState: AlertsListState = {
   sortDirection: 0 as DirectionID,
-  modeLineFilterValue: MODES_AND_LINES[0],
+  modeLineFilterValue: ALERTS_PAGE_MODES_AND_LINES[0],
   screenTypeFilterValue: SCREEN_TYPES[0],
   statusFilterValue: STATUSES[0],
 };
