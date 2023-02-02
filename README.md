@@ -9,6 +9,9 @@ To start your Phoenix server:
 - Set required env variables with
   - `export SECRET_KEY_BASE=`. You can use the value in `config.exs`.
   - `export GUARDIAN_SECRET_KEY=test_auth_secret`
+  - URLs for other MBTA APIs that Screenplay communicates with. **Make sure to use the same environment for all!**
+    - `export API_V3_URL="https://api-v3.mbta.com/"` (or another environment's URL if you want to fetch data from there instead)
+    - `export SCREENS_URL="https://screens.mbta.com/"` (or another environment's URL if you want to fetch data from there instead)
 - Add a `screen_locations.json` file to the `priv` directory. You can either ask an engineer for a copy of the file, or enter an empty array as its contents (`[]`). The file just needs to exist and contain an array of 0 or more `{"id": "<screen ID>", "location": "<location description>"}` objects.
 - Add a `place_descriptions.json` file to the `priv` directory. You can either ask an engineer for a copy of the file, or enter an empty array as its contents (`[]`). The file just needs to exist and contain an array of 0 or more `{"id": "<place ID>", "description": "<place description>"}` objects.
 - Install dependencies with `mix deps.get`
