@@ -54,7 +54,8 @@ defmodule Screenplay.MixProject do
       {:ex_aws_s3, "~> 2.2"},
       {:httpoison, "~> 1.8.0"},
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.8", only: :dev}
+      {:sobelow, "~> 0.8", only: :dev},
+      {:sentry, "~> 8.0"}
     ]
   end
 
