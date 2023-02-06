@@ -16,8 +16,9 @@ defmodule Screenplay.Alerts.Alert do
   ]
 
   @significant_alert_effects %{
-    :subway => ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
-    :bus => ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"]
+    subway: ["SHUTTLE", "STATION_CLOSURE", "SUSPENSION", "DELAY"],
+    bus: ["STOP_CLOSURE", "DETOUR", "STOP_MOVE", "SNOW_ROUTE", "SUSPENSION"],
+    access: ["ELEVATOR_CLOSURE"]
   }
 
   defstruct id: nil,
@@ -54,7 +55,7 @@ defmodule Screenplay.Alerts.Alert do
           created_at: DateTime.t(),
           updated_at: DateTime.t(),
           description: String.t(),
-          affected_list: list(atom())
+          affected_list: list(atom | String.t())
         }
 
   def fetch(get_json_fn \\ &V3Api.get_json/2) do
@@ -111,30 +112,31 @@ defmodule Screenplay.Alerts.Alert do
   # High priority (deliver to T-Alert subscribers immediately) -> 10
   def interpret_severity(severity) do
     cond do
-      severity < 3 -> "up to 10 minutes"
-      severity > 9 -> "more than 60 minutes"
-      severity >= 8 -> "more than #{30 * (severity - 7)} minutes"
-      true -> "up to #{5 * (severity - 1)} minutes"
+      severity in 1..3 -> "up to 10 minutes"
+      severity in 4..7 -> "up to #{5 * (severity - 1)} minutes"
+      severity == 8 -> "more than 30 minutes"
+      severity >= 9 -> "more than 60 minutes"
     end
   end
 
-  # Check if alert is one of the chosen effect types + happening now
-  @spec is_significant_alert?(t()) :: boolean()
-  def is_significant_alert?(alert = %{affected_list: affected_list}) do
+  # Check if alert is one of the chosen effect types
+  @spec significant?(t()) :: boolean()
+  def significant?(alert = %{affected_list: affected_list}) do
     mode = primary_affected_mode(affected_list)
 
-    cond do
-      is_nil(mode) -> false
-      alert.effect === "DELAY" and mode === :subway -> alert.severity > 3
-      true -> alert.effect in @significant_alert_effects[mode]
+    case {mode, alert.effect} do
+      {:subway, "DELAY"} -> alert.severity > 3
+      {mode, effect} -> effect in Map.get(@significant_alert_effects, mode, [])
     end
   end
 
+  @spec primary_affected_mode(list()) :: :subway | :bus | :access | nil
   defp primary_affected_mode(affected_list) do
     if Enum.any?(affected_list, fn mode -> mode in @subway_ids end) do
       :subway
     else
       case affected_list do
+        [:access] -> :access
         ["bus" | _] -> :bus
         ["sl" <> _ | _] -> :bus
         _ -> nil

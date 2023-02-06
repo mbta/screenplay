@@ -1,7 +1,12 @@
-interface InformedEntity {
-  stop: string;
-  route: string;
-  route_type: number;
+import { DirectionID } from "./direction_id";
+import { RouteType } from "./route_type";
+
+export interface InformedEntity {
+  direction_id: DirectionID | null;
+  facility: string | null;
+  route: string | null;
+  route_type: RouteType | null;
+  stop: string | null;
 }
 
 export interface ActivePeriod {
