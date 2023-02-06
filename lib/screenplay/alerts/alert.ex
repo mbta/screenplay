@@ -120,8 +120,8 @@ defmodule Screenplay.Alerts.Alert do
   end
 
   # Check if alert is one of the chosen effect types
-  @spec is_significant_alert?(t()) :: boolean()
-  def is_significant_alert?(alert = %{affected_list: affected_list}) do
+  @spec significant?(t()) :: boolean()
+  def significant?(alert = %{affected_list: affected_list}) do
     mode = primary_affected_mode(affected_list)
 
     case {mode, alert.effect} do

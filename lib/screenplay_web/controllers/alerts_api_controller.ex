@@ -11,7 +11,7 @@ defmodule ScreenplayWeb.AlertsApiController do
     # Filter down by relevance to Screenplay
     relevant_alerts =
       Enum.filter(alerts, fn alert ->
-        Alert.is_significant_alert?(alert) and Alert.happening_now?(alert)
+        Alert.significant?(alert) and Alert.happening_now?(alert)
       end)
 
     # Makes it a list of ids only
