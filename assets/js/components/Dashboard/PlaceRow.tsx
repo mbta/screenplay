@@ -48,6 +48,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     bus_shelter_v2: "Bus Shelter",
     pre_fare_v2: "Prefare",
     dup: "DUP",
+    dup_v2: "DUP",
     gl_eink_single: "GL E-Ink",
     gl_eink_double: "GL E-Ink",
     gl_eink_v2: "GL E-Ink",
@@ -59,6 +60,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const sortScreens = (screenList: Screen[] = screens) => {
     const screenTypeOrder = [
       "dup",
+      "dup_v2",
       "bus_shelter_v2",
       "bus_eink",
       "bus_eink_v2",

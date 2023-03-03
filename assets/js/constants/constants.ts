@@ -44,7 +44,7 @@ export const SORT_LABELS: Record<string, [string, string]> = {
 export const SCREEN_TYPES = [
   { label: "All SCREEN TYPES", ids: ["All"] },
   { label: "Bus Shelter", ids: ["bus_shelter_v2"] },
-  { label: "DUP", ids: ["dup"] },
+  { label: "DUP", ids: ["dup", "dup_v2"] },
   { label: "E-Ink: Bus", ids: ["bus_eink", "bus_eink_v2"] },
   {
     label: "E-Ink: Green Line",
