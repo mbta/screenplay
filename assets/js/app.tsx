@@ -46,7 +46,7 @@ const fullstoryOrgId = document
   .querySelector("meta[name=fullstory-org-id]")
   ?.getAttribute("content");
 
-if (fullstoryOrgId && !FullStory.isInitialized()) {
+if (fullstoryOrgId) {
   FullStory.init({ orgId: fullstoryOrgId });
 }
 
