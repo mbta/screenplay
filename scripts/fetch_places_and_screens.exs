@@ -127,6 +127,47 @@ formatted_screens =
 
     {id,
      %{
+       "app_id" => "dup_v2",
+       "app_params" => %{
+         "primary_departures" => %{
+           "sections" => [%{"query" => %{"params" => %{"stop_ids" => primary_stop_ids}}} | _]
+         },
+         "secondary_departures" => %{"sections" => []}
+       }
+     } = stuff} ->
+      primary =
+        Enum.map(primary_stop_ids, fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
+
+      primary
+
+    {id,
+     %{
+       "app_id" => "dup_v2",
+       "app_params" => %{
+         "primary_departures" => %{
+           "sections" => [%{"query" => %{"params" => %{"stop_ids" => primary_stop_ids}}} | _]
+         },
+         "secondary_departures" => %{
+           "sections" => [%{"query" => %{"params" => %{"stop_ids" => secondary_stop_ids}}} | _]
+         }
+       }
+     } = stuff} ->
+      primary =
+        Enum.map(primary_stop_ids, fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
+
+      secondary =
+        Enum.map(secondary_stop_ids, fn stop_id ->
+          {id, Map.put(stuff, "stop", stop_id)}
+        end)
+
+      primary ++ secondary
+
+    {id,
+     %{
        "app_id" => "solari",
        "app_params" => %{
          "sections" => sections
@@ -205,9 +246,10 @@ live_screens =
 
       {_id,
        %{
-         "app_id" => "dup",
+         "app_id" => app_id,
          "stop" => stop_id
-       }} ->
+       }}
+      when app_id in ["dup", "dup_v2"] ->
         stop_id
     end,
     fn
