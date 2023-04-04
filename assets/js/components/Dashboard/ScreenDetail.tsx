@@ -101,7 +101,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
         >
           {translatedScreenType} {getScreenLocation}
         </div>
-        {screens[0].type === "dup" && (
+        {["dup", "dup_v2"].includes(screens[0].type) && (
           <div className="screen-detail__dup-ad-text">
             Cycle in the ad loop for 7.5 seconds every 45 seconds
           </div>
