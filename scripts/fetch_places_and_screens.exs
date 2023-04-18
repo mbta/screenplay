@@ -79,6 +79,16 @@ add_routes_to_stops = fn
     Map.put(stop, :routes, routes)
 end
 
+get_first_not_nil = fn sources ->
+  sources
+  |> Enum.map(fn %{"stop_id" => platform_id} ->
+    platform_to_stop_map[platform_id]
+  end)
+  |> Enum.uniq()
+  |> Enum.reject(&is_nil/1)
+  |> hd()
+end
+
 # Get live config from S3
 {:ok, file} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
 parsed = Jason.decode!(file)
@@ -395,12 +405,25 @@ parsed = signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jaso
 stop_ids =
   parsed
   |> Enum.flat_map(fn
-    %{"source_config" => [both]} ->
-      Enum.map(both, fn %{"stop_id" => stop_id} -> stop_id end)
+    %{"source_config" => %{"sources" => sources}} ->
+      Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
 
-    %{"source_config" => [top, bottom]} ->
-      Enum.map(top, fn %{"stop_id" => stop_id} -> stop_id end) ++
-        Enum.map(bottom, fn %{"stop_id" => stop_id} -> stop_id end)
+    %{"source_config" => [%{"sources" => sources}]} ->
+      Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
+
+    %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
+      Enum.map(top_sources, fn %{"stop_id" => stop_id} -> stop_id end) ++
+        Enum.map(bottom_sources, fn %{"stop_id" => stop_id} -> stop_id end)
+
+    %{"sources" => sources} ->
+      Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
+
+    %{
+      "top_sources" => top_sources,
+      "bottom_sources" => bottom_sources
+    } ->
+      Enum.map(top_sources, fn %{"stop_id" => stop_id} -> stop_id end) ++
+        Enum.map(bottom_sources, fn %{"stop_id" => stop_id} -> stop_id end)
   end)
   |> Enum.uniq()
 
@@ -430,20 +453,24 @@ labels = Jason.decode!(labels)
 pa_ess_screens =
   parsed
   |> Enum.group_by(
-    fn %{"source_config" => source_config} ->
-      case source_config do
-        [both] ->
-          Enum.map(both, fn %{"stop_id" => platform_id} -> platform_to_stop_map[platform_id] end)
+    fn
+      %{"source_config" => %{"sources" => sources}} ->
+        get_first_not_nil.(sources)
 
-        [top, bottom] ->
-          Enum.map(top, fn %{"stop_id" => platform_id} -> platform_to_stop_map[platform_id] end) ++
-            Enum.map(bottom, fn %{"stop_id" => platform_id} ->
-              platform_to_stop_map[platform_id]
-            end)
-      end
-      |> Enum.uniq()
-      |> Enum.reject(&is_nil/1)
-      |> hd()
+      %{"source_config" => [%{"sources" => sources}]} ->
+        get_first_not_nil.(sources)
+
+      %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
+        get_first_not_nil.(top_sources ++ bottom_sources)
+
+      %{"sources" => sources} ->
+        get_first_not_nil.(sources)
+
+      %{
+        "top_sources" => top_sources,
+        "bottom_sources" => bottom_sources
+      } ->
+        get_first_not_nil.(top_sources ++ bottom_sources)
     end,
     fn %{
          "id" => id,
