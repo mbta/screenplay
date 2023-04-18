@@ -79,16 +79,6 @@ add_routes_to_stops = fn
     Map.put(stop, :routes, routes)
 end
 
-get_first_not_nil = fn sources ->
-  sources
-  |> Enum.map(fn %{"stop_id" => platform_id} ->
-    platform_to_stop_map[platform_id]
-  end)
-  |> Enum.uniq()
-  |> Enum.reject(&is_nil/1)
-  |> hd()
-end
-
 # Get live config from S3
 {:ok, file} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
 parsed = Jason.decode!(file)
@@ -445,6 +435,16 @@ platform_to_stop_map =
      ])}
   end)
   |> Enum.into(%{})
+
+get_first_not_nil = fn sources ->
+  sources
+  |> Enum.map(fn %{"stop_id" => platform_id} ->
+    platform_to_stop_map[platform_id]
+  end)
+  |> Enum.uniq()
+  |> Enum.reject(&is_nil/1)
+  |> hd()
+end
 
 {:ok, labels} = File.read("scripts/paess_labels.json")
 labels = Jason.decode!(labels)
