@@ -398,9 +398,6 @@ stop_ids =
     %{"source_config" => %{"sources" => sources}} ->
       Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
 
-    %{"source_config" => [%{"sources" => sources}]} ->
-      Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
-
     %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
       Enum.map(top_sources, fn %{"stop_id" => stop_id} -> stop_id end) ++
         Enum.map(bottom_sources, fn %{"stop_id" => stop_id} -> stop_id end)
@@ -455,9 +452,6 @@ pa_ess_screens =
   |> Enum.group_by(
     fn
       %{"source_config" => %{"sources" => sources}} ->
-        get_first_not_nil.(sources)
-
-      %{"source_config" => [%{"sources" => sources}]} ->
         get_first_not_nil.(sources)
 
       %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
