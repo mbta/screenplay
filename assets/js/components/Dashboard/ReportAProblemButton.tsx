@@ -10,16 +10,15 @@ const ReportAProblemButton = (): JSX.Element => {
     : "https://mbta.slack.com/channels/screens";
 
   return (
-    <div className="report-a-problem-button">
-      <Button
-        data-testid="report-a-problem"
-        href={link}
-        onClick={(e: SyntheticEvent) => e.stopPropagation()}
-        target="_blank"
-      >
-        <FlagFill /> Report a problem
-      </Button>
-    </div>
+    <Button
+      data-testid="report-a-problem"
+      className="report-a-problem-button"
+      href={link}
+      onClick={(e: SyntheticEvent) => e.stopPropagation()}
+      target="_blank"
+    >
+      <FlagFill /> Report a problem
+    </Button>
   );
 };
 
