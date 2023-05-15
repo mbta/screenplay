@@ -47,7 +47,7 @@ const fullstoryOrgId = document
   ?.getAttribute("content");
 
 if (fullstoryOrgId) {
-  FullStory.init({ orgId: fullstoryOrgId });
+  FullStory.init({ orgId: fullstoryOrgId, recordCrossDomainIFrames: true });
 }
 
 ReactDOM.render(<App />, document.getElementById("app"));
