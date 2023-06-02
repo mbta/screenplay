@@ -123,6 +123,8 @@ const ScreenCard = (props: ScreenDetailProps) => {
               <ScreenDetailHeader
                 screen={screen}
                 isMultipleScreens={isMultipleScreens}
+                translatedScreenType={translatedScreenType}
+                screenLocation={getScreenLocation}
               />
               <div
                 className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}

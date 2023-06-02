@@ -7,17 +7,11 @@ import ScreenDetailActionBar from "./ScreenDetailActionBar";
 interface ScreenDetailHeaderProps {
   screen: Screen;
   isMultipleScreens?: boolean;
+  translatedScreenType: string | undefined;
+  screenLocation: string;
 }
 
 const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
-  const translatedScreenType = SCREEN_TYPES.find(({ ids }) =>
-    ids.includes(props.screen.type)
-  )?.label;
-
-  const getScreenLocation = props.screen.location
-    ? `/ ${props.screen.location}`
-    : "";
-
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
     // @ts-ignore Suppressing "object could be null" warning
@@ -43,7 +37,7 @@ const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
   return (
     <div className="screen-detail__header">
       <div className={classNames("screen-detail__screen-type-location")}>
-        {translatedScreenType} {getScreenLocation}
+        {props.translatedScreenType} {props.screenLocation}
         {["dup", "dup_v2"].includes(props.screen.type) && (
           <div className="screen-detail__dup-ad-text">
             Cycle in the ad loop for 7.5 seconds every 45 seconds
