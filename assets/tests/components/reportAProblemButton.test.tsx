@@ -4,7 +4,9 @@ import ReportAProblemButton from "../../js/components/Dashboard/ReportAProblemBu
 
 describe("ReportAProblemButton", () => {
   test("uses correct URL for non-admin users", async () => {
-    const { getByTestId } = render(<ReportAProblemButton />);
+    const { getByTestId } = render(
+      <ReportAProblemButton url={"https://mbta.slack.com/channels/screens"} />
+    );
 
     await waitFor(() =>
       expect(getByTestId("report-a-problem")).toHaveAttribute(
@@ -19,7 +21,11 @@ describe("ReportAProblemButton", () => {
     meta.setAttribute("name", "is-admin");
     document.head.appendChild(meta);
 
-    const { getByTestId } = render(<ReportAProblemButton />);
+    const { getByTestId } = render(
+      <ReportAProblemButton
+        url={"https://mbta.slack.com/channels/screens-team-pios"}
+      />
+    );
 
     await waitFor(() =>
       expect(getByTestId("report-a-problem")).toHaveAttribute(

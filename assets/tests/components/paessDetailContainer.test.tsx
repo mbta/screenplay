@@ -1,5 +1,6 @@
 import React from "react";
 import PaessDetailContainer from "../../js/components/Dashboard/PaessDetailContainer";
+import { ScreenplayProvider } from "../../js/hooks/useScreenplayContext";
 import { render } from "@testing-library/react";
 import { Screen } from "../../js/models/screen";
 
@@ -22,7 +23,11 @@ describe("PaessDetailContainer", () => {
       },
     ];
 
-    const { getByTestId } = render(<PaessDetailContainer screens={screens} />);
+    const { getByTestId } = render(
+      <ScreenplayProvider>
+        <PaessDetailContainer screens={screens} />
+      </ScreenplayProvider>
+    );
 
     expect(getByTestId("paess-col-left")).toBeVisible();
     expect(getByTestId("paess-col-center")).toBeVisible();
@@ -41,7 +46,11 @@ describe("PaessDetailContainer", () => {
       },
     ];
 
-    const { getByText } = render(<PaessDetailContainer screens={screens} />);
+    const { getByText } = render(
+      <ScreenplayProvider>
+        <PaessDetailContainer screens={screens} />
+      </ScreenplayProvider>
+    );
 
     expect(getByText("Test Label")).toBeInTheDocument();
   });
