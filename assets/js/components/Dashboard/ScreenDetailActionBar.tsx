@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useRef, useEffect, useState, SyntheticEvent } from "react";
 import ReportAProblemButton from "./ReportAProblemButton";
 import CopyLinkButton from "./CopyLinkButton";
 import OpenInWindowButton from "./OpenInTabButton";
-import Dropdown from "react-bootstrap/Dropdown";
-import { Button } from "react-bootstrap";
-import { ThreeDotsVertical } from "react-bootstrap-icons";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
-import { Link45deg } from "react-bootstrap-icons";
-import { FlagFill } from "react-bootstrap-icons";
+import { Button, Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Link45deg,
+  FlagFill,
+  BoxArrowUpRight,
+  ThreeDotsVertical,
+} from "react-bootstrap-icons";
+import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
 
 interface ScreenDetailActionBarProps {
   screenUrl: string;
   isPaess?: boolean;
+  isMultipleScreens?: boolean;
 }
 
 type CustomToggleProps = {
@@ -20,40 +23,108 @@ type CustomToggleProps = {
 };
 
 // The forwardRef is important!!
-// Dropdown needs access to the DOM node in order to position the Menu
+// Dropdown needs access to the DOM node in order to position the dropdown menu
 const CustomToggle = React.forwardRef(
   (props: CustomToggleProps, ref: React.Ref<HTMLButtonElement>) => (
-    <Button
-      className="three-dots-vertical-button"
-      href=""
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        props.onClick(e);
-      }}
+    <OverlayTrigger
+      key="bottom"
+      placement="bottom"
+      overlay={<Tooltip>Copy, report and more</Tooltip>}
     >
-      <ThreeDotsVertical className="three-dots-vertical-icon" />
-      {props.children}
-    </Button>
+      <Button
+        className="screen-detail-action-bar-button three-dots-vertical-button"
+        href=""
+        ref={ref}
+        onClick={(e) => {
+          e.preventDefault();
+          props.onClick(e);
+        }}
+      >
+        <ThreeDotsVertical className="three-dots-vertical-button__icon" />
+        {props.children}
+      </Button>
+    </OverlayTrigger>
   )
 );
 
 const ScreenDetailActionBar = (
   props: ScreenDetailActionBarProps
 ): JSX.Element => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useScreenplayDispatchContext();
+
+  // For handling clicking outside of the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const queueToastExpiration = () => {
+    setTimeout(
+      () =>
+        dispatch({
+          type: "SHOW_LINK_COPIED",
+          showLinkCopied: false,
+        }),
+      5000
+    );
+  };
+
+  const isAdmin = document.querySelector("meta[name=is-admin]");
+
+  const adminLink = isAdmin
+    ? "https://mbta.slack.com/channels/screens-team-pios"
+    : "https://mbta.slack.com/channels/screens";
+
   let actionBar;
-  if (props.isPaess) {
+
+  if (props.isPaess || props.isMultipleScreens) {
     actionBar = (
-      <Dropdown className="three-dots-vertical-dropdown">
-        <Dropdown.Toggle as={CustomToggle} />
+      <Dropdown
+        className="three-dots-vertical-dropdown"
+        show={isOpen}
+        ref={dropdownRef}
+        drop={"down"}
+      >
+        <Dropdown.Toggle as={CustomToggle} onClick={() => setIsOpen(!isOpen)} />
         <Dropdown.Menu>
-          <Dropdown.Item href="#/action-1">
-            <BoxArrowUpRight className="open-in-tab-icon" /> Open in new tab
+          <Dropdown.Item
+            className="three-dots-vertical-dropdown__item"
+            href={props.screenUrl}
+            target="_blank"
+            onClick={(e: SyntheticEvent) => e.stopPropagation()}
+          >
+            <BoxArrowUpRight className="open-in-tab-button__icon" /> Open in new
+            tab
           </Dropdown.Item>
-          <Dropdown.Item href="#/action-2">
-            <Link45deg className="copy-link-icon" /> Copy link
+          <Dropdown.Item
+            className="three-dots-vertical-dropdown__item"
+            onClick={() => {
+              navigator.clipboard.writeText(props.screenUrl);
+              dispatch({ type: "SHOW_LINK_COPIED", showLinkCopied: true });
+              queueToastExpiration();
+            }}
+          >
+            <Link45deg className="copy-link-button__icon" /> Copy link
           </Dropdown.Item>
-          <Dropdown.Item href="#/action-3">
+          <Dropdown.Item
+            className="three-dots-vertical-dropdown__item"
+            href={adminLink}
+            onClick={(e: SyntheticEvent) => e.stopPropagation()}
+            target="_blank"
+          >
             <FlagFill /> Report a problem
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -63,8 +134,11 @@ const ScreenDetailActionBar = (
     actionBar = (
       <div>
         <OpenInWindowButton url={props.screenUrl} />
-        <CopyLinkButton url={props.screenUrl} />
-        <ReportAProblemButton />
+        <CopyLinkButton
+          url={props.screenUrl}
+          queueToastExpiration={queueToastExpiration}
+        />
+        <ReportAProblemButton url={adminLink} />
       </div>
     );
   }

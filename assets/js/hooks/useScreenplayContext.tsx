@@ -35,6 +35,10 @@ type ReducerAction =
   | {
       type: "SET_BANNER_ALERT";
       bannerAlert: BannerAlert | undefined;
+    }
+  | {
+      type: "SHOW_LINK_COPIED";
+      showLinkCopied: boolean;
     };
 
 type AlertsListReducerAction = {
@@ -86,6 +90,7 @@ interface ScreenplayState {
   allAPIAlertIds: string[];
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
+  showLinkCopied: boolean;
 }
 
 const reducer = (state: ScreenplayState, action: ReducerAction) => {
@@ -103,6 +108,11 @@ const reducer = (state: ScreenplayState, action: ReducerAction) => {
       return {
         ...state,
         bannerAlert: action.bannerAlert,
+      };
+    case "SHOW_LINK_COPIED":
+      return {
+        ...state,
+        showLinkCopied: action.showLinkCopied,
       };
     default:
       throw new Error();
@@ -182,6 +192,7 @@ const initialState: ScreenplayState = {
   allAPIAlertIds: [] as string[],
   screensByAlertMap: {} as ScreensByAlert,
   bannerAlert: undefined,
+  showLinkCopied: false,
 };
 
 const initialPlacesListState: PlacesListState = {

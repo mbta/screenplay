@@ -1,14 +1,16 @@
-import React, { SyntheticEvent } from "react";
-import { Button } from "react-bootstrap";
+import React from "react";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link45deg } from "react-bootstrap-icons";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
+import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
 
 interface CopyLinkButtonProps {
   url: string;
+  queueToastExpiration: () => void;
 }
 
 const CopyLinkButton = (props: CopyLinkButtonProps): JSX.Element => {
+  const dispatch = useScreenplayDispatchContext();
+
   return (
     <OverlayTrigger
       key="bottom"
@@ -17,12 +19,14 @@ const CopyLinkButton = (props: CopyLinkButtonProps): JSX.Element => {
     >
       <Button
         data-testid="copy-link-button"
-        className="copy-link-button"
+        className="screen-detail-action-bar-button copy-link-button"
         onClick={() => {
           navigator.clipboard.writeText(props.url);
+          dispatch({ type: "SHOW_LINK_COPIED", showLinkCopied: true });
+          props.queueToastExpiration();
         }}
       >
-        <Link45deg className="copy-link-icon" />
+        <Link45deg className="copy-link-button__icon" />
       </Button>
     </OverlayTrigger>
   );
