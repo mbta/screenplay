@@ -104,6 +104,7 @@
     min-height: 100px;
     display: flex;
     justify-content: center;
+    padding-bottom: 20px;
   }
 
   &--solari {
@@ -164,9 +165,11 @@
 
 .screen-detail__dup-ad-text {
   font-size: 14px;
+  font-weight: normal;
   line-height: 17px;
   color: rgba(255, 255, 255, 0.6);
   text-align: right;
   flex-grow: 2;
+  margin-top: 12px;
   margin-right: 16px;
 }

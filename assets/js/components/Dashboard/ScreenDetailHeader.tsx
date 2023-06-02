@@ -6,6 +6,7 @@ import ScreenDetailActionBar from "./ScreenDetailActionBar";
 
 interface ScreenDetailHeaderProps {
   screen: Screen;
+  isMultipleScreens?: boolean;
 }
 
 const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
@@ -49,9 +50,10 @@ const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
           </div>
         )}
       </div>
-      <div className="screen-detail__report-a-problem-button">
-        <ScreenDetailActionBar screenUrl={generateSource(props.screen)} />
-      </div>
+      <ScreenDetailActionBar
+        screenUrl={generateSource(props.screen)}
+        isMultipleScreens={props.isMultipleScreens}
+      />
     </div>
   );
 };

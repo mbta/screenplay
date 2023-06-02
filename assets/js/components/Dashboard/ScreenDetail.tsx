@@ -8,15 +8,22 @@ import classNames from "classnames";
 interface ScreenDetailProps {
   screens: Screen[];
   isOpen: boolean;
+  isMultipleScreens?: boolean;
 }
 
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   const isSolari = props.screens.every((screen) => screen.type === "solari");
+  const isMultipleScreens = props.screens.length > 1;
 
   return isSolari ? (
     <div className="screen-detail__solari-layout">
       {props.screens.map((screens, index) => (
-        <ScreenCard {...props} key={index} screens={[screens]} />
+        <ScreenCard
+          {...props}
+          key={index}
+          screens={[screens]}
+          isMultipleScreens={isMultipleScreens}
+        />
       ))}
     </div>
   ) : (
@@ -25,7 +32,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 };
 
 const ScreenCard = (props: ScreenDetailProps) => {
-  const { screens, isOpen } = props;
+  const { screens, isOpen, isMultipleScreens } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
   const isSolari = screens.every((screen) => screen.type === "solari");
   const paessRouteLetter = screens[0].station_code
@@ -112,10 +119,12 @@ const ScreenCard = (props: ScreenDetailProps) => {
           </div>
         ) : (
           screens.map((screen) => (
-            <div>
-              <ScreenDetailHeader screen={screen} />
+            <div key={screen.id}>
+              <ScreenDetailHeader
+                screen={screen}
+                isMultipleScreens={isMultipleScreens}
+              />
               <div
-                key={screen.id}
                 className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
               >
                 <iframe

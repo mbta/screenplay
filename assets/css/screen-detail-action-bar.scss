@@ -1,22 +1,45 @@
 .three-dots-vertical-dropdown {
   float: right;
+
+  &__item {
+    background-color: $gray-700;
+    color: white;
+
+    &:hover {
+      background-color: $gray-800;
+      color: white;
+    }
+
+    &:focus {
+      background-color: $gray-700;
+      color: white;
+    }
+  }
 }
 
-.three-dots-vertical-button {
+.screen-detail-action-bar-button {
   border-radius: 6px;
   background-color: $gray-700;
   border: 1px solid rgba(23, 31, 38, 0.3);
   height: 36px;
-  width: 36px;
-  margin-right: 8px;
-  margin-left: 8px;
-  float: right;
 
   &:hover {
     background-color: $gray-800;
   }
 
-  .three-dots-vertical-icon {
+  &:focus {
+    background-color: $gray-700;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.three-dots-vertical-button {
+  width: 36px;
+  margin-left: 8px;
+  float: right;
+
+  &__icon {
     position: relative;
     right: 2px;
     bottom: 2px;
@@ -24,19 +47,11 @@
 }
 
 .open-in-tab-button {
-  border-radius: 6px;
-  background-color: $gray-700;
-  border: 1px solid rgba(23, 31, 38, 0.3);
-  height: 36px;
   width: 36px;
   margin-right: 8px;
   margin-left: 8px;
 
-  &:hover {
-    background-color: $gray-800;
-  }
-
-  .open-in-tab-icon {
+  &__icon {
     position: relative;
     right: 2px;
     bottom: 2px;
@@ -44,19 +59,11 @@
 }
 
 .copy-link-button {
-  border-radius: 6px;
-  background-color: $gray-700;
-  border: 1px solid rgba(23, 31, 38, 0.3);
-  height: 36px;
   width: 36px;
   margin-right: 8px;
   margin-left: 8px;
 
-  &:hover {
-    background-color: $gray-800;
-  }
-
-  .copy-link-icon {
+  &__icon {
     vertical-align: bottom;
     position: relative;
     right: 6px;
@@ -65,15 +72,35 @@
 }
 
 .report-a-problem-button {
-  border-radius: 6px;
-  background-color: $gray-700;
-  border: 1px solid rgba(23, 31, 38, 0.3);
   height: 36px;
   padding: 6px 16px;
   font-size: 16px;
   font-weight: 500;
   margin-left: 8px;
-  &:hover {
-    background-color: $gray-800;
+}
+
+.dropdown-menu {
+  background-color: $gray-700;
+}
+
+.link-copied-toast {
+  background-color: #165c96;
+  color: white;
+  width: 400px;
+  height: 56px;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 4px;
+  margin-top: 36px;
+  font-size: 16px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+
+  &__icon {
+    position: relative;
+    bottom: 2px;
+    font-size: large;
+    opacity: 60%;
   }
 }
