@@ -19,7 +19,7 @@ interface ScreenDetailActionBarProps {
 
 type CustomToggleProps = {
   children?: React.ReactNode;
-  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {};
+  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => unknown;
 };
 
 // The forwardRef is important!!

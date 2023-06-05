@@ -1,7 +1,6 @@
 import React from "react";
 import classNames from "classnames";
 import { Screen } from "../../models/screen";
-import { SCREEN_TYPES } from "../../constants/constants";
 import ScreenDetailActionBar from "./ScreenDetailActionBar";
 
 interface ScreenDetailHeaderProps {
