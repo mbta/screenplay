@@ -103,11 +103,13 @@ const ScreenCard = (props: ScreenDetailProps) => {
           <div>
             <div className="screen-detail__header">
               <div
-                className={classNames("screen-detail__screen-type-location", {
-                  "screen-detail__screen-type-location--paess-s":
-                    isPaess && paessRouteLetter == "s",
-                  "screen-detail__screen-type-location--paess": isPaess,
-                })}
+                className={classNames(
+                  "screen-detail__screen-type-location screen-detail__screen-type-location--paess",
+                  {
+                    "screen-detail__screen-type-location--paess-s":
+                      paessRouteLetter == "s",
+                  }
+                )}
               >
                 {translatedScreenType} {getScreenLocation}
               </div>

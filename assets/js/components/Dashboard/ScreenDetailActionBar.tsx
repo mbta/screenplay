@@ -13,8 +13,7 @@ import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
 
 interface ScreenDetailActionBarProps {
   screenUrl: string;
-  isPaess?: boolean;
-  isMultipleScreens?: boolean;
+  isCollapsed?: boolean;
 }
 
 type CustomToggleProps = {
@@ -90,7 +89,7 @@ const ScreenDetailActionBar = (
 
   let actionBar;
 
-  if (props.isPaess || props.isMultipleScreens) {
+  if (props.isCollapsed) {
     actionBar = (
       <Dropdown
         className="three-dots-vertical-dropdown"

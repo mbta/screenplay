@@ -37,7 +37,10 @@ const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
     <div>
       <div className="paess__sign-label">
         {props.label ?? getZoneLabel(props.zone)}
-        <ScreenDetailActionBar screenUrl={generateSource()} isPaess={true} />
+        <ScreenDetailActionBar
+          screenUrl={generateSource()}
+          isCollapsed={true}
+        />
       </div>
       <iframe
         className="screen-detail__iframe screen-detail__iframe--pa_ess"

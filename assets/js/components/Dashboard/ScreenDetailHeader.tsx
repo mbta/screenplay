@@ -45,7 +45,7 @@ const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
       </div>
       <ScreenDetailActionBar
         screenUrl={generateSource(props.screen)}
-        isMultipleScreens={props.isMultipleScreens}
+        isCollapsed={props.isMultipleScreens}
       />
     </div>
   );
