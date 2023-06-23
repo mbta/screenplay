@@ -3,6 +3,7 @@ import { fireEvent, render } from "@testing-library/react";
 import PlaceRow from "../../js/components/Dashboard/PlaceRow";
 import { Accordion } from "react-bootstrap";
 import { Place } from "../../js/models/place";
+import { ScreenplayProvider } from "../../js/hooks/useScreenplayContext";
 
 beforeAll(() => {
   const app = document.createElement("div");
@@ -27,14 +28,16 @@ describe("PlaceRow", () => {
     const handleClick = jest.fn();
 
     const { getByTestId, getByAltText, queryByAltText } = render(
-      <Accordion>
-        <PlaceRow
-          place={place}
-          eventKey="0"
-          onClick={handleClick}
-          defaultSort
-        />
-      </Accordion>
+      <ScreenplayProvider>
+        <Accordion>
+          <PlaceRow
+            place={place}
+            eventKey="0"
+            onClick={handleClick}
+            defaultSort
+          />
+        </Accordion>
+      </ScreenplayProvider>
     );
 
     expect(getByTestId("place-row").className).toBe("place-row");

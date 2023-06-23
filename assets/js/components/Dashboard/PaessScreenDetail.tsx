@@ -1,4 +1,5 @@
 import * as React from "react";
+import ScreenDetailActionBar from "./ScreenDetailActionBar";
 
 interface PaessScreenDetailProps {
   stationCode: string;
@@ -36,6 +37,10 @@ const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
     <div>
       <div className="paess__sign-label">
         {props.label ?? getZoneLabel(props.zone)}
+        <ScreenDetailActionBar
+          screenUrl={generateSource()}
+          isCollapsed={true}
+        />
       </div>
       <iframe
         className="screen-detail__iframe screen-detail__iframe--pa_ess"

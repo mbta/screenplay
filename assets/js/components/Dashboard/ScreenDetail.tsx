@@ -1,6 +1,6 @@
 import React, { SyntheticEvent } from "react";
 import { Screen } from "../../models/screen";
-import ReportAProblemButton from "./ReportAProblemButton";
+import ScreenDetailHeader from "./ScreenDetailHeader";
 import { SCREEN_TYPES } from "../../constants/constants";
 import PaessDetailContainer from "./PaessDetailContainer";
 import classNames from "classnames";
@@ -8,15 +8,22 @@ import classNames from "classnames";
 interface ScreenDetailProps {
   screens: Screen[];
   isOpen: boolean;
+  isMultipleScreens?: boolean;
 }
 
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
   const isSolari = props.screens.every((screen) => screen.type === "solari");
+  const isMultipleScreens = props.screens.length > 1;
 
   return isSolari ? (
     <div className="screen-detail__solari-layout">
       {props.screens.map((screens, index) => (
-        <ScreenCard {...props} key={index} screens={[screens]} />
+        <ScreenCard
+          {...props}
+          key={index}
+          screens={[screens]}
+          isMultipleScreens={isMultipleScreens}
+        />
       ))}
     </div>
   ) : (
@@ -25,7 +32,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 };
 
 const ScreenCard = (props: ScreenDetailProps) => {
-  const { screens, isOpen } = props;
+  const { screens, isOpen, isMultipleScreens } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
   const isSolari = screens.every((screen) => screen.type === "solari");
   const paessRouteLetter = screens[0].station_code
@@ -91,44 +98,45 @@ const ScreenCard = (props: ScreenDetailProps) => {
       })}
       onClick={(e: SyntheticEvent) => e.stopPropagation()}
     >
-      <div className="screen-detail__header">
-        <div
-          className={classNames("screen-detail__screen-type-location", {
-            "screen-detail__screen-type-location--paess-s":
-              isPaess && paessRouteLetter == "s",
-            "screen-detail__screen-type-location--paess": isPaess,
-          })}
-        >
-          {translatedScreenType} {getScreenLocation}
-        </div>
-        {["dup", "dup_v2"].includes(screens[0].type) && (
-          <div className="screen-detail__dup-ad-text">
-            Cycle in the ad loop for 7.5 seconds every 45 seconds
-          </div>
-        )}
-        {!isPaess && (
-          <div className="screen-detail__report-a-problem-button">
-            <ReportAProblemButton />
-          </div>
-        )}
-      </div>
       {isOpen &&
         (isPaess ? (
-          <PaessDetailContainer
-            key={screens[0].station_code}
-            screens={screens}
-          ></PaessDetailContainer>
+          <div>
+            <div className="screen-detail__header">
+              <div
+                className={classNames(
+                  "screen-detail__screen-type-location screen-detail__screen-type-location--paess",
+                  {
+                    "screen-detail__screen-type-location--paess-s":
+                      paessRouteLetter == "s",
+                  }
+                )}
+              >
+                {translatedScreenType} {getScreenLocation}
+              </div>
+            </div>
+            <PaessDetailContainer
+              key={screens[0].station_code}
+              screens={screens}
+            ></PaessDetailContainer>
+          </div>
         ) : (
           screens.map((screen) => (
-            <div
-              key={screen.id}
-              className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
-            >
-              <iframe
-                className={`screen-detail__iframe screen-detail__iframe--${screen.type}`}
-                title={screen.id}
-                src={generateSource(screen)}
+            <div key={screen.id}>
+              <ScreenDetailHeader
+                screen={screen}
+                isMultipleScreens={isMultipleScreens}
+                translatedScreenType={translatedScreenType}
+                screenLocation={getScreenLocation}
               />
+              <div
+                className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
+              >
+                <iframe
+                  className={`screen-detail__iframe screen-detail__iframe--${screen.type}`}
+                  title={screen.id}
+                  src={generateSource(screen)}
+                />
+              </div>
             </div>
           ))
         ))}

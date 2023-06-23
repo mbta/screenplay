@@ -1,0 +1,118 @@
+.three-dots-vertical-dropdown {
+  float: right;
+
+  &__item {
+    background-color: $gray-700;
+    color: white;
+    padding-right: 20px;
+    padding-left: 20px;
+
+    &:hover {
+      background-color: $gray-800;
+      color: white;
+    }
+
+    &:focus {
+      background-color: $gray-700;
+      color: white;
+    }
+  }
+}
+
+.screen-detail-action-bar-button {
+  border-radius: 6px;
+  background-color: $gray-700;
+  border: 1px solid rgba(23, 31, 38, 0.3);
+  height: 36px;
+
+  &:hover {
+    background-color: $gray-800;
+  }
+
+  &:focus {
+    background-color: $gray-700;
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.three-dots-vertical-button {
+  width: 36px;
+  margin-left: 8px;
+  float: right;
+
+  &__icon {
+    position: relative;
+    right: 3px;
+    bottom: 2px;
+  }
+}
+
+.open-in-tab-button {
+  width: 36px;
+  margin-right: 8px;
+  margin-left: 8px;
+
+  &__icon {
+    position: relative;
+    right: 2px;
+    bottom: 2px;
+    margin-right: 8px;
+  }
+}
+
+.copy-link-button {
+  width: 36px;
+  margin-right: 8px;
+  margin-left: 8px;
+
+  &__icon {
+    vertical-align: bottom;
+    position: relative;
+    right: 7px;
+    font-size: x-large;
+  }
+}
+
+.report-a-problem-button {
+  height: 36px;
+  padding: 6px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-left: 8px;
+
+  &__icon {
+    margin-right: 8px;
+    position: relative;
+    right: 4px;
+  }
+}
+
+.dropdown-menu {
+  background-color: $gray-700;
+}
+
+.link-copied-toast {
+  background-color: #165c96;
+  color: white;
+  width: 400px;
+  height: 56px;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 4px;
+  margin-top: 36px;
+  font-size: 16px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+  border: none;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.36);
+
+  &__icon {
+    position: relative;
+    bottom: 2px;
+    font-size: 24px;
+    opacity: 60%;
+    margin-right: 6px;
+  }
+}
