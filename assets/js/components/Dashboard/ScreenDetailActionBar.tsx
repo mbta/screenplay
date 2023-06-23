@@ -124,7 +124,8 @@ const ScreenDetailActionBar = (
             onClick={(e: SyntheticEvent) => e.stopPropagation()}
             target="_blank"
           >
-            <FlagFill /> Report a problem
+            <FlagFill className="report-a-problem-button__icon" /> Report a
+            problem
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
