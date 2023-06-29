@@ -98,7 +98,7 @@ const ScreenDetailActionBar = (
         drop={"down"}
       >
         <Dropdown.Toggle as={CustomToggle} onClick={() => setIsOpen(!isOpen)} />
-        <Dropdown.Menu>
+        <Dropdown.Menu className="three-dots-vertical-dropdown__menu">
           <Dropdown.Item
             className="three-dots-vertical-dropdown__item"
             href={props.screenUrl}

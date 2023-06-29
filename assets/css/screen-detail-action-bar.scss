@@ -1,6 +1,10 @@
 .three-dots-vertical-dropdown {
   float: right;
 
+  &__menu {
+    background-color: $gray-700;
+  }
+
   &__item {
     background-color: $gray-700;
     color: white;
@@ -86,10 +90,6 @@
     position: relative;
     right: 4px;
   }
-}
-
-.dropdown-menu {
-  background-color: $gray-700;
 }
 
 .link-copied-toast {
