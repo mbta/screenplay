@@ -119,9 +119,12 @@
     // so height adjusted to fit
     width: 100%;
 
-    &--bus_shelter_v2,
-    &--pre_fare_v2 {
+    &--bus_shelter_v2 {
       height: 379px;
+    }
+
+    &--pre_fare_v2 {
+      height: 470px;
     }
 
     &--bus_eink_v2,
