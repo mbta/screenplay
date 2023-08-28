@@ -396,22 +396,21 @@ stop_ids =
   parsed
   |> Enum.flat_map(fn
     %{"source_config" => %{"sources" => sources}} ->
-      Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
+      sources
 
     %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
-      Enum.map(top_sources, fn %{"stop_id" => stop_id} -> stop_id end) ++
-        Enum.map(bottom_sources, fn %{"stop_id" => stop_id} -> stop_id end)
+      top_sources ++ bottom_sources
 
     %{"sources" => sources} ->
-      Enum.map(sources, fn %{"stop_id" => stop_id} -> stop_id end)
+      sources
 
     %{
       "top_sources" => top_sources,
       "bottom_sources" => bottom_sources
     } ->
-      Enum.map(top_sources, fn %{"stop_id" => stop_id} -> stop_id end) ++
-        Enum.map(bottom_sources, fn %{"stop_id" => stop_id} -> stop_id end)
+      top_sources ++ bottom_sources
   end)
+  |> Enum.map(fn %{"stop_id" => stop_id} -> stop_id end)
   |> Enum.uniq()
 
 params = URI.encode_query(%{"filter[id]" => Enum.join(stop_ids, ",")})
