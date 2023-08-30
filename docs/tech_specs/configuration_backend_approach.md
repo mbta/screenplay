@@ -105,3 +105,7 @@ The approach I recommend is number 2, the library approach. This approach requir
 While the git dependency would be the lowest hanging fruit in achieving our goal, we will lack the ability to maintain any boundaries between Screenplay and Screens which isn’t what we want since the majority of Screens code will not be needed by Screenplay.
 
 The library approach is a familiar and well supported method and achieves our needs in a way that lets us mark clear boundaries between the applications. While this approach will introduce some level of overhead in maintaining dependencies, it also gives us flexibility if we need it.
+
+# Selected Approach
+
+After discussion, we've decided to go with a mixture of two approaches. We will separate out the config code into its own Github repository but use the git dependency approach to import the code to Screens and Screenplay. This achieves the benefits of the library approach while allowing us to skip publishing a package to Hex.
