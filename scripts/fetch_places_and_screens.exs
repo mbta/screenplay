@@ -246,6 +246,13 @@ live_screens =
 
       {_id,
        %{
+         "app_id" => "triptych_v2",
+         "app_params" => %{"train_crowding" => %{"station_id" => stop_id}}
+       }} ->
+        stop_id
+
+      {_id,
+       %{
          "app_id" => app_id,
          "stop" => stop_id
        }}
