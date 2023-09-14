@@ -55,6 +55,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     bus_eink: "Bus E-Ink",
     bus_eink_v2: "Bus E-Ink",
     solari: "Solari",
+    triptych_v2: "Triptych",
   };
 
   const sortScreens = (screenList: Screen[] = screens) => {
@@ -68,6 +69,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       "gl_eink_double",
       "gl_eink_v2",
       "pre_fare_v2",
+      "triptych_v2",
       "solari",
       "pa_ess",
     ];
