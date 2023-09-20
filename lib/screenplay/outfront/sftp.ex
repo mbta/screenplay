@@ -110,13 +110,21 @@ defmodule Screenplay.Outfront.SFTP do
     user = Application.get_env(:screenplay, :outfront_sftp_user)
     key = Application.get_env(:screenplay, :outfront_ssh_key)
 
+    if is_binary?(key) and String.length(key) > 0 do
+      Logger.info("Outfront SSH key is a valid string")
+    else
+      Logger.info("Outfront SSH key is not a string as expected: #{key}")
+    end
+
     case sftp_client_module().connect(
            host: host,
            user: user,
            key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
          ) do
       {:ok, sftp_conn} -> sftp_conn
-      {:error, _error} -> start_connection(retry - 1)
+      {:error, error} ->
+        Logger.error("[sftp_connection_error] #{error}")
+        start_connection(retry - 1)
     end
   end
 
