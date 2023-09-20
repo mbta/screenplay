@@ -110,7 +110,7 @@ defmodule Screenplay.Outfront.SFTP do
     user = Application.get_env(:screenplay, :outfront_sftp_user)
     key = Application.get_env(:screenplay, :outfront_ssh_key)
 
-    if is_binary?(key) and String.length(key) > 0 do
+    if is_binary(key) and String.length(key) > 0 do
       Logger.info("Outfront SSH key is a valid string")
     else
       Logger.info("Outfront SSH key is not a string as expected: #{key}")
