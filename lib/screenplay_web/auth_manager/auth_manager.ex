@@ -3,6 +3,8 @@ defmodule ScreenplayWeb.AuthManager do
 
   use Guardian, otp_app: :screenplay
 
+  require Logger
+
   @type access_level :: :none | :read_only | :admin
 
   @screenplay_admin_group "screenplay-admin"
@@ -25,6 +27,8 @@ defmodule ScreenplayWeb.AuthManager do
 
   @spec claims_access_level(Guardian.Token.claims()) :: access_level()
   def claims_access_level(%{"groups" => groups}) do
+    Logger.info("[claims_access_level] groups=#{Enum.join(groups, ",")}")
+
     if not is_nil(groups) and @screenplay_admin_group in groups do
       :admin
     else
@@ -33,6 +37,7 @@ defmodule ScreenplayWeb.AuthManager do
   end
 
   def claims_access_level(_claims) do
+    Logger.info("[claims_access_level no groups]")
     :read_only
   end
 end
