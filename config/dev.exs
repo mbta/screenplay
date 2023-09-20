@@ -84,5 +84,5 @@ config :screenplay,
 
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: {Screenplay.Ueberauth.Strategy.Fake, [groups: ["screenplay-admin"]]}
+    cognito: {Screenplay.Ueberauth.Strategy.Fake, [groups: ["screenplay"]]}
   ]
