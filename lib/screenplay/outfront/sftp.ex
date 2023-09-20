@@ -121,9 +121,11 @@ defmodule Screenplay.Outfront.SFTP do
            user: user,
            key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
          ) do
-      {:ok, sftp_conn} -> sftp_conn
+      {:ok, sftp_conn} ->
+        sftp_conn
+
       {:error, error} ->
-        Logger.error("[sftp_connection_error] #{error}")
+        Logger.error("[sftp_connection_error] #{inspect(error)}")
         start_connection(retry - 1)
     end
   end
