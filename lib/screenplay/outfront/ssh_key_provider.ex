@@ -67,7 +67,7 @@ defmodule Screenplay.Outfront.SSHKeyProvider do
              :private,
              algorithm,
              key_contents,
-             ""
+             :ignore
            ),
          {decoded_key, _} <- List.first(decoded_keys) do
       {:ok, decoded_key}
