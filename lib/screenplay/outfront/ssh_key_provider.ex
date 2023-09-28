@@ -25,39 +25,54 @@ defmodule Screenplay.Outfront.SSHKeyProvider do
   end
 
   @impl true
-  def user_key(_algorithm, opts) do
+  def user_key(algorithm, opts) do
     provider_opts = opts[:key_cb_private]
 
-    pem_entry =
-      case provider_opts[:private_key] do
-        nil ->
-          Logger.error("No private key provided")
-          {:error, "No private key provided"}
+    case provider_opts[:private_key] do
+      nil ->
+        Logger.error("No private key provided")
+        {:error, "No private key provided"}
 
-        private_key ->
-          private_key
-          |> :public_key.pem_decode()
-          |> List.first()
-          |> case do
-            nil ->
-              Logger.error("Unable to decode key")
-              {:error, "Unable to decode key"}
+      private_key ->
+        private_key
+        |> :public_key.pem_decode()
+        |> List.first()
+        |> case do
+          nil ->
+            Logger.error("Unable to decode key")
+            {:error, "Unable to decode key"}
 
-            {_type, _key, :not_encrypted} = entry ->
-              {:ok, entry}
+          {{_, :new_openssh}, _key, _} ->
+            decode_new_openssh_private_key_contents(
+              private_key,
+              algorithm
+            )
 
-            _ ->
-              Logger.error("Passphrase required for provided key")
-              {:error, "Passphrase required for provided key"}
-          end
-      end
+          {_type, _key, :not_encrypted} = entry ->
+            {:ok, :public_key.pem_entry_decode(entry)}
 
-    case pem_entry do
-      {:ok, entry} ->
-        {:ok, :public_key.pem_entry_decode(entry)}
+          _ ->
+            Logger.error("Passphrase required for provided key")
+            {:error, "Passphrase required for provided key"}
+        end
+    end
+  end
 
-      error ->
-        error
+  defp decode_new_openssh_private_key_contents(
+         key_contents,
+         algorithm
+       ) do
+    with {:ok, decoded_keys} <-
+           :ssh_file.decode_ssh_file(
+             :private,
+             algorithm,
+             key_contents,
+             :ignore
+           ),
+         {decoded_key, _} <- List.first(decoded_keys) do
+      {:ok, decoded_key}
+    else
+      _result -> {:error, 'Unable to decode key'}
     end
   end
 end
