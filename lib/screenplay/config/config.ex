@@ -1,4 +1,4 @@
-defmodule Screenplay.Config.Config do
+defmodule Screenplay.Config.PermanentConfig do
   @moduledoc false
 
   def add_new_screen do
