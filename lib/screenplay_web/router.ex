@@ -96,6 +96,20 @@ defmodule ScreenplayWeb.Router do
     get("/past_alerts", AlertController, :past_alerts)
   end
 
+  scope "/config", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :api,
+      :browser,
+      :auth,
+      :ensure_auth
+    ])
+
+    post("/add", ConfigController, :add)
+    post("/edit", ConfigController, :edit)
+    post("/delete", ConfigController, :delete)
+  end
+
   # Enables LiveDashboard only for development
   #
   # If you want to use the LiveDashboard in production, you should put
