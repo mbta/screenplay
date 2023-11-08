@@ -18,7 +18,7 @@ defmodule Screenplay.Config.S3Fetch do
     end
   end
 
-  def get_screens_config() do
+  def get_screens_config do
     with {:ok, screens_contents, etag} <- do_get(:screens),
          {:ok, screens_json} <- Jason.decode(screens_contents) do
       {:ok, screens_json, etag}

@@ -32,12 +32,14 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   defp get_current_config(etag) do
-    with {:ok, config, current_etag} <- S3Fetch.get_screens_config() do
-      if etag == current_etag,
-        do: {:ok, config},
-        else: :error
-    else
-      _ -> :error
+    case S3Fetch.get_screens_config() do
+      {:ok, config, current_etag} ->
+        if etag == current_etag,
+          do: {:ok, config},
+          else: :error
+
+      _ ->
+        :error
     end
   end
 end
