@@ -1,0 +1,19 @@
+.button-image {
+  height: 268px;
+  border-radius: 16px;
+  background: #2b3741;
+  border-color: transparent;
+  min-width: 306px;
+  min-height: 260px;
+
+  &:hover {
+    background: #2e3f4d;
+    border-color: transparent;
+  }
+
+  &__image-container {
+    max-height: 200px;
+    margin-top: 10px;
+    margin-bottom: 16px;
+  }
+}
