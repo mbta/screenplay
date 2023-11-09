@@ -15,9 +15,6 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  def edit_screen do
-  end
-
   @spec delete_screen(binary(), binary()) :: :error | :ok
   def delete_screen(screen_id, etag) do
     case get_current_config(etag) do
@@ -33,7 +30,8 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_config(etag) do
     case S3Fetch.get_screens_config() do
-      {:ok, config, ^etag} -> {:ok, config}
+      {:ok, config, ^etag} ->
+        {:ok, config}
 
       _ ->
         :error

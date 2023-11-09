@@ -106,7 +106,6 @@ defmodule ScreenplayWeb.Router do
     ])
 
     post("/add", ConfigController, :add)
-    post("/edit", ConfigController, :edit)
     post("/delete", ConfigController, :delete)
   end
 

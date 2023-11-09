@@ -13,11 +13,6 @@ defmodule ScreenplayWeb.ConfigController do
     end
   end
 
-  def edit(conn, _params) do
-    PermanentConfig.edit_screen()
-    conn
-  end
-
   def delete(conn, %{"screen_id" => screen_id, "etag" => etag}) do
     case PermanentConfig.delete_screen(screen_id, etag) do
       :ok ->
