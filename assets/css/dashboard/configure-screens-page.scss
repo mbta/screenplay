@@ -1,0 +1,36 @@
+.configure-screens-page {
+  display: flex;
+  flex-direction: column;
+  color: $text-primary;
+  background: #0f1417;
+  min-height: 100vh;
+
+  .navbar-dark {
+    background: $cool-gray-15;
+
+    .navbar-brand {
+      color: $text-primary;
+    }
+  }
+
+  .select-screen-type {
+    max-width: 1320px;
+
+    &__title {
+      width: fit-content;
+      font-weight: 700;
+      font-size: 28px;
+    }
+
+    .row {
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .col {
+      width: fit-content;
+      max-width: 306px;
+    }
+  }
+}
