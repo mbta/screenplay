@@ -1,19 +1,23 @@
-.button-image {
-  height: 268px;
-  border-radius: 16px;
-  background: #2b3741;
-  border-color: transparent;
-  min-width: 306px;
-  min-height: 260px;
+.button-image-container {
+  display: flex;
 
-  &:hover {
-    background: $cool-gray-30;
+  .button-image {
+    display: flex;
+    flex-direction: column;
+    height: 268px;
+    border-radius: 16px;
+    background: #2b3741;
     border-color: transparent;
-  }
+    flex: 1 1 306px;
 
-  &__image-container {
-    max-height: 200px;
-    margin-top: 10px;
-    margin-bottom: 16px;
+    &:hover {
+      background: $cool-gray-30;
+      border-color: transparent;
+    }
+
+    &__image-container {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
   }
 }

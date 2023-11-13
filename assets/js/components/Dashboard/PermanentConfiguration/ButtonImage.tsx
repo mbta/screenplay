@@ -12,12 +12,14 @@ const ButtonImage: ComponentType<ButtonImageProps> = (
 ) => {
   const { fileName, label, onClick } = props;
   return (
-    <Button className="button-image" onClick={onClick}>
-      <div className="button-image__image-container">
-        <img alt="" src={`/images/${fileName}`} />
-      </div>
-      <div>{label}</div>
-    </Button>
+    <div className="button-image-container">
+      <Button className="button-image" onClick={onClick}>
+        <div className="button-image__image-container">
+          <img alt="" src={`/images/${fileName}`} />
+        </div>
+        <div className="button-image__label">{label}</div>
+      </Button>
+    </div>
   );
 };
 
