@@ -1,3 +1,7 @@
+$theme-colors: (
+  "primary": #384956,
+);
+
 @import "~bootstrap/scss/bootstrap";
 @import "variables.scss";
 @import "dashboard.scss";

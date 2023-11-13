@@ -14,11 +14,7 @@ const Appbar: ComponentType<AppBarProps> = (props: AppBarProps) => {
     <Navbar variant="dark" data-bs-theme="dark">
       <Container>
         <Navbar.Brand>{title}</Navbar.Brand>
-        <CloseButton
-          className="justify-content-end"
-          variant="white"
-          onClick={() => navigate(-1)}
-        />
+        <CloseButton variant="white" onClick={() => navigate(-1)} />
       </Container>
     </Navbar>
   );
