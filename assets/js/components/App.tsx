@@ -9,6 +9,9 @@ const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
 const PlacesPage = React.lazy(() => import("./Dashboard/PlacesPage"));
 const AlertsPage = React.lazy(() => import("./Dashboard/AlertsPage"));
 const AlertDetails = React.lazy(() => import("./Dashboard/AlertDetails"));
+const PendingScreensPage = React.lazy(
+  () => import("./Dashboard/PendingScreensPage")
+);
 
 class AppRoutes extends React.Component {
   render() {
@@ -30,6 +33,8 @@ class AppRoutes extends React.Component {
             <Route path="dashboard" element={<PlacesPage />}></Route>
             <Route path="alerts" element={<AlertsPage />}></Route>
             <Route path="alerts/:id" element={<AlertDetails />}></Route>
+            <Route path="pending" element={<PendingScreensPage />}></Route>
+            <Route path="configure-screens" element={<></>}></Route>
           </Route>
         </Routes>
       </React.Suspense>
