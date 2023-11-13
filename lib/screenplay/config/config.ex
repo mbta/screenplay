@@ -2,7 +2,8 @@ defmodule Screenplay.Config.PermanentConfig do
   @moduledoc false
   alias Screenplay.Config.S3Fetch
 
-  @spec add_new_screen(binary(), map(), binary()) :: :error | :ok
+  @spec add_new_screen(binary(), map(), binary()) ::
+          {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
   def add_new_screen(screen_id, screen, etag) do
     case get_current_config(etag) do
       {:ok, config} ->
@@ -10,12 +11,13 @@ defmodule Screenplay.Config.PermanentConfig do
         |> Map.put(screen_id, Jason.decode!(screen))
         |> S3Fetch.put_screens_config()
 
-      _ ->
-        :error
+      error ->
+        error
     end
   end
 
-  @spec delete_screen(binary(), binary()) :: :error | :ok
+  @spec delete_screen(binary(), binary()) ::
+          {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
   def delete_screen(screen_id, etag) do
     case get_current_config(etag) do
       {:ok, config} ->
@@ -23,8 +25,8 @@ defmodule Screenplay.Config.PermanentConfig do
         |> Map.delete(screen_id)
         |> S3Fetch.put_screens_config()
 
-      _ ->
-        :error
+      error ->
+        error
     end
   end
 
@@ -33,8 +35,11 @@ defmodule Screenplay.Config.PermanentConfig do
       {:ok, config, ^etag} ->
         {:ok, config}
 
+      :error ->
+        {:error, :config_not_fetched}
+
       _ ->
-        :error
+        {:error, :etag_mismatch}
     end
   end
 end

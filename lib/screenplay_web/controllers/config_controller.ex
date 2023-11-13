@@ -8,8 +8,14 @@ defmodule ScreenplayWeb.ConfigController do
       :ok ->
         send_resp(conn, 200, "OK")
 
-      :error ->
-        send_resp(conn, 400, "Unable to add new screen")
+      {:error, :etag_mismatch} ->
+        send_resp(conn, 400, "Config version mismatch")
+
+      {:error, :config_not_fetched} ->
+        send_resp(conn, 400, "S3 Operation Failed: Get")
+
+      {:error, :config_not_written} ->
+        send_resp(conn, 400, "S3 Operation Failed: Put")
     end
   end
 
@@ -18,8 +24,14 @@ defmodule ScreenplayWeb.ConfigController do
       :ok ->
         send_resp(conn, 200, "OK")
 
-      :error ->
-        send_resp(conn, 400, "Unable to delete screen")
+      {:error, :etag_mismatch} ->
+        send_resp(conn, 400, "Config version mismatch")
+
+      {:error, :config_not_fetched} ->
+        send_resp(conn, 400, "S3 Operation Failed: Get")
+
+      {:error, :config_not_written} ->
+        send_resp(conn, 400, "S3 Operation Failed: Put")
     end
   end
 end

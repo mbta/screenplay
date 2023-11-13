@@ -77,7 +77,7 @@ defmodule Screenplay.Config.S3Fetch do
         :ok
 
       _ ->
-        :error
+        {:error, :config_not_written}
     end
   end
 end
