@@ -1,6 +1,6 @@
 import React, { ComponentType, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import Appbar from "./AppBar";
+import AppBar from "./AppBar";
 import ButtonImage from "./ButtonImage";
 import "../../../../css/screenplay.scss";
 
@@ -23,7 +23,7 @@ const ConfigureScreensPage: ComponentType = () => {
 
   return (
     <div className="configure-screens-page">
-      <Appbar title="Configure Screens" />
+      <AppBar title="Configure Screens" />
       {layout}
     </div>
   );
