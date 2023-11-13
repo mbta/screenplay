@@ -9,6 +9,7 @@
     max-width: 1320px;
 
     &__title {
+      white-space: nowrap;
       width: fit-content;
       font-weight: 700;
       font-size: 28px;
