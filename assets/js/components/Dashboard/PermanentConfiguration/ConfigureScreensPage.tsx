@@ -10,8 +10,6 @@ const ConfigureScreensPage: ComponentType = () => {
   const selectScreenType = (screenType: string) =>
     setSelectedScreenType(screenType);
 
-  console.log(selectedScreenType);
-
   let layout;
   switch (selectedScreenType) {
     case "gl-eink":
