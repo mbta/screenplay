@@ -60,6 +60,8 @@ defmodule ScreenplayWeb.Router do
 
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
+    get("/pending", ConfigController, :index)
+    get("/configure-screens", ConfigController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
@@ -94,6 +96,20 @@ defmodule ScreenplayWeb.Router do
     post("/clear_all", AlertController, :clear_all)
     get("/active_alerts", AlertController, :active_alerts)
     get("/past_alerts", AlertController, :past_alerts)
+  end
+
+  scope "/config", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :api,
+      :browser,
+      :auth,
+      :ensure_auth
+    ])
+
+    post("/add", ConfigController, :add)
+    post("/edit", ConfigController, :edit)
+    post("/delete", ConfigController, :delete)
   end
 
   # Enables LiveDashboard only for development

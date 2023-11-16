@@ -39,7 +39,7 @@ defmodule ScreenplayWeb.ConnCase do
             Phoenix.ConnTest.build_conn()
             |> Plug.Test.init_test_session(%{})
             |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
-              "groups" => ["screenplay-admin"]
+              "groups" => ["screenplay"]
             })
             |> Plug.Conn.put_session(:username, user)
 

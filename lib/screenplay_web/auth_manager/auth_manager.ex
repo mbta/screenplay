@@ -5,7 +5,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   @type access_level :: :none | :read_only | :admin
 
-  @screenplay_admin_group "screenplay-admin"
+  @screenplay_admin_group "screenplay"
 
   @spec subject_for_token(
           resource :: Guardian.Token.resource(),
