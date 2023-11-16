@@ -68,7 +68,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
     if (isPaess) {
       return `/ ${getPaessRoute(paessRouteLetter)}`;
     } else if (isTriptych) {
-      const [_prefix, _stationsName, _routeId, directionId, _index] =
+      const [_prefix, _stationName, _routeId, directionId, _index] =
         screens[0].id.split("-");
 
       return `/ ${getTriptychPlatform(parseInt(directionId))}`;
