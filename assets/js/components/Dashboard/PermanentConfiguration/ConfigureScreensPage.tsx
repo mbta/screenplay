@@ -46,7 +46,7 @@ const SelectScreenTypeComponent: ComponentType<SelectScreenTypeComponentProps> =
           <Col></Col>
           <Col></Col>
         </Row>
-        <Row>
+        <Row md={2} lg={3}>
           <Col>
             <ButtonImage
               fileName="bus-eink.png"
@@ -68,8 +68,6 @@ const SelectScreenTypeComponent: ComponentType<SelectScreenTypeComponentProps> =
               onClick={() => selectScreenType("gl-eink")}
             />
           </Col>
-        </Row>
-        <Row>
           <Col>
             <ButtonImage
               fileName="dup.png"

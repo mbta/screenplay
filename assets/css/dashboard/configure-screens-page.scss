@@ -23,7 +23,8 @@
 
     .col {
       width: fit-content;
-      max-width: 306px;
+      flex-grow: 0;
+      min-width: 306px;
     }
   }
 }
