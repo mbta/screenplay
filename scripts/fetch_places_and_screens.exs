@@ -273,12 +273,12 @@ live_screens =
     end
   )
   |> Enum.reduce(%{}, fn {id, screen_list}, acc ->
-    all_but_one_triptych =
+    one_triptych_per_platform =
       Enum.filter(screen_list, fn screen ->
         screen.type == "triptych_v2" and String.last(screen.id) == "1"
       end)
 
-    Map.put(acc, id, all_but_one_triptych)
+    Map.put(acc, id, one_triptych_per_platform)
   end)
 
 # We only need to store bus stops in places if there is a screen there.
