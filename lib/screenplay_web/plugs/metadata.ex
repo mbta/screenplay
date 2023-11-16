@@ -40,6 +40,6 @@ defmodule ScreenplayWeb.Plugs.Metadata do
     claims = Guardian.Plug.current_claims(conn)
 
     not is_nil(claims) and
-      ScreenplayWeb.AuthManager.claims_access_level(claims) == :admin
+      ScreenplayWeb.AuthManager.claims_access_level(claims) == :emergency_admin
   end
 end
