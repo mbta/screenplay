@@ -41,7 +41,9 @@ const SelectScreenTypeComponent: ComponentType<SelectScreenTypeComponentProps> =
       <Container className="select-screen-type p-5">
         <Row>
           <Col>
-            <div className="select-screen-type__title">Select screen type</div>
+            <div className="h3 select-screen-type__title">
+              Select screen type
+            </div>
           </Col>
           <Col></Col>
           <Col></Col>

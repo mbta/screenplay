@@ -26,8 +26,6 @@ $theme-colors: (
 @import "animation.scss";
 @import "screen-detail-action-bar.scss";
 
-$body-bg: $cool-gray-30;
-
 html {
   font-size: 16px;
 }
@@ -69,4 +67,9 @@ body {
 button,
 input[type="button"] {
   letter-spacing: 0.5px;
+}
+
+.h3 {
+  font-weight: 700;
+  font-size: 28px;
 }
