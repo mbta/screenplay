@@ -61,6 +61,9 @@ const ScreenCard = (props: ScreenDetailProps) => {
     }
   };
 
+  const getTriptychPlatform = (directionId: number) =>
+    directionId === 0 ? "Southbound" : "Northbound";
+
   const getScreenLocation = () => {
     if (isPaess) {
       return `/ ${getPaessRoute(paessRouteLetter)}`;
@@ -68,11 +71,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
       const [_prefix, _stationsName, _routeId, directionId, _index] =
         screens[0].id.split("-");
 
-      if (parseInt(directionId) === 0) {
-        return "/ Southbound";
-      } else {
-        return "/ Northbound";
-      }
+      return `/ ${getTriptychPlatform(parseInt(directionId))}`;
     } else if (screens[0].location) {
       return `/ ${screens[0].location}`;
     } else {
