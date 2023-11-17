@@ -275,7 +275,7 @@ live_screens =
   |> Map.new(fn {id, screen_list} ->
     one_triptych_per_platform =
       Enum.filter(screen_list, fn screen ->
-        screen.type == "triptych_v2" and String.last(screen.id) == "1"
+        screen.type != "triptych_v2" or String.last(screen.id) == "1"
       end)
 
     {id, one_triptych_per_platform}
