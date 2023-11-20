@@ -61,17 +61,22 @@ const ScreenCard = (props: ScreenDetailProps) => {
     }
   };
 
-  const getTriptychPlatform = (directionId: number) =>
-    directionId === 0 ? "Southbound" : "Northbound";
+  const getTriptychPlatform = (routeId: string, directionId: number) => {
+    if (["Orange", "Red"].includes(routeId)) {
+      return directionId === 0 ? "Southbound" : "Northbound";
+    } else {
+      return directionId === 0 ? "Westbound" : "Eastbound";
+    }
+  };
 
   const getScreenLocation = () => {
     if (isPaess) {
       return `/ ${getPaessRoute(paessRouteLetter)}`;
     } else if (isTriptych) {
-      const [_prefix, _stationName, _routeId, directionId, _index] =
+      const [_prefix, _stationName, routeId, directionId, _index] =
         screens[0].id.split("-");
 
-      return `/ ${getTriptychPlatform(parseInt(directionId))}`;
+      return `/ ${getTriptychPlatform(routeId, parseInt(directionId))}`;
     } else if (screens[0].location) {
       return `/ ${screens[0].location}`;
     } else {
