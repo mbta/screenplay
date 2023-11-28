@@ -66,7 +66,7 @@ const PlacesPage: ComponentType = () => {
   );
 };
 
-interface CustomAccordionRowProps {
+interface PlaceRowAccordionProps {
   place: Place;
   canShowAnimation?: boolean;
   dispatch: React.Dispatch<PlacesListReducerAction>;
@@ -75,14 +75,14 @@ interface CustomAccordionRowProps {
   filteredLine: string | null;
   className: string;
 }
-const CustomAccordionRow: ComponentType<CustomAccordionRowProps> = ({
+const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
   place,
   canShowAnimation,
   dispatch,
   stateValues,
   filteredLine,
   className,
-}: CustomAccordionRowProps) => {
+}: PlaceRowAccordionProps) => {
   const { sortDirection, activeEventKeys } = stateValues;
   const handleClickAccordion = (eventKey: string) => {
     if (activeEventKeys?.includes(eventKey)) {
@@ -415,7 +415,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
             (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
 
           return (
-            <CustomAccordionRow
+            <PlaceRowAccordion
               key={place.id}
               place={place}
               canShowAnimation={
