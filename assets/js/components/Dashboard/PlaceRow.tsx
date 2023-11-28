@@ -275,7 +275,11 @@ const PlaceRow = ({
             </Col>
           </Row>
         </Container>
-        {children && children}
+        {/*
+        Needed to allow Accordion functionality to work. With this way of rendering Accordion.Collapse,
+        this component can leave out all references to Accordion while maintaining original functionality.
+        */}
+        {variant === "accordion" && children}
       </div>
     </div>
   );
