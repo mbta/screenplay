@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React, { ReactElement, useContext } from "react";
 import {
-  Accordion,
   Col,
   Container,
   Row,
@@ -12,7 +11,6 @@ import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
-import ScreenDetail from "./ScreenDetail";
 import MapSegment from "./MapSegment";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import { classWithModifier } from "../../util";
@@ -22,26 +20,34 @@ interface PlaceRowProps {
   place: Place;
   eventKey: string;
   onClick: (eventKey: string) => void;
-  classNames?: string;
+  className?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
-  showAnimation?: boolean;
+  canShowAnimation?: boolean;
+  children?: ReactElement;
 }
 
 /**
  * Component used to display each place and their screen simulations.
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
-const PlaceRow = (props: PlaceRowProps): JSX.Element => {
-  const { routes, name, description, screens } = props.place;
+const PlaceRow = ({
+  place,
+  eventKey,
+  onClick,
+  className,
+  filteredLine,
+  defaultSort,
+  canShowAnimation,
+  children,
+}: PlaceRowProps): JSX.Element => {
+  const { routes, name, description, screens } = place;
   const { activeEventKey } = useContext(AccordionContext);
-  const rowOnClick = useAccordionButton(props.eventKey, () =>
-    props.onClick(props.eventKey)
-  );
-  const { showAnimation } = useUpdateAnimation([], null, props.showAnimation);
-  const isOpen = activeEventKey?.includes(props.eventKey);
+  const rowOnClick = useAccordionButton(eventKey, () => onClick(eventKey));
+  const isOpen = activeEventKey?.includes(eventKey);
   const hasScreens =
     screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
+  const { showAnimation } = useUpdateAnimation([], null, canShowAnimation);
 
   const typeMap: Record<string, string> = {
     pa_ess: "PA",
@@ -84,46 +90,6 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const screenTypes = !hasScreens
     ? ["no screens"]
     : Array.from(new Set(sortScreens().map((screen) => typeMap[screen.type])));
-
-  const filterAndGroupScreens = (screens: Screen[]) => {
-    const visibleScreens = screens.filter((screen) => !screen.hidden);
-    const solariScreens = visibleScreens.filter(
-      (screen) => screen.type === "solari"
-    );
-    const paEssScreens = visibleScreens.filter(
-      (screen) => screen.type === "pa_ess"
-    );
-    const groupedScreens = visibleScreens
-      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
-      .map((screen) => [screen]);
-
-    groupedScreens.push(solariScreens);
-
-    if (paEssScreens.length > 0) {
-      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
-    }
-
-    return groupedScreens;
-  };
-
-  const groupPaEssScreensbyRoute = (
-    paEssScreens: Screen[],
-    groupedScreens: Screen[][]
-  ) => {
-    const paEssGroupedByRoute = new Map<string, Screen[]>();
-    paEssScreens.map((paEssScreen) => {
-      if (paEssScreen.station_code) {
-        const routeLetter = paEssScreen.station_code.charAt(0);
-
-        paEssGroupedByRoute.has(routeLetter)
-          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
-          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
-      }
-    });
-    paEssGroupedByRoute.forEach((screens) => {
-      groupedScreens.push(screens);
-    });
-  };
 
   const renderModesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
@@ -172,8 +138,8 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
     // If a filter is present, only look at stations for that filter.
     // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
-    if (props.filteredLine) {
-      const line = STATION_ORDER_BY_LINE[props.filteredLine.toLowerCase()];
+    if (filteredLine) {
+      const line = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
       const terminalStops = line.filter((line) => line.isTerminalStop);
       isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
     }
@@ -201,9 +167,14 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     return capitalizeTerminalStops(stationName);
   };
 
+  const formatScreenTypes = () =>
+    screenTypes.map((type, index) =>
+      index < screenTypes.length - 1 ? `${type}  ·  ` : type
+    );
+
   return (
     <div
-      className={classNames("place-row", props.classNames, {
+      className={classNames("place-row", className, {
         open: isOpen,
         disabled: !hasScreens,
       })}
@@ -212,10 +183,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       <Fade appear in={showAnimation}>
         <div className="update-animation"></div>
       </Fade>
-      <div
-        key={props.eventKey}
-        onClick={hasScreens ? rowOnClick : () => undefined}
-      >
+      <div onClick={hasScreens ? rowOnClick : () => undefined}>
         <Container fluid>
           <Row
             className="align-items-center text-white"
@@ -233,18 +201,17 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                   <ChevronRight size={16} className="bootstrap-line-icon" />
                 )}
               </div>
-              {props.filteredLine && (
+              {filteredLine && (
                 <div
                   className={classNames(
                     "place-row__map-segment-container",
-                    `place-row__map-segment-container--${props.filteredLine}`,
+                    `place-row__map-segment-container--${filteredLine}`,
                     {
-                      "place-row__map-segment-container--flipped":
-                        !props.defaultSort,
+                      "place-row__map-segment-container--flipped": !defaultSort,
                     }
                   )}
                 >
-                  {getInlineMap(props.place, props.filteredLine.toLowerCase())}
+                  {getInlineMap(place, filteredLine.toLowerCase())}
                 </div>
               )}
               <div className="place-row__name" data-testid="place-name">
@@ -259,16 +226,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
               className="place-row__screen-types"
               data-testid="place-screen-types"
             >
-              {screenTypes.map((type, index) =>
-                index < screenTypes.length - 1 ? (
-                  <span key={index}>
-                    {type}
-                    <span className="spacer">·</span>
-                  </span>
-                ) : (
-                  type
-                )
-              )}
+              {formatScreenTypes()}
             </Col>
             <Col
               lg={3}
@@ -279,20 +237,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
             </Col>
           </Row>
         </Container>
-        <Accordion.Collapse eventKey={props.eventKey}>
-          <>
-            <div className="place-row__screen-preview-container">
-              {hasScreens &&
-                filterAndGroupScreens(sortScreens()).map((screens, index) => (
-                  <ScreenDetail
-                    key={index}
-                    screens={screens}
-                    isOpen={isOpen ?? false}
-                  />
-                ))}
-            </div>
-          </>
-        </Accordion.Collapse>
+        {children && children}
       </div>
     </div>
   );

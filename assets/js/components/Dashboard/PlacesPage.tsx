@@ -5,6 +5,7 @@ import FilterDropdown from "./FilterDropdown";
 import { Accordion, Col, Container, Row } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import { Place } from "../../models/place";
+import { Screen } from "../../models/screen";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import {
   PLACES_PAGE_MODES_AND_LINES as MODES_AND_LINES,
@@ -21,6 +22,8 @@ import {
 } from "../../hooks/useScreenplayContext";
 import { DirectionID } from "../../models/direction_id";
 import { usePrevious } from "../../hooks/usePrevious";
+import ScreenDetail from "./ScreenDetail";
+import { sortScreens } from "../../util";
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
@@ -241,6 +244,46 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     screenTypeFilterValue === SCREEN_TYPES[0] &&
     (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
 
+  const filterAndGroupScreens = (screens: Screen[]) => {
+    const visibleScreens = screens.filter((screen) => !screen.hidden);
+    const solariScreens = visibleScreens.filter(
+      (screen) => screen.type === "solari"
+    );
+    const paEssScreens = visibleScreens.filter(
+      (screen) => screen.type === "pa_ess"
+    );
+    const groupedScreens = visibleScreens
+      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
+      .map((screen) => [screen]);
+
+    groupedScreens.push(solariScreens);
+
+    if (paEssScreens.length > 0) {
+      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
+    }
+
+    return groupedScreens;
+  };
+
+  const groupPaEssScreensbyRoute = (
+    paEssScreens: Screen[],
+    groupedScreens: Screen[][]
+  ) => {
+    const paEssGroupedByRoute = new Map<string, Screen[]>();
+    paEssScreens.map((paEssScreen) => {
+      if (paEssScreen.station_code) {
+        const routeLetter = paEssScreen.station_code.charAt(0);
+
+        paEssGroupedByRoute.has(routeLetter)
+          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
+          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
+      }
+    });
+    paEssGroupedByRoute.forEach((screens) => {
+      groupedScreens.push(screens);
+    });
+  };
+
   return (
     <>
       <Container fluid>
@@ -301,21 +344,42 @@ const PlacesList: ComponentType<PlacesListProps> = ({
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>
         {sortedFilteredPlaces.map((place: Place) => {
+          const hasScreens =
+            place.screens.length > 0 &&
+            place.screens.filter((screen) => !screen.hidden).length > 0;
+
           return (
             <PlaceRow
               key={place.id}
               place={place}
               eventKey={place.id}
               onClick={handleClickAccordion}
-              classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
+              className={isFiltered || isAlertPlacesList ? "filtered" : ""}
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               defaultSort={sortDirection === 0}
-              showAnimation={
+              canShowAnimation={
                 showAnimationForNewPlaces &&
                 prevPlaceIds !== undefined &&
                 !prevPlaceIds.includes(place.id)
               }
-            />
+            >
+              <Accordion.Collapse eventKey={place.id}>
+                <div className="place-row__screen-preview-container">
+                  {hasScreens &&
+                    filterAndGroupScreens(sortScreens(place.screens)).map(
+                      (screens, index) => {
+                        return (
+                          <ScreenDetail
+                            key={`${place.id}.screendetail.${index}`}
+                            screens={screens}
+                            eventKey={place.id}
+                          />
+                        );
+                      }
+                    )}
+                </div>
+              </Accordion.Collapse>
+            </PlaceRow>
           );
         })}
       </Accordion>
