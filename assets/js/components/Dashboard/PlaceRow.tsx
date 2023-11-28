@@ -3,9 +3,9 @@ import {
   Col,
   Container,
   Row,
-  useAccordionButton,
   AccordionContext,
   Fade,
+  Form,
 } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
@@ -14,17 +14,62 @@ import { Screen } from "../../models/screen";
 import MapSegment from "./MapSegment";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import { classWithModifier } from "../../util";
-import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
+
+interface AccordionToggleProps {
+  eventKey: string;
+  hidden?: boolean;
+}
+
+const AccordionToggle = ({
+  eventKey,
+  hidden,
+}: AccordionToggleProps): JSX.Element => {
+  const { activeEventKey } = useContext(AccordionContext);
+  const isOpen = activeEventKey?.includes(eventKey) || false;
+  const Chevron = isOpen ? ChevronDown : ChevronRight;
+
+  return (
+    <div
+      className={classNames("place-row__toggle", {
+        "hidden-toggle": hidden,
+      })}
+    >
+      <Chevron size={16} className="bootstrap-line-icon" />
+    </div>
+  );
+};
+
+interface SelectBoxToggleProps {
+  checked?: boolean;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  disabled: boolean;
+}
+
+const SelectBoxToggle = ({
+  checked,
+  onChange,
+  disabled,
+}: SelectBoxToggleProps): JSX.Element => {
+  return (
+    <div className="place-row__toggle">
+      <Form.Check disabled={disabled} checked={checked} onChange={onChange} />
+    </div>
+  );
+};
 
 interface PlaceRowProps {
   place: Place;
   eventKey: string;
-  onClick: (eventKey: string) => void;
+  onClick?: React.MouseEventHandler;
   className?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
-  canShowAnimation?: boolean;
+  showAnimation?: boolean;
+  disabled: boolean;
   children?: ReactElement;
+  variant: "accordion" | "select-box";
+  checkboxValue?: boolean;
+  checkboxOnChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 /**
@@ -38,16 +83,16 @@ const PlaceRow = ({
   className,
   filteredLine,
   defaultSort,
-  canShowAnimation,
+  showAnimation,
+  disabled,
   children,
+  variant,
+  checkboxValue,
+  checkboxOnChange,
 }: PlaceRowProps): JSX.Element => {
   const { routes, name, description, screens } = place;
-  const { activeEventKey } = useContext(AccordionContext);
-  const rowOnClick = useAccordionButton(eventKey, () => onClick(eventKey));
-  const isOpen = activeEventKey?.includes(eventKey);
   const hasScreens =
     screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
-  const { showAnimation } = useUpdateAnimation([], null, canShowAnimation);
 
   const typeMap: Record<string, string> = {
     pa_ess: "PA",
@@ -175,32 +220,29 @@ const PlaceRow = ({
   return (
     <div
       className={classNames("place-row", className, {
-        open: isOpen,
-        disabled: !hasScreens,
+        disabled: disabled,
       })}
       data-testid="place-row"
     >
       <Fade appear in={showAnimation}>
         <div className="update-animation"></div>
       </Fade>
-      <div onClick={hasScreens ? rowOnClick : () => undefined}>
+      <div onClick={onClick}>
         <Container fluid>
           <Row
             className="align-items-center text-white"
             data-testid="place-row-header"
           >
             <Col lg={5} className="d-flex align-items-center">
-              <div
-                className={classNames("place-row__toggle", {
-                  "hidden-toggle": !hasScreens,
-                })}
-              >
-                {isOpen ? (
-                  <ChevronDown size={16} className="bootstrap-line-icon" />
-                ) : (
-                  <ChevronRight size={16} className="bootstrap-line-icon" />
-                )}
-              </div>
+              {variant === "accordion" ? (
+                <AccordionToggle eventKey={eventKey} hidden={!hasScreens} />
+              ) : (
+                <SelectBoxToggle
+                  checked={checkboxValue}
+                  onChange={checkboxOnChange}
+                  disabled={disabled}
+                />
+              )}
               {filteredLine && (
                 <div
                   className={classNames(
