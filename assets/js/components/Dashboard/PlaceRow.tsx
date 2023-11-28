@@ -41,7 +41,7 @@ const AccordionToggle = ({
 
 interface SelectBoxToggleProps {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const SelectBoxToggle = ({
@@ -63,7 +63,7 @@ interface PlaceRowProps {
   filteredLine?: string | null;
   defaultSort?: boolean;
   showAnimation?: boolean;
-  disabled: boolean;
+  disabled?: boolean;
   children?: ReactElement;
   variant: "accordion" | "select-box";
   checkboxValue?: boolean;
