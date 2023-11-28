@@ -40,19 +40,17 @@ const AccordionToggle = ({
 };
 
 interface SelectBoxToggleProps {
-  checked?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   disabled: boolean;
 }
 
 const SelectBoxToggle = ({
-  checked,
   onChange,
   disabled,
 }: SelectBoxToggleProps): JSX.Element => {
   return (
     <div className="place-row__toggle">
-      <Form.Check disabled={disabled} checked={checked} onChange={onChange} />
+      <Form.Check disabled={disabled} onChange={onChange} />
     </div>
   );
 };
@@ -87,7 +85,6 @@ const PlaceRow = ({
   disabled,
   children,
   variant,
-  checkboxValue,
   checkboxOnChange,
 }: PlaceRowProps): JSX.Element => {
   const { routes, name, description, screens } = place;
@@ -238,7 +235,6 @@ const PlaceRow = ({
                 <AccordionToggle eventKey={eventKey} hidden={!hasScreens} />
               ) : (
                 <SelectBoxToggle
-                  checked={checkboxValue}
                   onChange={checkboxOnChange}
                   disabled={disabled}
                 />
