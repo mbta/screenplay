@@ -1,8 +1,15 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useContext } from "react";
 import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
-import { Accordion, Col, Container, Row } from "react-bootstrap";
+import {
+  Accordion,
+  AccordionContext,
+  Col,
+  Container,
+  Row,
+  useAccordionButton,
+} from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
@@ -24,6 +31,7 @@ import { DirectionID } from "../../models/direction_id";
 import { usePrevious } from "../../hooks/usePrevious";
 import ScreenDetail from "./ScreenDetail";
 import { sortScreens } from "../../util";
+import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
@@ -55,6 +63,122 @@ const PlacesPage: ComponentType = () => {
         />
       </div>
     </div>
+  );
+};
+
+interface CustomAccordionRowProps {
+  place: Place;
+  canShowAnimation?: boolean;
+  dispatch: React.Dispatch<PlacesListReducerAction>;
+  stateValues: PlacesListState;
+  isFiltered: boolean;
+  filteredLine: string | null;
+  className: string;
+}
+const CustomAccordionRow: ComponentType<CustomAccordionRowProps> = ({
+  place,
+  canShowAnimation,
+  dispatch,
+  stateValues,
+  filteredLine,
+  className,
+}: CustomAccordionRowProps) => {
+  const { sortDirection, activeEventKeys } = stateValues;
+  const handleClickAccordion = (eventKey: string) => {
+    if (activeEventKeys?.includes(eventKey)) {
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        eventKeys: activeEventKeys.filter((e: string) => e !== eventKey),
+      });
+    } else {
+      dispatch({
+        type: "SET_ACTIVE_EVENT_KEYS",
+        eventKeys: [...activeEventKeys, eventKey],
+      });
+    }
+  };
+
+  const filterAndGroupScreens = (screens: Screen[]) => {
+    const visibleScreens = screens.filter((screen) => !screen.hidden);
+    const solariScreens = visibleScreens.filter(
+      (screen) => screen.type === "solari"
+    );
+    const paEssScreens = visibleScreens.filter(
+      (screen) => screen.type === "pa_ess"
+    );
+    const groupedScreens = visibleScreens
+      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
+      .map((screen) => [screen]);
+
+    groupedScreens.push(solariScreens);
+
+    if (paEssScreens.length > 0) {
+      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
+    }
+
+    return groupedScreens;
+  };
+
+  const groupPaEssScreensbyRoute = (
+    paEssScreens: Screen[],
+    groupedScreens: Screen[][]
+  ) => {
+    const paEssGroupedByRoute = new Map<string, Screen[]>();
+    paEssScreens.map((paEssScreen) => {
+      if (paEssScreen.station_code) {
+        const routeLetter = paEssScreen.station_code.charAt(0);
+
+        paEssGroupedByRoute.has(routeLetter)
+          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
+          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
+      }
+    });
+    paEssGroupedByRoute.forEach((screens) => {
+      groupedScreens.push(screens);
+    });
+  };
+
+  const hasScreens =
+    place.screens.length > 0 &&
+    place.screens.filter((screen) => !screen.hidden).length > 0;
+  const rowOnClick = hasScreens
+    ? useAccordionButton(place.id, () => handleClickAccordion(place.id))
+    : undefined;
+  const { activeEventKey } = useContext(AccordionContext);
+  const isOpen = activeEventKey?.includes(place.id);
+  const { showAnimation } = useUpdateAnimation([], null, canShowAnimation);
+
+  return (
+    <>
+      <PlaceRow
+        place={place}
+        eventKey={place.id}
+        onClick={rowOnClick}
+        className={isOpen ? className + " open" : className}
+        filteredLine={filteredLine}
+        defaultSort={sortDirection === 0}
+        showAnimation={showAnimation}
+        disabled={!hasScreens}
+        variant="accordion"
+      >
+        <Accordion.Collapse eventKey={place.id}>
+          <div className="place-row__screen-preview-container">
+            {hasScreens &&
+              filterAndGroupScreens(sortScreens(place.screens)).map(
+                (screens, index) => {
+                  return (
+                    <ScreenDetail
+                      key={`${place.id}.screendetail.${index}`}
+                      screens={screens}
+                      eventKey={place.id}
+                    />
+                  );
+                }
+              )}
+          </div>
+        </Accordion.Collapse>
+      </PlaceRow>
+    </>
   );
 };
 
@@ -129,20 +253,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
       type: "SET_SORT_DIRECTION",
       sortDirection: (1 - sortDirection) as DirectionID,
     });
-  };
-
-  const handleClickAccordion = (eventKey: string) => {
-    if (activeEventKeys.includes(eventKey)) {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        eventKeys: activeEventKeys.filter((e: string) => e !== eventKey),
-      });
-    } else {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        eventKeys: [...activeEventKeys, eventKey],
-      });
-    }
   };
 
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
@@ -238,52 +348,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     statusFilterValue !== STATUSES[0] ||
     screenTypeFilterValue !== SCREEN_TYPES[0];
 
-  const isOnlyFilteredByRoute =
-    modeLineFilterValue !== MODES_AND_LINES[0] &&
-    statusFilterValue === STATUSES[0] &&
-    screenTypeFilterValue === SCREEN_TYPES[0] &&
-    (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
-
-  const filterAndGroupScreens = (screens: Screen[]) => {
-    const visibleScreens = screens.filter((screen) => !screen.hidden);
-    const solariScreens = visibleScreens.filter(
-      (screen) => screen.type === "solari"
-    );
-    const paEssScreens = visibleScreens.filter(
-      (screen) => screen.type === "pa_ess"
-    );
-    const groupedScreens = visibleScreens
-      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
-      .map((screen) => [screen]);
-
-    groupedScreens.push(solariScreens);
-
-    if (paEssScreens.length > 0) {
-      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
-    }
-
-    return groupedScreens;
-  };
-
-  const groupPaEssScreensbyRoute = (
-    paEssScreens: Screen[],
-    groupedScreens: Screen[][]
-  ) => {
-    const paEssGroupedByRoute = new Map<string, Screen[]>();
-    paEssScreens.map((paEssScreen) => {
-      if (paEssScreen.station_code) {
-        const routeLetter = paEssScreen.station_code.charAt(0);
-
-        paEssGroupedByRoute.has(routeLetter)
-          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
-          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
-      }
-    });
-    paEssGroupedByRoute.forEach((screens) => {
-      groupedScreens.push(screens);
-    });
-  };
-
   return (
     <>
       <Container fluid>
@@ -344,42 +408,27 @@ const PlacesList: ComponentType<PlacesListProps> = ({
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>
         {sortedFilteredPlaces.map((place: Place) => {
-          const hasScreens =
-            place.screens.length > 0 &&
-            place.screens.filter((screen) => !screen.hidden).length > 0;
+          const isOnlyFilteredByRoute =
+            modeLineFilterValue !== MODES_AND_LINES[0] &&
+            statusFilterValue === STATUSES[0] &&
+            screenTypeFilterValue === SCREEN_TYPES[0] &&
+            (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
 
           return (
-            <PlaceRow
+            <CustomAccordionRow
               key={place.id}
               place={place}
-              eventKey={place.id}
-              onClick={handleClickAccordion}
-              className={isFiltered || isAlertPlacesList ? "filtered" : ""}
-              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
-              defaultSort={sortDirection === 0}
               canShowAnimation={
                 showAnimationForNewPlaces &&
                 prevPlaceIds !== undefined &&
                 !prevPlaceIds.includes(place.id)
               }
-            >
-              <Accordion.Collapse eventKey={place.id}>
-                <div className="place-row__screen-preview-container">
-                  {hasScreens &&
-                    filterAndGroupScreens(sortScreens(place.screens)).map(
-                      (screens, index) => {
-                        return (
-                          <ScreenDetail
-                            key={`${place.id}.screendetail.${index}`}
-                            screens={screens}
-                            eventKey={place.id}
-                          />
-                        );
-                      }
-                    )}
-                </div>
-              </Accordion.Collapse>
-            </PlaceRow>
+              dispatch={dispatch}
+              stateValues={stateValues}
+              isFiltered={isFiltered}
+              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
+              className={isFiltered || isAlertPlacesList ? "filtered" : ""}
+            />
           );
         })}
       </Accordion>
