@@ -411,6 +411,13 @@ stop_ids =
     %{"sources" => sources} ->
       sources
 
+    %{"configs" => configs} ->
+      Enum.flat_map(configs, fn %{"sources" => sources} -> sources end)
+
+    %{"top_configs" => top_configs, "bottom_configs" => bottom_configs} ->
+      Enum.flat_map(top_configs, fn %{"sources" => sources} -> sources end) ++
+      Enum.flat_map(bottom_configs, fn %{"sources" => sources} -> sources end)
+
     %{
       "top_sources" => top_sources,
       "bottom_sources" => bottom_sources
@@ -465,6 +472,13 @@ pa_ess_screens =
 
       %{"sources" => sources} ->
         get_first_not_nil.(sources)
+
+      %{"configs" => configs} ->
+        Enum.flat_map(configs, fn %{"sources" => sources} -> sources end) |> get_first_not_nil.()
+
+      %{"top_configs" => top_configs, "bottom_configs" => bottom_configs} ->
+        Enum.flat_map(top_configs, fn %{"sources" => sources} -> sources end) ++
+        Enum.flat_map(bottom_configs, fn %{"sources" => sources} -> sources end) |> get_first_not_nil.()
 
       %{
         "top_sources" => top_sources,
