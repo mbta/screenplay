@@ -3,8 +3,8 @@ import PlaceRow from "./PlaceRow";
 import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import {
+  DirectionID,
   PlacesListReducerAction,
-  PlacesListState,
 } from "../../hooks/useScreenplayContext";
 import {
   Accordion,
@@ -14,26 +14,28 @@ import {
 import ScreenDetail from "./ScreenDetail";
 import { sortScreens } from "../../util";
 import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
+import classNames from "classnames";
 
 interface PlaceRowAccordionProps {
   place: Place;
   canShowAnimation?: boolean;
   dispatch: React.Dispatch<PlacesListReducerAction>;
-  stateValues: PlacesListState;
-  isFiltered: boolean;
-  filteredLine: string | null;
-  className: string;
+  activeEventKeys: string[];
+  sortDirection: DirectionID;
+  isFiltered?: boolean;
+  filteredLine?: string | null;
+  className?: string;
 }
 
 const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
   place,
   canShowAnimation,
   dispatch,
-  stateValues,
   filteredLine,
-  className,
+  sortDirection,
+  activeEventKeys,
+  className = "",
 }: PlaceRowAccordionProps) => {
-  const { sortDirection, activeEventKeys } = stateValues;
   const handleClickAccordion = (eventKey: string) => {
     if (activeEventKeys?.includes(eventKey)) {
       dispatch({
@@ -104,7 +106,7 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
         place={place}
         eventKey={place.id}
         onClick={rowOnClick}
-        className={isOpen ? className + " open" : className}
+        className={isOpen ? classNames(className, "open") : className}
         filteredLine={filteredLine}
         defaultSort={sortDirection === 0}
         showAnimation={showAnimation}

@@ -297,7 +297,8 @@ const PlacesList: ComponentType<PlacesListProps> = ({
                 !prevPlaceIds.includes(place.id)
               }
               dispatch={dispatch}
-              stateValues={stateValues}
+              activeEventKeys={activeEventKeys}
+              sortDirection={sortDirection}
               isFiltered={isFiltered}
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               className={isFiltered || isAlertPlacesList ? "filtered" : ""}
