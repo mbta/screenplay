@@ -37,11 +37,11 @@ class AppRoutes extends React.Component {
             <Route path="alerts" element={<AlertsPage />}></Route>
             <Route path="alerts/:id" element={<AlertDetails />}></Route>
             <Route path="pending" element={<PendingScreensPage />}></Route>
+            <Route
+              path="configure-screens"
+              element={<ConfigureScreensPage />}
+            />
           </Route>
-          <Route
-            path="configure-screens"
-            element={<ConfigureScreensPage />}
-          ></Route>
         </Routes>
       </React.Suspense>
     );
