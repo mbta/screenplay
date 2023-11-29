@@ -35,6 +35,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
   const { screens, isOpen, isMultipleScreens } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
   const isSolari = screens.every((screen) => screen.type === "solari");
+  const isTriptych = screens.every((screen) => screen.type === "triptych_v2");
   const paessRouteLetter = screens[0].station_code
     ? screens[0].station_code.charAt(0).toLowerCase()
     : "";
@@ -60,11 +61,28 @@ const ScreenCard = (props: ScreenDetailProps) => {
     }
   };
 
-  const getScreenLocation = isPaess
-    ? `/ ${getPaessRoute(paessRouteLetter)}`
-    : screens[0].location
-    ? `/ ${screens[0].location}`
-    : "";
+  const getTriptychPlatform = (routeId: string, directionId: number) => {
+    if (["Orange", "Red"].includes(routeId)) {
+      return directionId === 0 ? "Southbound" : "Northbound";
+    } else {
+      return directionId === 0 ? "Westbound" : "Eastbound";
+    }
+  };
+
+  const getScreenLocation = () => {
+    if (isPaess) {
+      return `/ ${getPaessRoute(paessRouteLetter)}`;
+    } else if (isTriptych) {
+      const [_prefix, _stationName, routeId, directionId, _index] =
+        screens[0].id.split("-");
+
+      return `/ ${getTriptychPlatform(routeId, parseInt(directionId))}`;
+    } else if (screens[0].location) {
+      return `/ ${screens[0].location}`;
+    } else {
+      return "";
+    }
+  };
 
   const generateSource = (screen: Screen) => {
     const { id, type } = screen;
@@ -111,7 +129,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
                   }
                 )}
               >
-                {translatedScreenType} {getScreenLocation}
+                {translatedScreenType} {getScreenLocation()}
               </div>
             </div>
             <PaessDetailContainer
@@ -126,7 +144,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
                 screen={screen}
                 isMultipleScreens={isMultipleScreens}
                 translatedScreenType={translatedScreenType}
-                screenLocation={getScreenLocation}
+                screenLocation={getScreenLocation()}
               />
               <div
                 className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
