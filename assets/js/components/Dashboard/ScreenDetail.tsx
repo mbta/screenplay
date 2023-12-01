@@ -1,13 +1,14 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useContext } from "react";
 import { Screen } from "../../models/screen";
 import ScreenDetailHeader from "./ScreenDetailHeader";
 import { SCREEN_TYPES } from "../../constants/constants";
 import PaessDetailContainer from "./PaessDetailContainer";
 import classNames from "classnames";
+import { AccordionContext } from "react-bootstrap";
 
 interface ScreenDetailProps {
   screens: Screen[];
-  isOpen: boolean;
+  eventKey: string;
   isMultipleScreens?: boolean;
 }
 
@@ -32,7 +33,7 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 };
 
 const ScreenCard = (props: ScreenDetailProps) => {
-  const { screens, isOpen, isMultipleScreens } = props;
+  const { screens, eventKey, isMultipleScreens } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
   const isSolari = screens.every((screen) => screen.type === "solari");
   const isTriptych = screens.every((screen) => screen.type === "triptych_v2");
@@ -106,6 +107,9 @@ const ScreenCard = (props: ScreenDetailProps) => {
 
     return "";
   };
+
+  const { activeEventKey } = useContext(AccordionContext);
+  const isOpen = activeEventKey?.includes(eventKey);
 
   return (
     <div
