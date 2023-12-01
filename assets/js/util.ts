@@ -6,6 +6,7 @@ import CANNED_MESSAGES from "./constants/messages";
 import STATIONS_BY_LINE from "./constants/stations";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
+import { Screen } from "./models/screen";
 import { ScreensByAlert } from "./models/screensByAlert";
 
 export const color = (line: string) => {
@@ -173,4 +174,25 @@ export const placesWithSelectedAlert = (
         }))
         .filter((place) => place.screens.length > 0)
     : [];
+};
+
+export const sortScreens = (screenList: Screen[]) => {
+  const screenTypeOrder = [
+    "dup",
+    "dup_v2",
+    "bus_shelter_v2",
+    "bus_eink",
+    "bus_eink_v2",
+    "gl_eink_single",
+    "gl_eink_double",
+    "gl_eink_v2",
+    "pre_fare_v2",
+    "triptych_v2",
+    "solari",
+    "pa_ess",
+  ];
+
+  return screenList.sort((a, b) =>
+    screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type) ? 1 : -1
+  );
 };
