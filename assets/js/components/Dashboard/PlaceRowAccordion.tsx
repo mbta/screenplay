@@ -22,7 +22,6 @@ interface PlaceRowAccordionProps {
   dispatch: React.Dispatch<PlacesListReducerAction>;
   activeEventKeys: string[];
   sortDirection: DirectionID;
-  isFiltered?: boolean;
   filteredLine?: string | null;
   className?: string;
 }

@@ -299,7 +299,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
               dispatch={dispatch}
               activeEventKeys={activeEventKeys}
               sortDirection={sortDirection}
-              isFiltered={isFiltered}
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
               className={isFiltered || isAlertPlacesList ? "filtered" : ""}
             />
