@@ -1,7 +1,7 @@
 import React, { ComponentType } from "react";
-import PlaceRow from "./PlaceRow";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
+import PlaceRowAccordion from "./PlaceRowAccordion";
 import { Accordion, Col, Container, Row } from "react-bootstrap";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import { Place } from "../../models/place";
@@ -128,20 +128,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     });
   };
 
-  const handleClickAccordion = (eventKey: string) => {
-    if (activeEventKeys.includes(eventKey)) {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        eventKeys: activeEventKeys.filter((e: string) => e !== eventKey),
-      });
-    } else {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        eventKeys: [...activeEventKeys, eventKey],
-      });
-    }
-  };
-
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
 
   const sortPlaces = (places: Place[]) => {
@@ -235,12 +221,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     statusFilterValue !== STATUSES[0] ||
     screenTypeFilterValue !== SCREEN_TYPES[0];
 
-  const isOnlyFilteredByRoute =
-    modeLineFilterValue !== MODES_AND_LINES[0] &&
-    statusFilterValue === STATUSES[0] &&
-    screenTypeFilterValue === SCREEN_TYPES[0] &&
-    (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
-
   return (
     <>
       <Container fluid>
@@ -301,20 +281,26 @@ const PlacesList: ComponentType<PlacesListProps> = ({
       )}
       <Accordion flush alwaysOpen activeKey={activeEventKeys}>
         {sortedFilteredPlaces.map((place: Place) => {
+          const isOnlyFilteredByRoute =
+            modeLineFilterValue !== MODES_AND_LINES[0] &&
+            statusFilterValue === STATUSES[0] &&
+            screenTypeFilterValue === SCREEN_TYPES[0] &&
+            (showScreenlessPlaces || !filteredPlacesHaveScreenlessPlaces);
+
           return (
-            <PlaceRow
+            <PlaceRowAccordion
               key={place.id}
               place={place}
-              eventKey={place.id}
-              onClick={handleClickAccordion}
-              classNames={isFiltered || isAlertPlacesList ? "filtered" : ""}
-              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
-              defaultSort={sortDirection === 0}
-              showAnimation={
+              canShowAnimation={
                 showAnimationForNewPlaces &&
                 prevPlaceIds !== undefined &&
                 !prevPlaceIds.includes(place.id)
               }
+              dispatch={dispatch}
+              activeEventKeys={activeEventKeys}
+              sortDirection={sortDirection}
+              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
+              className={isFiltered || isAlertPlacesList ? "filtered" : ""}
             />
           );
         })}
