@@ -339,6 +339,7 @@ contents =
       %{id: id, name: name, screens: []}
     end
   end)
+  |> Enum.reject(&(&1.id === "place-WML-0252"))
   # Add on bus stops
   |> Enum.concat(bus_stops)
   |> Enum.group_by(fn %{id: id} -> id end)
