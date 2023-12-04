@@ -1,0 +1,14 @@
+.workflow-container {
+  padding: 48px 76px 0 76px;
+}
+
+.workflow {
+  &__places-list-summary-row {
+    background: $cool-gray-40;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    padding: 16px;
+    border-radius: 8px 8px 0 0;
+  }
+}
