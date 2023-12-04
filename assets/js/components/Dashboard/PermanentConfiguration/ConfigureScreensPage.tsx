@@ -18,6 +18,10 @@ const ConfigureScreensPage: ComponentType = () => {
           place.routes.some((route) => route.startsWith("Green"))
         );
         break;
+      default:
+        throw new Error(
+          `getPlacesList not implemented for screen type ${screenType}`
+        );
     }
 
     return filteredPlaces;
