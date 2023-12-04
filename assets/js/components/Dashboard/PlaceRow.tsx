@@ -40,25 +40,31 @@ const AccordionToggle = ({
 };
 
 interface SelectBoxToggleProps {
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  checked?: boolean;
   disabled?: boolean;
 }
 
 const SelectBoxToggle = ({
-  onChange,
+  checked,
   disabled,
 }: SelectBoxToggleProps): JSX.Element => {
   return (
     <div className="place-row__toggle">
-      <Form.Check disabled={disabled} onChange={onChange} />
+      <Form.Check
+        disabled={disabled}
+        checked={checked}
+        onChange={(e) => {
+          e.stopPropagation();
+        }}
+      />
     </div>
   );
 };
 
 interface PlaceRowProps {
   place: Place;
-  eventKey: string;
-  onClick?: React.MouseEventHandler;
+  eventKey?: string;
+  onClick: (checked?: boolean) => void;
   className?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
@@ -66,8 +72,7 @@ interface PlaceRowProps {
   disabled?: boolean;
   children?: ReactElement;
   variant: "accordion" | "select-box";
-  checkboxValue?: boolean;
-  checkboxOnChange?: React.ChangeEventHandler<HTMLInputElement>;
+  checked?: boolean;
 }
 
 /**
@@ -84,7 +89,7 @@ const PlaceRow = ({
   disabled,
   children,
   variant,
-  checkboxOnChange,
+  checked,
 }: PlaceRowProps): JSX.Element => {
   const { routes, name, description, screens } = place;
   const hasScreens =
@@ -213,6 +218,9 @@ const PlaceRow = ({
       index < screenTypes.length - 1 ? `${type}  ·  ` : type
     );
 
+  const onRowClick = () =>
+    variant === "select-box" ? onClick(!checked) : onClick();
+
   return (
     <div
       className={classNames("place-row", className, {
@@ -223,20 +231,17 @@ const PlaceRow = ({
       <Fade appear in={showAnimation}>
         <div className="update-animation"></div>
       </Fade>
-      <div onClick={onClick}>
+      <div onClick={onRowClick}>
         <Container fluid>
           <Row
             className="align-items-center text-white"
             data-testid="place-row-header"
           >
             <Col lg={5} className="d-flex align-items-center">
-              {variant === "accordion" ? (
+              {variant === "accordion" && eventKey ? (
                 <AccordionToggle eventKey={eventKey} hidden={!hasScreens} />
               ) : (
-                <SelectBoxToggle
-                  onChange={checkboxOnChange}
-                  disabled={disabled}
-                />
+                <SelectBoxToggle checked={checked} disabled={disabled} />
               )}
               {filteredLine && (
                 <div
