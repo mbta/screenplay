@@ -2,7 +2,9 @@
   display: flex;
   flex-direction: column;
   color: $text-primary;
-  background: #0f1417;
+  background-color: #0f1417;
+  overflow-y: scroll;
+  min-height: 100%;
 
   .select-screen-type {
     max-width: 1320px;
