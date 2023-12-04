@@ -413,17 +413,18 @@ stop_ids =
     %{"source_config" => %{"sources" => sources}} ->
       sources
 
-    %{"source_config" => sources} ->
-      Enum.flat_map(sources, fn %{"sources" => source} -> source end)
+    %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
+      top_sources ++ bottom_sources
 
     %{"sources" => sources} ->
-      Enum.flat_map(sources, fn %{"sources" => source} -> source end)
+      sources
 
-    %{"configs" => sources} ->
-      Enum.flat_map(sources, fn %{"sources" => source} -> source end)
+    %{"configs" => configs} ->
+      Enum.flat_map(configs, fn %{"sources" => sources} -> sources end)
 
-    %{"bottom_configs" => sources} ->
-      Enum.flat_map(sources, fn %{"sources" => source} -> source end)
+    %{"top_configs" => top_configs, "bottom_configs" => bottom_configs} ->
+      Enum.flat_map(top_configs, fn %{"sources" => sources} -> sources end) ++
+        Enum.flat_map(bottom_configs, fn %{"sources" => sources} -> sources end)
 
     %{
       "top_sources" => top_sources,
@@ -474,22 +475,18 @@ pa_ess_screens =
       %{"source_config" => %{"sources" => sources}} ->
         get_first_not_nil.(sources)
 
-      %{"source_config" => sources} ->
-        sources
-        |> Enum.flat_map(fn %{"sources" => source} -> source end)
-        |> get_first_not_nil.()
+      %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
+        get_first_not_nil.(top_sources ++ bottom_sources)
 
       %{"sources" => sources} ->
         get_first_not_nil.(sources)
 
-      %{"configs" => sources} ->
-        sources
-        |> Enum.flat_map(fn %{"sources" => source} -> source end)
-        |> get_first_not_nil.()
+      %{"configs" => configs} ->
+        Enum.flat_map(configs, fn %{"sources" => sources} -> sources end) |> get_first_not_nil.()
 
-      %{"bottom_configs" => sources} ->
-        sources
-        |> Enum.flat_map(fn %{"sources" => source} -> source end)
+      %{"top_configs" => top_configs, "bottom_configs" => bottom_configs} ->
+        (Enum.flat_map(top_configs, fn %{"sources" => sources} -> sources end) ++
+           Enum.flat_map(bottom_configs, fn %{"sources" => sources} -> sources end))
         |> get_first_not_nil.()
 
       %{
@@ -520,57 +517,4 @@ merged_paess =
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
 
-# Now do busways and Silver Line
-contents_bus_silver =
-  contents
-  |> Enum.filter(fn %{id: id, routes: routes} ->
-    # Exclude ids that are integers because there are no countdown clocks at normal bus stops
-    ("Bus" in routes or "Silver" in routes) and Integer.parse(id) == :error
-  end)
-
-# Use Signs UI config for Bus/Silver Line PAESS ARINC to realtime signs id mapping
-url = "https://api.github.com/repos/mbta/signs_ui/contents/priv/arinc_to_realtime.json"
-%{status_code: 200, body: body} = HTTPoison.get!(url, headers)
-gh_response = Jason.decode!(body)
-
-%{"content" => signs_json_file} = gh_response
-parsed = signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
-
-bus_silver_configs =
-  parsed
-  |> Enum.filter(fn {_, realtime_id} -> realtime_id =~ "bus." or realtime_id =~ "Silver_Line" end)
-  |> Enum.map(fn {station_code_zone, realtime_id} ->
-    [station_code, zone] = String.split(station_code_zone, "-")
-
-    %{
-      id: realtime_id,
-      station_code: station_code,
-      zone: zone,
-      type: "pa_ess",
-      label: labels[station_code_zone]
-    }
-  end)
-
-place_to_config_mapping =
-  contents_bus_silver
-  |> Enum.map(fn %{id: id, name: name} ->
-    pa_ess_here =
-      Enum.filter(bus_silver_configs, fn %{id: realtime_id} ->
-        [_, realtime_id_no_prefix] = String.split(realtime_id, ".")
-        [name_start | _] = String.split(realtime_id_no_prefix, "_")
-        name =~ name_start
-      end)
-
-    if pa_ess_here != [], do: %{id => pa_ess_here}, else: nil
-  end)
-  |> Enum.filter(fn place -> is_map(place) end)
-  |> Enum.reduce(&Map.merge/2)
-
-# Merge in bus and Silver Line PAESS configs
-merged_final =
-  Enum.map(merged_paess, fn %{id: id, screens: screens} = place ->
-    Map.put(place, :screens, screens ++ (place_to_config_mapping[id] || []))
-  end)
-  |> Enum.sort_by(& &1.name)
-
-File.write!("priv/places_and_screens.json", Jason.encode!(merged_final), [:binary])
+File.write!("priv/places_and_screens.json", Jason.encode!(merged_paess), [:binary])
