@@ -3,12 +3,20 @@
 }
 
 .workflow {
-  &__places-list-summary-row {
+  &__places-list-header-row {
     background: $cool-gray-40;
     display: flex;
     align-items: center;
-    height: 56px;
-    padding: 16px;
     border-radius: 8px 8px 0 0;
+  }
+
+  &__places-list-header-text {
+    padding: 16px;
+    line-height: 24px;
+  }
+
+  &__places-list-header-count {
+    font-size: 32px;
+    font-weight: 900;
   }
 }

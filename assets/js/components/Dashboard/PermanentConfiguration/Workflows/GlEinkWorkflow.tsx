@@ -35,8 +35,13 @@ const GlEinkWorkflow: ComponentType<SubwayWorkflowProps> = ({
           onClick={() => setSortDirection((1 - sortDirection) as DirectionID)}
           className="mx-3 my-4"
         />
-        <div className="workflow__places-list-summary-row">
-          <div>{selectedPlaces.size} stations selected</div>
+        <div className="workflow__places-list-header-row">
+          <div className="workflow__places-list-header-text">
+            <span className="workflow__places-list-header-count">
+              {selectedPlaces.size}
+            </span>{" "}
+            stations selected
+          </div>
         </div>
         {sortByStationOrder(places, "Green", sortDirection === 1).map(
           (place) => (
