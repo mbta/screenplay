@@ -1,0 +1,33 @@
+.bottom-action-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.bottom-action-bar-container {
+  justify-content: right;
+  height: 78px;
+
+  button {
+    margin-left: 8px;
+    padding: 6px 12px;
+    height: 38px;
+  }
+
+  .forward {
+    background-color: $form-check-input-checked-bg-color;
+    color: black;
+    &:hover {
+      background-color: #72a4cd;
+    }
+  }
+  .cancel {
+    color: #c1e4ff;
+    text-decoration: none !important;
+  }
+
+  &__icon {
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+}
