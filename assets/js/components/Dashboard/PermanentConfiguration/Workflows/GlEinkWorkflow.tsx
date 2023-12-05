@@ -28,12 +28,12 @@ const GlEinkWorkflow: ComponentType<SubwayWorkflowProps> = ({
         </div>
         <div>This is where the search bar will go</div>
       </div>
-      <div>
+      <div className="mt-4">
         <SortLabel
           label={SORT_LABELS["Green"][sortDirection]}
           sortDirection={sortDirection}
           onClick={() => setSortDirection((1 - sortDirection) as DirectionID)}
-          className="mx-3 my-4"
+          className="mx-3 mb-4"
         />
         <div className="workflow__places-list-header-row">
           <div className="workflow__places-list-header-text">
