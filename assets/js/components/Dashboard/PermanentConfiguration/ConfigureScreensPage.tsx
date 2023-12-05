@@ -113,9 +113,9 @@ const SelectScreenTypeComponent: ComponentType<SelectScreenTypeComponentProps> =
     );
   };
 
-interface SubwayWorkflowProps {
+interface WorkflowProps {
   places: Place[];
 }
 
-export { SubwayWorkflowProps };
+export { WorkflowProps };
 export default ConfigureScreensPage;

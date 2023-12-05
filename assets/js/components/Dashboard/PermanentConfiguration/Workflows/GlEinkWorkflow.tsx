@@ -1,5 +1,5 @@
 import React, { ComponentType, useState } from "react";
-import { SubwayWorkflowProps } from "../ConfigureScreensPage";
+import { WorkflowProps } from "../ConfigureScreensPage";
 import { Container } from "react-bootstrap";
 import PlaceRow from "../../PlaceRow";
 import { sortByStationOrder } from "../../../../util";
@@ -7,9 +7,9 @@ import SortLabel from "../../SortLabel";
 import { SORT_LABELS } from "../../../../constants/constants";
 import { DirectionID } from "../../../../models/direction_id";
 
-const GlEinkWorkflow: ComponentType<SubwayWorkflowProps> = ({
+const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
-}: SubwayWorkflowProps) => {
+}: WorkflowProps) => {
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
 
