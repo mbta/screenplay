@@ -53,7 +53,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
               defaultSort={sortDirection === 0}
               className="filtered"
               checked={selectedPlaces.has(place.id)}
-              onClick={(checked) => {
+              onClick={(checked: boolean) => {
                 // Make a new Set so React knows state was changed.
                 const newSet = new Set(selectedPlaces);
                 checked ? newSet.add(place.id) : newSet.delete(place.id);
