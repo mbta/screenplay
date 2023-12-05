@@ -2,6 +2,8 @@ import React, { ComponentType, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import AppBar from "./AppBar";
 import ButtonImage from "./ButtonImage";
+import BottomActionBar from "./BottomActionBar";
+import { useNavigate } from "react-router-dom";
 import "../../../../css/screenplay.scss";
 import { Place } from "../../../models/place";
 import { useScreenplayContext } from "../../../hooks/useScreenplayContext";
