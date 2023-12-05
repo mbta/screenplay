@@ -94,7 +94,7 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
     place.screens.filter((screen) => !screen.hidden).length > 0;
   const rowOnClick = hasScreens
     ? useAccordionButton(place.id, () => handleClickAccordion(place.id))
-    : undefined;
+    : () => undefined;
   const { activeEventKey } = useContext(AccordionContext);
   const isOpen = activeEventKey?.includes(place.id);
   const { showAnimation } = useUpdateAnimation([], null, canShowAnimation);
