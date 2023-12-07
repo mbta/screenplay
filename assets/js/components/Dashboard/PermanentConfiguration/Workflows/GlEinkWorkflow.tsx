@@ -2,6 +2,7 @@ import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../ConfigureScreensPage";
 import { Container } from "react-bootstrap";
 import PlaceRow from "../../PlaceRow";
+import SearchBar from "../SearchBar";
 import { sortByStationOrder } from "../../../../util";
 import SortLabel from "../../SortLabel";
 import { SORT_LABELS } from "../../../../constants/constants";
@@ -22,11 +23,11 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           branches
         </div>
       </div>
-      <div className="search-bar mb-3">
+      <div className="search-bar-container mb-3">
         <div className="body--medium mb-2">
           Enter Station ID or name to select stations
         </div>
-        <div>This is where the search bar will go</div>
+        <SearchBar items={places} />
       </div>
       <div className="mt-4">
         <SortLabel
