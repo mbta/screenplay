@@ -33,6 +33,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         </div>
         <SearchBar
           items={places}
+          selectedItems={Array.from(selectedPlaces)}
           handleSearchResultClick={handleSearchResultClick}
         />
       </div>

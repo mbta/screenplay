@@ -1,4 +1,4 @@
-import React, { ComponentType, useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 interface SearchItem {
@@ -8,14 +8,16 @@ interface SearchItem {
 
 interface SearchBarProps {
   items: SearchItem[];
+  selectedItems: string[];
   handleSearchResultClick: (item: SearchItem) => void;
 }
 
 const SearchBar: ComponentType<SearchBarProps> = ({
   items,
+  selectedItems,
   handleSearchResultClick,
 }: SearchBarProps) => {
-  const [inputString, setInputString] = useState<string>("");
+  const [inputString, setInputString] = useState<string>();
 
   const formatResult = (item: SearchItem) => {
     return (
@@ -25,12 +27,35 @@ const SearchBar: ComponentType<SearchBarProps> = ({
     );
   };
 
-  const handleOnSearch = (searchString: string, _results: SearchItem[]) =>
-    setInputString(searchString);
+  // When pressing enter on a result instead of clicking the result, inputString is not cleared properly.
+  // As an item is selected, inputString will be set to the full name of the item.
+  // As the parent state changes, check if the inputString is the full item name or id.
+  // If it is, the item was just selected and the text box needs to be cleared.
+  useEffect(() => {
+    const item = items.find(
+      (item) => item.id === inputString || item.name === inputString
+    );
+    if (item && selectedItems.includes(item.id)) {
+      setInputString("");
+    } else {
+      setInputString(inputString);
+    }
+  }, [selectedItems]);
+
+  const handleOnSearch = (searchString: string, results: SearchItem[]) => {
+    const item = results.find(
+      (item) => item.id === searchString || item.name === searchString
+    );
+    if (item && selectedItems.includes(item.id)) {
+      setInputString("");
+    } else {
+      setInputString(searchString);
+    }
+  };
 
   const handleOnSelect = (item: SearchItem) => {
-    setInputString("");
     handleSearchResultClick(item);
+    setInputString("");
   };
 
   return (
