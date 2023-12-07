@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React, { ComponentType, useState } from "react";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 interface SearchItem {
@@ -8,17 +8,29 @@ interface SearchItem {
 
 interface SearchBarProps {
   items: SearchItem[];
+  handleSearchResultClick: (item: SearchItem) => void;
 }
 
 const SearchBar: ComponentType<SearchBarProps> = ({
   items,
+  handleSearchResultClick,
 }: SearchBarProps) => {
+  const [inputString, setInputString] = useState<string>("");
+
   const formatResult = (item: SearchItem) => {
     return (
       <span className="result-row body--regular">
         {item.name} · Station ID: {item.id}
       </span>
     );
+  };
+
+  const handleOnSearch = (searchString: string, _results: SearchItem[]) =>
+    setInputString(searchString);
+
+  const handleOnSelect = (item: SearchItem) => {
+    setInputString("");
+    handleSearchResultClick(item);
   };
 
   return (
@@ -32,6 +44,9 @@ const SearchBar: ComponentType<SearchBarProps> = ({
       className="search-bar body--medium"
       showIcon={false}
       showClear={false}
+      onSearch={handleOnSearch}
+      onSelect={handleOnSelect}
+      inputSearchString={inputString}
       styling={{
         height: "38px",
         border: "none",
@@ -45,4 +60,5 @@ const SearchBar: ComponentType<SearchBarProps> = ({
   );
 };
 
+export { SearchItem };
 export default SearchBar;
