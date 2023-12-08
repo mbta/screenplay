@@ -2,7 +2,7 @@ import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../ConfigureScreensPage";
 import { Container } from "react-bootstrap";
 import PlaceRow from "../../PlaceRow";
-import SearchBar, { SearchItem } from "../SearchBar";
+import PlacesSearchBar, { SearchItem } from "../PlacesSearchBar";
 import { sortByStationOrder } from "../../../../util";
 import SortLabel from "../../SortLabel";
 import { SORT_LABELS } from "../../../../constants/constants";
@@ -31,8 +31,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         <div className="body--medium mb-2">
           Enter Station ID or name to select stations
         </div>
-        <SearchBar
-          items={places}
+        <PlacesSearchBar
+          places={places}
           selectedItems={Array.from(selectedPlaces)}
           handleSearchResultClick={handleSearchResultClick}
         />

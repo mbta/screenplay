@@ -6,17 +6,17 @@ interface SearchItem {
   name: string;
 }
 
-interface SearchBarProps {
-  items: SearchItem[];
+interface PlacesSearchBarProps {
+  places: SearchItem[];
   selectedItems: string[];
   handleSearchResultClick: (item: SearchItem) => void;
 }
 
-const SearchBar: ComponentType<SearchBarProps> = ({
-  items,
+const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
+  places,
   selectedItems,
   handleSearchResultClick,
-}: SearchBarProps) => {
+}: PlacesSearchBarProps) => {
   const [inputString, setInputString] = useState<string>();
 
   const formatResult = (item: SearchItem) => {
@@ -32,10 +32,10 @@ const SearchBar: ComponentType<SearchBarProps> = ({
   // As the parent state changes, check if the inputString is the full item name or id.
   // If it is, the item was just selected and the text box needs to be cleared.
   useEffect(() => {
-    const item = items.find(
-      (item) => item.id === inputString || item.name === inputString
+    const place = places.find(
+      (place) => place.id === inputString || place.name === inputString
     );
-    if (item && selectedItems.includes(item.id)) {
+    if (place && selectedItems.includes(place.id)) {
       setInputString("");
     } else {
       setInputString(inputString);
@@ -43,18 +43,18 @@ const SearchBar: ComponentType<SearchBarProps> = ({
   }, [selectedItems]);
 
   const handleOnSearch = (searchString: string, results: SearchItem[]) => {
-    const item = results.find(
-      (item) => item.id === searchString || item.name === searchString
+    const place = results.find(
+      (place) => place.id === searchString || place.name === searchString
     );
-    if (item && selectedItems.includes(item.id)) {
+    if (place && selectedItems.includes(place.id)) {
       setInputString("");
     } else {
       setInputString(searchString);
     }
   };
 
-  const handleOnSelect = (item: SearchItem) => {
-    handleSearchResultClick(item);
+  const handleOnSelect = (place: SearchItem) => {
+    handleSearchResultClick(place);
     setInputString("");
   };
 
@@ -65,7 +65,7 @@ const SearchBar: ComponentType<SearchBarProps> = ({
         keys: ["id", "name"],
         minMatchCharLength: 2,
       }}
-      items={items}
+      items={places}
       className="search-bar body--medium"
       showIcon={false}
       showClear={false}
@@ -81,10 +81,11 @@ const SearchBar: ComponentType<SearchBarProps> = ({
         color: "#F8F9FA",
         fontSize: "16px",
         fontFamily: "Inter",
+        placeholderColor: "#6C757D",
       }}
     />
   );
 };
 
 export { SearchItem };
-export default SearchBar;
+export default PlacesSearchBar;
