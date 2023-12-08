@@ -72,6 +72,7 @@ const SearchBar: ComponentType<SearchBarProps> = ({
       onSearch={handleOnSearch}
       onSelect={handleOnSelect}
       inputSearchString={inputString}
+      placeholder="Enter Station ID or name"
       styling={{
         height: "38px",
         border: "none",
