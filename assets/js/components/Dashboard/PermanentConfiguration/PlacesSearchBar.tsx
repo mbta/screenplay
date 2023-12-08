@@ -63,7 +63,7 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
       formatResult={formatResult}
       fuseOptions={{
         keys: ["id", "name"],
-        minMatchCharLength: 2,
+        minMatchCharLength: 3,
       }}
       items={places}
       className="search-bar body--medium"
@@ -73,6 +73,7 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
       onSelect={handleOnSelect}
       inputSearchString={inputString}
       placeholder="Enter Station ID or name"
+      showNoResults={false}
       styling={{
         height: "38px",
         border: "none",
