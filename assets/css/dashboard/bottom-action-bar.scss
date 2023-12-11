@@ -2,10 +2,11 @@
   position: absolute;
   bottom: 0;
   width: 100%;
+  z-index: 1000;
 }
 
 .bottom-action-bar-container {
-  justify-content: right;
+  justify-content: right !important;
   height: 78px;
 
   button {
