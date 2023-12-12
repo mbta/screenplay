@@ -102,6 +102,14 @@ class OutfrontTakeoverTool extends React.Component<
     }));
   }
 
+  testSFTPConnection = () => {
+    fetch("/api/test_sftp_connection")
+      .then((response) => response.json())
+      .then((json: any) => {
+        alert(json);
+      });
+  };
+
   render() {
     return (
       <>
@@ -112,6 +120,9 @@ class OutfrontTakeoverTool extends React.Component<
               <div>Outfront Media screens</div>
               <div className="weight-700">Emergency Takeover</div>
             </div>
+            <button onClick={this.testSFTPConnection}>
+              <span className="text-16">Test SFTP Connection</span>
+            </button>
           </div>
           {this.state.alertWizardOpen ? (
             <AlertWizard

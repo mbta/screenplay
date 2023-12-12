@@ -96,6 +96,7 @@ defmodule ScreenplayWeb.Router do
     post("/clear_all", AlertController, :clear_all)
     get("/active_alerts", AlertController, :active_alerts)
     get("/past_alerts", AlertController, :past_alerts)
+    get("/test_sftp_connection", AlertController, :test_sftp_connection)
   end
 
   scope "/config", ScreenplayWeb do
