@@ -17,7 +17,7 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
   selectedItems,
   handleSearchResultClick,
 }: PlacesSearchBarProps) => {
-  const [inputString, setInputString] = useState<string>();
+  const [inputString, setInputString] = useState<string>("");
 
   const formatResult = (item: SearchItem) => {
     return (
@@ -32,17 +32,13 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
   // As the parent state changes, check if the inputString is the full item name or id.
   // If it is, the item was just selected and the text box needs to be cleared.
   useEffect(() => {
-    const place = places.find(
-      (place) => place.id === inputString || place.name === inputString
-    );
-    if (place && selectedItems.includes(place.id)) {
-      setInputString("");
-    } else {
-      setInputString(inputString);
-    }
+    checkResultsForSearchString(inputString, places);
   }, [selectedItems]);
 
-  const handleOnSearch = (searchString: string, results: SearchItem[]) => {
+  const checkResultsForSearchString = (
+    searchString: string,
+    results: SearchItem[]
+  ) => {
     const place = results.find(
       (place) => place.id === searchString || place.name === searchString
     );
@@ -69,7 +65,7 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
       className="search-bar body--medium"
       showIcon={false}
       showClear={false}
-      onSearch={handleOnSearch}
+      onSearch={checkResultsForSearchString}
       onSelect={handleOnSelect}
       inputSearchString={inputString}
       placeholder="Enter Station ID or name"
