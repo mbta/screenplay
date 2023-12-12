@@ -28,7 +28,7 @@ defmodule Screenplay.Outfront.SFTPTest do
     if is_binary(key) and String.length(key) > 0 do
       Logger.info("Outfront SSH key is a valid string")
     else
-      Logger.info("Outfront SSH key is not a string as expected: #{key}")
+      Logger.info("Outfront SSH key is not a string as expected: #{inspect(key)}")
     end
 
     case sftp_client_module().connect(
