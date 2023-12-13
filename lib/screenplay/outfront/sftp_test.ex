@@ -89,8 +89,8 @@ defmodule Screenplay.Outfront.SFTPTest do
     do: {:error, "Could not establish SFTP connection after #{@retries} attempts!"}
 
   defp start_connection(retry) do
-    host = "em-api.outfrontmediadigital.com"
-    user = "MBTA_EMessaging"
+    host = Application.get_env(:screenplay, :outfront_sftp_domain)
+    user = Application.get_env(:screenplay, :outfront_sftp_user)
     key = Application.get_env(:screenplay, :outfront_ssh_key)
 
     if is_binary(key) and String.length(key) > 0 do
