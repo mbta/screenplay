@@ -1,9 +1,9 @@
-defmodule Screenplay.Config.Fetch.Local do
+defmodule Screenplay.Config.Fetch.S3 do
   @moduledoc """
   Functions to work with a local copy of the screens config.
   """
 
-  @behaviour Screenplay.Config.Fetch
+  @behaviour Screenplay.Config.Cache.Fetch
 
   @impl true
   def fetch_config(current_version \\ nil) do

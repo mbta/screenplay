@@ -4,18 +4,17 @@ defmodule Screenplay.Config.Cache.Engine do
   """
 
   alias ScreensConfig.Config
-  alias Screenplay.Config.{Cache, Fetch}
+  alias Screenplay.Config.Cache
+  alias Screenplay.Config.Cache.Fetch
 
   @behaviour Screenplay.Cache.Engine
-
-  @last_deploy_fetcher Application.compile_env(:screenplay, :last_deploy_fetcher)
 
   @impl true
   def name, do: Screenplay.Config.Cache.table()
 
   @impl true
   def update_table(current_version) do
-    last_deploy_timestamp = @last_deploy_fetcher.get_last_deploy_time()
+    # last_deploy_timestamp = @last_deploy_fetcher.get_last_deploy_time()
 
     with {:ok, body, new_version} <- Fetch.fetch_config(current_version),
          {:ok, deserialized} <- Jason.decode(body) do
@@ -24,11 +23,11 @@ defmodule Screenplay.Config.Cache.Engine do
       # It's inefficient to store the entire config under one key--every time we read any entry from an ETS table,
       # a full copy of that entry is made.
       # So, we need to split the config into separate entries for each screen, plus a couple metadata items.
-      table_entries = config_to_table_entries(config, last_deploy_timestamp)
+      table_entries = config_to_table_entries(config)
 
       {:replace, table_entries, new_version}
     else
-      :unchanged -> {:patch, {:last_deploy_timestamp, last_deploy_timestamp}}
+      :unchanged -> :unchanged
       _ -> :error
     end
   end
@@ -39,14 +38,14 @@ defmodule Screenplay.Config.Cache.Engine do
   @impl true
   def update_failure_error_log_threshold_minutes, do: 2
 
-  @spec config_to_table_entries(Config.t(), DateTime.t() | nil) :: Cache.table_contents()
-  defp config_to_table_entries(config, last_deploy_timestamp) do
+  @spec config_to_table_entries(Config.t()) :: Cache.table_contents()
+  defp config_to_table_entries(config) do
     screen_entries =
       Enum.map(config.screens, fn {screen_id, screen_config} ->
         {{:screen, screen_id}, screen_config}
       end)
 
-    metadata_entries = [last_deploy_timestamp: last_deploy_timestamp, devops: config.devops]
+    metadata_entries = [devops: config.devops]
 
     metadata_entries ++ screen_entries
   end

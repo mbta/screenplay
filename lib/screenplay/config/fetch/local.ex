@@ -3,7 +3,7 @@ defmodule Screenplay.Config.Fetch.Local do
   Functions to work with a local copy of the screens config.
   """
 
-  @behaviour Screenplay.Config.Fetch
+  @behaviour Screenplay.Config.Cache.Fetch
 
   @impl true
   def fetch_config(current_version \\ nil) do
@@ -27,9 +27,10 @@ defmodule Screenplay.Config.Fetch.Local do
   end
 
   defp local_config_path do
-    case Application.get_env(:screenplay, :local_config_file_spec) do
+    case Application.get_env(:screenplay, :local_screens_config_file_spec) do
       {:priv, file_name} -> Path.join(:code.priv_dir(:screenplay), file_name)
       {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
+      path -> path
     end
   end
 
