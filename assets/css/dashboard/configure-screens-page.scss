@@ -3,7 +3,8 @@
   flex-direction: column;
   color: $text-primary;
   background: #0f1417;
-  min-height: 100vh;
+  overflow-y: scroll;
+  min-height: 100%;
 
   .select-screen-type {
     max-width: 1320px;
