@@ -121,7 +121,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
     message =
       case SFTPTest.list_directories() do
         {:ok, contents} -> contents
-        {:error, error} -> error
+        error -> error
       end
 
     json(conn, message)
