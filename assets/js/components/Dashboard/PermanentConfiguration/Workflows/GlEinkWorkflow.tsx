@@ -1,11 +1,9 @@
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../ConfigureScreensPage";
 import { Container } from "react-bootstrap";
-import PlaceRow from "../../PlaceRow";
-import { sortByStationOrder } from "../../../../util";
-import SortLabel from "../../SortLabel";
-import { SORT_LABELS } from "../../../../constants/constants";
+import WorkflowPlacesList from "../WorkflowPlacesList";
 import { DirectionID } from "../../../../models/direction_id";
+import { Place } from "../../../../models/place";
 
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
@@ -28,44 +26,19 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         </div>
         <div>This is where the search bar will go</div>
       </div>
-      <div className="mt-4">
-        <SortLabel
-          label={SORT_LABELS["Green"][sortDirection]}
-          sortDirection={sortDirection}
-          onClick={() =>
-            setSortDirection((prevSD) => (1 - prevSD) as DirectionID)
-          }
-          className="mx-3 mb-4"
-        />
-        <div className="workflow__places-list-header-row">
-          <div className="workflow__places-list-header-text">
-            <span className="workflow__places-list-header-count">
-              {selectedPlaces.size}
-            </span>{" "}
-            stations selected
-          </div>
-        </div>
-        {sortByStationOrder(places, "Green", sortDirection === 1).map(
-          (place) => (
-            <PlaceRow
-              key={place.id}
-              place={place}
-              filteredLine="Green"
-              variant="select-box"
-              defaultSort={sortDirection === 0}
-              className="filtered"
-              checked={selectedPlaces.has(place.id)}
-              onClick={(checked: boolean) => {
-                // Make a new Set so React knows state was changed.
-                const newSet = new Set(selectedPlaces);
-                checked ? newSet.add(place.id) : newSet.delete(place.id);
+      <WorkflowPlacesList
+        places={places}
+        setSortDirection={setSortDirection}
+        sortDirection={sortDirection}
+        selectedPlaces={selectedPlaces}
+        onRowClick={(place: Place, checked: boolean) => {
+          // Make a new Set so React knows state was changed.
+          const newSet = new Set(selectedPlaces);
+          checked ? newSet.add(place.id) : newSet.delete(place.id);
 
-                setSelectedPlaces(newSet);
-              }}
-            />
-          )
-        )}
-      </div>
+          setSelectedPlaces(newSet);
+        }}
+      />
     </Container>
   );
 };
