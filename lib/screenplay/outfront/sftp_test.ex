@@ -74,7 +74,7 @@ defmodule Screenplay.Outfront.SFTPTest do
     conn = start_connection()
 
     result =
-      case SFTPClient.list_dir(conn, Path.join(["Portrait"])) do
+      case SFTPClient.list_dir(conn, ".") do
         {:error, error} -> "Something wrong with directory: #{error}"
         result -> result
       end
