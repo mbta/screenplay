@@ -1,7 +1,7 @@
 defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.Outfront.SFTP
+  alias Screenplay.Outfront.{SFTP, SFTPTest}
   alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
   alias ScreenplayWeb.UserActionLogger
 
@@ -119,7 +119,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
 
   def test_sftp_connection(conn, _) do
     message =
-      case Screenplay.Outfront.SFTPTest.list_directories() do
+      case SFTPTest.list_directories() do
         {:ok, contents} -> contents
         {:error, error} -> error
       end
