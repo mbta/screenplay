@@ -32,7 +32,9 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         <SortLabel
           label={SORT_LABELS["Green"][sortDirection]}
           sortDirection={sortDirection}
-          onClick={() => setSortDirection((1 - sortDirection) as DirectionID)}
+          onClick={() =>
+            setSortDirection((prevSD) => (1 - prevSD) as DirectionID)
+          }
           className="mx-3 mb-4"
         />
         <div className="workflow__places-list-header-row">
