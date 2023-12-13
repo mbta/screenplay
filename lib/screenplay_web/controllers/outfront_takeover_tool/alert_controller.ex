@@ -119,13 +119,9 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
 
   def test_sftp_connection(conn, _) do
     message =
-      if Application.get_env(:screenplay, :environment_name) === "dev-green" do
-        case Screenplay.Outfront.SFTPTest.list_directories() do
-          {:ok, contents} -> contents
-          {:error, error} -> error
-        end
-      else
-        "Wrong environment"
+      case Screenplay.Outfront.SFTPTest.list_directories() do
+        {:ok, contents} -> contents
+        {:error, error} -> error
       end
 
     json(conn, message)
