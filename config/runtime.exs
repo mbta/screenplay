@@ -19,7 +19,7 @@ sftp_client_module =
     _ -> Screenplay.Outfront.FakeSFTPClient
   end
 
-env = System.get_env("ENVIRONMENT_NAME", "dev")
+env = System.get_env("ENVIRONMENT_NAME")
 
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),

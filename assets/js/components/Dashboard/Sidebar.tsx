@@ -5,8 +5,6 @@ import {
   CollectionFill,
   ExclamationTriangleFill,
   PersonFill,
-  PlusLg,
-  ClockFill,
 } from "react-bootstrap-icons";
 import TSquare from "../../../static/images/t-square.svg";
 
@@ -39,20 +37,6 @@ const Sidebar: ComponentType = () => {
           <Button className={pathname === "alerts" ? "selected" : ""}>
             <ExclamationTriangleFill size={20} className="sidebar-link__icon" />
             <span className="nav-link__name">Posted Alerts</span>
-          </Button>
-        </Link>
-        <Link className="sidebar-link" to="/pending">
-          <Button className={pathname === "pending" ? "selected" : ""}>
-            <ClockFill size={20} className="sidebar-link__icon" />
-            <span className="nav-link__name">Pending</span>
-          </Button>
-        </Link>
-        <Link className="sidebar-link" to="/configure-screens">
-          <Button
-            className={pathname === "configure-screens" ? "selected" : ""}
-          >
-            <PlusLg size={20} className="sidebar-link__icon" />
-            <span className="nav-link__name">Configure</span>
           </Button>
         </Link>
         {/* This button slightly different to trigger a reload */}
