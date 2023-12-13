@@ -3,10 +3,6 @@ defmodule ScreenplayWeb.ConfigController do
 
   alias Screenplay.Config.PermanentConfig
 
-  def index(conn, _params) do
-    render(conn, "index.html")
-  end
-
   def add(conn, _params) do
     PermanentConfig.add_new_screen()
     conn
