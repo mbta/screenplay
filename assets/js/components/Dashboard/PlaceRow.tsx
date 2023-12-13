@@ -50,7 +50,7 @@ const SelectBoxToggle = ({
 }: SelectBoxToggleProps): JSX.Element => {
   return (
     <div className="place-row__toggle">
-      <Form.Check disabled={disabled} checked={checked} />
+      <Form.Check disabled={disabled} checked={checked} readOnly />
     </div>
   );
 };
