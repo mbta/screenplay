@@ -16,7 +16,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
   live_view: [signing_salt: "vSiyKz7D"]
 
 config :screenplay,
-  config_fetcher: Screenplay.Config.S3Fetch,
+  config_fetcher: Screenplay.Config.Fetch.S3,
   config_s3_bucket: "mbta-ctd-config",
   record_sentry: false
 
