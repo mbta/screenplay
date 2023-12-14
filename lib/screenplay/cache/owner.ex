@@ -23,7 +23,8 @@ defmodule Screenplay.Cache.Owner do
           ### Cache state
           table_version: Engine.table_version(),
           retry_count: non_neg_integer(),
-          # The server initializes in error state, and transitions permanently to ok after its first successful data fetch.
+          # The server initializes in error state,
+          # and transitions permanently to ok after its first successful data fetch.
           status: :ok | :error
         }
 
@@ -168,7 +169,7 @@ defmodule Screenplay.Cache.Owner do
     keys(table, :ets.next(table, key), [key | acc])
   end
 
-  defp error_state(%{status: :error} = state) do
+  defp error_state(state = %{status: :error}) do
     _ = Logger.error("cache_init_error table_name=#{state.name}")
 
     %{state | retry_count: state.retry_count + 1}

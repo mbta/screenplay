@@ -4,13 +4,12 @@ defmodule Screenplay.ScreensConfig.Cache.Engine do
   """
 
   alias ScreensConfig.Config
-  alias Screenplay.ScreensConfig.Cache
-  alias Screenplay.ScreensConfig.Cache.Fetch
+  alias Screenplay.ScreensConfig.{Cache, Fetch}
 
   @behaviour Screenplay.Cache.Engine
 
   @impl true
-  def name, do: Screenplay.ScreensConfig.Cache.table()
+  def name, do: Cache.table()
 
   @impl true
   def update_table(current_version) do

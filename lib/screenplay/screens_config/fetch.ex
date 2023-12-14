@@ -1,4 +1,4 @@
-defmodule Screenplay.ScreensConfig.Cache.Fetch do
+defmodule Screenplay.ScreensConfig.Fetch do
   @moduledoc """
   Defines a behaviour for, and delegates to, a module that provides access to
   the screens config file.

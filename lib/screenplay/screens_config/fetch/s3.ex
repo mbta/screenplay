@@ -1,49 +1,56 @@
 defmodule Screenplay.ScreensConfig.Fetch.S3 do
   @moduledoc """
-  Functions to work with a local copy of the screens config.
+  Functions to work with an S3-hosted copy of the screens config.
   """
 
-  @behaviour Screenplay.ScreensConfig.Cache.Fetch
+  require Logger
+
+  @behaviour Screenplay.ScreensConfig.Fetch
 
   @impl true
   def fetch_config(current_version \\ nil) do
-    path = local_config_path()
+    bucket = Application.get_env(:screenplay, :config_s3_bucket)
+    path = config_path_for_environment()
 
-    with {:ok, last_modified} <- get_last_modified(path) do
-      if last_modified == current_version do
-        :unchanged
-      else
-        do_fetch(path, last_modified)
+    opts =
+      case current_version do
+        nil -> []
+        _ -> [if_none_match: current_version]
       end
+
+    get_operation = ExAws.S3.get_object(bucket, path, opts)
+
+    case ExAws.request(get_operation) do
+      {:ok, %{status_code: 304}} ->
+        :unchanged
+
+      {:ok, %{body: body, headers: headers, status_code: 200}} ->
+        etag =
+          headers
+          |> Enum.into(%{})
+          |> Map.get("ETag")
+
+        {:ok, body, etag}
+
+      {:error, err} ->
+        _ = Logger.info("s3_screens_config_fetch_error #{inspect(err)}")
+        :error
     end
   end
 
   @impl true
   def put_config(file_contents) do
-    case File.write(local_config_path(), file_contents) do
-      :ok -> :ok
-      {:error, _} -> :error
-    end
-  end
+    bucket = Application.get_env(:screenplay, :config_s3_bucket)
+    path = config_path_for_environment()
+    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
 
-  defp local_config_path do
-    case Application.get_env(:screenplay, :local_config_file_spec) do
-      {:priv, file_name} -> Path.join(:code.priv_dir(:screenplay), file_name)
-      {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
-    end
-  end
-
-  defp do_fetch(path, last_modified) do
-    case File.read(path) do
-      {:ok, contents} -> {:ok, contents, last_modified}
+    case ExAws.request(put_operation) do
+      {:ok, %{status_code: 200}} -> :ok
       _ -> :error
     end
   end
 
-  defp get_last_modified(path) do
-    case File.stat(path) do
-      {:ok, %File.Stat{mtime: mtime}} -> {:ok, mtime}
-      {:error, _} -> :error
-    end
+  defp config_path_for_environment do
+    "screens/screens-#{Application.get_env(:screenplay, :environment_name)}.json"
   end
 end
