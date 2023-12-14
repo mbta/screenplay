@@ -11,7 +11,7 @@ config :screenplay,
   alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.LocalFetch,
   local_alerts_path_spec: {:test, "alerts.json"},
   config_fetcher: Screenplay.Config.LocalFetch,
-  screens_config_fetcher: Screenplay.Config.Fetch.Local,
+  screens_config_fetcher: Screenplay.ScreensConfig.Fetch.Local,
   api_v3_url: [:no_api_requests_allowed_during_testing]
 
 config :ueberauth, Ueberauth,
