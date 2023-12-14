@@ -1,6 +1,8 @@
 defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
+  require Logger
+
   alias Screenplay.Outfront.{SFTP, SFTPTest}
   alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
   alias ScreenplayWeb.UserActionLogger
@@ -124,6 +126,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.AlertController do
         error -> error
       end
 
+    Logger.info("[test_sftp_connection] message: #{message}")
     json(conn, message)
   end
 
