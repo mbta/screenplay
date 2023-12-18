@@ -12,7 +12,9 @@ config :screenplay,
   local_alerts_path_spec: {:test, "alerts.json"},
   config_fetcher: Screenplay.Config.LocalFetch,
   screens_config_fetcher: Screenplay.ScreensConfig.Fetch.Local,
-  local_screens_config_file_spec: "../screens/test/config.json",
+  pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.Local,
+  local_screens_config_file_spec: "../screens/test/fixtures/config.json",
+  local_pending_screens_config_file_spec: "../screens/test/fixtures/pending-screens.json",
   api_v3_url: [:no_api_requests_allowed_during_testing]
 
 config :ueberauth, Ueberauth,
