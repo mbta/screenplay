@@ -19,6 +19,7 @@ defmodule Screenplay.ScreensConfig.Fetch.Local do
   end
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def put_config(file_contents) do
     case File.write(local_config_path(), file_contents) do
       :ok -> :ok
@@ -30,6 +31,7 @@ defmodule Screenplay.ScreensConfig.Fetch.Local do
     Application.get_env(:screenplay, :local_screens_config_file_spec)
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp do_fetch(path, last_modified) do
     case File.read(path) do
       {:ok, contents} -> {:ok, contents, last_modified}

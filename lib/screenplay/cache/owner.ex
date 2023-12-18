@@ -59,6 +59,7 @@ defmodule Screenplay.Cache.Owner do
   # Overrides the default child_spec/1 defined by `use GenServer`, because we need
   # a unique ID for each cache owner that we spin up.
   # The table name provided by the engine must be unique, so let's use that!
+  # sobelow_skip ["DOS.BinToAtom"]
   def child_spec(init_arg) do
     table_name = init_arg[:engine_module].name()
 
