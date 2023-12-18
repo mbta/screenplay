@@ -4,7 +4,6 @@ defmodule ScreenplayWeb.UnauthorizedController do
   def index(conn, _params) do
     conn
     |> put_status(403)
-    |> put_layout("error.html")
-    |> render("index.html")
+    |> render("index.html", layout: {ScreenplayWeb.LayoutView, "error.html"})
   end
 end

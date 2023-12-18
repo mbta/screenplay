@@ -17,6 +17,8 @@ defmodule ScreenplayWeb.ConnCase do
 
   using do
     quote do
+      use ScreenplayWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
