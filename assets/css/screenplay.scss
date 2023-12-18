@@ -1,5 +1,7 @@
+@import "variables.scss";
+
 $theme-colors: (
-  "primary": #384956,
+  "primary": $theme-primary,
 );
 
 $form-check-input-checked-color: #0f1417;
@@ -8,7 +10,6 @@ $form-check-input-bg: #0f1417;
 $form-check-input-border: 1px solid #8b9198;
 
 @import "~bootstrap/scss/bootstrap";
-@import "variables.scss";
 @import "dashboard.scss";
 @import "dashboard/places-page.scss";
 @import "dashboard/alerts-page.scss";
@@ -68,7 +69,7 @@ input[type="button"] {
 
 .h2 {
   font-weight: 700;
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .h3 {

@@ -205,15 +205,18 @@ export const sortByStationOrder = (
 ) => {
   const stationOrder = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
 
-  places.sort((placeA, placeB) => {
-    const indexA = stationOrder.findIndex((station) => {
-      return station.name.toLowerCase() === placeA.name.toLowerCase();
-    });
-    const indexB = stationOrder.findIndex((station) => {
-      return station.name.toLowerCase() === placeB.name.toLowerCase();
-    });
-    return indexA - indexB;
-  });
+  const stationOrderToIndex = Object.fromEntries(
+    stationOrder.map((station, i) => [station.name.toLowerCase(), i])
+  );
 
-  return reverse ? places.reverse() : places;
+  const placesByStationOrder = places.map((place) => ({
+    place,
+    index: stationOrderToIndex[place.name.toLowerCase()],
+  }));
+
+  const sortedPlaces = placesByStationOrder
+    .sort(({ index: i1 }, { index: i2 }) => i1 - i2)
+    .map(({ place }) => place);
+
+  return reverse ? sortedPlaces.reverse() : sortedPlaces;
 };

@@ -92,9 +92,12 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
   const hasScreens =
     place.screens.length > 0 &&
     place.screens.filter((screen) => !screen.hidden).length > 0;
-  const rowOnClick = hasScreens
-    ? useAccordionButton(place.id, () => handleClickAccordion(place.id))
-    : () => undefined;
+  // Always call the `useAccordionButton` hook, but conditionally use its click handler. https://react.dev/learn#using-hooks
+  const handleAccordionClick = useAccordionButton(place.id, () =>
+    handleClickAccordion(place.id)
+  );
+  const rowOnClick = hasScreens ? handleAccordionClick : () => undefined;
+
   const { activeEventKey } = useContext(AccordionContext);
   const isOpen = activeEventKey?.includes(place.id);
   const { showAnimation } = useUpdateAnimation([], null, canShowAnimation);
