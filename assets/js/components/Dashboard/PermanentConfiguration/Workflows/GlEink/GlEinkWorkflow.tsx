@@ -1,5 +1,6 @@
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../../ConfigureScreensPage";
+import ConfigureScreensPage from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
@@ -50,7 +51,13 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       onForward = () => {
         navigate("/pending");
       };
-      layout = <div>Configure Screens Page</div>;
+      layout = (
+        <ConfigureScreensPage
+          selectedPlaces={places.filter((place) =>
+            selectedPlaces.has(place.id)
+          )}
+        />
+      );
       break;
   }
 
