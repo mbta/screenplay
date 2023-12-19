@@ -5,12 +5,14 @@ interface Destination {
   direction_id: DirectionID;
 }
 
-interface GlEinkConfig {
+interface GlEinkAppParams {
+  id: string;
   app_params: {
     header: Destination;
   };
 }
 
 export interface ScreenConfiguration {
-  [id: string]: GlEinkConfig;
+  id: string;
+  app_params: GlEinkAppParams;
 }

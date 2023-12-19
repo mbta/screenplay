@@ -1,7 +1,7 @@
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { ScreenConfiguration } from "../models/screen_configuration";
+import { ExistingScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 
 export const fetchPlaces = (callback: (places: Place[]) => void) => {
   return fetch("/api/dashboard")
@@ -31,22 +31,16 @@ export const fetchAlerts = (
     });
 };
 
-interface ExistingScreensResponse {
-  live_screens: ScreenConfiguration[];
-  pending_screens: ScreenConfiguration[];
-}
-
 export const fetchExistingScreens = (
-  placeId: string,
   appId: string,
-  callback: (
-    live_screens: ScreenConfiguration[],
-    pending_screens: ScreenConfiguration[]
-  ) => void
+  placeIds: string[],
+  callback: (places_and_screens: ExistingScreens) => void
 ) => {
-  return fetch(`/config/existing-screens/${placeId}/${appId}`)
+  return fetch(
+    `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
+  )
     .then((response) => response.json())
-    .then(({ live_screens, pending_screens }: ExistingScreensResponse) => {
-      callback(live_screens, pending_screens);
+    .then((places_and_screens: ExistingScreens) => {
+      callback(places_and_screens);
     });
 };

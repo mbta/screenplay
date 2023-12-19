@@ -43,21 +43,30 @@ defmodule ScreenplayWeb.ConfigController do
     end
   end
 
-  def existing_screens(conn, %{"place_id" => place_id, "app_id" => app_id}) do
+  def existing_screens(conn, %{"place_ids" => place_ids, "app_id" => app_id}) do
     app_id_atom = String.to_existing_atom(app_id)
 
-    filter_fn = fn
-      {_, %Screen{app_id: ^app_id_atom} = config} ->
-        place_id_has_screen?(place_id, String.to_existing_atom(app_id), config)
+    places_and_screens =
+      place_ids
+      |> String.split(",")
+      |> Enum.map(fn place_id ->
+        filter_fn = fn
+          {_, %Screen{app_id: ^app_id_atom} = config} ->
+            place_id_has_screen?(place_id, String.to_existing_atom(app_id), config)
 
-      _ ->
-        false
-    end
+          _ ->
+            false
+        end
 
-    live_screens = ScreensConfigCache.screens(&filter_fn.(&1))
-    pending_screens = PendingScreensConfigCache.screens(&filter_fn.(&1))
+        live_screens = ScreensConfigCache.screens(&filter_fn.(&1))
+        pending_screens = PendingScreensConfigCache.screens(&filter_fn.(&1))
 
-    json(conn, %{live_screens: live_screens, pending_screens: pending_screens})
+        {place_id, %{live_screens: live_screens, pending_screens: pending_screens}}
+      end)
+      |> Enum.into(%{})
+      |> IO.inspect()
+
+    json(conn, places_and_screens)
   end
 
   defp place_id_has_screen?(place_id, :gl_eink_v2, %Screen{
