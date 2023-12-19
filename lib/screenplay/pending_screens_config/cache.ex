@@ -102,10 +102,12 @@ defmodule Screenplay.PendingScreensConfig.Cache do
   that relies more on :ets.match / :ets.select to limit the size of data returned.
   """
   def config do
-    with pending_screens_map when is_map(pending_screens_map) <- pending_screens() do
-      %Config{screens: pending_screens_map}
-    else
-      _ -> :error
+    case pending_screens() do
+      pending_screens_map when is_map(pending_screens_map) ->
+        %Config{screens: pending_screens_map}
+
+      _ ->
+        :error
     end
   end
 end
