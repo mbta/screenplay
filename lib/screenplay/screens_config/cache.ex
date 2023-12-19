@@ -63,20 +63,22 @@ defmodule Screenplay.ScreensConfig.Cache do
   end
 
   @doc """
-  Returns a list of all screen IDs that satisfy the given filter.
-  The filter function will be passed a tuple of {screen_id, screen_config} and should return true if that screen ID should be included in the results.
+  Returns a list of all screen configurations that satisfy the given filter.
+  The filter function will be passed a tuple of {screen_id, screen_config} and should return true if that screen should be included in the results.
   """
-  def screen_ids(filter_fn) do
+  def screens(filter_fn) do
     with_table default: [] do
       filter_reducer = fn
         {{:screen, screen_id}, screen_config}, acc ->
-          if filter_fn.({screen_id, screen_config}), do: [screen_id | acc], else: acc
+          if filter_fn.({screen_id, screen_config}),
+            do: Map.put(acc, screen_id, screen_config),
+            else: acc
 
         _, acc ->
           acc
       end
 
-      :ets.foldl(filter_reducer, [], @table)
+      :ets.foldl(filter_reducer, %{}, @table)
     end
   end
 
