@@ -5,7 +5,7 @@ import ButtonImage from "./ButtonImage";
 import "../../../../css/screenplay.scss";
 import { Place } from "../../../models/place";
 import { useScreenplayContext } from "../../../hooks/useScreenplayContext";
-import GlEinkWorkflow from "./Workflows/GlEinkWorkflow";
+import GlEinkWorkflow from "./Workflows/GlEink/GlEinkWorkflow";
 
 const ConfigureScreensPage: ComponentType = () => {
   const [selectedScreenType, setSelectedScreenType] = useState<string>();
