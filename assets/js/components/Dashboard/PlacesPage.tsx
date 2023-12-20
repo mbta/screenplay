@@ -2,10 +2,9 @@ import React, { ComponentType } from "react";
 import PlacesActionBar from "./PlacesActionBar";
 import FilterDropdown from "./FilterDropdown";
 import PlaceRowAccordion from "./PlaceRowAccordion";
+import SortLabel from "./SortLabel";
 import { Accordion, Col, Container, Row } from "react-bootstrap";
-import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import { Place } from "../../models/place";
-import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
 import {
   PLACES_PAGE_MODES_AND_LINES as MODES_AND_LINES,
   SORT_LABELS,
@@ -21,6 +20,7 @@ import {
 } from "../../hooks/useScreenplayContext";
 import { DirectionID } from "../../models/direction_id";
 import { usePrevious } from "../../hooks/usePrevious";
+import { sortByStationOrder } from "../../util";
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
@@ -139,7 +139,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
       modeLineFilterValue.label.includes("Line") ||
       modeLineFilterValue.label === "Mattapan"
     ) {
-      return sortByStationOrder(places, sortDirection === 1);
+      return sortByStationOrder(places, getFilteredLine(), sortDirection === 1);
     }
 
     return places;
@@ -177,22 +177,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     return { filteredPlaces, filteredPlacesHaveScreenlessPlaces };
   };
 
-  const sortByStationOrder = (places: Place[], reverse?: boolean) => {
-    const stationOrder = STATION_ORDER_BY_LINE[getFilteredLine().toLowerCase()];
-
-    places.sort((placeA, placeB) => {
-      const indexA = stationOrder.findIndex((station) => {
-        return station.name.toLowerCase() === placeA.name.toLowerCase();
-      });
-      const indexB = stationOrder.findIndex((station) => {
-        return station.name.toLowerCase() === placeB.name.toLowerCase();
-      });
-      return indexA - indexB;
-    });
-
-    return reverse ? places.reverse() : places;
-  };
-
   const getFilteredLine = () => {
     if (
       modeLineFilterValue.label.includes("Line") ||
@@ -226,18 +210,11 @@ const PlacesList: ComponentType<PlacesListProps> = ({
       <Container fluid>
         <Row className="filterable-list__header-row">
           <Col lg={3}>
-            <div
-              className="filterable-list__sort-label d-flex align-items-center"
+            <SortLabel
+              label={sortLabel}
+              sortDirection={sortDirection}
               onClick={handleClickSortLabel}
-              data-testid="sort-label"
-            >
-              {sortLabel}{" "}
-              {sortDirection === 0 ? (
-                <ArrowDown className="bootstrap-line-icon" />
-              ) : (
-                <ArrowUp className="bootstrap-line-icon" />
-              )}
-            </div>
+            />
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">
             {!noModeFilter && (

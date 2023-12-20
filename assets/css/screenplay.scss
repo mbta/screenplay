@@ -31,6 +31,8 @@ $form-check-input-border: 1px solid #8b9198;
 @import "alert-banner.scss";
 @import "animation.scss";
 @import "screen-detail-action-bar.scss";
+@import "workflow.scss";
+@import "sort-label.scss";
 
 html {
   font-size: 16px;
@@ -44,17 +46,6 @@ body {
   display: flex;
   align-items: center;
   margin-bottom: 24px;
-
-  .filterable-list__sort-label {
-    color: white;
-    font-weight: 900;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 1px;
-    margin-right: auto;
-    cursor: pointer;
-    width: fit-content;
-  }
 }
 
 .screenplay-button {
@@ -75,7 +66,24 @@ input[type="button"] {
   letter-spacing: 0.5px;
 }
 
+.h2 {
+  font-weight: 700;
+  font-size: 32px;
+}
+
 .h3 {
   font-weight: 700;
   font-size: 28px;
+}
+
+.body {
+  &--regular {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  &--medium {
+    font-size: 16px;
+    font-weight: 500;
+  }
 }

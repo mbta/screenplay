@@ -5,6 +5,7 @@ import ButtonImage from "./ButtonImage";
 import "../../../../css/screenplay.scss";
 import { Place } from "../../../models/place";
 import { useScreenplayContext } from "../../../hooks/useScreenplayContext";
+import GlEinkWorkflow from "./Workflows/GlEinkWorkflow";
 
 const ConfigureScreensPage: ComponentType = () => {
   const [selectedScreenType, setSelectedScreenType] = useState<string>();
@@ -33,7 +34,7 @@ const ConfigureScreensPage: ComponentType = () => {
   let layout;
   switch (selectedScreenType) {
     case "gl-eink":
-      layout = <GlEinkConfigPage places={getPlacesList("gl-eink")} />;
+      layout = <GlEinkWorkflow places={getPlacesList("gl-eink")} />;
       break;
     default:
       layout = (
@@ -116,21 +117,9 @@ const SelectScreenTypeComponent: ComponentType<SelectScreenTypeComponentProps> =
     );
   };
 
-interface SubwayConfigPageProps {
+interface WorkflowProps {
   places: Place[];
 }
 
-const GlEinkConfigPage: ComponentType<SubwayConfigPageProps> = ({
-  places,
-}: SubwayConfigPageProps) => {
-  return (
-    <>
-      <div>GL-Eink</div>
-      {places.map((place) => (
-        <div key={place.id}>{place.name}</div>
-      ))}
-    </>
-  );
-};
-
+export { WorkflowProps };
 export default ConfigureScreensPage;

@@ -3,6 +3,7 @@ import {
   CustomMessage,
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
+import STATION_ORDER_BY_LINE from "./constants/stationOrder";
 import STATIONS_BY_LINE from "./constants/stations";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
@@ -195,4 +196,27 @@ export const sortScreens = (screenList: Screen[]) => {
   return screenList.sort((a, b) =>
     screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type) ? 1 : -1
   );
+};
+
+export const sortByStationOrder = (
+  places: Place[],
+  filteredLine: string,
+  reverse?: boolean
+) => {
+  const stationOrder = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
+
+  const stationOrderToIndex = Object.fromEntries(
+    stationOrder.map((station, i) => [station.name.toLowerCase(), i])
+  );
+
+  const placesByStationOrder = places.map((place) => ({
+    place,
+    index: stationOrderToIndex[place.name.toLowerCase()],
+  }));
+
+  const sortedPlaces = placesByStationOrder
+    .sort(({ index: i1 }, { index: i2 }) => i1 - i2)
+    .map(({ place }) => place);
+
+  return reverse ? sortedPlaces.reverse() : sortedPlaces;
 };
