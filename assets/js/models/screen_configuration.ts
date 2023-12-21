@@ -6,10 +6,7 @@ interface Destination {
 }
 
 interface GlEinkAppParams {
-  id: string;
-  app_params: {
-    header: Destination;
-  };
+  header: Destination;
 }
 
 export interface ScreenConfiguration {

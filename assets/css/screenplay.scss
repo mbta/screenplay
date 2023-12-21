@@ -19,6 +19,7 @@ $form-check-input-border: 1px solid #8b9198;
 @import "dashboard/button-image.scss";
 @import "dashboard/appbar.scss";
 @import "dashboard/bottom-action-bar.scss";
+@import "dashboard/configure-screens-workflow-page.scss";
 @import "place-row.scss";
 @import "places-action-bar.scss";
 @import "filter-dropdown.scss";
@@ -68,6 +69,11 @@ input[type="button"] {
   letter-spacing: 0.5px;
 }
 
+.h1 {
+  font-weight: 700;
+  font-size: 40px;
+}
+
 .h2 {
   font-weight: 700;
   font-size: 32px;
@@ -76,6 +82,16 @@ input[type="button"] {
 .h3 {
   font-weight: 700;
   font-size: 28px;
+}
+
+.h4 {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.h5 {
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .body {

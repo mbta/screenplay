@@ -1,0 +1,72 @@
+.configure-place-card {
+  .header {
+    border-radius: 8px 8px 0 0;
+    background-color: $cool-gray-30;
+    min-height: 82px;
+    padding: 16px;
+
+    .header-name {
+      line-height: 24px;
+      max-width: fit-content;
+    }
+  }
+
+  .table-row {
+    border-radius: 0 0 8px 8px;
+    background-color: $cool-gray-15;
+    padding: 16px;
+
+    .table {
+      thead {
+        border-bottom-color: $border-primary;
+        border-bottom-width: 1px;
+      }
+
+      tbody tr:not(:last-child) {
+        border-bottom-color: #2b3741;
+        border-bottom-width: 1px;
+      }
+
+      thead,
+      tbody {
+        tr {
+          .screen-id {
+            width: 141px;
+          }
+
+          .direction {
+            width: 269px;
+          }
+
+          .platform-location {
+            width: 581px;
+          }
+        }
+      }
+
+      color: $text-primary;
+    }
+
+    .screen-id-input {
+      max-width: 93px;
+      color: $text-disabled;
+      background-color: $cool-gray-15;
+      border: 1px solid $text-primary;
+    }
+
+    .row-button-group {
+      .row-button {
+        height: 38px;
+        padding: 6px 12px;
+        border: 1px solid $text-primary;
+        background-color: $button-primary;
+      }
+
+      .selected {
+        background-color: #8ecdff;
+        color: $button-primary;
+        border: transparent;
+      }
+    }
+  }
+}
