@@ -11,61 +11,90 @@
     }
   }
 
-  .table-row {
+  .screens-table-container {
     border-radius: 0 0 8px 8px;
     background-color: $cool-gray-15;
-    padding: 16px;
+    padding: 24px;
 
     .table {
-      thead {
+      color: $text-primary;
+
+      .screens-table-header {
         border-bottom-color: $border-primary;
         border-bottom-width: 1px;
       }
 
-      tbody tr:not(:last-child) {
-        border-bottom-color: #2b3741;
-        border-bottom-width: 1px;
+      .screens-table-body tr.screen-row:not(:first-child) {
+        border-top-color: #2b3741;
+        border-top-width: 1px;
       }
 
-      thead,
-      tbody {
-        tr {
-          .screen-id {
-            width: 141px;
+      .screens-table-header,
+      .screens-table-body {
+        td,
+        th {
+          padding: 10px 24px;
+        }
+
+        .screen-id {
+          width: 94px;
+        }
+
+        .direction {
+          width: 269px;
+        }
+
+        .status {
+          text-align: end;
+          vertical-align: middle;
+        }
+
+        .add-screen-button {
+          width: 113px;
+        }
+      }
+
+      .screen-row {
+        height: 58px;
+
+        .screen-id-input {
+          max-width: 93px;
+          color: $text-primary;
+          background-color: $cool-gray-15;
+          border: 1px solid $text-primary;
+
+          &:disabled {
+            background-color: $cool-gray-20;
+            color: $text-disabled;
+          }
+        }
+
+        .row-button-group {
+          .row-button {
+            height: 38px;
+            padding: 6px 12px;
+            border: 1px solid $text-primary;
+            background-color: $button-primary;
           }
 
-          .direction {
-            width: 269px;
-          }
-
-          .platform-location {
-            width: 581px;
+          .selected {
+            background-color: #8ecdff;
+            color: $button-primary;
+            border: transparent;
           }
         }
       }
 
-      color: $text-primary;
-    }
+      .add-screen-button-row {
+        td {
+          padding: 6px 12px;
+          cursor: pointer;
+          height: 24px;
+        }
 
-    .screen-id-input {
-      max-width: 93px;
-      color: $text-disabled;
-      background-color: $cool-gray-15;
-      border: 1px solid $text-primary;
-    }
-
-    .row-button-group {
-      .row-button {
-        height: 38px;
-        padding: 6px 12px;
-        border: 1px solid $text-primary;
-        background-color: $button-primary;
-      }
-
-      .selected {
-        background-color: #8ecdff;
-        color: $button-primary;
-        border: transparent;
+        .add-screen-button {
+          margin-top: 18px;
+        }
       }
     }
   }

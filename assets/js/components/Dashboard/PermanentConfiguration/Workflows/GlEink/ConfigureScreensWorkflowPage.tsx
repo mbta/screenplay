@@ -18,6 +18,7 @@ import {
   ArrowRight,
   Dot,
   LightningChargeFill,
+  Plus,
 } from "react-bootstrap-icons";
 
 interface ExistingScreens {
@@ -49,7 +50,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
     return (
       <Container className="workflow-container">
-        <div className="h3 text-white mb-5">Select Green Line Stations</div>
+        <div className="h3 text-white mb-5">Configure Green Line Stations</div>
         {selectedPlaces.map((place) => {
           const existingScreens = selectedPlacesAndScreens[place.id];
           return (
@@ -87,26 +88,39 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
         <Col className="h5 my-auto header-name">{place.name.toUpperCase()}</Col>
         <Col className="body--medium my-auto">Station ID: {place.id}</Col>
       </Row>
-      <Row className="table-row">
-        <Table borderless className="table">
-          <thead>
+      <Row className="screens-table-container">
+        <Table borderless className="screens-table m-0">
+          <thead className="screens-table-header">
             <tr className="body--regular">
               <th className="screen-id">Screen ID</th>
               <th className="direction">Direction</th>
               <th className="platform-location">Platform Location</th>
-              <th className=""></th>
+              <th className="status"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="screens-table-body">
             {existingLiveScreens.map((screen) => (
               <ConfigureScreenRow key={screen.id} config={screen} isLive />
             ))}
             {pendingScreens.map((screen) => (
               <ConfigureScreenRow key={screen.id} config={screen} />
             ))}
-            {newScreens.map((screen) => (
-              <ConfigureScreenRow key={screen.id} config={screen} />
+            {newScreens.map((screen, index) => (
+              <ConfigureScreenRow key={screen.id + index} config={screen} />
             ))}
+            <tr className="add-screen-button-row">
+              <td>
+                <div
+                  className="add-screen-button"
+                  onClick={() => {
+                    const newScreen: ScreenConfiguration = { id: "EIG-" };
+                    setNewScreens((prev) => [...prev, newScreen]);
+                  }}
+                >
+                  <Plus fill="#F8F9FA" /> Add Screen
+                </div>
+              </td>
+            </tr>
           </tbody>
         </Table>
       </Row>
@@ -123,18 +137,21 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   isLive,
 }: ConfigureScreenRowProps) => {
   const [screenId, setScreenId] = useState<string>(config.id);
-  const [direction, setDirection] = useState<DirectionID>(
-    config.app_params.header.direction_id
+  const [direction, setDirection] = useState<DirectionID | undefined>(
+    config.app_params?.header.direction_id
   );
-  const [platformDirection, setPlatformDirection] = useState<string>("front");
+  const [platformDirection, setPlatformDirection] = useState<string>(
+    config.app_params ? "front" : ""
+  );
 
   return (
-    <tr>
+    <tr className="screen-row">
       <td className="screen-id">
         <Form.Control
           className="screen-id-input"
           value={screenId}
           disabled={isLive}
+          onChange={(e) => setScreenId(e.target.value)}
         />
       </td>
       <td className="direction">
@@ -177,11 +194,11 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
           </Button>
         </ButtonGroup>
       </td>
-      <td>
+      <td className="status">
         {isLive ? (
-          <span>
-            <LightningChargeFill fill="#EFF193" /> Live
-          </span>
+          <div>
+            <LightningChargeFill fill="#EFF193" /> Live · Read-only
+          </div>
         ) : (
           <span>
             <Dot fill="#8ECDFF" /> Just added
