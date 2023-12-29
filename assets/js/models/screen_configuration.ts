@@ -1,8 +1,8 @@
 import { DirectionID } from "./direction_id";
 
 interface Destination {
-  route_id: "green_b" | "green_c" | "green_d" | "green_e";
-  direction_id: DirectionID;
+  route_id: string;
+  direction_id?: DirectionID;
 }
 
 interface GlEinkAppParams {
@@ -11,5 +11,5 @@ interface GlEinkAppParams {
 
 export interface ScreenConfiguration {
   id: string;
-  app_params?: GlEinkAppParams;
+  app_params: GlEinkAppParams;
 }

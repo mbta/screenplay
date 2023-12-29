@@ -11,7 +11,6 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import { DirectionID } from "../../../../../models/direction_id";
 import classNames from "classnames";
 import {
   ArrowLeft,
@@ -82,6 +81,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     existingScreens?.pending_screens ?? []
   );
   const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
+
   return (
     <Container className="configure-place-card p-0">
       <Row className="header">
@@ -100,21 +100,51 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
           </thead>
           <tbody className="screens-table-body">
             {existingLiveScreens.map((screen) => (
-              <ConfigureScreenRow key={screen.id} config={screen} isLive />
+              <ConfigureScreenRow
+                key={screen.id}
+                config={screen}
+                isLive
+                onChange={() => undefined}
+              />
             ))}
-            {pendingScreens.map((screen) => (
-              <ConfigureScreenRow key={screen.id} config={screen} />
+            {pendingScreens.map((screen, index) => (
+              <ConfigureScreenRow
+                key={`pendingScreens.${screen.id}`}
+                config={screen}
+                onChange={(screen: ScreenConfiguration) => {
+                  setPendingScreens((prevState) => {
+                    const newState = [...prevState];
+                    newState[index] = screen;
+                    return newState;
+                  });
+                }}
+              />
             ))}
             {newScreens.map((screen, index) => (
-              <ConfigureScreenRow key={screen.id + index} config={screen} />
+              <ConfigureScreenRow
+                key={`newScreens.${index}`}
+                config={screen}
+                onChange={(screen: ScreenConfiguration) => {
+                  setNewScreens((prevState) => {
+                    const newState = [...prevState];
+                    newState[index] = screen;
+                    return newState;
+                  });
+                }}
+              />
             ))}
             <tr className="add-screen-button-row">
               <td>
                 <div
                   className="add-screen-button"
                   onClick={() => {
-                    const newScreen: ScreenConfiguration = { id: "EIG-" };
-                    setNewScreens((prev) => [...prev, newScreen]);
+                    setNewScreens((prev) => [
+                      ...prev,
+                      {
+                        id: "",
+                        app_params: { header: { route_id: place.routes[0] } },
+                      },
+                    ]);
                   }}
                 >
                   <Plus fill="#F8F9FA" /> Add Screen
@@ -131,41 +161,51 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
 interface ConfigureScreenRowProps {
   config: ScreenConfiguration;
   isLive?: boolean;
+  onChange: (screen: ScreenConfiguration) => void;
 }
 const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   config,
   isLive,
+  onChange,
 }: ConfigureScreenRowProps) => {
-  const [screenId, setScreenId] = useState<string>(config.id);
-  const [direction, setDirection] = useState<DirectionID | undefined>(
-    config.app_params?.header.direction_id
-  );
-  const [platformDirection, setPlatformDirection] = useState<string>(
-    config.app_params ? "front" : ""
-  );
+  const direction = config.app_params?.header.direction_id;
+  const platformDirection = config.app_params ? "front" : "back";
 
   return (
     <tr className="screen-row">
       <td className="screen-id">
         <Form.Control
           className="screen-id-input"
-          value={screenId}
           disabled={isLive}
-          onChange={(e) => setScreenId(e.target.value)}
+          value={config.id}
+          onChange={(e) => {
+            onChange({ ...config, id: e.target.value });
+          }}
+          placeholder="EIG-"
         />
       </td>
       <td className="direction">
         <ButtonGroup className="row-button-group">
           <Button
-            className={classNames("row-button", { selected: direction === 0 })}
-            onClick={() => setDirection(0)}
+            className={classNames("row-button", {
+              selected: direction === 0,
+            })}
+            onClick={() => {
+              config.app_params.header.direction_id = 0;
+              onChange(config);
+            }}
             disabled={isLive}
           >
             <ArrowLeft /> Westbound
           </Button>
           <Button
-            className={classNames("row-button", { selected: direction === 1 })}
-            onClick={() => setDirection(1)}
+            className={classNames("row-button", {
+              selected: direction === 1,
+            })}
+            onClick={() => {
+              config.app_params.header.direction_id = 1;
+              onChange(config);
+            }}
             disabled={isLive}
           >
             Eastbound <ArrowRight />
@@ -178,7 +218,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
             className={classNames("row-button", {
               selected: platformDirection === "front",
             })}
-            onClick={() => setPlatformDirection("front")}
+            onClick={() => onChange(config)}
             disabled={isLive}
           >
             Front
@@ -187,7 +227,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
             className={classNames("row-button", {
               selected: platformDirection === "back",
             })}
-            onClick={() => setPlatformDirection("back")}
+            onClick={() => onChange(config)}
             disabled={isLive}
           >
             Back
