@@ -1,4 +1,6 @@
 .configure-place-card {
+  margin-bottom: 40px;
+
   .header {
     border-radius: 8px 8px 0 0;
     background-color: $cool-gray-30;
@@ -12,9 +14,9 @@
   }
 
   .screens-table-container {
-    border-radius: 0 0 8px 8px;
     background-color: $cool-gray-15;
     padding: 24px;
+    padding-bottom: 0;
 
     .table {
       color: $text-primary;
@@ -37,7 +39,7 @@
         }
 
         .screen-id {
-          width: 94px;
+          width: 141px;
         }
 
         .direction {
@@ -89,19 +91,17 @@
           }
         }
       }
+    }
+  }
 
-      .add-screen-button-row {
-        td {
-          padding: 6px 12px;
-          cursor: pointer;
-          height: 24px;
-        }
+  .add-screen-button-row {
+    background-color: $cool-gray-15;
+    border-radius: 0 0 8px 8px;
+    padding: 24px 32px;
+    cursor: pointer;
 
-        .add-screen-button {
-          color: $text-secondary;
-          margin-top: 18px;
-        }
-      }
+    .add-screen-button {
+      color: $text-secondary;
     }
   }
 }

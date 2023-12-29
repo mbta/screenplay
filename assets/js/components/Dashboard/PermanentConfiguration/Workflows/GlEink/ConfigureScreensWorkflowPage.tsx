@@ -133,26 +133,24 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                 }}
               />
             ))}
-            <tr className="add-screen-button-row">
-              <td>
-                <div
-                  className="add-screen-button"
-                  onClick={() => {
-                    setNewScreens((prev) => [
-                      ...prev,
-                      {
-                        id: "",
-                        app_params: { header: { route_id: place.routes[0] } },
-                      },
-                    ]);
-                  }}
-                >
-                  <Plus fill="#F8F9FA" /> Add Screen
-                </div>
-              </td>
-            </tr>
           </tbody>
         </Table>
+      </Row>
+      <Row className="add-screen-button-row">
+        <div
+          className="add-screen-button"
+          onClick={() => {
+            setNewScreens((prev) => [
+              ...prev,
+              {
+                id: "",
+                app_params: { header: { route_id: place.routes[0] } },
+              },
+            ]);
+          }}
+        >
+          <Plus fill="#F8F9FA" /> Add Screen
+        </div>
       </Row>
     </Container>
   );
