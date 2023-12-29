@@ -75,6 +75,11 @@
             padding: 6px 12px;
             border: 1px solid $text-primary;
             background-color: $button-primary;
+
+            &:disabled {
+              color: #6c757d;
+              border: 1px solid #6c757d;
+            }
           }
 
           .selected {
@@ -93,6 +98,7 @@
         }
 
         .add-screen-button {
+          color: $text-secondary;
           margin-top: 18px;
         }
       }

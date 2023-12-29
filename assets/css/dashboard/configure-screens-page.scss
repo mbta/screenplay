@@ -5,6 +5,8 @@
   background-color: #0f1417;
   overflow-y: scroll;
   min-height: 100%;
+  // Prevents overflow from hiding behind the bottom-action-bar
+  padding-bottom: 78px;
 
   .select-screen-type {
     max-width: 1320px;
