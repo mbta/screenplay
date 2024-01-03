@@ -126,7 +126,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       </Row>
       {hasRows && (
         <Row className="screens-table-container">
-          <Table borderless className="screens-table m-0">
+          <Table responsive borderless className="screens-table m-0">
             <thead className="screens-table-header">
               <tr className="body--regular">
                 <th className="screen-id">Screen ID</th>

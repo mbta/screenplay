@@ -47,6 +47,7 @@
 
         .screen-id {
           width: 141px;
+          min-width: 141px;
         }
 
         .direction {
@@ -56,6 +57,7 @@
         .status {
           text-align: end;
           vertical-align: middle;
+          white-space: nowrap;
 
           .just-added-dropdown-toggle {
             background-color: transparent;
