@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { ComponentType, ForwardedRef, useEffect, useState } from "react";
 import { Place } from "../../../../../models/place";
 import { fetchExistingScreens } from "../../../../../utils/api";
@@ -54,20 +55,32 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
       );
     }, [selectedPlaces]);
 
+    let layout;
+    if (selectedPlaces.length) {
+      layout = selectedPlaces.map((place) => {
+        const existingScreens = selectedPlacesAndScreens[place.id];
+        return (
+          <ConfigurePlaceCard
+            key={place.id}
+            place={place}
+            existingScreens={existingScreens}
+            handleRemoveLocation={() => handleRemoveLocation(place.id)}
+          />
+        );
+      });
+    } else {
+      layout = (
+        <div>
+          All locations have been removed. Select "Back" to select new
+          locations.
+        </div>
+      );
+    }
+
     return (
       <Container className="workflow-container">
         <div className="h3 text-white mb-5">Configure Green Line Stations</div>
-        {selectedPlaces.map((place) => {
-          const existingScreens = selectedPlacesAndScreens[place.id];
-          return (
-            <ConfigurePlaceCard
-              key={place.id}
-              place={place}
-              existingScreens={existingScreens}
-              handleRemoveLocation={() => handleRemoveLocation(place.id)}
-            />
-          );
-        })}
+        {layout}
       </Container>
     );
   };
