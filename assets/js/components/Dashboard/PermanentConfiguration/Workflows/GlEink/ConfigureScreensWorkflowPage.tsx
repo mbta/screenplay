@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, ForwardedRef, useEffect, useState } from "react";
 import { Place } from "../../../../../models/place";
 import { fetchExistingScreens } from "../../../../../utils/api";
 import { ScreenConfiguration } from "../../../../../models/screen_configuration";
@@ -7,6 +7,7 @@ import {
   ButtonGroup,
   Col,
   Container,
+  Dropdown,
   Form,
   Row,
   Table,
@@ -18,6 +19,8 @@ import {
   Dot,
   LightningChargeFill,
   Plus,
+  ThreeDotsVertical,
+  TrashFill,
 } from "react-bootstrap-icons";
 
 interface ExistingScreens {
@@ -104,6 +107,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                 key={screen.id}
                 config={screen}
                 isLive
+                handleDelete={() => undefined}
                 onChange={() => undefined}
               />
             ))}
@@ -111,6 +115,13 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               <ConfigureScreenRow
                 key={`pendingScreens.${screen.id}`}
                 config={screen}
+                handleDelete={() => {
+                  setPendingScreens((prevState) => {
+                    const newState = [...prevState];
+                    newState.splice(index, 1);
+                    return newState;
+                  });
+                }}
                 onChange={(screen: ScreenConfiguration) => {
                   setPendingScreens((prevState) => {
                     const newState = [...prevState];
@@ -124,6 +135,13 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               <ConfigureScreenRow
                 key={`newScreens.${index}`}
                 config={screen}
+                handleDelete={() => {
+                  setNewScreens((prevState) => {
+                    const newState = [...prevState];
+                    newState.splice(index, 1);
+                    return newState;
+                  });
+                }}
                 onChange={(screen: ScreenConfiguration) => {
                   setNewScreens((prevState) => {
                     const newState = [...prevState];
@@ -156,15 +174,41 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   );
 };
 
+interface CustomToggleProps {
+  children?: React.ReactNode;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const CustomToggle = React.forwardRef<HTMLButtonElement, CustomToggleProps>(
+  (
+    { children, onClick }: CustomToggleProps,
+    ref: ForwardedRef<HTMLButtonElement>
+  ) => (
+    <button
+      className="just-added-dropdown-toggle"
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      {children}
+      <ThreeDotsVertical fill="#F8F9FA" />
+    </button>
+  )
+);
+
 interface ConfigureScreenRowProps {
   config: ScreenConfiguration;
   isLive?: boolean;
   onChange: (screen: ScreenConfiguration) => void;
+  handleDelete: () => void;
 }
 const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   config,
   isLive,
   onChange,
+  handleDelete,
 }: ConfigureScreenRowProps) => {
   const direction = config.app_params?.header.direction_id;
   const platformDirection = config.app_params ? "front" : "back";
@@ -238,9 +282,21 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
             <LightningChargeFill fill="#EFF193" /> Live · Read-only
           </div>
         ) : (
-          <span>
+          <div>
             <Dot fill="#8ECDFF" /> Just added
-          </span>
+            <Dropdown as={ButtonGroup}>
+              <Dropdown.Toggle as={CustomToggle} />
+              <Dropdown.Menu className="just-added-dropdown-menu">
+                <Dropdown.Item
+                  eventKey="1"
+                  className="just-added-dropdown-item"
+                  onClick={() => handleDelete()}
+                >
+                  <TrashFill fill="#F8F9FA" /> Delete
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
         )}
       </td>
     </tr>

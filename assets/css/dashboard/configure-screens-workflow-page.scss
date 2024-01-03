@@ -49,6 +49,27 @@
         .status {
           text-align: end;
           vertical-align: middle;
+
+          .just-added-dropdown-toggle {
+            background-color: transparent;
+            border: none;
+            width: 40px;
+            padding: 0;
+            height: 100%;
+          }
+
+          .just-added-dropdown-menu {
+            background-color: #343a40;
+            align-content: center;
+          }
+
+          .just-added-dropdown-item {
+            color: #dee2e6;
+
+            &:hover {
+              background-color: transparent;
+            }
+          }
         }
 
         .add-screen-button {
