@@ -105,6 +105,11 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   );
   const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
 
+  const hasRows =
+    existingLiveScreens.length > 0 ||
+    pendingScreens.length > 0 ||
+    newScreens.length > 0;
+
   return (
     <Container className="configure-place-card p-0">
       <Row className="header">
@@ -119,69 +124,71 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
           </Button>
         </Col>
       </Row>
-      <Row className="screens-table-container">
-        <Table borderless className="screens-table m-0">
-          <thead className="screens-table-header">
-            <tr className="body--regular">
-              <th className="screen-id">Screen ID</th>
-              <th className="direction">Direction</th>
-              <th className="platform-location">Platform Location</th>
-              <th className="status"></th>
-            </tr>
-          </thead>
-          <tbody className="screens-table-body">
-            {existingLiveScreens.map((screen) => (
-              <ConfigureScreenRow
-                key={screen.id}
-                config={screen}
-                isLive
-                handleDelete={() => undefined}
-                onChange={() => undefined}
-              />
-            ))}
-            {pendingScreens.map((screen, index) => (
-              <ConfigureScreenRow
-                key={`pendingScreens.${screen.id}`}
-                config={screen}
-                handleDelete={() => {
-                  setPendingScreens((prevState) => {
-                    const newState = [...prevState];
-                    newState.splice(index, 1);
-                    return newState;
-                  });
-                }}
-                onChange={(screen: ScreenConfiguration) => {
-                  setPendingScreens((prevState) => {
-                    const newState = [...prevState];
-                    newState[index] = screen;
-                    return newState;
-                  });
-                }}
-              />
-            ))}
-            {newScreens.map((screen, index) => (
-              <ConfigureScreenRow
-                key={`newScreens.${index}`}
-                config={screen}
-                handleDelete={() => {
-                  setNewScreens((prevState) => {
-                    const newState = [...prevState];
-                    newState.splice(index, 1);
-                    return newState;
-                  });
-                }}
-                onChange={(screen: ScreenConfiguration) => {
-                  setNewScreens((prevState) => {
-                    const newState = [...prevState];
-                    newState[index] = screen;
-                    return newState;
-                  });
-                }}
-              />
-            ))}
-          </tbody>
-        </Table>
-      </Row>
+      {hasRows && (
+        <Row className="screens-table-container">
+          <Table borderless className="screens-table m-0">
+            <thead className="screens-table-header">
+              <tr className="body--regular">
+                <th className="screen-id">Screen ID</th>
+                <th className="direction">Direction</th>
+                <th className="platform-location">Platform Location</th>
+                <th className="status"></th>
+              </tr>
+            </thead>
+            <tbody className="screens-table-body">
+              {existingLiveScreens.map((screen) => (
+                <ConfigureScreenRow
+                  key={screen.id}
+                  config={screen}
+                  isLive
+                  handleDelete={() => undefined}
+                  onChange={() => undefined}
+                />
+              ))}
+              {pendingScreens.map((screen, index) => (
+                <ConfigureScreenRow
+                  key={`pendingScreens.${screen.id}`}
+                  config={screen}
+                  handleDelete={() => {
+                    setPendingScreens((prevState) => {
+                      const newState = [...prevState];
+                      newState.splice(index, 1);
+                      return newState;
+                    });
+                  }}
+                  onChange={(screen: ScreenConfiguration) => {
+                    setPendingScreens((prevState) => {
+                      const newState = [...prevState];
+                      newState[index] = screen;
+                      return newState;
+                    });
+                  }}
+                />
+              ))}
+              {newScreens.map((screen, index) => (
+                <ConfigureScreenRow
+                  key={`newScreens.${index}`}
+                  config={screen}
+                  handleDelete={() => {
+                    setNewScreens((prevState) => {
+                      const newState = [...prevState];
+                      newState.splice(index, 1);
+                      return newState;
+                    });
+                  }}
+                  onChange={(screen: ScreenConfiguration) => {
+                    setNewScreens((prevState) => {
+                      const newState = [...prevState];
+                      newState[index] = screen;
+                      return newState;
+                    });
+                  }}
+                />
+              ))}
+            </tbody>
+          </Table>
+        </Row>
+      )}
       <Row className="add-screen-button-row">
         <div
           className="add-screen-button"
