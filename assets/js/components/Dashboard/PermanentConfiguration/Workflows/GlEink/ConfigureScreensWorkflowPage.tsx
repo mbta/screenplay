@@ -32,10 +32,14 @@ interface ExistingScreens {
 
 interface ConfigureScreensWorkflowPageProps {
   selectedPlaces: Place[];
+  handleRemoveLocation: (place: string) => void;
 }
 
 const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
-  ({ selectedPlaces }: ConfigureScreensWorkflowPageProps) => {
+  ({
+    selectedPlaces,
+    handleRemoveLocation,
+  }: ConfigureScreensWorkflowPageProps) => {
     const [selectedPlacesAndScreens, setSelectedPlacesAndScreens] =
       useState<ExistingScreens>({});
 
@@ -60,6 +64,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
               key={place.id}
               place={place}
               existingScreens={existingScreens}
+              handleRemoveLocation={() => handleRemoveLocation(place.id)}
             />
           );
         })}
@@ -73,11 +78,13 @@ interface ConfigurePlaceCardProps {
     live_screens: ScreenConfiguration[];
     pending_screens: ScreenConfiguration[];
   } | null;
+  handleRemoveLocation: () => void;
 }
 
 const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   place,
   existingScreens,
+  handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
   const existingLiveScreens = existingScreens?.live_screens ?? [];
   const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
@@ -90,6 +97,14 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       <Row className="header">
         <Col className="h5 my-auto header-name">{place.name.toUpperCase()}</Col>
         <Col className="body--medium my-auto">Station ID: {place.id}</Col>
+        <Col className="d-flex">
+          <Button
+            className="remove-location-button"
+            onClick={handleRemoveLocation}
+          >
+            Remove Location
+          </Button>
+        </Col>
       </Row>
       <Row className="screens-table-container">
         <Table borderless className="screens-table m-0">

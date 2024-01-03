@@ -56,6 +56,11 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           selectedPlaces={places.filter((place) =>
             selectedPlaces.has(place.id)
           )}
+          handleRemoveLocation={(place: string) => {
+            const newSelectedPlaces = new Set(selectedPlaces);
+            newSelectedPlaces.delete(place);
+            setSelectedPlaces(newSelectedPlaces);
+          }}
         />
       );
       break;
