@@ -80,10 +80,6 @@
             }
           }
         }
-
-        .add-screen-button {
-          width: 113px;
-        }
       }
 
       .screen-row {
@@ -128,10 +124,15 @@
     background-color: $cool-gray-15;
     border-radius: 0 0 8px 8px;
     padding: 24px 32px;
-    cursor: pointer;
 
     .add-screen-button {
+      background-color: transparent;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      width: 137px;
       color: $text-secondary;
+      box-shadow: none;
     }
   }
 }

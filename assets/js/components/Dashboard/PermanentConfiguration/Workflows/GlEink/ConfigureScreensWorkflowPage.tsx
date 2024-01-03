@@ -126,7 +126,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       </Row>
       {hasRows && (
         <Row className="screens-table-container">
-          <Table responsive borderless className="screens-table m-0">
+          <Table responsive="md" borderless className="screens-table m-0">
             <thead className="screens-table-header">
               <tr className="body--regular">
                 <th className="screen-id">Screen ID</th>
@@ -190,8 +190,8 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
         </Row>
       )}
       <Row className="add-screen-button-row">
-        <div
-          className="add-screen-button"
+        <Button
+          className="add-screen-button body--medium"
           onClick={() => {
             setNewScreens((prev) => [
               ...prev,
@@ -203,7 +203,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
           }}
         >
           <Plus fill="#F8F9FA" /> Add Screen
-        </div>
+        </Button>
       </Row>
     </Container>
   );
