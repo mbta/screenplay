@@ -11,10 +11,6 @@ defmodule ScreenplayWeb.ConfigController do
     render(conn, "index.html")
   end
 
-  def index(conn, _params) do
-    render(conn, "index.html")
-  end
-
   def add(conn, %{"screen_id" => screen_id, "screen" => screen, "etag" => etag}) do
     case PermanentConfig.add_new_screen(screen_id, screen, etag) do
       :ok ->
