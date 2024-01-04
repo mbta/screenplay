@@ -7,6 +7,7 @@ interface Destination {
 
 interface GlEinkAppParams {
   header: Destination;
+  plaform_location?: "front" | "back" | null;
 }
 
 export interface ScreenConfiguration {

@@ -246,7 +246,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   handleDelete,
 }: ConfigureScreenRowProps) => {
   const direction = config.app_params?.header.direction_id;
-  const platformDirection = config.app_params ? "front" : "back";
+  const platformLocation = config.app_params.plaform_location;
 
   return (
     <tr className="screen-row">
@@ -293,18 +293,24 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
         <ButtonGroup className="row-button-group">
           <Button
             className={classNames("row-button", {
-              selected: platformDirection === "front",
+              selected: platformLocation === "front",
             })}
-            onClick={() => onChange(config)}
+            onClick={() => {
+              config.app_params.plaform_location = "front";
+              onChange(config);
+            }}
             disabled={isLive}
           >
             Front
           </Button>
           <Button
             className={classNames("row-button", {
-              selected: platformDirection === "back",
+              selected: platformLocation === "back",
             })}
-            onClick={() => onChange(config)}
+            onClick={() => {
+              config.app_params.plaform_location = "back";
+              onChange(config);
+            }}
             disabled={isLive}
           >
             Back
