@@ -246,7 +246,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   handleDelete,
 }: ConfigureScreenRowProps) => {
   const direction = config.app_params?.header.direction_id;
-  const platformLocation = config.app_params.plaform_location;
+  const platformLocation = config.app_params.platform_location;
 
   return (
     <tr className="screen-row">
