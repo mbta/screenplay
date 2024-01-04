@@ -68,7 +68,6 @@ defmodule ScreenplayWeb.ConfigController do
         {place_id, %{live_screens: live_screens, pending_screens: pending_screens}}
       end)
       |> Enum.into(%{})
-      |> IO.inspect()
 
     json(conn, places_and_screens)
   end
