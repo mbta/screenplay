@@ -70,7 +70,7 @@ defmodule Screenplay.ScreensConfig.Cache do
     with_table default: [] do
       filter_reducer = fn
         {{:screen, screen_id}, screen_config}, acc ->
-          if filter_fn.({screen_id, screen_config}),
+          if not screen_config.hidden_from_screenplay and filter_fn.({screen_id, screen_config}),
             do: [Map.put(screen_config, :id, screen_id) | acc],
             else: acc
 
