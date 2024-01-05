@@ -71,7 +71,7 @@ defmodule Screenplay.PendingScreensConfig.Cache do
       filter_reducer = fn
         {{:screen, screen_id}, screen_config}, acc ->
           if filter_fn.({screen_id, screen_config}),
-            do: [Map.put(screen_config, screen_id, screen_config) | acc],
+            do: [Map.put(screen_config, :id, screen_id) | acc],
             else: acc
 
         _, acc ->
