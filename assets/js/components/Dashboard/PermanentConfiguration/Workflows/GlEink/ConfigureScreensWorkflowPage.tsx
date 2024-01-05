@@ -296,7 +296,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               selected: platformLocation === "front",
             })}
             onClick={() => {
-              config.app_params.plaform_location = "front";
+              config.app_params.platform_location = "front";
               onChange(config);
             }}
             disabled={isLive}
@@ -308,7 +308,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               selected: platformLocation === "back",
             })}
             onClick={() => {
-              config.app_params.plaform_location = "back";
+              config.app_params.platform_location = "back";
               onChange(config);
             }}
             disabled={isLive}
