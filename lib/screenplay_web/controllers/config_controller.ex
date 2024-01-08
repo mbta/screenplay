@@ -1,11 +1,11 @@
 defmodule ScreenplayWeb.ConfigController do
   use ScreenplayWeb, :controller
 
+  alias Screenplay.Config.PermanentConfig
+  alias Screenplay.PendingScreensConfig.Cache, as: PendingScreensConfigCache
+  alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
   alias ScreensConfig.Screen
   alias ScreensConfig.V2.GlEink
-  alias Screenplay.Config.PermanentConfig
-  alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
-  alias Screenplay.PendingScreensConfig.Cache, as: PendingScreensConfigCache
 
   def index(conn, _params) do
     render(conn, "index.html")
