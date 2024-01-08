@@ -99,14 +99,13 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   existingScreens,
   handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
-  let existingLiveScreens: ScreenConfiguration[] = [];
+  const existingLiveScreens = existingScreens?.live_screens ?? [];
   const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
     []
   );
   const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
 
   useEffect(() => {
-    existingLiveScreens = existingScreens?.live_screens ?? [];
     setPendingScreens(existingScreens?.pending_screens ?? []);
   }, [existingScreens]);
 
