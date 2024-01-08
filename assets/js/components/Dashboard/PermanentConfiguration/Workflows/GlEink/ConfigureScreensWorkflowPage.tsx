@@ -1,5 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { ComponentType, ForwardedRef, useEffect, useState } from "react";
+import React, {
+  ComponentType,
+  ForwardedRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Place } from "../../../../../models/place";
 import { fetchExistingScreens } from "../../../../../utils/api";
 import { ScreenConfiguration } from "../../../../../models/screen_configuration";
@@ -251,6 +257,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
 }: ConfigureScreenRowProps) => {
   const direction = config.app_params?.header.direction_id;
   const platformLocation = config.app_params.platform_location;
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
     <tr className="screen-row">
@@ -329,11 +336,10 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
         ) : (
           <div>
             <Dot fill="#8ECDFF" /> Just added
-            <Dropdown as={ButtonGroup}>
+            <Dropdown as={ButtonGroup} ref={dropdownRef} drop="down">
               <Dropdown.Toggle as={CustomToggle} />
               <Dropdown.Menu className="just-added-dropdown-menu">
                 <Dropdown.Item
-                  eventKey="1"
                   className="just-added-dropdown-item"
                   onClick={() => handleDelete()}
                 >
