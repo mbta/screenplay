@@ -206,7 +206,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
             setNewScreens((prev) => [
               ...prev,
               {
-                id: "",
+                id: "EIG-",
                 app_params: { header: { route_id: place.routes[0] } },
               },
             ]);
