@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useState } from "react";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 interface SearchItem {
@@ -8,16 +8,17 @@ interface SearchItem {
 
 interface PlacesSearchBarProps {
   places: SearchItem[];
-  selectedItems: string[];
   handleSearchResultClick: (item: SearchItem) => void;
 }
 
 const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
   places,
-  selectedItems,
   handleSearchResultClick,
 }: PlacesSearchBarProps) => {
-  const [inputString, setInputString] = useState<string>("");
+  // When selecting an item, the text in the input is not cleared properly.
+  // This is likely due to a bug in the package.
+  // To resolve this, we can force a rerender of the component so it resets to default.
+  const [reset, setReset] = useState<number>(-1);
 
   const formatResult = (item: SearchItem) => {
     return (
@@ -27,35 +28,14 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
     );
   };
 
-  // When pressing enter on a result instead of clicking the result, inputString is not cleared properly.
-  // As an item is selected, inputString will be set to the full name of the item.
-  // As the parent state changes, check if the inputString is the full item name or id.
-  // If it is, the item was just selected and the text box needs to be cleared.
-  useEffect(() => {
-    checkResultsForSearchString(inputString, places);
-  }, [selectedItems]);
-
-  const checkResultsForSearchString = (
-    searchString: string,
-    results: SearchItem[]
-  ) => {
-    const place = results.find(
-      (place) => place.id === searchString || place.name === searchString
-    );
-    if (place && selectedItems.includes(place.id)) {
-      setInputString("");
-    } else {
-      setInputString(searchString);
-    }
-  };
-
   const handleOnSelect = (place: SearchItem) => {
     handleSearchResultClick(place);
-    setInputString("");
+    setReset(1 - reset);
   };
 
   return (
     <ReactSearchAutocomplete
+      key={reset}
       formatResult={formatResult}
       fuseOptions={{
         keys: ["id", "name"],
@@ -65,9 +45,7 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
       className="search-bar body--medium"
       showIcon={false}
       showClear={false}
-      onSearch={checkResultsForSearchString}
       onSelect={handleOnSelect}
-      inputSearchString={inputString}
       placeholder="Enter Station ID or name"
       showNoResults={false}
       styling={{
