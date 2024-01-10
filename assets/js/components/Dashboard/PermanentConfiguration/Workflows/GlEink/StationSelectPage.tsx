@@ -2,8 +2,8 @@ import React, { ComponentType, useState } from "react";
 import { Container } from "react-bootstrap";
 import PlacesSearchBar, { SearchItem } from "../../PlacesSearchBar";
 import WorkflowPlacesList from "../../WorkflowPlacesList";
-import { Place } from "../../../../../models/place";
 import { DirectionID } from "../../../../../models/direction_id";
+import { Place } from "../../../../../models/place";
 
 interface StationSelectPageProps {
   places: Place[];
@@ -21,6 +21,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
     const existingSelectedPlaces = new Set(selectedPlaces);
     setSelectedPlaces(existingSelectedPlaces.add(place.id));
   };
+
   return (
     <Container className="workflow-container">
       <div className="mb-5">
@@ -36,7 +37,6 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
         </div>
         <PlacesSearchBar
           places={places}
-          selectedItems={Array.from(selectedPlaces)}
           handleSearchResultClick={handleSearchResultClick}
         />
       </div>

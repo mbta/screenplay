@@ -3,15 +3,13 @@ defmodule Screenplay.PendingScreensConfig.Cache do
   Functions to read data from a cached copy of the screens config.
   """
 
-  alias ScreensConfig.{Config, Devops}
+  alias ScreensConfig.Config
 
   use Screenplay.Cache.Client, table: :pending_screens_config
 
   @type table_contents :: list(table_entry)
 
-  @type table_entry ::
-          {{:screen, screen_id :: String.t()}, ScreensConfig.Screen.t()}
-          | {:devops, ScreensConfig.Devops.t()}
+  @type table_entry :: {{:screen, screen_id :: String.t()}, ScreensConfig.Screen.t()}
 
   def ok?, do: table_exists?()
 
@@ -37,15 +35,6 @@ defmodule Screenplay.PendingScreensConfig.Cache do
     with_table default: nil do
       case :ets.match(@table, {{:screen, screen_id}, %{app_params: :"$1"}}) do
         [[app_params]] -> app_params
-        [] -> nil
-      end
-    end
-  end
-
-  def devops do
-    with_table default: nil do
-      case :ets.match(@table, {:devops, :"$1"}) do
-        [[devops]] -> devops
         [] -> nil
       end
     end
@@ -115,11 +104,12 @@ defmodule Screenplay.PendingScreensConfig.Cache do
   that relies more on :ets.match / :ets.select to limit the size of data returned.
   """
   def config do
-    with pending_screens_map when is_map(pending_screens_map) <- pending_screens(),
-         %Devops{} = devops_struct <- devops() do
-      %Config{screens: pending_screens_map, devops: devops_struct}
-    else
-      _ -> :error
+    case pending_screens() do
+      pending_screens_map when is_map(pending_screens_map) ->
+        %Config{screens: pending_screens_map}
+
+      _ ->
+        :error
     end
   end
 end
