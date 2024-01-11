@@ -7,8 +7,8 @@ import { Place } from "../../../../../models/place";
 
 interface StationSelectPageProps {
   places: Place[];
-  selectedPlaces: Set<string>;
-  setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<string>>>;
+  selectedPlaces: Set<Place>;
+  setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<Place>>>;
 }
 
 const StationSelectPage: ComponentType<StationSelectPageProps> = ({
@@ -17,9 +17,12 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
   setSelectedPlaces,
 }: StationSelectPageProps) => {
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
-  const handleSearchResultClick = (place: SearchItem) => {
+  const handleSearchResultClick = (item: SearchItem) => {
     const existingSelectedPlaces = new Set(selectedPlaces);
-    setSelectedPlaces(existingSelectedPlaces.add(place.id));
+    const placeToAdd = places.find((place) => place.id === item.id);
+    if (placeToAdd) {
+      setSelectedPlaces(existingSelectedPlaces.add(placeToAdd));
+    }
   };
 
   return (
@@ -48,7 +51,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
         onRowClick={(place: Place, checked: boolean) => {
           // Make a new Set so React knows state was changed.
           const newSet = new Set(selectedPlaces);
-          checked ? newSet.add(place.id) : newSet.delete(place.id);
+          checked ? newSet.add(place) : newSet.delete(place);
 
           setSelectedPlaces(newSet);
         }}

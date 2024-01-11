@@ -4,11 +4,12 @@ import ConfigureScreensWorkflowPage from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
+import { Place } from "../../../../../models/place";
 
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
 }: WorkflowProps) => {
-  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
+  const [selectedPlaces, setSelectedPlaces] = useState<Set<Place>>(new Set());
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
@@ -54,10 +55,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       };
       layout = (
         <ConfigureScreensWorkflowPage
-          selectedPlaces={places.filter((place) =>
-            selectedPlaces.has(place.id)
-          )}
-          handleRemoveLocation={(place: string) => {
+          selectedPlaces={Array.from(selectedPlaces)}
+          handleRemoveLocation={(place: Place) => {
             const newSelectedPlaces = new Set(selectedPlaces);
             newSelectedPlaces.delete(place);
             setSelectedPlaces(newSelectedPlaces);

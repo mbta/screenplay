@@ -39,7 +39,7 @@ interface ExistingScreens {
 
 interface ConfigureScreensWorkflowPageProps {
   selectedPlaces: Place[];
-  handleRemoveLocation: (place: string) => void;
+  handleRemoveLocation: (place: Place) => void;
 }
 
 const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
@@ -70,7 +70,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
             key={place.id}
             place={place}
             existingScreens={existingScreens}
-            handleRemoveLocation={() => handleRemoveLocation(place.id)}
+            handleRemoveLocation={() => handleRemoveLocation(place)}
           />
         );
       });
