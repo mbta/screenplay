@@ -92,7 +92,6 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   setScreensToAdd,
   handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
-  let liveScreens: ScreenConfiguration[] = [];
   const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
     []
   );
@@ -101,7 +100,6 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     if (!existingScreens) return;
 
     setPendingScreens(existingScreens.filter((screen) => !screen.is_live));
-    liveScreens = existingScreens.filter((screen) => screen.is_live);
   }, [existingScreens]);
 
   useEffect(() => {
@@ -116,6 +114,9 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       return newScreens;
     });
   }, [pendingScreens]);
+
+  const getExistingLiveScreens = () =>
+    existingScreens.filter((screen) => screen.is_live);
 
   const hasRows = existingScreens?.length > 0 || pendingScreens.length > 0;
 
@@ -145,7 +146,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               </tr>
             </thead>
             <tbody className="screens-table-body">
-              {liveScreens.map((screen) => (
+              {getExistingLiveScreens().map((screen) => (
                 <ConfigureScreenRow
                   key={screen.id}
                   config={screen}
