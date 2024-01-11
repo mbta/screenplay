@@ -1,6 +1,6 @@
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../../ConfigureScreensPage";
-import ConfigureScreensWorkflowPage from "./ConfigureScreensWorkflowPage";
+import ConfigureScreensWorkflowPage from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";

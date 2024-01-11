@@ -1,7 +1,7 @@
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { ExistingScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensWorkflowPage";
+import { ExistingScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 
 export const fetchPlaces = (callback: (places: Place[]) => void) => {
   return fetch("/api/dashboard")
