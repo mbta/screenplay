@@ -7,7 +7,6 @@ import React, {
   useState,
 } from "react";
 import { Place } from "../../../../../models/place";
-import { fetchExistingScreens } from "../../../../../utils/api";
 import { ScreenConfiguration } from "../../../../../models/screen_configuration";
 import {
   Button,
@@ -30,46 +29,35 @@ import {
   TrashFill,
 } from "react-bootstrap-icons";
 
-interface ExistingScreens {
+interface PlaceIdsAndScreens {
   [place_id: string]: {
-    live_screens: ScreenConfiguration[];
-    pending_screens: ScreenConfiguration[];
+    screens: ScreenConfiguration[];
   };
 }
 
 interface ConfigureScreensWorkflowPageProps {
   selectedPlaces: Place[];
+  existingScreens: PlaceIdsAndScreens;
+  setScreensToAdd: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
   handleRemoveLocation: (place: Place) => void;
 }
 
 const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
   ({
     selectedPlaces,
+    existingScreens,
+    setScreensToAdd,
     handleRemoveLocation,
   }: ConfigureScreensWorkflowPageProps) => {
-    const [selectedPlacesAndScreens, setSelectedPlacesAndScreens] =
-      useState<ExistingScreens>({});
-
-    useEffect(() => {
-      if (!selectedPlaces.length) return;
-      fetchExistingScreens(
-        "gl_eink_v2",
-        selectedPlaces.map((place) => place.id),
-        (placesAndScreens) => {
-          setSelectedPlacesAndScreens(placesAndScreens);
-        }
-      );
-    }, [selectedPlaces]);
-
     let layout;
     if (selectedPlaces.length) {
       layout = selectedPlaces.map((place) => {
-        const existingScreens = selectedPlacesAndScreens[place.id];
         return (
           <ConfigurePlaceCard
             key={place.id}
             place={place}
-            existingScreens={existingScreens}
+            existingScreens={existingScreens[place.id]?.screens}
+            setScreensToAdd={setScreensToAdd}
             handleRemoveLocation={() => handleRemoveLocation(place)}
           />
         );
@@ -93,32 +81,43 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
 interface ConfigurePlaceCardProps {
   place: Place;
-  existingScreens: {
-    live_screens: ScreenConfiguration[];
-    pending_screens: ScreenConfiguration[];
-  } | null;
+  existingScreens: ScreenConfiguration[];
+  setScreensToAdd: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
   handleRemoveLocation: () => void;
 }
 
 const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   place,
   existingScreens,
+  setScreensToAdd,
   handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
-  const existingLiveScreens = existingScreens?.live_screens ?? [];
+  let liveScreens: ScreenConfiguration[] = [];
   const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
     []
   );
-  const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
 
   useEffect(() => {
-    setPendingScreens(existingScreens?.pending_screens ?? []);
+    if (!existingScreens) return;
+
+    setPendingScreens(existingScreens.filter((screen) => !screen.is_live));
+    liveScreens = existingScreens.filter((screen) => screen.is_live);
   }, [existingScreens]);
 
-  const hasRows =
-    existingLiveScreens.length > 0 ||
-    pendingScreens.length > 0 ||
-    newScreens.length > 0;
+  useEffect(() => {
+    setScreensToAdd((screens) => {
+      const screensAtPlace = screens[place.id];
+      const newScreens = { ...screens };
+      if (screensAtPlace) {
+        newScreens[place.id].screens = pendingScreens;
+      } else {
+        newScreens[place.id] = { screens: pendingScreens };
+      }
+      return newScreens;
+    });
+  }, [pendingScreens]);
+
+  const hasRows = existingScreens?.length > 0 || pendingScreens.length > 0;
 
   return (
     <Container className="configure-place-card p-0">
@@ -146,7 +145,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               </tr>
             </thead>
             <tbody className="screens-table-body">
-              {existingLiveScreens.map((screen) => (
+              {liveScreens.map((screen) => (
                 <ConfigureScreenRow
                   key={screen.id}
                   config={screen}
@@ -157,7 +156,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               ))}
               {pendingScreens.map((screen, index) => (
                 <ConfigureScreenRow
-                  key={`pendingScreens.${screen.id}`}
+                  key={`pendingScreens.${index}`}
                   config={screen}
                   handleDelete={() => {
                     setPendingScreens((prevState) => {
@@ -168,26 +167,6 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                   }}
                   onChange={(screen: ScreenConfiguration) => {
                     setPendingScreens((prevState) => {
-                      const newState = [...prevState];
-                      newState[index] = screen;
-                      return newState;
-                    });
-                  }}
-                />
-              ))}
-              {newScreens.map((screen, index) => (
-                <ConfigureScreenRow
-                  key={`newScreens.${index}`}
-                  config={screen}
-                  handleDelete={() => {
-                    setNewScreens((prevState) => {
-                      const newState = [...prevState];
-                      newState.splice(index, 1);
-                      return newState;
-                    });
-                  }}
-                  onChange={(screen: ScreenConfiguration) => {
-                    setNewScreens((prevState) => {
                       const newState = [...prevState];
                       newState[index] = screen;
                       return newState;
@@ -203,7 +182,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
         <Button
           className="add-screen-button body--medium"
           onClick={() => {
-            setNewScreens((prev) => [
+            setPendingScreens((prev) => [
               ...prev,
               {
                 id: "EIG-",
@@ -354,6 +333,6 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   );
 };
 
-export { ExistingScreens };
+export { PlaceIdsAndScreens };
 
 export default ConfigureScreensWorkflowPage;

@@ -1,18 +1,35 @@
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../../ConfigureScreensPage";
-import ConfigureScreensWorkflowPage from "./ConfigureScreensPage";
+import ConfigureScreensWorkflowPage, {
+  PlaceIdsAndScreens,
+} from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
+import { fetchExistingScreens } from "../../../../../utils/api";
 
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
 }: WorkflowProps) => {
   const [selectedPlaces, setSelectedPlaces] = useState<Set<Place>>(new Set());
+  const [existingScreens, setExistingScreens] = useState<PlaceIdsAndScreens>(
+    {}
+  );
+  const [screensToAdd, setScreensToAdd] = useState<PlaceIdsAndScreens>({});
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
+
+  const handleRemoveLocation = (place: Place) => {
+    const newSelectedPlaces = new Set(selectedPlaces);
+    newSelectedPlaces.delete(place);
+    setSelectedPlaces(newSelectedPlaces);
+    setScreensToAdd((screens) => {
+      delete screens[place.id];
+      return screens;
+    });
+  };
 
   let backButtonLabel;
   let forwardButtonLabel;
@@ -30,6 +47,18 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         navigate(-1);
       };
       onForward = () => {
+        //Leaving log here to appease ESLint. Value will not be used until post to S3 task.
+        console.log(screensToAdd);
+        if (selectedPlaces.size > 0) {
+          fetchExistingScreens(
+            "gl_eink_v2",
+            Array.from(selectedPlaces).map((place) => place.id),
+            (placesAndScreens) => {
+              setExistingScreens(placesAndScreens);
+            }
+          );
+        }
+
         setConfigStep(configStep + 1);
       };
       layout = (
@@ -56,11 +85,9 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       layout = (
         <ConfigureScreensWorkflowPage
           selectedPlaces={Array.from(selectedPlaces)}
-          handleRemoveLocation={(place: Place) => {
-            const newSelectedPlaces = new Set(selectedPlaces);
-            newSelectedPlaces.delete(place);
-            setSelectedPlaces(newSelectedPlaces);
-          }}
+          existingScreens={existingScreens}
+          setScreensToAdd={setScreensToAdd}
+          handleRemoveLocation={handleRemoveLocation}
         />
       );
       break;
