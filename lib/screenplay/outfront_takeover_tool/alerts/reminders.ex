@@ -29,15 +29,19 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
           Logger.debug("No outdated alerts found")
 
         alerts ->
-          Enum.each(alerts, fn %Alert{stations: stations} ->
-            stations
-            |> format_slack_message()
-            |> send_slack_message(url)
-          end)
+          send_reminders_for_alerts(alerts, url)
       end
     end
 
     {:noreply, state}
+  end
+
+  defp send_reminders_for_alerts(alerts, url) do
+    Enum.each(alerts, fn %Alert{stations: stations} ->
+      stations
+      |> format_slack_message()
+      |> send_slack_message(url)
+    end)
   end
 
   defp format_slack_message(stations) do
