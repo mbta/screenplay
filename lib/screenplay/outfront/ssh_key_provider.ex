@@ -72,7 +72,7 @@ defmodule Screenplay.Outfront.SSHKeyProvider do
          {decoded_key, _} <- List.first(decoded_keys) do
       {:ok, decoded_key}
     else
-      _result -> {:error, ~c"Unable to decode key"}
+      _result -> {:error, "Unable to decode key"}
     end
   end
 end

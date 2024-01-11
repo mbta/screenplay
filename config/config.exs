@@ -17,6 +17,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
 
 config :screenplay,
   config_fetcher: Screenplay.Config.S3Fetch,
+  screens_config_fetcher: Screenplay.ScreensConfig.Fetch.S3,
   config_s3_bucket: "mbta-ctd-config",
   record_sentry: false
 
