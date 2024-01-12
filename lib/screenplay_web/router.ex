@@ -18,7 +18,7 @@ defmodule ScreenplayWeb.Router do
   end
 
   pipeline :redirect_prod_http do
-    if Application.get_env(:screenplay, :redirect_http?) do
+    if Application.compile_env(:screenplay, :redirect_http?) do
       plug(Plug.SSL, rewrite_on: [:x_forwarded_proto])
     end
   end

@@ -17,6 +17,8 @@ defmodule ScreenplayWeb do
   and import those modules here.
   """
 
+  def static_paths, do: ~w(css fonts images js favicon.ico robots.txt)
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: ScreenplayWeb
@@ -24,6 +26,8 @@ defmodule ScreenplayWeb do
       import Plug.Conn
       import ScreenplayWeb.Gettext
       alias ScreenplayWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -69,6 +73,17 @@ defmodule ScreenplayWeb do
       import ScreenplayWeb.ErrorHelpers
       import ScreenplayWeb.Gettext
       alias ScreenplayWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: ScreenplayWeb.Endpoint,
+        router: ScreenplayWeb.Router,
+        statics: ScreenplayWeb.static_paths()
     end
   end
 
