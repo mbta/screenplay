@@ -7,15 +7,11 @@ import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
-import { fetchExistingScreens } from "../../../../../utils/api";
 
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
 }: WorkflowProps) => {
   const [selectedPlaces, setSelectedPlaces] = useState<Set<Place>>(new Set());
-  const [existingScreens, setExistingScreens] = useState<PlaceIdsAndScreens>(
-    {}
-  );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [screensToUpdate, setScreensToUpdate] = useState<PlaceIdsAndScreens>(
@@ -51,16 +47,6 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         navigate(-1);
       };
       onForward = () => {
-        if (selectedPlaces.size > 0) {
-          fetchExistingScreens(
-            "gl_eink_v2",
-            Array.from(selectedPlaces).map((place) => place.id),
-            (placesAndScreens) => {
-              setExistingScreens(placesAndScreens);
-            }
-          );
-        }
-
         setConfigStep(configStep + 1);
       };
       layout = (
@@ -87,7 +73,6 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       layout = (
         <ConfigureScreensWorkflowPage
           selectedPlaces={Array.from(selectedPlaces)}
-          existingScreens={existingScreens}
           setScreensToUpdate={setScreensToUpdate}
           handleRemoveLocation={handleRemoveLocation}
         />

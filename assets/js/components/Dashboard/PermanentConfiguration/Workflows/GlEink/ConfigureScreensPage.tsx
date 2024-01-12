@@ -28,6 +28,7 @@ import {
   ThreeDotsVertical,
   TrashFill,
 } from "react-bootstrap-icons";
+import { fetchExistingScreens } from "../../../../../utils/api";
 
 interface PlaceIdsAndScreens {
   [place_id: string]: {
@@ -47,6 +48,22 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
     setScreensToUpdate,
     handleRemoveLocation,
   }: ConfigureScreensWorkflowPageProps) => {
+    const [existingScreens, setExistingScreens] = useState<PlaceIdsAndScreens>(
+      {}
+    );
+
+    useEffect(() => {
+      if (selectedPlaces.length) {
+        fetchExistingScreens(
+          "gl_eink_v2",
+          selectedPlaces.map((place) => place.id),
+          (placesAndScreens) => {
+            setExistingScreens(placesAndScreens);
+          }
+        );
+      }
+    }, []);
+
     let layout;
     if (selectedPlaces.length) {
       layout = selectedPlaces.map((place) => {
