@@ -18,7 +18,9 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   );
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [screensToAdd, setScreensToAdd] = useState<PlaceIdsAndScreens>({});
+  const [screensToUpdate, setScreensToUpdate] = useState<PlaceIdsAndScreens>(
+    {}
+  );
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
@@ -27,7 +29,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     const newSelectedPlaces = new Set(selectedPlaces);
     newSelectedPlaces.delete(place);
     setSelectedPlaces(newSelectedPlaces);
-    setScreensToAdd((screens) => {
+    setScreensToUpdate((screens) => {
       delete screens[place.id];
       return screens;
     });
@@ -86,7 +88,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         <ConfigureScreensWorkflowPage
           selectedPlaces={Array.from(selectedPlaces)}
           existingScreens={existingScreens}
-          setScreensToAdd={setScreensToAdd}
+          setScreensToUpdate={setScreensToUpdate}
           handleRemoveLocation={handleRemoveLocation}
         />
       );

@@ -37,16 +37,14 @@ interface PlaceIdsAndScreens {
 
 interface ConfigureScreensWorkflowPageProps {
   selectedPlaces: Place[];
-  existingScreens: PlaceIdsAndScreens;
-  setScreensToAdd: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
+  setScreensToUpdate: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
   handleRemoveLocation: (place: Place) => void;
 }
 
 const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
   ({
     selectedPlaces,
-    existingScreens,
-    setScreensToAdd,
+    setScreensToUpdate,
     handleRemoveLocation,
   }: ConfigureScreensWorkflowPageProps) => {
     let layout;
@@ -57,7 +55,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
             key={place.id}
             place={place}
             existingScreens={existingScreens[place.id]?.screens}
-            setScreensToAdd={setScreensToAdd}
+            setScreensToUpdate={setScreensToUpdate}
             handleRemoveLocation={() => handleRemoveLocation(place)}
           />
         );
@@ -82,14 +80,14 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 interface ConfigurePlaceCardProps {
   place: Place;
   existingScreens: ScreenConfiguration[];
-  setScreensToAdd: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
+  setScreensToUpdate: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
   handleRemoveLocation: () => void;
 }
 
 const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   place,
   existingScreens,
-  setScreensToAdd,
+  setScreensToUpdate,
   handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
   const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
@@ -103,7 +101,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   }, [existingScreens]);
 
   useEffect(() => {
-    setScreensToAdd((screens) => {
+    setScreensToUpdate((screens) => {
       const screensAtPlace = screens[place.id];
       const newScreens = { ...screens };
       if (screensAtPlace) {
