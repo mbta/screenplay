@@ -136,7 +136,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       </Row>
       {hasRows && (
         <Row className="screens-table-container">
-          <Table responsive="md" borderless className="screens-table m-0">
+          <Table responsive borderless className="screens-table m-0">
             <thead className="screens-table-header">
               <tr className="body--regular">
                 <th className="screen-id">Screen ID</th>
@@ -162,7 +162,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                   handleDelete={() => {
                     setPendingScreens((prevState) => {
                       const newState = [...prevState];
-                      newState.splice(index, 1);
+                      newState[index].is_deleted = true;
                       return newState;
                     });
                   }}
@@ -173,6 +173,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                       return newState;
                     });
                   }}
+                  className={screen.is_deleted ? "hidden" : ""}
                 />
               ))}
             </tbody>
@@ -228,26 +229,32 @@ interface ConfigureScreenRowProps {
   isLive?: boolean;
   onChange: (screen: ScreenConfiguration) => void;
   handleDelete: () => void;
+  className?: string;
 }
 const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   config,
   isLive,
   onChange,
   handleDelete,
+  className = "",
 }: ConfigureScreenRowProps) => {
   const direction = config.app_params?.header.direction_id;
   const platformLocation = config.app_params.platform_location;
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
-    <tr className="screen-row">
+    <tr className={classNames("screen-row", className)}>
       <td className="screen-id">
         <Form.Control
           className="screen-id-input"
           disabled={isLive}
           value={config.id}
           onChange={(e) => {
-            onChange({ ...config, id: e.target.value });
+            const newConfig = { ...config, id: e.target.value };
+            if (!newConfig.old_id) {
+              newConfig.old_id = config.id;
+            }
+            onChange(newConfig);
           }}
           placeholder="EIG-"
         />

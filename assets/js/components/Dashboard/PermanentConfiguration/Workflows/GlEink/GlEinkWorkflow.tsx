@@ -16,6 +16,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const [existingScreens, setExistingScreens] = useState<PlaceIdsAndScreens>(
     {}
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [screensToAdd, setScreensToAdd] = useState<PlaceIdsAndScreens>({});
 
   const navigate = useNavigate();
@@ -47,8 +49,6 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         navigate(-1);
       };
       onForward = () => {
-        //Leaving log here to appease ESLint. Value will not be used until post to S3 task.
-        console.log(screensToAdd);
         if (selectedPlaces.size > 0) {
           fetchExistingScreens(
             "gl_eink_v2",
@@ -105,7 +105,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           onBack={onBack}
           onForward={onForward}
           forwardButtonDisabled={forwardButtonDisabled}
-        ></BottomActionBar>
+        />
       </div>
     </div>
   );
