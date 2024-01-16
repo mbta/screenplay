@@ -183,7 +183,7 @@ defmodule Screenplay.Outfront.SFTP do
 
   defp get_outfront_path_for_image(station, orientation) do
     station_directory = get_outfront_directory_for_station(station)
-    Path.join(["emergency-messaging", orientation, station_directory, "takeover.png"])
+    Path.join([orientation, station_directory, "takeover.png"])
   end
 
   defp get_outfront_directory_for_station(station) do
