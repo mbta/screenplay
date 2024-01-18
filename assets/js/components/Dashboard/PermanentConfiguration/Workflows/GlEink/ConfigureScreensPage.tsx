@@ -38,15 +38,19 @@ interface PlaceIdsAndScreens {
 
 interface ConfigureScreensWorkflowPageProps {
   selectedPlaces: Place[];
-  setScreensToUpdate: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
+  setPlacesAndScreensToUpdate: React.Dispatch<
+    React.SetStateAction<PlaceIdsAndScreens>
+  >;
   handleRemoveLocation: (place: Place) => void;
+  setConfigVersion: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
   ({
     selectedPlaces,
-    setScreensToUpdate,
+    setPlacesAndScreensToUpdate,
     handleRemoveLocation,
+    setConfigVersion,
   }: ConfigureScreensWorkflowPageProps) => {
     const [existingScreens, setExistingScreens] = useState<PlaceIdsAndScreens>(
       {}
@@ -57,7 +61,8 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
         fetchExistingScreens(
           "gl_eink_v2",
           selectedPlaces.map((place) => place.id),
-          (placesAndScreens) => {
+          (placesAndScreens, etag) => {
+            setConfigVersion(etag);
             setExistingScreens(placesAndScreens);
           }
         );
@@ -72,7 +77,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
             key={place.id}
             place={place}
             existingScreens={existingScreens[place.id]?.screens}
-            setScreensToUpdate={setScreensToUpdate}
+            setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
             handleRemoveLocation={() => handleRemoveLocation(place)}
           />
         );
@@ -97,14 +102,16 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 interface ConfigurePlaceCardProps {
   place: Place;
   existingScreens: ScreenConfiguration[];
-  setScreensToUpdate: React.Dispatch<React.SetStateAction<PlaceIdsAndScreens>>;
+  setPlacesAndScreensToUpdate: React.Dispatch<
+    React.SetStateAction<PlaceIdsAndScreens>
+  >;
   handleRemoveLocation: () => void;
 }
 
 const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   place,
   existingScreens,
-  setScreensToUpdate,
+  setPlacesAndScreensToUpdate,
   handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
   const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
@@ -118,7 +125,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   }, [existingScreens]);
 
   useEffect(() => {
-    setScreensToUpdate((screens) => {
+    setPlacesAndScreensToUpdate((screens) => {
       const screensAtPlace = screens[place.id];
       const newScreens = { ...screens };
       if (screensAtPlace) {
@@ -281,8 +288,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               selected: direction === 0,
             })}
             onClick={() => {
-              config.app_params.header.direction_id = 0;
-              onChange(config);
+              const newConfig = { ...config };
+              newConfig.app_params.header.direction_id = 0;
+              onChange(newConfig);
             }}
             disabled={isLive}
           >
@@ -293,8 +301,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               selected: direction === 1,
             })}
             onClick={() => {
-              config.app_params.header.direction_id = 1;
-              onChange(config);
+              const newConfig = { ...config };
+              newConfig.app_params.header.direction_id = 1;
+              onChange(newConfig);
             }}
             disabled={isLive}
           >
@@ -309,8 +318,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               selected: platformLocation === "front",
             })}
             onClick={() => {
-              config.app_params.platform_location = "front";
-              onChange(config);
+              const newConfig = { ...config };
+              newConfig.app_params.platform_location = "front";
+              onChange(newConfig);
             }}
             disabled={isLive}
           >
@@ -321,8 +331,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               selected: platformLocation === "back",
             })}
             onClick={() => {
-              config.app_params.platform_location = "back";
-              onChange(config);
+              const newConfig = { ...config };
+              newConfig.app_params.platform_location = "back";
+              onChange(newConfig);
             }}
             disabled={isLive}
           >

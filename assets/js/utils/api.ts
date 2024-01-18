@@ -34,13 +34,13 @@ export const fetchAlerts = (
 export const fetchExistingScreens = (
   appId: string,
   placeIds: string[],
-  callback: (places_and_screens: PlaceIdsAndScreens) => void
+  callback: (places_and_screens: PlaceIdsAndScreens, etag: string) => void
 ) => {
   return fetch(
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
   )
     .then((response) => response.json())
-    .then((places_and_screens: PlaceIdsAndScreens) => {
-      callback(places_and_screens);
+    .then(({ places_and_screens, etag }) => {
+      callback(places_and_screens, etag);
     });
 };
