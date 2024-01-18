@@ -2,6 +2,7 @@ import { Alert } from "../models/alert";
 import { Place } from "../models/place";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
+import getCsrfToken from "../csrf";
 
 export const fetchPlaces = (callback: (places: Place[]) => void) => {
   return fetch("/api/dashboard")
@@ -43,4 +44,25 @@ export const fetchExistingScreens = (
     .then(({ places_and_screens, etag }) => {
       callback(places_and_screens, etag);
     });
+};
+
+export const putPendingScreens = (
+  placesAndScreens: PlaceIdsAndScreens,
+  screenType: "gl_eink_v2" | null,
+  etag: string,
+  callback: () => void
+) => {
+  return fetch("/config/put", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token": getCsrfToken(),
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      places_and_screens: placesAndScreens,
+      screen_type: screenType,
+      etag: etag,
+    }),
+  }).then(() => callback());
 };
