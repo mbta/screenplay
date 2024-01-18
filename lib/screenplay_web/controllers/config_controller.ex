@@ -70,7 +70,10 @@ defmodule ScreenplayWeb.ConfigController do
       end)
       |> Enum.into(%{})
 
-    json(conn, places_and_screens)
+    json(conn, %{
+      places_and_screens: places_and_screens,
+      etag: PendingScreensConfigCache.table_version()
+    })
   end
 
   defp place_id_has_screen?(place_id, :gl_eink_v2, %Screen{

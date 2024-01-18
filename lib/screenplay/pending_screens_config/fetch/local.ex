@@ -41,8 +41,12 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
 
   defp get_last_modified(path) do
     case File.stat(path) do
-      {:ok, %File.Stat{mtime: mtime}} -> {:ok, mtime}
-      {:error, _} -> :error
+      {:ok, %File.Stat{mtime: mtime}} ->
+        mtime_as_string = mtime |> NaiveDateTime.from_erl!() |> NaiveDateTime.to_string()
+        {:ok, mtime_as_string}
+
+      {:error, _} ->
+        :error
     end
   end
 end

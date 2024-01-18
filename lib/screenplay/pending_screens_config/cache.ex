@@ -106,7 +106,7 @@ defmodule Screenplay.PendingScreensConfig.Cache do
   def config do
     case pending_screens() do
       pending_screens_map when is_map(pending_screens_map) ->
-        %Config{screens: pending_screens_map}
+        {:ok, %Config{screens: pending_screens_map}, table_version()}
 
       _ ->
         :error

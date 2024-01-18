@@ -21,7 +21,6 @@ defmodule Screenplay.Cache.Owner do
           update_failure_error_log_threshold_minutes: non_neg_integer,
 
           ### Cache state
-          table_version: Engine.table_version(),
           retry_count: non_neg_integer(),
           # The server initializes in error state,
           # and transitions permanently to ok after its first successful data fetch.
@@ -34,7 +33,7 @@ defmodule Screenplay.Cache.Owner do
     :update_interval_ms,
     :update_failure_error_log_threshold_minutes
   ]
-  defstruct @enforce_keys ++ [table_version: nil, retry_count: 0, status: :error]
+  defstruct @enforce_keys ++ [retry_count: 0, status: :error]
 
   ### Client
 
@@ -104,12 +103,16 @@ defmodule Screenplay.Cache.Owner do
   end
 
   defp do_update(state) do
-    case state.update_table.(state.table_version) do
+    state.name
+    |> get_table_version()
+    |> state.update_table.()
+    |> case do
       {:replace, table_entries, table_version} ->
         :ok = ensure_table_created(state)
         replace_contents(state.name, table_entries)
+        _ = put_table_version(state.name, table_version)
 
-        %{state | table_version: table_version, retry_count: 0, status: :ok}
+        %{state | retry_count: 0, status: :ok}
 
       {:patch, updated_table_entries} ->
         :ok = ensure_table_created(state)
@@ -126,6 +129,21 @@ defmodule Screenplay.Cache.Owner do
 
       :error ->
         error_state(state)
+    end
+  end
+
+  defp get_table_version(table) do
+    unless :ets.whereis(table) == :undefined do
+      case :ets.match(table, {:version, :"$1"}) do
+        [[version]] -> version
+        [] -> nil
+      end
+    end
+  end
+
+  defp put_table_version(table, version) do
+    unless :ets.whereis(table) == :undefined do
+      :ets.insert(table, {:version, version})
     end
   end
 
