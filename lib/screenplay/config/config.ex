@@ -6,7 +6,7 @@ defmodule Screenplay.Config.PermanentConfig do
   alias ScreensConfig.V2.{Alerts, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
-  alias Screenplay.Stops.Stop
+  alias Screenplay.RoutePatterns.RoutePattern
   alias ScreensConfig.Config
 
   @type screen_type :: :gl_eink_v2
@@ -44,12 +44,7 @@ defmodule Screenplay.Config.PermanentConfig do
   def gl_eink_config_reducer(place_and_screens, acc) do
     {place_id, %{"screens" => screens}} = place_and_screens
     route_id = screens |> List.first() |> get_in(["app_params", "header", "route_id"])
-
-    platform_ids =
-      case Stop.fetch_platform_ids_for_route_at_stop(place_id, route_id) do
-        [terminal_platform_id] -> [terminal_platform_id, terminal_platform_id]
-        platform_ids -> platform_ids
-      end
+    platform_ids = RoutePattern.fetch_platform_ids_for_route_at_stop(place_id, route_id)
 
     Enum.reduce(screens, acc, fn
       %{"is_deleted" => true} = screen, acc ->
@@ -83,7 +78,7 @@ defmodule Screenplay.Config.PermanentConfig do
       }
     } = screen
 
-    platform_id = Enum.at(platform_ids, direction_id)
+    platform_id = elem(platform_ids, direction_id)
 
     struct(Screen,
       vendor: :mercury,

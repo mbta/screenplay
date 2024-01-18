@@ -1,4 +1,4 @@
-defmodule Screenplay.Stops.Stop do
+defmodule Screenplay.RoutePatterns.RoutePattern do
   @moduledoc false
 
   alias Screenplay.V3Api
