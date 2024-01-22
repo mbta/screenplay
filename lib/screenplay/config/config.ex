@@ -1,13 +1,12 @@
 defmodule Screenplay.Config.PermanentConfig do
   @moduledoc false
   alias Screenplay.PendingScreensConfig
-  alias ScreensConfig.Screen
-  alias ScreensConfig.V2.Header.Destination
-  alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
-  alias ScreensConfig.V2.Departures.{Query, Section}
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
-  alias ScreensConfig.Config
+  alias ScreensConfig.{Config, Screen}
+  alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
+  alias ScreensConfig.V2.Departures.{Query, Section}
+  alias ScreensConfig.V2.Header.Destination
 
   @type screen_type :: :gl_eink_v2
 
