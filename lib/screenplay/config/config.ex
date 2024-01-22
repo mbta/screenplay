@@ -3,7 +3,7 @@ defmodule Screenplay.Config.PermanentConfig do
   alias Screenplay.PendingScreensConfig
   alias ScreensConfig.Screen
   alias ScreensConfig.V2.Header.Destination
-  alias ScreensConfig.V2.{Alerts, Departures, Footer, GlEink, LineMap}
+  alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
@@ -85,6 +85,7 @@ defmodule Screenplay.Config.PermanentConfig do
       app_id: :gl_eink_v2,
       app_params:
         struct(GlEink,
+          audio: default_enabled_audio_config(),
           departures:
             struct(Departures,
               sections: [
@@ -112,5 +113,13 @@ defmodule Screenplay.Config.PermanentConfig do
           footer: %Footer{stop_id: parent_station_id}
         )
     )
+  end
+
+  defp default_enabled_audio_config do
+    %Audio{
+      start_time: ~T[00:00:00],
+      stop_time: ~T[23:59:59],
+      days_active: [1, 2, 3, 4, 5, 6, 7]
+    }
   end
 end
