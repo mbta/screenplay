@@ -37,10 +37,10 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  def get_config_reducer(:gl_eink_v2), do: &gl_eink_config_reducer/2
-  def get_config_reducer(_), do: raise("Not implemented")
+  defp get_config_reducer(:gl_eink_v2), do: &gl_eink_config_reducer/2
+  defp get_config_reducer(_), do: raise("Not implemented")
 
-  def gl_eink_config_reducer(place_and_screens, acc) do
+  defp gl_eink_config_reducer(place_and_screens, acc) do
     {place_id, %{"screens" => screens}} = place_and_screens
     route_id = screens |> List.first() |> get_in(["app_params", "header", "route_id"])
     platform_ids = RoutePattern.fetch_platform_ids_for_route_at_stop(place_id, route_id)
