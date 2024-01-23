@@ -400,7 +400,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               <Dropdown.Menu className="just-added-dropdown-menu">
                 <Dropdown.Item
                   className="just-added-dropdown-item"
-                  onClick={() => handleDelete()}
+                  onClick={handleDelete}
                 >
                   <TrashFill fill="#F8F9FA" /> Delete
                 </Dropdown.Item>
