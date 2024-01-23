@@ -30,8 +30,13 @@ export const fetchAlerts = (
     });
 };
 
-export const fetchExistingScreens = (appId: string, placeIds: string[]) => {
-  return fetch(
+export const fetchExistingScreens = async (
+  appId: string,
+  placeIds: string[]
+) => {
+  const response = await fetch(
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
-  ).then((response) => response.json());
+  );
+
+  return await response.json();
 };
