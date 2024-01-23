@@ -30,16 +30,26 @@ import {
 } from "react-bootstrap-icons";
 import { fetchExistingScreens } from "../../../../../utils/api";
 
-interface PlaceIdsAndScreens {
+interface PlaceIdsAndExistingScreens {
+  [place_id: string]: ExistingScreens;
+}
+
+interface ExistingScreens {
+  live_screens?: { [screen_id: string]: ScreenConfiguration };
+  pending_screens: { [screen_id: string]: ScreenConfiguration };
+}
+
+interface PlaceIdsAndNewScreens {
   [place_id: string]: {
-    screens: ScreenConfiguration[];
+    updatedScreens: { [screen_id: string]: ScreenConfiguration };
+    newScreens?: ScreenConfiguration[];
   };
 }
 
 interface ConfigureScreensWorkflowPageProps {
   selectedPlaces: Place[];
   setPlacesAndScreensToUpdate: React.Dispatch<
-    React.SetStateAction<PlaceIdsAndScreens>
+    React.SetStateAction<PlaceIdsAndNewScreens>
   >;
   handleRemoveLocation: (place: Place) => void;
   setConfigVersion: React.Dispatch<React.SetStateAction<string>>;
@@ -52,20 +62,18 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
     handleRemoveLocation,
     setConfigVersion,
   }: ConfigureScreensWorkflowPageProps) => {
-    const [existingScreens, setExistingScreens] = useState<PlaceIdsAndScreens>(
-      {}
-    );
+    const [existingScreens, setExistingScreens] =
+      useState<PlaceIdsAndExistingScreens>({});
 
     useEffect(() => {
       if (selectedPlaces.length) {
         fetchExistingScreens(
           "gl_eink_v2",
-          selectedPlaces.map((place) => place.id),
-          (placesAndScreens, etag) => {
-            setConfigVersion(etag);
-            setExistingScreens(placesAndScreens);
-          }
-        );
+          selectedPlaces.map((place) => place.id)
+        ).then(({ places_and_screens, etag }) => {
+          setConfigVersion(etag);
+          setExistingScreens(places_and_screens);
+        });
       }
     }, []);
 
@@ -76,7 +84,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
           <ConfigurePlaceCard
             key={place.id}
             place={place}
-            existingScreens={existingScreens[place.id]?.screens}
+            existingScreens={existingScreens[place.id]}
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
             handleRemoveLocation={() => handleRemoveLocation(place)}
           />
@@ -101,9 +109,9 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
 interface ConfigurePlaceCardProps {
   place: Place;
-  existingScreens: ScreenConfiguration[];
+  existingScreens: ExistingScreens;
   setPlacesAndScreensToUpdate: React.Dispatch<
-    React.SetStateAction<PlaceIdsAndScreens>
+    React.SetStateAction<PlaceIdsAndNewScreens>
   >;
   handleRemoveLocation: () => void;
 }
@@ -114,33 +122,39 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   setPlacesAndScreensToUpdate,
   handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
-  const [pendingScreens, setPendingScreens] = useState<ScreenConfiguration[]>(
-    []
-  );
+  const [existingPendingScreens, setExistingPendingScreens] = useState<{
+    [screen_id: string]: ScreenConfiguration;
+  }>({});
+  const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
 
   useEffect(() => {
     if (!existingScreens) return;
 
-    setPendingScreens(existingScreens.filter((screen) => !screen.is_live));
+    setExistingPendingScreens(existingScreens.pending_screens);
   }, [existingScreens]);
 
   useEffect(() => {
-    setPlacesAndScreensToUpdate((screens) => {
-      const screensAtPlace = screens[place.id];
-      const newScreens = { ...screens };
+    setPlacesAndScreensToUpdate((placesAndScreens) => {
+      const screensAtPlace = placesAndScreens[place.id];
+      const newState = { ...placesAndScreens };
       if (screensAtPlace) {
-        newScreens[place.id].screens = pendingScreens;
+        newState[place.id].updatedScreens = existingPendingScreens;
+        newState[place.id].newScreens = newScreens;
       } else {
-        newScreens[place.id] = { screens: pendingScreens };
+        newState[place.id] = {
+          updatedScreens: existingPendingScreens,
+          newScreens: newScreens,
+        };
       }
-      return newScreens;
+      return newState;
     });
-  }, [pendingScreens]);
+  }, [existingPendingScreens, newScreens]);
 
-  const getExistingLiveScreens = () =>
-    existingScreens.filter((screen) => screen.is_live);
+  const getExistingLiveScreens = () => existingScreens?.live_screens ?? {};
 
-  const hasRows = existingScreens?.length > 0 || pendingScreens.length > 0;
+  const hasRows =
+    Object.keys(getExistingLiveScreens()).length > 0 ||
+    Object.keys(existingPendingScreens).length > 0;
 
   return (
     <Container className="configure-place-card p-0">
@@ -168,36 +182,69 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               </tr>
             </thead>
             <tbody className="screens-table-body">
-              {getExistingLiveScreens().map((screen) => (
-                <ConfigureScreenRow
-                  key={screen.id}
-                  config={screen}
-                  isLive
-                  handleDelete={() => undefined}
-                  onChange={() => undefined}
-                />
-              ))}
-              {pendingScreens.map((screen, index) => (
-                <ConfigureScreenRow
-                  key={`pendingScreens.${index}`}
-                  config={screen}
-                  handleDelete={() => {
-                    setPendingScreens((prevState) => {
-                      const newState = [...prevState];
-                      newState[index].is_deleted = true;
-                      return newState;
-                    });
-                  }}
-                  onChange={(screen: ScreenConfiguration) => {
-                    setPendingScreens((prevState) => {
-                      const newState = [...prevState];
-                      newState[index] = screen;
-                      return newState;
-                    });
-                  }}
-                  className={screen.is_deleted ? "hidden" : ""}
-                />
-              ))}
+              {Object.keys(getExistingLiveScreens()).map((screenID) => {
+                const screen = getExistingLiveScreens()[screenID];
+                return (
+                  <ConfigureScreenRow
+                    key={screenID}
+                    screenID={screenID}
+                    config={screen}
+                    isLive
+                    handleDelete={() => undefined}
+                    onChange={() => undefined}
+                  />
+                );
+              })}
+              {Object.keys(existingPendingScreens).map((screenID, index) => {
+                const screen = existingPendingScreens[screenID];
+
+                return (
+                  <ConfigureScreenRow
+                    key={`pendingScreens.${index}`}
+                    screenID={screen.new_id ?? screenID}
+                    config={screen}
+                    handleDelete={() => {
+                      setExistingPendingScreens((prevState) => {
+                        const newState = { ...prevState };
+                        newState[screenID].is_deleted = true;
+                        return newState;
+                      });
+                    }}
+                    onChange={(screen: ScreenConfiguration) => {
+                      setExistingPendingScreens((prevState) => {
+                        const newState = { ...prevState };
+                        newState[screenID] = screen;
+                        return newState;
+                      });
+                    }}
+                    className={screen.is_deleted ? "hidden" : ""}
+                  />
+                );
+              })}
+              {newScreens.map((screen, index) => {
+                return (
+                  <ConfigureScreenRow
+                    key={`newScreens.${index}`}
+                    screenID={screen.new_id ?? ""}
+                    config={screen}
+                    handleDelete={() => {
+                      setNewScreens((prevState) => {
+                        const newState = [...prevState];
+                        newState.splice(index, 1);
+                        return newState;
+                      });
+                    }}
+                    onChange={(screen: ScreenConfiguration) => {
+                      setNewScreens((prevState) => {
+                        const newState = [...prevState];
+                        newState[index] = screen;
+                        return newState;
+                      });
+                    }}
+                    className={screen.is_deleted ? "hidden" : ""}
+                  />
+                );
+              })}
             </tbody>
           </Table>
         </Row>
@@ -206,10 +253,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
         <Button
           className="add-screen-button body--medium"
           onClick={() => {
-            setPendingScreens((prev) => [
-              ...prev,
+            setNewScreens((prevState) => [
+              ...prevState,
               {
-                id: "EIG-",
+                new_id: "EIG-",
                 app_params: { header: { route_id: place.routes[0] } },
               },
             ]);
@@ -247,6 +294,7 @@ const CustomToggle = React.forwardRef<HTMLButtonElement, CustomToggleProps>(
 );
 
 interface ConfigureScreenRowProps {
+  screenID: string;
   config: ScreenConfiguration;
   isLive?: boolean;
   onChange: (screen: ScreenConfiguration) => void;
@@ -254,6 +302,7 @@ interface ConfigureScreenRowProps {
   className?: string;
 }
 const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
+  screenID,
   config,
   isLive,
   onChange,
@@ -270,12 +319,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
         <Form.Control
           className="screen-id-input"
           disabled={isLive}
-          value={config.id}
+          value={screenID}
           onChange={(e) => {
-            const newConfig = { ...config, id: e.target.value };
-            if (!newConfig.old_id) {
-              newConfig.old_id = config.id;
-            }
+            const newConfig = { ...config, new_id: e.target.value };
             onChange(newConfig);
           }}
           placeholder="EIG-"
@@ -354,7 +400,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
               <Dropdown.Menu className="just-added-dropdown-menu">
                 <Dropdown.Item
                   className="just-added-dropdown-item"
-                  onClick={() => handleDelete()}
+                  onClick={handleDelete}
                 >
                   <TrashFill fill="#F8F9FA" /> Delete
                 </Dropdown.Item>
@@ -367,6 +413,6 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   );
 };
 
-export { PlaceIdsAndScreens };
+export { PlaceIdsAndExistingScreens, PlaceIdsAndNewScreens };
 
 export default ConfigureScreensWorkflowPage;

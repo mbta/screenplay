@@ -1,7 +1,7 @@
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { PlaceIdsAndScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
+import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
 
 export const fetchPlaces = (callback: (places: Place[]) => void) => {
@@ -32,27 +32,23 @@ export const fetchAlerts = (
     });
 };
 
-export const fetchExistingScreens = (
+export const fetchExistingScreens = async (
   appId: string,
-  placeIds: string[],
-  callback: (places_and_screens: PlaceIdsAndScreens, etag: string) => void
+  placeIds: string[]
 ) => {
-  return fetch(
+  const response = await fetch(
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
-  )
-    .then((response) => response.json())
-    .then(({ places_and_screens, etag }) => {
-      callback(places_and_screens, etag);
-    });
+  );
+
+  return await response.json();
 };
 
-export const putPendingScreens = (
-  placesAndScreens: PlaceIdsAndScreens,
+export const putPendingScreens = async (
+  placesAndScreens: PlaceIdsAndNewScreens,
   screenType: "gl_eink_v2" | null,
-  etag: string,
-  callback: () => void
+  etag: string
 ) => {
-  return fetch("/config/put", {
+  return await fetch("/config/put", {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -64,5 +60,5 @@ export const putPendingScreens = (
       screen_type: screenType,
       etag: etag,
     }),
-  }).then(() => callback());
+  });
 };

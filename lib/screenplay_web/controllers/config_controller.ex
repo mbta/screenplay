@@ -44,21 +44,16 @@ defmodule ScreenplayWeb.ConfigController do
       |> Enum.map(fn place_id ->
         filter_fn = fn
           {_, %Screen{app_id: ^app_id_atom} = config} ->
-            place_id_has_screen?(place_id, String.to_existing_atom(app_id), config)
+            place_id_has_screen?(place_id, app_id_atom, config)
 
           _ ->
             false
         end
 
-        live_screens =
-          ScreensConfigCache.screens(&filter_fn.(&1))
-          |> Enum.map(fn screen ->
-            Map.put(screen, :is_live, true)
-          end)
+        live_screens = ScreensConfigCache.screens(filter_fn)
+        pending_screens = PendingScreensConfigCache.screens(filter_fn)
 
-        pending_screens = PendingScreensConfigCache.screens(&filter_fn.(&1))
-
-        {place_id, %{screens: live_screens ++ pending_screens}}
+        {place_id, %{live_screens: live_screens, pending_screens: pending_screens}}
       end)
       |> Enum.into(%{})
 

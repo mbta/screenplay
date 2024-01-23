@@ -9,7 +9,7 @@ import PlaceRow from "../PlaceRow";
 interface WorkflowPlacesListProps {
   sortDirection: DirectionID;
   setSortDirection: React.Dispatch<React.SetStateAction<DirectionID>>;
-  selectedPlaces: Set<Place>;
+  selectedPlaces: Set<string>;
   places: Place[];
   onRowClick: (place: Place, checked: boolean) => void;
 }
@@ -47,7 +47,7 @@ const WorkflowPlacesList: ComponentType<WorkflowPlacesListProps> = ({
           variant="select-box"
           defaultSort={sortDirection === 0}
           className="filtered"
-          checked={selectedPlaces.has(place)}
+          checked={selectedPlaces.has(place.id)}
           onClick={(checked: boolean) => onRowClick(place, checked)}
         />
       ))}

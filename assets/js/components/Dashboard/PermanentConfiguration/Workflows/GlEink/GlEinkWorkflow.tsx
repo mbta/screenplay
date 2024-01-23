@@ -1,7 +1,7 @@
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../../ConfigureScreensPage";
 import ConfigureScreensWorkflowPage, {
-  PlaceIdsAndScreens,
+  PlaceIdsAndNewScreens,
 } from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
@@ -12,22 +12,23 @@ import { putPendingScreens } from "../../../../../utils/api";
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
 }: WorkflowProps) => {
-  const [selectedPlaces, setSelectedPlaces] = useState<Set<Place>>(new Set());
+  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [configVersion, setConfigVersion] = useState<string>("");
 
   const [placesAndScreensToUpdate, setPlacesAndScreensToUpdate] =
-    useState<PlaceIdsAndScreens>({});
+    useState<PlaceIdsAndNewScreens>({});
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
-    newSelectedPlaces.delete(place);
+    newSelectedPlaces.delete(place.id);
     setSelectedPlaces(newSelectedPlaces);
     setPlacesAndScreensToUpdate((placesAndScreens) => {
-      delete placesAndScreens[place.id];
-      return placesAndScreens;
+      const { [place.id]: _discarded, ...newPlacesAndScreens } =
+        placesAndScreens;
+      return newPlacesAndScreens;
     });
   };
 
@@ -71,13 +72,14 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         putPendingScreens(
           placesAndScreensToUpdate,
           "gl_eink_v2",
-          configVersion,
-          () => navigate("/pending")
-        );
+          configVersion
+        ).then(() => navigate("/pending"));
       };
       layout = (
         <ConfigureScreensWorkflowPage
-          selectedPlaces={Array.from(selectedPlaces)}
+          selectedPlaces={places.filter((place) =>
+            selectedPlaces.has(place.id)
+          )}
           setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
           handleRemoveLocation={handleRemoveLocation}
           setConfigVersion={setConfigVersion}

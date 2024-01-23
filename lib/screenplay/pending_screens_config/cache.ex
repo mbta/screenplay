@@ -60,14 +60,14 @@ defmodule Screenplay.PendingScreensConfig.Cache do
       filter_reducer = fn
         {{:screen, screen_id}, screen_config}, acc ->
           if filter_fn.({screen_id, screen_config}),
-            do: [Map.put(screen_config, :id, screen_id) | acc],
+            do: Map.put(acc, screen_id, screen_config),
             else: acc
 
         _, acc ->
           acc
       end
 
-      :ets.foldl(filter_reducer, [], @table)
+      :ets.foldl(filter_reducer, %{}, @table)
     end
   end
 

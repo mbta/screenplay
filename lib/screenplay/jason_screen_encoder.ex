@@ -1,4 +1,4 @@
-defimpl Jason.Encoder, for: [ScreensConfig.Screen] do
+defimpl Jason.Encoder, for: ScreensConfig.Screen do
   alias ScreensConfig.Screen
 
   def encode(data, opts) do

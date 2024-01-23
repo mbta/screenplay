@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 interface StationSelectPageProps {
   places: Place[];
-  selectedPlaces: Set<Place>;
-  setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<Place>>>;
+  selectedPlaces: Set<string>;
+  setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<string>>>;
 }
 
 const StationSelectPage: ComponentType<StationSelectPageProps> = ({
@@ -23,7 +23,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
     const existingSelectedPlaces = new Set(selectedPlaces);
     const placeToAdd = places.find((place) => place.id === item.id);
     if (placeToAdd) {
-      setSelectedPlaces(existingSelectedPlaces.add(placeToAdd));
+      setSelectedPlaces(existingSelectedPlaces.add(placeToAdd.id));
     }
   };
 
@@ -73,7 +73,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
             onRowClick={(place: Place, checked: boolean) => {
               // Make a new Set so React knows state was changed.
               const newSet = new Set(selectedPlaces);
-              checked ? newSet.add(place) : newSet.delete(place);
+              checked ? newSet.add(place.id) : newSet.delete(place.id);
 
               setSelectedPlaces(newSet);
             }}
