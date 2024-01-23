@@ -2,7 +2,7 @@
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../../ConfigureScreensPage";
 import ConfigureScreensWorkflowPage, {
-  PlaceIdsAndScreens,
+  PlaceIdsAndNewScreens,
 } from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const [configVersion, setConfigVersion] = useState<string>("");
 
   const [placesAndScreensToUpdate, setPlacesAndScreensToUpdate] =
-    useState<PlaceIdsAndScreens>({});
+    useState<PlaceIdsAndNewScreens>({});
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
