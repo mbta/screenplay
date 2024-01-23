@@ -41,19 +41,17 @@ defmodule Screenplay.Config.PermanentConfig do
   defp get_config_reducer(_), do: raise("Not implemented")
 
   defp gl_eink_config_reducer(place_and_screens, acc) do
-    {place_id, %{"screens" => screens}} = place_and_screens
-    route_id = screens |> List.first() |> get_in(["app_params", "header", "route_id"])
+    {place_id, %{"updated_screens" => updated_screens, "new_screens" => new_screens}} =
+      place_and_screens
+
+    route_id = get_route_id(updated_screens, new_screens)
     platform_ids = RoutePattern.fetch_platform_ids_for_route_at_stop(place_id, route_id)
 
-    Enum.reduce(screens, acc, fn
-      %{"is_deleted" => true} = screen, acc ->
-        Map.delete(acc, screen["id"])
+    # Update/remove existing configs
+    new_config = update_existing_pending_screens(place_id, platform_ids, updated_screens, acc)
 
-      screen, acc ->
-        acc
-        |> Map.delete(screen["old_id"])
-        |> Map.put(screen["id"], json_to_struct(screen, :gl_eink_v2, place_id, platform_ids))
-    end)
+    # Add new pending screens
+    add_new_pending_screens(place_id, platform_ids, new_screens, new_config)
   end
 
   defp get_current_config(etag) do
@@ -114,11 +112,49 @@ defmodule Screenplay.Config.PermanentConfig do
     )
   end
 
+  defp update_existing_pending_screens(place_id, platform_ids, updated_screens, acc) do
+    Enum.reduce(updated_screens, acc, fn
+      {screen_id, %{"is_deleted" => true}}, acc ->
+        Map.delete(acc, screen_id)
+
+      # screen_id was updated
+      {screen_id, %{"new_id" => new_id} = config}, acc ->
+        acc
+        |> Map.delete(screen_id)
+        |> Map.put(
+          new_id,
+          json_to_struct(config, :gl_eink_v2, place_id, platform_ids)
+        )
+
+      {screen_id, config}, acc ->
+        Map.put(acc, screen_id, config)
+    end)
+  end
+
+  defp add_new_pending_screens(place_id, platform_ids, new_screens, acc) do
+    Enum.reduce(new_screens, acc, fn
+      config, acc ->
+        Map.put(
+          acc,
+          config["new_id"],
+          json_to_struct(config, :gl_eink_v2, place_id, platform_ids)
+        )
+    end)
+  end
+
   defp default_enabled_audio_config do
     %Audio{
       start_time: ~T[00:00:00],
       stop_time: ~T[23:59:59],
       days_active: [1, 2, 3, 4, 5, 6, 7]
     }
+  end
+
+  defp get_route_id(updated_screens, new_screens) do
+    updated_screens
+    |> Enum.map(fn {_screen_id, config} -> config end)
+    |> Enum.concat(new_screens)
+    |> List.first()
+    |> get_in(["app_params", "header", "route_id"])
   end
 end
