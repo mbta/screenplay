@@ -26,8 +26,9 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     newSelectedPlaces.delete(place);
     setSelectedPlaces(newSelectedPlaces);
     setPlacesAndScreensToUpdate((placesAndScreens) => {
-      delete placesAndScreens[place.id];
-      return placesAndScreens;
+      const { [place.id]: _discarded, ...newPlacesAndScreens } =
+        placesAndScreens;
+      return newPlacesAndScreens;
     });
   };
 
