@@ -60,12 +60,11 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
       if (selectedPlaces.length) {
         fetchExistingScreens(
           "gl_eink_v2",
-          selectedPlaces.map((place) => place.id),
-          (placesAndScreens, etag) => {
-            setConfigVersion(etag);
-            setExistingScreens(placesAndScreens);
-          }
-        );
+          selectedPlaces.map((place) => place.id)
+        ).then(({ placesAndScreens, etag }) => {
+          setConfigVersion(etag);
+          setExistingScreens(placesAndScreens);
+        });
       }
     }, []);
 
