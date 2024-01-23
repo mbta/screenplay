@@ -52,7 +52,7 @@ defmodule ScreenplayWeb.ConfigController do
       |> Enum.map(fn place_id ->
         filter_fn = fn
           {_, %Screen{app_id: ^app_id_atom} = config} ->
-            place_id_has_screen?(place_id, String.to_existing_atom(app_id), config)
+            place_id_has_screen?(place_id, app_id_atom, config)
 
           _ ->
             false
