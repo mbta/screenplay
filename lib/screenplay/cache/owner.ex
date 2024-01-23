@@ -81,13 +81,13 @@ defmodule Screenplay.Cache.Owner do
 
     state = do_update(init_state)
 
-    _ = schedule_update(cache_opts.update_interval_ms)
+    schedule_update(cache_opts.update_interval_ms)
     {:ok, state}
   end
 
   @impl true
   def handle_info(:update, state) do
-    _ = schedule_update(state.update_interval_ms)
+    schedule_update(state.update_interval_ms)
 
     {:noreply, do_update(state)}
   end
@@ -110,7 +110,7 @@ defmodule Screenplay.Cache.Owner do
       {:replace, table_entries, table_version} ->
         :ok = ensure_table_created(state)
         replace_contents(state.name, table_entries)
-        _ = put_table_version(state.name, table_version)
+        put_table_version(state.name, table_version)
 
         %{state | retry_count: 0, status: :ok}
 
@@ -189,7 +189,7 @@ defmodule Screenplay.Cache.Owner do
   end
 
   defp error_state(state = %{status: :error}) do
-    _ = Logger.error("cache_init_error table_name=#{state.name}")
+    Logger.error("cache_init_error table_name=#{state.name}")
 
     %{state | retry_count: state.retry_count + 1}
   end
