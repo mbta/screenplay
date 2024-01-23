@@ -12,7 +12,7 @@ import { Place } from "../../../../../models/place";
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
 }: WorkflowProps) => {
-  const [selectedPlaces, setSelectedPlaces] = useState<Set<Place>>(new Set());
+  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [configVersion, setConfigVersion] = useState<string>("");
 
   const [placesAndScreensToUpdate, setPlacesAndScreensToUpdate] =
@@ -23,7 +23,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
-    newSelectedPlaces.delete(place);
+    newSelectedPlaces.delete(place.id);
     setSelectedPlaces(newSelectedPlaces);
     setPlacesAndScreensToUpdate((placesAndScreens) => {
       const { [place.id]: _discarded, ...newPlacesAndScreens } =
@@ -73,7 +73,9 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       };
       layout = (
         <ConfigureScreensWorkflowPage
-          selectedPlaces={Array.from(selectedPlaces)}
+          selectedPlaces={places.filter((place) =>
+            selectedPlaces.has(place.id)
+          )}
           setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
           handleRemoveLocation={handleRemoveLocation}
           setConfigVersion={setConfigVersion}
