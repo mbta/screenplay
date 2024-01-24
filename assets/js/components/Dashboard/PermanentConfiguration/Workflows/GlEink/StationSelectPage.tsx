@@ -20,10 +20,9 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
 }: StationSelectPageProps) => {
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const handleSearchResultClick = (item: SearchItem) => {
-    const existingSelectedPlaces = new Set(selectedPlaces);
     const placeToAdd = places.find((place) => place.id === item.id);
     if (placeToAdd) {
-      setSelectedPlaces(existingSelectedPlaces.add(placeToAdd.id));
+      setSelectedPlaces((prev) => new Set([placeToAdd.id, ...prev]));
     }
   };
 
