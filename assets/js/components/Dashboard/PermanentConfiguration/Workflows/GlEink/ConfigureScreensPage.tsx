@@ -126,6 +126,9 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     [screen_id: string]: ScreenConfiguration;
   }>({});
   const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
+  const existingLiveScreens: {
+    [screen_id: string]: ScreenConfiguration;
+  } = existingScreens?.live_screens ?? {};
 
   useEffect(() => {
     if (!existingScreens) return;
@@ -150,11 +153,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     });
   }, [existingPendingScreens, newScreens]);
 
-  const getExistingLiveScreens = () => existingScreens?.live_screens ?? {};
-
   const hasRows =
-    Object.keys(getExistingLiveScreens()).length > 0 ||
-    Object.keys(existingPendingScreens).length > 0;
+    Object.keys(existingLiveScreens).length > 0 ||
+    Object.keys(existingPendingScreens).length > 0 ||
+    newScreens.length > 0;
 
   return (
     <Container className="configure-place-card p-0">
@@ -182,20 +184,18 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               </tr>
             </thead>
             <tbody className="screens-table-body">
-              {Object.entries(getExistingLiveScreens()).map(
-                ([screenID, screen]) => {
-                  return (
-                    <ConfigureScreenRow
-                      key={screenID}
-                      screenID={screenID}
-                      config={screen}
-                      isLive
-                      handleDelete={() => undefined}
-                      onChange={() => undefined}
-                    />
-                  );
-                }
-              )}
+              {Object.entries(existingLiveScreens).map(([screenID, screen]) => {
+                return (
+                  <ConfigureScreenRow
+                    key={screenID}
+                    screenID={screenID}
+                    config={screen}
+                    isLive
+                    handleDelete={() => undefined}
+                    onChange={() => undefined}
+                  />
+                );
+              })}
               {Object.entries(existingPendingScreens).map(
                 ([screenID, screen], index) => {
                   return (
