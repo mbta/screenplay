@@ -29,3 +29,14 @@ export const fetchAlerts = (
       callback(all_alert_ids, alerts, screens_by_alert);
     });
 };
+
+export const fetchExistingScreens = async (
+  appId: string,
+  placeIds: string[]
+) => {
+  const response = await fetch(
+    `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
+  );
+
+  return await response.json();
+};

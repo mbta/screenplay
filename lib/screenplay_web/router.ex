@@ -109,6 +109,7 @@ defmodule ScreenplayWeb.Router do
 
     post("/add", ConfigController, :add)
     post("/delete", ConfigController, :delete)
+    get("/existing-screens/:app_id", ConfigController, :existing_screens)
   end
 
   # Enables LiveDashboard only for development

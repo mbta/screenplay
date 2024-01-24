@@ -1,21 +1,29 @@
 import React, { ComponentType, useState } from "react";
-import { WorkflowProps } from "../ConfigureScreensPage";
 import { Container } from "react-bootstrap";
-import PlacesSearchBar, { SearchItem } from "../PlacesSearchBar";
-import { DirectionID } from "../../../../models/direction_id";
-import BottomActionBar from "../BottomActionBar";
+import PlacesSearchBar, { SearchItem } from "../../PlacesSearchBar";
+import WorkflowPlacesList from "../../WorkflowPlacesList";
+import { DirectionID } from "../../../../../models/direction_id";
+import { Place } from "../../../../../models/place";
+import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
-import WorkflowPlacesList from "../WorkflowPlacesList";
-import { Place } from "../../../../models/place";
 
-const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
+interface StationSelectPageProps {
+  places: Place[];
+  selectedPlaces: Set<string>;
+  setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<string>>>;
+}
+
+const StationSelectPage: ComponentType<StationSelectPageProps> = ({
   places,
-}: WorkflowProps) => {
-  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
+  selectedPlaces,
+  setSelectedPlaces,
+}: StationSelectPageProps) => {
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
-  const handleSearchResultClick = (place: SearchItem) => {
-    const existingSelectedPlaces = new Set(selectedPlaces);
-    setSelectedPlaces(existingSelectedPlaces.add(place.id));
+  const handleSearchResultClick = (item: SearchItem) => {
+    const placeToAdd = places.find((place) => place.id === item.id);
+    if (placeToAdd) {
+      setSelectedPlaces((prev) => new Set([placeToAdd.id, ...prev]));
+    }
   };
 
   const navigate = useNavigate();
@@ -106,4 +114,4 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   );
 };
 
-export default GlEinkWorkflow;
+export default StationSelectPage;
