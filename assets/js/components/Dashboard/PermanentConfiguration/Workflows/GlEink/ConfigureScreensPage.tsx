@@ -182,45 +182,46 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               </tr>
             </thead>
             <tbody className="screens-table-body">
-              {Object.keys(getExistingLiveScreens()).map((screenID) => {
-                const screen = getExistingLiveScreens()[screenID];
-                return (
-                  <ConfigureScreenRow
-                    key={screenID}
-                    screenID={screenID}
-                    config={screen}
-                    isLive
-                    handleDelete={() => undefined}
-                    onChange={() => undefined}
-                  />
-                );
-              })}
-              {Object.keys(existingPendingScreens).map((screenID, index) => {
-                const screen = existingPendingScreens[screenID];
-
-                return (
-                  <ConfigureScreenRow
-                    key={`pendingScreens.${index}`}
-                    screenID={screen.new_id ?? screenID}
-                    config={screen}
-                    handleDelete={() => {
-                      setExistingPendingScreens((prevState) => {
-                        const newState = { ...prevState };
-                        newState[screenID].is_deleted = true;
-                        return newState;
-                      });
-                    }}
-                    onChange={(screen: ScreenConfiguration) => {
-                      setExistingPendingScreens((prevState) => {
-                        const newState = { ...prevState };
-                        newState[screenID] = screen;
-                        return newState;
-                      });
-                    }}
-                    className={screen.is_deleted ? "hidden" : ""}
-                  />
-                );
-              })}
+              {Object.entries(getExistingLiveScreens()).map(
+                ([screenID, screen]) => {
+                  return (
+                    <ConfigureScreenRow
+                      key={screenID}
+                      screenID={screenID}
+                      config={screen}
+                      isLive
+                      handleDelete={() => undefined}
+                      onChange={() => undefined}
+                    />
+                  );
+                }
+              )}
+              {Object.entries(existingPendingScreens).map(
+                ([screenID, screen], index) => {
+                  return (
+                    <ConfigureScreenRow
+                      key={`pendingScreens.${index}`}
+                      screenID={screen.new_id ?? screenID}
+                      config={screen}
+                      handleDelete={() => {
+                        setExistingPendingScreens((prevState) => {
+                          const newState = { ...prevState };
+                          newState[screenID].is_deleted = true;
+                          return newState;
+                        });
+                      }}
+                      onChange={(screen: ScreenConfiguration) => {
+                        setExistingPendingScreens((prevState) => {
+                          const newState = { ...prevState };
+                          newState[screenID] = screen;
+                          return newState;
+                        });
+                      }}
+                      className={screen.is_deleted ? "hidden" : ""}
+                    />
+                  );
+                }
+              )}
               {newScreens.map((screen, index) => {
                 return (
                   <ConfigureScreenRow
