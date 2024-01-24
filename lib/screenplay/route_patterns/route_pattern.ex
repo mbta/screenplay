@@ -1,8 +1,11 @@
 defmodule Screenplay.RoutePatterns.RoutePattern do
   @moduledoc false
 
+  @behaviour Screenplay.RoutePatterns.Behaviour
+
   alias Screenplay.V3Api
 
+  @impl true
   def fetch_platform_ids_for_route_at_stop(stop_id, route_id) do
     case V3Api.get_json("route_patterns", %{
            "include" => "representative_trip.stops",
@@ -40,7 +43,7 @@ defmodule Screenplay.RoutePatterns.RoutePattern do
          Enum.find(platform_ids_at_stop, &(&1 in direction_1_platforms))}
 
       _ ->
-        []
+        {}
     end
   end
 end

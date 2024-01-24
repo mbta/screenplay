@@ -45,7 +45,7 @@ defmodule Screenplay.Config.PermanentConfig do
       place_and_screens
 
     route_id = get_route_id(updated_screens, new_screens)
-    platform_ids = RoutePattern.fetch_platform_ids_for_route_at_stop(place_id, route_id)
+    platform_ids = route_pattern_mod().fetch_platform_ids_for_route_at_stop(place_id, route_id)
 
     # Update/remove existing configs
     new_config = update_existing_pending_screens(place_id, platform_ids, updated_screens, acc)
@@ -156,5 +156,9 @@ defmodule Screenplay.Config.PermanentConfig do
     |> Enum.concat(new_screens)
     |> List.first()
     |> get_in(["app_params", "header", "route_id"])
+  end
+
+  defp route_pattern_mod do
+    Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
   end
 end

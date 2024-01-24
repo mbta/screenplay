@@ -1,0 +1,82 @@
+{
+  "screens": {
+    "1234": {
+      "disabled": false,
+      "name": null,
+      "tags": [],
+      "app_params": {
+        "header": {
+          "route_id": "Green-B",
+          "direction_id": 0
+        },
+        "alerts": {
+          "stop_id": "123"
+        },
+        "platform_location": "front",
+        "audio": {
+          "daytime_start_time": "00:00:00",
+          "daytime_stop_time": "00:00:00",
+          "daytime_volume": 0.0,
+          "interval_offset_seconds": 0,
+          "nighttime_volume": 0.0,
+          "start_time": "00:00:00",
+          "stop_time": "23:59:59",
+          "days_active": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "departures": {
+          "sections": [
+            {
+              "filter": null,
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": 0,
+                  "route_type": null,
+                  "stop_ids": [
+                    "place-test"
+                  ],
+                  "route_ids": [
+                    "Green-B"
+                  ]
+                }
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            }
+          ]
+        },
+        "line_map": {
+          "stop_id": "123",
+          "route_id": "Green-B",
+          "direction_id": 0,
+          "station_id": "place-test"
+        },
+        "footer": {
+          "stop_id": "place-test"
+        },
+        "evergreen_content": []
+      },
+      "hidden_from_screenplay": false,
+      "vendor": "mercury",
+      "app_id": "gl_eink_v2",
+      "refresh_if_loaded_before": null,
+      "device_id": null
+    }
+  },
+  "devops": {
+    "disabled_modes": []
+  }
+}
