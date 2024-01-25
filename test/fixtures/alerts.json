@@ -1,6 +1,8 @@
 {
   "alerts": [
     {
+      "cleared_at": null,
+      "cleared_by": null,
       "created_by": "user",
       "edited_by": "user",
       "id": "a1",
@@ -16,13 +18,17 @@
         "Haymarket",
         "Government Center"
       ]
-    },
+    }
+  ],
+  "cleared_alerts": [
     {
+      "cleared_at": "2024-01-25T13:48:52.747361Z",
+      "cleared_by": "bar",
       "created_by": "user",
       "edited_by": "user",
       "id": "a2",
       "message": {
-        "text": "All clear now",
+        "text": "This is an alert",
         "type": "custom"
       },
       "schedule": {
