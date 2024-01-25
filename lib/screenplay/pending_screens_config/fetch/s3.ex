@@ -51,6 +51,6 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
   end
 
   defp config_path_for_environment do
-    "screens/pending-#{Application.get_env(:screenplay, :environment_name)}.json"
+    "screens/pending-screens-#{Application.get_env(:screenplay, :environment_name)}.json"
   end
 end
