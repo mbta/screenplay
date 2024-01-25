@@ -1,6 +1,6 @@
 defmodule Screenplay.Config.PermanentConfig do
   @moduledoc false
-  alias Screenplay.PendingScreensConfig
+
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
   alias ScreensConfig.{Config, Screen}
@@ -13,25 +13,25 @@ defmodule Screenplay.Config.PermanentConfig do
   @spec put_pending_screens(map(), screen_type(), binary()) ::
           {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
   def put_pending_screens(places_and_screens, screen_type, etag) do
-    case get_current_config(etag) do
-      {:ok, config} ->
-        %Config{screens: existing_screens} = config
+    with {:ok, config_string} <- get_current_config(etag),
+         {:ok, deserialized} <- Jason.decode(config_string) do
+      %Config{screens: existing_screens} = Config.from_json(deserialized)
 
-        new_screens_config =
-          Enum.reduce(
-            places_and_screens,
-            existing_screens,
-            get_config_reducer(screen_type)
-          )
+      new_screens_config =
+        Enum.reduce(
+          places_and_screens,
+          existing_screens,
+          get_config_reducer(screen_type)
+        )
 
-        new_config = %Config{screens: new_screens_config}
-        new_config_json = new_config |> Config.to_json() |> Jason.encode!(pretty: true)
+      new_config = %Config{screens: new_screens_config}
+      new_config_json = new_config |> Config.to_json() |> Jason.encode!(pretty: true)
 
-        case PendingScreensFetch.put_config(new_config_json) do
-          :ok -> :ok
-          :error -> {:error, :config_not_written}
-        end
-
+      case PendingScreensFetch.put_config(new_config_json) do
+        :ok -> :ok
+        :error -> {:error, :config_not_written}
+      end
+    else
       error ->
         error
     end
@@ -55,7 +55,8 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   defp get_current_config(etag) do
-    case PendingScreensConfig.Cache.config() do
+    # Get config directly from source so we have an up-to-date etag
+    case PendingScreensFetch.fetch_config() do
       {:ok, config, ^etag} ->
         {:ok, config}
 
