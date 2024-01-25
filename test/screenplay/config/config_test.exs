@@ -6,7 +6,7 @@ defmodule Screenplay.Config.ConfigTest do
   alias Screenplay.Config.PermanentConfig
   alias Screenplay.PendingScreensConfig.Fetch.Local
 
-  def fetch_current_config_version() do
+  def fetch_current_config_version do
     {:ok, _config, version} = Local.fetch_config()
     version
   end
