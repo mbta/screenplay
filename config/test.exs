@@ -15,7 +15,16 @@ config :screenplay,
 
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: {Screenplay.Ueberauth.Strategy.Fake, []}
+    keycloak: {Screenplay.Ueberauth.Strategy.Fake, []}
+  ]
+
+config :ueberauth_oidcc,
+  providers: [
+    keycloak: [
+      issuer: :keycloak_issuer,
+      client_id: "test-client",
+      client_secret: "fake-secret"
+    ]
   ]
 
 # Print only warnings and errors during test

@@ -5,7 +5,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   @type access_level :: :none | :read_only | :emergency_admin | :screens_config_admmin
 
-  @screenplay_admin_group "screenplay-emergency-admin"
+  @screenplay_admin_role "screenplay-emergency-admin"
   @screens_admin "screens-admin"
 
   @spec subject_for_token(
@@ -25,12 +25,12 @@ defmodule ScreenplayWeb.AuthManager do
   def resource_from_claims(_), do: {:error, :invalid_claims}
 
   @spec claims_access_level(Guardian.Token.claims()) :: access_level()
-  def claims_access_level(%{"groups" => groups}) when not is_nil(groups) do
+  def claims_access_level(%{"roles" => roles}) when not is_nil(roles) do
     cond do
-      @screenplay_admin_group in groups ->
+      @screenplay_admin_role in roles ->
         :emergency_admin
 
-      @screens_admin in groups ->
+      @screens_admin in roles ->
         :screens_config_admmin
 
       true ->
