@@ -50,6 +50,7 @@ defmodule Screenplay.MixProject do
       {:guardian, "~> 2.3"},
       {:ueberauth, "~> 0.10.0"},
       {:ueberauth_oidcc, "~> 0.3"},
+      {:openid_connect, "~> 0.2.2"},
       {:sftp_client, "~> 1.4"},
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},
