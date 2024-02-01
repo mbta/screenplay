@@ -15,7 +15,7 @@ defmodule ScreenplayWeb.AuthController do
     roles =
       get_in(auth.extra.raw_info.userinfo, ["resource_access", keycloak_client_id, "roles"]) || []
 
-    previous_path = Plug.Conn.get_session(conn, :previous_path)
+    # previous_path = Plug.Conn.get_session(conn, :previous_path)
     Plug.Conn.delete_session(conn, :previous_path)
 
     conn
@@ -27,7 +27,7 @@ defmodule ScreenplayWeb.AuthController do
     )
     |> Plug.Conn.put_session(:username, name || username)
     # Redirect to whatever page they came from
-    |> redirect(to: previous_path)
+    |> redirect(to: "/dashboard")
   end
 
   def callback(
