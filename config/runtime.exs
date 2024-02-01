@@ -14,6 +14,23 @@ sftp_client_module =
 
 env = System.get_env("ENVIRONMENT_NAME")
 
+keycloak_opts = [
+  issuer: :keycloak_issuer,
+  client_id: System.fetch_env!("KEYCLOAK_CLIENT_ID"),
+  client_secret: System.fetch_env!("KEYCLOAK_CLIENT_SECRET")
+]
+
+config :ueberauth_oidcc,
+  issuers: [
+    %{
+      name: :keycloak_issuer,
+      issuer: System.fetch_env!("KEYCLOAK_ISSUER")
+    }
+  ],
+  providers: [
+    keycloak: keycloak_opts
+  ]
+
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
   sftp_client_module: sftp_client_module,
