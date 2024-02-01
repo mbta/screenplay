@@ -17,7 +17,8 @@ env = System.get_env("ENVIRONMENT_NAME")
 keycloak_opts = [
   issuer: :keycloak_issuer,
   client_id: System.fetch_env!("KEYCLOAK_CLIENT_ID"),
-  client_secret: System.fetch_env!("KEYCLOAK_CLIENT_SECRET")
+  client_secret: System.fetch_env!("KEYCLOAK_CLIENT_SECRET"),
+  redirect_uri: "https://screenplay-dev-green.mbtace.com/auth/keycloak/callback"
 ]
 
 config :ueberauth_oidcc,
