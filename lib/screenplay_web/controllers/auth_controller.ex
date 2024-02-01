@@ -25,6 +25,7 @@ defmodule ScreenplayWeb.AuthController do
       %{roles: roles},
       ttl: {expiration - current_time, :seconds}
     )
+    |> Plug.Conn.put_session(:username, name || username)
     # Redirect to whatever page they came from
     |> redirect(to: previous_path)
   end
