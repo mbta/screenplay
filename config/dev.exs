@@ -82,6 +82,14 @@ config :screenplay,
   local_place_descriptions_file_spec: {:priv, "place_descriptions.json"},
   api_v3_key: System.get_env("API_V3_KEY")
 
+# To use Keycloak authentication locally, uncomment this config block and comment out the two below it.
+# Also make sure that KEYCLOAK_CLIENT_ID, KEYCLOAK_ISSUER, and KEYCLOAK_CLIENT_SECRET are set in .envrc.
+# config :ueberauth, Ueberauth,
+#   providers: [
+#     keycloak:
+#       {Ueberauth.Strategy.Oidcc, userinfo: true, uid_field: "email", scopes: ~w(openid email)}
+#   ]
+
 config :ueberauth, Ueberauth,
   providers: [
     keycloak: {Screenplay.Ueberauth.Strategy.Fake, [roles: ["screenplay-emergency-admin"]]}
