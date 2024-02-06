@@ -2,7 +2,7 @@
   {
     "id": "place-alfcl",
     "name": "Alewife",
-    "routes": ["Bus", "Red"],
+    "routes": ["bus", "red"],
     "screens": [
       {
         "id": "alewife_center_southbound",
@@ -21,7 +21,7 @@
   {
     "id": "place-davis",
     "name": "Davis",
-    "routes": ["Bus", "Red"],
+    "routes": ["bus", "red"],
     "screens": [
       { "disabled": false, "id": "Landscape255", "type": "dup" },
       {
@@ -47,7 +47,7 @@
   {
     "id": "place-portr",
     "name": "Porter",
-    "routes": ["CR", "Red"],
+    "routes": ["cr", "red"],
     "screens": [
       { "disabled": false, "id": "PRE-108", "type": "pre_fare_v2" },
       { "disabled": false, "id": "1508", "type": "pre_fare_v2" },
@@ -74,7 +74,7 @@
   {
     "id": "place-ogmnl",
     "name": "Oak Grove",
-    "routes": ["Bus", "Orange"],
+    "routes": ["bus", "orange"],
     "screens": [
       {
         "id": "oak_grove_mezzanine_southbound",
@@ -99,7 +99,7 @@
   {
     "id": "place-mlmnl",
     "name": "Malden Center",
-    "routes": ["Bus", "CR", "Orange"],
+    "routes": ["bus", "cr", "orange"],
     "screens": [
       { "disabled": false, "id": "DUP-Malden", "type": "dup" },
       {
@@ -119,7 +119,7 @@
   {
     "id": "place-welln",
     "name": "Wellington",
-    "routes": ["Bus", "Orange"],
+    "routes": ["bus", "orange"],
     "screens": [
       { "disabled": false, "id": "1512", "type": "pre_fare_v2" },
       { "disabled": false, "id": "PRE-112", "type": "pre_fare_v2" },
@@ -146,7 +146,7 @@
   {
     "id": "place-gover",
     "name": "Government Center",
-    "routes": ["Blue", "Green-B", "Green-C", "Green-D", "Green-E"],
+    "routes": ["blue", "green_b", "green_c", "green_d", "green_e"],
     "screens": [
       { "disabled": false, "id": "1503", "type": "pre_fare_v2" },
       { "disabled": false, "id": "PRE-103", "type": "pre_fare_v2" },
@@ -193,7 +193,7 @@
   {
     "id": "place-pktrm",
     "name": "Park Street",
-    "routes": ["Green-B", "Green-C", "Green-D", "Green-E", "Red"],
+    "routes": ["green_b", "green_c", "green_d", "green_e", "red"],
     "screens": [
       {
         "id": "red_park_st_northbound",
@@ -242,7 +242,7 @@
   {
     "id": "place-boyls",
     "name": "Boylston",
-    "routes": ["Green-B", "Green-C", "Green-D", "Green-E"],
+    "routes": ["green_b", "green_c", "green_d", "green_e"],
     "screens": [
       {
         "id": "boylston_eastbound",
@@ -261,7 +261,7 @@
   {
     "id": "place-north",
     "name": "North Station",
-    "routes": ["CR", "Green-D", "Green-E", "Orange"],
+    "routes": ["cr", "green_d", "green_e", "orange"],
     "screens": [
       {
         "id": "orange_north_station_northbound",
@@ -310,7 +310,7 @@
   {
     "id": "place-haecl",
     "name": "Haymarket",
-    "routes": ["Green-D", "Green-E", "Orange"],
+    "routes": ["green_d", "green_e", "orange"],
     "screens": [
       { "disabled": false, "id": "DUP-Haymarket", "type": "dup" },
       {
@@ -348,7 +348,7 @@
   {
     "id": "place-unsqu",
     "name": "Union Square",
-    "routes": ["Green-D"],
+    "routes": ["green_d"],
     "screens": [
       {
         "id": "union_sq_track_one",
@@ -373,7 +373,7 @@
   {
     "id": "place-lech",
     "name": "Lechmere",
-    "routes": ["Bus", "Green-D", "Green-E"],
+    "routes": ["bus", "green_d", "green_e"],
     "screens": [
       {
         "id": "lechmere_green_line_eastbound",
@@ -398,7 +398,7 @@
   {
     "id": "place-spmnl",
     "name": "Science Park/West End",
-    "routes": ["Green-D", "Green-E"],
+    "routes": ["green_d", "green_e"],
     "screens": [
       {
         "id": "science_park_eastbound",
@@ -423,37 +423,37 @@
   {
     "id": "place-esomr",
     "name": "East Somerville",
-    "routes": ["Green-E"],
+    "routes": ["green_e"],
     "screens": []
   },
   {
     "id": "place-gilmn",
     "name": "Gilman Square",
-    "routes": ["Green-E"],
+    "routes": ["green_e"],
     "screens": []
   },
   {
     "id": "place-mgngl",
     "name": "Magoun Square",
-    "routes": ["Green-E"],
+    "routes": ["green_e"],
     "screens": []
   },
   {
     "id": "place-balsq",
     "name": "Ball Square",
-    "routes": ["Green-E"],
+    "routes": ["green_e"],
     "screens": []
   },
   {
     "id": "place-mdftf",
     "name": "Medford/Tufts",
-    "routes": ["Green-E"],
+    "routes": ["green_e"],
     "screens": []
   },
   {
     "id": "place-wondl",
     "name": "Wonderland",
-    "routes": ["Bus", "Blue"],
+    "routes": ["bus", "blue"],
     "screens": [
       { "disabled": false, "id": "PRE-114", "type": "pre_fare_v2" },
       { "disabled": false, "id": "1514", "type": "pre_fare_v2" },
@@ -474,7 +474,7 @@
   {
     "id": "place-rbmnl",
     "name": "Revere Beach",
-    "routes": ["Blue"],
+    "routes": ["blue"],
     "screens": [
       {
         "id": "revere_beach_eastbound",
@@ -499,7 +499,7 @@
   {
     "id": "place-bmmnl",
     "name": "Beachmont",
-    "routes": ["Blue"],
+    "routes": ["blue"],
     "screens": [
       {
         "id": "beachmont_eastbound",
@@ -518,7 +518,7 @@
   {
     "id": "1215",
     "name": "Columbus Ave @ Bray St",
-    "routes": ["Bus"],
+    "routes": ["bus"],
     "screens": [
       { "disabled": false, "id": "BUS-104", "type": "bus_shelter_v2" },
       { "disabled": false, "id": "1401", "type": "bus_shelter_v2" }
@@ -527,7 +527,7 @@
   {
     "id": "1722",
     "name": "1624 Blue Hill Ave @ Mattapan Sq",
-    "routes": ["Bus"],
+    "routes": ["bus"],
     "screens": [
       {
         "disabled": false,
@@ -539,7 +539,7 @@
   {
     "id": "place-bland",
     "name": "Blandford Street",
-    "routes": ["Green-B"],
+    "routes": ["green_b"],
     "screens": [
       {
         "disabled": true,
@@ -566,7 +566,7 @@
   {
     "id": "place-asmnl",
     "name": "Ashmont",
-    "routes": ["Bus", "Mattapan", "Red"],
+    "routes": ["bus", "mattapan", "red"],
     "screens": [
       {
         "disabled": false,

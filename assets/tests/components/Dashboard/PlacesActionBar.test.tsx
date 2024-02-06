@@ -7,7 +7,7 @@ describe("PlacesActionBar", () => {
   const place1: Place = {
     id: "place-stop1",
     name: "Place Name1",
-    routes: ["CR", "Red", "Green-B"],
+    routes: ["cr", "red", "green_b"],
     status: "Auto",
     screens: [
       { id: "1111", type: "dup", disabled: false },
@@ -19,7 +19,7 @@ describe("PlacesActionBar", () => {
   const place2: Place = {
     id: "place-stop2",
     name: "Place Name2",
-    routes: ["Green-B"],
+    routes: ["green_b"],
     status: "Auto",
     screens: [
       { id: "4444", type: "gl_eink_double", disabled: false },
@@ -33,7 +33,7 @@ describe("PlacesActionBar", () => {
   const place3: Place = {
     id: "place-stop3",
     name: "Place Name3",
-    routes: ["Green-D"],
+    routes: ["green_d"],
     status: "Auto",
     screens: [],
   };

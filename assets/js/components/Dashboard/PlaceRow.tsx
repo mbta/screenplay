@@ -134,16 +134,16 @@ const PlaceRow = ({
 
   const renderModesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
-      route.startsWith("Green-")
+      route.startsWith("green_")
     ).length;
 
     // If the list of routes contains a single GL branch, show the GL branch icon.
     // If it contains more than one branch, show the GL icon.
     // Otherwise, show the route icon.
     const newRoutes = routes.reduce((result: string[], current) => {
-      if (current.startsWith("Green-") && numberOfGLBranches > 1) {
-        if (!result.includes("Green")) {
-          result.push("Green");
+      if (current.startsWith("green_") && numberOfGLBranches > 1) {
+        if (!result.includes("green")) {
+          result.push("green");
         }
       } else {
         result.push(current);
