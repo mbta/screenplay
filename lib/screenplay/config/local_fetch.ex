@@ -3,6 +3,7 @@ defmodule Screenplay.Config.LocalFetch do
 
   @behaviour Screenplay.Config.Fetch
 
+  @impl true
   def get_config do
     with {:ok, config_contents} <- do_get(:local_config_file_spec),
          {:ok, location_contents} <- do_get(:local_locations_file_spec),
@@ -12,6 +13,14 @@ defmodule Screenplay.Config.LocalFetch do
          {:ok, place_description_json} <-
            do_decode(place_description_contents, :local_place_descriptions_file_spec) do
       {:ok, config_json, location_json, place_description_json}
+    end
+  end
+
+  @impl true
+  def put_config(file_contents) do
+    case File.write(local_path(:local_config_file_spec), file_contents) do
+      :ok -> :ok
+      {:error, _} -> :error
     end
   end
 

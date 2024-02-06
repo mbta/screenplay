@@ -5,6 +5,7 @@ defmodule Screenplay.Config.S3Fetch do
 
   @behaviour Screenplay.Config.Fetch
 
+  @impl true
   def get_config do
     with {:ok, config_contents, _} <- do_get(:config),
          {:ok, location_contents, _} <- do_get(:screen_locations),
@@ -23,6 +24,18 @@ defmodule Screenplay.Config.S3Fetch do
          {:ok, screens_json} <- Jason.decode(screens_contents) do
       {:ok, screens_json, etag}
     else
+      _ -> :error
+    end
+  end
+
+  @impl true
+  def put_config(file_contents) do
+    bucket = Application.get_env(:screenplay, :config_s3_bucket)
+    path = config_path_for_environment(:config)
+    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
+
+    case ExAws.request(put_operation) do
+      {:ok, %{status_code: 200}} -> :ok
       _ -> :error
     end
   end
