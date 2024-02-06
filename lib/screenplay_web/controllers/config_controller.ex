@@ -63,6 +63,13 @@ defmodule ScreenplayWeb.ConfigController do
     })
   end
 
+  def publish(conn, %{"place_id" => place_id}) do
+    case PermanentConfig.publish_pending_screens(place_id) do
+      :ok -> send_resp(conn, 200, "OK")
+      _ -> send_resp(conn, 400, "Could not publish screens")
+    end
+  end
+
   defp place_id_has_screen?(place_id, :gl_eink_v2, %Screen{
          app_params: %GlEink{footer: %{stop_id: stop_id}}
        }),

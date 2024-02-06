@@ -2,6 +2,7 @@ defmodule Screenplay.Config.PermanentConfig do
   @moduledoc false
 
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
+  alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
   alias ScreensConfig.{Config, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
@@ -13,7 +14,7 @@ defmodule Screenplay.Config.PermanentConfig do
   @spec put_pending_screens(map(), screen_type(), binary()) ::
           {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
   def put_pending_screens(places_and_screens, screen_type, etag) do
-    with {:ok, config_string} <- get_current_config(etag),
+    with {:ok, config_string} <- get_current_pending_config(etag),
          {:ok, deserialized} <- Jason.decode(config_string) do
       %Config{screens: existing_screens} = Config.from_json(deserialized)
 
@@ -24,10 +25,7 @@ defmodule Screenplay.Config.PermanentConfig do
           get_config_reducer(screen_type)
         )
 
-      new_config = %Config{screens: new_screens_config}
-      new_config_json = new_config |> Config.to_json() |> Jason.encode!(pretty: true)
-
-      case PendingScreensFetch.put_config(new_config_json) do
+      case put_new_pending_screens(new_screens_config) do
         :ok -> :ok
         :error -> {:error, :config_not_written}
       end
@@ -54,7 +52,41 @@ defmodule Screenplay.Config.PermanentConfig do
     add_new_pending_screens(place_id, platform_ids, new_screens, new_config)
   end
 
-  defp get_current_config(etag) do
+  def publish_pending_screens(place_id) do
+    %Config{screens: pending_screens} =
+      get_current_pending_config() |> Jason.decode!() |> Config.from_json()
+
+    %Config{screens: published_screens} =
+      get_current_published_config() |> Jason.decode!() |> Config.from_json()
+
+    {screens_to_publish, new_pending_screens} =
+      Enum.split_with(pending_screens, &place_has_screen(&1, place_id))
+
+    new_published_screens =
+      screens_to_publish
+      |> Enum.into(%{})
+      |> Map.merge(published_screens)
+
+    new_pending_screens
+    |> Enum.into(%{})
+    |> put_new_pending_screens()
+    |> case do
+      :ok ->
+        put_new_published_screens(new_published_screens)
+
+      error ->
+        error
+    end
+  end
+
+  defp get_current_pending_config() do
+    case PendingScreensFetch.fetch_config() do
+      {:ok, config, _etag} -> config
+      error -> error
+    end
+  end
+
+  defp get_current_pending_config(etag) do
     # Get config directly from source so we have an up-to-date etag
     case PendingScreensFetch.fetch_config() do
       {:ok, config, ^etag} ->
@@ -66,6 +98,15 @@ defmodule Screenplay.Config.PermanentConfig do
       _ ->
         {:error, :etag_mismatch}
     end
+  end
+
+  defp put_new_pending_screens(new_pending_screens) do
+    new_pending_config = %Config{screens: new_pending_screens}
+
+    new_pending_config_json =
+      new_pending_config |> Config.to_json() |> Jason.encode!(pretty: true)
+
+    PendingScreensFetch.put_config(new_pending_config_json)
   end
 
   defp json_to_struct(screen, :gl_eink_v2, parent_station_id, platform_ids) do
@@ -159,7 +200,31 @@ defmodule Screenplay.Config.PermanentConfig do
     |> get_in(["app_params", "header", "route_id"])
   end
 
-  defp route_pattern_mod do
-    Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
+  defp get_current_published_config() do
+    case PublishedScreensFetch.fetch_config() do
+      {:ok, config, _etag} -> config
+      error -> error
+    end
   end
+
+  defp put_new_published_screens(new_published_screens) do
+    new_published_config = %Config{screens: new_published_screens}
+
+    new_published_config_json =
+      new_published_config |> Config.to_json() |> Jason.encode!(pretty: true)
+
+    PublishedScreensFetch.put_config(new_published_config_json)
+  end
+
+  defp place_has_screen(
+         {_screen_id, %Screen{app_id: :gl_eink_v2} = screen},
+         place_id
+       ) do
+    %Screen{app_params: %GlEink{footer: %Footer{stop_id: stop_id}}} = screen
+    stop_id == place_id
+  end
+
+  defp place_has_screen(_screen, _place_id), do: false
+
+  defp route_pattern_mod, do: Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
 end
