@@ -16,7 +16,7 @@ describe("PlaceRowAccordion", () => {
     const place: Place = {
       id: "place-stop1",
       name: "Place Name1",
-      routes: ["cr", "red", "green_b"],
+      routes: ["CR", "Red", "Green-B"],
       status: "Auto",
       screens: [
         { id: "1111", type: "dup", disabled: false },

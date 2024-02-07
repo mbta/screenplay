@@ -175,13 +175,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
         case "Access":
           return (ie) => ie.facility != null;
         default:
-          return (ie) => {
-            const formattedRouteId = (ie.route as string)
-              .replace("-", "_")
-              .toLowerCase();
-
-            return ids.includes(formattedRouteId);
-          };
+          return (ie) => ids.includes(ie.route as string);
       }
     })();
 

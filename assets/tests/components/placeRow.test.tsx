@@ -15,7 +15,7 @@ describe("PlaceRow", () => {
     const place: Place = {
       id: "place-stop1",
       name: "Place Name1",
-      routes: ["cr", "red", "green_b", "green_c"],
+      routes: ["CR", "Red", "Green-B", "Green-C"],
       status: "Auto",
       screens: [],
     };
@@ -41,8 +41,8 @@ describe("PlaceRow", () => {
     expect(getByTestId("place-row").className).not.toContain("filtered");
     expect(getByTestId("place-screen-types").textContent).toBe("no screens");
     expect(getByTestId("place-status").textContent).toBe("—");
-    expect(getByAltText("green")).toBeInTheDocument();
-    expect(queryByAltText("green_b")).toBeNull();
-    expect(queryByAltText("green_c")).toBeNull();
+    expect(getByAltText("Green")).toBeInTheDocument();
+    expect(queryByAltText("Green-B")).toBeNull();
+    expect(queryByAltText("Green-C")).toBeNull();
   });
 });

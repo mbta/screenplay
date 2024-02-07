@@ -33,40 +33,32 @@ end
 
 cr_or_bus_only? = fn routes ->
   Enum.all?(routes, fn route ->
-    route == "cr" or route == "bus"
+    route == "CR" or route == "Bus"
   end)
 end
 
 format_bus_routes = fn routes ->
   if Enum.any?(routes, &string_is_number?.(&1)) do
-    routes |> Enum.reject(&string_is_number?.(&1)) |> Enum.concat(["bus"])
+    routes |> Enum.reject(&string_is_number?.(&1)) |> Enum.concat(["Bus"])
   else
     routes
   end
 end
 
-format_route_id = fn
-  "Green-" <> branch ->
-    "green_#{String.downcase(branch)}"
-
-  route ->
-    String.downcase(route)
-end
-
 sort_routes = fn routes ->
   route_order = [
-    "bus",
-    "cr",
-    "ferry",
-    "mattapan",
-    "silver",
-    "blue",
-    "green_b",
-    "green_c",
-    "green_d",
-    "green_e",
-    "orange",
-    "red"
+    "Bus",
+    "CR",
+    "Ferry",
+    "Mattapan",
+    "Silver",
+    "Blue",
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Orange",
+    "Red"
   ]
 
   Enum.sort(
@@ -81,7 +73,7 @@ end
 # If a place's stop shows Ferry departures from a separate nearby stop, add it here.
 add_routes_to_stops = fn
   routes, %{id: "place-aqucl"} = stop ->
-    Map.put(stop, :routes, routes ++ ["ferry"])
+    Map.put(stop, :routes, routes ++ ["Ferry"])
 
   routes, stop ->
     Map.put(stop, :routes, routes)
@@ -391,11 +383,11 @@ contents =
 
     data
     |> Enum.map(fn
-      %{"attributes" => %{"short_name" => "SL" <> _}} -> "silver"
-      %{"id" => "CR-" <> _} -> "cr"
+      %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
+      %{"id" => "CR-" <> _} -> "CR"
       # Bus edge case I found in the data.
-      %{"id" => "34E"} -> "bus"
-      %{"id" => route_id} -> format_route_id.(route_id)
+      %{"id" => "34E"} -> "Bus"
+      %{"id" => route_id} -> route_id
     end)
     |> format_bus_routes.()
     |> Enum.dedup()
