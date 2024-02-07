@@ -16,7 +16,7 @@ const ConfigureScreensPage: ComponentType = () => {
     switch (screenType) {
       case "gl-eink":
         filteredPlaces = places.filter((place) =>
-          place.routes.some((route) => route.startsWith("Green"))
+          place.routes.some((route) => route.startsWith("green"))
         );
         break;
       default:
