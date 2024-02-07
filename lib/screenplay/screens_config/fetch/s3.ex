@@ -3,6 +3,8 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
   Functions to work with an S3-hosted copy of the screens config.
   """
 
+  alias ScreensConfig.Config
+
   require Logger
 
   @behaviour Screenplay.ScreensConfig.Fetch
@@ -39,10 +41,11 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
   end
 
   @impl true
-  def put_config(file_contents) do
+  def put_config(config) do
+    json = config |> Config.to_json() |> Jason.encode!(pretty: true)
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
-    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
+    put_operation = ExAws.S3.put_object(bucket, path, json)
 
     case ExAws.request(put_operation) do
       {:ok, %{status_code: 200}} -> :ok

@@ -3,7 +3,7 @@ defmodule Screenplay.PendingScreensConfig.Cache.Engine do
   Engine for the pending screens config cache.
   """
 
-  alias ScreensConfig.Config
+  alias ScreensConfig.PendingConfig
   alias Screenplay.PendingScreensConfig.{Cache, Fetch}
 
   @behaviour Screenplay.Cache.Engine
@@ -22,7 +22,7 @@ defmodule Screenplay.PendingScreensConfig.Cache.Engine do
 
     with {:ok, body, new_version} <- Fetch.fetch_config(current_version),
          {:ok, deserialized} <- Jason.decode(body) do
-      config = Config.from_json(deserialized)
+      config = PendingConfig.from_json(deserialized)
 
       # It's inefficient to store the entire config under one key--every time we read any entry from an ETS table,
       # a full copy of that entry is made.
@@ -42,15 +42,10 @@ defmodule Screenplay.PendingScreensConfig.Cache.Engine do
   @impl true
   def update_failure_error_log_threshold_minutes, do: 2
 
-  @spec config_to_table_entries(Config.t()) :: Cache.table_contents()
+  @spec config_to_table_entries(PendingConfig.t()) :: Cache.table_contents()
   defp config_to_table_entries(config) do
-    screen_entries =
-      Enum.map(config.screens, fn {screen_id, screen_config} ->
-        {{:screen, screen_id}, screen_config}
-      end)
-
-    metadata_entries = [devops: config.devops]
-
-    metadata_entries ++ screen_entries
+    Enum.map(config.screens, fn {screen_id, screen_config} ->
+      {{:screen, screen_id}, screen_config}
+    end)
   end
 end

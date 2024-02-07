@@ -3,6 +3,8 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   Functions to work with a local copy of the pending screens config.
   """
 
+  alias ScreensConfig.PendingConfig
+
   @behaviour Screenplay.PendingScreensConfig.Fetch
 
   @impl true
@@ -20,8 +22,10 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
 
   @impl true
   # sobelow_skip ["Traversal.FileModule"]
-  def put_config(file_contents) do
-    case File.write(local_config_path(), file_contents) do
+  def put_config(config) do
+    json = config |> PendingConfig.to_json() |> Jason.encode!(pretty: true)
+
+    case File.write(local_config_path(), json) do
       :ok -> :ok
       {:error, _} -> :error
     end

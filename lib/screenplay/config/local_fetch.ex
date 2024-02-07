@@ -18,7 +18,13 @@ defmodule Screenplay.Config.LocalFetch do
 
   @impl true
   def put_config(file_contents) do
-    case File.write(local_path(:local_config_file_spec), file_contents) do
+    encoded_contents =
+      case Jason.encode(file_contents, pretty: true) do
+        {:ok, contents} -> contents
+        {:error, _} -> :error
+      end
+
+    case File.write(local_path(:local_config_file_spec), encoded_contents) do
       :ok -> :ok
       {:error, _} -> :error
     end
