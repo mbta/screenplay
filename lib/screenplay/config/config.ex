@@ -1,13 +1,16 @@
 defmodule Screenplay.Config.PermanentConfig do
   @moduledoc false
 
+  alias Screenplay.Config.PlaceAndScreens
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
-  alias ScreensConfig.{Config, Screen}
+  alias ScreensConfig.{Config, PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias ScreensConfig.V2.Header.Destination
+
+  @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   @type screen_type :: :gl_eink_v2
 
@@ -16,7 +19,7 @@ defmodule Screenplay.Config.PermanentConfig do
   def put_pending_screens(places_and_screens, screen_type, etag) do
     with {:ok, config_string} <- get_current_pending_config(etag),
          {:ok, deserialized} <- Jason.decode(config_string) do
-      %Config{screens: existing_screens} = Config.from_json(deserialized)
+      %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
 
       new_screens_config =
         Enum.reduce(
@@ -25,7 +28,7 @@ defmodule Screenplay.Config.PermanentConfig do
           get_config_reducer(screen_type)
         )
 
-      case put_new_pending_screens(new_screens_config) do
+      case PendingScreensFetch.put_config(%PendingConfig{screens: new_screens_config}) do
         :ok -> :ok
         :error -> {:error, :config_not_written}
       end
@@ -53,29 +56,24 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   def publish_pending_screens(place_id) do
-    %Config{screens: pending_screens} =
-      get_current_pending_config() |> Jason.decode!() |> Config.from_json()
-
-    %Config{screens: published_screens} =
-      get_current_published_config() |> Jason.decode!() |> Config.from_json()
+    %PendingConfig{screens: pending_screens} =
+      get_current_pending_config() |> Jason.decode!() |> PendingConfig.from_json()
 
     {screens_to_publish, new_pending_screens} =
       Enum.split_with(pending_screens, &place_has_screen(&1, place_id))
 
-    new_published_screens =
-      screens_to_publish
-      |> Enum.into(%{})
-      |> Map.merge(published_screens)
+    new_pending_screens_config =
+      %PendingConfig{screens: Enum.into(new_pending_screens, %{})}
 
-    new_pending_screens
-    |> Enum.into(%{})
-    |> put_new_pending_screens()
-    |> case do
-      :ok ->
-        put_new_published_screens(new_published_screens)
+    new_published_screens_config = get_new_published_screens(screens_to_publish)
+    new_places_and_screens_config = get_new_places_and_screens_config(screens_to_publish)
 
-      error ->
-        error
+    with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
+         :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
+         :ok <- @config_fetcher.put_config(new_places_and_screens_config) do
+      :ok
+    else
+      _ -> :error
     end
   end
 
@@ -98,15 +96,6 @@ defmodule Screenplay.Config.PermanentConfig do
       _ ->
         {:error, :etag_mismatch}
     end
-  end
-
-  defp put_new_pending_screens(new_pending_screens) do
-    new_pending_config = %Config{screens: new_pending_screens}
-
-    new_pending_config_json =
-      new_pending_config |> Config.to_json() |> Jason.encode!(pretty: true)
-
-    PendingScreensFetch.put_config(new_pending_config_json)
   end
 
   defp json_to_struct(screen, :gl_eink_v2, parent_station_id, platform_ids) do
@@ -207,13 +196,59 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  defp put_new_published_screens(new_published_screens) do
-    new_published_config = %Config{screens: new_published_screens}
+  defp get_new_published_screens(screens_to_publish) do
+    %Config{screens: published_screens, devops: devops} =
+      get_current_published_config() |> Jason.decode!() |> Config.from_json()
 
-    new_published_config_json =
-      new_published_config |> Config.to_json() |> Jason.encode!(pretty: true)
+    screens =
+      screens_to_publish
+      |> Enum.into(%{})
+      |> Map.merge(published_screens)
 
-    PublishedScreensFetch.put_config(new_published_config_json)
+    %Config{screens: screens, devops: devops}
+  end
+
+  defp get_new_places_and_screens_config(new_published_screens) do
+    places_and_screens_config =
+      case @config_fetcher.get_config() do
+        {:ok, places_and_screens_config, _, _} ->
+          places_and_screens_config
+
+        _ ->
+          {:error, "Could not fetch places_and_screens"}
+      end
+
+    places_and_screens_config =
+      Enum.map(places_and_screens_config, &PlaceAndScreens.from_map/1)
+
+    grouped_places_and_screens =
+      new_published_screens
+      |> Enum.into(%{})
+      |> Enum.group_by(
+        fn
+          {_, %Screen{app_id: :gl_eink_v2} = config} ->
+            config.app_params.footer.stop_id
+
+          _ ->
+            raise("Not implemented")
+        end,
+        fn {screen_id, config} ->
+          %Screen{app_id: app_id, disabled: disabled} = config
+          %{id: screen_id, type: app_id, disabled: disabled}
+        end
+      )
+
+    Enum.reduce(places_and_screens_config, [], fn
+      %{id: place_id} = place_and_screens, acc
+      when is_map_key(grouped_places_and_screens, place_id) ->
+        new_screens = grouped_places_and_screens[place_id]
+        %{screens: existing_screens} = place_and_screens
+
+        [%{place_and_screens | screens: existing_screens ++ new_screens} | acc]
+
+      map, acc ->
+        [map | acc]
+    end)
   end
 
   defp place_has_screen(
