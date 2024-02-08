@@ -15,7 +15,7 @@ config :screenplay,
 
 config :ueberauth, Ueberauth,
   providers: [
-    keycloak: {Screenplay.Ueberauth.Strategy.Fake, []}
+    keycloak: {Screenplay.Ueberauth.Strategy.Fake, [roles: ["test1"]]}
   ]
 
 config :ueberauth_oidcc,
