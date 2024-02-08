@@ -73,9 +73,16 @@ defmodule Screenplay.Config.PermanentConfig do
     with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
          :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
          :ok <- @config_fetcher.put_config(new_places_and_screens_config) do
+      PendingScreensFetch.commit()
+      # PublishedScreensFetch.commit()
+      # @config_fetcher.commit()
       :ok
     else
-      _ -> :error
+      _ ->
+        PendingScreensFetch.revert(version)
+        # PublishedScreensFetch.revert(version)
+        # @config_fetcher.revert(version)
+        :error
     end
   end
 

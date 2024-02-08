@@ -11,8 +11,9 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
 
   @callback fetch_config(Engine.table_version()) :: fetch_result
   @callback fetch_config() :: fetch_result
-
   @callback put_config(PendingConfig.t()) :: :ok | :error
+  @callback commit() :: :ok
+  @callback revert(String.t()) :: :ok
 
   # The module adopting this behaviour that we use for the current environment.
   @config_fetcher Application.compile_env(:screenplay, :pending_screens_config_fetcher)
@@ -22,4 +23,6 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
   defdelegate fetch_config(config_version), to: @config_fetcher
   defdelegate fetch_config(), to: @config_fetcher
   defdelegate put_config(config), to: @config_fetcher
+  defdelegate commit(), to: @config_fetcher
+  defdelegate revert(version), to: @config_fetcher
 end
