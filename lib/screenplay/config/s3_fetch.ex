@@ -20,9 +20,9 @@ defmodule Screenplay.Config.S3Fetch do
   end
 
   def get_screens_config do
-    with {:ok, screens_contents, etag} <- do_get(:screens),
+    with {:ok, screens_contents, version_id} <- do_get(:screens),
          {:ok, screens_json} <- Jason.decode(screens_contents) do
-      {:ok, screens_json, etag}
+      {:ok, screens_json, version_id}
     else
       _ -> :error
     end
@@ -48,12 +48,12 @@ defmodule Screenplay.Config.S3Fetch do
 
     case ExAws.request(get_operation) do
       {:ok, %{body: body, headers: headers, status_code: 200}} ->
-        etag =
+        version_id =
           headers
           |> Enum.into(%{})
-          |> Map.get("ETag")
+          |> Map.get("x-amz-version-id")
 
-        {:ok, body, etag}
+        {:ok, body, version_id}
 
       {:error, err} ->
         Logger.error(err)

@@ -14,17 +14,17 @@ defmodule ScreenplayWeb.ConfigController do
   def put(conn, %{
         "places_and_screens" => places_and_screens,
         "screen_type" => screen_type,
-        "etag" => etag
+        "version_id" => version_id
       }) do
     case PermanentConfig.put_pending_screens(
            places_and_screens,
            String.to_existing_atom(screen_type),
-           etag
+           version_id
          ) do
       :ok ->
         send_resp(conn, 200, "OK")
 
-      {:error, :etag_mismatch} ->
+      {:error, :version_mismatch} ->
         send_resp(conn, 400, "Config version mismatch")
 
       {:error, :config_not_fetched} ->
@@ -66,7 +66,7 @@ defmodule ScreenplayWeb.ConfigController do
 
     json(conn, %{
       places_and_screens: places_and_screens,
-      etag: PendingScreensConfigCache.table_version()
+      version_id: PendingScreensConfigCache.table_version()
     })
   end
 

@@ -15,9 +15,9 @@ defmodule Screenplay.Config.PermanentConfig do
   @type screen_type :: :gl_eink_v2
 
   @spec put_pending_screens(map(), screen_type(), binary()) ::
-          {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
-  def put_pending_screens(places_and_screens, screen_type, etag) do
-    with {:ok, config_string} <- get_current_pending_config(etag),
+          {:error, :version_mismatch | :config_not_fetched | :config_not_written} | :ok
+  def put_pending_screens(places_and_screens, screen_type, version_id) do
+    with {:ok, config_string} <- get_current_pending_config(version_id),
          {:ok, deserialized} <- Jason.decode(config_string) do
       %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
 
@@ -56,8 +56,10 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   def publish_pending_screens(place_id) do
+    {config, version} = get_current_pending_config()
+
     %PendingConfig{screens: pending_screens} =
-      get_current_pending_config() |> Jason.decode!() |> PendingConfig.from_json()
+      config |> Jason.decode!() |> PendingConfig.from_json()
 
     {screens_to_publish, new_pending_screens} =
       Enum.split_with(pending_screens, &place_has_screen(&1, place_id))
@@ -79,22 +81,22 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_pending_config() do
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, _etag} -> config
+      {:ok, config, version} -> {config, version}
       error -> error
     end
   end
 
-  defp get_current_pending_config(etag) do
-    # Get config directly from source so we have an up-to-date etag
+  defp get_current_pending_config(version) do
+    # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^etag} ->
+      {:ok, config, ^version} ->
         {:ok, config}
 
       :error ->
         {:error, :config_not_fetched}
 
       _ ->
-        {:error, :etag_mismatch}
+        {:error, :version_mismatch}
     end
   end
 
@@ -191,7 +193,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_published_config() do
     case PublishedScreensFetch.fetch_config() do
-      {:ok, config, _etag} -> config
+      {:ok, config, _version_id} -> config
       error -> error
     end
   end
