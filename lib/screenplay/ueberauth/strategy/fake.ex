@@ -4,12 +4,13 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
   """
 
   use Ueberauth.Strategy, ignores_csrf_attack: true
+  use ScreenplayWeb, :verified_routes
   alias Ueberauth.Strategy.Helpers, as: Helpers
 
   @impl Ueberauth.Strategy
   def handle_request!(conn) do
     conn
-    |> redirect!("/auth/keycloak/callback")
+    |> redirect!(~p"/auth/keycloak/callback")
     |> halt()
   end
 
