@@ -24,10 +24,30 @@ defmodule Screenplay.Config.LocalFetch do
         {:error, _} -> :error
       end
 
+    File.copy!(
+      local_path(:local_config_file_spec),
+      local_path(:local_config_file_spec) <> ".temp"
+    )
+
     case File.write(local_path(:local_config_file_spec), encoded_contents) do
       :ok -> :ok
       {:error, _} -> :error
     end
+  end
+
+  @impl true
+  def commit do
+    File.rm!(local_path(:local_config_file_spec) <> ".temp")
+  end
+
+  @impl true
+  def revert(_) do
+    File.copy!(
+      local_path(:local_config_file_spec) <> ".temp",
+      local_path(:local_config_file_spec)
+    )
+
+    File.rm!(local_path(:local_config_file_spec) <> ".temp")
   end
 
   # sobelow_skip ["Traversal.FileModule"]

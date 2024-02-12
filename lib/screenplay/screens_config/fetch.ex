@@ -11,6 +11,8 @@ defmodule Screenplay.ScreensConfig.Fetch do
 
   @callback fetch_config(Engine.table_version()) :: fetch_result
   @callback fetch_config() :: fetch_result
+  @callback commit() :: :ok
+  @callback revert(String.t()) :: :ok
 
   @callback put_config(Config.t()) :: :ok | :error
 
@@ -22,4 +24,6 @@ defmodule Screenplay.ScreensConfig.Fetch do
   defdelegate fetch_config(config_version), to: @config_fetcher
   defdelegate fetch_config(), to: @config_fetcher
   defdelegate put_config(config), to: @config_fetcher
+  defdelegate commit(), to: @config_fetcher
+  defdelegate revert(version), to: @config_fetcher
 end

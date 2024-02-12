@@ -33,10 +33,12 @@ defmodule Screenplay.ScreensConfig.Fetch.Local do
     end
   end
 
+  @impl true
   def commit do
     File.rm!(local_config_path() <> ".temp")
   end
 
+  @impl true
   def revert(_) do
     File.copy!(local_config_path() <> ".temp", local_config_path())
     File.rm!(local_config_path() <> ".temp")
