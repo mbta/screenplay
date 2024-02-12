@@ -34,11 +34,13 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   end
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def commit do
     File.rm!(local_config_path() <> ".temp")
   end
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def revert(_) do
     File.copy!(local_config_path() <> ".temp", local_config_path())
     File.rm!(local_config_path() <> ".temp")

@@ -17,6 +17,7 @@ defmodule Screenplay.Config.LocalFetch do
   end
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def put_config(file_contents) do
     encoded_contents =
       case Jason.encode(file_contents, pretty: true) do
@@ -36,11 +37,13 @@ defmodule Screenplay.Config.LocalFetch do
   end
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def commit do
     File.rm!(local_path(:local_config_file_spec) <> ".temp")
   end
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def revert(_) do
     File.copy!(
       local_path(:local_config_file_spec) <> ".temp",
