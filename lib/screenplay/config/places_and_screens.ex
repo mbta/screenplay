@@ -39,7 +39,7 @@ defmodule Screenplay.Config.PlaceAndScreens do
           screen
           |> Map.new(fn
             {"type", "pa_ess"} -> {:type, :pa_ess}
-            {k, v} -> {String.to_atom(k), v}
+            {k, v} -> {String.to_existing_atom(k), v}
           end)
       end)
 
