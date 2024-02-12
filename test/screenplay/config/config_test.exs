@@ -5,6 +5,8 @@ defmodule Screenplay.Config.ConfigTest do
 
   alias Screenplay.Config.PermanentConfig
   alias Screenplay.PendingScreensConfig.Fetch.Local
+  alias ScreensConfig.{PendingConfig, Screen}
+  alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 
   def fetch_current_config_version do
     {:ok, _config, version} = Local.fetch_config()
@@ -52,9 +54,9 @@ defmodule Screenplay.Config.ConfigTest do
       assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) == :ok
 
       expected_file_contents =
-        %{
+        %PendingConfig{
           screens: %{
-            "1234" => %ScreensConfig.Screen{
+            "1234" => %Screen{
               vendor: :mercury,
               device_id: nil,
               name: nil,
@@ -62,23 +64,23 @@ defmodule Screenplay.Config.ConfigTest do
               refresh_if_loaded_before: nil,
               disabled: false,
               hidden_from_screenplay: false,
-              app_params: %ScreensConfig.V2.GlEink{
-                departures: %ScreensConfig.V2.Departures{
+              app_params: %GlEink{
+                departures: %Departures{
                   sections: [
-                    %ScreensConfig.V2.Departures.Section{
-                      query: %ScreensConfig.V2.Departures.Query{
-                        params: %ScreensConfig.V2.Departures.Query.Params{
+                    %Departures.Section{
+                      query: %Departures.Query{
+                        params: %Departures.Query.Params{
                           stop_ids: ["place-test"],
                           route_ids: ["Green-B"],
                           direction_id: 0,
                           route_type: nil
                         },
-                        opts: %ScreensConfig.V2.Departures.Query.Opts{
+                        opts: %Departures.Query.Opts{
                           include_schedules: false
                         }
                       },
                       filter: nil,
-                      headway: %ScreensConfig.V2.Departures.Headway{
+                      headway: %Departures.Headway{
                         headway_id: nil,
                         override: nil
                       },
@@ -86,20 +88,20 @@ defmodule Screenplay.Config.ConfigTest do
                     }
                   ]
                 },
-                footer: %ScreensConfig.V2.Footer{stop_id: "place-test"},
-                header: %ScreensConfig.V2.Header.Destination{
+                footer: %Footer{stop_id: "place-test"},
+                header: %Header.Destination{
                   route_id: "Green-B",
                   direction_id: 0
                 },
-                alerts: %ScreensConfig.V2.Alerts{stop_id: "123"},
-                line_map: %ScreensConfig.V2.LineMap{
+                alerts: %Alerts{stop_id: "123"},
+                line_map: %LineMap{
                   stop_id: "123",
                   station_id: "place-test",
                   direction_id: 0,
                   route_id: "Green-B"
                 },
                 evergreen_content: [],
-                audio: %ScreensConfig.V2.Audio{
+                audio: %Audio{
                   start_time: ~T[00:00:00],
                   stop_time: ~T[23:59:59],
                   daytime_start_time: ~T[00:00:00],
@@ -113,9 +115,9 @@ defmodule Screenplay.Config.ConfigTest do
               },
               tags: []
             }
-          },
-          devops: %{disabled_modes: []}
+          }
         }
+        |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
       {:ok, config, version} = Local.fetch_config()
@@ -139,9 +141,9 @@ defmodule Screenplay.Config.ConfigTest do
       assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) == :ok
 
       expected_file_contents =
-        %{
+        %PendingConfig{
           screens: %{
-            "12345" => %ScreensConfig.Screen{
+            "12345" => %Screen{
               vendor: :mercury,
               device_id: nil,
               name: nil,
@@ -149,23 +151,23 @@ defmodule Screenplay.Config.ConfigTest do
               refresh_if_loaded_before: nil,
               disabled: false,
               hidden_from_screenplay: false,
-              app_params: %ScreensConfig.V2.GlEink{
-                departures: %ScreensConfig.V2.Departures{
+              app_params: %GlEink{
+                departures: %Departures{
                   sections: [
-                    %ScreensConfig.V2.Departures.Section{
-                      query: %ScreensConfig.V2.Departures.Query{
-                        params: %ScreensConfig.V2.Departures.Query.Params{
+                    %Departures.Section{
+                      query: %Departures.Query{
+                        params: %Departures.Query.Params{
                           stop_ids: ["place-test"],
                           route_ids: ["Green-B"],
                           direction_id: 1,
                           route_type: nil
                         },
-                        opts: %ScreensConfig.V2.Departures.Query.Opts{
+                        opts: %Departures.Query.Opts{
                           include_schedules: false
                         }
                       },
                       filter: nil,
-                      headway: %ScreensConfig.V2.Departures.Headway{
+                      headway: %Departures.Headway{
                         headway_id: nil,
                         override: nil
                       },
@@ -173,20 +175,20 @@ defmodule Screenplay.Config.ConfigTest do
                     }
                   ]
                 },
-                footer: %ScreensConfig.V2.Footer{stop_id: "place-test"},
-                header: %ScreensConfig.V2.Header.Destination{
+                footer: %Footer{stop_id: "place-test"},
+                header: %Header.Destination{
                   route_id: "Green-B",
                   direction_id: 1
                 },
-                alerts: %ScreensConfig.V2.Alerts{stop_id: "456"},
-                line_map: %ScreensConfig.V2.LineMap{
+                alerts: %Alerts{stop_id: "456"},
+                line_map: %LineMap{
                   stop_id: "456",
                   station_id: "place-test",
                   direction_id: 1,
                   route_id: "Green-B"
                 },
                 evergreen_content: [],
-                audio: %ScreensConfig.V2.Audio{
+                audio: %Audio{
                   start_time: ~T[00:00:00],
                   stop_time: ~T[23:59:59],
                   daytime_start_time: ~T[00:00:00],
@@ -200,9 +202,9 @@ defmodule Screenplay.Config.ConfigTest do
               },
               tags: []
             }
-          },
-          devops: %{disabled_modes: []}
+          }
         }
+        |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
       {:ok, config, _} = Local.fetch_config()
