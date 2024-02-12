@@ -110,6 +110,12 @@ defmodule ScreenplayWeb.Router do
     post("/add", ConfigController, :add)
     post("/delete", ConfigController, :delete)
     get("/existing-screens/:app_id", ConfigController, :existing_screens)
+    # Honestly what do I call this 🙃
+    get(
+      "/existing-screens-at-places-with-pending-screens",
+      ConfigController,
+      :existing_screens_at_places_with_pending_screens
+    )
   end
 
   # Enables LiveDashboard only for development

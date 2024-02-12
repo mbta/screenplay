@@ -14,6 +14,7 @@ $form-check-input-border: 1px solid #8b9198;
 @import "dashboard/places-page.scss";
 @import "dashboard/alerts-page.scss";
 @import "dashboard/overrides-page.scss";
+@import "dashboard/pending-screens-page.scss";
 @import "dashboard/alert-details.scss";
 @import "dashboard/configure-screens-page.scss";
 @import "dashboard/button-image.scss";
@@ -26,6 +27,7 @@ $form-check-input-border: 1px solid #8b9198;
 @import "sidebar.scss";
 @import "screenplay-container.scss";
 @import "screen-detail.scss";
+@import "screen-simulation.scss";
 @import "paess.scss";
 @import "alert-card.scss";
 @import "map-segment.scss";
@@ -55,6 +57,7 @@ body {
   background: $main-blue;
   border: 1px solid rgba(23, 31, 38, 0.3);
   border-radius: 6px;
+
   &:hover {
     background: $hover-blue;
   }

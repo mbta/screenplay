@@ -9,6 +9,14 @@ import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
 
+// I made this change before realizing that the "Review Pending" page was actually
+// not part of the "wizard" and instead a standalone page at a separate route.
+// Can revert.
+enum ConfigStep {
+  SelectStation = 0,
+  ConfigureScreens,
+}
+
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
 }: WorkflowProps) => {
@@ -19,7 +27,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     useState<PlaceIdsAndNewScreens>({});
 
   const navigate = useNavigate();
-  const [configStep, setConfigStep] = useState<number>(0);
+  const [configStep, setConfigStep] = useState<ConfigStep>(ConfigStep.SelectStation);
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
@@ -41,7 +49,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   let layout;
   const forwardButtonDisabled = selectedPlaces.size === 0;
   switch (configStep) {
-    case 0:
+    case ConfigStep.SelectStation:
       cancelButtonLabel = "Cancel";
       forwardButtonLabel = "Next";
       onCancel = () => {
@@ -58,7 +66,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         />
       );
       break;
-    case 1:
+    case ConfigStep.ConfigureScreens:
       backButtonLabel = "Back";
       forwardButtonLabel = "Review Screens";
       cancelButtonLabel = "Cancel";

@@ -28,16 +28,7 @@ import {
   ThreeDotsVertical,
   TrashFill,
 } from "react-bootstrap-icons";
-import { fetchExistingScreens } from "../../../../../utils/api";
-
-interface PlaceIdsAndExistingScreens {
-  [place_id: string]: ExistingScreens;
-}
-
-interface ExistingScreens {
-  live_screens?: { [screen_id: string]: ScreenConfiguration };
-  pending_screens: { [screen_id: string]: ScreenConfiguration };
-}
+import { ExistingScreens, ExistingScreensAtPlace, fetchExistingScreens } from "../../../../../utils/api";
 
 interface PlaceIdsAndNewScreens {
   [place_id: string]: {
@@ -62,8 +53,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
     handleRemoveLocation,
     setConfigVersion,
   }: ConfigureScreensWorkflowPageProps) => {
-    const [existingScreens, setExistingScreens] =
-      useState<PlaceIdsAndExistingScreens>({});
+    const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
 
     useEffect(() => {
       if (selectedPlaces.length) {
@@ -109,7 +99,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
 interface ConfigurePlaceCardProps {
   place: Place;
-  existingScreens: ExistingScreens;
+  existingScreens: ExistingScreensAtPlace;
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
   >;
@@ -414,6 +404,6 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   );
 };
 
-export { PlaceIdsAndExistingScreens, PlaceIdsAndNewScreens };
+export { PlaceIdsAndNewScreens };
 
 export default ConfigureScreensWorkflowPage;

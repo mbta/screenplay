@@ -52,7 +52,7 @@ defmodule Screenplay.PendingScreensConfig.Cache do
   end
 
   @doc """
-  Returns a list of all screen configurations that satisfy the given filter.
+  Returns a %{screen_id => screen_config} map of all screen configurations that satisfy the given filter.
   The filter function will be passed a tuple of {screen_id, screen_config} and should return true if that screen should be included in the results.
   """
   def screens(filter_fn) do
