@@ -16,11 +16,14 @@ defmodule Screenplay.Config.ConfigTest do
   setup_all do
     on_exit(fn ->
       empty_config = %{screens: %{}}
+      pending_screens_path = Path.join(~w[#{File.cwd!()} test fixtures pending_config.json])
 
       File.write(
-        Path.join(~w[#{File.cwd!()} test fixtures pending_config.json]),
+        pending_screens_path,
         Jason.encode!(empty_config)
       )
+
+      File.rm!(pending_screens_path <> ".temp")
     end)
   end
 
