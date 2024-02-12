@@ -52,7 +52,7 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
     %{body: body, status_code: 200} = ExAws.request!(get_operation)
 
     put_operation = ExAws.S3.put_object(bucket, path, body)
-    ExAws.request!(put_operation) |> IO.inspect()
+    ExAws.request!(put_operation)
   end
 
   @impl true

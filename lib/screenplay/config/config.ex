@@ -3,8 +3,8 @@ defmodule Screenplay.Config.PermanentConfig do
 
   alias Screenplay.Config.PlaceAndScreens
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
-  alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
+  alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias ScreensConfig.{Config, PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
@@ -86,7 +86,7 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  defp get_current_pending_config() do
+  defp get_current_pending_config do
     case PendingScreensFetch.fetch_config() do
       {:ok, config, version} -> {config, version}
       error -> error
@@ -198,7 +198,7 @@ defmodule Screenplay.Config.PermanentConfig do
     |> get_in(["app_params", "header", "route_id"])
   end
 
-  defp get_current_published_config() do
+  defp get_current_published_config do
     case PublishedScreensFetch.fetch_config() do
       {:ok, config, _version_id} -> config
       error -> error
