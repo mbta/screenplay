@@ -83,7 +83,7 @@ describe("PlacesPage", () => {
         fireEvent.click(getByRole("button", { name: "All MODES" }));
         fireEvent.click(await findByRole("button", { name: "Blue Line" }));
         await waitFor(() => {
-          expect(getAllByTestId("place-row")[0].className).toContain(
+          expect(getAllByTestId("accordion-row")[0].className).toContain(
             "filtered"
           );
         });

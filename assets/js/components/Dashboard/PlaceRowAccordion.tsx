@@ -116,7 +116,7 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
         variant="accordion"
       >
         <Accordion.Collapse eventKey={place.id}>
-          <div className="place-row__screen-preview-container">
+          <div className="accordion-row__screen-preview-container">
             {hasScreens &&
               filterAndGroupScreens(sortScreens(place.screens)).map(
                 (screens, index) => {
