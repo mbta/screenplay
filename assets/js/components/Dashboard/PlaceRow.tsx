@@ -13,7 +13,7 @@ import { Place } from "../../models/place";
 import { Screen } from "../../models/screen";
 import MapSegment from "./MapSegment";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
-import { classWithModifier } from "../../util";
+import { capitalizeTerminalStops, classWithModifier } from "../../util";
 
 interface AccordionToggleProps {
   eventKey: string;
@@ -174,38 +174,13 @@ const PlaceRow = ({
     return <MapSegment station={station} line={line} />;
   };
 
-  const capitalizeTerminalStops = (stationName: string) => {
-    let isTerminalStop = false;
-
-    // If a filter is present, only look at stations for that filter.
-    // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
-    if (filteredLine) {
-      const line = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
-      const terminalStops = line.filter((line) => line.isTerminalStop);
-      isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
-    }
-    // If there is no filtered line, look through all lines to find terminal stops.
-    // If a station is a terminal stop for any line, it will be capitalized.
-    else {
-      isTerminalStop = Object.keys(STATION_ORDER_BY_LINE)
-        .filter((key) => !["silver", "mattapan"].includes(key))
-        .some((key) => {
-          const line = STATION_ORDER_BY_LINE[key];
-          const terminalStops = line.filter((line) => line.isTerminalStop);
-          return terminalStops.some((stop) => stationName === stop.name);
-        });
-    }
-
-    return isTerminalStop ? stationName.toUpperCase() : stationName;
-  };
-
   // Function to add optional description and capitalize terminal stops according to STATION_ORDER_BY_LINE
   const formatStationName = (stationName: string, description?: string) => {
     if (description) {
       stationName = `${stationName} ${description}`;
     }
 
-    return capitalizeTerminalStops(stationName);
+    return capitalizeTerminalStops(stationName, filteredLine);
   };
 
   const formatScreenTypes = () =>
@@ -284,4 +259,5 @@ const PlaceRow = ({
   );
 };
 
+export { AccordionToggle };
 export default PlaceRow;
