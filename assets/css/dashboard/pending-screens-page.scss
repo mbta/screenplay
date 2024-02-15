@@ -1,1 +1,57 @@
-// TODO 🥲
+.pending-screens-page {
+  height: 100%;
+}
+
+.pending-screens-place-row-accordion {
+  border-radius: 8px;
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0,
+    rgba(255, 255, 255, 0) 1px
+  );
+
+  background-color: $cool-gray-30;
+  box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.25);
+  margin-bottom: 2px;
+  border-bottom: 0px;
+  position: relative;
+
+  &:hover:not(.disabled):not(.open) {
+    background-color: $cool-gray-40;
+  }
+
+  &.open {
+    background-color: $cool-gray-20;
+    padding: 0px 0px 16px;
+  }
+
+  &__header {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: left;
+
+    .row {
+      height: 82px;
+      width: 100%;
+    }
+
+    .place-info-col {
+      gap: 16px;
+    }
+
+    .buttons > .btn {
+      height: 38px;
+    }
+
+    .buttons {
+      gap: 8px;
+
+      .publish-button {
+        background-color: #8ecdff;
+        color: #212529;
+      }
+    }
+  }
+}
