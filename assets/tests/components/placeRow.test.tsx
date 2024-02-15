@@ -35,12 +35,10 @@ describe("PlaceRow", () => {
       </Accordion>
     );
 
-    expect(getByTestId("accordion-row").className).toBe(
-      "accordion-row disabled"
-    );
-    fireEvent.click(getByTestId("accordion-row"));
-    expect(getByTestId("accordion-row").className).not.toContain("open");
-    expect(getByTestId("accordion-row").className).not.toContain("filtered");
+    expect(getByTestId("place-row").className).toBe("place-row disabled");
+    fireEvent.click(getByTestId("place-row"));
+    expect(getByTestId("place-row").className).not.toContain("open");
+    expect(getByTestId("place-row").className).not.toContain("filtered");
     expect(getByTestId("place-screen-types").textContent).toBe("no screens");
     expect(getByTestId("place-status").textContent).toBe("—");
     expect(getByAltText("Green")).toBeInTheDocument();

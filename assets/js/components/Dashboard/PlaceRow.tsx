@@ -30,7 +30,7 @@ const AccordionToggle = ({
 
   return (
     <div
-      className={classNames("accordion-row__toggle", {
+      className={classNames("place-row__toggle", {
         "hidden-toggle": hidden,
       })}
     >
@@ -49,7 +49,7 @@ const SelectBoxToggle = ({
   disabled,
 }: SelectBoxToggleProps): JSX.Element => {
   return (
-    <div className="accordion-row__toggle">
+    <div className="place-row__toggle">
       <Form.Check disabled={disabled} checked={checked} readOnly />
     </div>
   );
@@ -154,7 +154,7 @@ const PlaceRow = ({
     return newRoutes.map((route) => (
       <img
         className={classWithModifier(
-          "accordion-row__mode-line-icon",
+          "place-row__mode-line-icon",
           route.toLowerCase()
         )}
         key={route}
@@ -218,10 +218,10 @@ const PlaceRow = ({
 
   return (
     <div
-      className={classNames("accordion-row", className, {
+      className={classNames("place-row", className, {
         disabled: disabled,
       })}
-      data-testid="accordion-row"
+      data-testid="place-row"
     >
       <Fade appear in={showAnimation}>
         <div className="update-animation"></div>
@@ -230,7 +230,7 @@ const PlaceRow = ({
         <Container fluid>
           <Row
             className="align-items-center text-white"
-            data-testid="accordion-row-header"
+            data-testid="place-row-header"
           >
             <Col lg={5} className="d-flex align-items-center">
               {variant === "accordion" && eventKey ? (
@@ -241,18 +241,17 @@ const PlaceRow = ({
               {filteredLine && (
                 <div
                   className={classNames(
-                    "accordion-row__map-segment-container",
-                    `accordion-row__map-segment-container--${filteredLine}`,
+                    "place-row__map-segment-container",
+                    `place-row__map-segment-container--${filteredLine}`,
                     {
-                      "accordion-row__map-segment-container--flipped":
-                        !defaultSort,
+                      "place-row__map-segment-container--flipped": !defaultSort,
                     }
                   )}
                 >
                   {getInlineMap(place, filteredLine.toLowerCase())}
                 </div>
               )}
-              <div className="accordion-row__name" data-testid="place-name">
+              <div className="place-row__name" data-testid="place-name">
                 {formatStationName(name, description)}
               </div>
             </Col>
@@ -261,14 +260,14 @@ const PlaceRow = ({
             </Col>
             <Col
               lg={3}
-              className="accordion-row__screen-types"
+              className="place-row__screen-types"
               data-testid="place-screen-types"
             >
               {formatScreenTypes()}
             </Col>
             <Col
               lg={3}
-              className="accordion-row__status"
+              className="place-row__status"
               data-testid="place-status"
             >
               {hasScreens ? "Auto" : "—"}
@@ -285,5 +284,4 @@ const PlaceRow = ({
   );
 };
 
-export { AccordionToggle };
 export default PlaceRow;

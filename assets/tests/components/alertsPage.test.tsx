@@ -76,7 +76,7 @@ describe("Alerts Page", () => {
         fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
         fireEvent.click(await findByRole("button", { name: "PA ESS" }));
         await waitFor(() => {
-          expect(queryAllByTestId("accordion-row")).toStrictEqual([]);
+          expect(queryAllByTestId("place-row")).toStrictEqual([]);
         });
       });
     });

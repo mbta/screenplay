@@ -40,8 +40,8 @@ describe("PlaceRowAccordion", () => {
       </ScreenplayProvider>
     );
 
-    expect(getByTestId("accordion-row").className).toBe("accordion-row");
-    fireEvent.click(getByTestId("accordion-row-header"));
-    expect(getByTestId("accordion-row").className).toBe("accordion-row open");
+    expect(getByTestId("place-row").className).toBe("place-row");
+    fireEvent.click(getByTestId("place-row-header"));
+    expect(getByTestId("place-row").className).toBe("place-row open");
   });
 });
