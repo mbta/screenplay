@@ -86,10 +86,11 @@ defmodule ScreenplayWeb.ConfigController do
   def existing_screens_at_places_with_pending_screens(conn, _params) do
     places_and_screens =
       PendingScreensConfigCache.pending_screens()
-      |> Enum.group_by(fn {id, screen} -> screen_to_place_id(screen) end)
-      |> Map.new(fn {place_id, pending_screens_at_place} ->
+      |> Enum.group_by(fn {_, screen} -> {screen_to_place_id(screen), screen.app_id} end)
+      |> Map.new(fn {{place_id, app_id}, pending_screens_at_place} ->
         live_screens_at_place =
-          ScreensConfigCache.screens(fn {_, screen} -> screen_to_place_id(screen) == place_id end)
+          ScreensConfigCache.screens(fn {_, screen} -> screen.app_id == app_id and screen_to_place_id(screen) == place_id end)
+
 
         live_and_pending = %{
           live_screens: live_screens_at_place,
