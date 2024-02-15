@@ -27,7 +27,7 @@ const PendingScreensPage: ComponentType = () => {
     <div className="pending-screens-page">
       <div className="page-content__header">Pending</div>
       <div className="page-content__body">
-        <Accordion flush>
+        <Accordion flush alwaysOpen>
           {Object.entries(existingScreens).map(
             ([
               placeID,
@@ -36,16 +36,12 @@ const PendingScreensPage: ComponentType = () => {
               const appID = getAppIdFromScreenConfig(pendingScreens);
               const place = places.find((place) => place.id === placeID);
               return place ? (
-                <div key={`${placeID}.${appID}`}>
-                  <PendingScreensPlaceRowAccordion
-                    place={place}
-                    appID={appID}
-                    screens={mergeLiveAndPendingByID(
-                      liveScreens,
-                      pendingScreens
-                    )}
-                  />
-                </div>
+                <PendingScreensPlaceRowAccordion
+                  key={`${placeID}.${appID}`}
+                  place={place}
+                  appID={appID}
+                  screens={mergeLiveAndPendingByID(liveScreens, pendingScreens)}
+                />
               ) : null;
             }
           )}

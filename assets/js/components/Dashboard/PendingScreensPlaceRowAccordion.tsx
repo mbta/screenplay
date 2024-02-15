@@ -1,7 +1,14 @@
 import React, { ComponentType } from "react";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import PendingScreenDetail from "./PendingScreenDetail";
-import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
+import {
+  Accordion,
+  Button,
+  Col,
+  Container,
+  Row,
+  useAccordionButton,
+} from "react-bootstrap";
 import { Place } from "../../models/place";
 import { AccordionToggle } from "./PlaceRow";
 import { capitalizeTerminalStops } from "../../util";
@@ -24,6 +31,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   appID,
   screens,
 }: Props) => {
+  const onRowClick = useAccordionButton(place.id);
   const formatAppID = () => {
     switch (appID) {
       case "gl_eink_v2":
@@ -37,7 +45,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   // TODO: Designs show a "Type" field in accordion header, e.g. "Type: GL E-Ink".
   // This doesn't make sense for Places with multiple screen types, check w/ Mary what to do about it.
   return (
-    <div className="pending-screens-place-row-accordion">
+    <div className="pending-screens-place-row-accordion" onClick={onRowClick}>
       <div className="pending-screens-place-row-accordion__header">
         <Container fluid>
           <Row className="align-items-center text-white">
