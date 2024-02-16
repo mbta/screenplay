@@ -16,12 +16,7 @@
   border-bottom: 0px;
   position: relative;
 
-  &:hover:not(.disabled):not(.open) {
-    background-color: $cool-gray-40;
-  }
-
   &.open {
-    background-color: $cool-gray-20;
     padding: 0px 0px 16px;
   }
 
