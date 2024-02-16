@@ -248,3 +248,11 @@ export const capitalizeTerminalStops = (
 
   return isTerminalStop ? stationName.toUpperCase() : stationName;
 };
+
+export const capitalize = (str: string) => {
+  if (str.length <= 1) {
+    return str.toUpperCase();
+  } else {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+};
