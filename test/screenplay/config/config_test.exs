@@ -327,14 +327,30 @@ defmodule Screenplay.Config.ConfigTest do
       end)
     end
 
-    test "publishs pending screens and adds screen to places_and_screens" do
-      assert PermanentConfig.publish_pending_screens("place-test") == :ok
+    test "publishes pending screens and adds screen to places_and_screens" do
+      assert PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, []) == :ok
 
       expected_places_and_screens = [
         %{
           "id" => "place-test",
           "name" => "Test Place",
           "screens" => [%{"disabled" => false, "id" => "12345", "type" => "gl_eink_v2"}],
+          "routes" => ["Green-B"]
+        }
+      ]
+
+      {:ok, config, _, _} = LocalFetch.get_config()
+      assert expected_places_and_screens == config
+    end
+
+    test "publishes pending screens but does not add to places_and_screens" do
+      assert PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["12345"]) == :ok
+
+      expected_places_and_screens = [
+        %{
+          "id" => "place-test",
+          "name" => "Test Place",
+          "screens" => [],
           "routes" => ["Green-B"]
         }
       ]
