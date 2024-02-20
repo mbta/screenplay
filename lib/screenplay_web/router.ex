@@ -108,7 +108,7 @@ defmodule ScreenplayWeb.Router do
     ])
 
     post("/put", ConfigController, :put)
-    post("/publish/:place_id", ConfigController, :publish)
+    post("/publish/:place_id/:app_id", ConfigController, :publish)
     get("/existing-screens/:app_id", ConfigController, :existing_screens)
   end
 

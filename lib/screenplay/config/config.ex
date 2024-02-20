@@ -41,14 +41,24 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  def publish_pending_screens(place_id) do
+  def publish_pending_screens(place_id, app_id, hidden_from_screenplay_ids) do
     {config, version} = get_current_pending_config()
 
     %PendingConfig{screens: pending_screens} =
       config |> Jason.decode!() |> PendingConfig.from_json()
 
     {screens_to_publish, new_pending_screens} =
-      Enum.split_with(pending_screens, &place_has_screen(&1, place_id))
+      pending_screens
+      |> Enum.filter(fn {_screen_id, screen} -> screen.app_id == app_id end)
+      |> Enum.map(fn
+        {screen_id, %Screen{} = screen} ->
+          if screen_id in hidden_from_screenplay_ids do
+            {screen_id, %{screen | hidden_from_screenplay: true}}
+          else
+            {screen_id, screen}
+          end
+      end)
+      |> Enum.split_with(&place_has_screen(&1, place_id))
 
     new_pending_screens_config =
       %PendingConfig{screens: Enum.into(new_pending_screens, %{})}
@@ -265,6 +275,7 @@ defmodule Screenplay.Config.PermanentConfig do
     grouped_places_and_screens =
       new_published_screens
       |> Enum.into(%{})
+      |> Enum.reject(fn {_, screen} -> screen.hidden_from_screenplay end)
       |> Enum.group_by(
         fn
           {_, %Screen{app_id: :gl_eink_v2} = config} ->

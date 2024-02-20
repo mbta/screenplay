@@ -70,8 +70,18 @@ defmodule ScreenplayWeb.ConfigController do
     })
   end
 
-  def publish(conn, %{"place_id" => place_id}) do
-    case PermanentConfig.publish_pending_screens(place_id) do
+  def publish(conn, %{
+        "place_id" => place_id,
+        "app_id" => app_id,
+        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids
+      }) do
+    app_id_atom = String.to_existing_atom(app_id)
+
+    case PermanentConfig.publish_pending_screens(
+           place_id,
+           app_id_atom,
+           hidden_from_screenplay_ids
+         ) do
       :ok -> send_resp(conn, 200, "OK")
       _ -> send_resp(conn, 400, "Could not publish screens")
     end
