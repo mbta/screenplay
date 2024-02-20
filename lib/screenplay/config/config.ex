@@ -41,7 +41,9 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   defp get_config_reducer(:gl_eink_v2), do: &gl_eink_config_reducer/2
-  defp get_config_reducer(_), do: raise("Not implemented")
+
+  defp get_config_reducer(app_id),
+    do: raise("get_config_reducer/1 not implemented for app_id: #{app_id}")
 
   defp gl_eink_config_reducer(place_and_screens, acc) do
     {place_id,
@@ -51,10 +53,12 @@ defmodule Screenplay.Config.PermanentConfig do
      }} =
       place_and_screens
 
-    route_id = get_route_id(updated_pending_screens, new_pending_screens)
+    route_id = get_route_id(:gl_eink_v2, updated_pending_screens, new_pending_screens)
+
+    # Need to fetch platform IDs because these screens are direction specific
     platform_ids = route_pattern_mod().fetch_platform_ids_for_route_at_stop(place_id, route_id)
 
-    # Update/remove existing configs
+    # Update/remove existing pending configs.
     new_config =
       update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc)
 
@@ -121,6 +125,9 @@ defmodule Screenplay.Config.PermanentConfig do
     )
   end
 
+  defp json_to_struct(_, app_id, _, _),
+    do: raise("json_to_struct/4 not implemented for app_id: #{app_id}")
+
   defp update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc) do
     Enum.reduce(updated_pending_screens, acc, fn
       {screen_id, %{"is_deleted" => true}}, acc ->
@@ -159,7 +166,7 @@ defmodule Screenplay.Config.PermanentConfig do
     }
   end
 
-  defp get_route_id(updated_pending_screens, new_pending_screens) do
+  defp get_route_id(:gl_eink_v2, updated_pending_screens, new_pending_screens) do
     updated_pending_screens
     |> Enum.map(fn {_screen_id, config} -> config end)
     |> Enum.concat(new_pending_screens)
@@ -167,6 +174,10 @@ defmodule Screenplay.Config.PermanentConfig do
     |> get_in(["app_params", "header", "route_id"])
   end
 
+  defp get_route_id(app_id, _, _),
+    do: raise("get_route_id/3 not implemented for app_id: #{app_id}")
+
+  # Necessary for new mock framework. Tests will use a mocked module when calling functions meant for the RoutePattern module.
   defp route_pattern_mod do
     Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
   end
