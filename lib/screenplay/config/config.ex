@@ -41,17 +41,22 @@ defmodule Screenplay.Config.PermanentConfig do
   defp get_config_reducer(_), do: raise("Not implemented")
 
   defp gl_eink_config_reducer(place_and_screens, acc) do
-    {place_id, %{"updated_screens" => updated_screens, "new_screens" => new_screens}} =
+    {place_id,
+     %{
+       "updated_pending_screens" => updated_pending_screens,
+       "new_pending_screens" => new_pending_screens
+     }} =
       place_and_screens
 
-    route_id = get_route_id(updated_screens, new_screens)
+    route_id = get_route_id(updated_pending_screens, new_pending_screens)
     platform_ids = route_pattern_mod().fetch_platform_ids_for_route_at_stop(place_id, route_id)
 
     # Update/remove existing configs
-    new_config = update_existing_pending_screens(place_id, platform_ids, updated_screens, acc)
+    new_config =
+      update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc)
 
     # Add new pending screens
-    add_new_pending_screens(place_id, platform_ids, new_screens, new_config)
+    add_new_pending_screens(place_id, platform_ids, new_pending_screens, new_config)
   end
 
   defp get_current_config(etag) do
@@ -113,8 +118,8 @@ defmodule Screenplay.Config.PermanentConfig do
     )
   end
 
-  defp update_existing_pending_screens(place_id, platform_ids, updated_screens, acc) do
-    Enum.reduce(updated_screens, acc, fn
+  defp update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc) do
+    Enum.reduce(updated_pending_screens, acc, fn
       {screen_id, %{"is_deleted" => true}}, acc ->
         Map.delete(acc, screen_id)
 
@@ -132,8 +137,8 @@ defmodule Screenplay.Config.PermanentConfig do
     end)
   end
 
-  defp add_new_pending_screens(place_id, platform_ids, new_screens, acc) do
-    Enum.reduce(new_screens, acc, fn
+  defp add_new_pending_screens(place_id, platform_ids, new_pending_screens, acc) do
+    Enum.reduce(new_pending_screens, acc, fn
       config, acc ->
         Map.put(
           acc,
@@ -151,10 +156,10 @@ defmodule Screenplay.Config.PermanentConfig do
     }
   end
 
-  defp get_route_id(updated_screens, new_screens) do
-    updated_screens
+  defp get_route_id(updated_pending_screens, new_pending_screens) do
+    updated_pending_screens
     |> Enum.map(fn {_screen_id, config} -> config end)
-    |> Enum.concat(new_screens)
+    |> Enum.concat(new_pending_screens)
     |> List.first()
     |> get_in(["app_params", "header", "route_id"])
   end
