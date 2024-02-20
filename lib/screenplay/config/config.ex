@@ -187,7 +187,8 @@ defmodule Screenplay.Config.PermanentConfig do
   defp get_route_id(app_id, _, _),
     do: raise("get_route_id/3 not implemented for app_id: #{app_id}")
 
-  # Necessary for new mock framework. Tests will use a mocked module when calling functions meant for the RoutePattern module.
+  # Necessary for new mock framework.
+  # Tests will use a mocked module when calling functions meant for the RoutePattern module.
   defp route_pattern_mod do
     Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
   end
