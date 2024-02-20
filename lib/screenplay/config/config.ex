@@ -20,17 +20,19 @@ defmodule Screenplay.Config.PermanentConfig do
          {:ok, deserialized} <- Jason.decode(config_string) do
       %Config{screens: existing_screens} = Config.from_json(deserialized)
 
-      new_screens_config =
+      new_pending_screens_config =
         Enum.reduce(
           places_and_screens,
           existing_screens,
           get_config_reducer(screen_type)
         )
 
-      new_config = %Config{screens: new_screens_config}
-      new_config_json = new_config |> Config.to_json() |> Jason.encode!(pretty: true)
+      new_pending_config = %Config{screens: new_pending_screens_config}
 
-      case PendingScreensFetch.put_config(new_config_json) do
+      new_pending_config_json =
+        new_pending_config |> Config.to_json() |> Jason.encode!(pretty: true)
+
+      case PendingScreensFetch.put_config(new_pending_config_json) do
         :ok -> :ok
         :error -> {:error, :config_not_written}
       end
@@ -40,6 +42,12 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
+  # Config reducers do 3 things:
+  # 1. Make necessary data requests for retrieving stop related data for screen configurations
+  # 2. Update any existing pending configurations that were changed.
+  # 3. Add new pending screen configurations
+  # Return on each reducer should be all pending configurations, including configurations that were not modified:
+  # %{ screen_id => Screen.t() }
   defp get_config_reducer(:gl_eink_v2), do: &gl_eink_config_reducer/2
 
   defp get_config_reducer(app_id),
@@ -134,6 +142,7 @@ defmodule Screenplay.Config.PermanentConfig do
         Map.delete(acc, screen_id)
 
       # screen_id was updated
+      # Delete the old configuration and treat new ID as a new configuration
       {screen_id, %{"new_id" => new_id} = config}, acc ->
         acc
         |> Map.delete(screen_id)
@@ -166,6 +175,7 @@ defmodule Screenplay.Config.PermanentConfig do
     }
   end
 
+  # Each screen type will look in a different part of the configuration to find it's physical location
   defp get_route_id(:gl_eink_v2, updated_pending_screens, new_pending_screens) do
     updated_pending_screens
     |> Enum.map(fn {_screen_id, config} -> config end)
