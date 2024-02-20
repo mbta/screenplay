@@ -41,6 +41,37 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
+  def publish_pending_screens(place_id) do
+    {config, version} = get_current_pending_config()
+
+    %PendingConfig{screens: pending_screens} =
+      config |> Jason.decode!() |> PendingConfig.from_json()
+
+    {screens_to_publish, new_pending_screens} =
+      Enum.split_with(pending_screens, &place_has_screen(&1, place_id))
+
+    new_pending_screens_config =
+      %PendingConfig{screens: Enum.into(new_pending_screens, %{})}
+
+    new_published_screens_config = get_new_published_screens(screens_to_publish)
+    new_places_and_screens_config = get_new_places_and_screens_config(screens_to_publish)
+
+    with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
+         :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
+         :ok <- @config_fetcher.put_config(new_places_and_screens_config) do
+      PendingScreensFetch.commit()
+      PublishedScreensFetch.commit()
+      @config_fetcher.commit()
+      :ok
+    else
+      _ ->
+        PendingScreensFetch.revert(version)
+        PublishedScreensFetch.revert(version)
+        @config_fetcher.revert(version)
+        :error
+    end
+  end
+
   # Config reducers do 3 things:
   # 1. Make necessary data requests for retrieving stop related data for screen configurations
   # 2. Update any existing pending configurations that were changed.
@@ -71,37 +102,6 @@ defmodule Screenplay.Config.PermanentConfig do
 
     # Add new pending screens
     add_new_pending_screens(place_id, platform_ids, new_pending_screens, new_config)
-  end
-
-  def publish_pending_screens(place_id) do
-    {config, version} = get_current_pending_config()
-
-    %PendingConfig{screens: pending_screens} =
-      config |> Jason.decode!() |> PendingConfig.from_json()
-
-    {screens_to_publish, new_pending_screens} =
-      Enum.split_with(pending_screens, &place_has_screen(&1, place_id))
-
-    new_pending_screens_config =
-      %PendingConfig{screens: Enum.into(new_pending_screens, %{})}
-
-    new_published_screens_config = get_new_published_screens(screens_to_publish)
-    new_places_and_screens_config = get_new_places_and_screens_config(screens_to_publish)
-
-    with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
-         :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
-         :ok <- @config_fetcher.put_config(new_places_and_screens_config) do
-      PendingScreensFetch.commit()
-      PublishedScreensFetch.commit()
-      @config_fetcher.commit()
-      :ok
-    else
-      _ ->
-        PendingScreensFetch.revert(version)
-        PublishedScreensFetch.revert(version)
-        @config_fetcher.revert(version)
-        :error
-    end
   end
 
   defp get_current_pending_config do
