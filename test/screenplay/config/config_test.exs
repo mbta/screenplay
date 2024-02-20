@@ -53,8 +53,8 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_screens" => %{},
-          "new_screens" => [
+          "updated_pending_screens" => %{},
+          "new_pending_screens" => [
             %{
               "new_id" => "1234",
               "app_params" => %{
@@ -140,7 +140,7 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_screens" => %{
+          "updated_pending_screens" => %{
             "1234" => %{
               "new_id" => "12345",
               "app_params" => %{
@@ -149,7 +149,7 @@ defmodule Screenplay.Config.ConfigTest do
               }
             }
           },
-          "new_screens" => []
+          "new_pending_screens" => []
         }
       }
 
@@ -229,8 +229,8 @@ defmodule Screenplay.Config.ConfigTest do
     test "returns version_mismatch error if version is outdated" do
       places_and_screens = %{
         "place-test" => %{
-          "updated_screens" => %{},
-          "new_screens" => [
+          "updated_pending_screens" => %{},
+          "new_pending_screens" => [
             %{
               "new_id" => "1234",
               "app_params" => %{

@@ -41,8 +41,8 @@ interface ExistingScreens {
 
 interface PlaceIdsAndNewScreens {
   [place_id: string]: {
-    updated_screens: { [screen_id: string]: ScreenConfiguration };
-    new_screens?: ScreenConfiguration[];
+    updated_pending_screens: { [screen_id: string]: ScreenConfiguration };
+    new_pending_screens?: ScreenConfiguration[];
   };
 }
 
@@ -141,12 +141,12 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       const screensAtPlace = placesAndScreens[place.id];
       const newState = { ...placesAndScreens };
       if (screensAtPlace) {
-        newState[place.id].updated_screens = existingPendingScreens;
-        newState[place.id].new_screens = newScreens;
+        newState[place.id].updated_pending_screens = existingPendingScreens;
+        newState[place.id].new_pending_screens = newScreens;
       } else {
         newState[place.id] = {
-          updated_screens: existingPendingScreens,
-          new_screens: newScreens,
+          updated_pending_screens: existingPendingScreens,
+          new_pending_screens: newScreens,
         };
       }
       return newState;
