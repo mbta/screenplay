@@ -301,6 +301,4 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   defp place_has_screen(_screen, _place_id), do: false
-
-  defp route_pattern_mod, do: Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
 end
