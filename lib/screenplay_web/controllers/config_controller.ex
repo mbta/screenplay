@@ -50,8 +50,15 @@ defmodule ScreenplayWeb.ConfigController do
             false
         end
 
-        live_screens = ScreensConfigCache.screens(filter_fn)
-        pending_screens = PendingScreensConfigCache.screens(filter_fn)
+        live_screens =
+          ScreensConfigCache.screens(filter_fn)
+          |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
+          |> Enum.into(%{})
+
+        pending_screens =
+          PendingScreensConfigCache.screens(filter_fn)
+          |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
+          |> Enum.into(%{})
 
         {place_id, %{live_screens: live_screens, pending_screens: pending_screens}}
       end)

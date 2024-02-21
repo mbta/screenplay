@@ -5,6 +5,8 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
 
   require Logger
 
+  alias ScreensConfig.PendingConfig
+
   @behaviour Screenplay.ScreensConfig.Fetch
 
   @impl true
@@ -39,10 +41,11 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
   end
 
   @impl true
-  def put_config(file_contents) do
+  def put_config(config) do
+    json = config |> PendingConfig.to_json() |> Jason.encode!(pretty: true)
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
-    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
+    put_operation = ExAws.S3.put_object(bucket, path, json)
 
     case ExAws.request(put_operation) do
       {:ok, %{status_code: 200}} -> :ok

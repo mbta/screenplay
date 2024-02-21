@@ -113,8 +113,7 @@ defmodule Screenplay.Config.ConfigTest do
               },
               tags: []
             }
-          },
-          devops: %{disabled_modes: []}
+          }
         }
         |> Jason.encode!(pretty: true)
 
@@ -200,8 +199,7 @@ defmodule Screenplay.Config.ConfigTest do
               },
               tags: []
             }
-          },
-          devops: %{disabled_modes: []}
+          }
         }
         |> Jason.encode!(pretty: true)
 

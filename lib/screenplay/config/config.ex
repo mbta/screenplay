@@ -6,7 +6,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
-  alias ScreensConfig.{Config, Screen}
+  alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias ScreensConfig.V2.Header.Destination
@@ -18,7 +18,7 @@ defmodule Screenplay.Config.PermanentConfig do
   def put_pending_screens(places_and_screens, screen_type, version_id) do
     with {:ok, config_string} <- get_current_config(version_id),
          {:ok, deserialized} <- Jason.decode(config_string) do
-      %Config{screens: existing_screens} = Config.from_json(deserialized)
+      %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
 
       new_pending_screens_config =
         Enum.reduce(
@@ -27,12 +27,7 @@ defmodule Screenplay.Config.PermanentConfig do
           get_config_reducer(screen_type)
         )
 
-      new_pending_config = %Config{screens: new_pending_screens_config}
-
-      new_pending_config_json =
-        new_pending_config |> Config.to_json() |> Jason.encode!(pretty: true)
-
-      case PendingScreensFetch.put_config(new_pending_config_json) do
+      case PendingScreensFetch.put_config(%PendingConfig{screens: new_pending_screens_config}) do
         :ok -> :ok
         :error -> {:error, :config_not_written}
       end
