@@ -18,15 +18,15 @@ const Dashboard: ComponentType = () => {
   const [bannerDone, setBannerDone] = useState(false);
 
   useEffect(() => {
-    // fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
-    //   findAndSetBannerAlert(alerts, newAlerts);
-    //   dispatch({
-    //     type: "SET_ALERTS",
-    //     alerts: newAlerts,
-    //     allAPIAlertIds: allAPIalertIds,
-    //     screensByAlertMap: screensByAlertMap,
-    //   });
-    // });
+    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
+      findAndSetBannerAlert(alerts, newAlerts);
+      dispatch({
+        type: "SET_ALERTS",
+        alerts: newAlerts,
+        allAPIAlertIds: allAPIalertIds,
+        screensByAlertMap: screensByAlertMap,
+      });
+    });
 
     fetchPlaces((placesList) =>
       dispatch({ type: "SET_PLACES", places: placesList })
@@ -34,17 +34,17 @@ const Dashboard: ComponentType = () => {
   }, []);
 
   // Fetch alerts every 4 seconds.
-  // useInterval(() => {
-  //   fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
-  //     findAndSetBannerAlert(alerts, newAlerts);
-  //     dispatch({
-  //       type: "SET_ALERTS",
-  //       alerts: newAlerts,
-  //       allAPIAlertIds: allAPIalertIds,
-  //       screensByAlertMap: screensByAlertMap,
-  //     });
-  //   });
-  // }, 4000);
+  useInterval(() => {
+    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
+      findAndSetBannerAlert(alerts, newAlerts);
+      dispatch({
+        type: "SET_ALERTS",
+        alerts: newAlerts,
+        allAPIAlertIds: allAPIalertIds,
+        screensByAlertMap: screensByAlertMap,
+      });
+    });
+  }, 4000);
 
   const findAndSetBannerAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
     const now = new Date();
