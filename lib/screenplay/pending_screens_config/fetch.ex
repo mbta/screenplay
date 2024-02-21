@@ -4,12 +4,11 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
   the pending screens config file.
   """
 
-  alias Screenplay.Cache.Engine
   alias ScreensConfig.PendingConfig
 
-  @type fetch_result :: {:ok, String.t(), Engine.table_version()} | :unchanged | :error
+  @type fetch_result :: {:ok, String.t(), String.t()} | :unchanged | :error
 
-  @callback fetch_config(Engine.table_version()) :: fetch_result
+  @callback fetch_config(String.t()) :: fetch_result
   @callback fetch_config() :: fetch_result
   @callback put_config(PendingConfig.t()) :: :ok | :error
   @callback commit() :: :ok

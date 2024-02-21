@@ -7,6 +7,8 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
 
   require Logger
 
+  alias ScreensConfig.PendingConfig
+
   @behaviour Screenplay.PendingScreensConfig.Fetch
 
   @impl true

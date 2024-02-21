@@ -116,15 +116,15 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_pending_config do
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, version} -> {config, version}
+      {:ok, config, version_id} -> {config, version_id}
       error -> error
     end
   end
 
-  defp get_current_pending_config(version) do
+  defp get_current_pending_config(version_id) do
     # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^version} ->
+      {:ok, config, ^version_id} ->
         {:ok, config}
 
       :error ->
@@ -199,7 +199,7 @@ defmodule Screenplay.Config.PermanentConfig do
         )
 
       {screen_id, config}, acc ->
-        Map.put(acc, screen_id, config)
+        Map.put(acc, screen_id, Screen.from_json(config))
     end)
   end
 

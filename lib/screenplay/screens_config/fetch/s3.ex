@@ -3,9 +3,9 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
   Functions to work with an S3-hosted copy of the screens config.
   """
 
-  alias ScreensConfig.Config
-
   require Logger
+
+  alias ScreensConfig.Config
 
   @behaviour Screenplay.ScreensConfig.Fetch
 
