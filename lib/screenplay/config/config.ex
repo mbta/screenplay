@@ -147,7 +147,7 @@ defmodule Screenplay.Config.PermanentConfig do
         )
 
       {screen_id, config}, acc ->
-        Map.put(acc, screen_id, config)
+        Map.put(acc, screen_id, Screen.from_json(config))
     end)
   end
 
