@@ -22,7 +22,7 @@ defmodule Screenplay.Cache.Engine do
 
   @typedoc """
   Any value representing the current version of the table data.
-  This is usually an S3 ETag.
+  This is usually an S3 version_id.
 
   Always starts out as nil, since we haven't fetched data (and its version metadata) yet.
   """

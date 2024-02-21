@@ -14,9 +14,9 @@ defmodule Screenplay.Config.PermanentConfig do
   @type screen_type :: :gl_eink_v2
 
   @spec put_pending_screens(map(), screen_type(), binary()) ::
-          {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
-  def put_pending_screens(places_and_screens, screen_type, etag) do
-    with {:ok, config_string} <- get_current_config(etag),
+          {:error, :version_mismatch | :config_not_fetched | :config_not_written} | :ok
+  def put_pending_screens(places_and_screens, screen_type, version_id) do
+    with {:ok, config_string} <- get_current_config(version_id),
          {:ok, deserialized} <- Jason.decode(config_string) do
       %Config{screens: existing_screens} = Config.from_json(deserialized)
 
@@ -74,17 +74,17 @@ defmodule Screenplay.Config.PermanentConfig do
     add_new_pending_screens(place_id, platform_ids, new_pending_screens, new_config)
   end
 
-  defp get_current_config(etag) do
-    # Get config directly from source so we have an up-to-date etag
+  defp get_current_config(version_id) do
+    # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^etag} ->
+      {:ok, config, ^version_id} ->
         {:ok, config}
 
       :error ->
         {:error, :config_not_fetched}
 
       _ ->
-        {:error, :etag_mismatch}
+        {:error, :version_mismatch}
     end
   end
 

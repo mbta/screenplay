@@ -25,12 +25,12 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
         :unchanged
 
       {:ok, %{body: body, headers: headers, status_code: 200}} ->
-        etag =
+        version_id =
           headers
           |> Enum.into(%{})
-          |> Map.get("ETag")
+          |> Map.get("x-amz-version-id")
 
-        {:ok, body, etag}
+        {:ok, body, version_id}
 
       {:error, err} ->
         _ = Logger.info("s3_screens_config_fetch_error #{inspect(err)}")
