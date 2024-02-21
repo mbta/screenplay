@@ -5,14 +5,14 @@ defmodule Screenplay.ScreensConfig.Fetch do
   """
 
   alias Screenplay.Cache.Engine
-  alias ScreensConfig.PendingConfig
+  alias ScreensConfig.Config
 
   @type fetch_result :: {:ok, String.t(), Engine.table_version()} | :unchanged | :error
 
   @callback fetch_config(Engine.table_version()) :: fetch_result
   @callback fetch_config() :: fetch_result
 
-  @callback put_config(PendingConfig.t()) :: :ok | :error
+  @callback put_config(Config.t()) :: :ok | :error
 
   # The module adopting this behaviour that we use for the current environment.
   @config_fetcher Application.compile_env(:screenplay, :screens_config_fetcher)

@@ -5,7 +5,7 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
 
   require Logger
 
-  alias ScreensConfig.PendingConfig
+  alias ScreensConfig.Config
 
   @behaviour Screenplay.ScreensConfig.Fetch
 
@@ -42,7 +42,7 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
 
   @impl true
   def put_config(config) do
-    json = config |> PendingConfig.to_json() |> Jason.encode!(pretty: true)
+    json = config |> Config.to_json() |> Jason.encode!(pretty: true)
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
     put_operation = ExAws.S3.put_object(bucket, path, json)
