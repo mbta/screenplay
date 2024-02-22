@@ -339,7 +339,7 @@ defmodule Screenplay.Config.ConfigTest do
         }
       ]
 
-      {:ok, config, _, _} = LocalFetch.get_config()
+      {:ok, config, _} = LocalFetch.get_places_and_screens()
       assert expected_places_and_screens == config
     end
 
@@ -355,7 +355,7 @@ defmodule Screenplay.Config.ConfigTest do
         }
       ]
 
-      {:ok, config, _, _} = LocalFetch.get_config()
+      {:ok, config, _} = LocalFetch.get_places_and_screens()
       assert expected_places_and_screens == config
     end
   end

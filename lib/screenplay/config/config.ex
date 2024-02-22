@@ -42,10 +42,13 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   def publish_pending_screens(place_id, app_id, hidden_from_screenplay_ids) do
-    {config, version} = get_current_pending_config()
+    {pending_config, pending_version_id} = get_current_pending_config()
 
     %PendingConfig{screens: pending_screens} =
-      config |> Jason.decode!() |> PendingConfig.from_json()
+      pending_config |> Jason.decode!() |> PendingConfig.from_json()
+
+    {published_config, published_version_id} = get_current_published_config()
+    {places_and_screens_config, places_and_screens_version_id} = get_current_places_and_screens()
 
     {screens_to_publish, new_pending_screens} =
       pending_screens
@@ -63,8 +66,10 @@ defmodule Screenplay.Config.PermanentConfig do
     new_pending_screens_config =
       %PendingConfig{screens: Enum.into(new_pending_screens, %{})}
 
-    new_published_screens_config = get_new_published_screens(screens_to_publish)
-    new_places_and_screens_config = get_new_places_and_screens_config(screens_to_publish)
+    new_published_screens_config = get_new_published_screens(published_config, screens_to_publish)
+
+    new_places_and_screens_config =
+      get_new_places_and_screens_config(places_and_screens_config, screens_to_publish)
 
     with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
          :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
@@ -75,9 +80,9 @@ defmodule Screenplay.Config.PermanentConfig do
       :ok
     else
       _ ->
-        PendingScreensFetch.revert(version)
-        PublishedScreensFetch.revert(version)
-        @config_fetcher.revert(version)
+        PendingScreensFetch.revert(pending_version_id)
+        PublishedScreensFetch.revert(published_version_id)
+        @config_fetcher.revert(places_and_screens_version_id)
         :error
     end
   end
@@ -242,14 +247,14 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_published_config do
     case PublishedScreensFetch.fetch_config() do
-      {:ok, config, _version_id} -> config
+      {:ok, config, version_id} -> {config, version_id}
       error -> error
     end
   end
 
-  defp get_new_published_screens(screens_to_publish) do
+  defp get_new_published_screens(published_config, screens_to_publish) do
     %Config{screens: published_screens, devops: devops} =
-      get_current_published_config() |> Jason.decode!() |> Config.from_json()
+      published_config |> Jason.decode!() |> Config.from_json()
 
     screens =
       screens_to_publish
@@ -259,16 +264,17 @@ defmodule Screenplay.Config.PermanentConfig do
     %Config{screens: screens, devops: devops}
   end
 
-  defp get_new_places_and_screens_config(new_published_screens) do
-    places_and_screens_config =
-      case @config_fetcher.get_config() do
-        {:ok, places_and_screens_config, _, _} ->
-          places_and_screens_config
+  defp get_current_places_and_screens do
+    case @config_fetcher.get_places_and_screens() do
+      {:ok, places_and_screens_config, version_id} ->
+        {places_and_screens_config, version_id}
 
-        _ ->
-          {:error, "Could not fetch places_and_screens"}
-      end
+      _ ->
+        {:error, "Could not fetch places_and_screens"}
+    end
+  end
 
+  defp get_new_places_and_screens_config(places_and_screens_config, new_published_screens) do
     places_and_screens_config =
       Enum.map(places_and_screens_config, &PlaceAndScreens.from_map/1)
 

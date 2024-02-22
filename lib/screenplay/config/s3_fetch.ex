@@ -6,23 +6,30 @@ defmodule Screenplay.Config.S3Fetch do
   @behaviour Screenplay.Config.Fetch
 
   @impl true
-  def get_config do
-    with {:ok, config_contents, _} <- do_get(:config),
-         {:ok, location_contents, _} <- do_get(:screen_locations),
-         {:ok, place_description_contents, _} <- do_get(:place_descriptions),
-         {:ok, config_json} <- Jason.decode(config_contents),
-         {:ok, location_json} <- Jason.decode(location_contents),
-         {:ok, place_description_json} <- Jason.decode(place_description_contents) do
-      {:ok, config_json, location_json, place_description_json}
+  def get_places_and_screens do
+    with {:ok, config_contents, version_id} <- do_get(:config),
+         {:ok, config_json} <- Jason.decode(config_contents) do
+      {:ok, config_json, version_id}
     else
       _ -> :error
     end
   end
 
-  def get_screens_config do
-    with {:ok, screens_contents, version_id} <- do_get(:screens),
-         {:ok, screens_json} <- Jason.decode(screens_contents) do
-      {:ok, screens_json, version_id}
+  @impl true
+  def get_locations do
+    with {:ok, location_contents, version_id} <- do_get(:screen_locations),
+         {:ok, location_json} <- Jason.decode(location_contents) do
+      {:ok, location_json, version_id}
+    else
+      _ -> :error
+    end
+  end
+
+  @impl true
+  def get_place_descriptions do
+    with {:ok, place_description_contents, version_id} <- do_get(:place_descriptions),
+         {:ok, place_description_json} <- Jason.decode(place_description_contents) do
+      {:ok, place_description_json, version_id}
     else
       _ -> :error
     end
