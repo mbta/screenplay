@@ -28,7 +28,10 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   end
 
   defp local_config_path do
-    Application.get_env(:screenplay, :local_pending_screens_config_file_spec)
+    case Application.get_env(:screenplay, :local_pending_screens_config_file_spec) do
+      {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
+      path -> path
+    end
   end
 
   # sobelow_skip ["Traversal.FileModule"]

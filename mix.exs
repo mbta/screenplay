@@ -57,7 +57,8 @@ defmodule Screenplay.MixProject do
       {:sobelow, "~> 0.8", only: :dev},
       {:sentry, "~> 8.0"},
       {:stream_data, "~> 0.5", only: :test},
-      {:screens_config, git: "https://github.com/mbta/screens-config-lib.git"}
+      {:screens_config, git: "https://github.com/mbta/screens-config-lib.git"},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 

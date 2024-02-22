@@ -107,8 +107,7 @@ defmodule ScreenplayWeb.Router do
       :ensure_auth
     ])
 
-    post("/add", ConfigController, :add)
-    post("/delete", ConfigController, :delete)
+    post("/put", ConfigController, :put)
     get("/existing-screens/:app_id", ConfigController, :existing_screens)
   end
 
