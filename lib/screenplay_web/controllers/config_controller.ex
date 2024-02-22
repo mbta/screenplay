@@ -31,10 +31,10 @@ defmodule ScreenplayWeb.ConfigController do
         send_resp(conn, 400, "Config version mismatch")
 
       {:error, :config_not_fetched} ->
-        send_resp(conn, 400, "S3 Operation Failed: Get")
+        send_resp(conn, 500, "S3 Operation Failed: Get")
 
       {:error, :config_not_written} ->
-        send_resp(conn, 400, "S3 Operation Failed: Put")
+        send_resp(conn, 500, "S3 Operation Failed: Put")
     end
   end
 
@@ -102,7 +102,7 @@ defmodule ScreenplayWeb.ConfigController do
            hidden_from_screenplay_ids
          ) do
       :ok -> send_resp(conn, 200, "OK")
-      _ -> send_resp(conn, 400, "Could not publish screens")
+      _ -> send_resp(conn, 500, "Could not publish screens")
     end
   end
 
