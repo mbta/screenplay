@@ -74,7 +74,7 @@ defmodule ScreenplayWeb.ConfigController do
 
         pending_screens =
           pending_screens_config
-          |> Enum.filter(&filter_fn.(&1))
+          |> Enum.filter(filter_fn)
           |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
           |> Enum.into(%{})
 
