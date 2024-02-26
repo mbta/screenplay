@@ -11,24 +11,16 @@ defmodule ScreenplayWeb.ConfigController do
     render(conn, "index.html")
   end
 
-  def add(conn, %{"screen_id" => screen_id, "screen" => screen, "etag" => etag}) do
-    case PermanentConfig.add_new_screen(screen_id, screen, etag) do
-      :ok ->
-        send_resp(conn, 200, "OK")
-
-      {:error, :etag_mismatch} ->
-        send_resp(conn, 400, "Config version mismatch")
-
-      {:error, :config_not_fetched} ->
-        send_resp(conn, 400, "S3 Operation Failed: Get")
-
-      {:error, :config_not_written} ->
-        send_resp(conn, 400, "S3 Operation Failed: Put")
-    end
-  end
-
-  def delete(conn, %{"screen_id" => screen_id, "etag" => etag}) do
-    case PermanentConfig.delete_screen(screen_id, etag) do
+  def put(conn, %{
+        "places_and_screens" => places_and_screens,
+        "screen_type" => screen_type,
+        "etag" => etag
+      }) do
+    case PermanentConfig.put_pending_screens(
+           places_and_screens,
+           String.to_existing_atom(screen_type),
+           etag
+         ) do
       :ok ->
         send_resp(conn, 200, "OK")
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { ComponentType, useState } from "react";
 import { WorkflowProps } from "../../ConfigureScreensPage";
 import ConfigureScreensWorkflowPage, {
@@ -8,6 +7,7 @@ import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
+import { putPendingScreens } from "../../../../../utils/api";
 
 const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   places,
@@ -69,7 +69,11 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         setConfigStep(configStep - 1);
       };
       onForward = () => {
-        navigate("/pending");
+        putPendingScreens(
+          placesAndScreensToUpdate,
+          "gl_eink_v2",
+          configVersion
+        ).then(() => navigate("/pending"));
       };
       layout = (
         <ConfigureScreensWorkflowPage

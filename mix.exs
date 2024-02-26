@@ -59,7 +59,8 @@ defmodule Screenplay.MixProject do
       {:stream_data, "~> 0.5", only: :test},
       {:screens_config,
        git: "https://github.com/mbta/screens-config-lib.git",
-       ref: "6bde1c69110b665d6223746a0340d6d44b5ac0be"}
+       ref: "6bde1c69110b665d6223746a0340d6d44b5ac0be"},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 
