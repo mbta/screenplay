@@ -52,8 +52,7 @@ defmodule ScreenplayWeb.ConfigController do
           {pending_screens, version_id}
 
         _ ->
-          Logger.error("Could not fetch pending screens config in existing_screens/2")
-          []
+          raise("Could not fetch pending screens config in existing_screens/2")
       end
 
     places_and_screens =
