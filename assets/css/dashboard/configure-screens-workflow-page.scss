@@ -54,6 +54,10 @@
           width: 269px;
         }
 
+        .error-text {
+          color: #ffb4ab;
+        }
+
         .status {
           text-align: end;
           vertical-align: middle;
@@ -94,6 +98,10 @@
           &:disabled {
             background-color: $cool-gray-20;
             color: $text-disabled;
+          }
+
+          &:error {
+            border-color: #ffb4ab;
           }
         }
 

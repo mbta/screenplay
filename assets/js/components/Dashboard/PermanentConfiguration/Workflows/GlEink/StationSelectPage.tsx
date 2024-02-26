@@ -6,28 +6,46 @@ import { DirectionID } from "../../../../../models/direction_id";
 import { Place } from "../../../../../models/place";
 import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
-
+import {
+  useConfigValidationContext,
+  useConfigValidationDispatchContext,
+} from "../../../../../hooks/useScreenplayContext";
+import { PlaceIdsAndNewScreens } from "./ConfigureScreensPage";
 interface StationSelectPageProps {
   places: Place[];
   selectedPlaces: Set<string>;
+  placesAndScreensToUpdate: PlaceIdsAndNewScreens;
   setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<string>>>;
+  setPlacesAndScreensToUpdate: React.Dispatch<
+    React.SetStateAction<PlaceIdsAndNewScreens>
+  >;
 }
 
 const StationSelectPage: ComponentType<StationSelectPageProps> = ({
   places,
   selectedPlaces,
+  placesAndScreensToUpdate,
   setSelectedPlaces,
+  setPlacesAndScreensToUpdate,
 }: StationSelectPageProps) => {
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const handleSearchResultClick = (item: SearchItem) => {
     const placeToAdd = places.find((place) => place.id === item.id);
     if (placeToAdd) {
       setSelectedPlaces((prev) => new Set([placeToAdd.id, ...prev]));
+      validationErrors[placeToAdd.id] = [];
+      dispatch({
+        type: "SET_VALIDATION_ERRORS",
+        validationErrors: validationErrors,
+      });
     }
   };
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
+
+  const { validationErrors } = useConfigValidationContext();
+  const dispatch = useConfigValidationDispatchContext();
 
   let backButtonLabel;
   let forwardButtonLabel;
@@ -74,6 +92,24 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
               const newSet = new Set(selectedPlaces);
               checked ? newSet.add(place.id) : newSet.delete(place.id);
 
+              if (checked) {
+                validationErrors[place.id] = [];
+                dispatch({
+                  type: "SET_VALIDATION_ERRORS",
+                  validationErrors: validationErrors,
+                });
+              } else {
+                delete validationErrors[place.id];
+                dispatch({
+                  type: "SET_VALIDATION_ERRORS",
+                  validationErrors: validationErrors,
+                });
+              }
+              setPlacesAndScreensToUpdate((placesAndScreens) => {
+                const { [place.id]: _discarded, ...newPlacesAndScreens } =
+                  placesAndScreens;
+                return newPlacesAndScreens;
+              });
               setSelectedPlaces(newSet);
             }}
           />

@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { Place } from "../../../../../models/place";
 import { ScreenConfiguration } from "../../../../../models/screen_configuration";
+import { ValidationErrorsForScreen } from "../../../../../models/configValidationErrors";
 import {
   Button,
   ButtonGroup,
@@ -29,6 +30,10 @@ import {
   TrashFill,
 } from "react-bootstrap-icons";
 import { fetchExistingScreens } from "../../../../../utils/api";
+import {
+  useConfigValidationContext,
+  useConfigValidationDispatchContext,
+} from "../../../../../hooks/useScreenplayContext";
 
 interface PlaceIdsAndExistingScreens {
   [place_id: string]: ExistingScreens;
@@ -79,7 +84,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
     let layout;
     if (selectedPlaces.length) {
-      layout = selectedPlaces.map((place) => {
+      layout = selectedPlaces.map((place, index) => {
         return (
           <ConfigurePlaceCard
             key={place.id}
@@ -129,6 +134,8 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   const existingLiveScreens: {
     [screen_id: string]: ScreenConfiguration;
   } = existingScreens?.live_screens ?? {};
+  const { validationErrors } = useConfigValidationContext();
+  const dispatch = useConfigValidationDispatchContext();
 
   useEffect(() => {
     if (!existingScreens) return;
@@ -193,6 +200,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                     isLive
                     handleDelete={() => undefined}
                     onChange={() => undefined}
+                    validationErrors={{
+                      missingFields: [],
+                      isDuplicateScreenId: false,
+                    }}
                   />
                 );
               })}
@@ -218,6 +229,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                         });
                       }}
                       className={screen.is_deleted ? "hidden" : ""}
+                      validationErrors={{
+                        missingFields: [],
+                        isDuplicateScreenId: false,
+                      }}
                     />
                   );
                 }
@@ -229,6 +244,11 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                     screenID={screen.new_id ?? ""}
                     config={screen}
                     handleDelete={() => {
+                      validationErrors[place.id].splice(index, 1);
+                      dispatch({
+                        type: "SET_VALIDATION_ERRORS",
+                        validationErrors: validationErrors,
+                      });
                       setNewScreens((prevState) => {
                         const newState = [...prevState];
                         newState.splice(index, 1);
@@ -243,6 +263,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                       });
                     }}
                     className={screen.is_deleted ? "hidden" : ""}
+                    validationErrors={validationErrors[place.id][index]}
                   />
                 );
               })}
@@ -261,6 +282,15 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                 app_params: { header: { route_id: place.routes[0] } },
               },
             ]);
+
+            validationErrors[place.id].push({
+              missingFields: [],
+              isDuplicateScreenId: false,
+            });
+            dispatch({
+              type: "SET_VALIDATION_ERRORS",
+              validationErrors: validationErrors,
+            });
           }}
         >
           <Plus fill="#F8F9FA" /> Add Screen
@@ -301,6 +331,7 @@ interface ConfigureScreenRowProps {
   onChange: (screen: ScreenConfiguration) => void;
   handleDelete: () => void;
   className?: string;
+  validationErrors: ValidationErrorsForScreen;
 }
 const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   screenID,
@@ -309,10 +340,21 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   onChange,
   handleDelete,
   className = "",
+  validationErrors,
 }: ConfigureScreenRowProps) => {
   const direction = config.app_params?.header.direction_id;
   const platformLocation = config.app_params.platform_location;
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const screenIdError = () => {
+    if (validationErrors.missingFields.includes("screen_id")) {
+      return <div className="error-text">Screen ID is required</div>;
+    } else if (validationErrors.isDuplicateScreenId) {
+      return <div className="error-text">Duplicate Screen ID</div>;
+    } else {
+      return null;
+    }
+  };
 
   return (
     <tr className={classNames("screen-row", className)}>
@@ -327,6 +369,7 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
           }}
           placeholder="EIG-"
         />
+        {screenIdError()}
       </td>
       <td className="direction">
         <ButtonGroup className="row-button-group">
@@ -357,6 +400,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
             Eastbound <ArrowRight />
           </Button>
         </ButtonGroup>
+        {validationErrors.missingFields.includes("direction_id") && (
+          <div className="error-text">Direction is required</div>
+        )}
       </td>
       <td className="platform-location">
         <ButtonGroup className="row-button-group">
@@ -387,6 +433,9 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
             Back
           </Button>
         </ButtonGroup>
+        {validationErrors.missingFields.includes("platform_location") && (
+          <div className="error-text">Platform Location is required</div>
+        )}
       </td>
       <td className="status">
         {isLive ? (

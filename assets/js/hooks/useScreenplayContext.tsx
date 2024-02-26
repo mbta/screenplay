@@ -4,6 +4,7 @@ import { Place } from "../models/place";
 import { Alert } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
+import { ConfigValidationErrors } from "../models/configValidationErrors";
 import { useReducer } from "react";
 import {
   PLACES_PAGE_MODES_AND_LINES,
@@ -62,6 +63,11 @@ type PlacesListReducerAction =
   | { type: "SET_ACTIVE_EVENT_KEYS"; eventKeys: string[] }
   | { type: "RESET_STATE" };
 
+type ConfigValidationReducerAction = {
+  type: "SET_VALIDATION_ERRORS";
+  validationErrors: ConfigValidationErrors;
+};
+
 interface FilterValue {
   label: string;
   ids: string[];
@@ -91,6 +97,10 @@ interface ScreenplayState {
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
   showLinkCopied: boolean;
+}
+
+interface ConfigValidationState {
+  validationErrors: ConfigValidationErrors;
 }
 
 const reducer = (state: ScreenplayState, action: ReducerAction) => {
@@ -186,6 +196,19 @@ const alertsReducer = (
   }
 };
 
+const configValidationReducer = (
+  state: ConfigValidationState,
+  action: ConfigValidationReducerAction
+) => {
+  switch (action.type) {
+    case "SET_VALIDATION_ERRORS":
+      return {
+        ...state,
+        validationErrors: action.validationErrors,
+      };
+  }
+};
+
 const initialState: ScreenplayState = {
   places: [] as Place[],
   alerts: [] as Alert[],
@@ -211,6 +234,10 @@ const initialAlertsListState: AlertsListState = {
   statusFilterValue: STATUSES[0],
 };
 
+const initialConfigValidationState: ConfigValidationState = {
+  validationErrors: {} as ConfigValidationErrors,
+};
+
 // Generate context
 const [useScreenplayContext, ScreenplayContextProvider] =
   createGenericContext<ScreenplayState>();
@@ -230,6 +257,14 @@ const [useAlertsListContext, AlertsListContextProvider] =
 const [useAlertsListDispatchContext, AlertsListDispatchContextProvider] =
   createGenericContext<React.Dispatch<AlertsListReducerAction>>();
 
+const [useConfigValidationContext, ConfigValidationContextProvider] =
+  createGenericContext<ConfigValidationState>();
+
+const [
+  useConfigValidationDispatchContext,
+  ConfigValidationDispatchContextProvider,
+] = createGenericContext<React.Dispatch<ConfigValidationReducerAction>>();
+
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
   const [screenplayState, screenplayDispatch] = useReducer(
@@ -244,6 +279,10 @@ const ScreenplayProvider = ({ children }: Props) => {
     alertsReducer,
     initialAlertsListState
   );
+  const [configValidationState, configValidationDispatch] = useReducer(
+    configValidationReducer,
+    initialConfigValidationState
+  );
 
   return (
     <ScreenplayContextProvider value={screenplayState}>
@@ -252,7 +291,13 @@ const ScreenplayProvider = ({ children }: Props) => {
           <PlacesListDispatchContextProvider value={placesListDispatch}>
             <AlertsListContextProvider value={alertsListState}>
               <AlertsListDispatchContextProvider value={alertsListDispatch}>
-                {children}
+                <ConfigValidationContextProvider value={configValidationState}>
+                  <ConfigValidationDispatchContextProvider
+                    value={configValidationDispatch}
+                  >
+                    {children}
+                  </ConfigValidationDispatchContextProvider>
+                </ConfigValidationContextProvider>
               </AlertsListDispatchContextProvider>
             </AlertsListContextProvider>
           </PlacesListDispatchContextProvider>
@@ -263,7 +308,13 @@ const ScreenplayProvider = ({ children }: Props) => {
 };
 
 // Types & Interfaces
-export { FilterValue, DirectionID, PlacesListReducerAction, PlacesListState };
+export {
+  FilterValue,
+  DirectionID,
+  PlacesListReducerAction,
+  PlacesListState,
+  ConfigValidationState,
+};
 
 // Values
 export {
@@ -273,6 +324,8 @@ export {
   usePlacesListDispatchContext,
   useAlertsListContext,
   useAlertsListDispatchContext,
+  useConfigValidationContext,
+  useConfigValidationDispatchContext,
   ScreenplayProvider,
   placesListReducer,
   initialPlacesListState,
