@@ -25,10 +25,25 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   def put_config(config) do
     json = config |> PendingConfig.to_json() |> Jason.encode!(pretty: true)
 
+    File.copy!(local_config_path(), local_config_path() <> ".temp")
+
     case File.write(local_config_path(), json) do
       :ok -> :ok
       {:error, _} -> :error
     end
+  end
+
+  @impl true
+  # sobelow_skip ["Traversal.FileModule"]
+  def commit do
+    File.rm!(local_config_path() <> ".temp")
+  end
+
+  @impl true
+  # sobelow_skip ["Traversal.FileModule"]
+  def revert(_) do
+    File.copy!(local_config_path() <> ".temp", local_config_path())
+    File.rm!(local_config_path() <> ".temp")
   end
 
   defp local_config_path do

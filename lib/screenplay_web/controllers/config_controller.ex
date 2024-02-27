@@ -31,10 +31,10 @@ defmodule ScreenplayWeb.ConfigController do
         send_resp(conn, 400, "Config version mismatch")
 
       {:error, :config_not_fetched} ->
-        send_resp(conn, 400, "S3 Operation Failed: Get")
+        send_resp(conn, 500, "S3 Operation Failed: Get")
 
       {:error, :config_not_written} ->
-        send_resp(conn, 400, "S3 Operation Failed: Put")
+        send_resp(conn, 500, "S3 Operation Failed: Put")
     end
   end
 
@@ -86,6 +86,23 @@ defmodule ScreenplayWeb.ConfigController do
       places_and_screens: places_and_screens,
       version_id: version_id
     })
+  end
+
+  def publish(conn, %{
+        "place_id" => place_id,
+        "app_id" => app_id,
+        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids
+      }) do
+    app_id_atom = String.to_existing_atom(app_id)
+
+    case PermanentConfig.publish_pending_screens(
+           place_id,
+           app_id_atom,
+           hidden_from_screenplay_ids
+         ) do
+      :ok -> send_resp(conn, 200, "OK")
+      _ -> send_resp(conn, 500, "Could not publish screens")
+    end
   end
 
   defp place_id_has_screen?(place_id, :gl_eink_v2, %Screen{

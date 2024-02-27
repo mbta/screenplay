@@ -3,6 +3,8 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
   Functions to work with an S3-hosted copy of the pending screens config.
   """
 
+  alias ScreensConfig.PendingConfig
+
   require Logger
 
   alias ScreensConfig.PendingConfig
@@ -38,6 +40,21 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
         _ = Logger.info("s3_pending_screens_config_fetch_error #{inspect(err)}")
         :error
     end
+  end
+
+  @impl true
+  def commit, do: :ok
+
+  @impl true
+  def revert(version) do
+    bucket = Application.get_env(:screenplay, :config_s3_bucket)
+    path = config_path_for_environment()
+
+    get_operation = ExAws.S3.get_object(bucket, path, version_id: version)
+    %{body: body, status_code: 200} = ExAws.request!(get_operation)
+
+    put_operation = ExAws.S3.put_object(bucket, path, body)
+    ExAws.request!(put_operation)
   end
 
   @impl true

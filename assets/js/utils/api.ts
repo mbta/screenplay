@@ -62,3 +62,19 @@ export const putPendingScreens = async (
     }),
   });
 };
+
+export const publishScreensForPlace = async (placeId: string) => {
+  const response = await fetch(`/config/publish/${placeId}`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token":
+        document?.head?.querySelector<HTMLMetaElement>(
+          "[name~=csrf-token][content]"
+        )?.content ?? "",
+    },
+    credentials: "include",
+  });
+
+  return response.statusText;
+};

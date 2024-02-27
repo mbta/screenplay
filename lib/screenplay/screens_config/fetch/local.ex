@@ -25,14 +25,32 @@ defmodule Screenplay.ScreensConfig.Fetch.Local do
   def put_config(config) do
     json = config |> Config.to_json() |> Jason.encode!(pretty: true)
 
+    File.copy!(local_config_path(), local_config_path() <> ".temp")
+
     case File.write(local_config_path(), json) do
       :ok -> :ok
       {:error, _} -> :error
     end
   end
 
+  @impl true
+  # sobelow_skip ["Traversal.FileModule"]
+  def commit do
+    File.rm!(local_config_path() <> ".temp")
+  end
+
+  @impl true
+  # sobelow_skip ["Traversal.FileModule"]
+  def revert(_) do
+    File.copy!(local_config_path() <> ".temp", local_config_path())
+    File.rm!(local_config_path() <> ".temp")
+  end
+
   defp local_config_path do
-    Application.get_env(:screenplay, :local_screens_config_file_spec)
+    case Application.get_env(:screenplay, :local_screens_config_file_spec) do
+      {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
+      path -> path
+    end
   end
 
   # sobelow_skip ["Traversal.FileModule"]
