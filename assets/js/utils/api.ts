@@ -46,7 +46,7 @@ export const fetchExistingScreens = async (
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
   screenType: "gl_eink_v2" | null,
-  etag: string
+  version_id: string
 ) => {
   return await fetch("/config/put", {
     method: "POST",
@@ -58,7 +58,7 @@ export const putPendingScreens = async (
     body: JSON.stringify({
       places_and_screens: placesAndScreens,
       screen_type: screenType,
-      etag: etag,
+      version_id: version_id,
     }),
   });
 };

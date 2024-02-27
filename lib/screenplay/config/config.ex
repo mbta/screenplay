@@ -6,7 +6,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
-  alias ScreensConfig.{Config, Screen}
+  alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias ScreensConfig.V2.Header.Destination
@@ -14,11 +14,11 @@ defmodule Screenplay.Config.PermanentConfig do
   @type screen_type :: :gl_eink_v2
 
   @spec put_pending_screens(map(), screen_type(), binary()) ::
-          {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
-  def put_pending_screens(places_and_screens, screen_type, etag) do
-    with {:ok, config_string} <- get_current_config(etag),
+          {:error, :version_mismatch | :config_not_fetched | :config_not_written} | :ok
+  def put_pending_screens(places_and_screens, screen_type, version_id) do
+    with {:ok, config_string} <- get_current_config(version_id),
          {:ok, deserialized} <- Jason.decode(config_string) do
-      %Config{screens: existing_screens} = Config.from_json(deserialized)
+      %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
 
       new_pending_screens_config =
         Enum.reduce(
@@ -27,12 +27,7 @@ defmodule Screenplay.Config.PermanentConfig do
           get_config_reducer(screen_type)
         )
 
-      new_pending_config = %Config{screens: new_pending_screens_config}
-
-      new_pending_config_json =
-        new_pending_config |> Config.to_json() |> Jason.encode!(pretty: true)
-
-      case PendingScreensFetch.put_config(new_pending_config_json) do
+      case PendingScreensFetch.put_config(%PendingConfig{screens: new_pending_screens_config}) do
         :ok -> :ok
         :error -> {:error, :config_not_written}
       end
@@ -74,17 +69,17 @@ defmodule Screenplay.Config.PermanentConfig do
     add_new_pending_screens(place_id, platform_ids, new_pending_screens, new_config)
   end
 
-  defp get_current_config(etag) do
-    # Get config directly from source so we have an up-to-date etag
+  defp get_current_config(version_id) do
+    # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^etag} ->
+      {:ok, config, ^version_id} ->
         {:ok, config}
 
       :error ->
         {:error, :config_not_fetched}
 
       _ ->
-        {:error, :etag_mismatch}
+        {:error, :version_mismatch}
     end
   end
 
@@ -152,7 +147,7 @@ defmodule Screenplay.Config.PermanentConfig do
         )
 
       {screen_id, config}, acc ->
-        Map.put(acc, screen_id, config)
+        Map.put(acc, screen_id, Screen.from_json(config))
     end)
   end
 

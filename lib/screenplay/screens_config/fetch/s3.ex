@@ -5,6 +5,8 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
 
   require Logger
 
+  alias ScreensConfig.Config
+
   @behaviour Screenplay.ScreensConfig.Fetch
 
   @impl true
@@ -25,12 +27,12 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
         :unchanged
 
       {:ok, %{body: body, headers: headers, status_code: 200}} ->
-        etag =
+        version_id =
           headers
           |> Enum.into(%{})
-          |> Map.get("ETag")
+          |> Map.get("x-amz-version-id")
 
-        {:ok, body, etag}
+        {:ok, body, version_id}
 
       {:error, err} ->
         _ = Logger.info("s3_screens_config_fetch_error #{inspect(err)}")
@@ -39,10 +41,11 @@ defmodule Screenplay.ScreensConfig.Fetch.S3 do
   end
 
   @impl true
-  def put_config(file_contents) do
+  def put_config(config) do
+    json = config |> Config.to_json() |> Jason.encode!(pretty: true)
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
-    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
+    put_operation = ExAws.S3.put_object(bucket, path, json)
 
     case ExAws.request(put_operation) do
       {:ok, %{status_code: 200}} -> :ok

@@ -5,6 +5,7 @@ defmodule Screenplay.Config.ConfigTest do
 
   alias Screenplay.Config.PermanentConfig
   alias Screenplay.PendingScreensConfig.Fetch.Local
+  alias ScreensConfig.PendingConfig
 
   def fetch_current_config_version do
     {:ok, _config, version} = Local.fetch_config()
@@ -52,7 +53,7 @@ defmodule Screenplay.Config.ConfigTest do
       assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) == :ok
 
       expected_file_contents =
-        %{
+        %PendingConfig{
           screens: %{
             "1234" => %ScreensConfig.Screen{
               vendor: :mercury,
@@ -113,9 +114,9 @@ defmodule Screenplay.Config.ConfigTest do
               },
               tags: []
             }
-          },
-          devops: %{disabled_modes: []}
+          }
         }
+        |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
       {:ok, config, version} = Local.fetch_config()
@@ -139,7 +140,7 @@ defmodule Screenplay.Config.ConfigTest do
       assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) == :ok
 
       expected_file_contents =
-        %{
+        %PendingConfig{
           screens: %{
             "12345" => %ScreensConfig.Screen{
               vendor: :mercury,
@@ -200,16 +201,16 @@ defmodule Screenplay.Config.ConfigTest do
               },
               tags: []
             }
-          },
-          devops: %{disabled_modes: []}
+          }
         }
+        |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
       {:ok, config, _} = Local.fetch_config()
       assert expected_file_contents == config
     end
 
-    test "returns etag_mismatch error if version is outdated" do
+    test "returns version_mismatch error if version is outdated" do
       places_and_screens = %{
         "place-test" => %{
           "updated_pending_screens" => %{},
@@ -226,7 +227,7 @@ defmodule Screenplay.Config.ConfigTest do
       }
 
       assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, "1234") ==
-               {:error, :etag_mismatch}
+               {:error, :version_mismatch}
     end
   end
 end
