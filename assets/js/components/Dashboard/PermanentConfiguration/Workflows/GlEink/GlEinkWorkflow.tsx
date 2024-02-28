@@ -1,9 +1,14 @@
-import React, { ComponentType, useState } from "react";
+import React, {
+  ComponentType,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import ConfigureScreensWorkflowPage, {
   PlaceIdsAndNewScreens,
 } from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
 import { putPendingScreens } from "../../../../../utils/api";
@@ -11,14 +16,16 @@ import { useScreenplayContext } from "../../../../../hooks/useScreenplayContext"
 
 const GlEinkWorkflow: ComponentType = () => {
   const { places } = useScreenplayContext();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [configVersion, setConfigVersion] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [configStep, setConfigStep] = useState<number>(0);
 
   const [placesAndScreensToUpdate, setPlacesAndScreensToUpdate] =
     useState<PlaceIdsAndNewScreens>({});
-
-  const navigate = useNavigate();
-  const [configStep, setConfigStep] = useState<number>(0);
 
   const getPlacesList = () => {
     return places.filter((place) =>
@@ -88,6 +95,7 @@ const GlEinkWorkflow: ComponentType = () => {
           setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
           handleRemoveLocation={handleRemoveLocation}
           setConfigVersion={setConfigVersion}
+          isEditing={isEditing}
         />
       );
       break;
@@ -98,7 +106,7 @@ const GlEinkWorkflow: ComponentType = () => {
       {layout}
       <div className="bottom-action-bar">
         <BottomActionBar
-          backButtonLabel={backButtonLabel}
+          backButtonLabel={isEditing ? null : backButtonLabel}
           forwardButtonLabel={forwardButtonLabel}
           cancelButtonLabel={cancelButtonLabel}
           onCancel={onCancel}
