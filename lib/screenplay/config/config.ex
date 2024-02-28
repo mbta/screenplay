@@ -14,9 +14,9 @@ defmodule Screenplay.Config.PermanentConfig do
           {:error, :etag_mismatch | :config_not_fetched | :config_not_written} | :ok
   def put_pending_screens(places_and_screens, screen_type, etag) do
     with {:ok, config_string} <- get_current_config(etag),
-         {:ok, deserialized} <- Jason.decode(config_string) do
-      %Config{screens: existing_screens} = Config.from_json(deserialized)
-
+         {:ok, deserialized} <- Jason.decode(config_string),
+         {:ok, existing_screens} <-
+           check_for_duplicate_screen_ids(deserialized, places_and_screens) do
       new_screens_config =
         Enum.reduce(
           places_and_screens,
@@ -35,6 +35,25 @@ defmodule Screenplay.Config.PermanentConfig do
       error ->
         error
     end
+  end
+
+  defp check_for_duplicate_screen_ids(deserialized, places_and_screens) do
+    %Config{screens: existing_screens} = Config.from_json(deserialized)
+
+    all_screen_ids =
+      Enum.flat_map(places_and_screens, fn {_place_id, %{"new_screens" => new_screens}} ->
+        Enum.map(new_screens, fn %{"new_id" => new_id} -> new_id end)
+      end) ++ Map.keys(existing_screens)
+
+    duplicate_screen_ids =
+      all_screen_ids
+      |> Enum.group_by(& &1)
+      |> Enum.filter(fn {_string, occurrences} -> length(occurrences) > 1 end)
+      |> Enum.map(&elem(&1, 0))
+
+    if Enum.empty?(duplicate_screen_ids),
+      do: {:ok, existing_screens},
+      else: {:error, {:duplicate_screen_ids, duplicate_screen_ids}}
   end
 
   defp get_config_reducer(:gl_eink_v2), do: &gl_eink_config_reducer/2

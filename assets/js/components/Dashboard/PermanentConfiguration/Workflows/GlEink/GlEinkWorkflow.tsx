@@ -73,11 +73,13 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     }
   };
 
-  const validateConfigs = (placesAndScreens: PlaceIdsAndNewScreens) => {
+  const validateConfigs = (
+    placesAndScreens: PlaceIdsAndNewScreens,
+    duplicateScreenIds: string[] = []
+  ) => {
     // Get list of all screen ids that are duplicates (locally)
-    const duplicateScreenIds: string[] = [];
     const allLocalScreenIds: string[] = [];
-    Object.entries(placesAndScreens).forEach(([placeId, screens]) => {
+    Object.entries(placesAndScreens).forEach(([_placeId, screens]) => {
       Object.keys(screens["updated_screens"]).forEach((screenId) => {
         allLocalScreenIds.push(screenId);
       });
@@ -192,15 +194,41 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         const { validationErrors, fieldsWithErrors } = validateConfigs(
           placesAndScreensToUpdate
         );
-        setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
 
         if (fieldsWithErrors.size === 0) {
           putPendingScreens(
             placesAndScreensToUpdate,
             "gl_eink_v2",
             configVersion
-          ).then(() => navigate("/pending"));
+          ).then((response) => {
+            if (response.ok) {
+              navigate("/pending");
+            } else {
+              return response
+                .json()
+                .then((data) => {
+                  const { validationErrors, fieldsWithErrors } =
+                    validateConfigs(
+                      placesAndScreensToUpdate,
+                      data.duplicate_screen_ids
+                    );
+
+                  setValidationErrorMessage(
+                    generateErrorMessage(fieldsWithErrors)
+                  );
+                  setShowValidationAlert(true);
+                  dispatch({
+                    type: "SET_VALIDATION_ERRORS",
+                    validationErrors: validationErrors,
+                  });
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+          });
         } else {
+          setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
           setShowValidationAlert(true);
           dispatch({
             type: "SET_VALIDATION_ERRORS",
