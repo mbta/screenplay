@@ -33,6 +33,15 @@ const GlEinkWorkflow: ComponentType = () => {
     );
   };
 
+  useLayoutEffect(() => {
+    if (location.state) {
+      setConfigStep(1);
+      setSelectedPlaces(new Set([location.state.place_id]));
+      setIsEditing(true);
+      window.history.replaceState({}, "");
+    }
+  }, [location]);
+
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
     newSelectedPlaces.delete(place.id);
