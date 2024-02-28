@@ -73,38 +73,25 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     }
   };
 
-  const validateConfigs = (
+  const validateDuplicateScreenIds = (
     placesAndScreens: PlaceIdsAndNewScreens,
     duplicateScreenIds: string[] = []
   ) => {
-    // Get list of all screen ids that are duplicates (locally)
-    const allLocalScreenIds: string[] = [];
-    Object.entries(placesAndScreens).forEach(([_placeId, screens]) => {
-      Object.keys(screens["updated_screens"]).forEach((screenId) => {
-        allLocalScreenIds.push(screenId);
-      });
-
-      screens["new_screens"]?.forEach((screen) => {
-        if (allLocalScreenIds.includes(screen.new_id ?? "")) {
-          duplicateScreenIds.push(screen.new_id ?? "");
-        } else {
-          allLocalScreenIds.push(screen.new_id ?? "");
-        }
-      });
-    });
-
-    const fieldsWithErrors = new Set<string>();
     for (const [place_id, screens] of Object.entries(placesAndScreens)) {
       // Check if screen id is a duplicate
       screens["new_screens"]?.map((screen, index) => {
         if (duplicateScreenIds.includes(screen.new_id ?? "")) {
-          fieldsWithErrors.add("screen_id");
           validationErrors[place_id][index].isDuplicateScreenId = true;
         } else {
           validationErrors[place_id][index].isDuplicateScreenId = false;
         }
       });
+    }
+  };
 
+  const validateRequiredFields = (placesAndScreens: PlaceIdsAndNewScreens) => {
+    const fieldsWithErrors = new Set<string>();
+    for (const [place_id, screens] of Object.entries(placesAndScreens)) {
       const fieldsByScreen = screens["new_screens"]?.map((screen) => {
         const presentFields = [];
 
@@ -114,21 +101,18 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         }
 
         // Get what fields are present in the config for this screen
-        return presentFields.concat(
-          Object.keys(screen["app_params"]).concat(
-            Object.keys(screen["app_params"].header)
-          )
-        );
+        return [
+          ...presentFields,
+          ...Object.keys(screen["app_params"]),
+          ...Object.keys(screen["app_params"].header),
+        ];
       });
 
       // Check if any screens are missing required fields (screen_id, direction_id, platform_location)
+      const requiredFields = ["screen_id", "direction_id", "platform_location"];
       if (fieldsByScreen) {
         fieldsByScreen.forEach((fields, index) => {
-          const missingFieldsForScreen = [
-            "screen_id",
-            "direction_id",
-            "platform_location",
-          ].filter((field) => {
+          const missingFieldsForScreen = requiredFields.filter((field) => {
             if (!fields.includes(field)) {
               fieldsWithErrors.add(field);
               return true;
@@ -142,7 +126,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         });
       }
     }
-    return { validationErrors, fieldsWithErrors };
+    return fieldsWithErrors;
   };
 
   let backButtonLabel;
@@ -191,7 +175,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         setConfigStep(configStep - 1);
       };
       onForward = () => {
-        const { validationErrors, fieldsWithErrors } = validateConfigs(
+        const fieldsWithErrors = validateRequiredFields(
           placesAndScreensToUpdate
         );
 
@@ -207,12 +191,11 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
               return response
                 .json()
                 .then((data) => {
-                  const { validationErrors, fieldsWithErrors } =
-                    validateConfigs(
-                      placesAndScreensToUpdate,
-                      data.duplicate_screen_ids
-                    );
-
+                  validateDuplicateScreenIds(
+                    placesAndScreensToUpdate,
+                    data.duplicate_screen_ids
+                  );
+                  fieldsWithErrors.add("screen_id");
                   setValidationErrorMessage(
                     generateErrorMessage(fieldsWithErrors)
                   );
@@ -228,6 +211,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
             }
           });
         } else {
+          validateDuplicateScreenIds(placesAndScreensToUpdate);
           setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
           setShowValidationAlert(true);
           dispatch({
