@@ -147,7 +147,7 @@ defmodule Screenplay.Config.PermanentConfig do
         )
 
       {screen_id, config}, acc ->
-        Map.put(acc, screen_id, config)
+        Map.put(acc, screen_id, json_to_struct(config, :gl_eink_v2, place_id, platform_ids))
     end)
   end
 
