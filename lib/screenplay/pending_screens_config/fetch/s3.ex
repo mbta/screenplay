@@ -3,7 +3,11 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
   Functions to work with an S3-hosted copy of the pending screens config.
   """
 
+  alias ScreensConfig.PendingConfig
+
   require Logger
+
+  alias ScreensConfig.PendingConfig
 
   @behaviour Screenplay.PendingScreensConfig.Fetch
 
@@ -25,12 +29,12 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
         :unchanged
 
       {:ok, %{body: body, headers: headers, status_code: 200}} ->
-        etag =
+        version_id =
           headers
           |> Enum.into(%{})
-          |> Map.get("ETag")
+          |> Map.get("x-amz-version-id")
 
-        {:ok, body, etag}
+        {:ok, body, version_id}
 
       {:error, err} ->
         _ = Logger.info("s3_pending_screens_config_fetch_error #{inspect(err)}")
@@ -39,10 +43,26 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
   end
 
   @impl true
-  def put_config(file_contents) do
+  def commit, do: :ok
+
+  @impl true
+  def revert(version) do
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
-    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
+
+    get_operation = ExAws.S3.get_object(bucket, path, version_id: version)
+    %{body: body, status_code: 200} = ExAws.request!(get_operation)
+
+    put_operation = ExAws.S3.put_object(bucket, path, body)
+    ExAws.request!(put_operation)
+  end
+
+  @impl true
+  def put_config(config) do
+    json = config |> PendingConfig.to_json() |> Jason.encode!(pretty: true)
+    bucket = Application.get_env(:screenplay, :config_s3_bucket)
+    path = config_path_for_environment()
+    put_operation = ExAws.S3.put_object(bucket, path, json)
 
     case ExAws.request(put_operation) do
       {:ok, %{status_code: 200}} -> :ok
