@@ -1,5 +1,4 @@
 import React, { ComponentType, useState } from "react";
-import { WorkflowProps } from "../../ConfigureScreensPage";
 import ConfigureScreensWorkflowPage, {
   PlaceIdsAndNewScreens,
 } from "./ConfigureScreensPage";
@@ -8,10 +7,10 @@ import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
 import { putPendingScreens } from "../../../../../utils/api";
+import { useScreenplayContext } from "../../../../../hooks/useScreenplayContext";
 
-const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
-  places,
-}: WorkflowProps) => {
+const GlEinkWorkflow: ComponentType = () => {
+  const { places } = useScreenplayContext();
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [configVersion, setConfigVersion] = useState<string>("");
 
@@ -20,6 +19,12 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
+
+  const getPlacesList = () => {
+    return places.filter((place) =>
+      place.routes.some((route) => route.startsWith("Green"))
+    );
+  };
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
@@ -52,7 +57,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       };
       layout = (
         <StationSelectPage
-          places={places}
+          places={getPlacesList()}
           selectedPlaces={selectedPlaces}
           setSelectedPlaces={setSelectedPlaces}
         />
@@ -89,7 +94,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   }
 
   return (
-    <div>
+    <>
       {layout}
       <div className="bottom-action-bar">
         <BottomActionBar
@@ -102,7 +107,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           forwardButtonDisabled={forwardButtonDisabled}
         />
       </div>
-    </div>
+    </>
   );
 };
 

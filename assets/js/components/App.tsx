@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ScreenplayProvider } from "../hooks/useScreenplayContext";
+import GlEinkWorkflow from "./Dashboard/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
@@ -14,6 +15,9 @@ const PendingScreensPage = React.lazy(
 );
 const ConfigureScreensPage = React.lazy(
   () => import("./Dashboard/PermanentConfiguration/ConfigureScreensPage")
+);
+const SelectScreenTypeComponent = React.lazy(
+  () => import("./Dashboard/PermanentConfiguration/SelectScreenType")
 );
 
 class AppRoutes extends React.Component {
@@ -37,10 +41,10 @@ class AppRoutes extends React.Component {
             <Route path="alerts" element={<AlertsPage />}></Route>
             <Route path="alerts/:id" element={<AlertDetails />}></Route>
             <Route path="pending" element={<PendingScreensPage />}></Route>
-            <Route
-              path="configure-screens"
-              element={<ConfigureScreensPage />}
-            />
+            <Route path="configure-screens" element={<ConfigureScreensPage />}>
+              <Route path="*" element={<SelectScreenTypeComponent />} />
+              <Route path="gl-eink" element={<GlEinkWorkflow />} />
+            </Route>
           </Route>
         </Routes>
       </React.Suspense>

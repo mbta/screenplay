@@ -61,7 +61,7 @@ defmodule ScreenplayWeb.Router do
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
     get("/pending", ConfigController, :index)
-    get("/configure-screens", ConfigController, :index)
+    get("/configure-screens/*app_id", ConfigController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
