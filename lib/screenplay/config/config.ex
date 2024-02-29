@@ -11,7 +11,12 @@ defmodule Screenplay.Config.PermanentConfig do
   @type screen_type :: :gl_eink_v2
 
   @spec put_pending_screens(map(), screen_type(), binary()) ::
-          {:error, :etag_mismatch | :config_not_fetched | :config_not_written | {:duplicate_screen_ids, list()}} | :ok
+          {:error,
+           :etag_mismatch
+           | :config_not_fetched
+           | :config_not_written
+           | {:duplicate_screen_ids, list()}}
+          | :ok
   def put_pending_screens(places_and_screens, screen_type, etag) do
     with {:ok, config_string} <- get_current_config(etag),
          {:ok, deserialized} <- Jason.decode(config_string),
