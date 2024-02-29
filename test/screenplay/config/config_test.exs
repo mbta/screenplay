@@ -23,6 +23,14 @@ defmodule Screenplay.Config.ConfigTest do
   end
 
   describe "put_pending_screens/3" do
+    setup do
+      :ok =
+        File.write(
+          Path.join(~w[#{File.cwd!()} test fixtures pending_config.json]),
+          Jason.encode!(%{screens: %{}})
+        )
+    end
+
     test "adds and updates a new config for GL E-Ink" do
       version = fetch_current_config_version()
 
