@@ -152,7 +152,6 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           places={places}
           selectedPlaces={selectedPlaces}
           setSelectedPlaces={setSelectedPlaces}
-          placesAndScreensToUpdate={placesAndScreensToUpdate}
           setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
         />
       );
