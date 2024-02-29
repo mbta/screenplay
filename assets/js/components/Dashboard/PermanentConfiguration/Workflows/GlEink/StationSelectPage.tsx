@@ -14,7 +14,6 @@ import { PlaceIdsAndNewScreens } from "./ConfigureScreensPage";
 interface StationSelectPageProps {
   places: Place[];
   selectedPlaces: Set<string>;
-  placesAndScreensToUpdate: PlaceIdsAndNewScreens;
   setSelectedPlaces: React.Dispatch<React.SetStateAction<Set<string>>>;
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
@@ -24,7 +23,6 @@ interface StationSelectPageProps {
 const StationSelectPage: ComponentType<StationSelectPageProps> = ({
   places,
   selectedPlaces,
-  placesAndScreensToUpdate,
   setSelectedPlaces,
   setPlacesAndScreensToUpdate,
 }: StationSelectPageProps) => {

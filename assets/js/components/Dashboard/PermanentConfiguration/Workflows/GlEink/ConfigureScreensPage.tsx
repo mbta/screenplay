@@ -84,7 +84,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
     let layout;
     if (selectedPlaces.length) {
-      layout = selectedPlaces.map((place, index) => {
+      layout = selectedPlaces.map((place) => {
         return (
           <ConfigurePlaceCard
             key={place.id}
