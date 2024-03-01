@@ -79,7 +79,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   ) => {
     for (const [place_id, screens] of Object.entries(placesAndScreens)) {
       // Check if screen id is a duplicate
-      screens["new_screens"]?.map((screen, index) => {
+      screens["new_pending_screens"]?.map((screen, index) => {
         if (duplicateScreenIds.includes(screen.new_id ?? "")) {
           validationErrors[place_id][index].isDuplicateScreenId = true;
         } else {
@@ -92,7 +92,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const validateRequiredFields = (placesAndScreens: PlaceIdsAndNewScreens) => {
     const fieldsWithErrors = new Set<string>();
     for (const [place_id, screens] of Object.entries(placesAndScreens)) {
-      const fieldsByScreen = screens["new_screens"]?.map((screen) => {
+      const fieldsByScreen = screens["new_pending_screens"]?.map((screen) => {
         const presentFields = [];
 
         // Validate that screen id is in correct format
