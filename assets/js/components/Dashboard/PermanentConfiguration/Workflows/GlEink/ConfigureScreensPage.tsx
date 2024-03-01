@@ -46,8 +46,8 @@ interface ExistingScreens {
 
 interface PlaceIdsAndNewScreens {
   [place_id: string]: {
-    updated_screens: { [screen_id: string]: ScreenConfiguration };
-    new_screens?: ScreenConfiguration[];
+    updated_pending_screens: { [screen_id: string]: ScreenConfiguration };
+    new_pending_screens?: ScreenConfiguration[];
   };
 }
 
@@ -75,8 +75,8 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
         fetchExistingScreens(
           "gl_eink_v2",
           selectedPlaces.map((place) => place.id)
-        ).then(({ places_and_screens, etag }) => {
-          setConfigVersion(etag);
+        ).then(({ places_and_screens, version_id }) => {
+          setConfigVersion(version_id);
           setExistingScreens(places_and_screens);
         });
       }
@@ -148,12 +148,12 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       const screensAtPlace = placesAndScreens[place.id];
       const newState = { ...placesAndScreens };
       if (screensAtPlace) {
-        newState[place.id].updated_screens = existingPendingScreens;
-        newState[place.id].new_screens = newScreens;
+        newState[place.id].updated_pending_screens = existingPendingScreens;
+        newState[place.id].new_pending_screens = newScreens;
       } else {
         newState[place.id] = {
-          updated_screens: existingPendingScreens,
-          new_screens: newScreens,
+          updated_pending_screens: existingPendingScreens,
+          new_pending_screens: newScreens,
         };
       }
       return newState;

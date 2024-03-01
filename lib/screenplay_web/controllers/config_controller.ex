@@ -1,8 +1,11 @@
 defmodule ScreenplayWeb.ConfigController do
+  alias ScreensConfig.PendingConfig
   use ScreenplayWeb, :controller
 
+  require Logger
+
   alias Screenplay.Config.PermanentConfig
-  alias Screenplay.PendingScreensConfig.Cache, as: PendingScreensConfigCache
+  alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensConfig
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
   alias ScreensConfig.Screen
   alias ScreensConfig.V2.GlEink
@@ -14,24 +17,24 @@ defmodule ScreenplayWeb.ConfigController do
   def put(conn, %{
         "places_and_screens" => places_and_screens,
         "screen_type" => screen_type,
-        "etag" => etag
+        "version_id" => version_id
       }) do
     case PermanentConfig.put_pending_screens(
            places_and_screens,
            String.to_existing_atom(screen_type),
-           etag
+           version_id
          ) do
       :ok ->
         send_resp(conn, 200, "OK")
 
-      {:error, :etag_mismatch} ->
+      {:error, :version_mismatch} ->
         send_resp(conn, 400, "Config version mismatch")
 
       {:error, :config_not_fetched} ->
-        send_resp(conn, 400, "S3 Operation Failed: Get")
+        send_resp(conn, 500, "S3 Operation Failed: Get")
 
       {:error, :config_not_written} ->
-        send_resp(conn, 400, "S3 Operation Failed: Put")
+        send_resp(conn, 500, "S3 Operation Failed: Put")
 
       {:error, {:duplicate_screen_ids, duplicate_screen_ids}} ->
         json(%{conn | status: 400}, %{duplicate_screen_ids: duplicate_screen_ids})
@@ -40,6 +43,20 @@ defmodule ScreenplayWeb.ConfigController do
 
   def existing_screens(conn, %{"place_ids" => place_ids, "app_id" => app_id}) do
     app_id_atom = String.to_existing_atom(app_id)
+
+    {pending_screens_config, version_id} =
+      case PendingScreensConfig.fetch_config() do
+        {:ok, config, version_id} ->
+          %PendingConfig{screens: pending_screens} =
+            config
+            |> Jason.decode!()
+            |> PendingConfig.from_json()
+
+          {pending_screens, version_id}
+
+        _ ->
+          raise("Could not fetch pending screens config in existing_screens/2")
+      end
 
     places_and_screens =
       place_ids
@@ -53,8 +70,16 @@ defmodule ScreenplayWeb.ConfigController do
             false
         end
 
-        live_screens = ScreensConfigCache.screens(filter_fn)
-        pending_screens = PendingScreensConfigCache.screens(filter_fn)
+        live_screens =
+          ScreensConfigCache.screens(filter_fn)
+          |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
+          |> Enum.into(%{})
+
+        pending_screens =
+          pending_screens_config
+          |> Enum.filter(filter_fn)
+          |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
+          |> Enum.into(%{})
 
         {place_id, %{live_screens: live_screens, pending_screens: pending_screens}}
       end)
@@ -62,8 +87,25 @@ defmodule ScreenplayWeb.ConfigController do
 
     json(conn, %{
       places_and_screens: places_and_screens,
-      etag: PendingScreensConfigCache.table_version()
+      version_id: version_id
     })
+  end
+
+  def publish(conn, %{
+        "place_id" => place_id,
+        "app_id" => app_id,
+        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids
+      }) do
+    app_id_atom = String.to_existing_atom(app_id)
+
+    case PermanentConfig.publish_pending_screens(
+           place_id,
+           app_id_atom,
+           hidden_from_screenplay_ids
+         ) do
+      :ok -> send_resp(conn, 200, "OK")
+      _ -> send_resp(conn, 500, "Could not publish screens")
+    end
   end
 
   defp place_id_has_screen?(place_id, :gl_eink_v2, %Screen{

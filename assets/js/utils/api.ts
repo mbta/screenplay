@@ -46,7 +46,7 @@ export const fetchExistingScreens = async (
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
   screenType: "gl_eink_v2" | null,
-  etag: string
+  version_id: string
 ) => {
   return await fetch("/config/put", {
     method: "POST",
@@ -58,7 +58,23 @@ export const putPendingScreens = async (
     body: JSON.stringify({
       places_and_screens: placesAndScreens,
       screen_type: screenType,
-      etag: etag,
+      version_id: version_id,
     }),
   });
+};
+
+export const publishScreensForPlace = async (placeId: string) => {
+  const response = await fetch(`/config/publish/${placeId}`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token":
+        document?.head?.querySelector<HTMLMetaElement>(
+          "[name~=csrf-token][content]"
+        )?.content ?? "",
+    },
+    credentials: "include",
+  });
+
+  return response.statusText;
 };
