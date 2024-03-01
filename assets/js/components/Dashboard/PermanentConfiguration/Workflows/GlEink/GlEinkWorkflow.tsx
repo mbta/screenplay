@@ -1,9 +1,4 @@
-import React, {
-  ComponentType,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from "react";
+import React, { ComponentType, useLayoutEffect, useState } from "react";
 import ConfigureScreensWorkflowPage, {
   PlaceIdsAndNewScreens,
 } from "./ConfigureScreensPage";
@@ -13,6 +8,10 @@ import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
 import { putPendingScreens } from "../../../../../utils/api";
 import { useScreenplayContext } from "../../../../../hooks/useScreenplayContext";
+
+interface EditNavigationState {
+  placeID: string;
+}
 
 const GlEinkWorkflow: ComponentType = () => {
   const { places } = useScreenplayContext();
@@ -35,9 +34,12 @@ const GlEinkWorkflow: ComponentType = () => {
 
   useLayoutEffect(() => {
     if (location.state) {
+      const { placeID } = location.state as EditNavigationState;
+
       setConfigStep(1);
-      setSelectedPlaces(new Set([location.state.place_id]));
+      setSelectedPlaces(new Set([placeID]));
       setIsEditing(true);
+
       window.history.replaceState({}, "");
     }
   }, [location]);
