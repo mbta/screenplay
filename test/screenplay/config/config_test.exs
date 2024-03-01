@@ -380,8 +380,8 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_screens" => %{},
-          "new_screens" => [
+          "updated_pending_screens" => %{},
+          "new_pending_screens" => [
             %{
               "new_id" => "1234",
               "app_params" => %{
@@ -398,8 +398,8 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_screens" => %{},
-          "new_screens" => [
+          "updated_pending_screens" => %{},
+          "new_pending_screens" => [
             %{
               "new_id" => "1234",
               "app_params" => %{
