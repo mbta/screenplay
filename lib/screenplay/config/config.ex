@@ -96,7 +96,7 @@ defmodule Screenplay.Config.PermanentConfig do
     %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
 
     all_screen_ids =
-      Enum.flat_map(places_and_screens, fn {_place_id, %{"new_screens" => new_screens}} ->
+      Enum.flat_map(places_and_screens, fn {_place_id, %{"new_pending_screens" => new_screens}} ->
         Enum.map(new_screens, fn %{"new_id" => new_id} -> new_id end)
       end) ++ Map.keys(existing_screens)
 
