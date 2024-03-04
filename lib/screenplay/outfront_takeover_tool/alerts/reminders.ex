@@ -24,20 +24,24 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
     if url == "" do
       Logger.info("No Slack Webhook URL found")
     else
-      case State.get_outdated_alerts() do
-        [] ->
-          Logger.debug("No outdated alerts found")
-
-        alerts ->
-          Enum.each(alerts, fn %Alert{stations: stations} ->
-            stations
-            |> format_slack_message()
-            |> send_slack_message(url)
-          end)
-      end
+      send_slack_messages_for_outdated_alerts(url)
     end
 
     {:noreply, state}
+  end
+
+  defp send_slack_messages_for_outdated_alerts(url) do
+    case State.get_outdated_alerts() do
+      [] ->
+        Logger.debug("No outdated alerts found")
+
+      alerts ->
+        Enum.each(alerts, fn %Alert{stations: stations} ->
+          stations
+          |> format_slack_message()
+          |> send_slack_message(url)
+        end)
+    end
   end
 
   defp format_slack_message(stations) do

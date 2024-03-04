@@ -6,13 +6,6 @@ config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: System.get_env("HOST"), port: 80],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
-config :ueberauth, Ueberauth.Strategy.Cognito,
-  auth_domain: System.get_env("COGNITO_DOMAIN"),
-  client_id: System.get_env("COGNITO_CLIENT_ID"),
-  client_secret: System.get_env("COGNITO_CLIENT_SECRET"),
-  user_pool_id: System.get_env("COGNITO_USER_POOL_ID"),
-  aws_region: System.get_env("COGNITO_AWS_REGION")
-
 sftp_client_module =
   case System.get_env("SFTP_SERVER") do
     "outfront" -> SFTPClient
@@ -20,6 +13,25 @@ sftp_client_module =
   end
 
 env = System.get_env("ENVIRONMENT_NAME")
+
+if config_env() == :prod do
+  keycloak_opts = [
+    issuer: :keycloak_issuer,
+    client_id: System.fetch_env!("KEYCLOAK_CLIENT_ID"),
+    client_secret: System.fetch_env!("KEYCLOAK_CLIENT_SECRET")
+  ]
+
+  config :ueberauth_oidcc,
+    issuers: [
+      %{
+        name: :keycloak_issuer,
+        issuer: System.fetch_env!("KEYCLOAK_ISSUER")
+      }
+    ],
+    providers: [
+      keycloak: keycloak_opts
+    ]
+end
 
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),

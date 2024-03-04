@@ -19,6 +19,6 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
   end
 
   def takeover_redirect(conn, _params) do
-    redirect(conn, to: Routes.page_path(conn, :index))
+    redirect(conn, to: ~p"/emergency-takeover")
   end
 end

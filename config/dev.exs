@@ -84,5 +84,14 @@ config :screenplay,
 
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: {Screenplay.Ueberauth.Strategy.Fake, [groups: ["screenplay-emergency-admin"]]}
+    keycloak: {Screenplay.Ueberauth.Strategy.Fake, [roles: ["screenplay-emergency-admin"]]}
+  ]
+
+config :ueberauth_oidcc,
+  providers: [
+    keycloak: [
+      issuer: :keycloak_issuer,
+      client_id: "dev-client",
+      client_secret: "fake-secret"
+    ]
   ]

@@ -9,6 +9,6 @@ defmodule ScreenplayWeb.AuthManager.ErrorHandler do
 
   @impl Guardian.Plug.ErrorHandler
   def auth_error(conn, {_type, _reason}, _opts) do
-    Phoenix.Controller.redirect(conn, to: Helpers.auth_path(conn, :request, "cognito"))
+    Phoenix.Controller.redirect(conn, to: Helpers.auth_path(conn, :request, "keycloak"))
   end
 end
