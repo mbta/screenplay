@@ -41,11 +41,19 @@ defmodule Screenplay.Config.ConfigTest do
 
   describe "put_pending_screens/3" do
     setup do
-      :ok =
-        File.write(
-          Path.join(~w[#{File.cwd!()} test fixtures pending_config.json]),
-          Jason.encode!(%{screens: %{}})
-        )
+      empty_config = %{screens: %{}}
+      pending_screens_path = get_fixture_path("pending_config.json")
+      published_screens_path = get_fixture_path("screens_config.json")
+
+      File.write(
+        pending_screens_path,
+        Jason.encode!(empty_config)
+      )
+
+      File.write(
+        published_screens_path,
+        Jason.encode!(empty_config)
+      )
     end
 
     test "adds and updates a new config for GL E-Ink" do

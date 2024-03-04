@@ -27,8 +27,14 @@ defmodule Screenplay.Config.PermanentConfig do
   def put_pending_screens(places_and_screens, screen_type, version_id) do
     with {:ok, config_string} <- get_current_pending_config(version_id),
          {:ok, deserialized} <- Jason.decode(config_string),
+         {published_config, _published_version_id} <- get_current_published_config(),
+         {:ok, published_config_deserialized} <- Jason.decode(published_config),
          {:ok, existing_screens} <-
-           check_for_duplicate_screen_ids(deserialized, places_and_screens) do
+           check_for_duplicate_screen_ids(
+             deserialized,
+             places_and_screens,
+             published_config_deserialized
+           ) do
       new_pending_screens_config =
         Enum.reduce(
           places_and_screens,
@@ -92,13 +98,18 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  defp check_for_duplicate_screen_ids(deserialized, places_and_screens) do
+  defp check_for_duplicate_screen_ids(
+         deserialized,
+         places_and_screens,
+         published_config_deserialized
+       ) do
     %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
+    %Config{screens: published_screens} = Config.from_json(published_config_deserialized)
 
     all_screen_ids =
       Enum.flat_map(places_and_screens, fn {_place_id, %{"new_pending_screens" => new_screens}} ->
         Enum.map(new_screens, fn %{"new_id" => new_id} -> new_id end)
-      end) ++ Map.keys(existing_screens)
+      end) ++ Map.keys(existing_screens) ++ Map.keys(published_screens)
 
     duplicate_screen_ids =
       all_screen_ids
