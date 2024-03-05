@@ -33,7 +33,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
 
-  const [showErrorModal, setShowErrorModal] = useState<boolean>(true);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
