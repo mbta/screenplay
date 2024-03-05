@@ -131,6 +131,34 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     return fieldsWithErrors;
   };
 
+  const handleGlEinkSubmitResponse = (
+    response: Response,
+    fieldsWithErrors: Set<string>
+  ) => {
+    if (response.ok) {
+      navigate("/pending");
+    } else {
+      return response
+        .json()
+        .then((data) => {
+          validateDuplicateScreenIds(
+            placesAndScreensToUpdate,
+            data.duplicate_screen_ids
+          );
+          fieldsWithErrors.add("screen_id");
+          setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
+          setShowValidationAlert(true);
+          dispatch({
+            type: "SET_VALIDATION_ERRORS",
+            validationErrors: validationErrors,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   let backButtonLabel;
   let forwardButtonLabel;
   let cancelButtonLabel;
@@ -186,30 +214,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
             "gl_eink_v2",
             configVersion
           ).then((response) => {
-            if (response.ok) {
-              navigate("/pending");
-            } else {
-              return response
-                .json()
-                .then((data) => {
-                  validateDuplicateScreenIds(
-                    placesAndScreensToUpdate,
-                    data.duplicate_screen_ids
-                  );
-                  fieldsWithErrors.add("screen_id");
-                  setValidationErrorMessage(
-                    generateErrorMessage(fieldsWithErrors)
-                  );
-                  setShowValidationAlert(true);
-                  dispatch({
-                    type: "SET_VALIDATION_ERRORS",
-                    validationErrors: validationErrors,
-                  });
-                })
-                .catch((error) => {
-                  console.log(error);
-                });
-            }
+            handleGlEinkSubmitResponse(response, fieldsWithErrors);
           });
         } else {
           validateDuplicateScreenIds(placesAndScreensToUpdate);
