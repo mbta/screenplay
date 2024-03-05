@@ -131,32 +131,40 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     return fieldsWithErrors;
   };
 
-  const handleGlEinkSubmitResponse = (
+  const handleGlEinkSubmitResponse = async (
     response: Response,
     fieldsWithErrors: Set<string>
   ) => {
     if (response.ok) {
       navigate("/pending");
+    } else if (response.status === 400) {
+      const data = await response.json();
+      if (data.duplicate_screen_ids) {
+        handleDuplicateIdsResponse(data.duplicate_screen_ids, fieldsWithErrors);
+      } else {
+        handleVersionMismatchResponse();
+      }
     } else {
-      return response
-        .json()
-        .then((data) => {
-          validateDuplicateScreenIds(
-            placesAndScreensToUpdate,
-            data.duplicate_screen_ids
-          );
-          fieldsWithErrors.add("screen_id");
-          setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
-          setShowValidationAlert(true);
-          dispatch({
-            type: "SET_VALIDATION_ERRORS",
-            validationErrors: validationErrors,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      console.log("Try again");
     }
+  };
+
+  const handleDuplicateIdsResponse = (
+    duplicate_screen_ids: string[],
+    fieldsWithErrors: Set<string>
+  ) => {
+    validateDuplicateScreenIds(placesAndScreensToUpdate, duplicate_screen_ids);
+    fieldsWithErrors.add("screen_id");
+    setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
+    setShowValidationAlert(true);
+    dispatch({
+      type: "SET_VALIDATION_ERRORS",
+      validationErrors: validationErrors,
+    });
+  };
+
+  const handleVersionMismatchResponse = () => {
+    setShowErrorModal(true);
   };
 
   let backButtonLabel;
