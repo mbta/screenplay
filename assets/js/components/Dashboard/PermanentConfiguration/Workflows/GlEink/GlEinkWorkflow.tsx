@@ -7,7 +7,7 @@ import BottomActionBar from "../../BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
-import { Alert } from "react-bootstrap";
+import { Alert, Button, Modal } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
   useConfigValidationContext,
@@ -32,6 +32,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const dispatch = useConfigValidationDispatchContext();
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
+
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(true);
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
@@ -221,6 +223,35 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       };
       layout = (
         <div>
+          <Modal
+            show={showErrorModal}
+            backdrop="static"
+            className="error-modal"
+          >
+            <Modal.Header closeButton closeVariant="white">
+              <Modal.Title>
+                Someone else is configuring these screens
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              In order not to overwrite each others work, please refresh your
+              browser and fill-out the form again.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onClick={() => setShowErrorModal(false)}
+                className="error-modal__cancel-button"
+              >
+                Cancel
+              </Button>
+              <Button
+                className="error-modal__refresh-button"
+                onClick={() => window.location.reload()}
+              >
+                Refresh now
+              </Button>
+            </Modal.Footer>
+          </Modal>
           <ConfigureScreensWorkflowPage
             selectedPlaces={places.filter((place) =>
               selectedPlaces.has(place.id)
