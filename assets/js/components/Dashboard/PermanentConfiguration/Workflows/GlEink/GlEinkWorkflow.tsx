@@ -145,7 +145,10 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         handleVersionMismatchResponse();
       }
     } else {
-      console.log("Try again");
+      setValidationErrorMessage(
+        "Something went wrong. Please select 'Review Screens' again."
+      );
+      setShowValidationAlert(true);
     }
   };
 
