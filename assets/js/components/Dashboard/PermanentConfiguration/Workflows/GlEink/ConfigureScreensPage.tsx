@@ -46,8 +46,9 @@ interface ExistingScreens {
 
 interface PlaceIdsAndNewScreens {
   [place_id: string]: {
-    updated_pending_screens: { [screen_id: string]: ScreenConfiguration };
+    updated_pending_screens: ScreenConfiguration[];
     new_pending_screens?: ScreenConfiguration[];
+    existing_pending_screens: ScreenConfiguration[];
   };
 }
 
@@ -70,12 +71,33 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
     const [existingScreens, setExistingScreens] =
       useState<PlaceIdsAndExistingScreens>({});
 
+    const { newScreenValidationErrors, pendingScreenValidationErrors } =
+      useConfigValidationContext();
+    const dispatch = useConfigValidationDispatchContext();
+
     useEffect(() => {
       if (selectedPlaces.length) {
         fetchExistingScreens(
           "gl_eink_v2",
           selectedPlaces.map((place) => place.id)
         ).then(({ places_and_screens, version_id }) => {
+          for (const place_id in places_and_screens) {
+            const screens = places_and_screens[place_id];
+
+            Object.keys(screens.pending_screens).map((_screen, index) => {
+              pendingScreenValidationErrors[place_id][index] = {
+                missingFields: [],
+                isDuplicateScreenId: false,
+              };
+            });
+          }
+
+          dispatch({
+            type: "SET_VALIDATION_ERRORS",
+            newScreenValidationErrors,
+            pendingScreenValidationErrors,
+          });
+
           setConfigVersion(version_id);
           setExistingScreens(places_and_screens);
         });
@@ -130,11 +152,17 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   const [existingPendingScreens, setExistingPendingScreens] = useState<{
     [screen_id: string]: ScreenConfiguration;
   }>({});
+
+  const [updatedPendingScreens, setUpdatedPendingScreens] = useState<
+    ScreenConfiguration[]
+  >([]);
+
   const [newScreens, setNewScreens] = useState<ScreenConfiguration[]>([]);
   const existingLiveScreens: {
     [screen_id: string]: ScreenConfiguration;
   } = existingScreens?.live_screens ?? {};
-  const { validationErrors } = useConfigValidationContext();
+  const { newScreenValidationErrors, pendingScreenValidationErrors } =
+    useConfigValidationContext();
   const dispatch = useConfigValidationDispatchContext();
 
   useEffect(() => {
@@ -143,22 +171,38 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     setExistingPendingScreens(existingScreens.pending_screens);
   }, [existingScreens]);
 
+  const existingScreensToArray = (existingPendingScreens: {
+    [screen_id: string]: ScreenConfiguration;
+  }) => {
+    return Object.entries(existingPendingScreens).map(([screen_id, screen]) => {
+      screen.screen_id = screen_id;
+      return screen;
+    });
+  };
+
   useEffect(() => {
     setPlacesAndScreensToUpdate((placesAndScreens) => {
       const screensAtPlace = placesAndScreens[place.id];
       const newState = { ...placesAndScreens };
+
       if (screensAtPlace) {
-        newState[place.id].updated_pending_screens = existingPendingScreens;
+        newState[place.id].updated_pending_screens = updatedPendingScreens;
         newState[place.id].new_pending_screens = newScreens;
+        newState[place.id].existing_pending_screens = existingScreensToArray(
+          existingPendingScreens
+        );
       } else {
         newState[place.id] = {
-          updated_pending_screens: existingPendingScreens,
+          updated_pending_screens: updatedPendingScreens,
           new_pending_screens: newScreens,
+          existing_pending_screens: existingScreensToArray(
+            existingPendingScreens
+          ),
         };
       }
       return newState;
     });
-  }, [existingPendingScreens, newScreens]);
+  }, [updatedPendingScreens, existingPendingScreens, newScreens]);
 
   const hasRows =
     Object.keys(existingLiveScreens).length > 0 ||
@@ -222,17 +266,30 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                         });
                       }}
                       onChange={(screen: ScreenConfiguration) => {
+                        if (screen.new_id == screenID) {
+                          setUpdatedPendingScreens((prevState) => {
+                            delete screen["new_id"];
+                            prevState[index] = screen;
+                            return prevState;
+                          });
+                        } else {
+                          setUpdatedPendingScreens((prevState) => {
+                            prevState[index] = screen;
+                            return prevState;
+                          });
+                        }
                         setExistingPendingScreens((prevState) => {
-                          const newState = { ...prevState };
+                          const newState = {
+                            ...prevState,
+                          };
                           newState[screenID] = screen;
                           return newState;
                         });
                       }}
                       className={screen.is_deleted ? "hidden" : ""}
-                      validationErrors={{
-                        missingFields: [],
-                        isDuplicateScreenId: false,
-                      }}
+                      validationErrors={
+                        pendingScreenValidationErrors[place.id][index]
+                      }
                     />
                   );
                 }
@@ -244,10 +301,11 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                     screenID={screen.new_id ?? ""}
                     config={screen}
                     handleDelete={() => {
-                      validationErrors[place.id].splice(index, 1);
+                      newScreenValidationErrors[place.id].splice(index, 1);
                       dispatch({
                         type: "SET_VALIDATION_ERRORS",
-                        validationErrors: validationErrors,
+                        newScreenValidationErrors,
+                        pendingScreenValidationErrors,
                       });
                       setNewScreens((prevState) => {
                         const newState = [...prevState];
@@ -263,7 +321,9 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                       });
                     }}
                     className={screen.is_deleted ? "hidden" : ""}
-                    validationErrors={validationErrors[place.id][index]}
+                    validationErrors={
+                      newScreenValidationErrors[place.id][index]
+                    }
                   />
                 );
               })}
@@ -283,13 +343,14 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               },
             ]);
 
-            validationErrors[place.id].push({
+            newScreenValidationErrors[place.id].push({
               missingFields: [],
               isDuplicateScreenId: false,
             });
             dispatch({
               type: "SET_VALIDATION_ERRORS",
-              validationErrors: validationErrors,
+              newScreenValidationErrors,
+              pendingScreenValidationErrors,
             });
           }}
         >

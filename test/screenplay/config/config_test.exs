@@ -69,7 +69,7 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{},
+          "updated_pending_screens" => [],
           "new_pending_screens" => [
             %{
               "new_id" => "1234",
@@ -156,15 +156,16 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{
-            "1234" => %{
+          "updated_pending_screens" => [
+            %{
               "new_id" => "12345",
               "app_params" => %{
                 "header" => %{"route_id" => "Green-B", "direction_id" => 1},
                 "platform_location" => "back"
-              }
+              },
+              "screen_id" => "1234"
             }
-          },
+          ],
           "new_pending_screens" => []
         }
       }
@@ -245,7 +246,7 @@ defmodule Screenplay.Config.ConfigTest do
     test "returns version_mismatch error if version is outdated" do
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{},
+          "updated_pending_screens" => [],
           "new_pending_screens" => [
             %{
               "new_id" => "1234",
@@ -275,7 +276,7 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{},
+          "updated_pending_screens" => [],
           "new_pending_screens" => [
             %{
               "new_id" => "1234",
@@ -293,7 +294,7 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{},
+          "updated_pending_screens" => [],
           "new_pending_screens" => [
             %{
               "new_id" => "1234",

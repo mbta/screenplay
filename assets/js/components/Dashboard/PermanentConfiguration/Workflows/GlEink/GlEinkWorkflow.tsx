@@ -28,7 +28,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const [configStep, setConfigStep] = useState<number>(0);
 
   const [showValidationAlert, setShowValidationAlert] = useState(true);
-  const { validationErrors } = useConfigValidationContext();
+  const { newScreenValidationErrors, pendingScreenValidationErrors } =
+    useConfigValidationContext();
   const dispatch = useConfigValidationDispatchContext();
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
@@ -36,10 +37,12 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
     newSelectedPlaces.delete(place.id);
-    delete validationErrors[place.id];
+    delete newScreenValidationErrors[place.id];
+    delete pendingScreenValidationErrors[place.id];
     dispatch({
       type: "SET_VALIDATION_ERRORS",
-      validationErrors: validationErrors,
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
     });
     setSelectedPlaces(newSelectedPlaces);
     setPlacesAndScreensToUpdate((placesAndScreens) => {
@@ -78,12 +81,24 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
     duplicateScreenIds: string[] = []
   ) => {
     for (const [place_id, screens] of Object.entries(placesAndScreens)) {
-      // Check if screen id is a duplicate
       screens["new_pending_screens"]?.map((screen, index) => {
         if (duplicateScreenIds.includes(screen.new_id ?? "")) {
-          validationErrors[place_id][index].isDuplicateScreenId = true;
+          newScreenValidationErrors[place_id][index].isDuplicateScreenId = true;
         } else {
-          validationErrors[place_id][index].isDuplicateScreenId = false;
+          newScreenValidationErrors[place_id][index].isDuplicateScreenId =
+            false;
+        }
+      });
+
+      screens["existing_pending_screens"].map((screen, index) => {
+        if (
+          duplicateScreenIds.includes(screen.new_id ?? screen.screen_id ?? "")
+        ) {
+          pendingScreenValidationErrors[place_id][index].isDuplicateScreenId =
+            true;
+        } else {
+          pendingScreenValidationErrors[place_id][index].isDuplicateScreenId =
+            false;
         }
       });
     }
@@ -121,7 +136,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
             }
           });
 
-          validationErrors[place_id][index].missingFields =
+          newScreenValidationErrors[place_id][index].missingFields =
             missingFieldsForScreen;
         });
       }
@@ -148,7 +163,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           setShowValidationAlert(true);
           dispatch({
             type: "SET_VALIDATION_ERRORS",
-            validationErrors: validationErrors,
+            newScreenValidationErrors,
+            pendingScreenValidationErrors,
           });
         })
         .catch((error) => {
@@ -193,12 +209,18 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       };
       onBack = () => {
         Object.keys(placesAndScreensToUpdate).forEach((placeId) => {
-          validationErrors[placeId] = [];
+          newScreenValidationErrors[placeId] = [];
         });
+        Object.keys(placesAndScreensToUpdate).forEach((placeId) => {
+          pendingScreenValidationErrors[placeId] = [];
+        });
+
         dispatch({
           type: "SET_VALIDATION_ERRORS",
-          validationErrors: validationErrors,
+          newScreenValidationErrors,
+          pendingScreenValidationErrors,
         });
+        setShowValidationAlert(false);
         setConfigStep(configStep - 1);
       };
       onForward = () => {
@@ -220,7 +242,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           setShowValidationAlert(true);
           dispatch({
             type: "SET_VALIDATION_ERRORS",
-            validationErrors: validationErrors,
+            newScreenValidationErrors,
+            pendingScreenValidationErrors,
           });
         }
       };
