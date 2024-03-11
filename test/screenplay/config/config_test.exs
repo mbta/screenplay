@@ -40,6 +40,22 @@ defmodule Screenplay.Config.ConfigTest do
   end
 
   describe "put_pending_screens/3" do
+    setup do
+      empty_config = %{screens: %{}}
+      pending_screens_path = get_fixture_path("pending_config.json")
+      published_screens_path = get_fixture_path("screens_config.json")
+
+      File.write(
+        pending_screens_path,
+        Jason.encode!(empty_config)
+      )
+
+      File.write(
+        published_screens_path,
+        Jason.encode!(empty_config)
+      )
+    end
+
     test "adds and updates a new config for GL E-Ink" do
       version = fetch_current_config_version()
 
@@ -53,7 +69,7 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{},
+          "updated_pending_screens" => [],
           "new_pending_screens" => [
             %{
               "new_id" => "1234",
@@ -140,15 +156,16 @@ defmodule Screenplay.Config.ConfigTest do
 
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{
-            "1234" => %{
+          "updated_pending_screens" => [
+            %{
               "new_id" => "12345",
               "app_params" => %{
                 "header" => %{"route_id" => "Green-B", "direction_id" => 1},
                 "platform_location" => "back"
-              }
+              },
+              "screen_id" => "1234"
             }
-          },
+          ],
           "new_pending_screens" => []
         }
       }
@@ -229,7 +246,7 @@ defmodule Screenplay.Config.ConfigTest do
     test "returns version_mismatch error if version is outdated" do
       places_and_screens = %{
         "place-test" => %{
-          "updated_pending_screens" => %{},
+          "updated_pending_screens" => [],
           "new_pending_screens" => [
             %{
               "new_id" => "1234",
@@ -244,6 +261,68 @@ defmodule Screenplay.Config.ConfigTest do
 
       assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, "1234") ==
                {:error, :version_mismatch}
+    end
+
+    test "returns error when duplicate screen IDs are found" do
+      version = fetch_current_config_version()
+
+      expect(Screenplay.RoutePatterns.Mock, :fetch_platform_ids_for_route_at_stop, 2, fn stop_id,
+                                                                                         route_id ->
+        assert stop_id == "place-test"
+        assert route_id == "Green-B"
+
+        {"123", "456"}
+      end)
+
+      places_and_screens = %{
+        "place-test" => %{
+          "updated_pending_screens" => [],
+          "new_pending_screens" => [
+            %{
+              "new_id" => "1234",
+              "app_params" => %{
+                "header" => %{"route_id" => "Green-B", "direction_id" => 0},
+                "platform_location" => "front"
+              }
+            }
+          ]
+        }
+      }
+
+      assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) == :ok
+      version = fetch_current_config_version()
+
+      places_and_screens = %{
+        "place-test" => %{
+          "updated_pending_screens" => [],
+          "new_pending_screens" => [
+            %{
+              "new_id" => "1234",
+              "app_params" => %{
+                "header" => %{"route_id" => "Green-B", "direction_id" => 0},
+                "platform_location" => "front"
+              }
+            },
+            %{
+              "new_id" => "5678",
+              "app_params" => %{
+                "header" => %{"route_id" => "Green-B", "direction_id" => 0},
+                "platform_location" => "front"
+              }
+            },
+            %{
+              "new_id" => "5678",
+              "app_params" => %{
+                "header" => %{"route_id" => "Green-B", "direction_id" => 0},
+                "platform_location" => "front"
+              }
+            }
+          ]
+        }
+      }
+
+      assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) ==
+               {:error, {:duplicate_screen_ids, ["1234", "5678"]}}
     end
   end
 

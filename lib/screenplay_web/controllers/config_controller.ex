@@ -35,6 +35,9 @@ defmodule ScreenplayWeb.ConfigController do
 
       {:error, :config_not_written} ->
         send_resp(conn, 500, "S3 Operation Failed: Put")
+
+      {:error, {:duplicate_screen_ids, duplicate_screen_ids}} ->
+        json(%{conn | status: 400}, %{duplicate_screen_ids: duplicate_screen_ids})
     end
   end
 

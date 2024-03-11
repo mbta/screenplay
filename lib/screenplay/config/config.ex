@@ -18,12 +18,23 @@ defmodule Screenplay.Config.PermanentConfig do
   @type screen_type :: :gl_eink_v2
 
   @spec put_pending_screens(map(), screen_type(), binary()) ::
-          {:error, :version_mismatch | :config_not_fetched | :config_not_written} | :ok
+          {:error,
+           :version_mismatch
+           | :config_not_fetched
+           | :config_not_written
+           | {:duplicate_screen_ids, list()}}
+          | :ok
   def put_pending_screens(places_and_screens, screen_type, version_id) do
     with {:ok, config_string} <- get_current_pending_config(version_id),
-         {:ok, deserialized} <- Jason.decode(config_string) do
-      %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
-
+         {:ok, deserialized} <- Jason.decode(config_string),
+         {published_config, _published_version_id} <- get_current_published_config(),
+         {:ok, published_config_deserialized} <- Jason.decode(published_config),
+         {:ok, existing_screens} <-
+           check_for_duplicate_screen_ids(
+             deserialized,
+             places_and_screens,
+             published_config_deserialized
+           ) do
       new_pending_screens_config =
         Enum.reduce(
           places_and_screens,
@@ -87,6 +98,44 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
+  defp check_for_duplicate_screen_ids(
+         deserialized,
+         places_and_screens,
+         published_config_deserialized
+       ) do
+    %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
+    %Config{screens: published_screens} = Config.from_json(published_config_deserialized)
+
+    all_screen_ids =
+      Enum.flat_map(places_and_screens, fn {_place_id,
+                                            %{
+                                              "new_pending_screens" => new_screens,
+                                              "updated_pending_screens" => updated_pending_screens
+                                            }} ->
+        Enum.map(new_screens, fn %{"new_id" => new_id} -> new_id end) ++
+          get_updated_pending_screen_ids(updated_pending_screens)
+      end) ++ Map.keys(existing_screens) ++ Map.keys(published_screens)
+
+    duplicate_screen_ids =
+      all_screen_ids
+      |> Enum.group_by(& &1)
+      |> Enum.filter(fn {_string, occurrences} -> length(occurrences) > 1 end)
+      |> Enum.map(&elem(&1, 0))
+
+    if Enum.empty?(duplicate_screen_ids),
+      do: {:ok, existing_screens},
+      else: {:error, {:duplicate_screen_ids, duplicate_screen_ids}}
+  end
+
+  defp get_updated_pending_screen_ids(updated_pending_screens) do
+    Enum.filter(updated_pending_screens, fn screen ->
+      not is_nil(screen) and Map.has_key?(screen, "new_id")
+    end)
+    |> Enum.map(fn
+      %{"new_id" => new_id} -> new_id
+    end)
+  end
+
   # Config reducers do 3 things:
   # 1. Make necessary data requests for retrieving stop related data for screen configurations
   # 2. Update any existing pending configurations that were changed.
@@ -105,6 +154,9 @@ defmodule Screenplay.Config.PermanentConfig do
        "new_pending_screens" => new_pending_screens
      }} =
       place_and_screens
+
+    updated_pending_screens =
+      Enum.reject(updated_pending_screens, &is_nil(&1))
 
     route_id = get_route_id(:gl_eink_v2, updated_pending_screens, new_pending_screens)
 
@@ -190,12 +242,12 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc) do
     Enum.reduce(updated_pending_screens, acc, fn
-      {screen_id, %{"is_deleted" => true}}, acc ->
+      %{"is_deleted" => true, "screen_id" => screen_id}, acc ->
         Map.delete(acc, screen_id)
 
       # screen_id was updated
       # Delete the old configuration and treat new ID as a new configuration
-      {screen_id, %{"new_id" => new_id} = config}, acc ->
+      %{"new_id" => new_id, "screen_id" => screen_id} = config, acc ->
         acc
         |> Map.delete(screen_id)
         |> Map.put(
@@ -203,7 +255,7 @@ defmodule Screenplay.Config.PermanentConfig do
           json_to_struct(config, :gl_eink_v2, place_id, platform_ids)
         )
 
-      {screen_id, config}, acc ->
+      %{"screen_id" => screen_id} = config, acc ->
         Map.put(acc, screen_id, Screen.from_json(config))
     end)
   end
@@ -230,7 +282,7 @@ defmodule Screenplay.Config.PermanentConfig do
   # Each screen type will look in a different part of the configuration to find it's physical location
   defp get_route_id(:gl_eink_v2, updated_pending_screens, new_pending_screens) do
     updated_pending_screens
-    |> Enum.map(fn {_screen_id, config} -> config end)
+    |> Enum.map(fn config -> config end)
     |> Enum.concat(new_pending_screens)
     |> List.first()
     |> get_in(["app_params", "header", "route_id"])
