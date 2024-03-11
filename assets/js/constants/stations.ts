@@ -191,7 +191,7 @@ const STATIONS_BY_LINE: StationsByLine = {
     },
     {
       name: "Massachusetts Avenue",
-      portrait: false,
+      portrait: true,
       landscape: false,
     },
     {
@@ -249,7 +249,7 @@ const STATIONS_BY_LINE: StationsByLine = {
     {
       name: "Maverick",
       portrait: true,
-      landscape: false,
+      landscape: true,
     },
     {
       name: "Airport",

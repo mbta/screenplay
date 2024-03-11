@@ -11,6 +11,7 @@ interface GlEinkAppParams {
 }
 
 export interface ScreenConfiguration {
+  screen_id?: string;
   new_id?: string;
   app_params: GlEinkAppParams;
   is_live?: boolean;
