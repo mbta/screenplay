@@ -210,8 +210,6 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       onBack = () => {
         Object.keys(placesAndScreensToUpdate).forEach((placeId) => {
           newScreenValidationErrors[placeId] = [];
-        });
-        Object.keys(placesAndScreensToUpdate).forEach((placeId) => {
           pendingScreenValidationErrors[placeId] = [];
         });
 
@@ -248,7 +246,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         }
       };
       layout = (
-        <div>
+        <>
           <ConfigureScreensWorkflowPage
             selectedPlaces={places.filter((place) =>
               selectedPlaces.has(place.id)
@@ -273,7 +271,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
               </Alert>
             </div>
           )}
-        </div>
+        </>
       );
       break;
   }

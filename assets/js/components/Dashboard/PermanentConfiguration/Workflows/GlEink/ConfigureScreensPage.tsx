@@ -81,28 +81,33 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
           "gl_eink_v2",
           selectedPlaces.map((place) => place.id)
         ).then(({ places_and_screens, version_id }) => {
-          for (const place_id in places_and_screens) {
-            const screens = places_and_screens[place_id];
-
-            Object.keys(screens.pending_screens).map((_screen, index) => {
-              pendingScreenValidationErrors[place_id][index] = {
-                missingFields: [],
-                isDuplicateScreenId: false,
-              };
-            });
-          }
-
-          dispatch({
-            type: "SET_VALIDATION_ERRORS",
-            newScreenValidationErrors,
-            pendingScreenValidationErrors,
-          });
-
+          initializeExistingScreenValidationErrors(places_and_screens);
           setConfigVersion(version_id);
           setExistingScreens(places_and_screens);
         });
       }
     }, []);
+
+    const initializeExistingScreenValidationErrors = (
+      placesAndScreens: PlaceIdsAndExistingScreens
+    ) => {
+      for (const place_id in placesAndScreens) {
+        const screens = placesAndScreens[place_id];
+
+        Object.keys(screens.pending_screens).map((_screen, index) => {
+          pendingScreenValidationErrors[place_id][index] = {
+            missingFields: [],
+            isDuplicateScreenId: false,
+          };
+        });
+      }
+
+      dispatch({
+        type: "SET_VALIDATION_ERRORS",
+        newScreenValidationErrors,
+        pendingScreenValidationErrors,
+      });
+    };
 
     let layout;
     if (selectedPlaces.length) {
