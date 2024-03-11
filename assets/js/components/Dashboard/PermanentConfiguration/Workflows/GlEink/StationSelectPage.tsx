@@ -31,10 +31,12 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
     const placeToAdd = places.find((place) => place.id === item.id);
     if (placeToAdd) {
       setSelectedPlaces((prev) => new Set([placeToAdd.id, ...prev]));
-      validationErrors[placeToAdd.id] = [];
+      newScreenValidationErrors[placeToAdd.id] = [];
+      pendingScreenValidationErrors[placeToAdd.id] = [];
       dispatch({
         type: "SET_VALIDATION_ERRORS",
-        validationErrors: validationErrors,
+        newScreenValidationErrors,
+        pendingScreenValidationErrors,
       });
     }
   };
@@ -42,7 +44,8 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
 
-  const { validationErrors } = useConfigValidationContext();
+  const { newScreenValidationErrors, pendingScreenValidationErrors } =
+    useConfigValidationContext();
   const dispatch = useConfigValidationDispatchContext();
 
   let backButtonLabel;
@@ -91,16 +94,20 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
               checked ? newSet.add(place.id) : newSet.delete(place.id);
 
               if (checked) {
-                validationErrors[place.id] = [];
+                newScreenValidationErrors[place.id] = [];
+                pendingScreenValidationErrors[place.id] = [];
                 dispatch({
                   type: "SET_VALIDATION_ERRORS",
-                  validationErrors: validationErrors,
+                  newScreenValidationErrors,
+                  pendingScreenValidationErrors,
                 });
               } else {
-                delete validationErrors[place.id];
+                delete newScreenValidationErrors[place.id];
+                delete pendingScreenValidationErrors[place.id];
                 dispatch({
                   type: "SET_VALIDATION_ERRORS",
-                  validationErrors: validationErrors,
+                  newScreenValidationErrors,
+                  pendingScreenValidationErrors,
                 });
               }
               setPlacesAndScreensToUpdate((placesAndScreens) => {

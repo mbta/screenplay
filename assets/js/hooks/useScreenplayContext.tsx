@@ -65,7 +65,8 @@ type PlacesListReducerAction =
 
 type ConfigValidationReducerAction = {
   type: "SET_VALIDATION_ERRORS";
-  validationErrors: ConfigValidationErrors;
+  newScreenValidationErrors: ConfigValidationErrors;
+  pendingScreenValidationErrors: ConfigValidationErrors;
 };
 
 interface FilterValue {
@@ -100,7 +101,8 @@ interface ScreenplayState {
 }
 
 interface ConfigValidationState {
-  validationErrors: ConfigValidationErrors;
+  newScreenValidationErrors: ConfigValidationErrors;
+  pendingScreenValidationErrors: ConfigValidationErrors;
 }
 
 const reducer = (state: ScreenplayState, action: ReducerAction) => {
@@ -204,7 +206,8 @@ const configValidationReducer = (
     case "SET_VALIDATION_ERRORS":
       return {
         ...state,
-        validationErrors: action.validationErrors,
+        newScreenValidationErrors: action.newScreenValidationErrors,
+        pendingScreenValidationErrors: action.pendingScreenValidationErrors,
       };
   }
 };
@@ -235,7 +238,8 @@ const initialAlertsListState: AlertsListState = {
 };
 
 const initialConfigValidationState: ConfigValidationState = {
-  validationErrors: {} as ConfigValidationErrors,
+  newScreenValidationErrors: {} as ConfigValidationErrors,
+  pendingScreenValidationErrors: {} as ConfigValidationErrors,
 };
 
 // Generate context
