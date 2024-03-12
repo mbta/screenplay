@@ -114,7 +114,7 @@ const PendingScreenDetail: ComponentType<Props> = ({
                   {liveScreenUrl}
                 </a>
               )
-              : <span className="url">{liveScreenUrl}</span>}
+              : <span className="url url--inactive">{liveScreenUrl}</span>}
             <div className="screen-url-row-button">
               <OpenInTabButton url={fullScreenUrl} />
             </div>
