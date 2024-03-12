@@ -24,10 +24,11 @@ config :screenplay,
 # Do not print debug messages in production
 config :logger, level: :info
 
-# Configure Ueberauth to use Cognito
+# Configure Ueberauth to use Keycloak
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: {Ueberauth.Strategy.Cognito, []}
+    keycloak:
+      {Ueberauth.Strategy.Oidcc, userinfo: true, uid_field: "email", scopes: ~w(openid email)}
   ]
 
 # ## SSL Support

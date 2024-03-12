@@ -44,10 +44,10 @@ config :ex_aws, json_codec: Jason
 
 config :screenplay, ScreenplayWeb.AuthManager, issuer: "screenplay"
 
-# Placeholder for Cognito authentication, defined for real in environment configs
+# Placeholder for Keycloak authentication, defined for real in environment configs
 config :ueberauth, Ueberauth,
   providers: [
-    cognito: nil
+    keycloak: nil
   ]
 
 # Import environment specific config. This must remain at the bottom
