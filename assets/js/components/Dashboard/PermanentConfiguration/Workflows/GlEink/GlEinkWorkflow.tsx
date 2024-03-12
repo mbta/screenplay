@@ -1,10 +1,9 @@
-import React, { ComponentType, useState } from "react";
-import { WorkflowProps } from "../../ConfigureScreensPage";
+import React, { ComponentType, useLayoutEffect, useState } from "react";
 import ConfigureScreensWorkflowPage, {
   PlaceIdsAndNewScreens,
 } from "./ConfigureScreensPage";
 import BottomActionBar from "../../BottomActionBar";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
 import { Alert } from "react-bootstrap";
@@ -14,18 +13,42 @@ import {
   useConfigValidationDispatchContext,
 } from "../../../../../hooks/useScreenplayContext";
 import { putPendingScreens } from "../../../../../utils/api";
+import { useScreenplayContext } from "../../../../../hooks/useScreenplayContext";
 
-const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
-  places,
-}: WorkflowProps) => {
+interface EditNavigationState {
+  placeID: string;
+}
+
+const GlEinkWorkflow: ComponentType = () => {
+  const { places } = useScreenplayContext();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [configVersion, setConfigVersion] = useState<string>("");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [configStep, setConfigStep] = useState<number>(0);
 
   const [placesAndScreensToUpdate, setPlacesAndScreensToUpdate] =
     useState<PlaceIdsAndNewScreens>({});
 
-  const navigate = useNavigate();
-  const [configStep, setConfigStep] = useState<number>(0);
+  const getPlacesList = () => {
+    return places.filter((place) =>
+      place.routes.some((route) => route.startsWith("Green"))
+    );
+  };
+
+  useLayoutEffect(() => {
+    if (location.state) {
+      const { placeID } = location.state as EditNavigationState;
+
+      setConfigStep(1);
+      setSelectedPlaces(new Set([placeID]));
+      setIsEditing(true);
+
+      window.history.replaceState({}, "");
+    }
+  }, [location]);
 
   const [showValidationAlert, setShowValidationAlert] = useState(true);
   const { newScreenValidationErrors, pendingScreenValidationErrors } =
@@ -193,7 +216,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
       };
       layout = (
         <StationSelectPage
-          places={places}
+          places={getPlacesList()}
           selectedPlaces={selectedPlaces}
           setSelectedPlaces={setSelectedPlaces}
           setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
@@ -254,6 +277,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
             handleRemoveLocation={handleRemoveLocation}
             setConfigVersion={setConfigVersion}
+            isEditing={isEditing}
           />
           {validationErrorMessage !== "" && (
             <div className="config-validation-alert-container">
@@ -277,11 +301,11 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
   }
 
   return (
-    <div>
+    <>
       {layout}
       <div className="bottom-action-bar">
         <BottomActionBar
-          backButtonLabel={backButtonLabel}
+          backButtonLabel={isEditing ? null : backButtonLabel}
           forwardButtonLabel={forwardButtonLabel}
           cancelButtonLabel={cancelButtonLabel}
           onCancel={onCancel}
@@ -290,7 +314,7 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
           forwardButtonDisabled={forwardButtonDisabled}
         />
       </div>
-    </div>
+    </>
   );
 };
 

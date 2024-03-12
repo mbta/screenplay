@@ -59,6 +59,7 @@ interface ConfigureScreensWorkflowPageProps {
   >;
   handleRemoveLocation: (place: Place) => void;
   setConfigVersion: React.Dispatch<React.SetStateAction<string>>;
+  isEditing: boolean;
 }
 
 const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
@@ -67,6 +68,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
     setPlacesAndScreensToUpdate,
     handleRemoveLocation,
     setConfigVersion,
+    isEditing,
   }: ConfigureScreensWorkflowPageProps) => {
     const [existingScreens, setExistingScreens] =
       useState<PlaceIdsAndExistingScreens>({});
@@ -87,6 +89,9 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
         });
       }
     }, []);
+
+    const getTitle = () =>
+      isEditing ? "Edit Pending" : "Configure Green Line Stations";
 
     const initializeExistingScreenValidationErrors = (
       placesAndScreens: PlaceIdsAndExistingScreens
@@ -133,7 +138,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
     return (
       <Container className="workflow-container">
-        <div className="h3 text-white mb-5">Configure Green Line Stations</div>
+        <div className="h3 text-white mb-5">{getTitle()}</div>
         {layout}
       </Container>
     );
