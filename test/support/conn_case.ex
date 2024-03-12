@@ -28,6 +28,8 @@ defmodule ScreenplayWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint ScreenplayWeb.Endpoint
+
+      use ScreenplayWeb, :verified_routes
     end
   end
 
@@ -41,7 +43,7 @@ defmodule ScreenplayWeb.ConnCase do
             Phoenix.ConnTest.build_conn()
             |> Plug.Test.init_test_session(%{})
             |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
-              "groups" => ["screenplay-emergency-admin"]
+              "roles" => ["screenplay-emergency-admin"]
             })
             |> Plug.Conn.put_session(:username, user)
 
@@ -53,7 +55,7 @@ defmodule ScreenplayWeb.ConnCase do
           conn =
             Phoenix.ConnTest.build_conn()
             |> Plug.Test.init_test_session(%{})
-            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{groups: []})
+            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{roles: []})
             |> Plug.Conn.put_session(:username, user)
 
           {conn, user}

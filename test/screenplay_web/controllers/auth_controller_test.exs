@@ -8,31 +8,40 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
       current_time = System.system_time(:second)
 
       auth = %Ueberauth.Auth{
+        provider: :keycloak,
         uid: "foo@mbta.com",
         credentials: %Ueberauth.Auth.Credentials{
           expires_at: current_time + 1_000,
-          other: %{groups: ["test1"]}
+          refresh_token: "test_refresh_token"
+        },
+        info: %{email: "foo@mbta.com", name: "Foo"},
+        extra: %Ueberauth.Auth.Extra{
+          raw_info: %UeberauthOidcc.RawInfo{
+            userinfo: %{
+              "resource_access" => %{
+                "test-client" => %{"roles" => ["test1"]}
+              }
+            }
+          }
         }
       }
 
       conn =
         conn
-        |> init_test_session(foo: "bar")
+        |> init_test_session(%{})
         |> assign(:ueberauth_auth, auth)
         |> Plug.Conn.put_session(:previous_path, "/test")
-        |> get(Helpers.auth_path(conn, :callback, "cognito"))
+        |> get(~p"/auth/keycloak/callback")
 
-      response = html_response(conn, 302)
-
-      assert response =~ "/test"
-      assert Guardian.Plug.current_claims(conn)["groups"] == ["test1"]
+      assert redirected_to(conn) == "/test"
+      assert Guardian.Plug.current_claims(conn)["roles"] == ["test1"]
     end
 
     test "handles generic failure", %{conn: conn} do
       conn =
         conn
         |> assign(:ueberauth_failure, %Ueberauth.Failure{})
-        |> get(Helpers.auth_path(conn, :callback, "cognito"))
+        |> get(Helpers.auth_path(conn, :callback, "keycloak"))
 
       response = response(conn, 401)
 
@@ -42,36 +51,11 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
 
   describe "request" do
     test "redirects to auth callback", %{conn: conn} do
-      conn = get(conn, Helpers.auth_path(conn, :request, "cognito"))
+      conn = get(conn, Helpers.auth_path(conn, :request, "keycloak"))
 
       response = response(conn, 302)
 
-      assert response =~ Helpers.auth_path(conn, :callback, "cognito")
+      assert response =~ Helpers.auth_path(conn, :callback, "keycloak")
     end
   end
-
-  # describe "logout" do
-  #   @tag :authenticated_admin
-  #   test "logs user out & redirects to dashboard requiring login", %{conn: conn} do
-  #     domain = "test_auth_domain"
-  #     client_id = "test_client_id"
-
-  #     reassign_env(:ueberauth, Ueberauth.Strategy.Cognito,
-  #       auth_domain: domain,
-  #       client_id: client_id
-  #     )
-
-  #     conn =
-  #       conn
-  #       |> put_session(:user_id, "00001")
-  #       |> get(Helpers.auth_path(conn, :logout, "cognito"))
-
-  #     response = response(conn, 302)
-  #     assert response =~ "/dashboard"
-
-  #     assert is_nil(Guardian.Plug.current_claims(conn))
-
-  #     assert is_nil(get_session(conn, :user_id))
-  #   end
-  # end
 end
