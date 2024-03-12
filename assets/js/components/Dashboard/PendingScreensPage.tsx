@@ -1,46 +1,52 @@
-import React, { ComponentType, useEffect, useState } from "react";
+import React, { ComponentType, useEffect, useMemo, useState } from "react";
 import {
-  ExistingScreens,
+  PendingAndLiveScreens,
   fetchExistingScreensAtPlacesWithPendingScreens,
 } from "../../utils/api";
 import { Accordion } from "react-bootstrap";
 import PendingScreensPlaceRowAccordion from "./PendingScreensPlaceRowAccordion";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import { useScreenplayContext } from "../../hooks/useScreenplayContext";
+import format from "date-fns/format";
+import { Place } from "../../models/place";
 
 const PendingScreensPage: ComponentType = () => {
   const { places } = useScreenplayContext();
-  const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
+  const [existingScreens, setExistingScreens] = useState<PendingAndLiveScreens>({});
+  const [versionID, setVersionID] = useState<string | null>(null);
+  const [lastModified, setLastModified] = useState<Date | null>(null);
+
+  const placesByID: Record<string, Place> = useMemo(
+    () => places.reduce((acc, place) => ({ ...acc, [place.id]: place }), {}),
+    [places]
+  );
 
   useEffect(() => {
-    // TODO: This gets ALL existing screens at any place that has at least one pending screen.
-    // This fn specifically should be future-proof, but surrounding code that can only handle GL e-ink screens
-    // might break if this starts returning data for other screen types.
-    fetchExistingScreensAtPlacesWithPendingScreens().then(setExistingScreens);
+    fetchExistingScreensAtPlacesWithPendingScreens()
+      .then(({ places_and_screens, version_id, last_modified_ms }) => {
+        setExistingScreens(places_and_screens);
+        setVersionID(version_id);
+        if (last_modified_ms !== null) {
+          setLastModified(new Date(last_modified_ms));
+        }
+      });
   }, []);
-
-  const getAppIdFromScreenConfig = (pendingScreens: {
-    [screen_id: string]: ScreenConfiguration;
-  }) => Object.entries(pendingScreens).map(([_, config]) => config.app_id)[0];
 
   return (
     <div className="pending-screens-page">
       <div className="page-content__header">Pending</div>
-      <div className="page-content__body">
+      <div className="page-content__body" style={{ color: "white" }}>
+        {lastModified && <div className="last-modified">Updated {format(lastModified, "MMMM d, y")}</div>}
         <Accordion flush alwaysOpen>
           {Object.entries(existingScreens).map(
-            ([
-              placeID,
-              { live_screens: liveScreens, pending_screens: pendingScreens },
-            ]) => {
-              const appID = getAppIdFromScreenConfig(pendingScreens);
-              const place = places.find((place) => place.id === placeID);
+            ([placeAndAppGroupID, { live_screens, pending_screens, place_id, app_id }]) => {
+              const place = placesByID[place_id];
               return place ? (
                 <PendingScreensPlaceRowAccordion
-                  key={`${placeID}.${appID}`}
+                  key={placeAndAppGroupID}
                   place={place}
-                  appID={appID}
-                  screens={mergeLiveAndPendingByID(liveScreens, pendingScreens)}
+                  appID={app_id}
+                  screens={mergeLiveAndPendingByID(live_screens, pending_screens)}
                 />
               ) : null;
             }
@@ -52,28 +58,18 @@ const PendingScreensPage: ComponentType = () => {
 };
 
 const mergeLiveAndPendingByID = (
-  liveScreens: ExistingScreens[string]["live_screens"],
-  pendingScreens: ExistingScreens[string]["pending_screens"]
+  liveScreens: PendingAndLiveScreens[string]["live_screens"],
+  pendingScreens: PendingAndLiveScreens[string]["pending_screens"]
 ) =>
-  Object.entries(liveScreens ?? {})
-    .map(([screenID, config]) => ({ isLive: true, screenID, config }))
-    .concat(
-      Object.entries(pendingScreens).map(([screenID, config]) => ({
-        isLive: false,
-        screenID,
-        config,
-      }))
-    )
-    .sort(({ screenID: id1 }, { screenID: id2 }) => {
-      switch (true) {
-        case id1 < id2:
-          return -1;
-        case id1 === id2:
-          return 0;
-        case id1 > id2:
-        default:
-          return 1;
-      }
-    });
+  [
+    ...Object.entries(liveScreens ?? {}).map(addIsLive(true)),
+    ...Object.entries(pendingScreens).map(addIsLive(false))
+  ].sort(({ screenID: id1 }, { screenID: id2 }) => {
+    if (id1 < id2) return -1;
+    if (id1 === id2) return 0;
+    return 1;
+  });
+
+const addIsLive = (isLive: boolean) => ([screenID, config]: [string, ScreenConfiguration]) => ({ isLive, screenID, config });
 
 export default PendingScreensPage;

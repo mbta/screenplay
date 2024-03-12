@@ -2,31 +2,88 @@
   background-color: #0f1417;
   border-radius: 8px;
   margin: 0px 16px 16px;
-  padding: 16px 0px 16px 16px;
+  padding: 0px 0px 16px 16px;
   color: white;
 
   .row {
     width: 100%;
-    height: 56px;
+    min-height: 56px;
     align-items: center;
 
-    &.screen-url {
+    .location-description {
+      height: 72px;
+      line-height: 72px;
+    }
+
+    .live-icon {
+      // It refused to vertically align with the text.
+      transform: translateY(-2px);
+    }
+
+    .pending-or-live {
+      display: inline-block;
+      margin-left: 8px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .pending-url-advisory {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 21px;
+      margin-top: -8px;
+      margin-bottom: 17px;
+    }
+
+    .screen-url {
+      display: inline-block;
+      line-height: 69px;
       //   gap: 16px;
+    }
+
+    .screen-id {
+      line-height: 56px;
+    }
+
+    .screen-url-row-button {
+      display: inline-block;
+      // Buttons are spaced only 8px apart, so we cancel out one of the 8px margins
+      margin-right: -8px;
+    }
+
+    .hide-on-places-page {
+      display: inline-block;
+      // Bootstrap checkbox has 16px right margin, we want 8.
+      margin-left: -8px;
+      height: 73px;
+      line-height: 73px;
     }
 
     &.screen-simulation {
       height: fit-content;
     }
+
     &:not(:first-child) {
       &::before {
-        // content: "";
-        // width: 100%;
-        // height: 1px;
-        // border-top: 1px solid rgba(255, 255, 255, 0.15);
+        content: "";
+        width: 100%;
+        height: 1px;
+        background-color: #41474d;
+      }
+    }
+
+    &:last-child {
+      &::before {
+        content: "";
+        width: 100%;
+        height: 2px;
+        background-color: #41474d;
       }
     }
 
     .url {
+      margin-left: 16px;
+      margin-right: 4px;
       color: white;
     }
   }

@@ -1,4 +1,5 @@
 import React, { ComponentType, useContext, useState } from "react";
+import { SCREEN_TYPES } from "../../constants/constants";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import PendingScreenDetail from "./PendingScreenDetail";
 import {
@@ -28,6 +29,25 @@ interface LiveOrPendingScreen {
   config: ScreenConfiguration;
 }
 
+const formatAppID = (appID: string) => {
+  switch (appID) {
+    // A few labels are presented differently on this page,
+    // to avoid a weird double-":" situation.
+    case "gl_eink":
+    case "gl_eink_v2":
+      return "Green Line E-Ink";
+
+    case "bus_eink":
+    case "bus_eink_v2":
+      return "Bus E-Ink";
+
+    // All other IDs are formatted as usual.
+    default:
+      const match = SCREEN_TYPES.find(({ ids }) => ids.includes(appID));
+      return match ? match.label : "";
+  }
+};
+
 const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   place,
   appID,
@@ -39,15 +59,6 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   const { activeEventKey } = useContext(AccordionContext);
   const isOpen = activeEventKey?.includes(place.id);
   const onRowClick = useAccordionButton(place.id);
-  const formatAppID = () => {
-    switch (appID) {
-      case "gl_eink_v2":
-        return "GL E-Ink";
-
-      default:
-        return "";
-    }
-  };
 
   const hideCheckboxOnClick = (screenID: string) => {
     if (hiddenFromScreenplayIDs.includes(screenID)) {
@@ -83,7 +94,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
               <div className="place-id">Station ID: {place.id}</div>
             </Col>
             <Col className="d-flex justify-content-center">
-              Type: {formatAppID()}
+              Type: {formatAppID(appID)}
             </Col>
             <Col className="buttons d-flex justify-content-end">
               <Button className="edit-button">

@@ -6,9 +6,10 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
 
   alias ScreensConfig.PendingConfig
 
-  @type fetch_result :: {:ok, String.t(), String.t()} | :unchanged | :error
+  @type fetch_result ::
+          {:ok, json :: String.t(), version_id :: String.t(), last_modified :: DateTime.t() | nil}
+          | :error
 
-  @callback fetch_config(String.t()) :: fetch_result
   @callback fetch_config() :: fetch_result
   @callback put_config(PendingConfig.t()) :: :ok | :error
   @callback commit() :: :ok
@@ -19,7 +20,6 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
 
   # These delegates let other modules call functions from the appropriate Fetch module
   # without having to know which it is.
-  defdelegate fetch_config(config_version), to: @config_fetcher
   defdelegate fetch_config(), to: @config_fetcher
   defdelegate put_config(config), to: @config_fetcher
   defdelegate commit(), to: @config_fetcher

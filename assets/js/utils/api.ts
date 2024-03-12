@@ -41,7 +41,20 @@ export const fetchExistingScreens = async (
   return await response.json();
 };
 
-export const fetchExistingScreensAtPlacesWithPendingScreens = async (): Promise<ExistingScreens> => {
+export interface PendingAndLiveScreensResponse {
+  places_and_screens: PendingAndLiveScreens;
+  version_id: string;
+  last_modified_ms: number | null;
+}
+
+// Very similar to the `ExistingScreens` interface, except:
+// 1. key is a string that combines place and app ID, and
+// 2. place and app IDs are added to each `ExistingScreensAtPlace` object, so that we don't have to parse them from the combined string.
+export interface PendingAndLiveScreens {
+  [placeAndAppID: string]: ExistingScreensAtPlace & { place_id: string, app_id: string }
+}
+
+export const fetchExistingScreensAtPlacesWithPendingScreens = async (): Promise<PendingAndLiveScreensResponse> => {
   const response = await fetch("/config/existing-screens-at-places-with-pending-screens");
   return await response.json();
 };

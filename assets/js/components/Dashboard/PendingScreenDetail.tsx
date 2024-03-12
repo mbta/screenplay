@@ -8,7 +8,8 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../util";
 import OpenInTabButton from "./OpenInTabButton";
 import CopyLinkButton from "./CopyLinkButton";
-import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
+import { DirectionID, useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
+import { LightningChargeFill, ClockFill } from "react-bootstrap-icons";
 
 interface Props {
   screenID: string;
@@ -26,6 +27,27 @@ interface Props {
   onClickHideOnPlacesPage: () => void;
 }
 
+const formatDirectionID = (directionID?: DirectionID) => {
+  switch (directionID) {
+    case 0:
+      return "Westbound";
+    case 1:
+      return "Eastbound";
+    default:
+      return "";
+  }
+};
+
+const getScreenLocationDescription = (config: ScreenConfiguration) => {
+  const direction = formatDirectionID(config.app_params.header.direction_id);
+  const platformLocation = capitalize(config.app_params.platform_location ?? "");
+
+  if (direction.length > 0 || platformLocation.length > 0) {
+    return `${direction} ${platformLocation}`;
+  }
+  return null;
+}
+
 const PendingScreenDetail: ComponentType<Props> = ({
   screenID,
   isLive,
@@ -38,17 +60,6 @@ const PendingScreenDetail: ComponentType<Props> = ({
     .querySelector("meta[name=screens-url]")
     ?.getAttribute("content");
 
-  const formatDirectionID = () => {
-    switch (config.app_params.header.direction_id) {
-      case 0:
-        return "Westbound";
-      case 1:
-        return "Eastbound";
-      default:
-        return "";
-    }
-  };
-
   const queueToastExpiration = () => {
     setTimeout(
       () =>
@@ -60,47 +71,60 @@ const PendingScreenDetail: ComponentType<Props> = ({
     );
   };
 
-  const simulationUrl = isLive
-    ? `${screensUrl}/v2/screen/${screenID}/simulation`
-    : `${screensUrl}/v2/screen/pending/${screenID}/simulation`;
+  const locationDescription = getScreenLocationDescription(config);
+
+  const fullScreenUrl = isLive
+    ? `${screensUrl}/v2/screen/${screenID}`
+    : `${screensUrl}/v2/screen/pending/${screenID}`;
+
+  // If screen is already live, this matches `fullScreenUrl`.
+  // If screen is pending, this is its future (but not yet working) live url.
+  const liveScreenUrl = `${screensUrl}/v2/screen/${screenID}`;
 
   return (
     <div
       className="pending-screen-detail"
       onClick={(e: SyntheticEvent) => e.stopPropagation()}
     >
-      <Container className="h5">
+      <Container fluid className="h5">
         <Row>
-          <Col className="d-flex justify-content-start">
-            {formatDirectionID()}{" "}
-            {capitalize(config.app_params.platform_location ?? "")}
-          </Col>
-          <Col className="d-flex justify-content-end">
-            {isLive ? "Live · Read-only" : "Pending"}
+          {locationDescription && (
+            <Col className="d-flex justify-content-start location-description">
+              {locationDescription}
+            </Col>
+          )}
+          <Col className="d-flex justify-content-end location-description">
+            {isLive
+              ? <><div className="live-icon"><LightningChargeFill size={16} color="#eff193" /></div><div className="pending-or-live">Live · Read-only</div></>
+              : <><div className="live-icon"><ClockFill size={16} /></div><div className="pending-or-live">Pending</div></>
+            }
           </Col>
         </Row>
         <Row>
           <Col>
-            Screen ID: <span className="body--regular">{screenID}</span>
+            Screen ID: <span className="screen-id body--regular">{screenID}</span>
           </Col>
         </Row>
-        <Row className="screen-url">
+        <Row>
           <Col lg="auto" className="pe-3">
-            Screen URL:
-          </Col>
-          <Col lg="auto" className="p-0 pe-3">
-            <a className="url body--regular" href={simulationUrl}>
-              https://.../{screenID}
-            </a>
-          </Col>
-          <Col lg="1" className="p-0">
-            <OpenInTabButton url={simulationUrl} />
-          </Col>
-          <Col lg="auto" className="p-0">
-            <CopyLinkButton
-              url={simulationUrl}
-              queueToastExpiration={queueToastExpiration}
-            />
+            <div className="screen-url">Live screen URL:</div>
+            {isLive
+              ? (
+                <a className="url body--regular" href={liveScreenUrl}>
+                  {liveScreenUrl}
+                </a>
+              )
+              : <span className="url">{liveScreenUrl}</span>}
+            <div className="screen-url-row-button">
+              <OpenInTabButton url={fullScreenUrl} />
+            </div>
+            <div className="screen-url-row-button">
+              <CopyLinkButton
+                url={liveScreenUrl}
+                queueToastExpiration={queueToastExpiration}
+              />
+            </div>
+            {!isLive && <div className="pending-url-advisory">Screen will be available at this URL once published</div>}
           </Col>
         </Row>
         {!isLive && (
@@ -110,14 +134,16 @@ const PendingScreenDetail: ComponentType<Props> = ({
                 checked={isHiddenOnPlacesPage}
                 readOnly
                 onClick={onClickHideOnPlacesPage}
+                inline
               />
+              <div className="hide-on-places-page" onClick={onClickHideOnPlacesPage}>Hide on Places page</div>
             </Col>
-            <Col>Hide on Live Screens</Col>
           </Row>
         )}
         <Row className="screen-simulation">
           <ScreenSimulation
             screen={{ id: screenID, type: config.app_id, disabled: false }}
+            isPending={!isLive}
           />
         </Row>
       </Container>

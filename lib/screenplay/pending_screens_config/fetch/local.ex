@@ -8,15 +8,12 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   @behaviour Screenplay.PendingScreensConfig.Fetch
 
   @impl true
-  def fetch_config(current_version \\ nil) do
+  def fetch_config do
     path = local_config_path()
 
-    with {:ok, last_modified} <- get_last_modified(path) do
-      if last_modified == current_version do
-        :unchanged
-      else
-        do_fetch(path, last_modified)
-      end
+    with {:ok, last_modified} <- get_last_modified(path),
+         {:ok, contents} <- do_fetch(path) do
+      {:ok, contents, DateTime.to_iso8601(last_modified), last_modified}
     end
   end
 
@@ -54,18 +51,17 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   end
 
   # sobelow_skip ["Traversal.FileModule"]
-  defp do_fetch(path, last_modified) do
+  defp do_fetch(path) do
     case File.read(path) do
-      {:ok, contents} -> {:ok, contents, last_modified}
+      {:ok, contents} -> {:ok, contents}
       _ -> :error
     end
   end
 
   defp get_last_modified(path) do
-    case File.stat(path) do
+    case File.stat(path, time: :posix) do
       {:ok, %File.Stat{mtime: mtime}} ->
-        mtime_as_string = mtime |> NaiveDateTime.from_erl!() |> NaiveDateTime.to_string()
-        {:ok, mtime_as_string}
+        {:ok, DateTime.from_unix!(mtime)}
 
       {:error, _} ->
         :error

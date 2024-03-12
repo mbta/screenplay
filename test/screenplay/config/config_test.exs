@@ -10,7 +10,7 @@ defmodule Screenplay.Config.ConfigTest do
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 
   def fetch_current_config_version do
-    {:ok, _config, version} = Local.fetch_config()
+    {:ok, _config, version, _last_modified} = Local.fetch_config()
     version
   end
 
@@ -135,7 +135,7 @@ defmodule Screenplay.Config.ConfigTest do
         |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
-      {:ok, config, version} = Local.fetch_config()
+      {:ok, config, version, _last_modified} = Local.fetch_config()
       assert expected_file_contents == config
 
       places_and_screens = %{
@@ -222,7 +222,7 @@ defmodule Screenplay.Config.ConfigTest do
         |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
-      {:ok, config, _} = Local.fetch_config()
+      {:ok, config, _version_id, _last_modified} = Local.fetch_config()
       assert expected_file_contents == config
     end
 
