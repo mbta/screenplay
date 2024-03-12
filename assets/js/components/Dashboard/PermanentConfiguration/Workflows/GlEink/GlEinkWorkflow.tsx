@@ -261,8 +261,8 @@ const GlEinkWorkflow: ComponentType<WorkflowProps> = ({
         <>
           <Modal
             show={showErrorModal}
-            backdrop="static"
             className="error-modal"
+            onHide={() => setShowErrorModal(false)}
           >
             <Modal.Header closeButton closeVariant="white">
               <Modal.Title>
