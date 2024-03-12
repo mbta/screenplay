@@ -6,7 +6,7 @@ import BottomActionBar from "../../BottomActionBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
 import { Place } from "../../../../../models/place";
-import { Alert } from "react-bootstrap";
+import { Alert, Button, Modal } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
   useConfigValidationContext,
@@ -56,6 +56,7 @@ const GlEinkWorkflow: ComponentType = () => {
   const dispatch = useConfigValidationDispatchContext();
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);
@@ -167,33 +168,44 @@ const GlEinkWorkflow: ComponentType = () => {
     return fieldsWithErrors;
   };
 
-  const handleGlEinkSubmitResponse = (
+  const handleGlEinkSubmitResponse = async (
     response: Response,
     fieldsWithErrors: Set<string>
   ) => {
     if (response.ok) {
       navigate("/pending");
+    } else if (response.status === 400) {
+      const data = await response.json();
+      if (data.duplicate_screen_ids) {
+        handleDuplicateIdsResponse(data.duplicate_screen_ids, fieldsWithErrors);
+      } else {
+        handleVersionMismatchResponse();
+      }
     } else {
-      return response
-        .json()
-        .then((data) => {
-          validateDuplicateScreenIds(
-            placesAndScreensToUpdate,
-            data.duplicate_screen_ids
-          );
-          fieldsWithErrors.add("screen_id");
-          setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
-          setShowValidationAlert(true);
-          dispatch({
-            type: "SET_VALIDATION_ERRORS",
-            newScreenValidationErrors,
-            pendingScreenValidationErrors,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      setValidationErrorMessage(
+        "Something went wrong. Please select 'Review Screens' again."
+      );
+      setShowValidationAlert(true);
     }
+  };
+
+  const handleDuplicateIdsResponse = (
+    duplicate_screen_ids: string[],
+    fieldsWithErrors: Set<string>
+  ) => {
+    validateDuplicateScreenIds(placesAndScreensToUpdate, duplicate_screen_ids);
+    fieldsWithErrors.add("screen_id");
+    setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
+    setShowValidationAlert(true);
+    dispatch({
+      type: "SET_VALIDATION_ERRORS",
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
+    });
+  };
+
+  const handleVersionMismatchResponse = () => {
+    setShowErrorModal(true);
   };
 
   let backButtonLabel;
@@ -270,6 +282,35 @@ const GlEinkWorkflow: ComponentType = () => {
       };
       layout = (
         <>
+          <Modal
+            show={showErrorModal}
+            className="error-modal"
+            onHide={() => setShowErrorModal(false)}
+          >
+            <Modal.Header closeButton closeVariant="white">
+              <Modal.Title>
+                Someone else is configuring these screens
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              In order not to overwrite each others work, please refresh your
+              browser and fill-out the form again.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onClick={() => setShowErrorModal(false)}
+                className="error-modal__cancel-button"
+              >
+                Cancel
+              </Button>
+              <Button
+                className="error-modal__refresh-button"
+                onClick={() => window.location.reload()}
+              >
+                Refresh now
+              </Button>
+            </Modal.Footer>
+          </Modal>
           <ConfigureScreensWorkflowPage
             selectedPlaces={places.filter((place) =>
               selectedPlaces.has(place.id)
