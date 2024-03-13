@@ -61,7 +61,7 @@ defmodule ScreenplayWeb.Router do
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
     get("/pending", ConfigController, :index)
-    get("/configure-screens", ConfigController, :index)
+    get("/configure-screens/*app_id", ConfigController, :index)
     get("/unauthorized", UnauthorizedController, :index)
   end
 
@@ -77,7 +77,6 @@ defmodule ScreenplayWeb.Router do
 
     get("/:provider", AuthController, :request)
     get("/:provider/callback", AuthController, :callback)
-    get("/:provider/logout", AuthController, :logout)
   end
 
   scope "/api", ScreenplayWeb.OutfrontTakeoverTool do

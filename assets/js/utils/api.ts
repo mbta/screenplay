@@ -33,7 +33,7 @@ export interface ExistingScreensAtPlace {
 export const fetchExistingScreens = async (
   appId: string,
   placeIds: string[]
-): Promise<{ places_and_screens: ExistingScreens, etag: string }> => {
+): Promise<{ places_and_screens: ExistingScreens, version_id: string }> => {
   const response = await fetch(
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
   );

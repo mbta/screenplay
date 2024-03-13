@@ -1,10 +1,9 @@
 import React, { ComponentType } from "react";
 import { Navbar, Container, Button } from "react-bootstrap";
 import { ArrowLeft, ArrowRight } from "react-bootstrap-icons";
-import "../../../../css/screenplay.scss";
 
 interface BottomActionBarProps {
-  backButtonLabel?: string;
+  backButtonLabel?: string | null;
   forwardButtonLabel?: string;
   cancelButtonLabel?: string;
   onBack?: () => void;

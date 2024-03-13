@@ -28,13 +28,19 @@ defmodule ScreenplayWeb.ConfigController do
         send_resp(conn, 200, "OK")
 
       {:error, :version_mismatch} ->
-        send_resp(conn, 400, "Config version mismatch")
+        json(%{conn | status: 400}, %{error: :version_mismatch})
 
       {:error, :config_not_fetched} ->
         send_resp(conn, 500, "S3 Operation Failed: Get")
 
       {:error, :config_not_written} ->
         send_resp(conn, 500, "S3 Operation Failed: Put")
+
+      {:error, {:duplicate_screen_ids, duplicate_screen_ids}} ->
+        json(%{conn | status: 400}, %{
+          duplicate_screen_ids: duplicate_screen_ids,
+          error: :duplicate_screen_ids
+        })
     end
   end
 
