@@ -111,7 +111,7 @@ defmodule ScreenplayWeb.ConfigController do
 
   @spec get_existing_screens_at_places_with_pending_screens() :: %{
           places_and_screens: %{
-            (place_id :: String.t()) => %{
+            (place_id_app_id_pair :: String.t()) => %{
               place_id: String.t(),
               app_id: atom(),
               live_screens: %{ScreensConfig.Config.screen_id() => Screen.t()},
@@ -179,17 +179,30 @@ defmodule ScreenplayWeb.ConfigController do
   def publish(conn, %{
         "place_id" => place_id,
         "app_id" => app_id,
-        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids
+        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids,
+        "version_id" => version_id
       }) do
     app_id_atom = String.to_existing_atom(app_id)
 
-    case PermanentConfig.publish_pending_screens(
-           place_id,
-           app_id_atom,
-           hidden_from_screenplay_ids
-         ) do
-      :ok -> send_resp(conn, 200, "OK")
-      _ -> send_resp(conn, 500, "Could not publish screens")
+    with {:ok, _, ^version_id, _} <- PendingScreensConfig.fetch_config() do
+      case PermanentConfig.publish_pending_screens(
+             place_id,
+             app_id_atom,
+             hidden_from_screenplay_ids
+           ) do
+        :ok -> send_resp(conn, 200, "OK")
+        _ -> send_resp(conn, 500, "Could not publish screens. Please contact an engineer.")
+      end
+    else
+      {:ok, _, _different_version_id, _} ->
+        send_resp(
+          conn,
+          500,
+          "Page is out of date. Please reload and try again."
+        )
+
+      :error ->
+        send_resp(conn, 500, "Could not fetch configuration. Please contact an engineer.")
     end
   end
 

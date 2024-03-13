@@ -1,12 +1,13 @@
-import React, { ComponentType, useEffect, useMemo, useState } from "react";
+import React, { ComponentType, useCallback, useEffect, useMemo, useState } from "react";
 import {
   PendingAndLiveScreens,
   fetchExistingScreensAtPlacesWithPendingScreens,
+  publishScreensForPlace,
 } from "../../utils/api";
 import { Accordion } from "react-bootstrap";
 import PendingScreensPlaceRowAccordion from "./PendingScreensPlaceRowAccordion";
 import { ScreenConfiguration } from "../../models/screen_configuration";
-import { useScreenplayContext } from "../../hooks/useScreenplayContext";
+import { useScreenplayContext, useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
 import format from "date-fns/format";
 import { Place } from "../../models/place";
 
@@ -21,7 +22,7 @@ const PendingScreensPage: ComponentType = () => {
     [places]
   );
 
-  useEffect(() => {
+  const fetchData = useCallback(() => {
     fetchExistingScreensAtPlacesWithPendingScreens()
       .then(({ places_and_screens, version_id, last_modified_ms }) => {
         setExistingScreens(places_and_screens);
@@ -30,7 +31,59 @@ const PendingScreensPage: ComponentType = () => {
           setLastModified(new Date(last_modified_ms));
         }
       });
-  }, []);
+  }, [setExistingScreens, setVersionID, setLastModified]);
+
+  const dispatch = useScreenplayDispatchContext();
+
+  const publish = useCallback(async (placeID, appID, hiddenFromScreenplayIDs) => {
+    let success = false;
+    try {
+      const { status, message } = await publishScreensForPlace(placeID, appID, versionID!, hiddenFromScreenplayIDs);
+
+      const defaultErrorMessage = "Server error. Please contact an engineer.";
+      switch (status) {
+        case 200:
+          dispatch({
+            type: "SHOW_PUBLISH_OUTCOME",
+            isSuccessful: true,
+            message: "Screens published to places"
+          });
+          success = true;
+          break;
+        case 500:
+          dispatch({
+            type: "SHOW_PUBLISH_OUTCOME",
+            isSuccessful: false,
+            message: message || defaultErrorMessage
+          });
+          break;
+        default:
+          dispatch({
+            type: "SHOW_PUBLISH_OUTCOME",
+            isSuccessful: false,
+            message: defaultErrorMessage
+          });
+          console.error(`Bad publish response status: ${status}`);
+      }
+    } catch (e) {
+      dispatch({
+        type: "SHOW_PUBLISH_OUTCOME",
+        isSuccessful: false,
+        message: "Unknown error. Please contact an engineer."
+      })
+      console.error(e);
+    }
+
+    setTimeout(() => {
+      dispatch({ type: "HIDE_PUBLISH_OUTCOME" });
+    }, 5000);
+
+    if (success) {
+      setTimeout(fetchData, 6000);
+    }
+  }, [versionID, dispatch, fetchData]);
+
+  useEffect(fetchData, []);
 
   return (
     <div className="pending-screens-page">
@@ -46,6 +99,8 @@ const PendingScreensPage: ComponentType = () => {
                   key={placeAndAppGroupID}
                   place={place}
                   appID={app_id}
+                  placeID={place_id}
+                  publishCallback={publish}
                   screens={mergeLiveAndPendingByID(live_screens, pending_screens)}
                 />
               ) : null;

@@ -173,7 +173,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_pending_config do
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, version_id} -> {config, version_id}
+      {:ok, config, version_id, _last_modified} -> {config, version_id}
       error -> error
     end
   end

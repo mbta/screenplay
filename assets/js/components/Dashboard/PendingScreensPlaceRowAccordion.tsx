@@ -16,11 +16,14 @@ import { AccordionToggle } from "./PlaceRow";
 import { capitalizeTerminalStops } from "../../util";
 import { PencilSquare } from "react-bootstrap-icons";
 import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   place: Place;
   appID: string;
+  placeID: string;
   screens: LiveOrPendingScreen[];
+  publishCallback: (placeID: string, appID: string, hiddenFromScreenplayIDs: string[]) => void
 }
 
 interface LiveOrPendingScreen {
@@ -48,10 +51,20 @@ const formatAppID = (appID: string) => {
   }
 };
 
+// When included in the /configure-screens/* route, app IDs are changed as follows:
+// 1. Remove `_v2` suffix
+// 2. Convert from snake_case to kebab-case
+const appIDAsRoutePart = (appID: string) =>
+  appID
+    .replace("_v2", "")
+    .replace("_", "-");
+
 const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   place,
   appID,
+  placeID,
   screens,
+  publishCallback
 }: Props) => {
   const [hiddenFromScreenplayIDs, setHiddenFromScreenplayIDs] = useState<
     string[]
@@ -59,8 +72,9 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   const { activeEventKey } = useContext(AccordionContext);
   const isOpen = activeEventKey?.includes(place.id);
   const onRowClick = useAccordionButton(place.id);
+  const navigate = useNavigate();
 
-  const hideCheckboxOnClick = (screenID: string) => {
+  const handleClickHideCheckbox = (screenID: string) => {
     if (hiddenFromScreenplayIDs.includes(screenID)) {
       setHiddenFromScreenplayIDs((prevState) =>
         prevState.filter((id) => id !== screenID)
@@ -70,8 +84,16 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
     }
   };
 
-  // TODO: Designs show a "Type" field in accordion header, e.g. "Type: GL E-Ink".
-  // This doesn't make sense for Places with multiple screen types, check w/ Mary what to do about it.
+  const handleClickEdit = () => {
+    navigate(`/configure-screens/${appIDAsRoutePart(appID)}`, {
+      state: { place_id: placeID },
+    });
+  };
+
+  const handleClickPublish = () => {
+    publishCallback(placeID, appID, hiddenFromScreenplayIDs);
+  };
+
   return (
     <div
       className={classNames(
@@ -97,10 +119,12 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
               Type: {formatAppID(appID)}
             </Col>
             <Col className="buttons d-flex justify-content-end">
-              <Button className="edit-button">
+              <Button className="edit-button" onClick={handleClickEdit}>
                 <PencilSquare /> Edit Pending
               </Button>
-              <Button className="publish-button">Publish Updates</Button>
+              <Button className="publish-button" onClick={handleClickPublish}>
+                Publish Updates
+              </Button>
             </Col>
           </Row>
         </Container>
@@ -115,7 +139,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
                   screen.screenID
                 )}
                 onClickHideOnPlacesPage={() =>
-                  hideCheckboxOnClick(screen.screenID)
+                  handleClickHideCheckbox(screen.screenID)
                 }
                 key={screen.screenID}
               />

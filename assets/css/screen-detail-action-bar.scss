@@ -116,3 +116,36 @@
     margin-right: 6px;
   }
 }
+
+.publish-outcome-toast {
+  width: fit-content;
+  height: 56px;
+  position: absolute;
+  padding-top: 4px;
+  padding-left: 4px;
+  margin-top: 36px;
+  font-size: 16px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100000;
+  border: none;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.36);
+
+  &--success {
+    background-color: #165c96;
+    color: white;
+  }
+
+  &--failure {
+    background-color: rgb(255, 193, 7);
+    color: rgb(33, 37, 41);
+  }
+
+  &__icon {
+    position: relative;
+    bottom: 2px;
+    font-size: 24px;
+    opacity: 60%;
+    margin-right: 6px;
+  }
+}

@@ -79,9 +79,13 @@ export const putPendingScreens = async (
   });
 };
 
-export const publishScreensForPlace = async (placeId: string) => {
-  const response = await fetch(`/config/publish/${placeId}`, {
+export const publishScreensForPlace = async (placeId: string, appId: string, versionId: string, hiddenFromScreenplayIds: string[]) => {
+  const response = await fetch(`/config/publish/${placeId}/${appId}`, {
     method: "POST",
+    body: JSON.stringify({
+      version_id: versionId,
+      hidden_from_screenplay_ids: hiddenFromScreenplayIds
+    }),
     headers: {
       "content-type": "application/json",
       "x-csrf-token":
@@ -92,5 +96,12 @@ export const publishScreensForPlace = async (placeId: string) => {
     credentials: "include",
   });
 
-  return response.statusText;
+  let message;
+  // Guard against unexpectedly long response bodies,
+  // e.g. when an exception is raised on the server
+  if (!response.headers.get("Content-Type")?.includes("text/html")) {
+    message = await response.text();
+  }
+
+  return { status: response.status, message };
 };
