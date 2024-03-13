@@ -38,6 +38,10 @@ const PendingScreensPage: ComponentType = () => {
   const publish = useCallback(async (placeID, appID, hiddenFromScreenplayIDs) => {
     let success = false;
     try {
+      // We know versionID is not null at this point because it's not possible for a "Publish" button
+      // to be rendered without the version ID also being set--both state values are set together in
+      // `fetchData`.
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const { status, message } = await publishScreensForPlace(placeID, appID, versionID!, hiddenFromScreenplayIDs);
 
       const defaultErrorMessage = "Server error. Please contact an engineer.";

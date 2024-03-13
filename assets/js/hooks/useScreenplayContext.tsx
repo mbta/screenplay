@@ -133,10 +133,9 @@ const reducer = (state: ScreenplayState, action: ReducerAction): ScreenplayState
         showLinkCopied: action.showLinkCopied,
       };
     case "SHOW_PUBLISH_OUTCOME":
-      const { type, ...args } = action;
       return {
         ...state,
-        publishOutcomeToast: { show: true, ...args }
+        publishOutcomeToast: { show: true, isSuccessful: action.isSuccessful, message: action.message }
       };
     case "HIDE_PUBLISH_OUTCOME":
       return {

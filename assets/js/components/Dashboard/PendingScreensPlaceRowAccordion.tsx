@@ -46,8 +46,7 @@ const formatAppID = (appID: string) => {
 
     // All other IDs are formatted as usual.
     default:
-      const match = SCREEN_TYPES.find(({ ids }) => ids.includes(appID));
-      return match ? match.label : "";
+      return SCREEN_TYPES.find(({ ids }) => ids.includes(appID))?.label ?? "";
   }
 };
 
