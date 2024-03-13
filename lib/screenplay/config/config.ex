@@ -181,7 +181,7 @@ defmodule Screenplay.Config.PermanentConfig do
   defp get_current_pending_config(version_id) do
     # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^version_id} ->
+      {:ok, config, ^version_id, _last_modified} ->
         {:ok, config}
 
       :error ->

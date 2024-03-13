@@ -7,7 +7,7 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
   alias ScreensConfig.PendingConfig
 
   @type fetch_result ::
-          {:ok, json :: String.t(), version_id :: String.t(), last_modified :: DateTime.t() | nil}
+          {:ok, json :: String.t(), version_id :: String.t(), last_modified :: DateTime.t()}
           | :error
 
   @callback fetch_config() :: fetch_result

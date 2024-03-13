@@ -118,7 +118,8 @@ defmodule ScreenplayWeb.ConfigController do
               pending_screens: %{ScreensConfig.Config.screen_id() => Screen.t()}
             }
           },
-          version_id: String.t()
+          version_id: String.t(),
+          last_modified_ms: integer
         }
   defp get_existing_screens_at_places_with_pending_screens do
     {pending_screens_config, version_id, last_modified} =
@@ -170,7 +171,7 @@ defmodule ScreenplayWeb.ConfigController do
     %{
       places_and_screens: existing,
       version_id: version_id,
-      last_modified_ms: last_modified && DateTime.to_unix(last_modified, :millisecond)
+      last_modified_ms: DateTime.to_unix(last_modified, :millisecond)
     }
   end
 
