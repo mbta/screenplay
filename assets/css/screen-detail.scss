@@ -21,9 +21,11 @@
   }
 
   &--paess-g {
-    background: linear-gradient(to bottom,
-        $mbta-green 40px,
-        $cool-gray-40 40px);
+    background: linear-gradient(
+      to bottom,
+      $mbta-green 40px,
+      $cool-gray-40 40px
+    );
   }
 
   &--paess-r {
@@ -39,9 +41,11 @@
   }
 
   &--paess-o {
-    background: linear-gradient(to bottom,
-        $mbta-orange 40px,
-        $cool-gray-40 40px);
+    background: linear-gradient(
+      to bottom,
+      $mbta-orange 40px,
+      $cool-gray-40 40px
+    );
   }
 
   &--paess-s {

@@ -29,7 +29,11 @@ import {
   ThreeDotsVertical,
   TrashFill,
 } from "react-bootstrap-icons";
-import { ExistingScreens, ExistingScreensAtPlace, fetchExistingScreens } from "../../../../../utils/api";
+import {
+  ExistingScreens,
+  ExistingScreensAtPlace,
+  fetchExistingScreens,
+} from "../../../../../utils/api";
 import {
   useConfigValidationContext,
   useConfigValidationDispatchContext,
@@ -344,7 +348,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               {
                 new_id: "EIG-",
                 app_params: { header: { route_id: place.routes[0] } },
-                app_id: "gl_eink_v2"
+                app_id: "gl_eink_v2",
               },
             ]);
 

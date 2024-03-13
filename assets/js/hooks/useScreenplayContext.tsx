@@ -21,31 +21,34 @@ interface Props {
 
 type ReducerAction =
   | {
-    type: "SET_PLACES";
-    places: Place[];
-  }
+      type: "SET_PLACES";
+      places: Place[];
+    }
   | {
-    type: "SET_ALERTS";
-    alerts: Alert[];
-    allAPIAlertIds: string[];
-    screensByAlertMap: ScreensByAlert;
-  }
+      type: "SET_ALERTS";
+      alerts: Alert[];
+      allAPIAlertIds: string[];
+      screensByAlertMap: ScreensByAlert;
+    }
   | {
-    type: "SET_SCREENS_BY_ALERT";
-    screensByAlertMap: ScreensByAlert;
-  }
+      type: "SET_SCREENS_BY_ALERT";
+      screensByAlertMap: ScreensByAlert;
+    }
   | {
-    type: "SET_BANNER_ALERT";
-    bannerAlert: BannerAlert | undefined;
-  }
+      type: "SET_BANNER_ALERT";
+      bannerAlert: BannerAlert | undefined;
+    }
   | {
-    type: "SHOW_LINK_COPIED";
-    showLinkCopied: boolean;
-  }
-  | { type: "SHOW_PUBLISH_OUTCOME"; } & Omit<Required<PublishOutcomeToastProps>, "show">
+      type: "SHOW_LINK_COPIED";
+      showLinkCopied: boolean;
+    }
+  | ({ type: "SHOW_PUBLISH_OUTCOME" } & Omit<
+      Required<PublishOutcomeToastProps>,
+      "show"
+    >)
   | {
-    type: "HIDE_PUBLISH_OUTCOME";
-  };
+      type: "HIDE_PUBLISH_OUTCOME";
+    };
 
 type AlertsListReducerAction = {
   type: "SET_MODE_LINE_FILTER" | "SET_SCREEN_TYPE_FILTER" | "SET_STATUS_FILTER";
@@ -55,16 +58,16 @@ type AlertsListReducerAction = {
 type PlacesListReducerAction =
   | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
   | {
-    type:
-    | "SET_MODE_LINE_FILTER"
-    | "SET_SCREEN_TYPE_FILTER"
-    | "SET_STATUS_FILTER";
-    filterValue: FilterValue;
-  }
+      type:
+        | "SET_MODE_LINE_FILTER"
+        | "SET_SCREEN_TYPE_FILTER"
+        | "SET_STATUS_FILTER";
+      filterValue: FilterValue;
+    }
   | {
-    type: "SET_SHOW_SCREENLESS_PLACES";
-    show: boolean;
-  }
+      type: "SET_SHOW_SCREENLESS_PLACES";
+      show: boolean;
+    }
   | { type: "SET_ACTIVE_EVENT_KEYS"; eventKeys: string[] }
   | { type: "RESET_STATE" };
 
@@ -111,7 +114,10 @@ interface ConfigValidationState {
   pendingScreenValidationErrors: ConfigValidationErrors;
 }
 
-const reducer = (state: ScreenplayState, action: ReducerAction): ScreenplayState => {
+const reducer = (
+  state: ScreenplayState,
+  action: ReducerAction
+): ScreenplayState => {
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
@@ -135,12 +141,16 @@ const reducer = (state: ScreenplayState, action: ReducerAction): ScreenplayState
     case "SHOW_PUBLISH_OUTCOME":
       return {
         ...state,
-        publishOutcomeToast: { show: true, isSuccessful: action.isSuccessful, message: action.message }
+        publishOutcomeToast: {
+          show: true,
+          isSuccessful: action.isSuccessful,
+          message: action.message,
+        },
       };
     case "HIDE_PUBLISH_OUTCOME":
       return {
         ...state,
-        publishOutcomeToast: { show: false }
+        publishOutcomeToast: { show: false },
       };
     default:
       throw new Error(`Unknown reducer action: ${JSON.stringify(action)}`);
@@ -235,7 +245,7 @@ const initialState: ScreenplayState = {
   screensByAlertMap: {} as ScreensByAlert,
   bannerAlert: undefined,
   showLinkCopied: false,
-  publishOutcomeToast: { show: false }
+  publishOutcomeToast: { show: false },
 };
 
 const initialPlacesListState: PlacesListState = {

@@ -6,8 +6,14 @@ interface Props {
   isPending?: boolean;
 }
 
-const ScreenSimulation = ({ screen, isPending = false }: Props): JSX.Element => {
-  const src = useMemo(() => generateSource(screen, isPending), [screen, isPending]);
+const ScreenSimulation = ({
+  screen,
+  isPending = false,
+}: Props): JSX.Element => {
+  const src = useMemo(
+    () => generateSource(screen, isPending),
+    [screen, isPending]
+  );
 
   return (
     <div
@@ -31,8 +37,9 @@ const generateSource = (screen: Screen, isPending: boolean) => {
   const queryParams = "requestor=screenplay";
 
   if (type.includes("v2")) {
-    return `${screensUrl}/v2/screen${isPending ? "/pending/" : "/"
-      }${id}/simulation?${queryParams}`;
+    return `${screensUrl}/v2/screen${
+      isPending ? "/pending/" : "/"
+    }${id}/simulation?${queryParams}`;
   }
   if (
     ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)

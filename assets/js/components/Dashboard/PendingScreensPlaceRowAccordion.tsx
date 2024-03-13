@@ -23,7 +23,11 @@ interface Props {
   appID: string;
   placeID: string;
   screens: LiveOrPendingScreen[];
-  publishCallback: (placeID: string, appID: string, hiddenFromScreenplayIDs: string[]) => void
+  publishCallback: (
+    placeID: string,
+    appID: string,
+    hiddenFromScreenplayIDs: string[]
+  ) => void;
 }
 
 interface LiveOrPendingScreen {
@@ -54,16 +58,14 @@ const formatAppID = (appID: string) => {
 // 1. Remove `_v2` suffix
 // 2. Convert from snake_case to kebab-case
 const appIDAsRoutePart = (appID: string) =>
-  appID
-    .replace("_v2", "")
-    .replace("_", "-");
+  appID.replace("_v2", "").replace("_", "-");
 
 const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   place,
   appID,
   placeID,
   screens,
-  publishCallback
+  publishCallback,
 }: Props) => {
   const [hiddenFromScreenplayIDs, setHiddenFromScreenplayIDs] = useState<
     string[]

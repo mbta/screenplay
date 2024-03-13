@@ -14,13 +14,18 @@ import LinkCopiedToast from "./LinkCopiedToast";
 import PublishOutcomeToast from "./PublishOutcomeToast";
 
 const Dashboard: ComponentType = () => {
-  const { alerts, bannerAlert, showLinkCopied, publishOutcomeToast } = useScreenplayContext();
+  const { alerts, bannerAlert, showLinkCopied, publishOutcomeToast } =
+    useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
 
   useEffect(() => {
-    fetchAlerts()
-      .then(({ all_alert_ids: allAPIalertIds, alerts: newAlerts, screens_by_alert: screensByAlertMap }) => {
+    fetchAlerts().then(
+      ({
+        all_alert_ids: allAPIalertIds,
+        alerts: newAlerts,
+        screens_by_alert: screensByAlertMap,
+      }) => {
         findAndSetBannerAlert(alerts, newAlerts);
         dispatch({
           type: "SET_ALERTS",
@@ -28,16 +33,22 @@ const Dashboard: ComponentType = () => {
           allAPIAlertIds: allAPIalertIds,
           screensByAlertMap: screensByAlertMap,
         });
-      });
+      }
+    );
 
-    fetchPlaces()
-      .then((placesList) => dispatch({ type: "SET_PLACES", places: placesList }));
+    fetchPlaces().then((placesList) =>
+      dispatch({ type: "SET_PLACES", places: placesList })
+    );
   }, []);
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
-    fetchAlerts()
-      .then(({ all_alert_ids: allAPIalertIds, alerts: newAlerts, screens_by_alert: screensByAlertMap }) => {
+    fetchAlerts().then(
+      ({
+        all_alert_ids: allAPIalertIds,
+        alerts: newAlerts,
+        screens_by_alert: screensByAlertMap,
+      }) => {
         findAndSetBannerAlert(alerts, newAlerts);
         dispatch({
           type: "SET_ALERTS",
@@ -45,7 +56,8 @@ const Dashboard: ComponentType = () => {
           allAPIAlertIds: allAPIalertIds,
           screensByAlertMap: screensByAlertMap,
         });
-      });
+      }
+    );
   }, 4000);
 
   const findAndSetBannerAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
@@ -71,7 +83,7 @@ const Dashboard: ComponentType = () => {
       postedOrEditedAlert &&
       (bannerAlert === undefined ||
         new Date(postedOrEditedAlert.updated_at).getTime() >
-        new Date(bannerAlert.startedAt).getTime())
+          new Date(bannerAlert.startedAt).getTime())
     ) {
       setBannerDone(false);
       dispatch({
@@ -88,7 +100,7 @@ const Dashboard: ComponentType = () => {
     else if (
       existingStartAtOrNull &&
       now.getTime() >=
-      new Date(existingStartAtOrNull.getTime() + 40000).getTime()
+        new Date(existingStartAtOrNull.getTime() + 40000).getTime()
     ) {
       setBannerDone(true);
     }

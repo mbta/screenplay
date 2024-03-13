@@ -33,7 +33,7 @@ export interface ExistingScreensAtPlace {
 export const fetchExistingScreens = async (
   appId: string,
   placeIds: string[]
-): Promise<{ places_and_screens: ExistingScreens, version_id: string }> => {
+): Promise<{ places_and_screens: ExistingScreens; version_id: string }> => {
   const response = await fetch(
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
   );
@@ -51,13 +51,19 @@ export interface PendingAndLiveScreensResponse {
 // 1. key is a string that combines place and app ID, and
 // 2. place and app IDs are added to each `ExistingScreensAtPlace` object, so that we don't have to parse them from the combined string.
 export interface PendingAndLiveScreens {
-  [placeAndAppID: string]: ExistingScreensAtPlace & { place_id: string, app_id: string }
+  [placeAndAppID: string]: ExistingScreensAtPlace & {
+    place_id: string;
+    app_id: string;
+  };
 }
 
-export const fetchExistingScreensAtPlacesWithPendingScreens = async (): Promise<PendingAndLiveScreensResponse> => {
-  const response = await fetch("/config/existing-screens-at-places-with-pending-screens");
-  return await response.json();
-};
+export const fetchExistingScreensAtPlacesWithPendingScreens =
+  async (): Promise<PendingAndLiveScreensResponse> => {
+    const response = await fetch(
+      "/config/existing-screens-at-places-with-pending-screens"
+    );
+    return await response.json();
+  };
 
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
@@ -79,12 +85,17 @@ export const putPendingScreens = async (
   });
 };
 
-export const publishScreensForPlace = async (placeId: string, appId: string, versionId: string, hiddenFromScreenplayIds: string[]) => {
+export const publishScreensForPlace = async (
+  placeId: string,
+  appId: string,
+  versionId: string,
+  hiddenFromScreenplayIds: string[]
+) => {
   const response = await fetch(`/config/publish/${placeId}/${appId}`, {
     method: "POST",
     body: JSON.stringify({
       version_id: versionId,
-      hidden_from_screenplay_ids: hiddenFromScreenplayIds
+      hidden_from_screenplay_ids: hiddenFromScreenplayIds,
     }),
     headers: {
       "content-type": "application/json",

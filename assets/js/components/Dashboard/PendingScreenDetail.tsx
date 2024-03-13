@@ -8,7 +8,10 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../util";
 import OpenInTabButton from "./OpenInTabButton";
 import CopyLinkButton from "./CopyLinkButton";
-import { DirectionID, useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
+import {
+  DirectionID,
+  useScreenplayDispatchContext,
+} from "../../hooks/useScreenplayContext";
 import { LightningChargeFill, ClockFill } from "react-bootstrap-icons";
 
 interface Props {
@@ -32,13 +35,15 @@ const formatDirectionID = (directionID?: DirectionID) => {
 
 const getScreenLocationDescription = (config: ScreenConfiguration) => {
   const direction = formatDirectionID(config.app_params.header.direction_id);
-  const platformLocation = capitalize(config.app_params.platform_location ?? "");
+  const platformLocation = capitalize(
+    config.app_params.platform_location ?? ""
+  );
 
   if (direction.length > 0 || platformLocation.length > 0) {
     return `${direction} ${platformLocation}`;
   }
   return null;
-}
+};
 
 const PendingScreenDetail: ComponentType<Props> = ({
   screenID,
@@ -86,27 +91,39 @@ const PendingScreenDetail: ComponentType<Props> = ({
             </Col>
           )}
           <Col className="d-flex justify-content-end location-description">
-            {isLive
-              ? <><div className="live-icon"><LightningChargeFill size={16} color="#eff193" /></div><div className="pending-or-live">Live · Read-only</div></>
-              : <><div className="live-icon"><ClockFill size={16} /></div><div className="pending-or-live">Pending</div></>
-            }
+            {isLive ? (
+              <>
+                <div className="live-icon">
+                  <LightningChargeFill size={16} color="#eff193" />
+                </div>
+                <div className="pending-or-live">Live · Read-only</div>
+              </>
+            ) : (
+              <>
+                <div className="live-icon">
+                  <ClockFill size={16} />
+                </div>
+                <div className="pending-or-live">Pending</div>
+              </>
+            )}
           </Col>
         </Row>
         <Row>
           <Col>
-            Screen ID: <span className="screen-id body--regular">{screenID}</span>
+            Screen ID:{" "}
+            <span className="screen-id body--regular">{screenID}</span>
           </Col>
         </Row>
         <Row>
           <Col lg="auto" className="pe-3">
             <div className="screen-url">Live screen URL:</div>
-            {isLive
-              ? (
-                <a className="url body--regular" href={liveScreenUrl}>
-                  {liveScreenUrl}
-                </a>
-              )
-              : <span className="url url--inactive">{liveScreenUrl}</span>}
+            {isLive ? (
+              <a className="url body--regular" href={liveScreenUrl}>
+                {liveScreenUrl}
+              </a>
+            ) : (
+              <span className="url url--inactive">{liveScreenUrl}</span>
+            )}
             <div className="screen-url-row-button">
               <OpenInTabButton url={fullScreenUrl} />
             </div>
@@ -116,7 +133,11 @@ const PendingScreenDetail: ComponentType<Props> = ({
                 queueToastExpiration={queueToastExpiration}
               />
             </div>
-            {!isLive && <div className="pending-url-advisory">Screen will be available at this URL once published</div>}
+            {!isLive && (
+              <div className="pending-url-advisory">
+                Screen will be available at this URL once published
+              </div>
+            )}
           </Col>
         </Row>
         {!isLive && (
@@ -128,7 +149,12 @@ const PendingScreenDetail: ComponentType<Props> = ({
                 onClick={onClickHideOnPlacesPage}
                 inline
               />
-              <div className="hide-on-places-page" onClick={onClickHideOnPlacesPage}>Hide on Places page</div>
+              <div
+                className="hide-on-places-page"
+                onClick={onClickHideOnPlacesPage}
+              >
+                Hide on Places page
+              </div>
             </Col>
           </Row>
         )}

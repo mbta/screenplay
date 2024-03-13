@@ -41,9 +41,7 @@ const generateSource = (screen: Screen) => {
   if (type.includes("v2")) {
     return `${screensUrl}/v2/screen/${id}`;
   }
-  if (
-    ["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)
-  ) {
+  if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
     return `${screensUrl}/screen/${id}`;
   }
   if (type === "solari") {
