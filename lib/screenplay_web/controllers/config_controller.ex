@@ -167,8 +167,6 @@ defmodule ScreenplayWeb.ConfigController do
         {json_key, live_and_pending}
       end)
 
-    DateTime.to_unix(last_modified) |> IO.inspect(label: "last modified as unix timestamp")
-
     %{
       places_and_screens: existing,
       version_id: version_id,
@@ -184,16 +182,17 @@ defmodule ScreenplayWeb.ConfigController do
       }) do
     app_id_atom = String.to_existing_atom(app_id)
 
-    with {:ok, _, ^version_id, _} <- PendingScreensConfig.fetch_config() do
-      case PermanentConfig.publish_pending_screens(
-             place_id,
-             app_id_atom,
-             hidden_from_screenplay_ids
-           ) do
-        :ok -> send_resp(conn, 200, "OK")
-        _ -> send_resp(conn, 500, "Could not publish screens. Please contact an engineer.")
-      end
-    else
+    case PendingScreensConfig.fetch_config() do
+      {:ok, _, ^version_id, _} ->
+        case PermanentConfig.publish_pending_screens(
+               place_id,
+               app_id_atom,
+               hidden_from_screenplay_ids
+             ) do
+          :ok -> send_resp(conn, 200, "OK")
+          _ -> send_resp(conn, 500, "Could not publish screens. Please contact an engineer.")
+        end
+
       {:ok, _, _different_version_id, _} ->
         send_resp(
           conn,
@@ -215,27 +214,27 @@ defmodule ScreenplayWeb.ConfigController do
     do:
       raise("place_id_has_screen/2 not implemented for app_id: #{app_id}, place_id: #{place_id}")
 
-  defp screen_to_place_id(%Screen{app_id: :gl_eink_v2} = screen) do
+  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_v2}) do
     screen.app_params.footer.stop_id
   end
 
-  defp screen_to_place_id(%Screen{app_id: :pre_fare_v2} = screen) do
+  defp screen_to_place_id(screen = %Screen{app_id: :pre_fare_v2}) do
     screen.app_params.header.stop_id
   end
 
-  defp screen_to_place_id(%Screen{app_id: :bus_eink_v2} = screen) do
+  defp screen_to_place_id(screen = %Screen{app_id: :bus_eink_v2}) do
     screen.app_params.header.stop_id
   end
 
-  defp screen_to_place_id(%Screen{app_id: :bus_shelter_v2} = screen) do
+  defp screen_to_place_id(screen = %Screen{app_id: :bus_shelter_v2}) do
     screen.app_params.footer.stop_id
   end
 
-  defp screen_to_place_id(%Screen{app_id: :dup_v2} = screen) do
+  defp screen_to_place_id(screen = %Screen{app_id: :dup_v2}) do
     screen.app_params.alerts.stop_id
   end
 
-  defp screen_to_place_id(%Screen{app_id: :gl_eink_single} = screen) do
+  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_single}) do
     screen.app_params.stop_id
   end
 
