@@ -4,28 +4,6 @@ defmodule Screenplay.Config.PlaceAndScreens do
   A screen config can either be a `PaEssScreen.t()` or a `ShowtimeScreen.t()`.
   """
 
-  @type route :: String.t()
-
-  @type pa_ess_screen :: PaEssScreen.t()
-
-  @type showtime_screen :: %{
-          id: String.t(),
-          type: String.t(),
-          disabled: boolean()
-        }
-
-  @type screen :: pa_ess_screen() | showtime_screen()
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          name: String.t(),
-          routes: list(route()),
-          screens: list(screen())
-        }
-
-  @derive Jason.Encoder
-  defstruct id: nil, name: nil, routes: [], screens: []
-
   defmodule PaEssScreen do
     @moduledoc """
     Module used to defined struct for PA/ESS screen configs stored in `places_and_screens.json`.
@@ -73,6 +51,28 @@ defmodule Screenplay.Config.PlaceAndScreens do
       |> then(&struct!(__MODULE__, &1))
     end
   end
+
+  @type route :: String.t()
+
+  @type pa_ess_screen :: PaEssScreen.t()
+
+  @type showtime_screen :: %{
+          id: String.t(),
+          type: String.t(),
+          disabled: boolean()
+        }
+
+  @type screen :: pa_ess_screen() | showtime_screen()
+
+  @type t :: %__MODULE__{
+          id: String.t(),
+          name: String.t(),
+          routes: list(route()),
+          screens: list(screen())
+        }
+
+  @derive Jason.Encoder
+  defstruct id: nil, name: nil, routes: [], screens: []
 
   def from_map(place_and_screens_map) do
     %{"id" => id, "name" => name, "routes" => routes, "screens" => screens} =
