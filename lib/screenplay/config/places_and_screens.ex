@@ -1,5 +1,8 @@
 defmodule Screenplay.Config.PlaceAndScreens do
-  @moduledoc false
+  @moduledoc """
+  Module used to defined struct for screen configs stored in places_and_screens.json.
+  A screen config can either be a `PaEssScreen.t()` or a `ShowtimeScreen.t()`.
+  """
 
   @type route :: String.t()
 
@@ -24,6 +27,10 @@ defmodule Screenplay.Config.PlaceAndScreens do
   defstruct id: nil, name: nil, routes: [], screens: []
 
   defmodule PaEssScreen do
+    @moduledoc """
+    Module used to defined struct for PA/ESS screen configs stored in `places_and_screens.json`.
+    """
+
     @derive Jason.Encoder
 
     @type t :: %__MODULE__{
@@ -45,6 +52,10 @@ defmodule Screenplay.Config.PlaceAndScreens do
   end
 
   defmodule ShowtimeScreen do
+    @moduledoc """
+    Module used to defined struct for Showtime screen configs stored in `places_and_screens.json`.
+    """
+
     @derive Jason.Encoder
 
     @type t :: %__MODULE__{
