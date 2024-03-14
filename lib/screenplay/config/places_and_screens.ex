@@ -3,13 +3,7 @@ defmodule Screenplay.Config.PlaceAndScreens do
 
   @type route :: String.t()
 
-  @type pa_ess_screen :: %{
-          id: String.t(),
-          label: String.t() | nil,
-          station_code: String.t(),
-          type: :pa_ess,
-          zone: String.t()
-        }
+  @type pa_ess_screen :: PaEssScreen.t()
 
   @type showtime_screen :: %{
           id: String.t(),
@@ -29,18 +23,54 @@ defmodule Screenplay.Config.PlaceAndScreens do
   @derive Jason.Encoder
   defstruct id: nil, name: nil, routes: [], screens: []
 
+  defmodule PaEssScreen do
+    @derive Jason.Encoder
+
+    @type t :: %__MODULE__{
+            id: String.t(),
+            label: String.t() | nil,
+            station_code: String.t(),
+            type: String.t(),
+            zone: String.t()
+          }
+
+    @enforce_keys [:id, :label, :station_code, :type, :zone]
+    defstruct @enforce_keys
+
+    def new(map) do
+      map
+      |> Map.new(fn {k, v} -> {String.to_existing_atom(k), v} end)
+      |> then(&struct!(__MODULE__, &1))
+    end
+  end
+
+  defmodule ShowtimeScreen do
+    @derive Jason.Encoder
+
+    @type t :: %__MODULE__{
+            id: String.t(),
+            type: String.t(),
+            disabled: boolean()
+          }
+
+    @enforce_keys [:id, :type, :disabled]
+    defstruct @enforce_keys
+
+    def new(map) do
+      map
+      |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
+      |> then(&struct!(__MODULE__, &1))
+    end
+  end
+
   def from_map(place_and_screens_map) do
     %{"id" => id, "name" => name, "routes" => routes, "screens" => screens} =
       place_and_screens_map
 
     screens =
       Enum.map(screens, fn
-        screen ->
-          screen
-          |> Map.new(fn
-            {"type", "pa_ess"} -> {:type, :pa_ess}
-            {k, v} -> {String.to_existing_atom(k), v}
-          end)
+        pa_ess_screen = %{"type" => "pa_ess"} -> PaEssScreen.new(pa_ess_screen)
+        showtime_screen -> ShowtimeScreen.new(showtime_screen)
       end)
 
     %__MODULE__{
