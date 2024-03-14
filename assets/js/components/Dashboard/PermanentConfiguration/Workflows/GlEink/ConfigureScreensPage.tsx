@@ -217,6 +217,106 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     Object.keys(existingPendingScreens).length > 0 ||
     newScreens.length > 0;
 
+  const deleteExistingPendingRow = (
+    screenID: string,
+    screen: ScreenConfiguration
+  ) => {
+    setExistingPendingScreens((prevState) => {
+      const newState = { ...prevState };
+      newState[screenID].is_deleted = true;
+      return newState;
+    });
+
+    setUpdatedPendingScreens((prevState) => {
+      const newState = [...prevState];
+      const index = newState.findIndex(
+        (screen) => screen.screen_id === screenID
+      );
+
+      if (index === -1) {
+        newState.push({
+          screen_id: screenID,
+          is_deleted: true,
+          app_id: "gl_eink_v2",
+          app_params: screen.app_params,
+        });
+      } else {
+        newState[index].is_deleted = true;
+      }
+
+      return newState;
+    });
+  };
+
+  const changeExistingPendingRow = (
+    screenID: string,
+    screen: ScreenConfiguration,
+    index: number
+  ) => {
+    if (screen.new_id == screenID) {
+      setUpdatedPendingScreens((prevState) => {
+        delete screen["new_id"];
+        prevState[index] = screen;
+        return prevState;
+      });
+    } else {
+      setUpdatedPendingScreens((prevState) => {
+        prevState[index] = screen;
+        return prevState;
+      });
+    }
+    setExistingPendingScreens((prevState) => {
+      const newState = {
+        ...prevState,
+      };
+      newState[screenID] = screen;
+      return newState;
+    });
+  };
+
+  const deleteNewRow = (index: number) => {
+    newScreenValidationErrors[place.id].splice(index, 1);
+    dispatch({
+      type: "SET_VALIDATION_ERRORS",
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
+    });
+    setNewScreens((prevState) => {
+      const newState = [...prevState];
+      newState.splice(index, 1);
+      return newState;
+    });
+  };
+
+  const changeNewRow = (screen: ScreenConfiguration, index: number) => {
+    setNewScreens((prevState) => {
+      const newState = [...prevState];
+      newState[index] = screen;
+      return newState;
+    });
+  };
+
+  const addNewRow = () => {
+    setNewScreens((prevState) => [
+      ...prevState,
+      {
+        new_id: "EIG-",
+        app_params: { header: { route_id: place.routes[0] } },
+        app_id: "gl_eink_v2",
+      },
+    ]);
+
+    newScreenValidationErrors[place.id].push({
+      missingFields: [],
+      isDuplicateScreenId: false,
+    });
+    dispatch({
+      type: "SET_VALIDATION_ERRORS",
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
+    });
+  };
+
   return (
     <Container className="configure-place-card p-0">
       <Row className="header">
@@ -266,34 +366,12 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                       key={`pendingScreens.${index}`}
                       screenID={screen.new_id ?? screenID}
                       config={screen}
-                      handleDelete={() => {
-                        setExistingPendingScreens((prevState) => {
-                          const newState = { ...prevState };
-                          newState[screenID].is_deleted = true;
-                          return newState;
-                        });
-                      }}
-                      onChange={(screen: ScreenConfiguration) => {
-                        if (screen.new_id == screenID) {
-                          setUpdatedPendingScreens((prevState) => {
-                            delete screen["new_id"];
-                            prevState[index] = screen;
-                            return prevState;
-                          });
-                        } else {
-                          setUpdatedPendingScreens((prevState) => {
-                            prevState[index] = screen;
-                            return prevState;
-                          });
-                        }
-                        setExistingPendingScreens((prevState) => {
-                          const newState = {
-                            ...prevState,
-                          };
-                          newState[screenID] = screen;
-                          return newState;
-                        });
-                      }}
+                      handleDelete={() =>
+                        deleteExistingPendingRow(screenID, screen)
+                      }
+                      onChange={(screen: ScreenConfiguration) =>
+                        changeExistingPendingRow(screenID, screen, index)
+                      }
                       className={screen.is_deleted ? "hidden" : ""}
                       validationErrors={
                         pendingScreenValidationErrors[place.id][index]
@@ -308,26 +386,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                     key={`newScreens.${index}`}
                     screenID={screen.new_id ?? ""}
                     config={screen}
-                    handleDelete={() => {
-                      newScreenValidationErrors[place.id].splice(index, 1);
-                      dispatch({
-                        type: "SET_VALIDATION_ERRORS",
-                        newScreenValidationErrors,
-                        pendingScreenValidationErrors,
-                      });
-                      setNewScreens((prevState) => {
-                        const newState = [...prevState];
-                        newState.splice(index, 1);
-                        return newState;
-                      });
-                    }}
-                    onChange={(screen: ScreenConfiguration) => {
-                      setNewScreens((prevState) => {
-                        const newState = [...prevState];
-                        newState[index] = screen;
-                        return newState;
-                      });
-                    }}
+                    handleDelete={() => deleteNewRow(index)}
+                    onChange={(screen: ScreenConfiguration) =>
+                      changeNewRow(screen, index)
+                    }
                     className={screen.is_deleted ? "hidden" : ""}
                     validationErrors={
                       newScreenValidationErrors[place.id][index]
@@ -340,29 +402,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
         </Row>
       )}
       <Row className="add-screen-button-row">
-        <Button
-          className="add-screen-button body--medium"
-          onClick={() => {
-            setNewScreens((prevState) => [
-              ...prevState,
-              {
-                new_id: "EIG-",
-                app_params: { header: { route_id: place.routes[0] } },
-                app_id: "gl_eink_v2",
-              },
-            ]);
-
-            newScreenValidationErrors[place.id].push({
-              missingFields: [],
-              isDuplicateScreenId: false,
-            });
-            dispatch({
-              type: "SET_VALIDATION_ERRORS",
-              newScreenValidationErrors,
-              pendingScreenValidationErrors,
-            });
-          }}
-        >
+        <Button className="add-screen-button body--medium" onClick={addNewRow}>
           <Plus fill="#F8F9FA" /> Add Screen
         </Button>
       </Row>
