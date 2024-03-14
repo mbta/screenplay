@@ -60,8 +60,6 @@ const GlEinkWorkflow: ComponentType = () => {
         newScreenValidationErrors,
         pendingScreenValidationErrors,
       });
-
-      window.history.replaceState({}, "");
     }
   }, [location]);
 
