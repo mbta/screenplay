@@ -3,9 +3,8 @@ defmodule ScreenplayWeb.EnsureScreensAdminGroup do
   Verify that the user has permission to access Permanent Configuration.
   """
 
-  import Plug.Conn
-
-  alias ScreenplayWeb.Router.Helpers
+  import Plug.Conn, only: [halt: 1]
+  import Phoenix.Controller, only: [redirect: 2]
 
   def init(options), do: options
 
@@ -16,7 +15,7 @@ defmodule ScreenplayWeb.EnsureScreensAdminGroup do
     else
       _ ->
         conn
-        |> Phoenix.Controller.redirect(to: Helpers.unauthorized_path(conn, :index))
+        |> redirect(to: "/dashboard")
         |> halt()
     end
   end
