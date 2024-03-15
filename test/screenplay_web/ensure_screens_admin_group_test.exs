@@ -3,7 +3,7 @@ defmodule ScreenplayWeb.EnsureScreensAdminGroupTest do
 
   describe "init/1" do
     test "passes options through unchanged" do
-      assert ScreenplayWeb.EnsureScreenplayAdminGroup.init([]) == []
+      assert ScreenplayWeb.EnsureScreensAdminGroup.init([]) == []
     end
   end
 
