@@ -35,6 +35,10 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.EnsureScreenplayAdminGroup)
   end
 
+  pipeline :ensure_screens_admin do
+    plug(ScreenplayWeb.EnsureScreensAdminGroup)
+  end
+
   # Load balancer health check
   # Exempt from auth checks and SSL redirects
   scope "/", ScreenplayWeb do
@@ -60,9 +64,21 @@ defmodule ScreenplayWeb.Router do
 
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
+    get("/unauthorized", UnauthorizedController, :index)
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :ensure_screens_admin,
+      :metadata
+    ])
+
     get("/pending", ConfigController, :index)
     get("/configure-screens/*app_id", ConfigController, :index)
-    get("/unauthorized", UnauthorizedController, :index)
   end
 
   scope "/api", ScreenplayWeb do
@@ -103,7 +119,8 @@ defmodule ScreenplayWeb.Router do
       :api,
       :browser,
       :auth,
-      :ensure_auth
+      :ensure_auth,
+      :ensure_screens_admin
     ])
 
     post("/put", ConfigController, :put)
