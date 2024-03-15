@@ -72,7 +72,7 @@ const PendingScreensPage: ComponentType = () => {
         switch (status) {
           case 200:
             dispatch({
-              type: "SHOW_PUBLISH_OUTCOME",
+              type: "SHOW_ACTION_OUTCOME",
               isSuccessful: true,
               message: "Screens published to places",
             });
@@ -82,14 +82,14 @@ const PendingScreensPage: ComponentType = () => {
             break;
           case 500:
             dispatch({
-              type: "SHOW_PUBLISH_OUTCOME",
+              type: "SHOW_ACTION_OUTCOME",
               isSuccessful: false,
               message: message || defaultErrorMessage,
             });
             break;
           default:
             dispatch({
-              type: "SHOW_PUBLISH_OUTCOME",
+              type: "SHOW_ACTION_OUTCOME",
               isSuccessful: false,
               message: defaultErrorMessage,
             });
@@ -97,7 +97,7 @@ const PendingScreensPage: ComponentType = () => {
         }
       } catch (e) {
         dispatch({
-          type: "SHOW_PUBLISH_OUTCOME",
+          type: "SHOW_ACTION_OUTCOME",
           isSuccessful: false,
           message: "Unknown error. Please contact an engineer.",
         });
@@ -106,7 +106,7 @@ const PendingScreensPage: ComponentType = () => {
 
       setIsPublishing(false);
       setTimeout(() => {
-        dispatch({ type: "HIDE_PUBLISH_OUTCOME" });
+        dispatch({ type: "HIDE_ACTION_OUTCOME" });
       }, 5000);
     },
     [versionID, dispatch, fetchData, isPublishing]

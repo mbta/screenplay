@@ -6,21 +6,21 @@ import {
 } from "react-bootstrap-icons";
 import classNames from "classnames";
 
-interface PublishOutcomeToastProps {
+interface ActionOutcomeToastProps {
   show: boolean;
   isSuccessful?: boolean;
   message?: string;
 }
 
-const PublishOutcomeToast = ({
+const ActionOutcomeToast = ({
   show,
   isSuccessful = true,
   message,
-}: PublishOutcomeToastProps): JSX.Element => {
+}: ActionOutcomeToastProps): JSX.Element => {
   const toastClass = classNames({
-    "publish-outcome-toast": true,
-    "publish-outcome-toast--success": isSuccessful,
-    "publish-outcome-toast--failure": !isSuccessful,
+    "action-outcome-toast": true,
+    "action-outcome-toast--success": isSuccessful,
+    "action-outcome-toast--failure": !isSuccessful,
   });
 
   const Icon = isSuccessful ? CheckCircleFill : ExclamationTriangleFill;
@@ -28,11 +28,11 @@ const PublishOutcomeToast = ({
   return (
     <Toast bg="warning" show={show} animation={true} className={toastClass}>
       <Toast.Body>
-        <Icon className="publish-outcome-toast__icon" /> {message}
+        <Icon className="action-outcome-toast__icon" /> {message}
       </Toast.Body>
     </Toast>
   );
 };
 
-export type { PublishOutcomeToastProps };
-export default PublishOutcomeToast;
+export type { ActionOutcomeToastProps };
+export default ActionOutcomeToast;
