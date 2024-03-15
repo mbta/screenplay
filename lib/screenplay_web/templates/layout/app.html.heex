@@ -23,6 +23,9 @@
     <%= if @is_admin do %>
         <meta name="is-admin" content={@is_admin}>
     <% end %>
+    <%= if @is_screens_admin do %>
+        <meta name="is-screens-admin" content={@is_screens_admin}>
+    <% end %>
     <%= if @fullstory_org_id do %>
         <meta name="fullstory-org-id" content={@fullstory_org_id}>
     <% end %>
