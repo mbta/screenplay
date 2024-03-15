@@ -2,7 +2,7 @@ defmodule ScreenplayWeb.Controllers.AlertsControllerTest do
   use ScreenplayWeb.ConnCase
 
   describe "index/2" do
-    @tag :authenticated_admin
+    @tag :authenticated_emergency_admin
     test "responds 200 to authenticated admin requests", %{conn: conn} do
       conn = get(conn, "/alerts")
       assert %{status: 200} = conn
