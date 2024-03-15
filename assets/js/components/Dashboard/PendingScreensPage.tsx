@@ -27,6 +27,7 @@ const PendingScreensPage: ComponentType = () => {
   );
   const [versionID, setVersionID] = useState<string | null>(null);
   const [lastModified, setLastModified] = useState<Date | null>(null);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
   const placesByID: Record<string, Place> = useMemo(
     () => places.reduce((acc, place) => ({ ...acc, [place.id]: place }), {}),
@@ -49,7 +50,12 @@ const PendingScreensPage: ComponentType = () => {
 
   const publish = useCallback(
     async (placeID, appID, hiddenFromScreenplayIDs) => {
-      let success = false;
+      if (isPublishing) {
+        // Prevent multiple publish requests from being fired if user accidentally double clicks the button.
+        return;
+      }
+
+      setIsPublishing(true);
       try {
         // We know versionID is not null at this point because it's not possible for a "Publish" button
         // to be rendered without the version ID also being set--both state values are set together in
@@ -70,7 +76,9 @@ const PendingScreensPage: ComponentType = () => {
               isSuccessful: true,
               message: "Screens published to places",
             });
-            success = true;
+            // Since the publish succeeded, let's update the page data immediately
+            // so the new state is reflected.
+            fetchData();
             break;
           case 500:
             dispatch({
@@ -96,15 +104,12 @@ const PendingScreensPage: ComponentType = () => {
         console.error(e);
       }
 
+      setIsPublishing(false);
       setTimeout(() => {
         dispatch({ type: "HIDE_PUBLISH_OUTCOME" });
       }, 5000);
-
-      if (success) {
-        setTimeout(fetchData, 6000);
-      }
     },
-    [versionID, dispatch, fetchData]
+    [versionID, dispatch, fetchData, isPublishing]
   );
 
   useEffect(fetchData, []);
@@ -131,6 +136,7 @@ const PendingScreensPage: ComponentType = () => {
                   place={place}
                   appID={app_id}
                   placeID={place_id}
+                  buttonsDisabled={isPublishing}
                   publishCallback={publish}
                   screens={mergeLiveAndPendingByID(
                     live_screens,
