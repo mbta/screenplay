@@ -56,3 +56,10 @@ config :sentry,
   included_environments: [env],
   enable_source_code_context: true,
   root_source_code_path: File.cwd!()
+
+scheduler_jobs =
+  if env == "prod",
+    do: [{"* * * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
+    else: []
+
+config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
