@@ -36,7 +36,7 @@ defmodule ScreenplayWeb.ConnCase do
   setup tags do
     {conn, user} =
       cond do
-        tags[:authenticated_admin] ->
+        tags[:authenticated_emergency_admin] ->
           user = "test_user"
 
           conn =
@@ -44,6 +44,19 @@ defmodule ScreenplayWeb.ConnCase do
             |> Plug.Test.init_test_session(%{})
             |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
               "roles" => ["screenplay-emergency-admin"]
+            })
+            |> Plug.Conn.put_session(:username, user)
+
+          {conn, user}
+
+        tags[:authenticated_screens_admin] ->
+          user = "test_user"
+
+          conn =
+            Phoenix.ConnTest.build_conn()
+            |> Plug.Test.init_test_session(%{})
+            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
+              "roles" => ["screens-admin"]
             })
             |> Plug.Conn.put_session(:username, user)
 
