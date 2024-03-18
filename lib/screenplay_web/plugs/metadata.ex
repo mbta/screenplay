@@ -32,12 +32,12 @@ defmodule ScreenplayWeb.Plugs.Metadata do
     |> assign(:alerts_ui_url, Application.get_env(:screenplay, :alerts_ui_url))
     |> assign(:screens_url, Application.get_env(:screenplay, :screens_url))
     |> assign(:signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
-    |> assign(:is_admin, admin?(conn))
+    |> assign(:is_emergency_admin, emergency_admin?(conn))
     |> assign(:is_screens_admin, screens_admin?(conn))
     |> assign(:fullstory_org_id, Application.get_env(:screenplay, :fullstory_org_id))
   end
 
-  defp admin?(conn) do
+  defp emergency_admin?(conn) do
     claims = Guardian.Plug.current_claims(conn)
 
     :emergency_admin in ScreenplayWeb.AuthManager.claims_access_level(claims)
