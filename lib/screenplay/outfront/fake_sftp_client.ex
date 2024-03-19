@@ -26,9 +26,21 @@ defmodule Screenplay.Outfront.FakeSFTPClient do
     :ok
   end
 
+  def upload_file(_conn, _path, remote_path) do
+    _ = Logger.info("Writing to fake #{remote_path}")
+
+    :ok
+  end
+
   def delete_file(_conn, path) do
     _ = Logger.info("Deleting file at fake #{path}")
 
     :ok
+  end
+
+  def list_dir(_conn, path) do
+    _ = Logger.info("Listing directories at fake #{path}")
+
+    {:ok, []}
   end
 end
