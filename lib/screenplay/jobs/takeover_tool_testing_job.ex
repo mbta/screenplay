@@ -81,15 +81,17 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         :ok
 
       {:error, error} ->
-        message = "[takeover_tool_testing sftp_connection_error] #{inspect(error)}"
+        message =
+          "[takeover_tool_testing sftp_connection_error] failed to delete from #{orientation} #{inspect(error)}"
+
         Logger.error(message)
         Sentry.capture_message(message, level: "error")
     end
   end
 
   defp all_directories_exist?(conn) do
-    portrait_dirs = SFTPClient.list_dir!(conn, "./Portrait")
-    landscape_dirs = SFTPClient.list_dir!(conn, "./Landscape")
+    {:ok, portrait_dirs} = sftp_client_module().list_dir(conn, "./Portrait")
+    {:ok, landscape_dirs} = sftp_client_module().list_dir(conn, "./Landscape")
 
     station_screen_orientation_list =
       :screenplay
