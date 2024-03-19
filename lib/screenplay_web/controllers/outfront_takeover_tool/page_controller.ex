@@ -21,4 +21,17 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
   def takeover_redirect(conn, _params) do
     redirect(conn, to: ~p"/emergency-takeover")
   end
+
+  def station_screen_orientation_list(conn, _params) do
+    station_list_json =
+      Application.get_env(:screenplay, :station_screen_orientation_list, %{
+        red: [],
+        orange: [],
+        blue: [],
+        silver: [],
+        green: []
+      })
+
+    json(conn, station_list_json)
+  end
 end
