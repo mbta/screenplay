@@ -14,10 +14,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
       all_directories_exist?(conn)
     rescue
       e ->
-        Sentry.capture_message(
-          "[takeover_tool_testing sftp_connection_error] #{inspect(e)}",
-          level: "error"
-        )
+        message = "[takeover_tool_testing sftp_connection_error] #{inspect(e)}"
+        Logger.error(message)
+        Sentry.capture_message(message, level: "error")
     after
       sftp_client_module().disconnect(conn)
     end
@@ -44,10 +43,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         sftp_conn
 
       {:error, error} ->
-        Sentry.capture_message(
-          "[takeover_tool_testing sftp_connection_error] #{inspect(error)}",
-          level: "error"
-        )
+        message = "[takeover_tool_testing sftp_connection_error] #{inspect(error)}"
+        Logger.error(message)
+        Sentry.capture_message(message, level: "error")
     end
   end
 
@@ -59,10 +57,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         :ok
 
       {:error, error} ->
-        Sentry.capture_message(
-          "[takeover_tool_testing sftp_connection_error] #{inspect(error)}",
-          level: "error"
-        )
+        message = "[takeover_tool_testing sftp_connection_error] #{inspect(error)}"
+        Logger.error(message)
+        Sentry.capture_message(message, level: "error")
     end
   end
 
@@ -79,10 +76,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         :ok
 
       {:error, error} ->
-        Sentry.capture_message(
-          "[takeover_tool_testing sftp_connection_error] #{inspect(error)}",
-          level: "error"
-        )
+        message = "[takeover_tool_testing sftp_connection_error] #{inspect(error)}"
+        Logger.error(message)
+        Sentry.capture_message(message, level: "error")
     end
   end
 
@@ -110,10 +106,11 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
       station_dir = SFTP.get_outfront_directory_for_station(station_name)
 
       if station_dir not in sftp_dirs do
-        Sentry.capture_message(
-          "[takeover_tool_testing sftp_connection_error] missing #{orientation} directory for station #{station_name}",
-          level: "error"
-        )
+        message =
+          "[takeover_tool_testing sftp_connection_error] missing #{orientation} directory for station #{station_name}"
+
+        Logger.error(message)
+        Sentry.capture_message(message, level: "error")
       end
     end)
   end
