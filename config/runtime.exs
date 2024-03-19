@@ -59,7 +59,7 @@ config :sentry,
 
 scheduler_jobs =
   if env == "prod",
-    do: [{"* * * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
+    do: [{"0 7 * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
     else: []
 
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
