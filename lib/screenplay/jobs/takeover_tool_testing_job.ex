@@ -23,8 +23,11 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp test_creating_and_removing_images(conn) do
+    local_image_path = Path.join(:code.priv_dir(:screenplay), "takeover_test.png")
+    local_image_data = File.read!(local_image_path)
+
     Enum.each(["Portrait", "Landscape"], fn orientation ->
-      upload_image(conn, orientation)
+      write_image(conn, orientation, local_image_data)
       delete_image(conn, orientation)
     end)
   end
@@ -51,17 +54,16 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end
   end
 
-  defp upload_image(conn, orientation) do
-    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover_test.png"])
-    local_path = Path.join(:code.priv_dir(:screenplay), "takeover_test.png")
+  defp write_image(conn, orientation, local_image_data) do
+    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
 
-    case sftp_client_module().upload_file(conn, local_path, remote_path) do
+    case sftp_client_module().write_file(conn, remote_path, local_image_data) do
       :ok ->
         :ok
 
       {:error, error} ->
         message =
-          "[takeover_tool_testing sftp_connection_error] Failed to upload to #{orientation} #{inspect(error)}"
+          "[takeover_tool_testing sftp_connection_error] Failed to write image to #{orientation} #{inspect(error)}"
 
         Logger.error(message)
         Sentry.capture_message(message, level: "error")
@@ -69,7 +71,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp delete_image(conn, orientation) do
-    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover_test.png"])
+    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
 
     case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
