@@ -43,7 +43,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         sftp_conn
 
       {:error, error} ->
-        message = "[takeover_tool_testing sftp_connection_error] #{inspect(error)}"
+        message =
+          "[takeover_tool_testing sftp_connection_error] Failed to connect: #{inspect(error)}"
+
         Logger.error(message)
         Sentry.capture_message(message, level: "error")
     end
@@ -57,7 +59,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         :ok
 
       {:error, error} ->
-        message = "[takeover_tool_testing sftp_connection_error] #{inspect(error)}"
+        message =
+          "[takeover_tool_testing sftp_connection_error] Failed to upload to #{orientation} #{inspect(error)}"
+
         Logger.error(message)
         Sentry.capture_message(message, level: "error")
     end
