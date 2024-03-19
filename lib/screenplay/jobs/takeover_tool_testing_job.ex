@@ -1,5 +1,11 @@
 defmodule Screenplay.Jobs.TakeoverToolTestingJob do
-  @moduledoc false
+  @moduledoc """
+  Module that executes automated testing for the OFM Takeover Tool.
+  Job tests two things:
+  1. We have the ability to write to and delete from the test folder `ZZZ-MBTA-TEST`
+  2. We see all station folders that we expect to see depending on the screens located at the station.
+  """
+
   alias Screenplay.Outfront.SFTP
 
   require Logger
@@ -32,7 +38,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end)
   end
 
-  defp start_connection() do
+  defp start_connection do
     host = Application.get_env(:screenplay, :outfront_sftp_domain)
     user = Application.get_env(:screenplay, :outfront_sftp_user)
     key = Application.get_env(:screenplay, :outfront_ssh_key)
