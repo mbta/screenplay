@@ -53,8 +53,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
   defp upload_image(conn, orientation) do
     remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover_test.png"])
+    local_path = Path.join(:code.priv_dir(:screenplay), "takeover_test.png")
 
-    case sftp_client_module().upload_file(conn, "", remote_path) do
+    case sftp_client_module().upload_file(conn, local_path, remote_path) do
       :ok ->
         :ok
 
