@@ -96,6 +96,10 @@ defmodule Screenplay.Outfront.SFTP do
     sftp_client_module().disconnect(conn)
   end
 
+  def get_outfront_directory_for_station(station) do
+    Map.get(@stations_to_outfront_directories, station)
+  end
+
   defp sftp_client_module do
     Application.get_env(:screenplay, :sftp_client_module)
   end
@@ -184,9 +188,5 @@ defmodule Screenplay.Outfront.SFTP do
   defp get_outfront_path_for_image(station, orientation) do
     station_directory = get_outfront_directory_for_station(station)
     Path.join([orientation, station_directory, "takeover.png"])
-  end
-
-  defp get_outfront_directory_for_station(station) do
-    Map.get(@stations_to_outfront_directories, station)
   end
 end

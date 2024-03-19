@@ -1,5 +1,6 @@
 defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @moduledoc false
+  alias Screenplay.Outfront.SFTP
 
   require Logger
 
@@ -10,6 +11,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     try do
       test_creating_and_removing_images(conn)
+      all_directories_exist?(conn)
     rescue
       e ->
         Sentry.capture_message(
@@ -82,6 +84,38 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
           level: "error"
         )
     end
+  end
+
+  defp all_directories_exist?(conn) do
+    portrait_dirs = SFTPClient.list_dir!(conn, "./Portrait")
+    landscape_dirs = SFTPClient.list_dir!(conn, "./Landscape")
+
+    station_screen_orientation_list =
+      :screenplay
+      |> Application.get_env(:station_screen_orientation_list)
+      |> Map.values()
+      |> List.flatten()
+      |> Enum.uniq()
+
+    portrait_stations = Enum.filter(station_screen_orientation_list, & &1.portrait)
+    landscape_stations = Enum.filter(station_screen_orientation_list, & &1.landscape)
+
+    log_missing_dirs(portrait_dirs, portrait_stations, "Portrait")
+    log_missing_dirs(landscape_dirs, landscape_stations, "Landscape")
+  end
+
+  defp log_missing_dirs(sftp_dirs, stations, orientation) do
+    Enum.each(stations, fn station ->
+      %{name: station_name} = station
+      station_dir = SFTP.get_outfront_directory_for_station(station_name)
+
+      if station_dir not in sftp_dirs do
+        Sentry.capture_message(
+          "[takeover_tool_testing sftp_connection_error] missing #{orientation} directory for station #{station_name}",
+          level: "error"
+        )
+      end
+    end)
   end
 
   defp sftp_client_module do
