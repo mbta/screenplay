@@ -28,6 +28,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   defp test_creating_and_removing_images(conn) do
     local_image_path = Path.join(:code.priv_dir(:screenplay), "takeover_test.png")
     local_image_data = File.read!(local_image_path)
