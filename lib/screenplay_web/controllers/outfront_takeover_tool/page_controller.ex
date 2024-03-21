@@ -3,6 +3,8 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
 
   plug(:sentry_dsn)
 
+  @screen_orientations Application.compile_env!(:screenplay, :outfront_takeover_tool_screens)
+
   defp sentry_dsn(conn, _) do
     dsn =
       if Application.get_env(:screenplay, :record_sentry, false) do
@@ -23,15 +25,6 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
   end
 
   def outfront_takeover_tool_screens(conn, _params) do
-    station_list_json =
-      Application.get_env(:screenplay, :outfront_takeover_tool_screens, %{
-        red: [],
-        orange: [],
-        blue: [],
-        silver: [],
-        green: []
-      })
-
-    json(conn, station_list_json)
+    json(conn, @screen_orientations)
   end
 end
