@@ -67,13 +67,7 @@ class OutfrontTakeoverTool extends React.Component<
         confirmJSX: <></>,
         onSubmit: this.toggleModal,
       },
-      stationScreenOrientationList: {
-        red: [],
-        orange: [],
-        blue: [],
-        silver: [],
-        green: [],
-      },
+      stationScreenOrientationList: {},
     };
 
     this.toggleAlertWizard = this.toggleAlertWizard.bind(this);
