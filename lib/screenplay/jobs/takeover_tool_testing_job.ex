@@ -13,6 +13,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @test_sftp_directory_name "ZZZ-MBTA-TEST"
   @landscape_dir "Landscape"
   @portrait_dir "Portrait"
+  @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
 
   def run do
     conn = start_connection()
@@ -32,11 +33,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
   # sobelow_skip ["Traversal.FileModule"]
   defp test_creating_and_removing_images(conn) do
-    local_image_path = Path.join(:code.priv_dir(:screenplay), "takeover_test.png")
-    local_image_data = File.read!(local_image_path)
-
     Enum.each([@portrait_dir, @landscape_dir], fn orientation ->
-      write_image(conn, orientation, local_image_data)
+      write_image(conn, orientation, @test_image)
       delete_image(conn, orientation)
     end)
   end
