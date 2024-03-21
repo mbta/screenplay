@@ -9,7 +9,7 @@ defmodule Screenplay.Outfront.SFTP do
   @landscape_dir "Landscape"
   @portrait_dir "Portrait"
   @retries 3
-  @sftp_client_module Application.compile_env(:screenplay, :sftp_client_module)
+  @sftp_client_module Application.compile_env!(:screenplay, :sftp_client_module)
 
   def run(work_fn) do
     conn = start_connection()

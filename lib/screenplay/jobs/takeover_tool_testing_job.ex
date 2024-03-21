@@ -15,7 +15,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @landscape_dir "Landscape"
   @portrait_dir "Portrait"
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
-  @sftp_client_module Application.compile_env(:screenplay, :sftp_client_module)
+  @sftp_client_module Application.compile_env!(:screenplay, :sftp_client_module)
 
   def run do
     SFTP.run(fn conn ->
