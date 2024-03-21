@@ -17,7 +17,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     try do
       test_creating_and_removing_images(conn)
-      all_directories_exist?(conn)
+      test_all_directories_exist(conn)
     rescue
       e ->
         message = "[takeover_tool_testing sftp_connection_error] #{inspect(e)}"
@@ -98,7 +98,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end
   end
 
-  defp all_directories_exist?(conn) do
+  defp test_all_directories_exist(conn) do
     {:ok, portrait_dirs} = sftp_client_module().list_dir(conn, "./Portrait")
     {:ok, landscape_dirs} = sftp_client_module().list_dir(conn, "./Landscape")
 
