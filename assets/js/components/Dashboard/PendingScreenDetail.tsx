@@ -23,40 +23,6 @@ interface Props {
   onClickHideOnPlacesPage: () => void;
 }
 
-const getDirectionName = (routeID: string, directionID?: DirectionID) => {
-  if (directionID === undefined) {
-    return "";
-  }
-
-  const key = routeID.split("-")[0];
-  const labels = SORT_LABELS[key];
-  if (labels == undefined) {
-    console.error(
-      `getDirectionName not implemented for routeID ${routeID}. Returning empty string.`
-    );
-    return "";
-  }
-
-  const label = labels[directionID];
-  const titleCasedLabel = `${label.at(0)?.toUpperCase()}${label
-    .slice(1)
-    .toLowerCase()}`;
-  return titleCasedLabel;
-};
-
-const getDirectionArgs = (config: ScreenConfiguration) => {
-  let args: Parameters<typeof getDirectionName> | null;
-  switch (config.app_id) {
-    case "gl_eink_v2":
-      args = ["Green", config.app_params.header.direction_id];
-      break;
-    default:
-      args = null;
-  }
-
-  return args ? getDirectionName(...args) : "";
-};
-
 const getGLScreenLocationDescription = (
   config: ScreenConfiguration & { app_id: "gl_eink_v2" }
 ) => {
