@@ -2,17 +2,13 @@
 // but its presentation is particular to the pending screens page.
 
 import React, { ComponentType, SyntheticEvent } from "react";
-import { SORT_LABELS } from "../../constants/constants";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import ScreenSimulation from "./ScreenSimulation";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../util";
 import OpenInTabButton from "./OpenInTabButton";
 import CopyLinkButton from "./CopyLinkButton";
-import {
-  DirectionID,
-  useScreenplayDispatchContext,
-} from "../../hooks/useScreenplayContext";
+import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
 import { LightningChargeFill, ClockFill } from "react-bootstrap-icons";
 
 interface Props {
