@@ -150,7 +150,7 @@ const reducer = (
     case "HIDE_ACTION_OUTCOME":
       return {
         ...state,
-        actionOutcomeToast: { show: false },
+        actionOutcomeToast: { ...state.actionOutcomeToast, show: false },
       };
     default:
       throw new Error(`Unknown reducer action: ${JSON.stringify(action)}`);

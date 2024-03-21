@@ -25,7 +25,7 @@ const PendingScreensPage: ComponentType = () => {
   const [existingScreens, setExistingScreens] = useState<PendingAndLiveScreens>(
     {}
   );
-  const [versionID, setVersionID] = useState<string | null>(null);
+  const [eTag, setETag] = useState<string | null>(null);
   const [lastModified, setLastModified] = useState<Date | null>(null);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
@@ -36,15 +36,15 @@ const PendingScreensPage: ComponentType = () => {
 
   const fetchData = useCallback(() => {
     fetchExistingScreensAtPlacesWithPendingScreens().then(
-      ({ places_and_screens, version_id, last_modified_ms }) => {
+      ({ places_and_screens, eTag, last_modified_ms }) => {
         setExistingScreens(places_and_screens);
-        setVersionID(version_id);
+        setETag(eTag);
         if (last_modified_ms !== null) {
           setLastModified(new Date(last_modified_ms));
         }
       }
     );
-  }, [setExistingScreens, setVersionID, setLastModified]);
+  }, [setExistingScreens, setETag, setLastModified]);
 
   const dispatch = useScreenplayDispatchContext();
 
@@ -57,15 +57,15 @@ const PendingScreensPage: ComponentType = () => {
 
       setIsPublishing(true);
       try {
-        // We know versionID is not null at this point because it's not possible for a "Publish" button
-        // to be rendered without the version ID also being set--both state values are set together in
+        // We know eTag is not null at this point because it's not possible for a "Publish" button
+        // to be rendered without the ETag also being set--both state values are set together in
         // `fetchData`.
         const { status, message } = await publishScreensForPlace(
           placeID,
           appID,
+          hiddenFromScreenplayIDs,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          versionID!,
-          hiddenFromScreenplayIDs
+          eTag!
         );
 
         const defaultErrorMessage = "Server error. Please contact an engineer.";
@@ -79,6 +79,13 @@ const PendingScreensPage: ComponentType = () => {
             // Since the publish succeeded, let's update the page data immediately
             // so the new state is reflected.
             fetchData();
+            break;
+          case 412:
+            dispatch({
+              type: "SHOW_ACTION_OUTCOME",
+              isSuccessful: false,
+              message: "Page is out of date. Please reload and try again.",
+            });
             break;
           case 500:
             dispatch({
@@ -109,7 +116,7 @@ const PendingScreensPage: ComponentType = () => {
         dispatch({ type: "HIDE_ACTION_OUTCOME" });
       }, 5000);
     },
-    [versionID, dispatch, fetchData, isPublishing]
+    [eTag, dispatch, fetchData, isPublishing]
   );
 
   useEffect(fetchData, []);

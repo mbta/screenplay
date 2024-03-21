@@ -49,9 +49,6 @@ const generateSource = (screen: Screen) => {
     // (Due to quirks of running on a very old browser in the past)
     return `${screensUrl}/screen/${id}?scroll=true`;
   }
-  if (type === "dup") {
-    return `${screensUrl}/screen/${id}`;
-  }
 
   return "";
 };

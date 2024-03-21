@@ -2,6 +2,7 @@
 // but its presentation is particular to the pending screens page.
 
 import React, { ComponentType, SyntheticEvent } from "react";
+import { SORT_LABELS } from "../../constants/constants";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import ScreenSimulation from "./ScreenSimulation";
 import { Col, Container, Form, Row } from "react-bootstrap";
@@ -22,27 +23,69 @@ interface Props {
   onClickHideOnPlacesPage: () => void;
 }
 
-const formatDirectionID = (directionID?: DirectionID) => {
-  switch (directionID) {
-    case 0:
-      return "Westbound";
-    case 1:
-      return "Eastbound";
-    default:
-      return "";
+const getDirectionName = (routeID: string, directionID?: DirectionID) => {
+  if (directionID === undefined) {
+    return "";
   }
+
+  const key = routeID.split("-")[0];
+  const labels = SORT_LABELS[key];
+  if (labels == undefined) {
+    console.error(
+      `getDirectionName not implemented for routeID ${routeID}. Returning empty string.`
+    );
+    return "";
+  }
+
+  const label = labels[directionID];
+  const titleCasedLabel = `${label.at(0)?.toUpperCase()}${label
+    .slice(1)
+    .toLowerCase()}`;
+  return titleCasedLabel;
 };
 
-const getScreenLocationDescription = (config: ScreenConfiguration) => {
-  const direction = formatDirectionID(config.app_params.header.direction_id);
+const getDirectionArgs = (config: ScreenConfiguration) => {
+  let args: Parameters<typeof getDirectionName> | null;
+  switch (config.app_id) {
+    case "gl_eink_v2":
+      args = ["Green", config.app_params.header.direction_id];
+      break;
+    default:
+      args = null;
+  }
+
+  return args ? getDirectionName(...args) : "";
+};
+
+const getGLScreenLocationDescription = (
+  config: ScreenConfiguration & { app_id: "gl_eink_v2" }
+) => {
+  let direction = "";
+  switch (config.app_params.header.direction_id) {
+    case 0:
+      direction = "Westbound";
+      break;
+    case 1:
+      direction = "Eastbound";
+  }
+
   const platformLocation = capitalize(
     config.app_params.platform_location ?? ""
   );
 
-  if (direction.length > 0 || platformLocation.length > 0) {
-    return `${direction} ${platformLocation}`;
+  return [direction, platformLocation].join(" ");
+};
+
+const getScreenLocationDescription = (config: ScreenConfiguration) => {
+  switch (config.app_id) {
+    case "gl_eink_v2":
+      return getGLScreenLocationDescription(config);
+    default:
+      console.warn(
+        `getScreenLocationDescription not implemented for ${config.app_id}`
+      );
+      return "";
   }
-  return null;
 };
 
 const PendingScreenDetail: ComponentType<Props> = ({
