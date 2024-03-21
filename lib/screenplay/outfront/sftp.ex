@@ -36,7 +36,7 @@ defmodule Screenplay.Outfront.SFTP do
   def get_outfront_directory_for_station(station) do
     %{sftp_dir_name: dir_name} =
       :screenplay
-      |> Application.get_env(:station_screen_orientation_list)
+      |> Application.get_env(:outfront_takeover_tool_screens)
       |> Map.values()
       |> List.flatten()
       |> Enum.find(&(&1.name == station))

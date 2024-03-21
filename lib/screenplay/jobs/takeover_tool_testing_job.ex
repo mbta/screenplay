@@ -104,7 +104,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     station_screen_orientation_list =
       :screenplay
-      |> Application.get_env(:station_screen_orientation_list)
+      |> Application.get_env(:outfront_takeover_tool_screens)
       |> Map.values()
       |> List.flatten()
       |> Enum.uniq()

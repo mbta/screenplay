@@ -24,7 +24,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
 
   def station_screen_orientation_list(conn, _params) do
     station_list_json =
-      Application.get_env(:screenplay, :station_screen_orientation_list, %{
+      Application.get_env(:screenplay, :outfront_takeover_tool_screens, %{
         red: [],
         orange: [],
         blue: [],
