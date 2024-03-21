@@ -3,7 +3,10 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
 
   plug(:sentry_dsn)
 
-  @screen_orientations Application.compile_env!(:screenplay, :outfront_takeover_tool_screens)
+  @stations_and_screen_orientations Application.compile_env!(
+                                      :screenplay,
+                                      :outfront_takeover_tool_screens
+                                    )
 
   defp sentry_dsn(conn, _) do
     dsn =
@@ -24,7 +27,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
     redirect(conn, to: ~p"/emergency-takeover")
   end
 
-  def outfront_takeover_tool_screens(conn, _params) do
-    json(conn, @screen_orientations)
+  def stations_and_screen_orientations(conn, _params) do
+    json(conn, @stations_and_screen_orientations)
   end
 end
