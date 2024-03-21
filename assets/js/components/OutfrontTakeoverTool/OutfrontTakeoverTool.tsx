@@ -82,7 +82,7 @@ class OutfrontTakeoverTool extends React.Component<
   }
 
   componentDidMount() {
-    fetch("/api/station_screen_orientation_list")
+    fetch("/api/outfront_takeover_tool_screens")
       .then((response) => response.json())
       .then((result) =>
         this.setState({ stationScreenOrientationList: result })
