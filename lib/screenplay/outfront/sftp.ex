@@ -2,6 +2,7 @@ defmodule Screenplay.Outfront.SFTP do
   @moduledoc """
   This module handles the CRUD functions to the SFTP server
   """
+  @dialyzer {:no_match, start_connection: 1, write_image: 5, delete_image: 4}
 
   require Logger
 

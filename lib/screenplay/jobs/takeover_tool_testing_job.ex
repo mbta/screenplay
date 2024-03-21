@@ -5,6 +5,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   1. We have the ability to write to and delete from the test folder `ZZZ-MBTA-TEST`
   2. We see all station folders that we expect to see depending on the screens located at the station.
   """
+  @dialyzer {:no_match, start_connection: 0, write_image: 3, delete_image: 2}
 
   alias Screenplay.Outfront.SFTP
 
