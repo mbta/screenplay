@@ -6,8 +6,8 @@ defmodule Screenplay.Outfront.SFTP do
 
   require Logger
 
-  @landscape_dir "Landscape"
-  @portrait_dir "Portrait"
+  @landscape_dir Application.compile_env!(:screenplay, :landscape_dir)
+  @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @retries 3
   @sftp_client_module Application.compile_env!(:screenplay, :sftp_client_module)
 

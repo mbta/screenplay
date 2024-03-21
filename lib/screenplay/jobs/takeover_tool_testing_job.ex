@@ -12,8 +12,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   require Logger
 
   @test_sftp_directory_name "ZZZ-MBTA-TEST"
-  @landscape_dir "Landscape"
-  @portrait_dir "Portrait"
+  @landscape_dir Application.compile_env!(:screenplay, :landscape_dir)
+  @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
   @sftp_client_module Application.compile_env!(:screenplay, :sftp_client_module)
 

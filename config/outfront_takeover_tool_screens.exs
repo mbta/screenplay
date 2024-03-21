@@ -1,6 +1,8 @@
 import Config
 
 config :screenplay,
+  landscape_dir: "Landscape",
+  portrait_dir: "Portrait",
   outfront_takeover_tool_screens: %{
     red: [
       %{
