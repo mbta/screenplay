@@ -112,7 +112,7 @@ defmodule ScreenplayWeb.ConfigController do
     {version_id, data} = Map.pop!(data, :version_id)
 
     conn
-    |> put_resp_header("ETag", version_id)
+    |> put_resp_header("etag", version_id)
     |> json(data)
   end
 
@@ -138,7 +138,7 @@ defmodule ScreenplayWeb.ConfigController do
     case get_req_header(conn, "if-match") do
       [] ->
         conn
-        |> send_resp(428, "Missing If-Match header")
+        |> send_resp(428, "Missing if-match header")
         |> halt()
 
       matches ->

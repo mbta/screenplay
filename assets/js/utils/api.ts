@@ -62,7 +62,7 @@ export const fetchExistingScreensAtPlacesWithPendingScreens =
     const response = await fetch(
       "/config/existing-screens-at-places-with-pending-screens"
     );
-    const eTag = response.headers.get("ETag") as string;
+    const eTag = response.headers.get("etag") as string;
     const data = (await response.json()) as Omit<
       PendingAndLiveScreensResponse,
       "etag"
@@ -104,7 +104,7 @@ export const publishScreensForPlace = async (
     }),
     headers: {
       "content-type": "application/json",
-      "If-Match": eTag,
+      "if-match": eTag,
       "x-csrf-token":
         document?.head?.querySelector<HTMLMetaElement>(
           "[name~=csrf-token][content]"
@@ -116,7 +116,7 @@ export const publishScreensForPlace = async (
   let message;
   // Guard against unexpectedly long response bodies,
   // e.g. when an exception is raised on the server
-  if (!response.headers.get("Content-Type")?.includes("text/html")) {
+  if (!response.headers.get("content-type")?.includes("text/html")) {
     message = await response.text();
   }
 
