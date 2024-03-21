@@ -117,8 +117,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp log_missing_dirs(sftp_dirs, stations, orientation) do
-    Enum.each(stations, fn station ->
-      %{name: station_name} = station
+    Enum.each(stations, fn %{name: station_name} ->
       station_dir = SFTP.get_outfront_directory_for_station(station_name)
 
       if station_dir not in sftp_dirs do
