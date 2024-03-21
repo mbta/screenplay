@@ -24,7 +24,6 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end)
   end
 
-  # sobelow_skip ["Traversal.FileModule"]
   defp test_creating_and_removing_images(conn) do
     Enum.each([@portrait_dir, @landscape_dir], fn orientation ->
       write_image(conn, orientation, @test_image)
