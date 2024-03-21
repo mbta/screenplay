@@ -5,15 +5,16 @@ defmodule Screenplay.Outfront.SFTP do
 
   require Logger
 
-  @orientations ["Portrait", "Landscape"]
+  @landscape_dir "Landscape"
+  @portrait_dir "Portrait"
   @retries 3
 
   def set_takeover_images(stations, portrait_png, landscape_png) do
     conn = start_connection()
 
     Enum.each(stations, fn station ->
-      write_image(conn, station, "Portrait", portrait_png)
-      write_image(conn, station, "Landscape", landscape_png)
+      write_image(conn, station, @portrait_dir, portrait_png)
+      write_image(conn, station, @landscape_dir, landscape_png)
     end)
 
     sftp_client_module().disconnect(conn)
@@ -25,8 +26,8 @@ defmodule Screenplay.Outfront.SFTP do
     Enum.each(
       stations,
       fn station ->
-        delete_image(conn, station, "Portrait")
-        delete_image(conn, station, "Landscape")
+        delete_image(conn, station, @portrait_dir)
+        delete_image(conn, station, @landscape_dir)
       end
     )
 
@@ -91,7 +92,7 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   defp do_write_image(conn, station, orientation, image_data, _retry)
-       when orientation in @orientations do
+       when orientation in [@landscape_dir, @portrait_dir] do
     path = get_outfront_path_for_image(station, orientation)
     sftp_client_module().write_file(conn, path, image_data)
   end
