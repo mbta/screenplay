@@ -78,7 +78,7 @@ defmodule Screenplay.Outfront.SFTP do
         sftp_conn
 
       {:error, error} ->
-        log_error(error)
+        Logger.error("[sftp_connection_error] #{inspect(error)}")
         start_connection(retry - 1)
     end
   end
@@ -137,11 +137,5 @@ defmodule Screenplay.Outfront.SFTP do
   defp get_outfront_path_for_image(station, orientation) do
     station_directory = get_outfront_directory_for_station(station)
     Path.join([orientation, station_directory, "takeover.png"])
-  end
-
-  defp log_error(error) do
-    message = "[sftp_connection_error] #{inspect(error)}"
-    Logger.error(message)
-    Sentry.capture_message(message, level: "error")
   end
 end
