@@ -16,9 +16,6 @@ defmodule Screenplay.Outfront.SFTP do
 
     try do
       work_fn.(conn)
-    rescue
-      e ->
-        log_error(e)
     after
       @sftp_client_module.disconnect(conn)
     end
