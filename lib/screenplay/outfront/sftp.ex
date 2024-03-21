@@ -8,6 +8,7 @@ defmodule Screenplay.Outfront.SFTP do
   @landscape_dir "Landscape"
   @portrait_dir "Portrait"
   @retries 3
+  @sftp_client_module Application.compile_env(:screenplay, :sftp_client_module)
 
   def set_takeover_images(stations, portrait_png, landscape_png) do
     conn = start_connection()
@@ -17,7 +18,7 @@ defmodule Screenplay.Outfront.SFTP do
       write_image(conn, station, @landscape_dir, landscape_png)
     end)
 
-    sftp_client_module().disconnect(conn)
+    @sftp_client_module.disconnect(conn)
   end
 
   def clear_takeover_images(stations) do
@@ -31,7 +32,7 @@ defmodule Screenplay.Outfront.SFTP do
       end
     )
 
-    sftp_client_module().disconnect(conn)
+    @sftp_client_module.disconnect(conn)
   end
 
   def get_outfront_directory_for_station(station) do
@@ -43,10 +44,6 @@ defmodule Screenplay.Outfront.SFTP do
       |> Enum.find(&(&1.name == station))
 
     dir_name
-  end
-
-  defp sftp_client_module do
-    Application.get_env(:screenplay, :sftp_client_module)
   end
 
   defp start_connection(retry \\ @retries)
@@ -65,7 +62,7 @@ defmodule Screenplay.Outfront.SFTP do
       Logger.info("Outfront SSH key is not a string as expected: #{key}")
     end
 
-    case sftp_client_module().connect(
+    case @sftp_client_module.connect(
            host: host,
            user: user,
            key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
@@ -94,7 +91,7 @@ defmodule Screenplay.Outfront.SFTP do
   defp do_write_image(conn, station, orientation, image_data, _retry)
        when orientation in [@landscape_dir, @portrait_dir] do
     path = get_outfront_path_for_image(station, orientation)
-    sftp_client_module().write_file(conn, path, image_data)
+    @sftp_client_module.write_file(conn, path, image_data)
   end
 
   defp do_write_image(_conn, station, orientation, _image_data, _retry),
@@ -127,7 +124,7 @@ defmodule Screenplay.Outfront.SFTP do
     path = get_outfront_path_for_image(station, orientation)
 
     # Note: Check what happens when the path doesn't exist.
-    sftp_client_module().delete_file(conn, path)
+    @sftp_client_module.delete_file(conn, path)
   end
 
   defp get_outfront_path_for_image(station, orientation) do

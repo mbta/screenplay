@@ -14,6 +14,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @landscape_dir "Landscape"
   @portrait_dir "Portrait"
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
+  @sftp_client_module Application.compile_env(:screenplay, :sftp_client_module)
 
   def run do
     conn = start_connection()
@@ -27,7 +28,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         Logger.error(message)
         Sentry.capture_message(message, level: "error")
     after
-      sftp_client_module().disconnect(conn)
+      @sftp_client_module.disconnect(conn)
     end
   end
 
@@ -44,7 +45,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     user = Application.get_env(:screenplay, :outfront_sftp_user)
     key = Application.get_env(:screenplay, :outfront_ssh_key)
 
-    case sftp_client_module().connect(
+    case @sftp_client_module.connect(
            host: host,
            user: user,
            key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
@@ -64,7 +65,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   defp write_image(conn, orientation, local_image_data) do
     remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
 
-    case sftp_client_module().write_file(conn, remote_path, local_image_data) do
+    case @sftp_client_module.write_file(conn, remote_path, local_image_data) do
       :ok ->
         :ok
 
@@ -80,7 +81,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   defp delete_image(conn, orientation) do
     remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
 
-    case sftp_client_module().delete_file(conn, remote_path) do
+    case @sftp_client_module.delete_file(conn, remote_path) do
       :ok ->
         :ok
 
@@ -99,8 +100,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp test_all_directories_exist(conn) do
-    {:ok, portrait_dirs} = sftp_client_module().list_dir(conn, "./Portrait")
-    {:ok, landscape_dirs} = sftp_client_module().list_dir(conn, "./Landscape")
+    {:ok, portrait_dirs} = @sftp_client_module.list_dir(conn, "./Portrait")
+    {:ok, landscape_dirs} = @sftp_client_module.list_dir(conn, "./Landscape")
 
     outfront_takeover_tool_screens =
       :screenplay
@@ -128,9 +129,5 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         Sentry.capture_message(message, level: "error")
       end
     end)
-  end
-
-  defp sftp_client_module do
-    Application.get_env(:screenplay, :sftp_client_module)
   end
 end
