@@ -2,6 +2,7 @@ import React, { createContext } from "react";
 import AlertDashboard from "./AlertDashboard/AlertDashboard";
 import AlertWizard from "./AlertWizard/AlertWizard";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
+import { BASE_URL } from "../../constants/constants";
 
 export interface Station {
   name: string;
@@ -76,7 +77,7 @@ class OutfrontTakeoverTool extends React.Component<
   }
 
   componentDidMount() {
-    fetch("/api/outfront_takeover_tool_screens")
+    fetch(`${BASE_URL}/stations_and_screen_orientations`)
       .then((response) => response.json())
       .then((result) =>
         this.setState({ stationScreenOrientationList: result })

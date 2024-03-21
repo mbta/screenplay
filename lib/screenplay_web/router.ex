@@ -77,7 +77,7 @@ defmodule ScreenplayWeb.Router do
     get("/:provider/callback", AuthController, :callback)
   end
 
-  scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
+  scope "/api/takeover_tool", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through([
       :redirect_prod_http,
       :api,

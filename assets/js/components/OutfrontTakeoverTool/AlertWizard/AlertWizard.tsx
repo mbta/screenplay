@@ -17,6 +17,7 @@ import { matchStation } from "../../../util";
 import parseISO from "date-fns/parseISO";
 import differenceInHours from "date-fns/differenceInHours";
 import { ModalDetails } from "../ConfirmationModal";
+import { BASE_URL } from "../../../constants/constants";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
@@ -233,7 +234,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   fetchActiveAlertsList() {
-    fetch("/api/active_alerts")
+    fetch(`${BASE_URL}/active_alerts`)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ activeAlertsList: data });
@@ -241,7 +242,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   handleSubmit() {
-    const endpoint = this.state.id === null ? "/api/create" : "/api/edit";
+    const endpoint =
+      this.state.id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
 
     const csrfMetaElement = document.head.querySelector(
       "[name~=csrf-token][content]"
