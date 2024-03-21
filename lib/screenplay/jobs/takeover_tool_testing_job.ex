@@ -5,7 +5,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   1. We have the ability to write to and delete from the test folder `ZZZ-MBTA-TEST`
   2. We see all station folders that we expect to see depending on the screens located at the station.
   """
-  @dialyzer {:no_match, start_connection: 0, write_image: 3, delete_image: 2}
+  @dialyzer {:no_match, write_image: 3, delete_image: 2}
 
   alias Screenplay.Outfront.SFTP
 
@@ -30,28 +30,6 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
       write_image(conn, orientation, @test_image)
       delete_image(conn, orientation)
     end)
-  end
-
-  defp start_connection do
-    host = Application.get_env(:screenplay, :outfront_sftp_domain)
-    user = Application.get_env(:screenplay, :outfront_sftp_user)
-    key = Application.get_env(:screenplay, :outfront_ssh_key)
-
-    case @sftp_client_module.connect(
-           host: host,
-           user: user,
-           key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
-         ) do
-      {:ok, sftp_conn} ->
-        sftp_conn
-
-      {:error, error} ->
-        message =
-          "[takeover_tool_testing sftp_connection_error] Failed to connect: #{inspect(error)}"
-
-        Logger.error(message)
-        Sentry.capture_message(message, level: "error")
-    end
   end
 
   defp write_image(conn, orientation, local_image_data) do
