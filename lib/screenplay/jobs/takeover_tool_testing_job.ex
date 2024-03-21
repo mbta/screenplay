@@ -18,19 +18,10 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @sftp_client_module Application.compile_env(:screenplay, :sftp_client_module)
 
   def run do
-    conn = start_connection()
-
-    try do
+    SFTP.run(fn conn ->
       test_creating_and_removing_images(conn)
       test_all_directories_exist(conn)
-    rescue
-      e ->
-        message = "[takeover_tool_testing sftp_connection_error] #{inspect(e)}"
-        Logger.error(message)
-        Sentry.capture_message(message, level: "error")
-    after
-      @sftp_client_module.disconnect(conn)
-    end
+    end)
   end
 
   # sobelow_skip ["Traversal.FileModule"]

@@ -11,29 +11,38 @@ defmodule Screenplay.Outfront.SFTP do
   @retries 3
   @sftp_client_module Application.compile_env(:screenplay, :sftp_client_module)
 
-  def set_takeover_images(stations, portrait_png, landscape_png) do
+  def run(work_fn) do
     conn = start_connection()
 
-    Enum.each(stations, fn station ->
-      write_image(conn, station, @portrait_dir, portrait_png)
-      write_image(conn, station, @landscape_dir, landscape_png)
-    end)
+    try do
+      work_fn.(conn)
+    rescue
+      e ->
+        log_error(e)
+    after
+      @sftp_client_module.disconnect(conn)
+    end
+  end
 
-    @sftp_client_module.disconnect(conn)
+  def set_takeover_images(stations, portrait_png, landscape_png) do
+    run(fn conn ->
+      Enum.each(stations, fn station ->
+        write_image(conn, station, @portrait_dir, portrait_png)
+        write_image(conn, station, @landscape_dir, landscape_png)
+      end)
+    end)
   end
 
   def clear_takeover_images(stations) do
-    conn = start_connection()
-
-    Enum.each(
-      stations,
-      fn station ->
-        delete_image(conn, station, @portrait_dir)
-        delete_image(conn, station, @landscape_dir)
-      end
-    )
-
-    @sftp_client_module.disconnect(conn)
+    run(fn conn ->
+      Enum.each(
+        stations,
+        fn station ->
+          delete_image(conn, station, @portrait_dir)
+          delete_image(conn, station, @landscape_dir)
+        end
+      )
+    end)
   end
 
   def get_outfront_directory_for_station(station) do
@@ -72,7 +81,7 @@ defmodule Screenplay.Outfront.SFTP do
         sftp_conn
 
       {:error, error} ->
-        Logger.error("[sftp_connection_error] #{inspect(error)}")
+        log_error(error)
         start_connection(retry - 1)
     end
   end
@@ -131,5 +140,11 @@ defmodule Screenplay.Outfront.SFTP do
   defp get_outfront_path_for_image(station, orientation) do
     station_directory = get_outfront_directory_for_station(station)
     Path.join([orientation, station_directory, "takeover.png"])
+  end
+
+  defp log_error(error) do
+    message = "[sftp_connection_error] #{inspect(error)}"
+    Logger.error(message)
+    Sentry.capture_message(message, level: "error")
   end
 end
