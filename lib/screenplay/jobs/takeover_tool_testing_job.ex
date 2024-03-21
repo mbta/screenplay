@@ -11,6 +11,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   require Logger
 
   @test_sftp_directory_name "ZZZ-MBTA-TEST"
+  @landscape_dir "Landscape"
+  @portrait_dir "Portrait"
 
   def run do
     conn = start_connection()
@@ -33,7 +35,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     local_image_path = Path.join(:code.priv_dir(:screenplay), "takeover_test.png")
     local_image_data = File.read!(local_image_path)
 
-    Enum.each(["Portrait", "Landscape"], fn orientation ->
+    Enum.each([@portrait_dir, @landscape_dir], fn orientation ->
       write_image(conn, orientation, local_image_data)
       delete_image(conn, orientation)
     end)
@@ -112,8 +114,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     portrait_stations = Enum.filter(outfront_takeover_tool_screens, & &1.portrait)
     landscape_stations = Enum.filter(outfront_takeover_tool_screens, & &1.landscape)
 
-    log_missing_dirs(portrait_dirs, portrait_stations, "Portrait")
-    log_missing_dirs(landscape_dirs, landscape_stations, "Landscape")
+    log_missing_dirs(portrait_dirs, portrait_stations, @portrait_dir)
+    log_missing_dirs(landscape_dirs, landscape_stations, @landscape_dir)
   end
 
   defp log_missing_dirs(sftp_dirs, stations, orientation) do
