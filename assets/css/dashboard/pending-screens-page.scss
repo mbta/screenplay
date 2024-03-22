@@ -54,6 +54,18 @@
     .buttons {
       gap: 8px;
 
+      .edit-button {
+        &__icon {
+          display: inline-block;
+          transform: translateY(-2px);
+          margin-right: 8px;
+        }
+
+        &__text {
+          display: inline-block;
+        }
+      }
+
       .publish-button {
         background-color: #8ecdff;
         color: #212529;

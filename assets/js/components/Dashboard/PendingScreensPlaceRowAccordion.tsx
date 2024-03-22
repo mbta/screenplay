@@ -127,7 +127,10 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
                 onClick={handleClickEdit}
                 disabled={buttonsDisabled}
               >
-                <PencilSquare /> Edit Pending
+                <div className="edit-button__icon">
+                  <PencilSquare />
+                </div>
+                <div className="edit-button__text">Edit Pending</div>
               </Button>
               <Button
                 className="publish-button"
