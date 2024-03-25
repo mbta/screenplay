@@ -120,8 +120,7 @@ defmodule ScreenplayWeb.ConfigController do
   def publish(conn, %{
         "place_id" => place_id,
         "app_id" => app_id,
-        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids,
-        "version_id" => version_id
+        "hidden_from_screenplay_ids" => hidden_from_screenplay_ids
       }) do
     app_id_atom = String.to_existing_atom(app_id)
 
@@ -164,39 +163,4 @@ defmodule ScreenplayWeb.ConfigController do
   defp place_id_has_screen?(place_id, app_id, _),
     do:
       raise("place_id_has_screen/2 not implemented for app_id: #{app_id}, place_id: #{place_id}")
-
-  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_v2}) do
-    screen.app_params.footer.stop_id
-  end
-
-  defp screen_to_place_id(screen = %Screen{app_id: :pre_fare_v2}) do
-    screen.app_params.header.stop_id
-  end
-
-  defp screen_to_place_id(screen = %Screen{app_id: :bus_eink_v2}) do
-    screen.app_params.header.stop_id
-  end
-
-  defp screen_to_place_id(screen = %Screen{app_id: :bus_shelter_v2}) do
-    screen.app_params.footer.stop_id
-  end
-
-  defp screen_to_place_id(screen = %Screen{app_id: :dup_v2}) do
-    screen.app_params.alerts.stop_id
-  end
-
-  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_single}) do
-    screen.app_params.stop_id
-  end
-
-  defp screen_to_place_id(%Screen{app_id: solari_v1_app})
-       when solari_v1_app in [:solari, :solari_large] do
-    # Solari screens frequently show info for multiple stop IDs in different sections.
-    # (Try `jq '.screens | map_values(select(.app_id == "solari")) | map_values(.app_params.sections | map(.query.params.stop_ids))' git/screens/priv/local.json` in your shell to see)
-    # So there isn't a straightforward implementation for that case, at the moment.
-    raise("screen_to_place_id/1 not implemented for app_id: #{solari_v1_app}")
-  end
-
-  defp screen_to_place_id(%Screen{app_id: app_id}),
-    do: raise("screen_to_place_id/1 not implemented for app_id: #{app_id}")
 end
