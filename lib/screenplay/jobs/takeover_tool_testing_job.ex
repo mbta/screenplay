@@ -68,6 +68,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().write_file(conn, remote_path, local_image_data) do
       :ok ->
+        Logger.info("Successfully uploaded image to #{remote_path}")
         :ok
 
       {:error, error} ->
@@ -84,6 +85,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
+        Logger.info("Successfully deleted image from #{remote_path}")
         :ok
 
       {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
