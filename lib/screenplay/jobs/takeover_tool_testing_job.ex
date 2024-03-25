@@ -17,10 +17,43 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
 
   def run do
-    SFTP.run(fn conn ->
+    # SFTP.run(fn conn ->
+    #   test_creating_and_removing_images(conn)
+    #   test_all_directories_exist(conn)
+    # end)
+
+    conn = start_connection()
+
+    try do
       test_creating_and_removing_images(conn)
       test_all_directories_exist(conn)
-    end)
+    after
+      sftp_client_module().disconnect(conn)
+    end
+  end
+
+  defp start_connection() do
+    host = Application.get_env(:screenplay, :outfront_sftp_domain)
+    user = Application.get_env(:screenplay, :outfront_sftp_user)
+    key = Application.get_env(:screenplay, :outfront_ssh_key)
+
+    if is_binary(key) and String.length(key) > 0 do
+      Logger.info("Outfront SSH key is a valid string")
+    else
+      Logger.info("Outfront SSH key is not a string as expected: #{key}")
+    end
+
+    case sftp_client_module().connect(
+           host: host,
+           user: user,
+           key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
+         ) do
+      {:ok, sftp_conn} ->
+        sftp_conn
+
+      {:error, error} ->
+        Logger.error("[sftp_connection_error] #{inspect(error)}")
+    end
   end
 
   defp test_creating_and_removing_images(conn) do
