@@ -24,7 +24,6 @@ sftp_client_module =
 config :screenplay,
   config_fetcher: Screenplay.Config.S3Fetch,
   config_s3_bucket: "mbta-ctd-config",
-  sftp_client_module: sftp_client_module,
   record_sentry: false
 
 # Include 2 logger backends
