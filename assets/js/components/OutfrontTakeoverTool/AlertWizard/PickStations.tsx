@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import StationColumn from "./StationColumn";
 
-import { Station } from "../../../constants/stations";
 import WizardWarning from "./WizardWarning";
+import { Station } from "../OutfrontTakeoverTool";
 
 interface PickStationsProps {
   selectedStations: Station[];

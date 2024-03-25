@@ -6,13 +6,13 @@ config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: System.get_env("HOST"), port: 80],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
+env = System.get_env("ENVIRONMENT_NAME")
+
 sftp_client_module =
-  case System.get_env("SFTP_SERVER") do
-    "outfront" -> SFTPClient
+  case env do
+    "prod" -> SFTPClient
     _ -> Screenplay.Outfront.FakeSFTPClient
   end
-
-env = System.get_env("ENVIRONMENT_NAME", "dev")
 
 if config_env() == :prod do
   keycloak_opts = [
@@ -56,3 +56,10 @@ config :sentry,
   included_environments: [env],
   enable_source_code_context: true,
   root_source_code_path: File.cwd!()
+
+scheduler_jobs =
+  if env == "prod",
+    do: [{"0 7 * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
+    else: []
+
+config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs

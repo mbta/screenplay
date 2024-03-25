@@ -18,7 +18,8 @@ config :screenplay,
   pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.Local,
   local_screens_config_file_spec: {:test, "screens_config.json"},
   local_pending_screens_config_file_spec: {:test, "pending_config.json"},
-  api_v3_url: [:no_api_requests_allowed_during_testing]
+  api_v3_url: [:no_api_requests_allowed_during_testing],
+  sftp_client_module: Screenplay.Outfront.FakeSFTPClient
 
 config :ueberauth, Ueberauth,
   providers: [
