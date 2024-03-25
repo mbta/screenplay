@@ -3,11 +3,23 @@ defmodule Screenplay.PendingScreensConfig.Fetch do
   Defines a behaviour for, and delegates to, a module that provides access to
   the pending screens config file.
   """
-
   alias ScreensConfig.PendingConfig
 
+  defmodule Metadata do
+    @moduledoc false
+
+    @type t :: %__MODULE__{
+            etag: String.t(),
+            version_id: String.t(),
+            last_modified: DateTime.t()
+          }
+
+    @enforce_keys [:etag, :version_id, :last_modified]
+    defstruct @enforce_keys
+  end
+
   @type fetch_result ::
-          {:ok, json :: String.t(), version_id :: String.t(), last_modified :: DateTime.t()}
+          {:ok, json :: String.t(), metadata :: Metadata.t()}
           | :error
 
   @callback fetch_config() :: fetch_result

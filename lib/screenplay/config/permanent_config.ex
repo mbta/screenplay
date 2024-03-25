@@ -7,6 +7,7 @@ defmodule Screenplay.Config.PermanentConfig do
   alias Screenplay.Config.PlaceAndScreens
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
+  alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias ScreensConfig.{Config, PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
@@ -16,6 +17,74 @@ defmodule Screenplay.Config.PermanentConfig do
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   @type screen_type :: :gl_eink_v2
+
+  @spec get_existing_screens_at_places_with_pending_screens() :: %{
+          places_and_screens: %{
+            (place_id_app_id_pair :: String.t()) => %{
+              place_id: String.t(),
+              app_id: atom(),
+              live_screens: %{Config.screen_id() => Screen.t()},
+              pending_screens: %{Config.screen_id() => Screen.t()}
+            }
+          },
+          etag: String.t(),
+          version_id: String.t(),
+          last_modified_ms: integer
+        }
+  def get_existing_screens_at_places_with_pending_screens do
+    {pending_screens_config, metadata} =
+      case PendingScreensFetch.fetch_config() do
+        {:ok, config, metadata} ->
+          %PendingConfig{screens: pending_screens} =
+            config
+            |> Jason.decode!()
+            |> PendingConfig.from_json()
+
+          {pending_screens, metadata}
+
+        _ ->
+          raise(
+            "Could not fetch pending screens config in existing_screens_at_places_with_pending_screens/2"
+          )
+      end
+
+    existing =
+      pending_screens_config
+      |> Enum.group_by(fn {_, screen} -> {screen_to_place_id(screen), screen.app_id} end)
+      |> Map.new(fn {{place_id, app_id}, pending_screens_at_place} ->
+        filter_fn = fn {_, screen} ->
+          screen.app_id == app_id and screen_to_place_id(screen) == place_id
+        end
+
+        live_screens_of_same_type_at_place =
+          for {id, screen} <- ScreensConfigCache.screens(filter_fn),
+              into: %{},
+              do: {id, Screen.to_json(screen)}
+
+        pending_screens_at_place =
+          for {id, screen} <- pending_screens_at_place,
+              into: %{},
+              do: {id, Screen.to_json(screen)}
+
+        live_and_pending = %{
+          live_screens: live_screens_of_same_type_at_place,
+          pending_screens: pending_screens_at_place,
+          place_id: place_id,
+          app_id: app_id
+        }
+
+        json_key = "#{place_id}/#{app_id}"
+
+        {json_key, live_and_pending}
+      end)
+
+    %{
+      places_and_screens: existing,
+      etag: metadata.etag,
+      version_id: metadata.version_id,
+      last_modified_ms: DateTime.to_unix(metadata.last_modified, :millisecond)
+    }
+  end
 
   @spec put_pending_screens(map(), screen_type(), binary()) ::
           {:error,
@@ -173,7 +242,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_pending_config do
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, version_id, _last_modified} -> {config, version_id}
+      {:ok, config, metadata} -> {config, metadata.version_id}
       error -> error
     end
   end
@@ -181,7 +250,7 @@ defmodule Screenplay.Config.PermanentConfig do
   defp get_current_pending_config(version_id) do
     # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^version_id, _last_modified} ->
+      {:ok, config, %{version_id: ^version_id}} ->
         {:ok, config}
 
       :error ->
@@ -370,4 +439,39 @@ defmodule Screenplay.Config.PermanentConfig do
   end
 
   defp place_has_screen(_screen, _place_id), do: false
+
+  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_v2}) do
+    screen.app_params.footer.stop_id
+  end
+
+  defp screen_to_place_id(screen = %Screen{app_id: :pre_fare_v2}) do
+    screen.app_params.header.stop_id
+  end
+
+  defp screen_to_place_id(screen = %Screen{app_id: :bus_eink_v2}) do
+    screen.app_params.header.stop_id
+  end
+
+  defp screen_to_place_id(screen = %Screen{app_id: :bus_shelter_v2}) do
+    screen.app_params.footer.stop_id
+  end
+
+  defp screen_to_place_id(screen = %Screen{app_id: :dup_v2}) do
+    screen.app_params.alerts.stop_id
+  end
+
+  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_single}) do
+    screen.app_params.stop_id
+  end
+
+  defp screen_to_place_id(%Screen{app_id: solari_v1_app})
+       when solari_v1_app in [:solari, :solari_large] do
+    # Solari screens frequently show info for multiple stop IDs in different sections.
+    # (Try `jq '.screens | map_values(select(.app_id == "solari")) | map_values(.app_params.sections | map(.query.params.stop_ids))' git/screens/priv/local.json` in your shell to see)
+    # So there isn't a straightforward implementation for that case, at the moment.
+    raise("screen_to_place_id/1 not implemented for app_id: #{solari_v1_app}")
+  end
+
+  defp screen_to_place_id(%Screen{app_id: app_id}),
+    do: raise("screen_to_place_id/1 not implemented for app_id: #{app_id}")
 end

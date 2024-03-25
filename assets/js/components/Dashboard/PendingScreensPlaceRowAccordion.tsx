@@ -23,6 +23,7 @@ interface Props {
   appID: string;
   placeID: string;
   screens: LiveOrPendingScreen[];
+  buttonsDisabled: boolean;
   publishCallback: (
     placeID: string,
     appID: string,
@@ -65,6 +66,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   appID,
   placeID,
   screens,
+  buttonsDisabled,
   publishCallback,
 }: Props) => {
   const [hiddenFromScreenplayIDs, setHiddenFromScreenplayIDs] = useState<
@@ -120,10 +122,21 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
               Type: {formatAppID(appID)}
             </Col>
             <Col className="buttons d-flex justify-content-end">
-              <Button className="edit-button" onClick={handleClickEdit}>
-                <PencilSquare /> Edit Pending
+              <Button
+                className="edit-button"
+                onClick={handleClickEdit}
+                disabled={buttonsDisabled}
+              >
+                <div className="edit-button__icon">
+                  <PencilSquare />
+                </div>
+                <div className="edit-button__text">Edit Pending</div>
               </Button>
-              <Button className="publish-button" onClick={handleClickPublish}>
+              <Button
+                className="publish-button"
+                onClick={handleClickPublish}
+                disabled={buttonsDisabled}
+              >
                 Publish Updates
               </Button>
             </Col>

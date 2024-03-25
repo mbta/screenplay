@@ -25,8 +25,9 @@ const PendingScreensPage: ComponentType = () => {
   const [existingScreens, setExistingScreens] = useState<PendingAndLiveScreens>(
     {}
   );
-  const [versionID, setVersionID] = useState<string | null>(null);
+  const [etag, setEtag] = useState<string | null>(null);
   const [lastModified, setLastModified] = useState<Date | null>(null);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
   const placesByID: Record<string, Place> = useMemo(
     () => places.reduce((acc, place) => ({ ...acc, [place.id]: place }), {}),
@@ -35,53 +36,67 @@ const PendingScreensPage: ComponentType = () => {
 
   const fetchData = useCallback(() => {
     fetchExistingScreensAtPlacesWithPendingScreens().then(
-      ({ places_and_screens, version_id, last_modified_ms }) => {
+      ({ places_and_screens, etag, last_modified_ms }) => {
         setExistingScreens(places_and_screens);
-        setVersionID(version_id);
+        setEtag(etag);
         if (last_modified_ms !== null) {
           setLastModified(new Date(last_modified_ms));
         }
       }
     );
-  }, [setExistingScreens, setVersionID, setLastModified]);
+  }, [setExistingScreens, setEtag, setLastModified]);
 
   const dispatch = useScreenplayDispatchContext();
 
   const publish = useCallback(
     async (placeID, appID, hiddenFromScreenplayIDs) => {
-      let success = false;
+      if (isPublishing) {
+        // Prevent multiple publish requests from being fired if user accidentally double clicks the button.
+        return;
+      }
+
+      setIsPublishing(true);
       try {
-        // We know versionID is not null at this point because it's not possible for a "Publish" button
-        // to be rendered without the version ID also being set--both state values are set together in
+        // We know etag is not null at this point because it's not possible for a "Publish" button
+        // to be rendered without the ETag also being set--both state values are set together in
         // `fetchData`.
         const { status, message } = await publishScreensForPlace(
           placeID,
           appID,
+          hiddenFromScreenplayIDs,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          versionID!,
-          hiddenFromScreenplayIDs
+          etag!
         );
 
         const defaultErrorMessage = "Server error. Please contact an engineer.";
         switch (status) {
           case 200:
             dispatch({
-              type: "SHOW_PUBLISH_OUTCOME",
+              type: "SHOW_ACTION_OUTCOME",
               isSuccessful: true,
               message: "Screens published to places",
             });
-            success = true;
+            // Since the publish succeeded, let's update the page data immediately
+            // so the new state is reflected.
+            fetchData();
+            break;
+          case 412:
+            dispatch({
+              type: "SHOW_ACTION_OUTCOME",
+              isSuccessful: false,
+              message: "Page is out of date. Please reload and try again.",
+            });
             break;
           case 500:
             dispatch({
-              type: "SHOW_PUBLISH_OUTCOME",
+              type: "SHOW_ACTION_OUTCOME",
               isSuccessful: false,
               message: message || defaultErrorMessage,
             });
             break;
           default:
             dispatch({
-              type: "SHOW_PUBLISH_OUTCOME",
+              type: "SHOW_ACTION_OUTCOME",
               isSuccessful: false,
               message: defaultErrorMessage,
             });
@@ -89,22 +104,19 @@ const PendingScreensPage: ComponentType = () => {
         }
       } catch (e) {
         dispatch({
-          type: "SHOW_PUBLISH_OUTCOME",
+          type: "SHOW_ACTION_OUTCOME",
           isSuccessful: false,
           message: "Unknown error. Please contact an engineer.",
         });
         console.error(e);
       }
 
+      setIsPublishing(false);
       setTimeout(() => {
-        dispatch({ type: "HIDE_PUBLISH_OUTCOME" });
+        dispatch({ type: "HIDE_ACTION_OUTCOME" });
       }, 5000);
-
-      if (success) {
-        setTimeout(fetchData, 6000);
-      }
     },
-    [versionID, dispatch, fetchData]
+    [etag, dispatch, fetchData, isPublishing]
   );
 
   useEffect(fetchData, []);
@@ -131,6 +143,7 @@ const PendingScreensPage: ComponentType = () => {
                   place={place}
                   appID={app_id}
                   placeID={place_id}
+                  buttonsDisabled={isPublishing}
                   publishCallback={publish}
                   screens={mergeLiveAndPendingByID(
                     live_screens,

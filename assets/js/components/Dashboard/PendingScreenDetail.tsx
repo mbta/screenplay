@@ -8,10 +8,7 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../util";
 import OpenInTabButton from "./OpenInTabButton";
 import CopyLinkButton from "./CopyLinkButton";
-import {
-  DirectionID,
-  useScreenplayDispatchContext,
-} from "../../hooks/useScreenplayContext";
+import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
 import { LightningChargeFill, ClockFill } from "react-bootstrap-icons";
 
 interface Props {
@@ -22,27 +19,35 @@ interface Props {
   onClickHideOnPlacesPage: () => void;
 }
 
-const formatDirectionID = (directionID?: DirectionID) => {
-  switch (directionID) {
+const getGLScreenLocationDescription = (
+  config: ScreenConfiguration & { app_id: "gl_eink_v2" }
+) => {
+  let direction = "";
+  switch (config.app_params.header.direction_id) {
     case 0:
-      return "Westbound";
+      direction = "Westbound";
+      break;
     case 1:
-      return "Eastbound";
-    default:
-      return "";
+      direction = "Eastbound";
   }
-};
 
-const getScreenLocationDescription = (config: ScreenConfiguration) => {
-  const direction = formatDirectionID(config.app_params.header.direction_id);
   const platformLocation = capitalize(
     config.app_params.platform_location ?? ""
   );
 
-  if (direction.length > 0 || platformLocation.length > 0) {
-    return `${direction} ${platformLocation}`;
+  return [direction, platformLocation].join(" ");
+};
+
+const getScreenLocationDescription = (config: ScreenConfiguration) => {
+  switch (config.app_id) {
+    case "gl_eink_v2":
+      return getGLScreenLocationDescription(config);
+    default:
+      console.warn(
+        `getScreenLocationDescription not implemented for ${config.app_id}`
+      );
+      return "";
   }
-  return null;
 };
 
 const PendingScreenDetail: ComponentType<Props> = ({

@@ -10,8 +10,8 @@ defmodule Screenplay.Config.ConfigTest do
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 
   def fetch_current_config_version do
-    {:ok, _config, version, _last_modified} = Local.fetch_config()
-    version
+    {:ok, _config, metadata} = Local.fetch_config()
+    metadata.version_id
   end
 
   def get_fixture_path(file_name) do
@@ -151,7 +151,7 @@ defmodule Screenplay.Config.ConfigTest do
         |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
-      {:ok, config, version, _last_modified} = Local.fetch_config()
+      {:ok, config, metadata} = Local.fetch_config()
       assert expected_file_contents == config
 
       places_and_screens = %{
@@ -170,7 +170,11 @@ defmodule Screenplay.Config.ConfigTest do
         }
       }
 
-      assert PermanentConfig.put_pending_screens(places_and_screens, :gl_eink_v2, version) == :ok
+      assert PermanentConfig.put_pending_screens(
+               places_and_screens,
+               :gl_eink_v2,
+               metadata.version_id
+             ) == :ok
 
       expected_file_contents =
         %PendingConfig{
@@ -239,7 +243,7 @@ defmodule Screenplay.Config.ConfigTest do
         |> PendingConfig.to_json()
         |> Jason.encode!(pretty: true)
 
-      {:ok, config, _version_id, _last_modified} = Local.fetch_config()
+      {:ok, config, _metadata} = Local.fetch_config()
       assert expected_file_contents == config
     end
 

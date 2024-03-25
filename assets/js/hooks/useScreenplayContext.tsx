@@ -13,7 +13,7 @@ import {
   STATUSES,
 } from "../constants/constants";
 import { BannerAlert } from "../components/Dashboard/AlertBanner";
-import { PublishOutcomeToastProps } from "../components/Dashboard/PublishOutcomeToast";
+import { ActionOutcomeToastProps } from "../components/Dashboard/ActionOutcomeToast";
 
 interface Props {
   children: React.ReactNode;
@@ -42,12 +42,12 @@ type ReducerAction =
       type: "SHOW_LINK_COPIED";
       showLinkCopied: boolean;
     }
-  | ({ type: "SHOW_PUBLISH_OUTCOME" } & Omit<
-      Required<PublishOutcomeToastProps>,
+  | ({ type: "SHOW_ACTION_OUTCOME" } & Omit<
+      Required<ActionOutcomeToastProps>,
       "show"
     >)
   | {
-      type: "HIDE_PUBLISH_OUTCOME";
+      type: "HIDE_ACTION_OUTCOME";
     };
 
 type AlertsListReducerAction = {
@@ -106,7 +106,7 @@ interface ScreenplayState {
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
   showLinkCopied: boolean;
-  publishOutcomeToast: PublishOutcomeToastProps;
+  actionOutcomeToast: ActionOutcomeToastProps;
 }
 
 interface ConfigValidationState {
@@ -138,19 +138,19 @@ const reducer = (
         ...state,
         showLinkCopied: action.showLinkCopied,
       };
-    case "SHOW_PUBLISH_OUTCOME":
+    case "SHOW_ACTION_OUTCOME":
       return {
         ...state,
-        publishOutcomeToast: {
+        actionOutcomeToast: {
           show: true,
           isSuccessful: action.isSuccessful,
           message: action.message,
         },
       };
-    case "HIDE_PUBLISH_OUTCOME":
+    case "HIDE_ACTION_OUTCOME":
       return {
         ...state,
-        publishOutcomeToast: { show: false },
+        actionOutcomeToast: { ...state.actionOutcomeToast, show: false },
       };
     default:
       throw new Error(`Unknown reducer action: ${JSON.stringify(action)}`);
@@ -245,7 +245,7 @@ const initialState: ScreenplayState = {
   screensByAlertMap: {} as ScreensByAlert,
   bannerAlert: undefined,
   showLinkCopied: false,
-  publishOutcomeToast: { show: false },
+  actionOutcomeToast: { show: false },
 };
 
 const initialPlacesListState: PlacesListState = {

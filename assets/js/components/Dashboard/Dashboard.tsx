@@ -11,10 +11,10 @@ import { useInterval } from "../../hooks/useInterval";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
 import LinkCopiedToast from "./LinkCopiedToast";
-import PublishOutcomeToast from "./PublishOutcomeToast";
+import ActionOutcomeToast from "./ActionOutcomeToast";
 
 const Dashboard: ComponentType = () => {
-  const { alerts, bannerAlert, showLinkCopied, publishOutcomeToast } =
+  const { alerts, bannerAlert, showLinkCopied, actionOutcomeToast } =
     useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
@@ -149,7 +149,7 @@ const Dashboard: ComponentType = () => {
   return (
     <div className="screenplay-container">
       <LinkCopiedToast show={showLinkCopied} />
-      <PublishOutcomeToast {...publishOutcomeToast} />
+      <ActionOutcomeToast {...actionOutcomeToast} />
       <Sidebar />
       <div className="page-content">
         {bannerAlert?.alert && (

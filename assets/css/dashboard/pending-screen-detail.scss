@@ -38,7 +38,6 @@
     .screen-url {
       display: inline-block;
       line-height: 69px;
-      //   gap: 16px;
     }
 
     .screen-id {
@@ -53,8 +52,7 @@
 
     .hide-on-places-page {
       display: inline-block;
-      // Bootstrap checkbox has 16px right margin, we want 8.
-      margin-left: -8px;
+      margin-right: 8px;
       height: 73px;
       line-height: 73px;
     }
