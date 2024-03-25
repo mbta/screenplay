@@ -60,7 +60,7 @@ config :sentry,
 
 scheduler_jobs =
   if env == "dev-green",
-    do: [{"30 * * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
+    do: [{"40 * * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
     else: []
 
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs

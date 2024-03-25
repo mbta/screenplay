@@ -22,7 +22,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     #   test_all_directories_exist(conn)
     # end)
 
-    conn = start_connection()
+    {:ok, conn} = start_connection()
 
     try do
       test_creating_and_removing_images(conn)
