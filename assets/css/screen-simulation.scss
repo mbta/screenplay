@@ -1,0 +1,96 @@
+.screen-simulation__iframe-container {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 16px;
+  overflow: hidden;
+
+  // The below values are "height of the iframe's container", which is different than the iframe content
+
+  // V2 apps don't need the height set
+
+  &--bus_eink,
+  &--gl_eink_double {
+    height: 480px;
+    width: 180px;
+    background-color: white;
+    box-shadow: 0px 0px 32px 0px #00000040;
+    margin-bottom: 12px;
+  }
+
+  &--gl_eink_single {
+    height: 240px;
+    width: 180px;
+    background-color: white;
+    box-shadow: 0px 0px 32px 0px #00000040;
+    margin-bottom: 12px;
+  }
+
+  &--pa_ess {
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+  }
+
+  &--solari {
+    height: 344px;
+    width: 194px;
+    box-shadow: 0px 0px 32px 0px #00000040;
+    margin-bottom: 12px;
+  }
+
+  .screen-simulation__iframe {
+    // DUP, PreFare, Bus Shelter, and Eink v2s all could have scrollbars,
+    // so height adjusted to fit
+    width: 100%;
+
+    &--bus_shelter_v2 {
+      height: 379px;
+    }
+
+    &--pre_fare_v2 {
+      height: 470px;
+    }
+
+    &--bus_eink_v2,
+    &--gl_eink_v2 {
+      height: 515px;
+    }
+
+    &--bus_eink,
+    &--gl_eink_double {
+      height: 3200px;
+      width: 1200px;
+      transform: scale(15%);
+      transform-origin: top left;
+    }
+
+    &--gl_eink_single {
+      height: 1600px;
+      width: 1200px;
+      transform: scale(15%);
+      transform-origin: top left;
+    }
+
+    &--dup,
+    &--dup_v2 {
+      height: 195px;
+    }
+
+    &--pa_ess {
+      height: 80px;
+      width: 250px;
+    }
+
+    &--solari {
+      height: 1920px;
+      width: 1080px;
+      transform: scale(17.92%);
+      transform-origin: top left;
+    }
+
+    &--triptych_v2 {
+      height: 365px;
+    }
+  }
+}

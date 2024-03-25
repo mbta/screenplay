@@ -73,6 +73,7 @@ defmodule ScreenplayWeb do
       import ScreenplayWeb.ErrorHelpers
       import ScreenplayWeb.Gettext
       alias ScreenplayWeb.Router.Helpers, as: Routes
+
       unquote(verified_routes())
     end
   end

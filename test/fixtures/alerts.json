@@ -1,6 +1,8 @@
 {
   "alerts": [
     {
+      "cleared_at": null,
+      "cleared_by": null,
       "created_by": "user",
       "edited_by": "user",
       "id": "a1",
@@ -18,11 +20,13 @@
       ]
     },
     {
+      "cleared_at": null,
+      "cleared_by": null,
       "created_by": "user",
-      "edited_by": "user",
+      "edited_by": "bar",
       "id": "a2",
       "message": {
-        "text": "All clear now",
+        "text": "This is an alert",
         "type": "custom"
       },
       "schedule": {
@@ -30,8 +34,9 @@
         "start": "2021-08-19T17:09:42Z"
       },
       "stations": [
-        "Kendall/MIT"
+        "South Station"
       ]
     }
-  ]
+  ],
+  "cleared_alerts": []
 }

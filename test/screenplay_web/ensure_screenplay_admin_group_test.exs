@@ -8,7 +8,7 @@ defmodule ScreenplayWeb.EnsureScreenplayAdminGroupTest do
   end
 
   describe "call/2" do
-    @tag :authenticated_admin
+    @tag :authenticated_emergency_admin
     test "does nothing when user is in the outfront admin group", %{conn: conn} do
       assert conn == ScreenplayWeb.EnsureScreenplayAdminGroup.call(conn, [])
     end

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import classNames from "classnames";
 import { Screen } from "../../models/screen";
 import ScreenDetailActionBar from "./ScreenDetailActionBar";
@@ -11,27 +11,7 @@ interface ScreenDetailHeaderProps {
 }
 
 const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
-  const generateSource = (screen: Screen) => {
-    const { id, type } = screen;
-    // @ts-ignore Suppressing "object could be null" warning
-    const screensUrl = document
-      .querySelector("meta[name=screens-url]")
-      ?.getAttribute("content");
-
-    if (type.includes("v2")) {
-      return `${screensUrl}/v2/screen/${id}`;
-    }
-    if (
-      ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
-    ) {
-      return `${screensUrl}/screen/${id}`;
-    }
-    if (type === "dup") {
-      return `${screensUrl}/screen/${id}`;
-    }
-
-    return "";
-  };
+  const url = useMemo(() => generateSource(props.screen), [props.screen]);
 
   return (
     <div className="screen-detail__header">
@@ -44,11 +24,33 @@ const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
         )}
       </div>
       <ScreenDetailActionBar
-        screenUrl={generateSource(props.screen)}
+        screenUrl={url}
         isCollapsed={props.isMultipleScreens}
       />
     </div>
   );
+};
+
+const generateSource = (screen: Screen) => {
+  const { id, type } = screen;
+  // @ts-ignore Suppressing "object could be null" warning
+  const screensUrl = document
+    .querySelector("meta[name=screens-url]")
+    ?.getAttribute("content");
+
+  if (type.includes("v2")) {
+    return `${screensUrl}/v2/screen/${id}`;
+  }
+  if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
+    return `${screensUrl}/screen/${id}`;
+  }
+  if (type === "solari") {
+    // Solari app disables scrolling unless this param is added.
+    // (Due to quirks of running on a very old browser in the past)
+    return `${screensUrl}/screen/${id}?scroll=true`;
+  }
+
+  return "";
 };
 
 export default ScreenDetailHeader;

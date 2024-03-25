@@ -17,6 +17,7 @@ defmodule Screenplay.Application do
       # {Screenplay.Worker, arg}
       Screenplay.OutfrontTakeoverTool.Alerts.State,
       Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
+      {Screenplay.Cache.Owner, engine_module: Screenplay.ScreensConfig.Cache.Engine},
       Screenplay.Scheduler
     ]
 

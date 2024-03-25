@@ -1,0 +1,30 @@
+.button-image-container {
+  display: flex;
+
+  .button-image {
+    display: flex;
+    flex-direction: column;
+    height: 268px;
+    border-radius: 16px;
+    background: #2b3741;
+    border-color: transparent;
+    flex: 1 1 306px;
+    align-items: center;
+    padding-bottom: 18px;
+
+    &:hover {
+      background: $cool-gray-30;
+      border-color: transparent;
+    }
+
+    &__image-container {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    &__label {
+      font-size: 16px;
+      font-weight: 700;
+    }
+  }
+}

@@ -11,7 +11,7 @@ defmodule ScreenplayWeb.EnsureScreenplayAdminGroup do
 
   def call(conn, _opts) do
     with claims <- Guardian.Plug.current_claims(conn),
-         true <- ScreenplayWeb.AuthManager.claims_access_level(claims) == :emergency_admin do
+         true <- :emergency_admin in ScreenplayWeb.AuthManager.claims_access_level(claims) do
       conn
     else
       _ ->

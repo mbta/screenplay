@@ -3,7 +3,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   use Guardian, otp_app: :screenplay
 
-  @type access_level :: :none | :read_only | :emergency_admin | :screens_config_admmin
+  @type access_level :: :none | :read_only | :emergency_admin | :screens_admin
 
   @screenplay_admin_role "screenplay-emergency-admin"
   @screens_admin "screens-admin"
@@ -24,21 +24,25 @@ defmodule ScreenplayWeb.AuthManager do
 
   def resource_from_claims(_), do: {:error, :invalid_claims}
 
-  @spec claims_access_level(Guardian.Token.claims()) :: access_level()
+  @spec claims_access_level(Guardian.Token.claims()) :: list(access_level())
   def claims_access_level(%{"roles" => roles}) when not is_nil(roles) do
-    cond do
-      @screenplay_admin_role in roles ->
-        :emergency_admin
+    access_levels =
+      []
+      |> append_if(@screenplay_admin_role in roles, :emergency_admin)
+      |> append_if(@screens_admin in roles, :screens_admin)
 
-      @screens_admin in roles ->
-        :screens_config_admmin
-
-      true ->
-        :read_only
+    if access_levels == [] do
+      [:read_only]
+    else
+      access_levels
     end
   end
 
   def claims_access_level(_claims) do
-    :read_only
+    [:read_only]
+  end
+
+  defp append_if(list, condition, item) do
+    if condition, do: list ++ [item], else: list
   end
 end

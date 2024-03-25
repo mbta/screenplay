@@ -54,10 +54,15 @@ defmodule Screenplay.MixProject do
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},
       {:httpoison, "~> 1.8.0"},
+      {:timex, "~> 3.0"},
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
       {:sentry, "~> 8.0"},
       {:stream_data, "~> 0.5", only: :test},
+      {:screens_config,
+       git: "https://github.com/mbta/screens-config-lib.git",
+       ref: "6bde1c69110b665d6223746a0340d6d44b5ac0be"},
+      {:mox, "~> 1.0", only: :test},
       {:quantum, "~> 3.0"}
     ]
   end

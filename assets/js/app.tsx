@@ -14,6 +14,8 @@ import "../css/app.scss";
 //
 import "phoenix_html";
 
+import "regenerator-runtime/runtime";
+
 import React from "react";
 import ReactDOM from "react-dom";
 
