@@ -6,6 +6,14 @@ config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: System.get_env("HOST"), port: 80],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
+env = System.get_env("ENVIRONMENT_NAME")
+
+sftp_client_module =
+  case env do
+    "prod" -> SFTPClient
+    _ -> Screenplay.Outfront.FakeSFTPClient
+  end
+
 if config_env() == :prod do
   keycloak_opts = [
     issuer: :keycloak_issuer,
@@ -25,23 +33,15 @@ if config_env() == :prod do
     ]
 end
 
-env = System.get_env("ENVIRONMENT_NAME")
-
-sftp_client_module =
-  case env do
-    "prod" -> SFTPClient
-    _ -> Screenplay.Outfront.FakeSFTPClient
-  end
-
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
+  sftp_client_module: sftp_client_module,
   outfront_ssh_key: System.get_env("OUTFRONT_SSH_KEY"),
   outfront_sftp_user: System.get_env("OUTFRONT_SFTP_USER"),
   outfront_sftp_domain: System.get_env("OUTFRONT_SFTP_DOMAIN"),
   pio_slack_group_id: System.get_env("PIO_SLACK_USERGROUP_ID"),
   slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL"),
   environment_name: env,
-  sftp_client_module: sftp_client_module,
   sentry_frontend_dsn: System.get_env("SENTRY_DSN"),
   api_v3_key: System.get_env("API_V3_KEY"),
   api_v3_url: System.get_env("API_V3_URL"),
