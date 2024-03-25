@@ -36,7 +36,6 @@ end
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
   sftp_client_module: sftp_client_module,
-  job_sftp_client_module: SFTPClient,
   outfront_ssh_key: System.get_env("OUTFRONT_SSH_KEY"),
   outfront_sftp_user: System.get_env("OUTFRONT_SFTP_USER"),
   outfront_sftp_domain: System.get_env("OUTFRONT_SFTP_DOMAIN"),
@@ -59,8 +58,8 @@ config :sentry,
   root_source_code_path: File.cwd!()
 
 scheduler_jobs =
-  if env == "dev-green",
-    do: [{"* * * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
+  if env == "prod",
+    do: [{"0 7 * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
     else: []
 
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs

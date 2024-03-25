@@ -17,43 +17,10 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
 
   def run do
-    # SFTP.run(fn conn ->
-    #   test_creating_and_removing_images(conn)
-    #   test_all_directories_exist(conn)
-    # end)
-
-    conn = start_connection()
-
-    try do
+    SFTP.run(fn conn ->
       test_creating_and_removing_images(conn)
       test_all_directories_exist(conn)
-    after
-      sftp_client_module().disconnect(conn)
-    end
-  end
-
-  defp start_connection() do
-    host = "em-api.outfrontmediadigital.com"
-    user = "MBTA_EMessaging"
-    key = Application.get_env(:screenplay, :outfront_ssh_key)
-
-    if is_binary(key) and String.length(key) > 0 do
-      Logger.info("Outfront SSH key is a valid string")
-    else
-      Logger.info("Outfront SSH key is not a string as expected: #{key}")
-    end
-
-    case sftp_client_module().connect(
-           host: host,
-           user: user,
-           key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
-         ) do
-      {:ok, sftp_conn} ->
-        sftp_conn
-
-      {:error, error} ->
-        Logger.error("[sftp_connection_error] #{inspect(error)}")
-    end
+    end)
   end
 
   defp test_creating_and_removing_images(conn) do
@@ -68,7 +35,6 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().write_file(conn, remote_path, local_image_data) do
       :ok ->
-        Logger.info("Successfully uploaded image to #{remote_path}")
         :ok
 
       {:error, error} ->
@@ -85,7 +51,6 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
-        Logger.info("Successfully deleted image from #{remote_path}")
         :ok
 
       {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
@@ -134,5 +99,5 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end)
   end
 
-  defp sftp_client_module, do: Application.get_env(:screenplay, :job_sftp_client_module)
+  defp sftp_client_module, do: Application.get_env(:screenplay, :sftp_client_module)
 end
