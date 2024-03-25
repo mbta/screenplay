@@ -33,8 +33,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp start_connection() do
-    host = Application.get_env(:screenplay, :outfront_sftp_domain)
-    user = Application.get_env(:screenplay, :outfront_sftp_user)
+    host = "em-api.outfrontmediadigital.com"
+    user = "MBTA_EMessaging"
     key = Application.get_env(:screenplay, :outfront_ssh_key)
 
     if is_binary(key) and String.length(key) > 0 do
