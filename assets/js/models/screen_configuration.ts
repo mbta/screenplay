@@ -11,7 +11,6 @@ interface GlEinkAppParams {
 }
 
 export interface GLScreenConfiguration {
-  app_id: "gl_eink_v2";
   screen_id?: string;
   new_id?: string;
   app_params: GlEinkAppParams;
