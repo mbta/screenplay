@@ -25,7 +25,7 @@ const PendingScreensPage: ComponentType = () => {
   const [existingScreens, setExistingScreens] = useState<PendingAndLiveScreens>(
     {}
   );
-  const [eTag, setETag] = useState<string | null>(null);
+  const [etag, setEtag] = useState<string | null>(null);
   const [lastModified, setLastModified] = useState<Date | null>(null);
   const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
@@ -36,15 +36,15 @@ const PendingScreensPage: ComponentType = () => {
 
   const fetchData = useCallback(() => {
     fetchExistingScreensAtPlacesWithPendingScreens().then(
-      ({ places_and_screens, eTag, last_modified_ms }) => {
+      ({ places_and_screens, etag, last_modified_ms }) => {
         setExistingScreens(places_and_screens);
-        setETag(eTag);
+        setEtag(etag);
         if (last_modified_ms !== null) {
           setLastModified(new Date(last_modified_ms));
         }
       }
     );
-  }, [setExistingScreens, setETag, setLastModified]);
+  }, [setExistingScreens, setEtag, setLastModified]);
 
   const dispatch = useScreenplayDispatchContext();
 
@@ -57,7 +57,7 @@ const PendingScreensPage: ComponentType = () => {
 
       setIsPublishing(true);
       try {
-        // We know eTag is not null at this point because it's not possible for a "Publish" button
+        // We know etag is not null at this point because it's not possible for a "Publish" button
         // to be rendered without the ETag also being set--both state values are set together in
         // `fetchData`.
         const { status, message } = await publishScreensForPlace(
@@ -65,7 +65,7 @@ const PendingScreensPage: ComponentType = () => {
           appID,
           hiddenFromScreenplayIDs,
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          eTag!
+          etag!
         );
 
         const defaultErrorMessage = "Server error. Please contact an engineer.";
@@ -116,7 +116,7 @@ const PendingScreensPage: ComponentType = () => {
         dispatch({ type: "HIDE_ACTION_OUTCOME" });
       }, 5000);
     },
-    [eTag, dispatch, fetchData, isPublishing]
+    [etag, dispatch, fetchData, isPublishing]
   );
 
   useEffect(fetchData, []);

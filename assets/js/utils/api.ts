@@ -43,7 +43,8 @@ export const fetchExistingScreens = async (
 
 export interface PendingAndLiveScreensResponse {
   places_and_screens: PendingAndLiveScreens;
-  eTag: string;
+  etag: string;
+  version_id: string;
   last_modified_ms: number | null;
 }
 
@@ -62,13 +63,13 @@ export const fetchExistingScreensAtPlacesWithPendingScreens =
     const response = await fetch(
       "/config/existing-screens-at-places-with-pending-screens"
     );
-    const eTag = response.headers.get("etag") as string;
+    const etag = response.headers.get("etag") as string;
     const data = (await response.json()) as Omit<
       PendingAndLiveScreensResponse,
       "etag"
     >;
 
-    return { ...data, eTag };
+    return { ...data, etag };
   };
 
 export const putPendingScreens = async (
@@ -95,7 +96,7 @@ export const publishScreensForPlace = async (
   placeId: string,
   appId: string,
   hiddenFromScreenplayIds: string[],
-  eTag: string
+  etag: string
 ) => {
   const response = await fetch(`/config/publish/${placeId}/${appId}`, {
     method: "POST",
@@ -104,7 +105,7 @@ export const publishScreensForPlace = async (
     }),
     headers: {
       "content-type": "application/json",
-      "if-match": eTag,
+      "if-match": etag,
       "x-csrf-token":
         document?.head?.querySelector<HTMLMetaElement>(
           "[name~=csrf-token][content]"

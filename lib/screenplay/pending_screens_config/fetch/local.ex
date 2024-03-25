@@ -3,9 +3,10 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   Functions to work with a local copy of the pending screens config.
   """
 
+  alias Screenplay.PendingScreensConfig.Fetch
   alias ScreensConfig.PendingConfig
 
-  @behaviour Screenplay.PendingScreensConfig.Fetch
+  @behaviour Fetch
 
   @impl true
   def fetch_config do
@@ -13,7 +14,15 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
 
     with {:ok, last_modified} <- get_last_modified(path),
          {:ok, contents} <- do_fetch(path) do
-      {:ok, contents, DateTime.to_iso8601(last_modified), last_modified}
+      last_modified_as_string = DateTime.to_iso8601(last_modified)
+
+      metadata = %Fetch.Metadata{
+        etag: last_modified_as_string,
+        version_id: last_modified_as_string,
+        last_modified: last_modified
+      }
+
+      {:ok, contents, metadata}
     end
   end
 

@@ -51,13 +51,13 @@ defmodule ScreenplayWeb.ConfigController do
 
     {pending_screens_config, version_id} =
       case PendingScreensConfig.fetch_config() do
-        {:ok, config, version_id, _last_modified} ->
+        {:ok, config, metadata} ->
           %PendingConfig{screens: pending_screens} =
             config
             |> Jason.decode!()
             |> PendingConfig.from_json()
 
-          {pending_screens, version_id}
+          {pending_screens, metadata.version_id}
 
         _ ->
           raise("Could not fetch pending screens config in existing_screens/2")
@@ -97,7 +97,8 @@ defmodule ScreenplayWeb.ConfigController do
   end
 
   @doc """
-  Responds with a map whose top-level keys are `:places_and_screens` and `:last_modified_ms`.
+  Responds with a map whose top-level keys are `:places_and_screens`, `:version_id`, and `:last_modified_ms`.
+  The response will also contain an `etag` header.
 
   The `:places_and_screens` map's keys are unique pairs of place ID+app ID (as strings, for JSON compatibility),
   and values are maps containing the live and pending screens at that place / with that app ID,
@@ -109,10 +110,10 @@ defmodule ScreenplayWeb.ConfigController do
   """
   def existing_screens_at_places_with_pending_screens(conn, _params) do
     data = PermanentConfig.get_existing_screens_at_places_with_pending_screens()
-    {version_id, data} = Map.pop!(data, :version_id)
+    {etag, data} = Map.pop!(data, :etag)
 
     conn
-    |> put_resp_header("etag", version_id)
+    |> put_resp_header("etag", etag)
     |> json(data)
   end
 
@@ -142,9 +143,9 @@ defmodule ScreenplayWeb.ConfigController do
         |> halt()
 
       matches ->
-        {:ok, _, current_version_id, _} = PendingScreensConfig.fetch_config()
+        {:ok, _, metadata} = PendingScreensConfig.fetch_config()
 
-        if current_version_id in matches do
+        if metadata.version_id in matches do
           conn
         else
           conn

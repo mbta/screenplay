@@ -27,19 +27,20 @@ defmodule Screenplay.Config.PermanentConfig do
               pending_screens: %{Config.screen_id() => Screen.t()}
             }
           },
+          etag: String.t(),
           version_id: String.t(),
           last_modified_ms: integer
         }
   def get_existing_screens_at_places_with_pending_screens do
-    {pending_screens_config, version_id, last_modified} =
+    {pending_screens_config, metadata} =
       case PendingScreensFetch.fetch_config() do
-        {:ok, config, version_id, last_modified} ->
+        {:ok, config, metadata} ->
           %PendingConfig{screens: pending_screens} =
             config
             |> Jason.decode!()
             |> PendingConfig.from_json()
 
-          {pending_screens, version_id, last_modified}
+          {pending_screens, metadata}
 
         _ ->
           raise(
@@ -79,8 +80,9 @@ defmodule Screenplay.Config.PermanentConfig do
 
     %{
       places_and_screens: existing,
-      version_id: version_id,
-      last_modified_ms: DateTime.to_unix(last_modified, :millisecond)
+      etag: metadata.etag,
+      version_id: metadata.version_id,
+      last_modified_ms: DateTime.to_unix(metadata.last_modified, :millisecond)
     }
   end
 
@@ -240,7 +242,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_current_pending_config do
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, version_id, _last_modified} -> {config, version_id}
+      {:ok, config, metadata} -> {config, metadata.version_id}
       error -> error
     end
   end
@@ -248,7 +250,7 @@ defmodule Screenplay.Config.PermanentConfig do
   defp get_current_pending_config(version_id) do
     # Get config directly from source so we have an up-to-date version_id
     case PendingScreensFetch.fetch_config() do
-      {:ok, config, ^version_id, _last_modified} ->
+      {:ok, config, %{version_id: ^version_id}} ->
         {:ok, config}
 
       :error ->
