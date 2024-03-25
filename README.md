@@ -12,8 +12,9 @@ To start your Phoenix server:
   - URLs for other MBTA APIs that Screenplay communicates with. **Make sure to use the same environment for all!**
     - `export API_V3_URL="https://api-v3.mbta.com"` (or another environment's URL if you want to fetch data from there instead)
     - `export SCREENS_URL="https://screens.mbta.com"` (or another environment's URL if you want to fetch data from there instead)
-- Add a `screen_locations.json` file to the `priv` directory. You can either ask an engineer for a copy of the file, or enter an empty array as its contents (`[]`). The file just needs to exist and contain an array of 0 or more `{"id": "<screen ID>", "location": "<location description>"}` objects.
-- Add a `place_descriptions.json` file to the `priv` directory. You can either ask an engineer for a copy of the file, or enter an empty array as its contents (`[]`). The file just needs to exist and contain an array of 0 or more `{"id": "<place ID>", "description": "<place description>"}` objects.
+- Add a `places_and_screens.json` file to the `priv/config` directory. You can generate this file by running `API_V3_KEY=<your_key_here> mix run scripts/fetch_places_and_screens.exs --environment dev`.
+- Add a `screen_locations.json` file to the `priv/config` directory. You can either ask an engineer for a copy of the file, or enter an empty array as its contents (`[]`). The file just needs to exist and contain an array of 0 or more `{"id": "<screen ID>", "location": "<location description>"}` objects.
+- Add a `place_descriptions.json` file to the `priv/config` directory. You can either ask an engineer for a copy of the file, or enter an empty array as its contents (`[]`). The file just needs to exist and contain an array of 0 or more `{"id": "<place ID>", "description": "<place description>"}` objects.
 - Install dependencies with `mix deps.get`
 - Install Node.js dependencies by running `npm run install`
 - Start Phoenix endpoint with `API_V3_KEY=<your-key-here> mix phx.server`

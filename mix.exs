@@ -57,7 +57,8 @@ defmodule Screenplay.MixProject do
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
       {:sentry, "~> 8.0"},
-      {:stream_data, "~> 0.5", only: :test}
+      {:stream_data, "~> 0.5", only: :test},
+      {:quantum, "~> 3.0"}
     ]
   end
 

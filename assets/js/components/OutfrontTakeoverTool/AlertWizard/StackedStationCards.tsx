@@ -1,7 +1,10 @@
-import React from "react";
-import stationsByLine, { Station } from "../../../constants/stations";
+import React, { useContext } from "react";
 import { abbreviation, color } from "../../../util";
 import ScreenIcon from "./ScreenIcon";
+import {
+  Station,
+  StationScreenOrientationContext,
+} from "../OutfrontTakeoverTool";
 
 interface StackedStationCardsProps {
   stations: Station[];
@@ -9,6 +12,9 @@ interface StackedStationCardsProps {
 }
 
 const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
+  const stationScreenOrientationList = useContext(
+    StationScreenOrientationContext
+  );
   return (
     <div
       className={`stacked-station-cards ${
@@ -20,8 +26,8 @@ const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
           return null;
         }
 
-        const lines = Object.keys(stationsByLine).filter((key) =>
-          stationsByLine[key].some((x) => x.name === station.name)
+        const lines = Object.keys(stationScreenOrientationList).filter((key) =>
+          stationScreenOrientationList[key].some((x) => x.name === station.name)
         );
 
         return (

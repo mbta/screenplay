@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import SelectableLine from "./SelectableLine";
 import SelectableStation from "./SelectableStation";
-import stationsByLine, { Station } from "../../../constants/stations";
+import {
+  Station,
+  StationScreenOrientationContext,
+} from "../OutfrontTakeoverTool";
 
 interface StationColumnProps {
   line: string;
@@ -11,11 +14,14 @@ interface StationColumnProps {
 }
 
 const StationColumn = (props: StationColumnProps): JSX.Element => {
+  const stationScreenOrientationList = useContext(
+    StationScreenOrientationContext
+  );
   return (
     <div>
       <SelectableLine
         line={props.line}
-        checked={stationsByLine[props.line]
+        checked={stationScreenOrientationList[props.line]
           // Ignore disabled stations when determining whether the whole line is selected
           .filter(({ landscape, portrait }) => landscape || portrait)
           .every((lineStation) =>
@@ -23,7 +29,7 @@ const StationColumn = (props: StationColumnProps): JSX.Element => {
           )}
         checkLine={props.checkLine}
       />
-      {stationsByLine[props.line].map((station) => {
+      {stationScreenOrientationList[props.line].map((station) => {
         const checked = props.selectedStations.some(
           (x) => x.name === station.name
         );

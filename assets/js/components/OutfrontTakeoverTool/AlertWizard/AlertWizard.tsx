@@ -5,9 +5,8 @@ import PickStations from "./PickStations";
 import SetSchedule from "./SetSchedule";
 import WizardNavFooter from "./WizardNavFooter";
 import WizardStepper from "./WizardStepper";
-import { AlertData } from "../OutfrontTakeoverTool";
+import { AlertData, Station, StationsByLine } from "../OutfrontTakeoverTool";
 
-import stationsByLine, { Station } from "../../../constants/stations";
 import CANNED_MESSAGES from "../../../constants/messages";
 
 import { BanIcon, XIcon } from "@heroicons/react/solid";
@@ -18,11 +17,13 @@ import { matchStation } from "../../../util";
 import parseISO from "date-fns/parseISO";
 import differenceInHours from "date-fns/differenceInHours";
 import { ModalDetails } from "../ConfirmationModal";
+import { BASE_URL } from "../../../constants/constants";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
   toggleAlertWizard: () => void;
+  stationScreenOrientationList: StationsByLine;
 }
 
 interface AlertWizardState {
@@ -96,7 +97,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       customMessage = message.text;
     }
 
-    const selectedStations = stations.map(matchStation);
+    const selectedStations = stations.map((station: string) =>
+      matchStation(station, this.props.stationScreenOrientationList)
+    );
 
     let duration;
 
@@ -231,7 +234,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   fetchActiveAlertsList() {
-    fetch("/api/active_alerts")
+    fetch(`${BASE_URL}/active_alerts`)
       .then((response) => response.json())
       .then((data) => {
         this.setState({ activeAlertsList: data });
@@ -239,7 +242,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   handleSubmit() {
-    const endpoint = this.state.id === null ? "/api/create" : "/api/edit";
+    const endpoint =
+      this.state.id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
 
     const csrfMetaElement = document.head.querySelector(
       "[name~=csrf-token][content]"
@@ -332,7 +336,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       return;
     }
     if (checked) {
-      stationsByLine[line]
+      this.props.stationScreenOrientationList[line]
         .filter((station) => station.portrait || station.landscape)
         .forEach((station) => {
           if (
@@ -342,7 +346,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           }
         });
     } else {
-      stationsByLine[line].forEach((station) => this.removeStation(station));
+      this.props.stationScreenOrientationList[line].forEach((station) =>
+        this.removeStation(station)
+      );
     }
   }
 

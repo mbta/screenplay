@@ -1,7 +1,7 @@
 import React from "react";
-import { Station } from "../../../constants/stations";
 import { formatDate, formatTime } from "../../../util";
 import StackedStationCards from "./StackedStationCards";
+import { Station } from "../OutfrontTakeoverTool";
 
 interface ConfirmationPageProps {
   goToStep: (step: number) => void;
