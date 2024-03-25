@@ -99,5 +99,5 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     end)
   end
 
-  defp sftp_client_module, do: Application.get_env(:screenplay, :sftp_client_module)
+  defp sftp_client_module, do: Application.get_env(:screenplay, :job_sftp_client_module)
 end
