@@ -15,7 +15,6 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @landscape_dir Application.compile_env!(:screenplay, :landscape_dir)
   @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
-  @sftp_client_module Application.compile_env!(:screenplay, :sftp_client_module)
 
   def run do
     SFTP.run(fn conn ->
@@ -34,7 +33,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   defp write_image(conn, orientation, local_image_data) do
     remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover-test.png"])
 
-    case @sftp_client_module.write_file(conn, remote_path, local_image_data) do
+    case sftp_client_module().write_file(conn, remote_path, local_image_data) do
       :ok ->
         :ok
 
@@ -50,7 +49,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   defp delete_image(conn, orientation) do
     remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
 
-    case @sftp_client_module.delete_file(conn, remote_path) do
+    case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
         :ok
 
@@ -69,8 +68,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp test_all_directories_exist(conn) do
-    {:ok, portrait_dirs} = @sftp_client_module.list_dir(conn, "./Portrait")
-    {:ok, landscape_dirs} = @sftp_client_module.list_dir(conn, "./Landscape")
+    {:ok, portrait_dirs} = sftp_client_module().list_dir(conn, "./Portrait")
+    {:ok, landscape_dirs} = sftp_client_module().list_dir(conn, "./Landscape")
 
     outfront_takeover_tool_screens =
       :screenplay
@@ -99,4 +98,6 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
       end
     end)
   end
+
+  defp sftp_client_module, do: Application.get_env(:screenplay, :sftp_client_module)
 end

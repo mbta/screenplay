@@ -6,13 +6,13 @@ config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: System.get_env("HOST"), port: 80],
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
+env = System.get_env("ENVIRONMENT_NAME")
+
 sftp_client_module =
-  case System.get_env("SFTP_SERVER") do
-    "outfront" -> SFTPClient
+  case env do
+    "prod" -> SFTPClient
     _ -> Screenplay.Outfront.FakeSFTPClient
   end
-
-env = System.get_env("ENVIRONMENT_NAME")
 
 if config_env() == :prod do
   keycloak_opts = [

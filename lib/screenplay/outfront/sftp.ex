@@ -9,7 +9,6 @@ defmodule Screenplay.Outfront.SFTP do
   @landscape_dir Application.compile_env!(:screenplay, :landscape_dir)
   @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @retries 3
-  @sftp_client_module Application.compile_env!(:screenplay, :sftp_client_module)
 
   def run(work_fn) do
     conn = start_connection()
@@ -17,7 +16,7 @@ defmodule Screenplay.Outfront.SFTP do
     try do
       work_fn.(conn)
     after
-      @sftp_client_module.disconnect(conn)
+      sftp_client_module().disconnect(conn)
     end
   end
 
@@ -69,7 +68,7 @@ defmodule Screenplay.Outfront.SFTP do
       Logger.info("Outfront SSH key is not a string as expected: #{key}")
     end
 
-    case @sftp_client_module.connect(
+    case sftp_client_module().connect(
            host: host,
            user: user,
            key_cb: {Screenplay.Outfront.SSHKeyProvider, private_key: key}
@@ -98,7 +97,7 @@ defmodule Screenplay.Outfront.SFTP do
   defp do_write_image(conn, station, orientation, image_data, _retry)
        when orientation in [@landscape_dir, @portrait_dir] do
     path = get_outfront_path_for_image(station, orientation)
-    @sftp_client_module.write_file(conn, path, image_data)
+    sftp_client_module().write_file(conn, path, image_data)
   end
 
   defp do_write_image(_conn, station, orientation, _image_data, _retry),
@@ -131,11 +130,13 @@ defmodule Screenplay.Outfront.SFTP do
     path = get_outfront_path_for_image(station, orientation)
 
     # Note: Check what happens when the path doesn't exist.
-    @sftp_client_module.delete_file(conn, path)
+    sftp_client_module().delete_file(conn, path)
   end
 
   defp get_outfront_path_for_image(station, orientation) do
     station_directory = get_outfront_directory_for_station(station)
     Path.join([orientation, station_directory, "takeover.png"])
   end
+
+  defp sftp_client_module, do: Application.get_env(:screenplay, :sftp_client_module)
 end
