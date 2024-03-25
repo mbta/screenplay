@@ -13,6 +13,7 @@ import {
   STATUSES,
 } from "../constants/constants";
 import { BannerAlert } from "../components/Dashboard/AlertBanner";
+import { ActionOutcomeToastProps } from "../components/Dashboard/ActionOutcomeToast";
 
 interface Props {
   children: React.ReactNode;
@@ -40,6 +41,13 @@ type ReducerAction =
   | {
       type: "SHOW_LINK_COPIED";
       showLinkCopied: boolean;
+    }
+  | ({ type: "SHOW_ACTION_OUTCOME" } & Omit<
+      Required<ActionOutcomeToastProps>,
+      "show"
+    >)
+  | {
+      type: "HIDE_ACTION_OUTCOME";
     };
 
 type AlertsListReducerAction = {
@@ -98,6 +106,7 @@ interface ScreenplayState {
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
   showLinkCopied: boolean;
+  actionOutcomeToast: ActionOutcomeToastProps;
 }
 
 interface ConfigValidationState {
@@ -105,7 +114,10 @@ interface ConfigValidationState {
   pendingScreenValidationErrors: ConfigValidationErrors;
 }
 
-const reducer = (state: ScreenplayState, action: ReducerAction) => {
+const reducer = (
+  state: ScreenplayState,
+  action: ReducerAction
+): ScreenplayState => {
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
@@ -126,8 +138,22 @@ const reducer = (state: ScreenplayState, action: ReducerAction) => {
         ...state,
         showLinkCopied: action.showLinkCopied,
       };
+    case "SHOW_ACTION_OUTCOME":
+      return {
+        ...state,
+        actionOutcomeToast: {
+          show: true,
+          isSuccessful: action.isSuccessful,
+          message: action.message,
+        },
+      };
+    case "HIDE_ACTION_OUTCOME":
+      return {
+        ...state,
+        actionOutcomeToast: { ...state.actionOutcomeToast, show: false },
+      };
     default:
-      throw new Error();
+      throw new Error(`Unknown reducer action: ${JSON.stringify(action)}`);
   }
 };
 
@@ -219,6 +245,7 @@ const initialState: ScreenplayState = {
   screensByAlertMap: {} as ScreensByAlert,
   bannerAlert: undefined,
   showLinkCopied: false,
+  actionOutcomeToast: { show: false },
 };
 
 const initialPlacesListState: PlacesListState = {

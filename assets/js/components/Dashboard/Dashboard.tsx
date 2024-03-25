@@ -11,39 +11,53 @@ import { useInterval } from "../../hooks/useInterval";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
 import LinkCopiedToast from "./LinkCopiedToast";
+import ActionOutcomeToast from "./ActionOutcomeToast";
 
 const Dashboard: ComponentType = () => {
-  const { alerts, bannerAlert, showLinkCopied } = useScreenplayContext();
+  const { alerts, bannerAlert, showLinkCopied, actionOutcomeToast } =
+    useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
 
   useEffect(() => {
-    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
-      findAndSetBannerAlert(alerts, newAlerts);
-      dispatch({
-        type: "SET_ALERTS",
+    fetchAlerts().then(
+      ({
+        all_alert_ids: allAPIalertIds,
         alerts: newAlerts,
-        allAPIAlertIds: allAPIalertIds,
-        screensByAlertMap: screensByAlertMap,
-      });
-    });
+        screens_by_alert: screensByAlertMap,
+      }) => {
+        findAndSetBannerAlert(alerts, newAlerts);
+        dispatch({
+          type: "SET_ALERTS",
+          alerts: newAlerts,
+          allAPIAlertIds: allAPIalertIds,
+          screensByAlertMap: screensByAlertMap,
+        });
+      }
+    );
 
-    fetchPlaces((placesList) =>
+    fetchPlaces().then((placesList) =>
       dispatch({ type: "SET_PLACES", places: placesList })
     );
   }, []);
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
-    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
-      findAndSetBannerAlert(alerts, newAlerts);
-      dispatch({
-        type: "SET_ALERTS",
+    fetchAlerts().then(
+      ({
+        all_alert_ids: allAPIalertIds,
         alerts: newAlerts,
-        allAPIAlertIds: allAPIalertIds,
-        screensByAlertMap: screensByAlertMap,
-      });
-    });
+        screens_by_alert: screensByAlertMap,
+      }) => {
+        findAndSetBannerAlert(alerts, newAlerts);
+        dispatch({
+          type: "SET_ALERTS",
+          alerts: newAlerts,
+          allAPIAlertIds: allAPIalertIds,
+          screensByAlertMap: screensByAlertMap,
+        });
+      }
+    );
   }, 4000);
 
   const findAndSetBannerAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
@@ -135,6 +149,7 @@ const Dashboard: ComponentType = () => {
   return (
     <div className="screenplay-container">
       <LinkCopiedToast show={showLinkCopied} />
+      <ActionOutcomeToast {...actionOutcomeToast} />
       <Sidebar />
       <div className="page-content">
         {bannerAlert?.alert && (

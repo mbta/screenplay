@@ -3,38 +3,24 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
   Functions to work with an S3-hosted copy of the pending screens config.
   """
 
-  alias ScreensConfig.PendingConfig
-
   require Logger
 
+  alias Screenplay.PendingScreensConfig.Fetch
   alias ScreensConfig.PendingConfig
 
-  @behaviour Screenplay.PendingScreensConfig.Fetch
+  @behaviour Fetch
 
   @impl true
-  def fetch_config(current_version \\ nil) do
+  def fetch_config do
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment()
 
-    opts =
-      case current_version do
-        nil -> []
-        _ -> [if_none_match: current_version]
-      end
-
-    get_operation = ExAws.S3.get_object(bucket, path, opts)
+    get_operation = ExAws.S3.get_object(bucket, path)
 
     case ExAws.request(get_operation) do
-      {:ok, %{status_code: 304}} ->
-        :unchanged
-
       {:ok, %{body: body, headers: headers, status_code: 200}} ->
-        version_id =
-          headers
-          |> Enum.into(%{})
-          |> Map.get("x-amz-version-id")
-
-        {:ok, body, version_id}
+        metadata = get_metadata(headers)
+        {:ok, body, metadata}
 
       {:error, err} ->
         _ = Logger.info("s3_pending_screens_config_fetch_error #{inspect(err)}")
@@ -68,6 +54,24 @@ defmodule Screenplay.PendingScreensConfig.Fetch.S3 do
       {:ok, %{status_code: 200}} -> :ok
       _ -> :error
     end
+  end
+
+  defp get_metadata(headers) do
+    headers = Map.new(headers)
+
+    etag = Map.get(headers, "ETag")
+    version_id = Map.get(headers, "x-amz-version-id")
+
+    last_modified =
+      headers
+      |> Map.get("Last-Modified")
+      |> Timex.parse("{RFC1123}")
+      |> case do
+        {:ok, dt} -> dt
+        {:error, _} -> nil
+      end
+
+    %Fetch.Metadata{etag: etag, version_id: version_id, last_modified: last_modified}
   end
 
   defp config_path_for_environment do

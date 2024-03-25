@@ -220,3 +220,39 @@ export const sortByStationOrder = (
 
   return reverse ? sortedPlaces.reverse() : sortedPlaces;
 };
+
+export const capitalizeTerminalStops = (
+  stationName: string,
+  filteredLine: string | null | undefined
+) => {
+  let isTerminalStop = false;
+
+  // If a filter is present, only look at stations for that filter.
+  // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
+  if (filteredLine) {
+    const line = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
+    const terminalStops = line.filter((line) => line.isTerminalStop);
+    isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
+  }
+  // If there is no filtered line, look through all lines to find terminal stops.
+  // If a station is a terminal stop for any line, it will be capitalized.
+  else {
+    isTerminalStop = Object.keys(STATION_ORDER_BY_LINE)
+      .filter((key) => !["silver", "mattapan"].includes(key))
+      .some((key) => {
+        const line = STATION_ORDER_BY_LINE[key];
+        const terminalStops = line.filter((line) => line.isTerminalStop);
+        return terminalStops.some((stop) => stationName === stop.name);
+      });
+  }
+
+  return isTerminalStop ? stationName.toUpperCase() : stationName;
+};
+
+export const capitalize = (str: string) => {
+  if (str.length <= 1) {
+    return str.toUpperCase();
+  } else {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+};

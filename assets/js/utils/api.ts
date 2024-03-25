@@ -1,15 +1,13 @@
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
+import { ScreenConfiguration } from "../models/screen_configuration";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
 
-export const fetchPlaces = (callback: (places: Place[]) => void) => {
-  return fetch("/api/dashboard")
-    .then((response) => response.json())
-    .then((placesList: Place[]) => {
-      callback(placesList);
-    });
+export const fetchPlaces = async (): Promise<Place[]> => {
+  const response = await fetch("/api/dashboard");
+  return await response.json();
 };
 
 interface AlertsResponse {
@@ -18,30 +16,61 @@ interface AlertsResponse {
   screens_by_alert: ScreensByAlert;
 }
 
-export const fetchAlerts = (
-  callback: (
-    all_alert_ids: string[],
-    alerts: Alert[],
-    screens_by_alert: ScreensByAlert
-  ) => void
-) => {
-  return fetch("/api/alerts")
-    .then((response) => response.json())
-    .then(({ all_alert_ids, alerts, screens_by_alert }: AlertsResponse) => {
-      callback(all_alert_ids, alerts, screens_by_alert);
-    });
+export const fetchAlerts = async (): Promise<AlertsResponse> => {
+  const response = await fetch("/api/alerts");
+  return await response.json();
 };
+
+export interface ExistingScreens {
+  [place_id: string]: ExistingScreensAtPlace;
+}
+
+export interface ExistingScreensAtPlace {
+  live_screens?: { [screen_id: string]: ScreenConfiguration };
+  pending_screens: { [screen_id: string]: ScreenConfiguration };
+}
 
 export const fetchExistingScreens = async (
   appId: string,
   placeIds: string[]
-) => {
+): Promise<{ places_and_screens: ExistingScreens; version_id: string }> => {
   const response = await fetch(
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
   );
 
   return await response.json();
 };
+
+export interface PendingAndLiveScreensResponse {
+  places_and_screens: PendingAndLiveScreens;
+  etag: string;
+  version_id: string;
+  last_modified_ms: number | null;
+}
+
+// Very similar to the `ExistingScreens` interface, except:
+// 1. key is a string that combines place and app ID, and
+// 2. place and app IDs are added to each `ExistingScreensAtPlace` object, so that we don't have to parse them from the combined string.
+export interface PendingAndLiveScreens {
+  [placeAndAppID: string]: ExistingScreensAtPlace & {
+    place_id: string;
+    app_id: string;
+  };
+}
+
+export const fetchExistingScreensAtPlacesWithPendingScreens =
+  async (): Promise<PendingAndLiveScreensResponse> => {
+    const response = await fetch(
+      "/config/existing-screens-at-places-with-pending-screens"
+    );
+    const etag = response.headers.get("etag") as string;
+    const data = (await response.json()) as Omit<
+      PendingAndLiveScreensResponse,
+      "etag"
+    >;
+
+    return { ...data, etag };
+  };
 
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
@@ -63,11 +92,20 @@ export const putPendingScreens = async (
   });
 };
 
-export const publishScreensForPlace = async (placeId: string) => {
-  const response = await fetch(`/config/publish/${placeId}`, {
+export const publishScreensForPlace = async (
+  placeId: string,
+  appId: string,
+  hiddenFromScreenplayIds: string[],
+  etag: string
+) => {
+  const response = await fetch(`/config/publish/${placeId}/${appId}`, {
     method: "POST",
+    body: JSON.stringify({
+      hidden_from_screenplay_ids: hiddenFromScreenplayIds,
+    }),
     headers: {
       "content-type": "application/json",
+      "if-match": etag,
       "x-csrf-token":
         document?.head?.querySelector<HTMLMetaElement>(
           "[name~=csrf-token][content]"
@@ -76,5 +114,12 @@ export const publishScreensForPlace = async (placeId: string) => {
     credentials: "include",
   });
 
-  return response.statusText;
+  let message;
+  // Guard against unexpectedly long response bodies,
+  // e.g. when an exception is raised on the server
+  if (!response.headers.get("content-type")?.includes("text/html")) {
+    message = await response.text();
+  }
+
+  return { status: response.status, message };
 };

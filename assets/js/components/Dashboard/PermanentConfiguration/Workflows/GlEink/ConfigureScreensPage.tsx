@@ -29,19 +29,18 @@ import {
   ThreeDotsVertical,
   TrashFill,
 } from "react-bootstrap-icons";
-import { fetchExistingScreens } from "../../../../../utils/api";
+import {
+  ExistingScreens,
+  ExistingScreensAtPlace,
+  fetchExistingScreens,
+} from "../../../../../utils/api";
 import {
   useConfigValidationContext,
   useConfigValidationDispatchContext,
 } from "../../../../../hooks/useScreenplayContext";
 
 interface PlaceIdsAndExistingScreens {
-  [place_id: string]: ExistingScreens;
-}
-
-interface ExistingScreens {
-  live_screens?: { [screen_id: string]: ScreenConfiguration };
-  pending_screens: { [screen_id: string]: ScreenConfiguration };
+  [place_id: string]: ExistingScreensAtPlace;
 }
 
 interface PlaceIdsAndNewScreens {
@@ -70,8 +69,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
     setConfigVersion,
     isEditing,
   }: ConfigureScreensWorkflowPageProps) => {
-    const [existingScreens, setExistingScreens] =
-      useState<PlaceIdsAndExistingScreens>({});
+    const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
 
     const { newScreenValidationErrors, pendingScreenValidationErrors } =
       useConfigValidationContext();
@@ -146,7 +144,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
 
 interface ConfigurePlaceCardProps {
   place: Place;
-  existingScreens: ExistingScreens;
+  existingScreens: ExistingScreensAtPlace;
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
   >;
@@ -350,6 +348,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
               {
                 new_id: "EIG-",
                 app_params: { header: { route_id: place.routes[0] } },
+                app_id: "gl_eink_v2",
               },
             ]);
 
@@ -534,6 +533,6 @@ const ConfigureScreenRow: ComponentType<ConfigureScreenRowProps> = ({
   );
 };
 
-export { PlaceIdsAndExistingScreens, PlaceIdsAndNewScreens };
+export { PlaceIdsAndNewScreens };
 
 export default ConfigureScreensWorkflowPage;
