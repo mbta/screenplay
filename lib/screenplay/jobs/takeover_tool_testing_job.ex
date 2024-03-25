@@ -32,7 +32,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp write_image(conn, orientation, local_image_data) do
-    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
+    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover-test.png"])
 
     case @sftp_client_module.write_file(conn, remote_path, local_image_data) do
       :ok ->
