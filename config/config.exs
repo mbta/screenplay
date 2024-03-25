@@ -15,12 +15,6 @@ config :screenplay, ScreenplayWeb.Endpoint,
   pubsub_server: Screenplay.PubSub,
   live_view: [signing_salt: "vSiyKz7D"]
 
-sftp_client_module =
-  case System.get_env("SFTP_SERVER") do
-    "outfront" -> SFTPClient
-    _ -> Screenplay.Outfront.FakeSFTPClient
-  end
-
 config :screenplay,
   config_fetcher: Screenplay.Config.S3Fetch,
   config_s3_bucket: "mbta-ctd-config",
