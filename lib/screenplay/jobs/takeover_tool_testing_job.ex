@@ -47,7 +47,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp delete_image(conn, orientation) do
-    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover.png"])
+    remote_path = Path.join([orientation, @test_sftp_directory_name, "takeover-test.png"])
 
     case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
