@@ -35,14 +35,13 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().write_file(conn, remote_path, local_image_data) do
       :ok ->
+        Logger.info("Successfully uploaded #{orientation} test image")
         :ok
 
       {:error, error} ->
-        message =
+        Logger.error(
           "[takeover_tool_testing sftp_connection_error] Failed to write image to #{orientation} #{inspect(error)}"
-
-        Logger.error(message)
-        Sentry.capture_message(message, level: "error")
+        )
     end
   end
 
@@ -51,19 +50,17 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
+        Logger.info("Successfully deleted #{orientation} test image")
         :ok
 
       {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
         Logger.info("Skipping deleting #{orientation} test image as file does not exist")
-
         :ok
 
       {:error, error} ->
-        message =
+        Logger.error(
           "[takeover_tool_testing sftp_connection_error] failed to delete from #{orientation} #{inspect(error)}"
-
-        Logger.error(message)
-        Sentry.capture_message(message, level: "error")
+        )
     end
   end
 
@@ -90,11 +87,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
       station_dir = SFTP.get_outfront_directory_for_station(station_name)
 
       if station_dir not in sftp_dirs do
-        message =
+        Logger.error(
           "[takeover_tool_testing sftp_connection_error] missing #{orientation} directory for station #{station_name}"
-
-        Logger.error(message)
-        Sentry.capture_message(message, level: "error")
+        )
       end
     end)
   end
