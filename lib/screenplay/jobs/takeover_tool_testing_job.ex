@@ -35,7 +35,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().write_file(conn, remote_path, local_image_data) do
       :ok ->
-        Logger.info("Successfully uploaded #{orientation} test image")
+        Logger.info("[takeover_tool_testing] Successfully uploaded #{orientation} test image")
         :ok
 
       {:error, error} ->
@@ -50,11 +50,14 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
     case sftp_client_module().delete_file(conn, remote_path) do
       :ok ->
-        Logger.info("Successfully deleted #{orientation} test image")
+        Logger.info("[takeover_tool_testing] Successfully deleted #{orientation} test image")
         :ok
 
       {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
-        Logger.info("Skipping deleting #{orientation} test image as file does not exist")
+        Logger.info(
+          "[takeover_tool_testing] Skipping deleting #{orientation} test image as file does not exist"
+        )
+
         :ok
 
       {:error, error} ->
@@ -86,7 +89,9 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     Enum.each(stations, fn %{name: station_name} ->
       station_dir = SFTP.get_outfront_directory_for_station(station_name)
 
-      if station_dir not in sftp_dirs do
+      if station_dir in sftp_dirs do
+        Logger.info("[takeover_tool_testing] #{orientation} directory exists for #{station_name}")
+      else
         Logger.error(
           "[takeover_tool_testing sftp_connection_error] missing #{orientation} directory for station #{station_name}"
         )
