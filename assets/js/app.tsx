@@ -35,6 +35,9 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     environment: environment,
+    integrations: [Sentry.replayIntegration()],
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
   });
 
   if (username) {
