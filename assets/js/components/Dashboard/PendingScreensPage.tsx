@@ -121,10 +121,12 @@ const PendingScreensPage: ComponentType = () => {
 
   useEffect(fetchData, []);
 
-  return (
-    <div className="pending-screens-page">
-      <div className="page-content__header">Pending</div>
-      <div className="page-content__body" style={{ color: "white" }}>
+  const screens = Object.entries(existingScreens);
+  let layout;
+
+  if (screens.length) {
+    layout = (
+      <>
         {lastModified && (
           <div className="last-modified">
             Updated {format(lastModified, "MMMM d, y")}
@@ -154,6 +156,19 @@ const PendingScreensPage: ComponentType = () => {
             }
           )}
         </Accordion>
+      </>
+    );
+  } else {
+    layout = (
+      <div className="no-screens-text h5">There are no pending screens.</div>
+    );
+  }
+
+  return (
+    <div className="pending-screens-page">
+      <div className="page-content__header">Pending</div>
+      <div className="page-content__body" style={{ color: "white" }}>
+        {layout}
       </div>
     </div>
   );
