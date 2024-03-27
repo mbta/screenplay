@@ -11,7 +11,7 @@ on:
         - dev
         - dev-green
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   call-workflow:

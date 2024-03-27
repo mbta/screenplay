@@ -1,10 +1,10 @@
 import {
   CannedMessage,
   CustomMessage,
+  StationsByLine,
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
 import STATION_ORDER_BY_LINE from "./constants/stationOrder";
-import STATIONS_BY_LINE from "./constants/stations";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
 import { Screen } from "./models/screen";
@@ -111,12 +111,13 @@ export const convertArrayToListString = (array: string[]) => {
   }
 };
 
-const ALL_STATIONS = ["blue", "green", "orange", "red", "silver"].flatMap(
-  (line) => STATIONS_BY_LINE[line]
-);
-
-export const matchStation = (station: string) => {
-  const result = ALL_STATIONS.find(({ name }) => name === station);
+export const matchStation = (
+  station: string,
+  stationScreenOrientationList: StationsByLine
+) => {
+  const result = Object.values(stationScreenOrientationList)
+    .flat()
+    .find(({ name }) => name === station);
   if (result === undefined) {
     throw new TypeError(
       `Station ${station} not present in list of all stations!`

@@ -1,8 +1,8 @@
 import React from "react";
 import StackedStationCards from "./StackedStationCards";
 
-import { Station } from "../../../constants/stations";
 import SVGPreviews from "./SVGPreviews";
+import { Station } from "../OutfrontTakeoverTool";
 
 interface WizardSidebarProps {
   selectedStations: Station[];

@@ -31,4 +31,10 @@ defmodule Screenplay.Outfront.FakeSFTPClient do
 
     :ok
   end
+
+  def list_dir(_conn, path) do
+    _ = Logger.info("Listing directories at fake #{path}")
+
+    {:ok, []}
+  end
 end

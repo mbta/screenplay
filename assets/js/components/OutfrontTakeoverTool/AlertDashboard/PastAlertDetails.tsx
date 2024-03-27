@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import StackedStationCards from "../AlertWizard/StackedStationCards";
 import {
   formatDate,
@@ -6,7 +6,10 @@ import {
   getMessageString,
   matchStation,
 } from "../../../util";
-import { AlertData } from "../OutfrontTakeoverTool";
+import {
+  AlertData,
+  StationScreenOrientationContext,
+} from "../OutfrontTakeoverTool";
 
 interface PastAlertDetailsProps {
   data: AlertData;
@@ -15,8 +18,13 @@ interface PastAlertDetailsProps {
 const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   const { cleared_at, cleared_by, created_by, message, schedule, stations } =
     props.data;
+  const stationScreenOrientationList = useContext(
+    StationScreenOrientationContext
+  );
 
-  const stationDetails = stations.map(matchStation);
+  const stationDetails = stations.map((station: string) =>
+    matchStation(station, stationScreenOrientationList)
+  );
 
   const startDate = new Date(schedule.start);
   const clearedDate = new Date(cleared_at);

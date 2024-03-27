@@ -1,6 +1,6 @@
 import React from "react";
-import { Station } from "../../../constants/stations";
 import { color } from "../../../util";
+import { Station } from "../OutfrontTakeoverTool";
 
 interface SelectableStationProps {
   line: string;
