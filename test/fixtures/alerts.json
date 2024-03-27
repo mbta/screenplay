@@ -23,7 +23,7 @@
       "cleared_at": null,
       "cleared_by": null,
       "created_by": "user",
-      "edited_by": "bar",
+      "edited_by": "user",
       "id": "a2",
       "message": {
         "text": "This is an alert",
@@ -34,7 +34,7 @@
         "start": "2021-08-19T17:09:42Z"
       },
       "stations": [
-        "South Station"
+        "Kendall/MIT"
       ]
     }
   ],

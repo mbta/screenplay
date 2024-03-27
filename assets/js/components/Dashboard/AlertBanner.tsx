@@ -1,7 +1,7 @@
 import React, { ComponentType } from "react";
 import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useScreenplayContext } from "../../hooks/useScreenplayContext";
 import { Alert } from "../../models/alert";
 
@@ -20,8 +20,9 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
   isDone,
   queueExpiration,
 }: AlertBannerProps) => {
+  const pathname = useLocation().pathname.replace(/\//g, "");
   const { bannerAlert } = useScreenplayContext();
-  if (!bannerAlert) return null;
+  if (pathname.includes("configure-screens") || !bannerAlert) return null;
 
   const { alert, type } = bannerAlert as BannerAlert;
 
@@ -64,7 +65,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
     const affectedListString = getAffectedListString();
 
     if (
-      ["dashboard", "alerts"].includes(route) ||
+      ["dashboard", "alerts", "pending"].includes(route) ||
       (params.id && params.id !== alert.id)
     ) {
       if (type === "closed") {

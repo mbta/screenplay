@@ -32,7 +32,7 @@ const PaessDetailContainer = (
     <Row className="h-100" lg={3}>
       <Col
         key={`${stationCode}-left`}
-        className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+        className={`screen-simulation__iframe-container screen-simulation__iframe-container--pa_ess`}
         data-testid="paess-col-left"
       >
         {leftScreens.length > 0 && (
@@ -54,7 +54,7 @@ const PaessDetailContainer = (
       </Col>
       <Col
         key={`${stationCode}-center`}
-        className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+        className={`screen-simulation__iframe-container screen-simulation__iframe-container--pa_ess`}
         data-testid="paess-col-center"
       >
         {centerScreens.length > 0 && (
@@ -76,7 +76,7 @@ const PaessDetailContainer = (
       </Col>
       <Col
         key={`${stationCode}-right`}
-        className={`screen-detail__iframe-container screen-detail__iframe-container--pa_ess`}
+        className={`screen-simulation__iframe-container screen-simulation__iframe-container--pa_ess`}
         data-testid="paess-col-right"
       >
         {rightScreens.length > 0 && (
