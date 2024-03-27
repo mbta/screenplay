@@ -40,7 +40,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
       {:error, error} ->
         Logger.error(
-          "[takeover_tool_testing sftp_connection_error] Failed to write image to #{orientation} #{inspect(error)}"
+          "[takeover_tool_testing write_error] Failed to write image to #{orientation} #{inspect(error)}"
         )
     end
   end
@@ -55,14 +55,14 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
 
       {:error, %SFTPClient.OperationError{reason: :no_such_file}} ->
         Logger.info(
-          "[takeover_tool_testing] Skipping deleting #{orientation} test image as file does not exist"
+          "[takeover_tool_testing missing_file] Skipping deleting #{orientation} test image as file does not exist"
         )
 
         :ok
 
       {:error, error} ->
         Logger.error(
-          "[takeover_tool_testing sftp_connection_error] failed to delete from #{orientation} #{inspect(error)}"
+          "[takeover_tool_testing delete_error] failed to delete from #{orientation} #{inspect(error)}"
         )
     end
   end
@@ -93,7 +93,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
         Logger.info("[takeover_tool_testing] #{orientation} directory exists for #{station_name}")
       else
         Logger.error(
-          "[takeover_tool_testing sftp_connection_error] missing #{orientation} directory for station #{station_name}"
+          "[takeover_tool_testing missing_directory] missing #{orientation} directory for station #{station_name}"
         )
       end
     end)
