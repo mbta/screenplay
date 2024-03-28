@@ -71,18 +71,18 @@ class OutfrontTakeoverTool extends React.Component<
       stationScreenOrientationList: {},
     };
 
-    this.toggleAlertWizard = this.toggleAlertWizard.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
-  }
-
-  componentDidMount() {
     fetch(`${BASE_URL}/stations_and_screen_orientations`)
       .then((response) => response.json())
       .then((result) =>
         this.setState({ stationScreenOrientationList: result })
       );
 
+    this.toggleAlertWizard = this.toggleAlertWizard.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+  }
+
+  componentDidMount() {
     document.title = "Outfront Media · Emergency Takeover";
   }
 
