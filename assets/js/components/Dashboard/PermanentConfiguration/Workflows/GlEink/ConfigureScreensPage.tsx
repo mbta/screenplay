@@ -222,9 +222,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     screen: ScreenConfiguration
   ) => {
     setExistingPendingScreens((prevState) => {
-      const newState = { ...prevState };
-      newState[screenID].is_deleted = true;
-      return newState;
+      return {
+        ...prevState,
+        [screenID]: { ...prevState.screenID, is_deleted: true}
+      };
     });
 
     setUpdatedPendingScreens((prevState) => {
