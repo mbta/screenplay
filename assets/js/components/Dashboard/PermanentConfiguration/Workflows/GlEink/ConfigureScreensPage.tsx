@@ -7,7 +7,10 @@ import React, {
   useState,
 } from "react";
 import { Place } from "../../../../../models/place";
-import { ScreenConfiguration } from "../../../../../models/screen_configuration";
+import {
+  GLScreenConfiguration,
+  ScreenConfiguration,
+} from "../../../../../models/screen_configuration";
 import { ValidationErrorsForScreen } from "../../../../../models/configValidationErrors";
 import {
   Button,
@@ -190,25 +193,16 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
 
   useEffect(() => {
     setPlacesAndScreensToUpdate((placesAndScreens) => {
-      const screensAtPlace = placesAndScreens[place.id];
-      const newState = { ...placesAndScreens };
-
-      if (screensAtPlace) {
-        newState[place.id].updated_pending_screens = updatedPendingScreens;
-        newState[place.id].new_pending_screens = newScreens;
-        newState[place.id].existing_pending_screens = existingScreensToArray(
-          existingPendingScreens
-        );
-      } else {
-        newState[place.id] = {
+      return {
+        ...placesAndScreens,
+        [place.id]: {
           updated_pending_screens: updatedPendingScreens,
           new_pending_screens: newScreens,
           existing_pending_screens: existingScreensToArray(
             existingPendingScreens
           ),
-        };
-      }
-      return newState;
+        },
+      };
     });
   }, [updatedPendingScreens, existingPendingScreens, newScreens]);
 
@@ -224,28 +218,31 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     setExistingPendingScreens((prevState) => {
       return {
         ...prevState,
-        [screenID]: { ...prevState.screenID, is_deleted: true}
+        [screenID]: { ...prevState[screenID], is_deleted: true },
       };
     });
 
     setUpdatedPendingScreens((prevState) => {
-      const newState = [...prevState];
-      const index = newState.findIndex(
+      const index = prevState.findIndex(
         (screen) => screen.screen_id === screenID
       );
 
       if (index === -1) {
-        newState.push({
+        const newDeletedScreen: GLScreenConfiguration = {
           screen_id: screenID,
           is_deleted: true,
           app_id: "gl_eink_v2",
           app_params: screen.app_params,
-        });
-      } else {
-        newState[index].is_deleted = true;
-      }
+        };
 
-      return newState;
+        return [...prevState, newDeletedScreen];
+      } else {
+        return [
+          ...prevState.slice(0, index),
+          { ...prevState[index], is_deleted: true },
+          ...prevState.slice(index + 1),
+        ];
+      }
     });
   };
 
@@ -256,22 +253,26 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   ) => {
     if (screen.new_id == screenID) {
       setUpdatedPendingScreens((prevState) => {
-        delete screen["new_id"];
-        prevState[index] = screen;
-        return prevState;
+        return [
+          ...prevState.slice(0, index),
+          { ...prevState[index], new_id: undefined },
+          ...prevState.slice(index + 1),
+        ];
       });
     } else {
       setUpdatedPendingScreens((prevState) => {
-        prevState[index] = screen;
-        return prevState;
+        return [
+          ...prevState.slice(0, index),
+          screen,
+          ...prevState.slice(index + 1),
+        ];
       });
     }
     setExistingPendingScreens((prevState) => {
-      const newState = {
+      return {
         ...prevState,
+        [screenID]: screen,
       };
-      newState[screenID] = screen;
-      return newState;
     });
   };
 
@@ -283,17 +284,17 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       pendingScreenValidationErrors,
     });
     setNewScreens((prevState) => {
-      const newState = [...prevState];
-      newState.splice(index, 1);
-      return newState;
+      return [...prevState.slice(0, index), ...prevState.slice(index + 1)];
     });
   };
 
   const changeNewRow = (screen: ScreenConfiguration, index: number) => {
     setNewScreens((prevState) => {
-      const newState = [...prevState];
-      newState[index] = screen;
-      return newState;
+      return [
+        ...prevState.slice(0, index),
+        screen,
+        ...prevState.slice(index + 1),
+      ];
     });
   };
 
