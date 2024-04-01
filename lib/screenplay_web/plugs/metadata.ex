@@ -33,6 +33,7 @@ defmodule ScreenplayWeb.Plugs.Metadata do
     |> assign(:screens_url, Application.get_env(:screenplay, :screens_url))
     |> assign(:signs_ui_url, Application.get_env(:screenplay, :signs_ui_url))
     |> assign(:is_emergency_admin, emergency_admin?(conn))
+    |> assign(:is_pa_message_admin, pa_message_admin?(conn))
     |> assign(:fullstory_org_id, Application.get_env(:screenplay, :fullstory_org_id))
   end
 
@@ -40,5 +41,11 @@ defmodule ScreenplayWeb.Plugs.Metadata do
     claims = Guardian.Plug.current_claims(conn)
 
     :emergency_admin in ScreenplayWeb.AuthManager.claims_access_level(claims)
+  end
+
+  defp pa_message_admin?(conn) do
+    claims = Guardian.Plug.current_claims(conn)
+
+    :pa_message_admin in ScreenplayWeb.AuthManager.claims_access_level(claims)
   end
 end
