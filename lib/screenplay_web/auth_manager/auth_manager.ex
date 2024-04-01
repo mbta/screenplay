@@ -3,10 +3,12 @@ defmodule ScreenplayWeb.AuthManager do
 
   use Guardian, otp_app: :screenplay
 
-  @type access_level :: :none | :read_only | :emergency_admin | :screens_config_admin
+  @type access_level ::
+          :none | :read_only | :emergency_admin | :screens_config_admin | :pa_message_admin
 
   @screenplay_emergency_admin_role "screenplay-emergency-admin"
   @screens_admin "screens-admin"
+  @pa_message_admin "pa-message-admin"
 
   @spec subject_for_token(
           resource :: Guardian.Token.resource(),
@@ -30,6 +32,7 @@ defmodule ScreenplayWeb.AuthManager do
       []
       |> append_if(@screenplay_emergency_admin_role in roles, :emergency_admin)
       |> append_if(@screens_admin in roles, :screens_admin)
+      |> append_if(@pa_message_admin in roles, :pa_message_admin)
 
     if access_levels == [] do
       [:read_only]
