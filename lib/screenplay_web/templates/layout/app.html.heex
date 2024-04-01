@@ -23,6 +23,9 @@
     <%= if @is_emergency_admin do %>
         <meta name="is-emergency-admin" content={@is_emergency_admin}>
     <% end %>
+    <%= if @is_pa_message_admin do %>
+        <meta name="is-pa-message-admin" content={@is_pa_message_admin}>
+    <% end %>
     <%= if @fullstory_org_id do %>
         <meta name="fullstory-org-id" content={@fullstory_org_id}>
     <% end %>
