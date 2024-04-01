@@ -5,7 +5,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   @type access_level :: :none | :read_only | :emergency_admin | :screens_config_admin
 
-  @screenplay_admin_role "screenplay-emergency-admin"
+  @screenplay_emergency_admin_role "screenplay-emergency-admin"
   @screens_admin "screens-admin"
 
   @spec subject_for_token(
@@ -28,7 +28,7 @@ defmodule ScreenplayWeb.AuthManager do
   def claims_access_level(%{"roles" => roles}) when not is_nil(roles) do
     access_levels =
       []
-      |> append_if(@screenplay_admin_role in roles, :emergency_admin)
+      |> append_if(@screenplay_emergency_admin_role in roles, :emergency_admin)
       |> append_if(@screens_admin in roles, :screens_admin)
 
     if access_levels == [] do
