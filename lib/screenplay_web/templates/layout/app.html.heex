@@ -20,8 +20,8 @@
     <%= if @alerts_ui_url do %>
         <meta name="alerts-ui-url" content={@alerts_ui_url}>
     <% end %>
-    <%= if @is_admin do %>
-        <meta name="is-admin" content={@is_admin}>
+    <%= if @is_emergency_admin do %>
+        <meta name="is-emergency-admin" content={@is_emergency_admin}>
     <% end %>
     <%= if @fullstory_org_id do %>
         <meta name="fullstory-org-id" content={@fullstory_org_id}>
