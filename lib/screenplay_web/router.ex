@@ -35,6 +35,10 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.EnsureScreenplayAdminGroup)
   end
 
+  pipeline :ensure_pa_message_admin do
+    plug(ScreenplayWeb.EnsurePaMessageAdmin)
+  end
+
   # Load balancer health check
   # Exempt from auth checks and SSL redirects
   scope "/", ScreenplayWeb do
@@ -61,6 +65,17 @@ defmodule ScreenplayWeb.Router do
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
     get("/unauthorized", UnauthorizedController, :index)
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :ensure_pa_message_admin,
+      :metadata
+    ])
   end
 
   scope "/api", ScreenplayWeb do
