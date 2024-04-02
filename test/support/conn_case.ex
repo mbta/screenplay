@@ -34,7 +34,7 @@ defmodule ScreenplayWeb.ConnCase do
   setup tags do
     {conn, user} =
       cond do
-        tags[:authenticated_admin] ->
+        tags[:authenticated_emergency_admin] ->
           user = "test_user"
 
           conn =
