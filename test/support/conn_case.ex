@@ -13,7 +13,6 @@ defmodule ScreenplayWeb.ConnCase do
   this option is not recommended for other databases.
   """
 
-  import Plug.Conn
   use ExUnit.CaseTemplate
 
   using do
@@ -45,7 +44,7 @@ defmodule ScreenplayWeb.ConnCase do
               "roles" => ["screenplay-emergency-admin"]
             })
             |> Plug.Conn.put_session(:username, user)
-            |> assign(:roles, [:emergency_admin])
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
 
           {conn, user}
 
@@ -57,7 +56,7 @@ defmodule ScreenplayWeb.ConnCase do
             |> Plug.Test.init_test_session(%{})
             |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{roles: []})
             |> Plug.Conn.put_session(:username, user)
-            |> assign(:roles, [])
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
 
           {conn, user}
 
@@ -71,7 +70,7 @@ defmodule ScreenplayWeb.ConnCase do
               "roles" => ["pa-message-admin"]
             })
             |> Plug.Conn.put_session(:username, user)
-            |> assign(:roles, [:pa_message_admin])
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
 
           {conn, user}
 
