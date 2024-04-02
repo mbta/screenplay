@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.EnsureScreenplayAdminGroup do
+defmodule ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup do
   @moduledoc """
   Verify that the user has permission to access the Outfront Takeover Tool.
   """
