@@ -6,9 +6,11 @@ defmodule ScreenplayWeb.AuthManager do
   @type access_level ::
           :none | :read_only | :emergency_admin | :screens_config_admin | :pa_message_admin
 
-  @screenplay_emergency_admin_role "screenplay-emergency-admin"
-  @screens_admin "screens-admin"
-  @pa_message_admin "pa-message-admin"
+  @roles %{
+    "screenplay-emergency-admin" => :emergency_admin,
+    "screens-admin" => :screens_admin,
+    "pa-message-admin" => :pa_message_admin
+  }
 
   @spec subject_for_token(
           resource :: Guardian.Token.resource(),
@@ -28,11 +30,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   @spec claims_access_level(Guardian.Token.claims()) :: list(access_level())
   def claims_access_level(%{"roles" => roles}) when not is_nil(roles) do
-    access_levels =
-      []
-      |> append_if(@screenplay_emergency_admin_role in roles, :emergency_admin)
-      |> append_if(@screens_admin in roles, :screens_admin)
-      |> append_if(@pa_message_admin in roles, :pa_message_admin)
+    access_levels = Enum.map(roles, &Map.get(@roles, &1)) |> Enum.reject(&is_nil/1)
 
     if access_levels == [] do
       [:read_only]
@@ -43,9 +41,5 @@ defmodule ScreenplayWeb.AuthManager do
 
   def claims_access_level(_claims) do
     [:read_only]
-  end
-
-  defp append_if(list, condition, item) do
-    if condition, do: list ++ [item], else: list
   end
 end
