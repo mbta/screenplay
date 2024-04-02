@@ -61,6 +61,20 @@ defmodule ScreenplayWeb.ConnCase do
 
           {conn, user}
 
+        tags[:authenticated_pa_message_admin] ->
+          user = "test_user"
+
+          conn =
+            Phoenix.ConnTest.build_conn()
+            |> Plug.Test.init_test_session(%{})
+            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
+              "roles" => ["pa-message-admin"]
+            })
+            |> Plug.Conn.put_session(:username, user)
+            |> assign(:roles, [:pa_message_admin])
+
+          {conn, user}
+
         true ->
           {Phoenix.ConnTest.build_conn(), nil}
       end
