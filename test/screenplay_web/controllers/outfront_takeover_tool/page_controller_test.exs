@@ -2,7 +2,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageControllerTest do
   use ScreenplayWeb.ConnCase
 
   describe "index/2" do
-    @tag :authenticated_admin
+    @tag :authenticated_emergency_admin
     test "responds 200 to authenticated admin requests", %{conn: conn} do
       conn = get(conn, "/emergency-takeover")
       assert %{status: 200} = conn
@@ -21,7 +21,7 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageControllerTest do
   end
 
   describe "takeover_redirect/2" do
-    @tag :authenticated_admin
+    @tag :authenticated_emergency_admin
     test "redirects admin to /emergency-takeover", %{conn: conn} do
       conn = get(conn, "/")
       assert redirected_to(conn) =~ "/emergency-takeover"
