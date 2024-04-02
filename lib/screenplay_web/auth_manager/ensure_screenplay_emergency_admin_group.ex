@@ -9,15 +9,13 @@ defmodule ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup do
 
   def init(options), do: options
 
-  def call(conn, _opts) do
-    with claims <- Guardian.Plug.current_claims(conn),
-         true <- :emergency_admin in ScreenplayWeb.AuthManager.claims_access_level(claims) do
+  def call(conn = %{assigns: %{roles: roles}}, _opts) do
+    if :emergency_admin in roles do
       conn
     else
-      _ ->
-        conn
-        |> Phoenix.Controller.redirect(to: Helpers.unauthorized_path(conn, :index))
-        |> halt()
+      conn
+      |> Phoenix.Controller.redirect(to: Helpers.unauthorized_path(conn, :index))
+      |> halt()
     end
   end
 end

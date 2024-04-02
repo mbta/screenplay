@@ -20,11 +20,11 @@
     <%= if @alerts_ui_url do %>
         <meta name="alerts-ui-url" content={@alerts_ui_url}>
     <% end %>
-    <%= if @is_emergency_admin do %>
-        <meta name="is-emergency-admin" content={@is_emergency_admin}>
+    <%= if :emergency_admin in @roles do %>
+        <meta name="is-emergency-admin" content={true}>
     <% end %>
-    <%= if @is_pa_message_admin do %>
-        <meta name="is-pa-message-admin" content={@is_pa_message_admin}>
+    <%= if :pa_message_admin in @roles do %>
+        <meta name="is-pa-message-admin" content={true}>
     <% end %>
     <%= if @fullstory_org_id do %>
         <meta name="fullstory-org-id" content={@fullstory_org_id}>
