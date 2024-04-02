@@ -51,8 +51,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_emergency_admin_group,
-      :metadata
+      :metadata,
+      :ensure_screenplay_emergency_admin_group
     ])
 
     get("/", PageController, :takeover_redirect)
@@ -73,8 +73,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_pa_message_admin,
-      :metadata
+      :metadata,
+      :ensure_pa_message_admin
     ])
   end
 
@@ -99,6 +99,7 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
+      :metadata,
       :ensure_screenplay_emergency_admin_group
     ])
 
