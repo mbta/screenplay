@@ -3,8 +3,7 @@ defmodule ScreenplayWeb.AuthManager do
 
   use Guardian, otp_app: :screenplay
 
-  @type access_level ::
-          :none | :read_only | :emergency_admin | :screens_config_admin | :pa_message_admin
+  @type access_level :: :emergency_admin | :screens_config_admin | :pa_message_admin
 
   @roles %{
     "screenplay-emergency-admin" => :emergency_admin,
@@ -30,16 +29,10 @@ defmodule ScreenplayWeb.AuthManager do
 
   @spec claims_access_level(Guardian.Token.claims()) :: list(access_level())
   def claims_access_level(%{"roles" => roles}) when not is_nil(roles) do
-    access_levels = Enum.map(roles, &Map.get(@roles, &1)) |> Enum.reject(&is_nil/1)
-
-    if access_levels == [] do
-      [:read_only]
-    else
-      access_levels
-    end
+    Enum.map(roles, &Map.get(@roles, &1)) |> Enum.reject(&is_nil/1)
   end
 
   def claims_access_level(_claims) do
-    [:read_only]
+    []
   end
 end
