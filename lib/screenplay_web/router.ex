@@ -31,8 +31,8 @@ defmodule ScreenplayWeb.Router do
     plug(Guardian.Plug.EnsureAuthenticated)
   end
 
-  pipeline :ensure_screenplay_admin_group do
-    plug(ScreenplayWeb.EnsureScreenplayAdminGroup)
+  pipeline :ensure_screenplay_emergency_admin_group do
+    plug(ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup)
   end
 
   pipeline :ensure_pa_message_admin do
@@ -51,7 +51,7 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group,
+      :ensure_screenplay_emergency_admin_group,
       :metadata
     ])
 
@@ -99,7 +99,7 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group
+      :ensure_screenplay_emergency_admin_group
     ])
 
     post("/create", AlertController, :create)
