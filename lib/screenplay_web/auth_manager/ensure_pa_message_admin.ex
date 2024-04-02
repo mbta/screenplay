@@ -8,15 +8,13 @@ defmodule ScreenplayWeb.EnsurePaMessageAdmin do
 
   def init(options), do: options
 
-  def call(conn, _opts) do
-    with claims <- Guardian.Plug.current_claims(conn),
-         true <- :pa_message_admin in ScreenplayWeb.AuthManager.claims_access_level(claims) do
+  def call(conn = %{assigns: %{roles: roles}}, _opts) do
+    if :pa_message_admin in roles do
       conn
     else
-      _ ->
-        conn
-        |> redirect(to: "/dashboard")
-        |> halt()
+      conn
+      |> redirect(to: "/dashboard")
+      |> halt()
     end
   end
 end
