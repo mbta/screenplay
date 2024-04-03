@@ -208,7 +208,8 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
 
   const hasRows =
     Object.keys(existingLiveScreens).length > 0 ||
-    Object.keys(existingPendingScreens).length > 0 ||
+    Object.values(existingPendingScreens).filter((config) => !config.is_deleted)
+      .length > 0 ||
     newScreens.length > 0;
 
   const deleteExistingPendingRow = (
