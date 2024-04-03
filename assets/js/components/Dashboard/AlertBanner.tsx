@@ -21,10 +21,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
   queueExpiration,
 }: AlertBannerProps) => {
   const { bannerAlert } = useScreenplayContext();
-  if (!bannerAlert) return null;
-
   const { alert, type } = bannerAlert as BannerAlert;
-
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();
 
@@ -64,7 +61,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
     const affectedListString = getAffectedListString();
 
     if (
-      ["dashboard", "alerts"].includes(route) ||
+      ["dashboard", "alerts", "pending"].includes(route) ||
       (params.id && params.id !== alert.id)
     ) {
       if (type === "closed") {

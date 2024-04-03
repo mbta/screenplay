@@ -16,7 +16,7 @@ import { putPendingScreens } from "../../../../../utils/api";
 import { useScreenplayContext } from "../../../../../hooks/useScreenplayContext";
 
 interface EditNavigationState {
-  placeID: string;
+  place_id: string;
 }
 
 const GlEinkWorkflow: ComponentType = () => {
@@ -38,18 +38,6 @@ const GlEinkWorkflow: ComponentType = () => {
     );
   };
 
-  useLayoutEffect(() => {
-    if (location.state) {
-      const { placeID } = location.state as EditNavigationState;
-
-      setConfigStep(1);
-      setSelectedPlaces(new Set([placeID]));
-      setIsEditing(true);
-
-      window.history.replaceState({}, "");
-    }
-  }, [location]);
-
   const [showValidationAlert, setShowValidationAlert] = useState(true);
   const { newScreenValidationErrors, pendingScreenValidationErrors } =
     useConfigValidationContext();
@@ -57,6 +45,23 @@ const GlEinkWorkflow: ComponentType = () => {
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    if (location.state) {
+      const { place_id } = location.state as EditNavigationState;
+
+      setConfigStep(1);
+      setSelectedPlaces(new Set([place_id]));
+      setIsEditing(true);
+      newScreenValidationErrors[place_id] = [];
+      pendingScreenValidationErrors[place_id] = [];
+      dispatch({
+        type: "SET_VALIDATION_ERRORS",
+        newScreenValidationErrors,
+        pendingScreenValidationErrors,
+      });
+    }
+  }, [location]);
 
   const handleRemoveLocation = (place: Place) => {
     const newSelectedPlaces = new Set(selectedPlaces);

@@ -12,6 +12,7 @@ import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
 import LinkCopiedToast from "./LinkCopiedToast";
 import ActionOutcomeToast from "./ActionOutcomeToast";
+import { useLocation } from "react-router-dom";
 
 const Dashboard: ComponentType = () => {
   const { alerts, bannerAlert, showLinkCopied, actionOutcomeToast } =
@@ -146,13 +147,19 @@ const Dashboard: ComponentType = () => {
     );
   };
 
+  const pathname = useLocation().pathname;
+  const showAlertBanner =
+    !pathname.includes("configure-screens") && bannerAlert?.alert;
+
+  const showSidebar = !pathname.includes("configure-screens");
+
   return (
     <div className="screenplay-container">
       <LinkCopiedToast show={showLinkCopied} />
       <ActionOutcomeToast {...actionOutcomeToast} />
-      <Sidebar />
+      {showSidebar && <Sidebar />}
       <div className="page-content">
-        {bannerAlert?.alert && (
+        {showAlertBanner && (
           <AlertBanner
             isDone={bannerDone}
             queueExpiration={queueBannerAlertExpiration}
