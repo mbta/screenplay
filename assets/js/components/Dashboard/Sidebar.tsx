@@ -12,7 +12,6 @@ import TSquare from "../../../static/images/t-square.svg";
 
 const Sidebar: ComponentType = () => {
   const pathname = useLocation().pathname;
-  if (pathname.includes("configure-screens")) return null;
 
   // @ts-ignore Suppressing "object could be null" warning
   const username = document

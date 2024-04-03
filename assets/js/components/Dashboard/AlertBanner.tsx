@@ -1,7 +1,7 @@
 import React, { ComponentType } from "react";
 import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useScreenplayContext } from "../../hooks/useScreenplayContext";
 import { Alert } from "../../models/alert";
 
@@ -21,11 +21,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
   queueExpiration,
 }: AlertBannerProps) => {
   const { bannerAlert } = useScreenplayContext();
-  if (useLocation().pathname.includes("configure-screens") || !bannerAlert)
-    return null;
-
   const { alert, type } = bannerAlert as BannerAlert;
-
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();
 
