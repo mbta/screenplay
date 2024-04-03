@@ -145,7 +145,7 @@ defmodule ScreenplayWeb.ConfigController do
       matches ->
         {:ok, _, metadata} = PendingScreensConfig.fetch_config()
 
-        if metadata.version_id in matches do
+        if metadata.etag in matches do
           conn
         else
           conn
