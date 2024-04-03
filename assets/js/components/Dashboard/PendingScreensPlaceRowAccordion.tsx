@@ -1,4 +1,9 @@
-import React, { ComponentType, useContext, useState } from "react";
+import React, {
+  ComponentType,
+  SyntheticEvent,
+  useContext,
+  useState,
+} from "react";
 import { SCREEN_TYPES } from "../../constants/constants";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import PendingScreenDetail from "./PendingScreenDetail";
@@ -87,13 +92,19 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
     }
   };
 
-  const handleClickEdit = () => {
+  const handleClickEdit = (e: SyntheticEvent) => {
+    // Prevent the button click from also causing the accordion to expand/collapse.
+    e.stopPropagation();
+
     navigate(`/configure-screens/${appIDAsRoutePart(appID)}`, {
       state: { place_id: placeID },
     });
   };
 
-  const handleClickPublish = () => {
+  const handleClickPublish = (e: SyntheticEvent) => {
+    // Prevent the button click from also causing the accordion to expand/collapse.
+    e.stopPropagation();
+
     publishCallback(placeID, appID, hiddenFromScreenplayIDs);
   };
 
