@@ -37,8 +37,8 @@ defmodule Screenplay.Alerts.Cache.Store do
   @doc """
   Retrieves the full set of alerts.
   """
-  @spec alerts() :: list(Alert.t())
-  def alerts() do
+  @spec alerts :: list(Alert.t())
+  def alerts do
     :ets.select(:alerts, [{{:_, :"$1"}, [], [:"$1"]}])
   end
 
