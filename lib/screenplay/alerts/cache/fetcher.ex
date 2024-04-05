@@ -1,4 +1,8 @@
 defmodule Screenplay.Alerts.Cache.Fetcher do
+  @moduledoc """
+  Module used to fetch current alerts from the V3 API every 4 seconds. Each set of alerts is passed to the Store module.
+  """
+
   require Logger
 
   use GenServer
