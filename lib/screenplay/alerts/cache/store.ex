@@ -1,4 +1,9 @@
 defmodule Screenplay.Alerts.Cache.Store do
+  @moduledoc """
+  Module for storing alerts in an ETS table. Each call to `update/1` removes all existing alerts and replaces with a new list each time.
+  This will ensure that no expired alerts are stored in the table.
+  """
+
   use GenServer
 
   alias Screenplay.Alerts.Alert
