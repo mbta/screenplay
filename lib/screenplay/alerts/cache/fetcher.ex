@@ -7,9 +7,9 @@ defmodule Screenplay.Alerts.Cache.Fetcher do
 
   use GenServer
 
-  alias Screenplay.V3Api
   alias Screenplay.Alerts.Alert
   alias Screenplay.Alerts.Cache.Store
+  alias Screenplay.V3Api
 
   @default_opts [
     get_json_fn: &V3Api.get_json/2,
@@ -36,7 +36,7 @@ defmodule Screenplay.Alerts.Cache.Fetcher do
   end
 
   @impl true
-  def handle_info(:fetch, {get_json_fn, update_interval_ms, update_fn} = state) do
+  def handle_info(:fetch, state = {get_json_fn, update_interval_ms, update_fn}) do
     case Alert.fetch(get_json_fn) do
       {:ok, alerts} ->
         update_fn.(alerts)

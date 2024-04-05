@@ -1,4 +1,8 @@
 defmodule Screenplay.Alerts.Cache.Supervisor do
+  @moduledoc """
+  Module used to spin up processes need to cache current alerts fetched from the V3 API.
+  """
+
   use Supervisor
 
   def start_link(_) do
