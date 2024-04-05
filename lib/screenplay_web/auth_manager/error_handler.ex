@@ -3,12 +3,12 @@ defmodule ScreenplayWeb.AuthManager.ErrorHandler do
   Custom Guardian error handler.
   """
 
-  @behaviour Guardian.Plug.ErrorHandler
+  use ScreenplayWeb, :plug
 
-  alias ScreenplayWeb.Router.Helpers
+  @behaviour Guardian.Plug.ErrorHandler
 
   @impl Guardian.Plug.ErrorHandler
   def auth_error(conn, {_type, _reason}, _opts) do
-    Phoenix.Controller.redirect(conn, to: Helpers.auth_path(conn, :request, "keycloak"))
+    Phoenix.Controller.redirect(conn, to: ~p"/auth/keycloak")
   end
 end
