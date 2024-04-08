@@ -137,16 +137,9 @@ const GlEinkWorkflow: ComponentType = () => {
     const fieldsWithErrors = new Set<string>();
     for (const [place_id, screens] of Object.entries(placesAndScreens)) {
       const fieldsByScreen = screens["new_pending_screens"]?.map((screen) => {
-        const presentFields = [];
-
-        // Validate that screen id is in correct format
-        if (screen.new_id?.match(/^EIG-\d+$/)) {
-          presentFields.push("screen_id");
-        }
-
         // Get what fields are present in the config for this screen
         return [
-          ...presentFields,
+          "screen_id",
           ...Object.keys(screen["app_params"]),
           ...Object.keys(screen["app_params"].header),
         ];
