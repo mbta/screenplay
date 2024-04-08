@@ -14,8 +14,7 @@ import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "../../../constants/misc";
 import { matchStation } from "../../../util";
 
-import parseISO from "date-fns/parseISO";
-import differenceInHours from "date-fns/differenceInHours";
+import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "../../../constants/constants";
 
