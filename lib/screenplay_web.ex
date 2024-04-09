@@ -62,6 +62,13 @@ defmodule ScreenplayWeb do
     end
   end
 
+  def plug do
+    quote do
+      import Plug.Conn
+      unquote(verified_routes())
+    end
+  end
+
   defp view_helpers do
     quote do
       # Use all HTML functionality (forms, tags, etc)

@@ -6,8 +6,7 @@ defmodule ScreenplayWeb.AuthController do
   def callback(conn = %{assigns: %{ueberauth_auth: auth}}, _params) do
     username = auth.uid
     name = auth.info.name
-    expiration = auth.credentials.expires_at
-    current_time = System.system_time(:second)
+    session_ttl_hours = 24 * 30
 
     keycloak_client_id =
       get_in(Application.get_env(:ueberauth_oidcc, :providers), [:keycloak, :client_id])
@@ -23,7 +22,7 @@ defmodule ScreenplayWeb.AuthController do
       ScreenplayWeb.AuthManager,
       username,
       %{roles: roles},
-      ttl: {expiration - current_time, :seconds}
+      ttl: {session_ttl_hours, :hours}
     )
     |> Plug.Conn.put_session(:username, name || username)
     # Redirect to whatever page they came from
