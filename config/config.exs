@@ -18,7 +18,8 @@ config :screenplay, ScreenplayWeb.Endpoint,
 config :screenplay,
   config_fetcher: Screenplay.Config.S3Fetch,
   config_s3_bucket: "mbta-ctd-config",
-  record_sentry: false
+  record_sentry: false,
+  start_alerts_cache: config_env() != :test
 
 # Include 2 logger backends
 config :logger,
