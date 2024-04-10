@@ -43,7 +43,7 @@ defmodule Screenplay.Alerts.Cache do
   # Server
   @impl true
   def init(opts) do
-    _ = :ets.new(:alerts, [:protected, :named_table, read_concurrency: true])
+    :ets.new(:alerts, [:protected, :named_table, read_concurrency: true])
 
     get_json_fn = Keyword.get(opts, :get_json_fn)
     update_interval_ms = Keyword.get(opts, :update_interval_ms)
