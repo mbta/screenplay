@@ -57,10 +57,7 @@ defmodule Screenplay.Alerts.Cache do
   def handle_info(:fetch, state = {get_json_fn, update_interval_ms}) do
     case Alert.fetch(get_json_fn) do
       {:ok, alerts} ->
-        alerts_to_insert =
-          Enum.reduce(alerts, [], fn alert, acc ->
-            [{alert.id, alert} | acc]
-          end)
+        alerts_to_insert = Enum.map(alerts, fn alert -> {alert.id, alert} end)
 
         :ets.delete_all_objects(:alerts)
         :ets.insert(:alerts, alerts_to_insert)
