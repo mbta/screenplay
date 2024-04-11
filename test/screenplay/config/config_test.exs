@@ -103,19 +103,9 @@ defmodule Screenplay.Config.ConfigTest do
                         params: %Departures.Query.Params{
                           stop_ids: ["place-test"],
                           route_ids: ["Green-B"],
-                          direction_id: 0,
-                          route_type: nil
-                        },
-                        opts: %Departures.Query.Opts{
-                          include_schedules: false
+                          direction_id: 0
                         }
-                      },
-                      filter: nil,
-                      headway: %Departures.Headway{
-                        headway_id: nil,
-                        override: nil
-                      },
-                      bidirectional: false
+                      }
                     }
                   ]
                 },
@@ -195,19 +185,9 @@ defmodule Screenplay.Config.ConfigTest do
                         params: %Departures.Query.Params{
                           stop_ids: ["place-test"],
                           route_ids: ["Green-B"],
-                          direction_id: 1,
-                          route_type: nil
-                        },
-                        opts: %Departures.Query.Opts{
-                          include_schedules: false
+                          direction_id: 1
                         }
-                      },
-                      filter: nil,
-                      headway: %Departures.Headway{
-                        headway_id: nil,
-                        override: nil
-                      },
-                      bidirectional: false
+                      }
                     }
                   ]
                 },
@@ -353,19 +333,9 @@ defmodule Screenplay.Config.ConfigTest do
                         params: %Departures.Query.Params{
                           stop_ids: ["place-test"],
                           route_ids: ["Green-B"],
-                          direction_id: 1,
-                          route_type: nil
-                        },
-                        opts: %Departures.Query.Opts{
-                          include_schedules: false
+                          direction_id: 1
                         }
-                      },
-                      filter: nil,
-                      headway: %Departures.Headway{
-                        headway_id: nil,
-                        override: nil
-                      },
-                      bidirectional: false
+                      }
                     }
                   ]
                 },
