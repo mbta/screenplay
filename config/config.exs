@@ -24,12 +24,6 @@ config :screenplay,
 config :logger,
   backends: [:console, Sentry.LoggerBackend]
 
-# Do not send local errors to Sentry
-config :sentry,
-  dsn: "",
-  environment_name: "dev",
-  included_environments: []
-
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
