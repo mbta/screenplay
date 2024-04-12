@@ -4,7 +4,6 @@ defmodule ScreenplayWeb.AlertsController do
   require Logger
 
   def index(conn, _params) do
-    Logger.error("Testing for Sentry")
     render(conn, "index.html")
   end
 end
