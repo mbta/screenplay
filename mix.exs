@@ -39,7 +39,7 @@ defmodule Screenplay.MixProject do
       {:phoenix_view, "~> 2.0"},
       {:phoenix_live_view, "~> 0.18.18"},
       {:phoenix_live_dashboard, "~> 0.7.2"},
-      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.24.0"},
       {:jason, "~> 1.4"},
