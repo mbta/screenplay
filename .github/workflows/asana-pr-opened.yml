@@ -2,6 +2,7 @@ name: Move Asana ticket after PR opened
 on: 
   pull_request:
     types: [opened, reopened]
+    branches-ignore: ["dependabot/*"]
 
 jobs:
   move-asana-ticket-job:

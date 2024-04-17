@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 import alerts from "./alerts.test.json";
 import alertsOnScreens from "./alerts_on_screens.test.json";
 import places from "./places_and_screens.test.json";
