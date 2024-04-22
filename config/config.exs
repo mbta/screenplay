@@ -7,6 +7,14 @@
 # General application configuration
 import Config
 
+config :screenplay, Screenplay.Repo,
+  database: "screenplay_repo",
+  username: "user",
+  password: "pass",
+  hostname: "localhost"
+
+config :screenplay, ecto_repos: [Screenplay.Repo]
+
 # Configures the endpoint
 config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: "localhost"],
