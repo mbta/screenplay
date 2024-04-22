@@ -14,7 +14,7 @@ RUN mix do local.hex --force, local.rebar --force
 RUN mix do deps.get --only prod
 
 # next, build frontend assets within a node.js container
-FROM node:14 as assets-builder
+FROM node:18 as assets-builder
 
 WORKDIR /root
 ADD . .
@@ -35,7 +35,7 @@ WORKDIR /root
 # add frontend assets compiled in node container, required by phx.digest
 COPY --from=assets-builder /root/priv/static ./priv/static
 
-RUN mix do compile --force, phx.digest, release
+RUN mix do compile --force, phx.digest, sentry.package_source_code, release
 
 # finally, use an Alpine container for the runtime environment
 FROM alpine:3.18.4

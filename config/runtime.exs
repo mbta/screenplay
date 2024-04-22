@@ -33,6 +33,8 @@ if config_env() == :prod do
     ]
 end
 
+sentry_dsn = System.get_env("SENTRY_DSN")
+
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
   sftp_client_module: sftp_client_module,
@@ -42,7 +44,7 @@ config :screenplay,
   pio_slack_group_id: System.get_env("PIO_SLACK_USERGROUP_ID"),
   slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL"),
   environment_name: env,
-  sentry_frontend_dsn: System.get_env("SENTRY_DSN"),
+  sentry_frontend_dsn: sentry_dsn,
   api_v3_key: System.get_env("API_V3_KEY"),
   api_v3_url: System.get_env("API_V3_URL"),
   screens_url: System.get_env("SCREENS_URL"),
@@ -50,12 +52,11 @@ config :screenplay,
   alerts_ui_url: System.get_env("ALERTS_UI_URL"),
   fullstory_org_id: System.get_env("FULLSTORY_ORG_ID")
 
-config :sentry,
-  dsn: System.get_env("SENTRY_DSN"),
-  environment_name: env,
-  included_environments: [env],
-  enable_source_code_context: true,
-  root_source_code_path: File.cwd!()
+if sentry_dsn not in [nil, ""] do
+  config :sentry,
+    dsn: sentry_dsn,
+    environment_name: env
+end
 
 scheduler_jobs =
   if env == "prod",

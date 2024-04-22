@@ -17,7 +17,7 @@ import {
   useScreenplayContext,
   useScreenplayDispatchContext,
 } from "../../hooks/useScreenplayContext";
-import format from "date-fns/format";
+import { format } from "date-fns/format";
 import { Place } from "../../models/place";
 
 const PendingScreensPage: ComponentType = () => {
@@ -64,7 +64,6 @@ const PendingScreensPage: ComponentType = () => {
           placeID,
           appID,
           hiddenFromScreenplayIDs,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           etag!
         );
 
