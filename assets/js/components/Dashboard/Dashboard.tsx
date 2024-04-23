@@ -29,7 +29,7 @@ const Dashboard: ComponentType = () => {
     });
 
     fetchPlaces((placesList) =>
-      dispatch({ type: "SET_PLACES", places: placesList })
+      dispatch({ type: "SET_PLACES", places: placesList }),
     );
   }, []);
 
@@ -114,7 +114,7 @@ const Dashboard: ComponentType = () => {
         })
         // sort them in descending order to get the most recently created or updated alert
         .sort((a1, a2) =>
-          new Date(a1.updated_at) < new Date(a2.updated_at) ? 1 : -1
+          new Date(a1.updated_at) < new Date(a2.updated_at) ? 1 : -1,
         )
         // get the first alert in the list or underfined if there are none
         .find((alert) => alert)
@@ -128,7 +128,7 @@ const Dashboard: ComponentType = () => {
           type: "SET_BANNER_ALERT",
           bannerAlert: undefined,
         }),
-      5000
+      5000,
     );
   };
 

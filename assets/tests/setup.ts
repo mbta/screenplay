@@ -39,12 +39,12 @@ beforeEach(() => {
             alerts,
             screens_by_alert: alertsOnScreens,
           }),
-      })
+      }),
     )
     .mockReturnValueOnce(
       Promise.resolve({
         json: () => Promise.resolve(places),
-      })
+      }),
     );
 });
 

@@ -20,8 +20,8 @@ export const fetchAlerts = (
   callback: (
     all_alert_ids: string[],
     alerts: Alert[],
-    screens_by_alert: ScreensByAlert
-  ) => void
+    screens_by_alert: ScreensByAlert,
+  ) => void,
 ) => {
   return fetch("/api/alerts")
     .then((response) => response.json())
