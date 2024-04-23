@@ -15,3 +15,9 @@
 # export SCREENS_URL=
 # export SIGNS_UI_URL=
 # export ALERTS_UI_URL=
+
+## Postgres configuration: username, password, and hostname
+## * Your local Postgres server should go here
+# export DATABASE_USERNAME=
+# export DATABASE_PASSWORD=
+# export DATABASE_HOSTNAME=
