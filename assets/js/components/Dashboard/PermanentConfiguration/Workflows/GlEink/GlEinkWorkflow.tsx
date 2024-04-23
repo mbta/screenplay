@@ -194,7 +194,6 @@ const GlEinkWorkflow: ComponentType = () => {
   let onForward;
   let onCancel;
   let layout;
-  const forwardButtonDisabled = selectedPlaces.size === 0;
   switch (configStep) {
     case 0:
       cancelButtonLabel = "Cancel";
@@ -330,7 +329,6 @@ const GlEinkWorkflow: ComponentType = () => {
           onCancel={onCancel}
           onBack={onBack}
           onForward={onForward}
-          forwardButtonDisabled={forwardButtonDisabled}
         />
       </div>
     </>
