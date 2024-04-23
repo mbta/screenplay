@@ -12,7 +12,7 @@ import ReactDOM from "react-dom";
 
 import App from "./components/App";
 import * as Sentry from "@sentry/react";
-import * as FullStory from "@fullstory/browser";
+import { FullStory, init as initFullStory } from "@fullstory/browser";
 
 const environment = document
   .querySelector("meta[name=environment-name]")
@@ -40,7 +40,14 @@ const fullstoryOrgId = document
   ?.getAttribute("content");
 
 if (fullstoryOrgId) {
-  FullStory.init({ orgId: fullstoryOrgId, recordCrossDomainIFrames: true });
+  initFullStory({ orgId: fullstoryOrgId, recordCrossDomainIFrames: true });
+
+  if (username) {
+    FullStory("setIdentity", {
+      uid: username,
+      properties: { displayName: username },
+    });
+  }
 }
 
 ReactDOM.render(<App />, document.getElementById("app"));
