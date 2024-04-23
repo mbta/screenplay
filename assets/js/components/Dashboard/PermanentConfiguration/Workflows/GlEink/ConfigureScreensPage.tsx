@@ -59,7 +59,6 @@ interface ConfigureScreensWorkflowPageProps {
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
   >;
-  handleRemoveLocation: (place: Place) => void;
   setConfigVersion: React.Dispatch<React.SetStateAction<string>>;
   isEditing: boolean;
 }
@@ -68,7 +67,6 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
   ({
     selectedPlaces,
     setPlacesAndScreensToUpdate,
-    handleRemoveLocation,
     setConfigVersion,
     isEditing,
   }: ConfigureScreensWorkflowPageProps) => {
@@ -124,7 +122,6 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
             place={place}
             existingScreens={existingScreens[place.id]}
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-            handleRemoveLocation={() => handleRemoveLocation(place)}
           />
         );
       });
@@ -151,14 +148,12 @@ interface ConfigurePlaceCardProps {
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
   >;
-  handleRemoveLocation: () => void;
 }
 
 const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   place,
   existingScreens,
   setPlacesAndScreensToUpdate,
-  handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
   const [existingPendingScreens, setExistingPendingScreens] = useState<{
     [screen_id: string]: ScreenConfiguration;
@@ -325,14 +320,6 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       <Row className="header">
         <Col className="h5 my-auto header-name">{place.name.toUpperCase()}</Col>
         <Col className="body--medium my-auto">Station ID: {place.id}</Col>
-        <Col className="d-flex">
-          <Button
-            className="remove-location-button"
-            onClick={handleRemoveLocation}
-          >
-            Remove Location
-          </Button>
-        </Col>
       </Row>
       {hasRows && (
         <Row className="screens-table-container">
