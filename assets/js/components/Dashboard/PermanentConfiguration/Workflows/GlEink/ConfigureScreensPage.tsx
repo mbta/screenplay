@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, {
   ComponentType,
   ForwardedRef,
@@ -113,31 +112,19 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
       });
     };
 
-    let layout;
-    if (selectedPlaces.length) {
-      layout = selectedPlaces.map((place) => {
-        return (
-          <ConfigurePlaceCard
-            key={place.id}
-            place={place}
-            existingScreens={existingScreens[place.id]}
-            setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-          />
-        );
-      });
-    } else {
-      layout = (
-        <div>
-          All locations have been removed. Select "Back" to select new
-          locations.
-        </div>
-      );
-    }
-
     return (
       <Container className="workflow-container">
         <div className="h3 text-white mb-5">{getTitle()}</div>
-        {layout}
+        {selectedPlaces.map((place) => {
+          return (
+            <ConfigurePlaceCard
+              key={place.id}
+              place={place}
+              existingScreens={existingScreens[place.id]}
+              setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
+            />
+          );
+        })}
       </Container>
     );
   };
