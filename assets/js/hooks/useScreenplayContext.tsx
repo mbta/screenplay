@@ -121,7 +121,7 @@ const reducer = (state: ScreenplayState, action: ReducerAction) => {
 
 const placesListReducer = (
   state: PlacesListState,
-  action: PlacesListReducerAction
+  action: PlacesListReducerAction,
 ) => {
   switch (action.type) {
     case "SET_SORT_DIRECTION":
@@ -165,7 +165,7 @@ const placesListReducer = (
 
 const alertsReducer = (
   state: AlertsListState,
-  action: AlertsListReducerAction
+  action: AlertsListReducerAction,
 ) => {
   switch (action.type) {
     case "SET_MODE_LINE_FILTER":
@@ -234,15 +234,15 @@ const [useAlertsListDispatchContext, AlertsListDispatchContextProvider] =
 const ScreenplayProvider = ({ children }: Props) => {
   const [screenplayState, screenplayDispatch] = useReducer(
     reducer,
-    initialState
+    initialState,
   );
   const [placesListState, placesListDispatch] = useReducer(
     placesListReducer,
-    initialPlacesListState
+    initialPlacesListState,
   );
   const [alertsListState, alertsListDispatch] = useReducer(
     alertsReducer,
-    initialAlertsListState
+    initialAlertsListState,
   );
 
   return (

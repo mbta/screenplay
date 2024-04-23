@@ -2,102 +2,54 @@ defmodule Screenplay.Outfront.SFTP do
   @moduledoc """
   This module handles the CRUD functions to the SFTP server
   """
+  @dialyzer {:no_match, start_connection: 1, write_image: 5, delete_image: 4}
 
   require Logger
 
-  @orientations ["Portrait", "Landscape"]
+  @landscape_dir Application.compile_env!(:screenplay, :landscape_dir)
+  @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @retries 3
 
-  @stations_to_outfront_directories %{
-    "Park Street" => "001_XFER_RED_GREEN_PARK",
-    "Downtown Crossing" => "002_XFER_RED_ORANGE_SILVER_DOWNTOWNCROSSING",
-    "South Station" => "003_XFER_RED_SILVER_CR_SOUTHSTATION",
-    "North Station" => "004_XFER_ORANGE_GREEN_CR_NORTHSTATION",
-    "Haymarket" => "005_XFER_ORANGE_GREEN_HAYMARKET",
-    "State" => "006_XFER_ORANGE_BLUE_STATE",
-    "Government Center" => "007_XFER_BLUE_GREEN_GOVERNMENTCENTER",
-    "Alewife" => "008_RED_ALEWIFE",
-    "Davis" => "009_RED_DAVIS",
-    "Porter" => "010_RED_CR_PORTER",
-    "Harvard" => "011_RED_HARVARD",
-    "Central" => "012_RED_CENTRAL",
-    "Kendall/MIT" => "013_RED_KENDALL",
-    "Charles/MGH" => "014_RED_CHARLES",
-    "Broadway" => "015_RED_BROADWAY",
-    "Andrew" => "016_RED_ANDREW",
-    "JFK/UMass" => "017_RED_CR_JFKUMASS",
-    "Savin Hill" => "018_A_RED_SAVINHILL",
-    "Fields Corner" => "019_A_RED_FIELDSCORNER",
-    "Shawmut" => "020_A_RED_SHAWMUT",
-    "Ashmont" => "021_A_RED_ASHMONT",
-    "North Quincy" => "022_B_RED_NORTHQUINCY",
-    "Wollaston" => "023_B_RED_WOLLASTON",
-    "Quincy Center" => "024_B_RED_CR_QUINCYCENTER",
-    "Quincy Adams" => "025_B_RED_QUINCYADAMS",
-    "Braintree" => "026_B_RED_CR_BRAINTREE",
-    "Oak Grove" => "034_ORANGE_OAKGROVE",
-    "Malden Center" => "035_ORANGE_CR_MALDENCENTER",
-    "Wellington" => "036_ORANGE_WELLINGTON",
-    "Assembly" => "037_ORANGE_ASSEMBLY",
-    "Sullivan Square" => "038_ORANGE_SULLIVAN",
-    "Community College" => "039_ORANGE_COMMUNITYCOLLEGE",
-    "Chinatown" => "040_ORANGE_SILVER_CHINATOWN",
-    "Tufts Medical Center" => "041_ORANGE_SILVER_TUFTSMEDICAL",
-    "Back Bay" => "042_ORANGE_CR_BACKBAY",
-    "Massachusetts Avenue" => "043_ORANGE_MASSAVE",
-    "Ruggles" => "044_ORANGE_CR_RUGGLES",
-    "Roxbury Crossing" => "045_ORANGE_ROXBURYCROSSING",
-    "Jackson Square" => "046_ORANGE_JACKSON",
-    "Stony Brook" => "047_ORANGE_STONYBROOK",
-    "Green Street" => "048_ORANGE_GREENST",
-    "Forest Hills" => "049_ORANGE_CR_FORESTHILLS",
-    "Wonderland" => "050_BLUE_WONDERLAND",
-    "Revere Beach" => "051_BLUE_REVEREBEACH",
-    "Beachmont" => "052_BLUE_BEACHMONT",
-    "Suffolk Downs" => "053_BLUE_SUFFOLKDOWNS",
-    "Orient Heights" => "054_BLUE_ORIENTHEIGHTS",
-    "Wood Island" => "055_BLUE_WOODISLAND",
-    "Airport" => "056_BLUE_SILVER_AIRPORT",
-    "Maverick" => "057_BLUE_MAVERICK",
-    "Aquarium" => "058_BLUE_AQUARIUM",
-    "Bowdoin" => "059_BLUE_BOWDOIN",
-    "Boylston" => "062_GREEN_SILVER_BOYLSTON",
-    "Arlington" => "063_GREEN_ARLINGTON",
-    "Copley" => "064_GREEN_COPLEY",
-    "Hynes Convention Center" => "065_GREEN_HYNES",
-    "Kenmore" => "066_GREEN_KENMORE",
-    "Prudential" => "111_E_GREEN_PRUDENTIAL",
-    "Symphony" => "112_E_GREEN_SYMPHONY",
-    "World Trade Center" => "125_1_2_3_SILVER_WORLDTRADE"
-  }
-
-  def set_takeover_images(stations, portrait_png, landscape_png) do
+  def run(work_fn) do
     conn = start_connection()
 
-    Enum.each(stations, fn station ->
-      write_image(conn, station, "Portrait", portrait_png)
-      write_image(conn, station, "Landscape", landscape_png)
-    end)
+    try do
+      work_fn.(conn)
+    after
+      sftp_client_module().disconnect(conn)
+    end
+  end
 
-    sftp_client_module().disconnect(conn)
+  def set_takeover_images(stations, portrait_png, landscape_png) do
+    run(fn conn ->
+      Enum.each(stations, fn station ->
+        write_image(conn, station, @portrait_dir, portrait_png)
+        write_image(conn, station, @landscape_dir, landscape_png)
+      end)
+    end)
   end
 
   def clear_takeover_images(stations) do
-    conn = start_connection()
-
-    Enum.each(
-      stations,
-      fn station ->
-        delete_image(conn, station, "Portrait")
-        delete_image(conn, station, "Landscape")
-      end
-    )
-
-    sftp_client_module().disconnect(conn)
+    run(fn conn ->
+      Enum.each(
+        stations,
+        fn station ->
+          delete_image(conn, station, @portrait_dir)
+          delete_image(conn, station, @landscape_dir)
+        end
+      )
+    end)
   end
 
-  defp sftp_client_module do
-    Application.get_env(:screenplay, :sftp_client_module)
+  def get_outfront_directory_for_station(station) do
+    %{sftp_dir_name: dir_name} =
+      :screenplay
+      |> Application.get_env(:outfront_takeover_tool_screens)
+      |> Map.values()
+      |> List.flatten()
+      |> Enum.find(&(&1.name == station))
+
+    dir_name
   end
 
   defp start_connection(retry \\ @retries)
@@ -143,7 +95,7 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   defp do_write_image(conn, station, orientation, image_data, _retry)
-       when orientation in @orientations do
+       when orientation in [@landscape_dir, @portrait_dir] do
     path = get_outfront_path_for_image(station, orientation)
     sftp_client_module().write_file(conn, path, image_data)
   end
@@ -186,7 +138,5 @@ defmodule Screenplay.Outfront.SFTP do
     Path.join([orientation, station_directory, "takeover.png"])
   end
 
-  defp get_outfront_directory_for_station(station) do
-    Map.get(@stations_to_outfront_directories, station)
-  end
+  defp sftp_client_module, do: Application.get_env(:screenplay, :sftp_client_module)
 end

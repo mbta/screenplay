@@ -6,7 +6,7 @@
 }
 
 .alert-not-found {
-  left: $sidebar-width/2;
+  left: calc($sidebar-width / 2);
 
   .alert-not-found_icon {
     flex-shrink: 0;

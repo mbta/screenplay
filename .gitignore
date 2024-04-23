@@ -34,9 +34,9 @@ npm-debug.log
 # this depending on your deployment strategy.
 /priv/static/
 
-# All files in /priv/ are going to be for local development
+# All config files in /priv/ are going to be for local development
 # so do not need to be tracked.
-/priv/*
-!priv/repo*
+/priv/alerts.json
+/priv/config/
 
 .envrc

@@ -16,7 +16,8 @@ defmodule Screenplay.Application do
       # Start a worker by calling: Screenplay.Worker.start_link(arg)
       # {Screenplay.Worker, arg}
       Screenplay.OutfrontTakeoverTool.Alerts.State,
-      Screenplay.OutfrontTakeoverTool.Alerts.Reminders
+      Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
+      Screenplay.Scheduler
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

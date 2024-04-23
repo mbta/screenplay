@@ -37,7 +37,7 @@ const CustomMenu = React.forwardRef<HTMLElement, CustomMenuProps>(
         <ul>{children}</ul>
       </div>
     );
-  }
+  },
 );
 
 /**
@@ -62,7 +62,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
           "filter-dropdown__dropdown-button--small": !isDefault(),
           "filter-dropdown__dropdown-button--large": isDefault(),
           disabled: props.disabled,
-        }
+        },
       )}
       title={props.disabled ? "Coming Soon!" : selectedValue.label}
       data-testid="filter-dropdown-button"
@@ -79,7 +79,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
     <ButtonGroup
       className={classWithModifier(
         "filter-dropdown__button-group",
-        props.className
+        props.className,
       )}
     >
       {!isDefault() && (
@@ -98,7 +98,7 @@ const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
         onSelect={onSelect}
         className={classWithModifier(
           "filter-dropdown__dropdown",
-          props.className
+          props.className,
         )}
       >
         {props.disabled ? (

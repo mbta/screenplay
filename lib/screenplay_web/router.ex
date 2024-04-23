@@ -77,7 +77,7 @@ defmodule ScreenplayWeb.Router do
     get("/:provider/callback", AuthController, :callback)
   end
 
-  scope "/api", ScreenplayWeb.OutfrontTakeoverTool do
+  scope "/api/takeover_tool", ScreenplayWeb.OutfrontTakeoverTool do
     pipe_through([
       :redirect_prod_http,
       :api,
@@ -93,6 +93,8 @@ defmodule ScreenplayWeb.Router do
     post("/clear_all", AlertController, :clear_all)
     get("/active_alerts", AlertController, :active_alerts)
     get("/past_alerts", AlertController, :past_alerts)
+
+    get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
   end
 
   # Enables LiveDashboard only for development

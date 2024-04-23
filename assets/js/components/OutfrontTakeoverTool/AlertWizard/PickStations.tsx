@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import StationColumn from "./StationColumn";
 
-import { Station } from "../../../constants/stations";
 import WizardWarning from "./WizardWarning";
+import { Station } from "../OutfrontTakeoverTool";
 
 interface PickStationsProps {
   selectedStations: Station[];
@@ -17,8 +17,8 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
   useEffect(() => {
     setFilteredAlerts(
       props.activeAlertsStations.filter((station) =>
-        props.selectedStations.map((station) => station.name).includes(station)
-      )
+        props.selectedStations.map((station) => station.name).includes(station),
+      ),
     );
   }, [props.selectedStations]);
 

@@ -46,7 +46,7 @@ defmodule Screenplay.Config.LocalFetch do
 
   defp local_path(file_spec) do
     case Application.get_env(:screenplay, file_spec) do
-      {:priv, file_name} -> Path.join(:code.priv_dir(:screenplay), file_name)
+      {:priv, file_name} -> Path.join([:code.priv_dir(:screenplay), "config", file_name])
       {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
     end
   end

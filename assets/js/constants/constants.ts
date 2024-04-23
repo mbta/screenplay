@@ -66,3 +66,5 @@ export const STATUSES = [
   { label: "Errors", ids: ["Errors"] },
   { label: "Screen off", ids: ["Off"] },
 ];
+
+export const BASE_URL = "/api/takeover_tool";

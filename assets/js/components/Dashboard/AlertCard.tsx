@@ -30,7 +30,7 @@ const AlertCard = (props: AlertCardProps): JSX.Element => {
       numberOfScreens,
     ],
     prevAlert,
-    showAnimationOnMount
+    showAnimationOnMount,
   );
   const isRecurring = alert.active_period.length > 1;
 

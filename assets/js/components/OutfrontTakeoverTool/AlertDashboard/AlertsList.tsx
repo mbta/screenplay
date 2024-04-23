@@ -5,6 +5,7 @@ import { ModalDetails } from "../ConfirmationModal";
 import { BanIcon } from "@heroicons/react/solid";
 import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
+import { BASE_URL } from "../../../constants/constants";
 
 interface AlertsListProps {
   startEditWizard: (data: AlertData, step: number) => void;
@@ -18,13 +19,13 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [lastChangeTime, setLastChangeTime] = useState(Date.now());
 
   useEffect(() => {
-    fetch("/api/active_alerts")
+    fetch(`${BASE_URL}/active_alerts`)
       .then((response) => response.json())
       .then(setAlertsData);
   }, [lastChangeTime]);
 
   useEffect(() => {
-    fetch("/api/past_alerts")
+    fetch(`${BASE_URL}/past_alerts`)
       .then((response) => response.json())
       .then(setPastAlertsData);
   }, [lastChangeTime]);
@@ -35,15 +36,15 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
 
   const clearAlert = (
     id: string,
-    setLastChangeTime: (time: number) => void
+    setLastChangeTime: (time: number) => void,
   ) => {
     const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]"
+      "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
     const data = { id };
 
-    fetch("/api/clear", {
+    fetch(`${BASE_URL}/clear`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,11 +78,11 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
 
   const clearAllAlerts = () => {
     const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]"
+      "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
 
-    fetch("/api/clear_all", {
+    fetch(`${BASE_URL}/clear_all`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

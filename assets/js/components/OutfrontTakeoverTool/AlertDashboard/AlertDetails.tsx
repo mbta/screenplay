@@ -1,6 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import StackedStationCards from "../AlertWizard/StackedStationCards";
-import { AlertData } from "../OutfrontTakeoverTool";
+import {
+  AlertData,
+  StationScreenOrientationContext,
+} from "../OutfrontTakeoverTool";
 import {
   formatDate,
   formatTime,
@@ -25,7 +28,13 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     props;
   const { created_by, id, message, schedule, stations } = data;
 
-  const stationDetails = stations.map(matchStation);
+  const stationScreenOrientationList = useContext(
+    StationScreenOrientationContext,
+  );
+
+  const stationDetails = stations.map((station: string) =>
+    matchStation(station, stationScreenOrientationList),
+  );
 
   const startDate = new Date(schedule.start);
   const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
@@ -57,11 +66,11 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
 
   const editAlert = useCallback(
     (step: number) => startEditWizard(data, step),
-    [startEditWizard, data]
+    [startEditWizard, data],
   );
   const clearAlert = useCallback(
     () => triggerConfirmation(modalDetails),
-    [triggerConfirmation, modalDetails]
+    [triggerConfirmation, modalDetails],
   );
 
   return (

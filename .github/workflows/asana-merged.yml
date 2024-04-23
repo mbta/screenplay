@@ -2,6 +2,7 @@ name: Move Asana ticket after merge
 on: 
   pull_request:
     types: [closed]
+    branches-ignore: ['dependabot/*']
 
 jobs:
   move-asana-ticket-job:

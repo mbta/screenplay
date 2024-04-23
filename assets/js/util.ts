@@ -1,9 +1,9 @@
 import {
   CannedMessage,
   CustomMessage,
+  StationsByLine,
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
-import STATIONS_BY_LINE from "./constants/stations";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
 import { ScreensByAlert } from "./models/screensByAlert";
@@ -109,15 +109,16 @@ export const convertArrayToListString = (array: string[]) => {
   }
 };
 
-const ALL_STATIONS = ["blue", "green", "orange", "red", "silver"].flatMap(
-  (line) => STATIONS_BY_LINE[line]
-);
-
-export const matchStation = (station: string) => {
-  const result = ALL_STATIONS.find(({ name }) => name === station);
+export const matchStation = (
+  station: string,
+  stationScreenOrientationList: StationsByLine,
+) => {
+  const result = Object.values(stationScreenOrientationList)
+    .flat()
+    .find(({ name }) => name === station);
   if (result === undefined) {
     throw new TypeError(
-      `Station ${station} not present in list of all stations!`
+      `Station ${station} not present in list of all stations!`,
     );
   }
   return result;
@@ -161,14 +162,14 @@ export const formatEffect = (effect: string) => {
 export const placesWithSelectedAlert = (
   alert: Alert | null,
   places: Place[],
-  screensByAlertMap: ScreensByAlert
+  screensByAlertMap: ScreensByAlert,
 ) => {
   return alert
     ? places
         .map((place) => ({
           ...place,
           screens: place.screens.filter((screen) =>
-            screensByAlertMap[alert.id].includes(screen.id)
+            screensByAlertMap[alert.id].includes(screen.id),
           ),
         }))
         .filter((place) => place.screens.length > 0)

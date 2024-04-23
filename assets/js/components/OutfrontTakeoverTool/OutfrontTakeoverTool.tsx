@@ -1,13 +1,25 @@
-import React from "react";
+import React, { createContext } from "react";
 import AlertDashboard from "./AlertDashboard/AlertDashboard";
 import AlertWizard from "./AlertWizard/AlertWizard";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
+import { BASE_URL } from "../../constants/constants";
+
+export interface Station {
+  name: string;
+  portrait: boolean;
+  landscape: boolean;
+}
+
+export interface StationsByLine {
+  [index: string]: Station[];
+}
 
 interface AppState {
   alertWizardOpen: boolean;
   alertData: any;
   modalOpen: boolean;
   modalDetails: ModalDetails;
+  stationScreenOrientationList: StationsByLine;
 }
 
 export interface CannedMessage {
@@ -56,14 +68,21 @@ class OutfrontTakeoverTool extends React.Component<
         confirmJSX: <></>,
         onSubmit: this.toggleModal,
       },
+      stationScreenOrientationList: {},
     };
+
+    fetch(`${BASE_URL}/stations_and_screen_orientations`)
+      .then((response) => response.json())
+      .then((result) =>
+        this.setState({ stationScreenOrientationList: result }),
+      );
 
     this.toggleAlertWizard = this.toggleAlertWizard.bind(this);
     this.openModal = this.openModal.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
   }
 
-  componentDidMount(): void {
+  componentDidMount() {
     document.title = "Outfront Media · Emergency Takeover";
   }
 
@@ -104,7 +123,9 @@ class OutfrontTakeoverTool extends React.Component<
 
   render() {
     return (
-      <>
+      <StationScreenOrientationContext.Provider
+        value={this.state.stationScreenOrientationList}
+      >
         <div className="outfront-container">
           <div className="app-title">
             <img src="/images/t-identity.png" alt="Logo" className="logo" />
@@ -118,6 +139,9 @@ class OutfrontTakeoverTool extends React.Component<
               triggerConfirmation={this.openModal}
               toggleAlertWizard={this.toggleAlertWizard.bind(this)}
               alertData={this.state.alertData}
+              stationScreenOrientationList={
+                this.state.stationScreenOrientationList
+              }
             />
           ) : (
             <AlertDashboard
@@ -134,10 +158,18 @@ class OutfrontTakeoverTool extends React.Component<
           // onSubmit={this.toggleAlertWizard}
           modalDetails={this.state.modalDetails}
         />
-      </>
+      </StationScreenOrientationContext.Provider>
     );
   }
 }
 
+const StationScreenOrientationContext = createContext<StationsByLine>({
+  red: [],
+  orange: [],
+  blue: [],
+  silver: [],
+  green: [],
+});
+
 export default OutfrontTakeoverTool;
-export { AlertData };
+export { AlertData, StationScreenOrientationContext };
