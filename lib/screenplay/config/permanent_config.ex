@@ -181,7 +181,7 @@ defmodule Screenplay.Config.PermanentConfig do
                                               "new_pending_screens" => new_screens,
                                               "updated_pending_screens" => updated_pending_screens
                                             }} ->
-        new_screens ++ get_updated_pending_screens(updated_pending_screens)
+        new_screens ++ updated_pending_screens
       end)
       |> Enum.split_with(& &1["is_deleted"])
 
@@ -206,12 +206,6 @@ defmodule Screenplay.Config.PermanentConfig do
     if Enum.empty?(duplicate_screen_ids),
       do: {:ok, existing_screens},
       else: {:error, {:duplicate_screen_ids, duplicate_screen_ids}}
-  end
-
-  defp get_updated_pending_screens(updated_pending_screens) do
-    Enum.filter(updated_pending_screens, fn screen ->
-      not is_nil(screen) and Map.has_key?(screen, "new_id")
-    end)
   end
 
   # Config reducers do 3 things:
