@@ -175,15 +175,27 @@ defmodule Screenplay.Config.PermanentConfig do
     %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
     %Config{screens: published_screens} = Config.from_json(published_config_deserialized)
 
-    all_screen_ids =
+    {deleted_screens, updated_screens} =
       Enum.flat_map(places_and_screens, fn {_place_id,
                                             %{
                                               "new_pending_screens" => new_screens,
                                               "updated_pending_screens" => updated_pending_screens
                                             }} ->
-        Enum.map(new_screens, fn %{"new_id" => new_id} -> new_id end) ++
-          get_updated_pending_screen_ids(updated_pending_screens)
-      end) ++ Map.keys(existing_screens) ++ Map.keys(published_screens)
+        new_screens ++ get_updated_pending_screens(updated_pending_screens)
+      end)
+      |> Enum.split_with(& &1["is_deleted"])
+
+    deleted_ids = Enum.map(deleted_screens, & &1["screen_id"])
+    updated_ids = Enum.map(updated_screens, & &1["new_id"])
+
+    # Do not call an ID a duplicate if we know we are going to delete it.
+    existing_after_deletes =
+      existing_screens
+      |> Enum.reject(fn {screen_id, _} -> screen_id in deleted_ids end)
+      |> Enum.into(%{})
+      |> Map.keys()
+
+    all_screen_ids = updated_ids ++ existing_after_deletes ++ Map.keys(published_screens)
 
     duplicate_screen_ids =
       all_screen_ids
@@ -196,12 +208,9 @@ defmodule Screenplay.Config.PermanentConfig do
       else: {:error, {:duplicate_screen_ids, duplicate_screen_ids}}
   end
 
-  defp get_updated_pending_screen_ids(updated_pending_screens) do
+  defp get_updated_pending_screens(updated_pending_screens) do
     Enum.filter(updated_pending_screens, fn screen ->
       not is_nil(screen) and Map.has_key?(screen, "new_id")
-    end)
-    |> Enum.map(fn
-      %{"new_id" => new_id} -> new_id
     end)
   end
 
@@ -312,7 +321,13 @@ defmodule Screenplay.Config.PermanentConfig do
   defp update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc) do
     Enum.reduce(updated_pending_screens, acc, fn
       %{"is_deleted" => true, "screen_id" => screen_id}, acc ->
-        Map.delete(acc, screen_id)
+        # Only delete screen if "is_deleted" is true AND platform is at current place.
+        # If a screen ID is deleted at one place and moved to another,
+        # we need to make sure we are removing the correct screen.
+        Map.reject(acc, fn
+          %{alerts: %Alerts{stop_id: platform_id}} -> platform_id in platform_ids
+          _ -> false
+        end)
 
       # screen_id was updated
       # Delete the old configuration and treat new ID as a new configuration
