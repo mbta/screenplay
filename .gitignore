@@ -37,5 +37,6 @@ npm-debug.log
 # All files in /priv/ are going to be for local development
 # so do not need to be tracked.
 /priv/*
+!priv/repo*
 
 .envrc

@@ -56,3 +56,5 @@ config :sentry,
   included_environments: [env],
   enable_source_code_context: true,
   root_source_code_path: File.cwd!()
+
+config :screenplay, Screenplay.Repo, pool_size: 10

@@ -53,6 +53,7 @@ defmodule Screenplay.MixProject do
       {:sftp_client, "~> 1.4"},
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},
+      {:ex_aws_rds, "~> 2.0.2"},
       {:httpoison, "~> 1.8.0"},
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
