@@ -84,7 +84,7 @@ describe("PlacesPage", () => {
         fireEvent.click(await findByRole("button", { name: "Blue Line" }));
         await waitFor(() => {
           expect(getAllByTestId("place-row")[0].className).toContain(
-            "filtered"
+            "filtered",
           );
         });
       });
@@ -116,7 +116,7 @@ describe("PlacesPage", () => {
         fireEvent.click(await findByRole("button", { name: "Blue Line" }));
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "WESTBOUND"
+            "WESTBOUND",
           );
         });
 
@@ -124,7 +124,7 @@ describe("PlacesPage", () => {
         fireEvent.click(await findByRole("button", { name: "Red Line" }));
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "SOUTHBOUND"
+            "SOUTHBOUND",
           );
         });
 
@@ -154,13 +154,13 @@ describe("PlacesPage", () => {
           // If not, we would have expected the label to still be that
           // of the "reverse" direction for the Red Line: "NORTHBOUND"
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "SOUTHBOUND"
+            "SOUTHBOUND",
           );
         });
         fireEvent.click(getByTestId("sort-label"));
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "NORTHBOUND"
+            "NORTHBOUND",
           );
         });
 
@@ -169,7 +169,7 @@ describe("PlacesPage", () => {
         fireEvent.click(getByTestId("sort-label"));
         await waitFor(() => {
           expect(getByTestId("sort-label").textContent?.trim()).toBe(
-            "EASTBOUND"
+            "EASTBOUND",
           );
         });
       });
@@ -185,8 +185,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "ALEWIFE",
             "Davis",
@@ -200,8 +200,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "ASHMONT",
             "Park Street",
@@ -223,8 +223,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "OAK GROVE",
             "Malden Center",
@@ -238,8 +238,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "Haymarket",
             "North Station",
@@ -261,8 +261,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "MEDFORD/TUFTS",
             "Ball Square",
@@ -285,8 +285,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "Blandford Street",
             "Boylston",
@@ -317,8 +317,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "WONDERLAND",
             "Revere Beach",
@@ -331,8 +331,8 @@ describe("PlacesPage", () => {
         await waitFor(() => {
           expect(
             getAllByTestId("place-name").map(
-              (placeName) => placeName.textContent
-            )
+              (placeName) => placeName.textContent,
+            ),
           ).toStrictEqual([
             "Government Center",
             "Beachmont",

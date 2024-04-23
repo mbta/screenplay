@@ -37,7 +37,7 @@ describe("PlaceRow", () => {
             defaultSort
           />
         </Accordion>
-      </ScreenplayProvider>
+      </ScreenplayProvider>,
     );
 
     expect(getByTestId("place-row").className).toBe("place-row");
@@ -45,7 +45,7 @@ describe("PlaceRow", () => {
     expect(handleClick).toHaveBeenCalled();
     expect(getByTestId("place-row").className).toBe("place-row open");
     expect(getByTestId("place-screen-types").textContent).toBe(
-      "DUP·Bus Shelter·Solari"
+      "DUP·Bus Shelter·Solari",
     );
     expect(getByTestId("place-status").textContent).toBe("Auto");
     expect(getByAltText("Green-B")).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe("PlaceRow", () => {
           onClick={handleClick}
           defaultSort
         />
-      </Accordion>
+      </Accordion>,
     );
 
     expect(getByTestId("place-row").className).toBe("place-row disabled");

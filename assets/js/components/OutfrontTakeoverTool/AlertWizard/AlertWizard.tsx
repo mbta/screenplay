@@ -97,7 +97,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
 
     const selectedStations = stations.map((station: string) =>
-      matchStation(station, this.props.stationScreenOrientationList)
+      matchStation(station, this.props.stationScreenOrientationList),
     );
 
     let duration;
@@ -245,7 +245,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       this.state.id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
 
     const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]"
+      "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
 
@@ -317,7 +317,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   removeStation(station: Station) {
     this.setState((state) => ({
       selectedStations: state.selectedStations.filter(
-        (x) => !this.stationsAreEqual(x, station)
+        (x) => !this.stationsAreEqual(x, station),
       ),
     }));
   }
@@ -346,7 +346,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         });
     } else {
       this.props.stationScreenOrientationList[line].forEach((station) =>
-        this.removeStation(station)
+        this.removeStation(station),
       );
     }
   }
@@ -384,7 +384,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     orientation: string,
     width: number,
     height: number,
-    callback: (dataUrl: string) => void
+    callback: (dataUrl: string) => void,
   ) {
     const canvas = document.createElement("canvas");
     canvas.width = width * svgScale;
@@ -415,10 +415,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
   generatePNGs() {
     this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
-      this.setState({ portraitPNG: url })
+      this.setState({ portraitPNG: url }),
     );
     this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
-      this.setState({ landscapePNG: url })
+      this.setState({ landscapePNG: url }),
     );
   }
 

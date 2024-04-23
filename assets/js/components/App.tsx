@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 
 const OutfrontTakeoverTool = React.lazy(
-  () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
+  () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool"),
 );
 const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
 const PlacesPage = React.lazy(() => import("./Dashboard/PlacesPage"));

@@ -24,7 +24,7 @@ import { usePrevious } from "../../hooks/usePrevious";
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
-  sortDirection: DirectionID
+  sortDirection: DirectionID,
 ) => {
   const line = modeLineFilterValue.label.split(" ")[0];
   const sortLabels = SORT_LABELS[line];
@@ -164,7 +164,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredPlaces = filteredPlaces.filter((place) => {
         return place.screens.some((screen) =>
-          screenTypeFilterValue.ids.includes(screen.type)
+          screenTypeFilterValue.ids.includes(screen.type),
         );
       });
     }
@@ -172,18 +172,18 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     if (modeLineFilterValue !== MODES_AND_LINES[0]) {
       filteredPlaces = filteredPlaces.filter((place) => {
         return place.routes.some((route) =>
-          modeLineFilterValue.ids.includes(route)
+          modeLineFilterValue.ids.includes(route),
         );
       });
     }
 
     const filteredPlacesHaveScreenlessPlaces = filteredPlaces.some(
-      (place) => place.screens.length === 0
+      (place) => place.screens.length === 0,
     );
 
     if (!showScreenlessPlaces) {
       filteredPlaces = filteredPlaces.filter(
-        (place) => place.screens.length > 0
+        (place) => place.screens.length > 0,
       );
     }
     // Can add additional filtering in if statements here.

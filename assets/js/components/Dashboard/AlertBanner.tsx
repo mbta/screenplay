@@ -33,7 +33,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
       return translateRouteID(alert.affected_list[0]);
     } else if (
       alert.affected_list.every((routeId: string) =>
-        routeId.startsWith("green")
+        routeId.startsWith("green"),
       )
     ) {
       return "Green Line";
@@ -72,7 +72,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
           <>
             <span className="bold">
               {`${aOrAn(
-                affectedListString
+                affectedListString,
               )} ${affectedListString} ${formatEffect(alert.effect)}
               alert was just closed.`}
             </span>{" "}

@@ -26,7 +26,7 @@ describe("PaessDetailContainer", () => {
     const { getByTestId } = render(
       <ScreenplayProvider>
         <PaessDetailContainer screens={screens} />
-      </ScreenplayProvider>
+      </ScreenplayProvider>,
     );
 
     expect(getByTestId("paess-col-left")).toBeVisible();
@@ -49,7 +49,7 @@ describe("PaessDetailContainer", () => {
     const { getByText } = render(
       <ScreenplayProvider>
         <PaessDetailContainer screens={screens} />
-      </ScreenplayProvider>
+      </ScreenplayProvider>,
     );
 
     expect(getByText("Test Label")).toBeInTheDocument();

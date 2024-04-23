@@ -36,7 +36,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const { routes, name, description, screens } = props.place;
   const { activeEventKey } = useContext(AccordionContext);
   const rowOnClick = useAccordionButton(props.eventKey, () =>
-    props.onClick(props.eventKey)
+    props.onClick(props.eventKey),
   );
   const { showAnimation } = useUpdateAnimation([], null, props.showAnimation);
   const isOpen = activeEventKey?.includes(props.eventKey);
@@ -77,7 +77,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
     return screenList.sort((a, b) =>
       screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type)
         ? 1
-        : -1
+        : -1,
     );
   };
 
@@ -88,10 +88,10 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
     const solariScreens = visibleScreens.filter(
-      (screen) => screen.type === "solari"
+      (screen) => screen.type === "solari",
     );
     const paEssScreens = visibleScreens.filter(
-      (screen) => screen.type === "pa_ess"
+      (screen) => screen.type === "pa_ess",
     );
     const groupedScreens = visibleScreens
       .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
@@ -108,7 +108,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   const groupPaEssScreensbyRoute = (
     paEssScreens: Screen[],
-    groupedScreens: Screen[][]
+    groupedScreens: Screen[][],
   ) => {
     const paEssGroupedByRoute = new Map<string, Screen[]>();
     paEssScreens.map((paEssScreen) => {
@@ -127,7 +127,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   const renderModesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
-      route.startsWith("Green-")
+      route.startsWith("Green-"),
     ).length;
 
     // If the list of routes contains a single GL branch, show the GL branch icon.
@@ -148,7 +148,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
       <img
         className={classWithModifier(
           "place-row__mode-line-icon",
-          route.toLowerCase()
+          route.toLowerCase(),
         )}
         key={route}
         src={`/images/pills/${route.toLowerCase()}.svg`}
@@ -159,7 +159,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
 
   const getInlineMap = (place: Place, line: string) => {
     const station = STATION_ORDER_BY_LINE[line].find(
-      (station) => station.name.toLowerCase() === place.name.toLowerCase()
+      (station) => station.name.toLowerCase() === place.name.toLowerCase(),
     );
 
     if (!station) return;
@@ -241,7 +241,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                     {
                       "place-row__map-segment-container--flipped":
                         !props.defaultSort,
-                    }
+                    },
                   )}
                 >
                   {getInlineMap(props.place, props.filteredLine.toLowerCase())}
@@ -267,7 +267,7 @@ const PlaceRow = (props: PlaceRowProps): JSX.Element => {
                   </span>
                 ) : (
                   type
-                )
+                ),
               )}
             </Col>
             <Col

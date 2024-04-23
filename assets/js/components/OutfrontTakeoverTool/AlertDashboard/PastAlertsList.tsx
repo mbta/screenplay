@@ -52,7 +52,7 @@ export class PastAlertsList extends React.Component<
   sort = (alerts: AlertData[]): AlertData[] =>
     alerts.sort(
       (a, b) =>
-        new Date(b.cleared_at).valueOf() - new Date(a.cleared_at).valueOf()
+        new Date(b.cleared_at).valueOf() - new Date(a.cleared_at).valueOf(),
     );
 
   render() {

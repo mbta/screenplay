@@ -111,14 +111,14 @@ export const convertArrayToListString = (array: string[]) => {
 
 export const matchStation = (
   station: string,
-  stationScreenOrientationList: StationsByLine
+  stationScreenOrientationList: StationsByLine,
 ) => {
   const result = Object.values(stationScreenOrientationList)
     .flat()
     .find(({ name }) => name === station);
   if (result === undefined) {
     throw new TypeError(
-      `Station ${station} not present in list of all stations!`
+      `Station ${station} not present in list of all stations!`,
     );
   }
   return result;
@@ -162,14 +162,14 @@ export const formatEffect = (effect: string) => {
 export const placesWithSelectedAlert = (
   alert: Alert | null,
   places: Place[],
-  screensByAlertMap: ScreensByAlert
+  screensByAlertMap: ScreensByAlert,
 ) => {
   return alert
     ? places
         .map((place) => ({
           ...place,
           screens: place.screens.filter((screen) =>
-            screensByAlertMap[alert.id].includes(screen.id)
+            screensByAlertMap[alert.id].includes(screen.id),
           ),
         }))
         .filter((place) => place.screens.length > 0)

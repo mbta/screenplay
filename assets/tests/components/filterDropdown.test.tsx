@@ -15,7 +15,7 @@ describe("FilterDropdown", () => {
         onSelect={() => null}
         selectedValue={list[1]}
         className="test"
-      />
+      />,
     );
 
     expect(getByTestId("filter-dropdown-clear-button")).toBeVisible();
@@ -40,7 +40,7 @@ describe("FilterDropdown", () => {
         onSelect={onSelect}
         selectedValue={selectedValue}
         className="test"
-      />
+      />,
     );
 
     expect(getByTestId("filter-dropdown-clear-button")).toBeVisible();
@@ -51,11 +51,11 @@ describe("FilterDropdown", () => {
         onSelect={onSelect}
         selectedValue={selectedValue}
         className="test"
-      />
+      />,
     );
     expect(queryByTestId("filter-dropdown-clear-button")).toBeNull();
     expect(getByTestId("filter-dropdown-button").firstChild?.textContent).toBe(
-      list[0].label
+      list[0].label,
     );
   });
 });
