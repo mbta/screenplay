@@ -89,7 +89,7 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
           setExistingScreens(places_and_screens);
         });
       }
-    }, []);
+    }, [selectedPlaces.length]);
 
     const getTitle = () =>
       isEditing ? "Edit Pending" : "Configure Green Line Stations";
