@@ -54,11 +54,11 @@ const AlertDetails: ComponentType = () => {
 
   const [placesListState, placesListDispatch] = useReducer(
     placesListReducer,
-    initialPlacesListState
+    initialPlacesListState,
   );
 
   const validAlertId = contextState.allAPIAlertIds.find(
-    (alert) => alert === id
+    (alert) => alert === id,
   );
 
   return selectedAlert ? (
@@ -93,7 +93,7 @@ const AlertDetails: ComponentType = () => {
               places={placesWithSelectedAlert(
                 selectedAlert,
                 places,
-                screensByAlertMap
+                screensByAlertMap,
               )}
               noModeFilter
               isAlertPlacesList

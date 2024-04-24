@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 export const useUpdateAnimation = (
   deps: any[],
   prevValue: any,
-  showAnimationOnMount?: boolean
+  showAnimationOnMount?: boolean,
 ) => {
   const [showAnimation, setShowAnimation] = useState(false);
   const timer = useRef<NodeJS.Timeout>();

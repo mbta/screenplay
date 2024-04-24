@@ -15,7 +15,7 @@ interface StationColumnProps {
 
 const StationColumn = (props: StationColumnProps): JSX.Element => {
   const stationScreenOrientationList = useContext(
-    StationScreenOrientationContext
+    StationScreenOrientationContext,
   );
   return (
     <div>
@@ -25,13 +25,13 @@ const StationColumn = (props: StationColumnProps): JSX.Element => {
           // Ignore disabled stations when determining whether the whole line is selected
           .filter(({ landscape, portrait }) => landscape || portrait)
           .every((lineStation) =>
-            props.selectedStations.some((x) => x.name === lineStation.name)
+            props.selectedStations.some((x) => x.name === lineStation.name),
           )}
         checkLine={props.checkLine}
       />
       {stationScreenOrientationList[props.line].map((station) => {
         const checked = props.selectedStations.some(
-          (x) => x.name === station.name
+          (x) => x.name === station.name,
         );
         return (
           <div

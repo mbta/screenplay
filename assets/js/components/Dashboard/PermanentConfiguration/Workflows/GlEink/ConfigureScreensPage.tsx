@@ -64,90 +64,90 @@ interface ConfigureScreensWorkflowPageProps {
   isEditing: boolean;
 }
 
-const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
-  ({
-    selectedPlaces,
-    setPlacesAndScreensToUpdate,
-    handleRemoveLocation,
-    setConfigVersion,
-    isEditing,
-  }: ConfigureScreensWorkflowPageProps) => {
-    const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
+const ConfigureScreensWorkflowPage: ComponentType<
+  ConfigureScreensWorkflowPageProps
+> = ({
+  selectedPlaces,
+  setPlacesAndScreensToUpdate,
+  handleRemoveLocation,
+  setConfigVersion,
+  isEditing,
+}: ConfigureScreensWorkflowPageProps) => {
+  const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
 
-    const { newScreenValidationErrors, pendingScreenValidationErrors } =
-      useConfigValidationContext();
-    const dispatch = useConfigValidationDispatchContext();
+  const { newScreenValidationErrors, pendingScreenValidationErrors } =
+    useConfigValidationContext();
+  const dispatch = useConfigValidationDispatchContext();
 
-    // This hook will run in two different scenarios:
-    // 1. Runs at initial render if navigated to from the StationSelectPage.
-    // 2. Runs after initial render if navigated to from the Edit Pending button on the Pending page.
-    // The items in selectedPlaces are guaranteed to stay the same while this page is being used.
-    useEffect(() => {
-      if (selectedPlaces.length) {
-        fetchExistingScreens(
-          "gl_eink_v2",
-          selectedPlaces.map((place) => place.id)
-        ).then(({ places_and_screens, version_id }) => {
-          initializeExistingScreenValidationErrors(places_and_screens);
-          setConfigVersion(version_id);
-          setExistingScreens(places_and_screens);
-        });
-      }
-    }, [selectedPlaces.length]);
-
-    const getTitle = () =>
-      isEditing ? "Edit Pending" : "Configure Green Line Stations";
-
-    const initializeExistingScreenValidationErrors = (
-      placesAndScreens: PlaceIdsAndExistingScreens
-    ) => {
-      for (const place_id in placesAndScreens) {
-        const screens = placesAndScreens[place_id];
-
-        Object.keys(screens.pending_screens).map((_screen, index) => {
-          pendingScreenValidationErrors[place_id][index] = {
-            missingFields: [],
-            isDuplicateScreenId: false,
-          };
-        });
-      }
-
-      dispatch({
-        type: "SET_VALIDATION_ERRORS",
-        newScreenValidationErrors,
-        pendingScreenValidationErrors,
-      });
-    };
-
-    let layout;
+  // This hook will run in two different scenarios:
+  // 1. Runs at initial render if navigated to from the StationSelectPage.
+  // 2. Runs after initial render if navigated to from the Edit Pending button on the Pending page.
+  // The items in selectedPlaces are guaranteed to stay the same while this page is being used.
+  useEffect(() => {
     if (selectedPlaces.length) {
-      layout = selectedPlaces.map((place) => {
-        return (
-          <ConfigurePlaceCard
-            key={place.id}
-            place={place}
-            existingScreens={existingScreens[place.id]}
-            setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-            handleRemoveLocation={() => handleRemoveLocation(place)}
-          />
-        );
+      fetchExistingScreens(
+        "gl_eink_v2",
+        selectedPlaces.map((place) => place.id)
+      ).then(({ places_and_screens, version_id }) => {
+        initializeExistingScreenValidationErrors(places_and_screens);
+        setConfigVersion(version_id);
+        setExistingScreens(places_and_screens);
       });
-    } else {
-      layout = (
-        <div>
-          All locations have been removed. Select "Back" to select new
-          locations.
-        </div>
-      );
+    }
+  }, [selectedPlaces.length]);
+
+  const getTitle = () =>
+    isEditing ? "Edit Pending" : "Configure Green Line Stations";
+
+  const initializeExistingScreenValidationErrors = (
+    placesAndScreens: PlaceIdsAndExistingScreens
+  ) => {
+    for (const place_id in placesAndScreens) {
+      const screens = placesAndScreens[place_id];
+
+      Object.keys(screens.pending_screens).map((_screen, index) => {
+        pendingScreenValidationErrors[place_id][index] = {
+          missingFields: [],
+          isDuplicateScreenId: false,
+        };
+      });
     }
 
-    return (
-      <Container className="workflow-container">
-        <div className="h3 text-white mb-5">{getTitle()}</div>
-        {layout}
-      </Container>
-    );
+    dispatch({
+      type: "SET_VALIDATION_ERRORS",
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
+    });
   };
+
+  let layout;
+  if (selectedPlaces.length) {
+    layout = selectedPlaces.map((place) => {
+      return (
+        <ConfigurePlaceCard
+          key={place.id}
+          place={place}
+          existingScreens={existingScreens[place.id]}
+          setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
+          handleRemoveLocation={() => handleRemoveLocation(place)}
+        />
+      );
+    });
+  } else {
+    layout = (
+      <div>
+        All locations have been removed. Select "Back" to select new locations.
+      </div>
+    );
+  }
+
+  return (
+    <Container className="workflow-container">
+      <div className="h3 text-white mb-5">{getTitle()}</div>
+      {layout}
+    </Container>
+  );
+};
 
 interface ConfigurePlaceCardProps {
   place: Place;

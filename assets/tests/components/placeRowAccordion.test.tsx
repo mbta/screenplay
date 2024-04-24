@@ -37,7 +37,7 @@ describe("PlaceRowAccordion", () => {
             sortDirection={0}
           />
         </Accordion>
-      </ScreenplayProvider>
+      </ScreenplayProvider>,
     );
 
     expect(getByTestId("place-row").className).toBe("place-row");

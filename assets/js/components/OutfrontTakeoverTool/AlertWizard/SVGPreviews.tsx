@@ -48,7 +48,7 @@ const createSVGText = (message: string, orientation: string) => {
         return { array: tempArray, lineCount: acc.lineCount };
       }
     },
-    { array: [""], lineCount: 0 }
+    { array: [""], lineCount: 0 },
   );
 
   // Take the array of message lines and and individual tspans to the text element

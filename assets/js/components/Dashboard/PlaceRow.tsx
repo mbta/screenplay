@@ -124,7 +124,7 @@ const PlaceRow = ({
     return screenList.sort((a, b) =>
       screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type)
         ? 1
-        : -1
+        : -1,
     );
   };
 
@@ -134,7 +134,7 @@ const PlaceRow = ({
 
   const renderModesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
-      route.startsWith("Green-")
+      route.startsWith("Green-"),
     ).length;
 
     // If the list of routes contains a single GL branch, show the GL branch icon.
@@ -155,7 +155,7 @@ const PlaceRow = ({
       <img
         className={classWithModifier(
           "place-row__mode-line-icon",
-          route.toLowerCase()
+          route.toLowerCase(),
         )}
         key={route}
         src={`/images/pills/${route.toLowerCase()}.svg`}
@@ -166,7 +166,7 @@ const PlaceRow = ({
 
   const getInlineMap = (place: Place, line: string) => {
     const station = STATION_ORDER_BY_LINE[line].find(
-      (station) => station.name.toLowerCase() === place.name.toLowerCase()
+      (station) => station.name.toLowerCase() === place.name.toLowerCase(),
     );
 
     if (!station) return;
@@ -185,7 +185,7 @@ const PlaceRow = ({
 
   const formatScreenTypes = () =>
     screenTypes.map((type, index) =>
-      index < screenTypes.length - 1 ? `${type}  ·  ` : type
+      index < screenTypes.length - 1 ? `${type}  ·  ` : type,
     );
 
   const onRowClick = () =>
@@ -220,7 +220,7 @@ const PlaceRow = ({
                     `place-row__map-segment-container--${filteredLine}`,
                     {
                       "place-row__map-segment-container--flipped": !defaultSort,
-                    }
+                    },
                   )}
                 >
                   {getInlineMap(place, filteredLine.toLowerCase())}

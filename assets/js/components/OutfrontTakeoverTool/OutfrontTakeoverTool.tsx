@@ -74,7 +74,7 @@ class OutfrontTakeoverTool extends React.Component<
     fetch(`${BASE_URL}/stations_and_screen_orientations`)
       .then((response) => response.json())
       .then((result) =>
-        this.setState({ stationScreenOrientationList: result })
+        this.setState({ stationScreenOrientationList: result }),
       );
 
     this.toggleAlertWizard = this.toggleAlertWizard.bind(this);

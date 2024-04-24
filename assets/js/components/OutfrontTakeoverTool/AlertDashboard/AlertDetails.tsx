@@ -29,11 +29,11 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   const { created_by, id, message, schedule, stations } = data;
 
   const stationScreenOrientationList = useContext(
-    StationScreenOrientationContext
+    StationScreenOrientationContext,
   );
 
   const stationDetails = stations.map((station: string) =>
-    matchStation(station, stationScreenOrientationList)
+    matchStation(station, stationScreenOrientationList),
   );
 
   const startDate = new Date(schedule.start);
@@ -66,11 +66,11 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
 
   const editAlert = useCallback(
     (step: number) => startEditWizard(data, step),
-    [startEditWizard, data]
+    [startEditWizard, data],
   );
   const clearAlert = useCallback(
     () => triggerConfirmation(modalDetails),
-    [triggerConfirmation, modalDetails]
+    [triggerConfirmation, modalDetails],
   );
 
   return (

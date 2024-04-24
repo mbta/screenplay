@@ -7,7 +7,7 @@ interface ReportAProblemButtonProps {
 }
 
 const ReportAProblemButton = (
-  props: ReportAProblemButtonProps
+  props: ReportAProblemButtonProps,
 ): JSX.Element => {
   return (
     <Button
