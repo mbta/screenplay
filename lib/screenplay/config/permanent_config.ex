@@ -191,9 +191,8 @@ defmodule Screenplay.Config.PermanentConfig do
     # Do not call an ID a duplicate if we know we are going to delete it.
     existing_after_deletes =
       existing_screens
-      |> Enum.reject(fn {screen_id, _} -> screen_id in deleted_ids end)
-      |> Enum.into(%{})
-      |> Map.keys()
+      |> Enum.map(&elem(&1, 0))
+      |> Enum.reject(&(&1 in deleted_ids))
 
     all_screen_ids = updated_ids ++ existing_after_deletes ++ Map.keys(published_screens)
 
