@@ -175,7 +175,7 @@ defmodule Screenplay.Config.PermanentConfig do
     %PendingConfig{screens: existing_screens} = PendingConfig.from_json(deserialized)
     %Config{screens: published_screens} = Config.from_json(published_config_deserialized)
 
-    {deleted_screens, updated_screens} =
+    {new_screen_ids, changed_screen_ids, deleted_screen_ids} =
       Enum.flat_map(places_and_screens, fn {_place_id,
                                             %{
                                               "new_pending_screens" => new_screens,
@@ -183,18 +183,25 @@ defmodule Screenplay.Config.PermanentConfig do
                                             }} ->
         new_screens ++ updated_pending_screens
       end)
-      |> Enum.split_with(& &1["is_deleted"])
+      |> Enum.reduce({[], [], []}, fn screen,
+                                      {new_screen_ids, changed_screen_ids, deleted_screen_ids} ->
+        cond do
+          screen["is_deleted"] ->
+            {new_screen_ids, changed_screen_ids, [screen["screen_id"] | deleted_screen_ids]}
 
-    deleted_ids = Enum.map(deleted_screens, & &1["screen_id"])
-    updated_ids = Enum.map(updated_screens, & &1["new_id"])
+          screen["new_id"] != nil and screen["screen_id"] == nil ->
+            {[screen["new_id"] | new_screen_ids], changed_screen_ids, deleted_screen_ids}
 
-    # Do not call an ID a duplicate if we know we are going to delete it.
-    existing_after_deletes =
-      existing_screens
-      |> Enum.map(&elem(&1, 0))
-      |> Enum.reject(&(&1 in deleted_ids))
+          # screen is existing but had its ID changed.
+          true ->
+            {[screen["new_id"] | new_screen_ids], [screen | changed_screen_ids],
+             deleted_screen_ids}
+        end
+      end)
 
-    all_screen_ids = updated_ids ++ existing_after_deletes ++ Map.keys(published_screens)
+    all_screen_ids =
+      (Map.keys(existing_screens) -- deleted_screen_ids -- changed_screen_ids) ++
+        new_screen_ids ++ Map.keys(published_screens)
 
     duplicate_screen_ids =
       all_screen_ids
