@@ -62,72 +62,73 @@ interface ConfigureScreensWorkflowPageProps {
   isEditing: boolean;
 }
 
-const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPageProps> =
-  ({
-    selectedPlaces,
-    setPlacesAndScreensToUpdate,
-    setConfigVersion,
-    isEditing,
-  }: ConfigureScreensWorkflowPageProps) => {
-    const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
+const ConfigureScreensWorkflowPage: ComponentType<
+  ConfigureScreensWorkflowPageProps
+> = ({
+  selectedPlaces,
+  setPlacesAndScreensToUpdate,
+  setConfigVersion,
+  isEditing,
+}: ConfigureScreensWorkflowPageProps) => {
+  const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
 
-    const { newScreenValidationErrors, pendingScreenValidationErrors } =
-      useConfigValidationContext();
-    const dispatch = useConfigValidationDispatchContext();
+  const { newScreenValidationErrors, pendingScreenValidationErrors } =
+    useConfigValidationContext();
+  const dispatch = useConfigValidationDispatchContext();
 
-    useEffect(() => {
-      if (selectedPlaces.length) {
-        fetchExistingScreens(
-          "gl_eink_v2",
-          selectedPlaces.map((place) => place.id)
-        ).then(({ places_and_screens, version_id }) => {
-          initializeExistingScreenValidationErrors(places_and_screens);
-          setConfigVersion(version_id);
-          setExistingScreens(places_and_screens);
-        });
-      }
-    }, []);
-
-    const getTitle = () =>
-      isEditing ? "Edit Pending" : "Configure Green Line Stations";
-
-    const initializeExistingScreenValidationErrors = (
-      placesAndScreens: PlaceIdsAndExistingScreens
-    ) => {
-      for (const place_id in placesAndScreens) {
-        const screens = placesAndScreens[place_id];
-
-        Object.keys(screens.pending_screens).map((_screen, index) => {
-          pendingScreenValidationErrors[place_id][index] = {
-            missingFields: [],
-            isDuplicateScreenId: false,
-          };
-        });
-      }
-
-      dispatch({
-        type: "SET_VALIDATION_ERRORS",
-        newScreenValidationErrors,
-        pendingScreenValidationErrors,
+  useEffect(() => {
+    if (selectedPlaces.length) {
+      fetchExistingScreens(
+        "gl_eink_v2",
+        selectedPlaces.map((place) => place.id),
+      ).then(({ places_and_screens, version_id }) => {
+        initializeExistingScreenValidationErrors(places_and_screens);
+        setConfigVersion(version_id);
+        setExistingScreens(places_and_screens);
       });
-    };
+    }
+  }, []);
 
-    return (
-      <Container className="workflow-container">
-        <div className="h3 text-white mb-5">{getTitle()}</div>
-        {selectedPlaces.map((place) => {
-          return (
-            <ConfigurePlaceCard
-              key={place.id}
-              place={place}
-              existingScreens={existingScreens[place.id]}
-              setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-            />
-          );
-        })}
-      </Container>
-    );
+  const getTitle = () =>
+    isEditing ? "Edit Pending" : "Configure Green Line Stations";
+
+  const initializeExistingScreenValidationErrors = (
+    placesAndScreens: PlaceIdsAndExistingScreens,
+  ) => {
+    for (const place_id in placesAndScreens) {
+      const screens = placesAndScreens[place_id];
+
+      Object.keys(screens.pending_screens).map((_screen, index) => {
+        pendingScreenValidationErrors[place_id][index] = {
+          missingFields: [],
+          isDuplicateScreenId: false,
+        };
+      });
+    }
+
+    dispatch({
+      type: "SET_VALIDATION_ERRORS",
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
+    });
   };
+
+  return (
+    <Container className="workflow-container">
+      <div className="h3 text-white mb-5">{getTitle()}</div>
+      {selectedPlaces.map((place) => {
+        return (
+          <ConfigurePlaceCard
+            key={place.id}
+            place={place}
+            existingScreens={existingScreens[place.id]}
+            setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
+          />
+        );
+      })}
+    </Container>
+  );
+};
 
 interface ConfigurePlaceCardProps {
   place: Place;
@@ -181,7 +182,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
           updated_pending_screens: updatedPendingScreens,
           new_pending_screens: newScreens,
           existing_pending_screens: existingScreensToArray(
-            existingPendingScreens
+            existingPendingScreens,
           ),
         },
       };
@@ -196,7 +197,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
 
   const deleteExistingPendingRow = (
     screenID: string,
-    screen: ScreenConfiguration
+    screen: ScreenConfiguration,
   ) => {
     setExistingPendingScreens((prevState) => {
       return {
@@ -207,7 +208,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
 
     setUpdatedPendingScreens((prevState) => {
       const index = prevState.findIndex(
-        (screen) => screen.screen_id === screenID
+        (screen) => screen.screen_id === screenID,
       );
 
       if (index === -1) {
@@ -232,7 +233,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   const changeExistingPendingRow = (
     screenID: string,
     screen: ScreenConfiguration,
-    index: number
+    index: number,
   ) => {
     if (screen.new_id == screenID) {
       setUpdatedPendingScreens((prevState) => {
@@ -355,7 +356,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
                       }
                     />
                   );
-                }
+                },
               )}
               {newScreens.map((screen, index) => {
                 return (
@@ -395,7 +396,7 @@ interface CustomToggleProps {
 const CustomToggle = React.forwardRef<HTMLButtonElement, CustomToggleProps>(
   (
     { children, onClick }: CustomToggleProps,
-    ref: ForwardedRef<HTMLButtonElement>
+    ref: ForwardedRef<HTMLButtonElement>,
   ) => (
     <button
       className="just-added-dropdown-toggle"
@@ -408,7 +409,7 @@ const CustomToggle = React.forwardRef<HTMLButtonElement, CustomToggleProps>(
       {children}
       <ThreeDotsVertical fill="#F8F9FA" />
     </button>
-  )
+  ),
 );
 
 interface ConfigureScreenRowProps {

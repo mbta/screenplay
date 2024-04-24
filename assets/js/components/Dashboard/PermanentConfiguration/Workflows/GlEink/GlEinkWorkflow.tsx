@@ -33,7 +33,7 @@ const GlEinkWorkflow: ComponentType = () => {
 
   const getPlacesList = () => {
     return places.filter((place) =>
-      place.routes.some((route) => route.startsWith("Green"))
+      place.routes.some((route) => route.startsWith("Green")),
     );
   };
 
@@ -72,7 +72,7 @@ const GlEinkWorkflow: ComponentType = () => {
         .split("_")
         .map(
           (word: string) =>
-            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
         );
       return capitalizedWords.join(" ");
     });
@@ -88,7 +88,7 @@ const GlEinkWorkflow: ComponentType = () => {
 
   const validateDuplicateScreenIds = (
     placesAndScreens: PlaceIdsAndNewScreens,
-    duplicateScreenIds: string[] = []
+    duplicateScreenIds: string[] = [],
   ) => {
     for (const [place_id, screens] of Object.entries(placesAndScreens)) {
       screens["new_pending_screens"]?.map((screen, index) => {
@@ -149,7 +149,7 @@ const GlEinkWorkflow: ComponentType = () => {
 
   const handleGlEinkSubmitResponse = async (
     response: Response,
-    fieldsWithErrors: Set<string>
+    fieldsWithErrors: Set<string>,
   ) => {
     if (response.ok) {
       navigate("/pending");
@@ -162,7 +162,7 @@ const GlEinkWorkflow: ComponentType = () => {
       }
     } else {
       setValidationErrorMessage(
-        "Something went wrong. Please select 'Review Screens' again."
+        "Something went wrong. Please select 'Review Screens' again.",
       );
       setShowValidationAlert(true);
     }
@@ -170,7 +170,7 @@ const GlEinkWorkflow: ComponentType = () => {
 
   const handleDuplicateIdsResponse = (
     duplicate_screen_ids: string[],
-    fieldsWithErrors: Set<string>
+    fieldsWithErrors: Set<string>,
   ) => {
     validateDuplicateScreenIds(placesAndScreensToUpdate, duplicate_screen_ids);
     fieldsWithErrors.add("screen_id");
@@ -236,14 +236,14 @@ const GlEinkWorkflow: ComponentType = () => {
       };
       onForward = () => {
         const fieldsWithErrors = validateRequiredFields(
-          placesAndScreensToUpdate
+          placesAndScreensToUpdate,
         );
 
         if (fieldsWithErrors.size === 0) {
           putPendingScreens(
             placesAndScreensToUpdate,
             "gl_eink_v2",
-            configVersion
+            configVersion,
           ).then((response) => {
             handleGlEinkSubmitResponse(response, fieldsWithErrors);
           });
@@ -291,7 +291,7 @@ const GlEinkWorkflow: ComponentType = () => {
           </Modal>
           <ConfigureScreensWorkflowPage
             selectedPlaces={places.filter((place) =>
-              selectedPlaces.has(place.id)
+              selectedPlaces.has(place.id),
             )}
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
             setConfigVersion={setConfigVersion}

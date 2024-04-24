@@ -17,8 +17,8 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
   useEffect(() => {
     setFilteredAlerts(
       props.activeAlertsStations.filter((station) =>
-        props.selectedStations.map((station) => station.name).includes(station)
-      )
+        props.selectedStations.map((station) => station.name).includes(station),
+      ),
     );
   }, [props.selectedStations]);
 

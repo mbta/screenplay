@@ -8,7 +8,7 @@ interface PaessDetailContainerProps {
 }
 
 const PaessDetailContainer = (
-  props: PaessDetailContainerProps
+  props: PaessDetailContainerProps,
 ): JSX.Element => {
   const zonePositions = {
     left: ["s", "w"],
@@ -18,14 +18,15 @@ const PaessDetailContainer = (
 
   const stationCode = props.screens[0].station_code;
   const leftScreens = props.screens.filter(
-    (screen) => screen.zone != null && zonePositions.left.includes(screen.zone)
+    (screen) => screen.zone != null && zonePositions.left.includes(screen.zone),
   );
   const centerScreens = props.screens.filter(
     (screen) =>
-      screen.zone != null && zonePositions.center.includes(screen.zone)
+      screen.zone != null && zonePositions.center.includes(screen.zone),
   );
   const rightScreens = props.screens.filter(
-    (screen) => screen.zone != null && zonePositions.right.includes(screen.zone)
+    (screen) =>
+      screen.zone != null && zonePositions.right.includes(screen.zone),
   );
 
   return (
@@ -47,7 +48,7 @@ const PaessDetailContainer = (
                     zone={screen.zone}
                     label={screen.label}
                   />
-                )
+                ),
             )}
           </div>
         )}
@@ -69,7 +70,7 @@ const PaessDetailContainer = (
                     zone={screen.zone}
                     label={screen.label}
                   />
-                )
+                ),
             )}
           </div>
         )}
@@ -91,7 +92,7 @@ const PaessDetailContainer = (
                     zone={screen.zone}
                     label={screen.label}
                   />
-                )
+                ),
             )}
           </div>
         )}

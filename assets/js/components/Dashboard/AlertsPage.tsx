@@ -28,7 +28,7 @@ const AlertsPage: ComponentType = () => {
   const { places, alerts, screensByAlertMap } = useScreenplayContext();
 
   const alertsWithPlaces = alerts.filter(
-    (alert) => screensByAlertMap[alert.id]
+    (alert) => screensByAlertMap[alert.id],
   );
 
   return (
@@ -117,7 +117,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
       numPlaces = placesWithSelectedAlert(
         alert,
         places,
-        screensByAlertMap
+        screensByAlertMap,
       ).length;
     }
 
@@ -145,14 +145,14 @@ const AlertsList: ComponentType<AlertsListProps> = ({
     if (screenTypeFilterValue !== SCREEN_TYPES[0]) {
       filteredAlerts = filterAlertsByScreenType(
         filteredAlerts,
-        screenTypeFilterValue
+        screenTypeFilterValue,
       );
     }
 
     if (modeLineFilterValue !== MODES_AND_LINES[0]) {
       filteredAlerts = filterAlertsByModeOrLine(
         filteredAlerts,
-        modeLineFilterValue
+        modeLineFilterValue,
       );
     }
     return filteredAlerts;
@@ -160,7 +160,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
   const filterAlertsByModeOrLine = (
     alerts: Alert[],
-    { label, ids }: { label: string; ids: string[] }
+    { label, ids }: { label: string; ids: string[] },
   ) => {
     const isRelevantIE: (ie: InformedEntity) => boolean = (() => {
       switch (label) {
@@ -197,7 +197,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
   const filterAlertsByScreenType = (
     alerts: Alert[],
-    { ids }: { label: string; ids: string[] }
+    { ids }: { label: string; ids: string[] },
   ) => {
     return alerts.filter((alert) => {
       // Get this alert's list of affected screens.
@@ -205,7 +205,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
       return screensWithAlert
         ? screensWithAlert.find((screen_id) =>
-            ids.includes(screenMetaData[screen_id].type)
+            ids.includes(screenMetaData[screen_id].type),
           )
         : false;
     });
@@ -213,7 +213,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
 
   const compareAlerts = (
     { active_period: active_period_1 }: Alert,
-    { active_period: active_period_2 }: Alert
+    { active_period: active_period_2 }: Alert,
   ) => {
     // Get the soonest start time
     const start1 = moment(active_period_1[0].start);

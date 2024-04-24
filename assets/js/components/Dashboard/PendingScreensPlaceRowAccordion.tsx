@@ -32,7 +32,7 @@ interface Props {
   publishCallback: (
     placeID: string,
     appID: string,
-    hiddenFromScreenplayIDs: string[]
+    hiddenFromScreenplayIDs: string[],
   ) => void;
 }
 
@@ -85,7 +85,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
   const handleClickHideCheckbox = (screenID: string) => {
     if (hiddenFromScreenplayIDs.includes(screenID)) {
       setHiddenFromScreenplayIDs((prevState) =>
-        prevState.filter((id) => id !== screenID)
+        prevState.filter((id) => id !== screenID),
       );
     } else {
       setHiddenFromScreenplayIDs((prevState) => [...prevState, screenID]);
@@ -112,7 +112,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
     <div
       className={classNames(
         "pending-screens-place-row-accordion",
-        isOpen ? "open" : ""
+        isOpen ? "open" : "",
       )}
       onClick={onRowClick}
     >
@@ -161,7 +161,7 @@ const PendingScreensPlaceRowAccordion: ComponentType<Props> = ({
               <PendingScreenDetail
                 {...screen}
                 isHiddenOnPlacesPage={hiddenFromScreenplayIDs.includes(
-                  screen.screenID
+                  screen.screenID,
                 )}
                 onClickHideOnPlacesPage={() =>
                   handleClickHideCheckbox(screen.screenID)
