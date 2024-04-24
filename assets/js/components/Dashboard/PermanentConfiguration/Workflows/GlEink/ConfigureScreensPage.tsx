@@ -78,6 +78,10 @@ const ConfigureScreensWorkflowPage: ComponentType<ConfigureScreensWorkflowPagePr
       useConfigValidationContext();
     const dispatch = useConfigValidationDispatchContext();
 
+    // This hook will run in two different scenarios:
+    // 1. Runs at initial render if navigated to from the StationSelectPage.
+    // 2. Runs after initial render if navigated to from the Edit Pending button on the Pending page.
+    // The items in selectedPlaces are guaranteed to stay the same while this page is being used.
     useEffect(() => {
       if (selectedPlaces.length) {
         fetchExistingScreens(
