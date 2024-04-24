@@ -116,7 +116,7 @@ interface ConfigValidationState {
 
 const reducer = (
   state: ScreenplayState,
-  action: ReducerAction
+  action: ReducerAction,
 ): ScreenplayState => {
   switch (action.type) {
     case "SET_PLACES":
@@ -159,7 +159,7 @@ const reducer = (
 
 const placesListReducer = (
   state: PlacesListState,
-  action: PlacesListReducerAction
+  action: PlacesListReducerAction,
 ) => {
   switch (action.type) {
     case "SET_SORT_DIRECTION":
@@ -203,7 +203,7 @@ const placesListReducer = (
 
 const alertsReducer = (
   state: AlertsListState,
-  action: AlertsListReducerAction
+  action: AlertsListReducerAction,
 ) => {
   switch (action.type) {
     case "SET_MODE_LINE_FILTER":
@@ -226,7 +226,7 @@ const alertsReducer = (
 
 const configValidationReducer = (
   state: ConfigValidationState,
-  action: ConfigValidationReducerAction
+  action: ConfigValidationReducerAction,
 ) => {
   switch (action.type) {
     case "SET_VALIDATION_ERRORS":
@@ -300,19 +300,19 @@ const [
 const ScreenplayProvider = ({ children }: Props) => {
   const [screenplayState, screenplayDispatch] = useReducer(
     reducer,
-    initialState
+    initialState,
   );
   const [placesListState, placesListDispatch] = useReducer(
     placesListReducer,
-    initialPlacesListState
+    initialPlacesListState,
   );
   const [alertsListState, alertsListDispatch] = useReducer(
     alertsReducer,
-    initialAlertsListState
+    initialAlertsListState,
   );
   const [configValidationState, configValidationDispatch] = useReducer(
     configValidationReducer,
-    initialConfigValidationState
+    initialConfigValidationState,
   );
 
   return (

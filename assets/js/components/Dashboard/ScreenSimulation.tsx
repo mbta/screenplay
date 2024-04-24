@@ -12,7 +12,7 @@ const ScreenSimulation = ({
 }: Props): JSX.Element => {
   const src = useMemo(
     () => generateSource(screen, isPending),
-    [screen, isPending]
+    [screen, isPending],
   );
 
   return (

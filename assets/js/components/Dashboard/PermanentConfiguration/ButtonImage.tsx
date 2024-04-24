@@ -8,7 +8,7 @@ interface ButtonImageProps {
 }
 
 const ButtonImage: ComponentType<ButtonImageProps> = (
-  props: ButtonImageProps
+  props: ButtonImageProps,
 ) => {
   const { fileName, label, onClick } = props;
   return (

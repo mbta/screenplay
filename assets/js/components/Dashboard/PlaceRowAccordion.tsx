@@ -52,10 +52,10 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
     const solariScreens = visibleScreens.filter(
-      (screen) => screen.type === "solari"
+      (screen) => screen.type === "solari",
     );
     const paEssScreens = visibleScreens.filter(
-      (screen) => screen.type === "pa_ess"
+      (screen) => screen.type === "pa_ess",
     );
     const groupedScreens = visibleScreens
       .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
@@ -72,7 +72,7 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
 
   const groupPaEssScreensbyRoute = (
     paEssScreens: Screen[],
-    groupedScreens: Screen[][]
+    groupedScreens: Screen[][],
   ) => {
     const paEssGroupedByRoute = new Map<string, Screen[]>();
     paEssScreens.map((paEssScreen) => {
@@ -94,7 +94,7 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
     place.screens.filter((screen) => !screen.hidden).length > 0;
   // Always call the `useAccordionButton` hook, but conditionally use its click handler. https://react.dev/learn#using-hooks
   const handleAccordionClick = useAccordionButton(place.id, () =>
-    handleClickAccordion(place.id)
+    handleClickAccordion(place.id),
   );
   const rowOnClick = hasScreens ? handleAccordionClick : () => undefined;
 
@@ -127,7 +127,7 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
                       eventKey={place.id}
                     />
                   );
-                }
+                },
               )}
           </div>
         </Accordion.Collapse>

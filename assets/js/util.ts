@@ -113,14 +113,14 @@ export const convertArrayToListString = (array: string[]) => {
 
 export const matchStation = (
   station: string,
-  stationScreenOrientationList: StationsByLine
+  stationScreenOrientationList: StationsByLine,
 ) => {
   const result = Object.values(stationScreenOrientationList)
     .flat()
     .find(({ name }) => name === station);
   if (result === undefined) {
     throw new TypeError(
-      `Station ${station} not present in list of all stations!`
+      `Station ${station} not present in list of all stations!`,
     );
   }
   return result;
@@ -164,14 +164,14 @@ export const formatEffect = (effect: string) => {
 export const placesWithSelectedAlert = (
   alert: Alert | null,
   places: Place[],
-  screensByAlertMap: ScreensByAlert
+  screensByAlertMap: ScreensByAlert,
 ) => {
   return alert
     ? places
         .map((place) => ({
           ...place,
           screens: place.screens.filter((screen) =>
-            screensByAlertMap[alert.id].includes(screen.id)
+            screensByAlertMap[alert.id].includes(screen.id),
           ),
         }))
         .filter((place) => place.screens.length > 0)
@@ -195,19 +195,19 @@ export const sortScreens = (screenList: Screen[]) => {
   ];
 
   return screenList.sort((a, b) =>
-    screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type) ? 1 : -1
+    screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type) ? 1 : -1,
   );
 };
 
 export const sortByStationOrder = (
   places: Place[],
   filteredLine: string,
-  reverse?: boolean
+  reverse?: boolean,
 ) => {
   const stationOrder = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
 
   const stationOrderToIndex = Object.fromEntries(
-    stationOrder.map((station, i) => [station.name.toLowerCase(), i])
+    stationOrder.map((station, i) => [station.name.toLowerCase(), i]),
   );
 
   const placesByStationOrder = places.map((place) => ({
@@ -224,7 +224,7 @@ export const sortByStationOrder = (
 
 export const capitalizeTerminalStops = (
   stationName: string,
-  filteredLine: string | null | undefined
+  filteredLine: string | null | undefined,
 ) => {
   let isTerminalStop = false;
 

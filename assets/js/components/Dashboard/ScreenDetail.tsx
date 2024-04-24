@@ -43,7 +43,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
     : "";
 
   const translatedScreenType = SCREEN_TYPES.find(({ ids }) =>
-    ids.includes(screens[0].type)
+    ids.includes(screens[0].type),
   )?.label;
 
   const getPaessRoute = (routeLetter: string) => {
@@ -108,7 +108,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
                   {
                     "screen-detail__screen-type-location--paess-s":
                       paessRouteLetter == "s",
-                  }
+                  },
                 )}
               >
                 {translatedScreenType} {getScreenLocation()}

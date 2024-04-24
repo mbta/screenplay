@@ -43,11 +43,11 @@ const CustomToggle = React.forwardRef(
         {props.children}
       </Button>
     </OverlayTrigger>
-  )
+  ),
 );
 
 const ScreenDetailActionBar = (
-  props: ScreenDetailActionBarProps
+  props: ScreenDetailActionBarProps,
 ): JSX.Element => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -77,12 +77,12 @@ const ScreenDetailActionBar = (
           type: "SHOW_LINK_COPIED",
           showLinkCopied: false,
         }),
-      5000
+      5000,
     );
   };
 
   const isEmergencyAdmin = document.querySelector(
-    "meta[name=is-emergency-admin]"
+    "meta[name=is-emergency-admin]",
   );
 
   const reportAProblemURL = isEmergencyAdmin

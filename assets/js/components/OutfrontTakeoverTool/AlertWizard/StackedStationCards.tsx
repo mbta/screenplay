@@ -13,7 +13,7 @@ interface StackedStationCardsProps {
 
 const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
   const stationScreenOrientationList = useContext(
-    StationScreenOrientationContext
+    StationScreenOrientationContext,
   );
   return (
     <div
@@ -27,7 +27,9 @@ const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
         }
 
         const lines = Object.keys(stationScreenOrientationList).filter((key) =>
-          stationScreenOrientationList[key].some((x) => x.name === station.name)
+          stationScreenOrientationList[key].some(
+            (x) => x.name === station.name,
+          ),
         );
 
         return (
