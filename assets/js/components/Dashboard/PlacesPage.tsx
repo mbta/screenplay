@@ -122,6 +122,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   };
 
   const handleClickSortLabel = () => {
+    throw new Error("Test Error");
     dispatch({
       type: "SET_SORT_DIRECTION",
       sortDirection: (1 - sortDirection) as DirectionID,
