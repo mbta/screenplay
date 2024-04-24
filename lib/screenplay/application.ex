@@ -17,7 +17,9 @@ defmodule Screenplay.Application do
       # {Screenplay.Worker, arg}
       Screenplay.OutfrontTakeoverTool.Alerts.State,
       Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
-      Screenplay.Scheduler
+      Screenplay.Scheduler,
+      Screenplay.Repo,
+      Screenplay.Migrate
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
