@@ -320,13 +320,17 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp update_existing_pending_screens(place_id, platform_ids, updated_pending_screens, acc) do
     Enum.reduce(updated_pending_screens, acc, fn
-      %{"is_deleted" => true}, acc ->
+      %{"is_deleted" => true, "screen_id" => screen_id}, acc ->
         # Only delete screen if "is_deleted" is true AND platform is at current place.
         # If a screen ID is deleted at one place and moved to another,
         # we need to make sure we are removing the correct screen.
+
         Map.reject(acc, fn
-          %{alerts: %Alerts{stop_id: platform_id}} -> platform_id in platform_ids
-          _ -> false
+          {^screen_id, %Screen{app_params: %GlEink{alerts: %Alerts{stop_id: platform_id}}}} ->
+            platform_id in Tuple.to_list(platform_ids)
+
+          _ ->
+            false
         end)
 
       # screen_id was updated
