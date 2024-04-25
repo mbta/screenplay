@@ -28,8 +28,22 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     env:
+      DATABASE_PASSWORD: postgres
+      DATABASE_USER: postgres
+      DATABASE_NAME: screenplay_test
+      DATABASE_HOST: localhost
       GUARDIAN_SECRET_KEY: test_auth_secret
       SECRET_KEY_BASE: local_secret_key_base_at_least_64_bytes_________________________________
+    services:
+      postgres:
+        image: postgres
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: ${{env.DATABASE_PASSWORD}}
+          POSTGRES_USER: ${{env.DATABASE_USER}}
+          POSTGRES_DB: ${{env.DATABASE_NAME}}
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     needs: asdf
     steps:
       - uses: actions/checkout@v2
