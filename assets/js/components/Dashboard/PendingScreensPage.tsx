@@ -23,7 +23,7 @@ import { Place } from "../../models/place";
 const PendingScreensPage: ComponentType = () => {
   const { places } = useScreenplayContext();
   const [existingScreens, setExistingScreens] = useState<PendingAndLiveScreens>(
-    {}
+    {},
   );
   const [etag, setEtag] = useState<string | null>(null);
   const [lastModified, setLastModified] = useState<Date | null>(null);
@@ -31,7 +31,7 @@ const PendingScreensPage: ComponentType = () => {
 
   const placesByID: Record<string, Place> = useMemo(
     () => places.reduce((acc, place) => ({ ...acc, [place.id]: place }), {}),
-    [places]
+    [places],
   );
 
   const fetchData = useCallback(() => {
@@ -42,7 +42,7 @@ const PendingScreensPage: ComponentType = () => {
         if (last_modified_ms !== null) {
           setLastModified(new Date(last_modified_ms));
         }
-      }
+      },
     );
   }, [setExistingScreens, setEtag, setLastModified]);
 
@@ -64,7 +64,7 @@ const PendingScreensPage: ComponentType = () => {
           placeID,
           appID,
           hiddenFromScreenplayIDs,
-          etag!
+          etag!,
         );
 
         const defaultErrorMessage = "Server error. Please contact an engineer.";
@@ -115,7 +115,7 @@ const PendingScreensPage: ComponentType = () => {
         dispatch({ type: "HIDE_ACTION_OUTCOME" });
       }, 5000);
     },
-    [etag, dispatch, fetchData, isPublishing]
+    [etag, dispatch, fetchData, isPublishing],
   );
 
   useEffect(fetchData, []);
@@ -148,11 +148,11 @@ const PendingScreensPage: ComponentType = () => {
                   publishCallback={publish}
                   screens={mergeLiveAndPendingByID(
                     live_screens,
-                    pending_screens
+                    pending_screens,
                   )}
                 />
               ) : null;
-            }
+            },
           )}
         </Accordion>
       </>
@@ -175,7 +175,7 @@ const PendingScreensPage: ComponentType = () => {
 
 const mergeLiveAndPendingByID = (
   liveScreens: PendingAndLiveScreens[string]["live_screens"],
-  pendingScreens: PendingAndLiveScreens[string]["pending_screens"]
+  pendingScreens: PendingAndLiveScreens[string]["pending_screens"],
 ) =>
   [
     ...Object.entries(liveScreens ?? {}).map(addIsLive(true)),

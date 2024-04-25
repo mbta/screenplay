@@ -54,21 +54,21 @@ describe("PlacesActionBar", () => {
         showScreenlessPlaces
         onClickResetFilters={handleClickResetFilters}
         onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
-      />
+      />,
     );
 
     expect(getByTestId("places-action-bar")).toBeInTheDocument();
     expect(
-      queryByTestId("places-action-bar-screenless-places-button")
+      queryByTestId("places-action-bar-screenless-places-button"),
     ).not.toBeInTheDocument();
     expect(
-      getByTestId("places-action-bar-reset-filters-button")
+      getByTestId("places-action-bar-reset-filters-button"),
     ).toBeInTheDocument();
     expect(
-      getByTestId("places-action-bar-stats-place-count")
+      getByTestId("places-action-bar-stats-place-count"),
     ).toHaveTextContent("2");
     expect(
-      getByTestId("places-action-bar-stats-screen-count")
+      getByTestId("places-action-bar-stats-screen-count"),
     ).toHaveTextContent("5");
   });
 
@@ -85,21 +85,21 @@ describe("PlacesActionBar", () => {
         showScreenlessPlaces
         onClickResetFilters={handleClickResetFilters}
         onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
-      />
+      />,
     );
 
     expect(getByTestId("places-action-bar")).toBeInTheDocument();
     expect(
-      getByTestId("places-action-bar-screenless-places-button")
+      getByTestId("places-action-bar-screenless-places-button"),
     ).toBeInTheDocument();
     expect(
-      getByTestId("places-action-bar-reset-filters-button")
+      getByTestId("places-action-bar-reset-filters-button"),
     ).toBeInTheDocument();
     expect(
-      getByTestId("places-action-bar-stats-place-count")
+      getByTestId("places-action-bar-stats-place-count"),
     ).toHaveTextContent("2");
     expect(
-      getByTestId("places-action-bar-stats-screen-count")
+      getByTestId("places-action-bar-stats-screen-count"),
     ).toHaveTextContent("3");
   });
 
@@ -114,7 +114,7 @@ describe("PlacesActionBar", () => {
         showScreenlessPlaces
         onClickResetFilters={handleClickResetFilters}
         onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
-      />
+      />,
     );
 
     await act(async () => {
@@ -126,7 +126,7 @@ describe("PlacesActionBar", () => {
 
     await act(async () => {
       fireEvent.click(
-        getByTestId("places-action-bar-screenless-places-button")
+        getByTestId("places-action-bar-screenless-places-button"),
       );
     });
 

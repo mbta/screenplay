@@ -19,7 +19,7 @@ describe("AlertCard", () => {
     };
 
     const { getByText } = render(
-      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />,
     );
 
     expect(getByText("Station Closure")).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe("AlertCard", () => {
     };
 
     const { getByText } = render(
-      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />,
     );
 
     expect(getByText("Delay—up to 15 minutes")).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("AlertCard", () => {
     };
 
     const { getByText } = render(
-      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />,
     );
 
     expect(getByText("9/16/2022 · 5:00 AM")).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe("AlertCard", () => {
     };
 
     const { getByText } = render(
-      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />
+      <AlertCard alert={alert} numberOfPlaces={0} numberOfScreens={0} />,
     );
 
     expect(getByText("9/16/2022 · 5:00 AM")).toBeInTheDocument();

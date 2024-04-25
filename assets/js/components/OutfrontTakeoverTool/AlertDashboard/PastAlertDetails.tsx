@@ -19,11 +19,11 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   const { cleared_at, cleared_by, created_by, message, schedule, stations } =
     props.data;
   const stationScreenOrientationList = useContext(
-    StationScreenOrientationContext
+    StationScreenOrientationContext,
   );
 
   const stationDetails = stations.map((station: string) =>
-    matchStation(station, stationScreenOrientationList)
+    matchStation(station, stationScreenOrientationList),
   );
 
   const startDate = new Date(schedule.start);

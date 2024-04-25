@@ -1,4 +1,4 @@
-defmodule Screenplay.Config.ConfigTest do
+defmodule Screenplay.Config.PermanentConfigTest do
   use ExUnit.Case
 
   import Mox

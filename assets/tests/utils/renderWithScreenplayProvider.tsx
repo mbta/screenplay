@@ -20,6 +20,6 @@ export const renderWithScreenplayProvider = (children: ReactNode) => {
           <Route index element={children} />
         </Route>
       </Routes>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 };

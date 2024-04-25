@@ -36,10 +36,10 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
 
   const clearAlert = (
     id: string,
-    setLastChangeTime: (time: number) => void
+    setLastChangeTime: (time: number) => void,
   ) => {
     const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]"
+      "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
     const data = { id };
@@ -78,7 +78,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
 
   const clearAllAlerts = () => {
     const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]"
+      "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
 

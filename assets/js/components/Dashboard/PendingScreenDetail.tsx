@@ -20,7 +20,7 @@ interface Props {
 }
 
 const getGLScreenLocationDescription = (
-  config: ScreenConfiguration & { app_id: "gl_eink_v2" }
+  config: ScreenConfiguration & { app_id: "gl_eink_v2" },
 ) => {
   let direction = "";
   switch (config.app_params.header.direction_id) {
@@ -32,7 +32,7 @@ const getGLScreenLocationDescription = (
   }
 
   const platformLocation = capitalize(
-    config.app_params.platform_location ?? ""
+    config.app_params.platform_location ?? "",
   );
 
   return [direction, platformLocation].join(" ");
@@ -44,7 +44,7 @@ const getScreenLocationDescription = (config: ScreenConfiguration) => {
       return getGLScreenLocationDescription(config);
     default:
       console.warn(
-        `getScreenLocationDescription not implemented for ${config.app_id}`
+        `getScreenLocationDescription not implemented for ${config.app_id}`,
       );
       return "";
   }
@@ -69,7 +69,7 @@ const PendingScreenDetail: ComponentType<Props> = ({
           type: "SHOW_LINK_COPIED",
           showLinkCopied: false,
         }),
-      5000
+      5000,
     );
   };
 

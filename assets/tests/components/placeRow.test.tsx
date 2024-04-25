@@ -32,7 +32,7 @@ describe("PlaceRow", () => {
           disabled
           variant="accordion"
         />
-      </Accordion>
+      </Accordion>,
     );
 
     expect(getByTestId("place-row").className).toBe("place-row disabled");

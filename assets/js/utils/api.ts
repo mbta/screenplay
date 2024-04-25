@@ -32,10 +32,10 @@ export interface ExistingScreensAtPlace {
 
 export const fetchExistingScreens = async (
   appId: string,
-  placeIds: string[]
+  placeIds: string[],
 ): Promise<{ places_and_screens: ExistingScreens; version_id: string }> => {
   const response = await fetch(
-    `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`
+    `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`,
   );
 
   return await response.json();
@@ -61,7 +61,7 @@ export interface PendingAndLiveScreens {
 export const fetchExistingScreensAtPlacesWithPendingScreens =
   async (): Promise<PendingAndLiveScreensResponse> => {
     const response = await fetch(
-      "/config/existing-screens-at-places-with-pending-screens"
+      "/config/existing-screens-at-places-with-pending-screens",
     );
     const etag = response.headers.get("etag") as string;
     const data = (await response.json()) as Omit<
@@ -75,7 +75,7 @@ export const fetchExistingScreensAtPlacesWithPendingScreens =
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
   screenType: "gl_eink_v2" | null,
-  version_id: string
+  version_id: string,
 ) => {
   return await fetch("/config/put", {
     method: "POST",
@@ -96,7 +96,7 @@ export const publishScreensForPlace = async (
   placeId: string,
   appId: string,
   hiddenFromScreenplayIds: string[],
-  etag: string
+  etag: string,
 ) => {
   const response = await fetch(`/config/publish/${placeId}/${appId}`, {
     method: "POST",
@@ -108,7 +108,7 @@ export const publishScreensForPlace = async (
       "if-match": etag,
       "x-csrf-token":
         document?.head?.querySelector<HTMLMetaElement>(
-          "[name~=csrf-token][content]"
+          "[name~=csrf-token][content]",
         )?.content ?? "",
     },
     credentials: "include",
