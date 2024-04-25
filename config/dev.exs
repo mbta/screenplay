@@ -85,7 +85,9 @@ config :screenplay,
 
 config :ueberauth, Ueberauth,
   providers: [
-    keycloak: {Screenplay.Ueberauth.Strategy.Fake, [roles: ["screenplay-emergency-admin"]]}
+    keycloak:
+      {Screenplay.Ueberauth.Strategy.Fake,
+       [roles: ["screenplay-emergency-admin", "pa-message-admin"]]}
   ]
 
 config :ueberauth_oidcc,

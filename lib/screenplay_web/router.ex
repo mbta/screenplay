@@ -31,8 +31,12 @@ defmodule ScreenplayWeb.Router do
     plug(Guardian.Plug.EnsureAuthenticated)
   end
 
-  pipeline :ensure_screenplay_admin_group do
-    plug(ScreenplayWeb.EnsureScreenplayAdminGroup)
+  pipeline :ensure_screenplay_emergency_admin_group do
+    plug(ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup)
+  end
+
+  pipeline :ensure_pa_message_admin do
+    plug(ScreenplayWeb.EnsurePaMessageAdmin)
   end
 
   # Load balancer health check
@@ -47,8 +51,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group,
-      :metadata
+      :metadata,
+      :ensure_screenplay_emergency_admin_group
     ])
 
     get("/", PageController, :takeover_redirect)
@@ -61,6 +65,17 @@ defmodule ScreenplayWeb.Router do
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
     get("/unauthorized", UnauthorizedController, :index)
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :metadata,
+      :ensure_pa_message_admin
+    ])
   end
 
   scope "/api", ScreenplayWeb do
@@ -84,7 +99,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group
+      :metadata,
+      :ensure_screenplay_emergency_admin_group
     ])
 
     post("/create", AlertController, :create)
