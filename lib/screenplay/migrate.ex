@@ -18,28 +18,7 @@ defmodule Screenplay.Migrate do
     Keyword.get(opts, :sync_migrate_fn, &default_migrate_fn/1).("migrations")
 
     Logger.info("#{__MODULE__} synchronous migrations finished")
-    {:ok, opts, {:continue, :async_migrations}}
-  end
-
-  @impl GenServer
-  def handle_continue(:async_migrations, opts) do
-    Logger.info("#{__MODULE__} async migrations starting")
-
-    try do
-      Keyword.get(
-        opts,
-        :async_migrate_fn,
-        &default_migrate_fn/1
-      ).("async_migrations")
-
-      Logger.info("#{__MODULE__} async migrations finished")
-    rescue
-      e ->
-        Logger.warning("#{__MODULE__} async migrations failed. error=#{inspect(e)}")
-        :ok
-    end
-
-    {:stop, :normal, opts}
+    {:ok, opts}
   end
 
   defp default_migrate_fn(migration_directory) do
