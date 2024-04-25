@@ -82,7 +82,7 @@ const ScreenDetailActionBar = (
   };
 
   const isEmergencyAdmin = document.querySelector(
-    "meta[name=is-emergency-admin]"
+    "meta[name=is-emergency-admin]",
   );
 
   const reportAProblemURL = isEmergencyAdmin
