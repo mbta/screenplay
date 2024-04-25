@@ -184,18 +184,24 @@ defmodule Screenplay.Config.PermanentConfig do
         new_screens ++ updated_pending_screens
       end)
       |> Enum.reduce({[], [], []}, fn screen,
-                                      {new_screen_ids, changed_screen_ids, deleted_screen_ids} ->
+                                      {new_screen_ids, changed_screen_ids, deleted_screen_ids} =
+                                        acc ->
         cond do
           screen["is_deleted"] ->
             {new_screen_ids, changed_screen_ids, [screen["screen_id"] | deleted_screen_ids]}
 
+          # new screen
           screen["new_id"] != nil and screen["screen_id"] == nil ->
             {[screen["new_id"] | new_screen_ids], changed_screen_ids, deleted_screen_ids}
 
           # screen is existing but had its ID changed.
-          true ->
-            {[screen["new_id"] | new_screen_ids], [screen | changed_screen_ids],
+          screen["new_id"] != nil and screen["screen_id"] != nil ->
+            {[screen["new_id"] | new_screen_ids], [screen["screen_id"] | changed_screen_ids],
              deleted_screen_ids}
+
+          # existing screen is being updated but did not change IDs
+          true ->
+            acc
         end
       end)
 
