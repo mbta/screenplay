@@ -28,7 +28,7 @@ config :ueberauth_oidcc,
     ]
   ]
 
-config :screenplauy, Screenplay.Repo,
+config :screenplay, Screenplay.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "screenplay_test",
   pool: Ecto.Adapters.SQL.Sandbox
