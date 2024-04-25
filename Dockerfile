@@ -63,5 +63,7 @@ COPY --from=app-builder /root/priv/static ./priv/static
 # add application artifact comipled in app build container
 COPY --from=app-builder /root/_build/prod/rel/screenplay .
 
+COPY --from=app-builder --chown=skate:skate /root/aws-cert-bundle.pem ./priv/aws-cert-bundle.pem
+
 # run the application
 CMD ["bin/screenplay", "start"]
