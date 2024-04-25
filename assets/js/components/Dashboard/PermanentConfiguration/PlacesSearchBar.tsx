@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import React, { ComponentType, useState } from "react";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
@@ -35,6 +36,7 @@ const PlacesSearchBar: ComponentType<PlacesSearchBarProps> = ({
 
   return (
     <ReactSearchAutocomplete
+      autoFocus
       key={reset}
       formatResult={formatResult}
       fuseOptions={{
