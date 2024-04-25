@@ -5,7 +5,6 @@ import ConfigureScreensWorkflowPage, {
 import BottomActionBar from "../../BottomActionBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import StationSelectPage from "./StationSelectPage";
-import { Place } from "../../../../../models/place";
 import { Alert, Button, Modal } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
@@ -62,24 +61,6 @@ const GlEinkWorkflow: ComponentType = () => {
       });
     }
   }, [location]);
-
-  const handleRemoveLocation = (place: Place) => {
-    const newSelectedPlaces = new Set(selectedPlaces);
-    newSelectedPlaces.delete(place.id);
-    delete newScreenValidationErrors[place.id];
-    delete pendingScreenValidationErrors[place.id];
-    dispatch({
-      type: "SET_VALIDATION_ERRORS",
-      newScreenValidationErrors,
-      pendingScreenValidationErrors,
-    });
-    setSelectedPlaces(newSelectedPlaces);
-    setPlacesAndScreensToUpdate((placesAndScreens) => {
-      const { [place.id]: _discarded, ...newPlacesAndScreens } =
-        placesAndScreens;
-      return newPlacesAndScreens;
-    });
-  };
 
   const generateErrorMessage = (errorSet: Set<string>) => {
     if (errorSet.size === 0) {
@@ -213,7 +194,6 @@ const GlEinkWorkflow: ComponentType = () => {
   let onForward;
   let onCancel;
   let layout;
-  const forwardButtonDisabled = selectedPlaces.size === 0;
   switch (configStep) {
     case 0:
       cancelButtonLabel = "Cancel";
@@ -314,7 +294,6 @@ const GlEinkWorkflow: ComponentType = () => {
               selectedPlaces.has(place.id),
             )}
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-            handleRemoveLocation={handleRemoveLocation}
             setConfigVersion={setConfigVersion}
             isEditing={isEditing}
           />
@@ -350,7 +329,6 @@ const GlEinkWorkflow: ComponentType = () => {
           onCancel={onCancel}
           onBack={onBack}
           onForward={onForward}
-          forwardButtonDisabled={forwardButtonDisabled}
         />
       </div>
     </>

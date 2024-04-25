@@ -9,7 +9,6 @@ interface BottomActionBarProps {
   onBack?: () => void;
   onForward?: () => void;
   onCancel?: () => void;
-  forwardButtonDisabled?: boolean;
 }
 
 const BottomActionBar: ComponentType<BottomActionBarProps> = ({
@@ -19,7 +18,6 @@ const BottomActionBar: ComponentType<BottomActionBarProps> = ({
   onBack,
   onForward,
   onCancel,
-  forwardButtonDisabled,
 }: BottomActionBarProps) => {
   return (
     <Navbar variant="dark" data-bs-theme="dark">
@@ -36,11 +34,7 @@ const BottomActionBar: ComponentType<BottomActionBarProps> = ({
           </Button>
         )}
         {forwardButtonLabel && (
-          <Button
-            onClick={onForward}
-            disabled={forwardButtonDisabled}
-            className="forward"
-          >
+          <Button onClick={onForward} className="forward">
             {forwardButtonLabel}
             <ArrowRight className="bottom-action-bar-container__icon" />
           </Button>

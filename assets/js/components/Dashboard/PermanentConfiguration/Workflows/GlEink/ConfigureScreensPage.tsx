@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import React, {
   ComponentType,
   ForwardedRef,
@@ -59,7 +58,6 @@ interface ConfigureScreensWorkflowPageProps {
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
   >;
-  handleRemoveLocation: (place: Place) => void;
   setConfigVersion: React.Dispatch<React.SetStateAction<string>>;
   isEditing: boolean;
 }
@@ -69,7 +67,6 @@ const ConfigureScreensWorkflowPage: ComponentType<
 > = ({
   selectedPlaces,
   setPlacesAndScreensToUpdate,
-  handleRemoveLocation,
   setConfigVersion,
   isEditing,
 }: ConfigureScreensWorkflowPageProps) => {
@@ -116,31 +113,19 @@ const ConfigureScreensWorkflowPage: ComponentType<
     });
   };
 
-  let layout;
-  if (selectedPlaces.length) {
-    layout = selectedPlaces.map((place) => {
-      return (
-        <ConfigurePlaceCard
-          key={place.id}
-          place={place}
-          existingScreens={existingScreens[place.id]}
-          setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-          handleRemoveLocation={() => handleRemoveLocation(place)}
-        />
-      );
-    });
-  } else {
-    layout = (
-      <div>
-        All locations have been removed. Select "Back" to select new locations.
-      </div>
-    );
-  }
-
   return (
     <Container className="workflow-container">
       <div className="h3 text-white mb-5">{getTitle()}</div>
-      {layout}
+      {selectedPlaces.map((place) => {
+        return (
+          <ConfigurePlaceCard
+            key={place.id}
+            place={place}
+            existingScreens={existingScreens[place.id]}
+            setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
+          />
+        );
+      })}
     </Container>
   );
 };
@@ -151,14 +136,12 @@ interface ConfigurePlaceCardProps {
   setPlacesAndScreensToUpdate: React.Dispatch<
     React.SetStateAction<PlaceIdsAndNewScreens>
   >;
-  handleRemoveLocation: () => void;
 }
 
 const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   place,
   existingScreens,
   setPlacesAndScreensToUpdate,
-  handleRemoveLocation,
 }: ConfigurePlaceCardProps) => {
   const [existingPendingScreens, setExistingPendingScreens] = useState<{
     [screen_id: string]: ScreenConfiguration;
@@ -325,14 +308,6 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       <Row className="header">
         <Col className="h5 my-auto header-name">{place.name.toUpperCase()}</Col>
         <Col className="body--medium my-auto">Station ID: {place.id}</Col>
-        <Col className="d-flex">
-          <Button
-            className="remove-location-button"
-            onClick={handleRemoveLocation}
-          >
-            Remove Location
-          </Button>
-        </Col>
       </Row>
       {hasRows && (
         <Row className="screens-table-container">
