@@ -64,3 +64,5 @@ scheduler_jobs =
     else: []
 
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
+
+config :screenplay, Screenplay.Repo, pool_size: 10

@@ -53,11 +53,14 @@ defmodule Screenplay.MixProject do
       {:sftp_client, "~> 2.0"},
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},
+      {:ex_aws_rds, "~> 2.0.2"},
       {:httpoison, "~> 2.2.1"},
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
       {:sentry, "~> 10.3"},
       {:stream_data, "~> 0.5", only: :test},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"},
       {:quantum, "~> 3.0"}
     ]
   end

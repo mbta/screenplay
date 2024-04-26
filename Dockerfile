@@ -30,7 +30,13 @@ FROM elixir-builder as app-builder
 
 ENV LANG="C.UTF-8" MIX_ENV="prod"
 
+RUN apk add --no-cache --update curl
+
 WORKDIR /root
+
+RUN curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
+    -o aws-cert-bundle.pem
+RUN echo "51b107da46717aed974d97464b63f7357b220fe8737969db1492d1cae74b3947  aws-cert-bundle.pem" | sha256sum -c -
 
 # add frontend assets compiled in node container, required by phx.digest
 COPY --from=assets-builder /root/priv/static ./priv/static
@@ -56,6 +62,8 @@ RUN apk add --no-cache \
 COPY --from=app-builder /root/priv/static ./priv/static
 # add application artifact comipled in app build container
 COPY --from=app-builder /root/_build/prod/rel/screenplay .
+
+COPY --from=app-builder --chown=screenplay:screenplay /root/aws-cert-bundle.pem ./priv/aws-cert-bundle.pem
 
 # run the application
 CMD ["bin/screenplay", "start"]

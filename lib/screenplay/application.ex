@@ -16,7 +16,9 @@ defmodule Screenplay.Application do
         ScreenplayWeb.Endpoint,
         Screenplay.OutfrontTakeoverTool.Alerts.State,
         Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
-        Screenplay.Scheduler
+        Screenplay.Scheduler,
+        Screenplay.Repo,
+        Screenplay.Migrate
       ] ++
         if Application.get_env(:screenplay, :start_alerts_cache) do
           [Screenplay.Alerts.Cache]
