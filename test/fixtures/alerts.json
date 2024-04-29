@@ -1,6 +1,8 @@
 {
   "alerts": [
     {
+      "cleared_at": null,
+      "cleared_by": null,
       "created_by": "user",
       "edited_by": "user",
       "id": "a1",
@@ -18,6 +20,8 @@
       ]
     },
     {
+      "cleared_at": null,
+      "cleared_by": null,
       "created_by": "user",
       "edited_by": "user",
       "id": "a2",
@@ -33,5 +37,6 @@
         "Kendall/MIT"
       ]
     }
-  ]
+  ],
+  "cleared_alerts": []
 }
