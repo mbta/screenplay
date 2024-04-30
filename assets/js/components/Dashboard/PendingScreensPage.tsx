@@ -10,7 +10,7 @@ import {
   fetchExistingScreensAtPlacesWithPendingScreens,
   publishScreensForPlace,
 } from "../../utils/api";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
 import PendingScreensPlaceRowAccordion from "./PendingScreensPlaceRowAccordion";
 import { ScreenConfiguration } from "../../models/screen_configuration";
 import {
@@ -19,6 +19,7 @@ import {
 } from "../../hooks/useScreenplayContext";
 import { format } from "date-fns/format";
 import { Place } from "../../models/place";
+import { useNavigate } from "react-router-dom";
 
 const PendingScreensPage: ComponentType = () => {
   const { places } = useScreenplayContext();
@@ -33,6 +34,8 @@ const PendingScreensPage: ComponentType = () => {
     () => places.reduce((acc, place) => ({ ...acc, [place.id]: place }), {}),
     [places]
   );
+
+  const navigate = useNavigate();
 
   const fetchData = useCallback(() => {
     fetchExistingScreensAtPlacesWithPendingScreens().then(
@@ -165,7 +168,21 @@ const PendingScreensPage: ComponentType = () => {
 
   return (
     <div className="pending-screens-page">
-      <div className="page-content__header">Pending</div>
+      <div className="page-content__header">
+        <Container fluid>
+          <Row className="align-items-center text-white">
+            <Col>Pending</Col>
+            <Col className="d-flex justify-content-end">
+              <Button
+                className="add-new-button"
+                onClick={() => navigate("/configure-screens")}
+              >
+                Add new
+              </Button>
+            </Col>
+          </Row>
+        </Container>
+      </div>
       <div className="page-content__body" style={{ color: "white" }}>
         {layout}
       </div>
