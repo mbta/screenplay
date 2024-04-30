@@ -51,7 +51,7 @@ defmodule ScreenplayWeb.Router do
       :metadata
     ])
 
-    get("/", PageController, :takeover_redirect)
+    get("/", PageController, :root_redirect)
     get("/emergency-takeover", PageController, :index)
   end
 
