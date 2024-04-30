@@ -112,7 +112,7 @@
             height: 38px;
             padding: 6px 12px;
             border: 1px solid $text-primary;
-            background-color: $button-primary;
+            background-color: $button-secondary;
 
             &:disabled {
               color: #6c757d;
@@ -121,8 +121,8 @@
           }
 
           .selected {
-            background-color: #8ecdff;
-            color: $button-primary;
+            background-color: $button-primary;
+            color: $button-secondary;
             border: transparent;
           }
         }

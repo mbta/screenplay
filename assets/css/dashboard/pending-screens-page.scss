@@ -3,7 +3,7 @@
 
   .add-new-button {
     height: 48px;
-    background-color: #8ecdff;
+    background-color: $button-primary;
     color: #212529;
   }
 }
@@ -77,7 +77,7 @@
       }
 
       .publish-button {
-        background-color: #8ecdff;
+        background-color: $button-primary;
         color: #212529;
       }
     }
