@@ -193,6 +193,23 @@ formatted_screens =
 
     {id,
      %{
+       "app_id" => "busway_v2",
+       "app_params" => %{
+         "departures" => %{"sections" => sections}
+       }
+     } = screen} ->
+      stops =
+        Enum.flat_map(sections, fn %{"query" => %{"params" => %{"stop_ids" => stop_ids}}} ->
+          stop_ids
+        end)
+        |> Enum.map(fn stop_id ->
+          {id, Map.put(screen, "stop", stop_id)}
+        end)
+
+      stops
+
+    {id,
+     %{
        "app_id" => "solari",
        "app_params" => %{
          "sections" => sections
@@ -258,6 +275,13 @@ live_screens =
       {_id,
        %{
          "app_id" => "solari",
+         "stop" => stop_id
+       }} ->
+        stop_id
+
+      {_id,
+       %{
+         "app_id" => "busway_v2",
          "stop" => stop_id
        }} ->
         stop_id
