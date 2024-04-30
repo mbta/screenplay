@@ -95,7 +95,7 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.State do
     case opts do
       :ok ->
         fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-        {:ok, init_state} = fetch_module.get_state()
+        init_state = fetch_module.get_state() |> Jason.decode!() |> from_json()
 
         {:ok, init_state}
 
@@ -250,7 +250,7 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.State do
 
   defp save_state(new_state) do
     fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-    fetch_module.put_state(new_state)
+    new_state |> to_json() |> Jason.encode!(pretty: true) |> fetch_module.put_state()
   end
 
   defp get_overlapping_stations(existing_alerts, new_id, new_stations) do
