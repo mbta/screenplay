@@ -170,9 +170,9 @@ const PendingScreensPage: ComponentType = () => {
     <div className="pending-screens-page">
       <div className="page-content__header">
         <Container fluid>
-          <Row className="align-items-center text-white">
-            <Col>Pending</Col>
-            <Col className="d-flex justify-content-end">
+          <Row className="align-items-center text-white justify-content-between">
+            <Col lg="auto">Pending</Col>
+            <Col lg="auto">
               <Button
                 className="add-new-button"
                 onClick={() => navigate("/configure-screens")}
