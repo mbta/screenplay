@@ -15,6 +15,7 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import * as Sentry from "@sentry/react";
 import { FullStory, init as initFullStory } from "@fullstory/browser";
+import SentryFullStory from "@sentry/fullstory";
 
 const environment = document
   .querySelector("meta[name=environment-name]")
@@ -25,17 +26,7 @@ const sentryDsn = document
 const username = document
   .querySelector("meta[name=username]")
   ?.getAttribute("content");
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    environment: environment,
-  });
-
-  if (username) {
-    Sentry.setUser({ username: username });
-  }
-}
+const SENTRY_ORG_SLUG = "mbtace";
 
 const fullstoryOrgId = document
   .querySelector("meta[name=fullstory-org-id]")
@@ -49,6 +40,18 @@ if (fullstoryOrgId) {
       uid: username,
       properties: { displayName: username },
     });
+  }
+}
+
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    environment: environment,
+    integrations: [new SentryFullStory(SENTRY_ORG_SLUG, { client: FullStory })],
+  });
+
+  if (username) {
+    Sentry.setUser({ username: username });
   }
 }
 
