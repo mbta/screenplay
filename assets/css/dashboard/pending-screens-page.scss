@@ -1,5 +1,11 @@
 .pending-screens-page {
   height: 100%;
+
+  .add-new-button {
+    height: 48px;
+    background-color: $button-primary;
+    color: $button-secondary;
+  }
 }
 
 .no-screens-text {
@@ -71,8 +77,8 @@
       }
 
       .publish-button {
-        background-color: #8ecdff;
-        color: #212529;
+        background-color: $button-primary;
+        color: $button-secondary;
       }
     }
   }
