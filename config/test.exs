@@ -8,8 +8,7 @@ config :screenplay, ScreenplayWeb.Endpoint,
 
 config :screenplay,
   redirect_http?: false,
-  alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.LocalFetch,
-  local_alerts_path_spec: {:test, "alerts.json"},
+  alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.TestFetch,
   config_fetcher: Screenplay.Config.LocalFetch,
   api_v3_url: [:no_api_requests_allowed_during_testing],
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient
