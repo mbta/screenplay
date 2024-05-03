@@ -22,7 +22,9 @@ Screenplay requires Postgres. If you don't already have Postgres installed, and 
 1. Install [`direnv`](https://direnv.net/)
 1. `cp .envrc.template .envrc`
 1. Fill in `API_V3_KEY` with a [V3 API key](https://api-v3.mbta.com/)
+1. Fill in `DATABASE_USER` and `DATABASE_PASSWORD` with the username and password of a DB user configured in your local psql server
 1. `direnv allow`
+1. `mix ecto.create` to stand up DB used by PA Messaging features
 
 Note the various `_URL` values in `.envrc`, which default to the production
 environments of the relevant apps — change these to e.g. point Screenplay to
