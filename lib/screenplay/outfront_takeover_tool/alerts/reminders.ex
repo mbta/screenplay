@@ -17,14 +17,11 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
   end
 
   def handle_info(:work, state) do
-    url = Application.get_env(:screenplay, :slack_webhook_url, "")
-
     schedule_work()
 
-    if url == "" do
-      Logger.info("No Slack Webhook URL found")
-    else
-      send_slack_messages_for_outdated_alerts(url)
+    case Application.get_env(:screenplay, :slack_webhook_url) do
+      v when v in [nil, ""] -> Logger.info("No Slack Webhook URL found")
+      url -> send_slack_messages_for_outdated_alerts(url)
     end
 
     {:noreply, state}
