@@ -25,4 +25,4 @@ export SIGNS_UI_URL="https://signs.mbta.com"
 export DATABASE_HOSTNAME="localhost"
 
 # Access key for allowing PA Message API calls. Required for endpoints in the /api/pa_messages scope. Generate a unique random string for local use.
-# export SCREENPLAY_API_KEY=
+export SCREENPLAY_API_KEY="local_api_key"
