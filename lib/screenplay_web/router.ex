@@ -39,6 +39,10 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.EnsurePaMessageAdmin)
   end
 
+  pipeline :enforce_api_key do
+    plug(ScreenplayWeb.Plugs.EnforceApiKey)
+  end
+
   # Load balancer health check
   # Exempt from auth checks and SSL redirects
   scope "/", ScreenplayWeb do
@@ -111,6 +115,12 @@ defmodule ScreenplayWeb.Router do
     get("/past_alerts", AlertController, :past_alerts)
 
     get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
+  end
+
+  scope "/api/pa_messages", ScreenplayWeb do
+    pipe_through([:redirect_prod_http, :api, :enforce_api_key])
+
+    get("/active_pa_messages", PaMessagesApiController, :active_pa_messages)
   end
 
   # Enables LiveDashboard only for development
