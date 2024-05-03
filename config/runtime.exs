@@ -36,7 +36,7 @@ end
 sentry_dsn = System.get_env("SENTRY_DSN")
 
 api_key = System.get_env("SCREENPLAY_API_KEY")
-if api_key in [nil, ""], do: raise("SCREENPLAY_API_KEY key not set")
+if config_env() != :test and api_key in [nil, ""], do: raise("SCREENPLAY_API_KEY key not set")
 
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
