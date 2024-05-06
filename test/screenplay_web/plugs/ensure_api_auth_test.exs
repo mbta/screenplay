@@ -1,9 +1,9 @@
-defmodule ScreenplayWeb.EnsureApiAuthTest do
+defmodule ScreenplayWeb.Plugs.EnsureApiAuthTest do
   use ScreenplayWeb.ConnCase
 
   describe "init/1" do
     test "passes options through unchanged" do
-      assert ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup.init([]) == []
+      assert ScreenplayWeb.Plugs.EnsureApiAuth.init([]) == []
     end
   end
 
