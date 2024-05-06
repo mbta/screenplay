@@ -8,12 +8,13 @@ defmodule ScreenplayWeb.Plugs.EnsureApiAuth do
   def init(default), do: default
 
   def call(conn, _default) do
-    api_key = Plug.Conn.get_req_header(conn, "x-api-key")
+    api_key = Application.get_env(:screenplay, :api_key)
+    api_key_headers = Plug.Conn.get_req_header(conn, "x-api-key")
 
-    if api_key != Application.get_env(:screenplay, :api_key) do
-      conn |> send_resp(403, "Invalid API key") |> halt()
-    else
+    if api_key in api_key_headers do
       conn
+    else
+      conn |> send_resp(403, "Invalid API key") |> halt()
     end
   end
 end
