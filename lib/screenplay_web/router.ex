@@ -39,8 +39,8 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.EnsurePaMessageAdmin)
   end
 
-  pipeline :enforce_api_key do
-    plug(ScreenplayWeb.Plugs.EnforceApiKey)
+  pipeline :ensure_api_auth do
+    plug(ScreenplayWeb.Plugs.EnsureApiAuth)
   end
 
   # Load balancer health check
@@ -118,7 +118,7 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/api/pa_messages", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :api, :enforce_api_key])
+    pipe_through([:redirect_prod_http, :api, :ensure_api_auth])
 
     get("/active_pa_messages", PaMessagesApiController, :active_pa_messages)
   end

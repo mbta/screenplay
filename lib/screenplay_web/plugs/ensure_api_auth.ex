@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.Plugs.EnforceApiKey do
+defmodule ScreenplayWeb.Plugs.EnsureApiAuth do
   @moduledoc """
   Plug used to verify a request contains a valid API key in the x-api-key request header.
   """
