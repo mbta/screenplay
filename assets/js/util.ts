@@ -182,6 +182,8 @@ export const sortScreens = (screenList: Screen[]) => {
   const screenTypeOrder = [
     "dup",
     "dup_v2",
+    "busway_v2",
+    "solari",
     "bus_shelter_v2",
     "bus_eink",
     "bus_eink_v2",
@@ -190,7 +192,6 @@ export const sortScreens = (screenList: Screen[]) => {
     "gl_eink_v2",
     "pre_fare_v2",
     "triptych_v2",
-    "solari",
     "pa_ess",
   ];
 

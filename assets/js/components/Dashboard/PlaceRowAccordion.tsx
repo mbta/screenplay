@@ -51,17 +51,19 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
 
   const filterAndGroupScreens = (screens: Screen[]) => {
     const visibleScreens = screens.filter((screen) => !screen.hidden);
-    const solariScreens = visibleScreens.filter(
-      (screen) => screen.type === "solari",
+    const inlineScreens = visibleScreens.filter((screen) =>
+      ["busway_v2", "solari"].includes(screen.type),
     );
     const paEssScreens = visibleScreens.filter(
       (screen) => screen.type === "pa_ess",
     );
     const groupedScreens = visibleScreens
-      .filter((screen) => screen.type !== "solari" && screen.type !== "pa_ess")
+      .filter(
+        (screen) => !["busway_v2", "pa_ess", "solari"].includes(screen.type),
+      )
       .map((screen) => [screen]);
 
-    groupedScreens.push(solariScreens);
+    groupedScreens.push(inlineScreens);
 
     if (paEssScreens.length > 0) {
       groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
