@@ -14,9 +14,11 @@ defmodule ScreenplayWeb.Plugs.EnsureApiAuthTest do
       assert %{status: 403, halted: true, resp_body: "Invalid API key"} = conn
     end
 
-    @tag :api_unauthenticated
     test "returns 403 when x-api-key does not match app API key", %{conn: conn} do
-      conn = ScreenplayWeb.Plugs.EnsureApiAuth.call(conn, [])
+      conn =
+        conn
+        |> Plug.Conn.put_req_header("x-api-key", "1234")
+        |> ScreenplayWeb.Plugs.EnsureApiAuth.call([])
 
       assert %{status: 403, halted: true, resp_body: "Invalid API key"} = conn
     end

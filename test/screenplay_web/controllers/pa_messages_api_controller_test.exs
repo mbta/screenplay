@@ -8,9 +8,9 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       assert %{status: 403, halted: true, resp_body: "Invalid API key"} = conn
     end
 
-    @tag :api_unauthenticated
     test "responds 403 if x-api-key does not match app API key", %{conn: conn} do
-      conn = get(conn, "/api/pa_messages")
+      conn =
+        conn |> Plug.Conn.put_req_header("x-api-key", "1234") |> get("/api/pa_messages")
 
       assert %{status: 403, halted: true, resp_body: "Invalid API key"} = conn
     end

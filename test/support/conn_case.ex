@@ -74,12 +74,6 @@ defmodule ScreenplayWeb.ConnCase do
 
           {conn, user}
 
-        tags[:api_unauthenticated] ->
-          conn =
-            Phoenix.ConnTest.build_conn() |> Plug.Conn.put_req_header("x-api-key", "1234")
-
-          {conn, nil}
-
         tags[:api_authenticated] ->
           conn =
             Phoenix.ConnTest.build_conn()
