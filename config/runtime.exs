@@ -35,9 +35,6 @@ end
 
 sentry_dsn = System.get_env("SENTRY_DSN")
 
-api_key = System.get_env("SCREENPLAY_API_KEY")
-if config_env() != :test and api_key in [nil, ""], do: raise("SCREENPLAY_API_KEY key not set")
-
 config :screenplay,
   alerts_s3_path: "screenplay/" <> System.get_env("ALERTS_S3_FILENAME", ""),
   sftp_client_module: sftp_client_module,
@@ -54,7 +51,7 @@ config :screenplay,
   signs_ui_url: System.get_env("SIGNS_UI_URL"),
   alerts_ui_url: System.get_env("ALERTS_UI_URL"),
   fullstory_org_id: System.get_env("FULLSTORY_ORG_ID"),
-  api_key: api_key
+  api_key: System.fetch_env!("SCREENPLAY_API_KEY")
 
 if sentry_dsn not in [nil, ""] do
   config :sentry,
