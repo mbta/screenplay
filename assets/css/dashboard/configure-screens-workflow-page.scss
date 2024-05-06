@@ -1,0 +1,152 @@
+.configure-place-card {
+  margin-bottom: 40px;
+
+  .header {
+    border-radius: 8px 8px 0 0;
+    background-color: $cool-gray-30;
+    min-height: 82px;
+    padding: 16px;
+
+    .header-name {
+      line-height: 24px;
+      max-width: fit-content;
+    }
+
+    .remove-location-button {
+      margin-left: auto;
+      background-color: transparent;
+      border: none;
+      color: #c1e4ff;
+    }
+  }
+
+  .screens-table-container {
+    background-color: $cool-gray-15;
+    padding: 24px;
+    padding-bottom: 0;
+
+    .table {
+      color: $text-primary;
+
+      .screens-table-header {
+        border-bottom-color: $border-primary;
+        border-bottom-width: 1px;
+      }
+
+      .screens-table-body tr.screen-row:not(:first-child) {
+        border-top-color: #2b3741;
+        border-top-width: 1px;
+      }
+
+      .screens-table-header,
+      .screens-table-body {
+        td,
+        th {
+          padding: 10px 24px;
+          color: $text-primary;
+          background-color: transparent;
+        }
+
+        .screen-id {
+          width: 200px;
+          min-width: 141px;
+        }
+
+        .direction {
+          width: 269px;
+        }
+
+        .error-text {
+          color: #ffb4ab;
+        }
+
+        .status {
+          text-align: end;
+          vertical-align: middle;
+          white-space: nowrap;
+
+          .just-added-dropdown-toggle {
+            background-color: transparent;
+            border: none;
+            width: 40px;
+            padding: 0;
+            height: 100%;
+          }
+
+          .just-added-dropdown-menu {
+            background-color: #343a40;
+            align-content: center;
+          }
+
+          .just-added-dropdown-item {
+            color: #dee2e6;
+
+            &:hover {
+              background-color: $cool-gray-20;
+            }
+          }
+        }
+      }
+
+      .screen-row {
+        height: 58px;
+
+        .screen-id-input {
+          max-width: 93px;
+          color: $text-primary;
+          background-color: $cool-gray-15;
+          border: 1px solid $text-primary;
+
+          &:disabled {
+            background-color: $cool-gray-20;
+            color: $text-disabled;
+          }
+
+          &:error {
+            border-color: #ffb4ab;
+          }
+        }
+
+        .row-button-group {
+          .row-button {
+            height: 38px;
+            padding: 6px 12px;
+            border: 1px solid $text-primary;
+            background-color: $button-secondary;
+
+            &:disabled {
+              color: #6c757d;
+              border: 1px solid #6c757d;
+            }
+          }
+
+          .selected {
+            background-color: $button-primary;
+            color: $button-secondary;
+            border: transparent;
+          }
+        }
+
+        &.hidden {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .add-screen-button-row {
+    background-color: $cool-gray-15;
+    border-radius: 0 0 8px 8px;
+    padding: 24px 32px;
+
+    .add-screen-button {
+      background-color: transparent;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      width: 137px;
+      color: $text-secondary;
+      box-shadow: none;
+    }
+  }
+}

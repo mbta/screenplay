@@ -77,14 +77,20 @@ config :screenplay,
   alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.LocalFetch,
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
   config_fetcher: Screenplay.Config.LocalFetch,
+  screens_config_fetcher: Screenplay.ScreensConfig.Fetch.Local,
+  pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.Local,
   local_config_file_spec: {:priv, "places_and_screens.json"},
+  local_screens_config_file_spec: "../screens/priv/local.json",
+  local_pending_screens_config_file_spec: "../screens/priv/local_pending.json",
   local_locations_file_spec: {:priv, "screen_locations.json"},
   local_place_descriptions_file_spec: {:priv, "place_descriptions.json"},
   api_v3_key: System.get_env("API_V3_KEY")
 
 config :ueberauth, Ueberauth,
   providers: [
-    keycloak: {Screenplay.Ueberauth.Strategy.Fake, [roles: ["screenplay-emergency-admin"]]}
+    keycloak:
+      {Screenplay.Ueberauth.Strategy.Fake,
+       [roles: ["screenplay-emergency-admin", "screens-admin"]]}
   ]
 
 config :ueberauth_oidcc,

@@ -1,0 +1,31 @@
+.configure-screens-page {
+  display: flex;
+  flex-direction: column;
+  color: $text-primary;
+  background-color: #0f1417;
+  overflow-y: scroll;
+  min-height: 100%;
+  // Prevents overflow from hiding behind the bottom-action-bar
+  padding-bottom: 78px;
+
+  .select-screen-type {
+    max-width: 1320px;
+
+    &__title {
+      white-space: nowrap;
+      width: fit-content;
+    }
+
+    .row {
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .col {
+      width: fit-content;
+      flex-grow: 0;
+      min-width: 306px;
+    }
+  }
+}

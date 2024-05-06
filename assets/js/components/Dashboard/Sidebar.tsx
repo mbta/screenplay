@@ -5,15 +5,19 @@ import {
   CollectionFill,
   ExclamationTriangleFill,
   PersonFill,
+  PlusLg,
 } from "react-bootstrap-icons";
 import TSquare from "../../../static/images/t-square.svg";
 
 const Sidebar: ComponentType = () => {
   const pathname = useLocation().pathname.replace(/\//g, "");
+
   // @ts-ignore Suppressing "object could be null" warning
   const username = document
     .querySelector("meta[name=username]")
     ?.getAttribute("content");
+
+  const isScreensAdmin = document.querySelector("meta[name=is-screens-admin]");
 
   return !pathname.includes("emergency-takeover") ? (
     <div className="sidebar-container">
@@ -39,6 +43,14 @@ const Sidebar: ComponentType = () => {
             <span className="nav-link__name">Posted Alerts</span>
           </Button>
         </Link>
+        {isScreensAdmin && (
+          <Link className="sidebar-link" to="/pending">
+            <Button className={pathname === "pending" ? "selected" : ""}>
+              <PlusLg size={20} className="sidebar-link__icon" />
+              <span className="nav-link__name">Configure</span>
+            </Button>
+          </Link>
+        )}
         {/* This button slightly different to trigger a reload */}
         <Button href="/" className="takeover-button">
           <ExclamationTriangleFill size={20} className="sidebar-link__icon" />

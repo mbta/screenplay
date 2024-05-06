@@ -18,7 +18,7 @@ describe("ReportAProblemButton", () => {
 
   test("uses correct URL for admins", async () => {
     const meta = document.createElement("meta");
-    meta.setAttribute("name", "is-admin");
+    meta.setAttribute("name", "is-emergency-admin");
     document.head.appendChild(meta);
 
     const { getByTestId } = render(
