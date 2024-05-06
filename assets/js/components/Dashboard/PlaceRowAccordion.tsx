@@ -16,6 +16,54 @@ import { sortScreens } from "../../util";
 import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
 import classNames from "classnames";
 
+type ScreenGroup = {
+  screens: Screen[];
+  isInline: boolean;
+};
+
+const groupScreens = (screens: Screen[]): ScreenGroup[] => {
+  const inlineScreens = screens.filter((screen) =>
+    ["busway_v2", "solari"].includes(screen.type),
+  );
+  const paEssScreens = screens.filter((screen) => screen.type === "pa_ess");
+  const otherScreens = screens.filter(
+    (screen) => !["busway_v2", "pa_ess", "solari"].includes(screen.type),
+  );
+
+  const groups = otherScreens.map((screen) => ({
+    screens: [screen],
+    isInline: false,
+  }));
+
+  if (inlineScreens.length > 0) {
+    groups.push({ screens: inlineScreens, isInline: true });
+  }
+
+  if (paEssScreens.length > 0) {
+    groupPaEssScreensbyRoute(paEssScreens).forEach((screens) =>
+      groups.push({ screens: screens, isInline: false }),
+    );
+  }
+
+  return groups;
+};
+
+const groupPaEssScreensbyRoute = (screens: Screen[]): Map<string, Screen[]> => {
+  const paEssGroupedByRoute = new Map<string, Screen[]>();
+
+  screens.map((screen) => {
+    if (screen.station_code) {
+      const routeLetter = screen.station_code.charAt(0);
+
+      paEssGroupedByRoute.has(routeLetter)
+        ? paEssGroupedByRoute.get(routeLetter)?.push(screen)
+        : paEssGroupedByRoute.set(routeLetter, [screen]);
+    }
+  });
+
+  return paEssGroupedByRoute;
+};
+
 interface PlaceRowAccordionProps {
   place: Place;
   canShowAnimation?: boolean;
@@ -49,52 +97,11 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
     }
   };
 
-  const filterAndGroupScreens = (screens: Screen[]) => {
-    const visibleScreens = screens.filter((screen) => !screen.hidden);
-    const inlineScreens = visibleScreens.filter((screen) =>
-      ["busway_v2", "solari"].includes(screen.type),
-    );
-    const paEssScreens = visibleScreens.filter(
-      (screen) => screen.type === "pa_ess",
-    );
-    const groupedScreens = visibleScreens
-      .filter(
-        (screen) => !["busway_v2", "pa_ess", "solari"].includes(screen.type),
-      )
-      .map((screen) => [screen]);
+  const screens = sortScreens(place.screens).filter((screen) => !screen.hidden);
+  const hasScreens = screens.length > 0;
 
-    groupedScreens.push(inlineScreens);
-
-    if (paEssScreens.length > 0) {
-      groupPaEssScreensbyRoute(paEssScreens, groupedScreens);
-    }
-
-    return groupedScreens;
-  };
-
-  const groupPaEssScreensbyRoute = (
-    paEssScreens: Screen[],
-    groupedScreens: Screen[][],
-  ) => {
-    const paEssGroupedByRoute = new Map<string, Screen[]>();
-    paEssScreens.map((paEssScreen) => {
-      if (paEssScreen.station_code) {
-        const routeLetter = paEssScreen.station_code.charAt(0);
-
-        paEssGroupedByRoute.has(routeLetter)
-          ? paEssGroupedByRoute.get(routeLetter)?.push(paEssScreen)
-          : paEssGroupedByRoute.set(routeLetter, [paEssScreen]);
-      }
-    });
-    paEssGroupedByRoute.forEach((screens) => {
-      groupedScreens.push(screens);
-    });
-  };
-
-  const hasScreens =
-    place.screens.length > 0 &&
-    place.screens.filter((screen) => !screen.hidden).length > 0;
-  // Always call the `useAccordionButton` hook, but conditionally use its click handler. https://react.dev/learn#using-hooks
+  // Always call the `useAccordionButton` hook, but conditionally use its click
+  // handler. https://react.dev/learn#using-hooks
   const handleAccordionClick = useAccordionButton(place.id, () =>
     handleClickAccordion(place.id),
   );
@@ -120,17 +127,16 @@ const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
         <Accordion.Collapse eventKey={place.id}>
           <div className="place-row__screen-preview-container">
             {hasScreens &&
-              filterAndGroupScreens(sortScreens(place.screens)).map(
-                (screens, index) => {
-                  return (
-                    <ScreenDetail
-                      key={`${place.id}.screendetail.${index}`}
-                      screens={screens}
-                      eventKey={place.id}
-                    />
-                  );
-                },
-              )}
+              groupScreens(screens).map((group, index) => {
+                return (
+                  <ScreenDetail
+                    key={`${place.id}.screendetail.${index}`}
+                    screens={group.screens}
+                    isInlineGroup={group.isInline}
+                    eventKey={place.id}
+                  />
+                );
+              })}
           </div>
         </Accordion.Collapse>
       </PlaceRow>

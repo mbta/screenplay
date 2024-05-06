@@ -10,10 +10,39 @@ import {
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
 import { Place } from "../../models/place";
-import { Screen } from "../../models/screen";
 import MapSegment from "./MapSegment";
 import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
-import { capitalizeTerminalStops, classWithModifier } from "../../util";
+import {
+  capitalizeTerminalStops,
+  classWithModifier,
+  sortScreens,
+} from "../../util";
+
+const typeMap: Record<string, string> = {
+  pa_ess: "PA",
+  bus_shelter_v2: "Bus Shelter",
+  pre_fare_v2: "Prefare",
+  dup: "DUP",
+  dup_v2: "DUP",
+  gl_eink_single: "GL E-Ink",
+  gl_eink_double: "GL E-Ink",
+  gl_eink_v2: "GL E-Ink",
+  bus_eink: "Bus E-Ink",
+  bus_eink_v2: "Bus E-Ink",
+  solari: "Solari",
+  busway_v2: "Solari",
+  triptych_v2: "Triptych",
+};
+
+const inlineMap = (place: Place, line: string) => {
+  const station = STATION_ORDER_BY_LINE[line].find(
+    (station) => station.name.toLowerCase() === place.name.toLowerCase(),
+  );
+
+  if (!station) return;
+
+  return <MapSegment station={station} line={line} />;
+};
 
 interface AccordionToggleProps {
   eventKey: string;
@@ -86,55 +115,16 @@ const PlaceRow = ({
   variant,
   checked,
 }: PlaceRowProps): JSX.Element => {
-  const { routes, name, description, screens } = place;
-  const hasScreens =
-    screens.length > 0 && screens.filter((screen) => !screen.hidden).length > 0;
+  const { routes, name, description, screens: allScreens } = place;
 
-  const typeMap: Record<string, string> = {
-    pa_ess: "PA",
-    bus_shelter_v2: "Bus Shelter",
-    pre_fare_v2: "Prefare",
-    dup: "DUP",
-    dup_v2: "DUP",
-    gl_eink_single: "GL E-Ink",
-    gl_eink_double: "GL E-Ink",
-    gl_eink_v2: "GL E-Ink",
-    bus_eink: "Bus E-Ink",
-    bus_eink_v2: "Bus E-Ink",
-    solari: "Solari",
-    busway_v2: "Solari",
-    triptych_v2: "Triptych",
-  };
+  const screens = sortScreens(allScreens).filter((screen) => !screen.hidden);
+  const hasScreens = screens.length > 0;
 
-  const sortScreens = (screenList: Screen[] = screens) => {
-    const screenTypeOrder = [
-      "dup",
-      "dup_v2",
-      "busway_v2",
-      "solari",
-      "bus_shelter_v2",
-      "bus_eink",
-      "bus_eink_v2",
-      "gl_eink_single",
-      "gl_eink_double",
-      "gl_eink_v2",
-      "pre_fare_v2",
-      "triptych_v2",
-      "pa_ess",
-    ];
+  const screenTypes = hasScreens
+    ? Array.from(new Set(screens.map((screen) => typeMap[screen.type])))
+    : ["no screens"];
 
-    return screenList.sort((a, b) =>
-      screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type)
-        ? 1
-        : -1,
-    );
-  };
-
-  const screenTypes = !hasScreens
-    ? ["no screens"]
-    : Array.from(new Set(sortScreens().map((screen) => typeMap[screen.type])));
-
-  const renderModesAndLinesIcons = () => {
+  const modesAndLinesIcons = () => {
     const numberOfGLBranches = routes.filter((route) =>
       route.startsWith("Green-"),
     ).length;
@@ -166,17 +156,8 @@ const PlaceRow = ({
     ));
   };
 
-  const getInlineMap = (place: Place, line: string) => {
-    const station = STATION_ORDER_BY_LINE[line].find(
-      (station) => station.name.toLowerCase() === place.name.toLowerCase(),
-    );
-
-    if (!station) return;
-
-    return <MapSegment station={station} line={line} />;
-  };
-
-  // Function to add optional description and capitalize terminal stops according to STATION_ORDER_BY_LINE
+  // Function to add optional description and capitalize terminal stops
+  // according to STATION_ORDER_BY_LINE
   const formatStationName = (stationName: string, description?: string) => {
     if (description) {
       stationName = `${stationName} ${description}`;
@@ -225,7 +206,7 @@ const PlaceRow = ({
                     },
                   )}
                 >
-                  {getInlineMap(place, filteredLine.toLowerCase())}
+                  {inlineMap(place, filteredLine.toLowerCase())}
                 </div>
               )}
               <div className="place-row__name" data-testid="place-name">
@@ -233,7 +214,7 @@ const PlaceRow = ({
               </div>
             </Col>
             <Col lg={1} className="d-flex justify-content-end">
-              {renderModesAndLinesIcons()}
+              {modesAndLinesIcons()}
             </Col>
             <Col
               lg={3}

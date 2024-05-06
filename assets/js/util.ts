@@ -178,23 +178,23 @@ export const placesWithSelectedAlert = (
     : [];
 };
 
-export const sortScreens = (screenList: Screen[]) => {
-  const screenTypeOrder = [
-    "dup",
-    "dup_v2",
-    "busway_v2",
-    "solari",
-    "bus_shelter_v2",
-    "bus_eink",
-    "bus_eink_v2",
-    "gl_eink_single",
-    "gl_eink_double",
-    "gl_eink_v2",
-    "pre_fare_v2",
-    "triptych_v2",
-    "pa_ess",
-  ];
+const screenTypeOrder = [
+  "dup",
+  "dup_v2",
+  "busway_v2",
+  "solari",
+  "bus_shelter_v2",
+  "bus_eink",
+  "bus_eink_v2",
+  "gl_eink_single",
+  "gl_eink_double",
+  "gl_eink_v2",
+  "pre_fare_v2",
+  "triptych_v2",
+  "pa_ess",
+];
 
+export const sortScreens = (screenList: Screen[]) => {
   return screenList.sort((a, b) =>
     screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type) ? 1 : -1,
   );
