@@ -102,6 +102,7 @@ const PlaceRow = ({
     bus_eink: "Bus E-Ink",
     bus_eink_v2: "Bus E-Ink",
     solari: "Solari",
+    busway_v2: "Solari",
     triptych_v2: "Triptych",
   };
 
@@ -109,6 +110,8 @@ const PlaceRow = ({
     const screenTypeOrder = [
       "dup",
       "dup_v2",
+      "busway_v2",
+      "solari",
       "bus_shelter_v2",
       "bus_eink",
       "bus_eink_v2",
@@ -117,7 +120,6 @@ const PlaceRow = ({
       "gl_eink_v2",
       "pre_fare_v2",
       "triptych_v2",
-      "solari",
       "pa_ess",
     ];
 

@@ -1,4 +1,4 @@
-.screen-detail__solari-layout {
+.screen-detail__inline-layout {
   display: flex;
   justify-content: space-between;
 }
@@ -8,7 +8,7 @@
   border-radius: 8px;
   padding: 16px;
 
-  &--solari {
+  &--inline {
     flex-grow: 1;
 
     &:not(:last-child) {
