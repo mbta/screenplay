@@ -8,10 +8,6 @@ defmodule ScreenplayWeb.EnsureApiAuthTest do
   end
 
   describe "call/2" do
-    setup do
-      Application.put_env(:screenplay, :api_key, "test_api_key")
-    end
-
     test "returns 403 when x-api-key header is missing", %{conn: conn} do
       conn = ScreenplayWeb.Plugs.EnsureApiAuth.call(conn, [])
 
