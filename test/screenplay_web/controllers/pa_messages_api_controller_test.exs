@@ -16,7 +16,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :api_authenticated
-    test "responds list of active messages if x-api-key mathces app API key", %{conn: conn} do
+    test "responds list of active messages if x-api-key matches app API key", %{conn: conn} do
       conn = get(conn, "/api/pa_messages")
 
       assert %{status: 200, resp_body: "[]"} = conn

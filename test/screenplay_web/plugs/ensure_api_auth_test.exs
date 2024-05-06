@@ -22,7 +22,7 @@ defmodule ScreenplayWeb.Plugs.EnsureApiAuthTest do
     end
 
     @tag :api_authenticated
-    test "returns conn unchange if x-api-key header matches app API key", %{conn: conn} do
+    test "returns conn unchanged if x-api-key header matches app API key", %{conn: conn} do
       assert ScreenplayWeb.Plugs.EnsureApiAuth.call(conn, []) == conn
     end
   end
