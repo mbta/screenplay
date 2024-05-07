@@ -34,6 +34,7 @@ jobs:
       DATABASE_HOST: localhost
       GUARDIAN_SECRET_KEY: test_auth_secret
       SECRET_KEY_BASE: local_secret_key_base_at_least_64_bytes_________________________________
+      SCREENPLAY_API_KEY: test_api_key
     services:
       postgres:
         image: postgres
