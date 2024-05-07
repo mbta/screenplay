@@ -7,6 +7,8 @@ import "../css/app.scss";
 // entry points. Those entry points can be configured
 // in "webpack.config.js".
 
+import "regenerator-runtime/runtime";
+
 import React from "react";
 import ReactDOM from "react-dom";
 

@@ -17,6 +17,8 @@ defmodule ScreenplayWeb.ConnCase do
 
   using do
     quote do
+      use ScreenplayWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
@@ -45,6 +47,19 @@ defmodule ScreenplayWeb.ConnCase do
             })
             |> Plug.Conn.put_session(:username, user)
             |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
+
+          {conn, user}
+
+        tags[:authenticated_screens_admin] ->
+          user = "test_user"
+
+          conn =
+            Phoenix.ConnTest.build_conn()
+            |> Plug.Test.init_test_session(%{})
+            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
+              "roles" => ["screens-admin"]
+            })
+            |> Plug.Conn.put_session(:username, user)
 
           {conn, user}
 

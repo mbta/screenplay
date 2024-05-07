@@ -4,8 +4,10 @@ import {
   StationsByLine,
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
+import STATION_ORDER_BY_LINE from "./constants/stationOrder";
 import { Alert } from "./models/alert";
 import { Place } from "./models/place";
+import { Screen } from "./models/screen";
 import { ScreensByAlert } from "./models/screensByAlert";
 
 export const color = (line: string) => {
@@ -174,4 +176,84 @@ export const placesWithSelectedAlert = (
         }))
         .filter((place) => place.screens.length > 0)
     : [];
+};
+
+export const sortScreens = (screenList: Screen[]) => {
+  const screenTypeOrder = [
+    "dup",
+    "dup_v2",
+    "bus_shelter_v2",
+    "bus_eink",
+    "bus_eink_v2",
+    "gl_eink_single",
+    "gl_eink_double",
+    "gl_eink_v2",
+    "pre_fare_v2",
+    "triptych_v2",
+    "solari",
+    "pa_ess",
+  ];
+
+  return screenList.sort((a, b) =>
+    screenTypeOrder.indexOf(a.type) >= screenTypeOrder.indexOf(b.type) ? 1 : -1,
+  );
+};
+
+export const sortByStationOrder = (
+  places: Place[],
+  filteredLine: string,
+  reverse?: boolean,
+) => {
+  const stationOrder = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
+
+  const stationOrderToIndex = Object.fromEntries(
+    stationOrder.map((station, i) => [station.name.toLowerCase(), i]),
+  );
+
+  const placesByStationOrder = places.map((place) => ({
+    place,
+    index: stationOrderToIndex[place.name.toLowerCase()],
+  }));
+
+  const sortedPlaces = placesByStationOrder
+    .sort(({ index: i1 }, { index: i2 }) => i1 - i2)
+    .map(({ place }) => place);
+
+  return reverse ? sortedPlaces.reverse() : sortedPlaces;
+};
+
+export const capitalizeTerminalStops = (
+  stationName: string,
+  filteredLine: string | null | undefined,
+) => {
+  let isTerminalStop = false;
+
+  // If a filter is present, only look at stations for that filter.
+  // This will prevent multi-route stops from being capitalized unless they are a terminal stop of the current filtered line.
+  if (filteredLine) {
+    const line = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
+    const terminalStops = line.filter((line) => line.isTerminalStop);
+    isTerminalStop = terminalStops.some((stop) => stationName === stop.name);
+  }
+  // If there is no filtered line, look through all lines to find terminal stops.
+  // If a station is a terminal stop for any line, it will be capitalized.
+  else {
+    isTerminalStop = Object.keys(STATION_ORDER_BY_LINE)
+      .filter((key) => !["silver", "mattapan"].includes(key))
+      .some((key) => {
+        const line = STATION_ORDER_BY_LINE[key];
+        const terminalStops = line.filter((line) => line.isTerminalStop);
+        return terminalStops.some((stop) => stationName === stop.name);
+      });
+  }
+
+  return isTerminalStop ? stationName.toUpperCase() : stationName;
+};
+
+export const capitalize = (str: string) => {
+  if (str.length <= 1) {
+    return str.toUpperCase();
+  } else {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 };

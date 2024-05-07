@@ -16,6 +16,7 @@ defmodule Screenplay.Application do
         ScreenplayWeb.Endpoint,
         Screenplay.OutfrontTakeoverTool.Alerts.State,
         Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
+        {Screenplay.Cache.Owner, engine_module: Screenplay.ScreensConfig.Cache.Engine},
         Screenplay.Scheduler,
         Screenplay.Repo,
         Screenplay.Migrate

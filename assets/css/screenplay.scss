@@ -1,16 +1,34 @@
-@import "~bootstrap/scss/bootstrap";
 @import "variables.scss";
+
+$theme-colors: (
+  "primary": $theme-primary,
+);
+
+$form-check-input-checked-color: #0f1417;
+$form-check-input-checked-bg-color: #8ecdff;
+$form-check-input-bg: #0f1417;
+$form-check-input-border: 1px solid #8b9198;
+
+@import "~bootstrap/scss/bootstrap";
 @import "dashboard.scss";
 @import "dashboard/places-page.scss";
 @import "dashboard/alerts-page.scss";
 @import "dashboard/overrides-page.scss";
+@import "dashboard/pending-screens-page.scss";
+@import "dashboard/pending-screen-detail.scss";
 @import "dashboard/alert-details.scss";
+@import "dashboard/configure-screens-page.scss";
+@import "dashboard/button-image.scss";
+@import "dashboard/appbar.scss";
+@import "dashboard/bottom-action-bar.scss";
+@import "dashboard/configure-screens-workflow-page.scss";
 @import "place-row.scss";
 @import "places-action-bar.scss";
 @import "filter-dropdown.scss";
 @import "sidebar.scss";
 @import "screenplay-container.scss";
 @import "screen-detail.scss";
+@import "screen-simulation.scss";
 @import "paess.scss";
 @import "alert-card.scss";
 @import "map-segment.scss";
@@ -18,8 +36,9 @@
 @import "alert-banner.scss";
 @import "animation.scss";
 @import "screen-detail-action-bar.scss";
-
-$body-bg: $cool-gray-30;
+@import "workflow.scss";
+@import "sort-label.scss";
+@import "search-bar.scss";
 
 html {
   font-size: 16px;
@@ -33,23 +52,13 @@ body {
   display: flex;
   align-items: center;
   margin-bottom: 24px;
-
-  .filterable-list__sort-label {
-    color: white;
-    font-weight: 900;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 1px;
-    margin-right: auto;
-    cursor: pointer;
-    width: fit-content;
-  }
 }
 
 .screenplay-button {
   background: $main-blue;
   border: 1px solid rgba(23, 31, 38, 0.3);
   border-radius: 6px;
+
   &:hover {
     background: $hover-blue;
   }
@@ -62,4 +71,41 @@ body {
 button,
 input[type="button"] {
   letter-spacing: 0.5px;
+}
+
+.h1 {
+  font-weight: 700;
+  font-size: 40px;
+}
+
+.h2 {
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.h3 {
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.h4 {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.h5 {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.body {
+  &--regular {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  &--medium {
+    font-size: 16px;
+    font-weight: 500;
+  }
 }

@@ -43,6 +43,10 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.Plugs.EnsureApiAuth)
   end
 
+  pipeline :ensure_screens_admin do
+    plug(ScreenplayWeb.EnsureScreensAdminGroup)
+  end
+
   # Load balancer health check
   # Exempt from auth checks and SSL redirects
   scope "/", ScreenplayWeb do
@@ -82,6 +86,20 @@ defmodule ScreenplayWeb.Router do
     ])
   end
 
+  scope "/", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :ensure_screens_admin,
+      :metadata
+    ])
+
+    get("/pending", ConfigController, :index)
+    get("/configure-screens/*app_id", ConfigController, :index)
+  end
+
   scope "/api", ScreenplayWeb do
     pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth])
 
@@ -115,6 +133,27 @@ defmodule ScreenplayWeb.Router do
     get("/past_alerts", AlertController, :past_alerts)
 
     get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
+  end
+
+  scope "/config", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :api,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :ensure_screens_admin
+    ])
+
+    post("/put", ConfigController, :put)
+    post("/publish/:place_id/:app_id", ConfigController, :publish)
+    get("/existing-screens/:app_id", ConfigController, :existing_screens)
+
+    get(
+      "/existing-screens-at-places-with-pending-screens",
+      ConfigController,
+      :existing_screens_at_places_with_pending_screens
+    )
   end
 
   scope "/api/pa_messages", ScreenplayWeb do

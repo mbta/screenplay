@@ -23,6 +23,9 @@
     <%= if :emergency_admin in @roles do %>
         <meta name="is-emergency-admin" content={true}>
     <% end %>
+    <%= if :screens_admin in @roles do %>
+        <meta name="is-screens-admin" content={true}>
+    <% end %>
     <%= if :pa_message_admin in @roles do %>
         <meta name="is-pa-message-admin" content={true}>
     <% end %>

@@ -41,7 +41,7 @@ export const SORT_LABELS: Record<string, [string, string]> = {
   Alerts: ["END", "END"],
 };
 
-export const SCREEN_TYPES = [
+export const SCREEN_TYPES: { label: string; ids: string[] }[] = [
   { label: "All SCREEN TYPES", ids: ["All"] },
   { label: "Bus Shelter", ids: ["bus_shelter_v2"] },
   { label: "DUP", ids: ["dup", "dup_v2"] },

@@ -3,7 +3,8 @@ defmodule ScreenplayWeb.AuthManager do
 
   use Guardian, otp_app: :screenplay
 
-  @type access_level :: :emergency_admin | :screens_config_admin | :pa_message_admin
+  @type access_level ::
+          :emergency_admin | :screens_config_admin | :screens_admin | :pa_message_admin
 
   @roles %{
     "screenplay-emergency-admin" => :emergency_admin,

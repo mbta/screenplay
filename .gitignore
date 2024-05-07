@@ -40,3 +40,6 @@ npm-debug.log
 /priv/config/
 
 .envrc
+
+# Detritus left behind by macOS Finder
+.DS_Store
