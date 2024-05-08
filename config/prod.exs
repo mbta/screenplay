@@ -31,6 +31,12 @@ config :ueberauth, Ueberauth,
       {Ueberauth.Strategy.Oidcc, userinfo: true, uid_field: "email", scopes: ~w(openid email)}
   ]
 
+config :screenplay, Screenplay.Repo,
+  database: "screenplay",
+  ssl: true,
+  show_sensitive_data_on_connection_error: false,
+  configure: {Screenplay.Repo, :add_prod_credentials, []}
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

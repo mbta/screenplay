@@ -2,6 +2,11 @@
 
 Enables OIOs to view and manage screens that provide transit info to riders.
 
+## Prerequisites
+
+Screenplay requires Postgres. If you don't already have Postgres installed, and you're on a Mac, [Postgres.app](https://postgresapp.com/downloads.html) is an easy way to get started. However, any Postgres instance to which you can connect and in which you have sufficient privileges should work.
+
+## Development
 
 ## Setup
 
@@ -17,6 +22,7 @@ Enables OIOs to view and manage screens that provide transit info to riders.
 1. Install [`direnv`](https://direnv.net/)
 1. `cp .envrc.template .envrc`
 1. Fill in `API_V3_KEY` with a [V3 API key](https://api-v3.mbta.com/)
+1. Fill in `DATABASE_USER` and `DATABASE_PASSWORD` with the username and password of a DB user configured in your local psql server
 1. `direnv allow`
 
 Note the various `_URL` values in `.envrc`, which default to the production
@@ -35,6 +41,7 @@ the command above.
 #### Start the server
 
 1. `mix deps.get`
+1. `mix ecto.create` to stand up DB used by PA Messaging features
 1. `npm install --prefix assets`
 1. `mix phx.server`
 1. Visit <http://localhost:4444>

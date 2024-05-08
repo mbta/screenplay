@@ -46,6 +46,7 @@ defmodule ScreenplayWeb.ConnCase do
               "roles" => ["screenplay-emergency-admin"]
             })
             |> Plug.Conn.put_session(:username, user)
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
 
           {conn, user}
 
@@ -70,8 +71,33 @@ defmodule ScreenplayWeb.ConnCase do
             |> Plug.Test.init_test_session(%{})
             |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{roles: []})
             |> Plug.Conn.put_session(:username, user)
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
 
           {conn, user}
+
+        tags[:authenticated_pa_message_admin] ->
+          user = "test_user"
+
+          conn =
+            Phoenix.ConnTest.build_conn()
+            |> Plug.Test.init_test_session(%{})
+            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
+              "roles" => ["pa-message-admin"]
+            })
+            |> Plug.Conn.put_session(:username, user)
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
+
+          {conn, user}
+
+        tags[:api_authenticated] ->
+          conn =
+            Phoenix.ConnTest.build_conn()
+            |> Plug.Conn.put_req_header(
+              "x-api-key",
+              Application.fetch_env!(:screenplay, :api_key)
+            )
+
+          {conn, nil}
 
         true ->
           {Phoenix.ConnTest.build_conn(), nil}

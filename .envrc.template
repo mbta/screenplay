@@ -17,3 +17,12 @@ export SECRET_KEY_BASE="local_secret_key_base_at_least_64_bytes_________________
 # export SFTP_REMOTE_PATH=
 # export SFTP_USER=
 export SIGNS_UI_URL="https://signs.mbta.com"
+
+## Postgres configuration: username, password, and hostname
+## * Your local Postgres server should go here
+# export DATABASE_USER=
+# export DATABASE_PASSWORD=
+export DATABASE_HOSTNAME="localhost"
+
+# Access key for allowing PA Message API calls. Required for endpoints in the /api/pa_messages scope. Generate a unique random string for local use.
+export SCREENPLAY_API_KEY="local_api_key"

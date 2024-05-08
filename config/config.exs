@@ -7,6 +7,17 @@
 # General application configuration
 import Config
 
+config :screenplay, Screenplay.Repo,
+  database: "screenplay_dev",
+  username: System.get_env("DATABASE_USER", ""),
+  password: System.get_env("DATABASE_PASSWORD", ""),
+  hostname: System.get_env("DATABASE_HOST", "localhost"),
+  port: System.get_env("DATABASE_PORT", "5432") |> String.to_integer(),
+  show_sensitive_data_on_connection_error: true,
+  backoff_min: 5_000
+
+config :screenplay, ecto_repos: [Screenplay.Repo]
+
 # Configures the endpoint
 config :screenplay, ScreenplayWeb.Endpoint,
   url: [host: "localhost"],
@@ -20,7 +31,8 @@ config :screenplay,
   screens_config_fetcher: Screenplay.ScreensConfig.Fetch.S3,
   pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.S3,
   config_s3_bucket: "mbta-ctd-config",
-  record_sentry: false
+  record_sentry: false,
+  start_alerts_cache: config_env() != :test
 
 # Include 2 logger backends
 config :logger,
