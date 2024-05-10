@@ -57,6 +57,8 @@ config :ueberauth, Ueberauth,
     keycloak: nil
   ]
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 import_config "outfront_takeover_tool_screens.exs"
 
 # Import environment specific config. This must remain at the bottom
