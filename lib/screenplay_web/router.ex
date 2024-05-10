@@ -31,8 +31,20 @@ defmodule ScreenplayWeb.Router do
     plug(Guardian.Plug.EnsureAuthenticated)
   end
 
-  pipeline :ensure_screenplay_admin_group do
-    plug(ScreenplayWeb.EnsureScreenplayAdminGroup)
+  pipeline :ensure_screenplay_emergency_admin_group do
+    plug(ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup)
+  end
+
+  pipeline :ensure_pa_message_admin do
+    plug(ScreenplayWeb.EnsurePaMessageAdmin)
+  end
+
+  pipeline :ensure_api_auth do
+    plug(ScreenplayWeb.Plugs.EnsureApiAuth)
+  end
+
+  pipeline :ensure_screens_admin do
+    plug(ScreenplayWeb.EnsureScreensAdminGroup)
   end
 
   # Load balancer health check
@@ -47,8 +59,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group,
-      :metadata
+      :metadata,
+      :ensure_screenplay_emergency_admin_group
     ])
 
     get("/", PageController, :root_redirect)
@@ -61,6 +73,31 @@ defmodule ScreenplayWeb.Router do
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
     get("/unauthorized", UnauthorizedController, :index)
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :metadata,
+      :ensure_pa_message_admin
+    ])
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :ensure_screens_admin,
+      :metadata
+    ])
+
+    get("/pending", ConfigController, :index)
+    get("/configure-screens/*app_id", ConfigController, :index)
   end
 
   scope "/api", ScreenplayWeb do
@@ -84,7 +121,8 @@ defmodule ScreenplayWeb.Router do
       :browser,
       :auth,
       :ensure_auth,
-      :ensure_screenplay_admin_group
+      :metadata,
+      :ensure_screenplay_emergency_admin_group
     ])
 
     post("/create", AlertController, :create)
@@ -95,6 +133,33 @@ defmodule ScreenplayWeb.Router do
     get("/past_alerts", AlertController, :past_alerts)
 
     get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
+  end
+
+  scope "/config", ScreenplayWeb do
+    pipe_through([
+      :redirect_prod_http,
+      :api,
+      :browser,
+      :auth,
+      :ensure_auth,
+      :ensure_screens_admin
+    ])
+
+    post("/put", ConfigController, :put)
+    post("/publish/:place_id/:app_id", ConfigController, :publish)
+    get("/existing-screens/:app_id", ConfigController, :existing_screens)
+
+    get(
+      "/existing-screens-at-places-with-pending-screens",
+      ConfigController,
+      :existing_screens_at_places_with_pending_screens
+    )
+  end
+
+  scope "/api/pa_messages", ScreenplayWeb do
+    pipe_through([:redirect_prod_http, :api, :ensure_api_auth])
+
+    get("/", PaMessagesApiController, :active)
   end
 
   # Enables LiveDashboard only for development

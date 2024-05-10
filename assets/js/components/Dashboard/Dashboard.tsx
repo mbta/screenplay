@@ -11,39 +11,54 @@ import { useInterval } from "../../hooks/useInterval";
 import { fetchAlerts, fetchPlaces } from "../../utils/api";
 import AlertBanner from "./AlertBanner";
 import LinkCopiedToast from "./LinkCopiedToast";
+import ActionOutcomeToast from "./ActionOutcomeToast";
+import { useLocation } from "react-router-dom";
 
 const Dashboard: ComponentType = () => {
-  const { alerts, bannerAlert, showLinkCopied } = useScreenplayContext();
+  const { alerts, bannerAlert, showLinkCopied, actionOutcomeToast } =
+    useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
 
   useEffect(() => {
-    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
-      findAndSetBannerAlert(alerts, newAlerts);
-      dispatch({
-        type: "SET_ALERTS",
+    fetchAlerts().then(
+      ({
+        all_alert_ids: allAPIalertIds,
         alerts: newAlerts,
-        allAPIAlertIds: allAPIalertIds,
-        screensByAlertMap: screensByAlertMap,
-      });
-    });
+        screens_by_alert: screensByAlertMap,
+      }) => {
+        findAndSetBannerAlert(alerts, newAlerts);
+        dispatch({
+          type: "SET_ALERTS",
+          alerts: newAlerts,
+          allAPIAlertIds: allAPIalertIds,
+          screensByAlertMap: screensByAlertMap,
+        });
+      },
+    );
 
-    fetchPlaces((placesList) =>
+    fetchPlaces().then((placesList) =>
       dispatch({ type: "SET_PLACES", places: placesList }),
     );
   }, []);
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
-    fetchAlerts((allAPIalertIds, newAlerts, screensByAlertMap) => {
-      findAndSetBannerAlert(alerts, newAlerts);
-      dispatch({
-        type: "SET_ALERTS",
+    fetchAlerts().then(
+      ({
+        all_alert_ids: allAPIalertIds,
         alerts: newAlerts,
-        allAPIAlertIds: allAPIalertIds,
-        screensByAlertMap: screensByAlertMap,
-      });
-    });
+        screens_by_alert: screensByAlertMap,
+      }) => {
+        findAndSetBannerAlert(alerts, newAlerts);
+        dispatch({
+          type: "SET_ALERTS",
+          alerts: newAlerts,
+          allAPIAlertIds: allAPIalertIds,
+          screensByAlertMap: screensByAlertMap,
+        });
+      },
+    );
   }, 4000);
 
   const findAndSetBannerAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
@@ -132,12 +147,19 @@ const Dashboard: ComponentType = () => {
     );
   };
 
+  const pathname = useLocation().pathname;
+  const showAlertBanner =
+    !pathname.includes("configure-screens") && bannerAlert?.alert;
+
+  const showSidebar = !pathname.includes("configure-screens");
+
   return (
     <div className="screenplay-container">
       <LinkCopiedToast show={showLinkCopied} />
-      <Sidebar />
+      <ActionOutcomeToast {...actionOutcomeToast} />
+      {showSidebar && <Sidebar />}
       <div className="page-content">
-        {bannerAlert?.alert && (
+        {showAlertBanner && (
           <AlertBanner
             isDone={bannerDone}
             queueExpiration={queueBannerAlertExpiration}

@@ -81,9 +81,11 @@ const ScreenDetailActionBar = (
     );
   };
 
-  const isAdmin = document.querySelector("meta[name=is-admin]");
+  const isEmergencyAdmin = document.querySelector(
+    "meta[name=is-emergency-admin]",
+  );
 
-  const adminLink = isAdmin
+  const reportAProblemURL = isEmergencyAdmin
     ? "https://mbta.slack.com/channels/screens-team-pios"
     : "https://mbta.slack.com/channels/screens";
 
@@ -120,7 +122,7 @@ const ScreenDetailActionBar = (
           </Dropdown.Item>
           <Dropdown.Item
             className="three-dots-vertical-dropdown__item"
-            href={adminLink}
+            href={reportAProblemURL}
             onClick={(e: SyntheticEvent) => e.stopPropagation()}
             target="_blank"
           >
@@ -138,7 +140,7 @@ const ScreenDetailActionBar = (
           url={props.screenUrl}
           queueToastExpiration={queueToastExpiration}
         />
-        <ReportAProblemButton url={adminLink} />
+        <ReportAProblemButton url={reportAProblemURL} />
       </div>
     );
   }

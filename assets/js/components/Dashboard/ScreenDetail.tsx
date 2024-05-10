@@ -1,27 +1,29 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useContext } from "react";
 import { Screen } from "../../models/screen";
 import ScreenDetailHeader from "./ScreenDetailHeader";
+import ScreenSimulation from "./ScreenSimulation";
 import { SCREEN_TYPES } from "../../constants/constants";
 import PaessDetailContainer from "./PaessDetailContainer";
 import classNames from "classnames";
+import { AccordionContext } from "react-bootstrap";
 
 interface ScreenDetailProps {
   screens: Screen[];
-  isOpen: boolean;
+  eventKey: string;
+  isInlineGroup?: boolean;
   isMultipleScreens?: boolean;
 }
 
 const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
-  const isSolari = props.screens.every((screen) => screen.type === "solari");
   const isMultipleScreens = props.screens.length > 1;
 
-  return isSolari ? (
-    <div className="screen-detail__solari-layout">
-      {props.screens.map((screens, index) => (
+  return props.isInlineGroup ? (
+    <div className="screen-detail__inline-layout">
+      {props.screens.map((screen, index) => (
         <ScreenCard
           {...props}
           key={index}
-          screens={[screens]}
+          screens={[screen]}
           isMultipleScreens={isMultipleScreens}
         />
       ))}
@@ -32,9 +34,8 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 };
 
 const ScreenCard = (props: ScreenDetailProps) => {
-  const { screens, isOpen, isMultipleScreens } = props;
+  const { screens, eventKey, isMultipleScreens } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
-  const isSolari = screens.every((screen) => screen.type === "solari");
   const isTriptych = screens.every((screen) => screen.type === "triptych_v2");
   const paessRouteLetter = screens[0].station_code
     ? screens[0].station_code.charAt(0).toLowerCase()
@@ -84,35 +85,15 @@ const ScreenCard = (props: ScreenDetailProps) => {
     }
   };
 
-  const generateSource = (screen: Screen) => {
-    const { id, type } = screen;
-    // @ts-ignore Suppressing "object could be null" warning
-    const screensUrl = document
-      .querySelector("meta[name=screens-url]")
-      ?.getAttribute("content");
-    const queryParams = "requestor=screenplay";
-
-    if (type.includes("v2")) {
-      return `${screensUrl}/v2/screen/${id}/simulation?${queryParams}`;
-    }
-    if (
-      ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
-    ) {
-      return `${screensUrl}/screen/${id}?${queryParams}`;
-    }
-    if (type === "dup") {
-      return `${screensUrl}/screen/${id}/simulation?${queryParams}`;
-    }
-
-    return "";
-  };
+  const { activeEventKey } = useContext(AccordionContext);
+  const isOpen = activeEventKey?.includes(eventKey);
 
   return (
     <div
       className={classNames("screen-detail__container", {
         [`screen-detail__container--paess screen-detail__container--paess-${paessRouteLetter}`]:
           isPaess,
-        [`screen-detail__container--solari`]: isSolari,
+        [`screen-detail__container--inline`]: props.isInlineGroup,
       })}
       onClick={(e: SyntheticEvent) => e.stopPropagation()}
     >
@@ -146,15 +127,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
                 translatedScreenType={translatedScreenType}
                 screenLocation={getScreenLocation()}
               />
-              <div
-                className={`screen-detail__iframe-container screen-detail__iframe-container--${screen.type}`}
-              >
-                <iframe
-                  className={`screen-detail__iframe screen-detail__iframe--${screen.type}`}
-                  title={screen.id}
-                  src={generateSource(screen)}
-                />
-              </div>
+              <ScreenSimulation screen={screen} />
             </div>
           ))
         ))}

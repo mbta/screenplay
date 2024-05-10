@@ -3,7 +3,7 @@ import { render, waitFor } from "@testing-library/react";
 import ReportAProblemButton from "../../js/components/Dashboard/ReportAProblemButton";
 
 describe("ReportAProblemButton", () => {
-  test("uses correct URL for non-admin users", async () => {
+  test("uses correct URL for users that are not emergency admins", async () => {
     const { getByTestId } = render(
       <ReportAProblemButton url={"https://mbta.slack.com/channels/screens"} />,
     );
@@ -16,9 +16,9 @@ describe("ReportAProblemButton", () => {
     );
   });
 
-  test("uses correct URL for admins", async () => {
+  test("uses correct URL for emergency admins", async () => {
     const meta = document.createElement("meta");
-    meta.setAttribute("name", "is-admin");
+    meta.setAttribute("name", "is-emergency-admin");
     document.head.appendChild(meta);
 
     const { getByTestId } = render(

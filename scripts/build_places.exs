@@ -1,14 +1,32 @@
-# Script to gather screenplay places and screens.
-#
-# Example usage: API_V3_KEY=<your_key_here> mix run scripts/fetch_places_and_screens.exs --environment prod
+# Script to populate `places_and_screens.json`.
 
 {opts, _, _} =
   System.argv()
-  |> OptionParser.parse(strict: [environment: :string])
+  |> OptionParser.parse(strict: [env: :string, path: :string])
 
-environment = Keyword.get(opts, :environment, "dev")
+environment = Keyword.get(opts, :env)
+local_path = Keyword.get(opts, :path)
 
-api_v3_key = System.get_env("API_V3_KEY")
+if is_nil(environment) and is_nil(local_path) do
+  IO.puts(:stderr, """
+  Usage: mix run scripts/build_places.exs [options]
+
+  Requires a valid `API_V3_KEY` in environment variables.
+
+  Options:
+
+    --env <ENV>
+    Load screen configuration from S3 using the specified Screens environment.
+    Requires ExAWS to have valid credentials, e.g. from `AWS_` environment variables.
+
+    --path <PATH>
+    Load screen configuration from a local file.
+  """)
+
+  exit({:shutdown, 1})
+end
+
+api_v3_key = System.fetch_env!("API_V3_KEY")
 headers = [{"x-api-key", api_v3_key}]
 
 string_is_number? = fn string ->
@@ -80,13 +98,20 @@ add_routes_to_stops = fn
 end
 
 # Get live config from S3
-{:ok, file} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
-parsed = Jason.decode!(file)
+config =
+  if environment do
+    {:ok, body} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
+    body
+  else
+    File.read!(local_path)
+  end
+
+parsed = Jason.decode!(config)
 
 formatted_screens =
   parsed["screens"]
-  # Certain screens (test screens, ones we've configured for non-MBTA locations) are intentionally not included in Screenplay,
-  # and marked as such with the `hidden_from_screenplay` boolean field.
+  # Certain screens (test screens, ones we've configured for non-MBTA locations) are intentionally
+  # not included in Screenplay, and marked as such with the `hidden_from_screenplay` boolean.
   |> Enum.reject(&match?({_id, %{"hidden_from_screenplay" => true}}, &1))
   # This flat_map allows us to split out a single config into multiple places.
   |> Enum.flat_map(fn
@@ -168,6 +193,23 @@ formatted_screens =
 
     {id,
      %{
+       "app_id" => "busway_v2",
+       "app_params" => %{
+         "departures" => %{"sections" => sections}
+       }
+     } = screen} ->
+      stops =
+        Enum.flat_map(sections, fn %{"query" => %{"params" => %{"stop_ids" => stop_ids}}} ->
+          stop_ids
+        end)
+        |> Enum.map(fn stop_id ->
+          {id, Map.put(screen, "stop", stop_id)}
+        end)
+
+      stops
+
+    {id,
+     %{
        "app_id" => "solari",
        "app_params" => %{
          "sections" => sections
@@ -233,6 +275,13 @@ live_screens =
       {_id,
        %{
          "app_id" => "solari",
+         "stop" => stop_id
+       }} ->
+        stop_id
+
+      {_id,
+       %{
+         "app_id" => "busway_v2",
          "stop" => stop_id
        }} ->
         stop_id

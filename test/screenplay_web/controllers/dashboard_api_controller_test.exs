@@ -2,7 +2,7 @@ defmodule ScreenplayWeb.Controllers.DashboardApiControllerTest do
   use ScreenplayWeb.ConnCase
 
   describe "index/2" do
-    @tag :authenticated_admin
+    @tag :authenticated_emergency_admin
     test "responds 200 to authenticated admin requests", %{conn: conn} do
       conn = get(conn, "/dashboard")
       assert %{status: 200} = conn

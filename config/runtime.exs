@@ -50,7 +50,8 @@ config :screenplay,
   screens_url: System.get_env("SCREENS_URL"),
   signs_ui_url: System.get_env("SIGNS_UI_URL"),
   alerts_ui_url: System.get_env("ALERTS_UI_URL"),
-  fullstory_org_id: System.get_env("FULLSTORY_ORG_ID")
+  fullstory_org_id: System.get_env("FULLSTORY_ORG_ID"),
+  api_key: System.fetch_env!("SCREENPLAY_API_KEY")
 
 if sentry_dsn not in [nil, ""] do
   config :sentry,
@@ -64,3 +65,5 @@ scheduler_jobs =
     else: []
 
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
+
+config :screenplay, Screenplay.Repo, pool_size: 10
