@@ -63,7 +63,7 @@ defmodule ScreenplayWeb.Router do
       :ensure_screenplay_emergency_admin_group
     ])
 
-    get("/", PageController, :takeover_redirect)
+    get("/", PageController, :root_redirect)
     get("/emergency-takeover", PageController, :index)
   end
 

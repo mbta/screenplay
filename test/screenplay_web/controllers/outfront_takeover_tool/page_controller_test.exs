@@ -20,15 +20,15 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageControllerTest do
     end
   end
 
-  describe "takeover_redirect/2" do
+  describe "root_redirect/2" do
     @tag :authenticated_emergency_admin
-    test "redirects admin to /emergency-takeover", %{conn: conn} do
+    test "redirects admin to /dashboard", %{conn: conn} do
       conn = get(conn, "/")
-      assert redirected_to(conn) =~ "/emergency-takeover"
+      assert redirected_to(conn) =~ "/dashboard"
     end
 
     @tag :authenticated
-    test "does not redirect non-admin to /emergency-takeover", %{conn: conn} do
+    test "does not redirect non-admin to /dashboard", %{conn: conn} do
       conn = get(conn, "/")
       assert redirected_to(conn) =~ "/unauthorized"
     end
