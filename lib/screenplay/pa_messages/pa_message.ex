@@ -1,4 +1,8 @@
 defmodule Screenplay.PaMessages.PaMessage do
+  @moduledoc """
+  Represents a PA Message that will be retrieved by RTS to play audio in stations.
+  """
+
   import Ecto.Query
 
   alias Screenplay.Alerts.Alert

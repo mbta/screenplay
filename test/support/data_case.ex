@@ -14,6 +14,8 @@ defmodule ScreenplayWeb.DataCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
       alias Screenplay.Repo
@@ -25,10 +27,10 @@ defmodule ScreenplayWeb.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Screenplay.Repo)
+    :ok = Sandbox.checkout(Screenplay.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Screenplay.Repo, {:shared, self()})
+      Sandbox.mode(Screenplay.Repo, {:shared, self()})
     end
 
     :ok
