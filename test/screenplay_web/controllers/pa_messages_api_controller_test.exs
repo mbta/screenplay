@@ -1,5 +1,16 @@
 defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   use ScreenplayWeb.ConnCase
+  use ScreenplayWeb.RepoCase
+
+  setup_all do
+    get_json_fn = fn "alerts", %{"include" => "routes"} ->
+      {:ok, %{"data" => [], "included" => []}}
+    end
+
+    _ = start_supervised({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
+
+    :ok
+  end
 
   describe "active/2" do
     test "responds 403 if x-api-key is missing", %{conn: conn} do
