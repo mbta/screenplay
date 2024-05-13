@@ -67,7 +67,8 @@ defmodule Screenplay.MixProject do
        ref: "86684912f37a41885c8fc291f7e125394a1a7509"},
       {:mox, "~> 1.0", only: :test},
       {:quantum, "~> 3.0"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:ex_machina, "~> 2.7", only: :test}
     ]
   end
 
