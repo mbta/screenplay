@@ -52,7 +52,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     alert_messages =
       Enum.filter(alert_messages, fn %{alert_id: alert_id} ->
         alert = Enum.find(active_alerts, &(&1.id == alert_id))
-        not is_nil(alert) and Alert.happening_now?(alert)
+        not is_nil(alert) and Alert.happening_now?(alert, now_utc)
       end)
 
     custom_messages ++ alert_messages
