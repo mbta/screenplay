@@ -34,6 +34,13 @@ defmodule ScreenplayWeb.ConnCase do
   end
 
   setup tags do
+    alias Ecto.Adapters.SQL.Sandbox
+    :ok = Sandbox.checkout(Screenplay.Repo)
+
+    unless tags[:async] do
+      Sandbox.mode(Screenplay.Repo, {:shared, self()})
+    end
+
     {conn, user} =
       cond do
         tags[:authenticated_emergency_admin] ->

@@ -1,6 +1,5 @@
 defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   use ScreenplayWeb.ConnCase
-  use ScreenplayWeb.RepoCase
 
   setup_all do
     get_json_fn = fn "alerts", %{"include" => "routes"} ->
