@@ -23,6 +23,7 @@ defmodule ScreenplayWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import ScreenplayWeb.ConnCase
+      import ScreenplayWeb.DataCase
 
       alias ScreenplayWeb.Router.Helpers, as: Routes
 

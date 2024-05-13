@@ -1,4 +1,4 @@
-defmodule ScreenplayWeb.RepoCase do
+defmodule ScreenplayWeb.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -20,7 +20,7 @@ defmodule ScreenplayWeb.RepoCase do
 
       import Ecto
       import Ecto.Query
-      import ScreenplayWeb.RepoCase
+      import ScreenplayWeb.DataCase
     end
   end
 
