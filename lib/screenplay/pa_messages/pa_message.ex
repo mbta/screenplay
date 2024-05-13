@@ -26,9 +26,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     timestamps(type: :utc_datetime)
   end
 
-  def get_active_messages do
-    now_utc = DateTime.utc_now()
-
+  def get_active_messages(now_utc \\ DateTime.utc_now()) do
     now_adjusted =
       now_utc
       |> DateTime.shift_zone!("America/New_York")
