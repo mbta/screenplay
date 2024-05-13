@@ -31,14 +31,6 @@ defmodule ScreenplayWeb.DataCase do
       Ecto.Adapters.SQL.Sandbox.mode(Screenplay.Repo, {:shared, self()})
     end
 
-    if tags[:start_cache] do
-      get_json_fn = fn "alerts", %{"include" => "routes"} ->
-        {:ok, %{"data" => [], "included" => []}}
-      end
-
-      start_supervised({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
-    end
-
     :ok
   end
 end
