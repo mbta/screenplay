@@ -19,7 +19,7 @@ interface AppState {
   alertData: any;
   modalOpen: boolean;
   modalDetails: ModalDetails;
-  stationScreenOrientationList: StationsByLine;
+  stationScreenOrientationList: null | StationsByLine;
 }
 
 export interface CannedMessage {
@@ -68,7 +68,7 @@ class OutfrontTakeoverTool extends React.Component<
         confirmJSX: <></>,
         onSubmit: this.toggleModal,
       },
-      stationScreenOrientationList: {},
+      stationScreenOrientationList: null,
     };
 
     fetch(`${BASE_URL}/stations_and_screen_orientations`)
@@ -123,42 +123,44 @@ class OutfrontTakeoverTool extends React.Component<
 
   render() {
     return (
-      <StationScreenOrientationContext.Provider
-        value={this.state.stationScreenOrientationList}
-      >
-        <div className="outfront-container">
-          <div className="app-title">
-            <img src="/images/t-identity.png" alt="Logo" className="logo" />
-            <div className="stacked-title text-30">
-              <div>Outfront Media screens</div>
-              <div className="weight-700">Emergency Takeover</div>
+      !!this.state.stationScreenOrientationList && (
+        <StationScreenOrientationContext.Provider
+          value={this.state.stationScreenOrientationList}
+        >
+          <div className="outfront-container">
+            <div className="app-title">
+              <img src="/images/t-identity.png" alt="Logo" className="logo" />
+              <div className="stacked-title text-30">
+                <div>Outfront Media screens</div>
+                <div className="weight-700">Emergency Takeover</div>
+              </div>
             </div>
+            {this.state.alertWizardOpen ? (
+              <AlertWizard
+                triggerConfirmation={this.openModal}
+                toggleAlertWizard={this.toggleAlertWizard.bind(this)}
+                alertData={this.state.alertData}
+                stationScreenOrientationList={
+                  this.state.stationScreenOrientationList
+                }
+              />
+            ) : (
+              <AlertDashboard
+                startAlertWizard={this.startAlertWizard.bind(this)}
+                startEditWizard={this.startEditWizard.bind(this)}
+                triggerConfirmation={this.openModal}
+                closeModal={this.toggleModal}
+              />
+            )}
           </div>
-          {this.state.alertWizardOpen ? (
-            <AlertWizard
-              triggerConfirmation={this.openModal}
-              toggleAlertWizard={this.toggleAlertWizard.bind(this)}
-              alertData={this.state.alertData}
-              stationScreenOrientationList={
-                this.state.stationScreenOrientationList
-              }
-            />
-          ) : (
-            <AlertDashboard
-              startAlertWizard={this.startAlertWizard.bind(this)}
-              startEditWizard={this.startEditWizard.bind(this)}
-              triggerConfirmation={this.openModal}
-              closeModal={this.toggleModal}
-            />
-          )}
-        </div>
-        <ConfirmationModal
-          show={this.state.modalOpen}
-          onHide={this.toggleModal}
-          // onSubmit={this.toggleAlertWizard}
-          modalDetails={this.state.modalDetails}
-        />
-      </StationScreenOrientationContext.Provider>
+          <ConfirmationModal
+            show={this.state.modalOpen}
+            onHide={this.toggleModal}
+            // onSubmit={this.toggleAlertWizard}
+            modalDetails={this.state.modalDetails}
+          />
+        </StationScreenOrientationContext.Provider>
+      )
     );
   }
 }
