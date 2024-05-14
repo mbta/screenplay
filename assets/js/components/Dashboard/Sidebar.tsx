@@ -52,7 +52,7 @@ const Sidebar: ComponentType = () => {
           </Link>
         )}
         {/* This button slightly different to trigger a reload */}
-        <Button href="/" className="takeover-button">
+        <Button href="/emergency-takeover" className="takeover-button">
           <ExclamationTriangleFill size={20} className="sidebar-link__icon" />
           <span className="nav-link__name">Outfront Emergency Takeover</span>
         </Button>
