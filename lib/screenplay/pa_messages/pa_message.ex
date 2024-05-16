@@ -47,7 +47,7 @@ defmodule Screenplay.PaMessages.PaMessage do
       Repo.all(
         from m in __MODULE__,
           where:
-            not is_nil(m.alert_id) or
+            (is_nil(m.start_time_utc) and is_nil(m.end_time_utc) and not is_nil(m.alert_id)) or
               (^day_of_week in m.days_of_week and
                  (m.start_time_utc <= ^current_time and m.end_time_utc >= ^current_time))
       )
