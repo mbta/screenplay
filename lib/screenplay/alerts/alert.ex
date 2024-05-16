@@ -36,6 +36,8 @@ defmodule Screenplay.Alerts.Alert do
             description: nil,
             affected_list: nil
 
+  @type id :: String.t()
+
   @type informed_entity :: %{
           stop: String.t() | nil,
           route: String.t() | nil,
@@ -43,7 +45,7 @@ defmodule Screenplay.Alerts.Alert do
         }
 
   @type t :: %__MODULE__{
-          id: String.t(),
+          id: id(),
           cause: String.t(),
           effect: String.t(),
           severity: integer,

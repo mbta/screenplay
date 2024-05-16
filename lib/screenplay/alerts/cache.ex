@@ -40,6 +40,14 @@ defmodule Screenplay.Alerts.Cache do
     :ets.select(:alerts, [{{:_, :"$1"}, [], [:"$1"]}])
   end
 
+  @doc """
+  Retrieves all alert IDs.
+  """
+  @spec alert_ids :: list(Alert.id())
+  def alert_ids do
+    :ets.select(:alerts, [{{:"$1", :_}, [], [:"$1"]}])
+  end
+
   # Server
   @impl true
   def init(opts) do
