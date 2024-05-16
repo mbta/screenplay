@@ -28,7 +28,7 @@ defmodule Screenplay.PaMessages.PaMessageTest do
   end
 
   describe "get_active_messages/0" do
-    test "returns messages linked to active alerts" do
+    test "returns messages linked to an existing alert" do
       now = ~U[2024-05-01T05:00:00Z]
 
       get_json_fn = fn "alerts", %{"include" => "routes"} ->
@@ -48,7 +48,8 @@ defmodule Screenplay.PaMessages.PaMessageTest do
       insert(:pa_message, %{alert_id: "1", days_of_week: [Date.day_of_week(now)]})
       insert(:pa_message, %{alert_id: "2", days_of_week: [Date.day_of_week(now)]})
 
-      assert [%PaMessage{alert_id: "1"}] = PaMessage.get_active_messages(now)
+      assert [%PaMessage{alert_id: "1"}, %PaMessage{alert_id: "2"}] =
+               PaMessage.get_active_messages(now)
     end
 
     test "returns custom messages if now is between start and end schedule" do
