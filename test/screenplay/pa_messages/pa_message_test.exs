@@ -74,4 +74,39 @@ defmodule Screenplay.PaMessages.PaMessageTest do
       assert [%PaMessage{id: 1}] = PaMessage.get_active_messages(now)
     end
   end
+
+  test "returns messages linked to an existing alert using custom schedule" do
+    now = ~U[2024-05-01T12:00:00Z]
+
+    get_json_fn = fn "alerts", %{"include" => "routes"} ->
+      {:ok,
+       %{
+         "data" => [
+           alert_json("1", ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z])
+         ],
+         "included" => []
+       }}
+    end
+
+    {:ok, fetcher} = start_supervised({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
+    send(fetcher, :fetch)
+
+    insert(:pa_message, %{
+      id: 1,
+      alert_id: "1",
+      start_time_utc: ~T[01:00:00],
+      end_time_utc: ~T[12:00:00],
+      days_of_week: [Date.day_of_week(now)]
+    })
+
+    insert(:pa_message, %{
+      id: 2,
+      alert_id: "2",
+      start_time_utc: ~T[00:00:00],
+      end_time_utc: ~T[01:00:00],
+      days_of_week: [Date.day_of_week(now)]
+    })
+
+    assert [%PaMessage{id: 1}] = PaMessage.get_active_messages(now)
+  end
 end
