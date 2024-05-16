@@ -33,8 +33,11 @@ defmodule Screenplay.PaMessages.PaMessage do
   def get_active_messages(now_utc \\ DateTime.utc_now()) do
     now_adjusted =
       now_utc
+      # Shift UTC to EST to account for possible Daylight Savings Time
       |> DateTime.shift_zone!("America/New_York")
-      |> DateTime.add(-150, :minute)
+      # Shift time back 3 hours to account for MBTA's 3am-3am service day
+      |> DateTime.add(-180, :minute)
+      # Shift back to UTC so time can be used in DB query
       |> DateTime.shift_zone!("Etc/UTC")
 
     day_of_week = Date.day_of_week(now_adjusted)
