@@ -54,13 +54,10 @@ defmodule Screenplay.PaMessages.PaMessage do
       )
       |> Enum.split_with(&is_nil(&1.alert_id))
 
-    active_alerts = AlertsCache.alerts()
+    alert_ids = AlertsCache.alert_ids()
 
     alert_messages =
-      Enum.filter(alert_messages, fn %{alert_id: alert_id} ->
-        alert = Enum.find(active_alerts, &(&1.id == alert_id))
-        not is_nil(alert) and Alert.happening_now?(alert, now_utc)
-      end)
+      Enum.filter(alert_messages, fn %{alert_id: alert_id} -> alert_id in alert_ids end)
 
     custom_messages ++ alert_messages
   end
