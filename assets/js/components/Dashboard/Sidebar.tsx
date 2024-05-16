@@ -1,70 +1,100 @@
-import React, { ComponentType } from "react";
-import { Button } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom";
+import React, { ReactNode } from "react";
+import { NavLink } from "react-router-dom";
 import {
-  CollectionFill,
+  GeoAlt,
+  GeoAltFill,
+  ExclamationTriangle,
   ExclamationTriangleFill,
-  PersonFill,
-  PlusLg,
+  VolumeUp,
+  VolumeUpFill,
+  Lightning,
+  LightningFill,
+  Signpost,
+  SignpostFill,
+  Icon,
 } from "react-bootstrap-icons";
-import TSquare from "../../../static/images/t-square.svg";
+import TLogo from "../../../static/images/t-logo.svg";
 
-const Sidebar: ComponentType = () => {
-  const pathname = useLocation().pathname.replace(/\//g, "");
+const SidebarLink = ({
+  to,
+  icon,
+  activeIcon,
+  reloadDocument,
+  children,
+}: {
+  to: string;
+  icon: Icon;
+  activeIcon: Icon;
+  reloadDocument?: boolean;
+  children: ReactNode;
+}) => {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+      reloadDocument={reloadDocument}
+    >
+      {({ isActive }) => {
+        const IconComponent = isActive ? activeIcon : icon;
+        return (
+          <>
+            <span className="sidebar-link-highlight">
+              <IconComponent size={36} />
+            </span>
+            <span>{children}</span>
+          </>
+        );
+      }}
+    </NavLink>
+  );
+};
 
-  // @ts-ignore Suppressing "object could be null" warning
-  const username = document
-    .querySelector("meta[name=username]")
-    ?.getAttribute("content");
+const Sidebar = () => {
+  const isScreensAdmin = !!document.querySelector(
+    "meta[name=is-screens-admin]",
+  );
+  const isPaMessageAdmin = !!document.querySelector(
+    "meta[name=is-pa-message-admin]",
+  );
 
-  const isScreensAdmin = document.querySelector("meta[name=is-screens-admin]");
-
-  return !pathname.includes("emergency-takeover") ? (
-    <div className="sidebar-container">
-      {/*
-        We use a regular web link for this rather than a React-Router Link,
-        so that the page reloads with fresh state.
-      */}
-      <a href="/dashboard" className="sidebar-brand">
-        <img src={TSquare} alt="Screenplay Logo" />
-        <div className="sidebar-brand__text">Screenplay</div>
+  return (
+    <nav className="sidebar-container">
+      <a href="/dashboard" className="sidebar-logo">
+        <img src={TLogo} alt="Screenplay Logo" style={{ width: 32 }} />
       </a>
-      {/* TODO: Both the Link and the Button allow for tab selection. Only one should. */}
-      <nav>
-        <Link className="sidebar-link" to="/dashboard">
-          <Button className={pathname === "dashboard" ? "selected" : ""}>
-            <CollectionFill size={20} className="sidebar-link__icon" />
-            <span className="nav-link__name">Places</span>
-          </Button>
-        </Link>
-        <Link className="sidebar-link" to="/alerts">
-          <Button className={pathname === "alerts" ? "selected" : ""}>
-            <ExclamationTriangleFill size={20} className="sidebar-link__icon" />
-            <span className="nav-link__name">Posted Alerts</span>
-          </Button>
-        </Link>
-        {isScreensAdmin && (
-          <Link className="sidebar-link" to="/pending">
-            <Button className={pathname === "pending" ? "selected" : ""}>
-              <PlusLg size={20} className="sidebar-link__icon" />
-              <span className="nav-link__name">Configure</span>
-            </Button>
-          </Link>
-        )}
-        {/* This button slightly different to trigger a reload */}
-        <Button href="/emergency-takeover" className="takeover-button">
-          <ExclamationTriangleFill size={20} className="sidebar-link__icon" />
-          <span className="nav-link__name">Outfront Emergency Takeover</span>
-        </Button>
-      </nav>
-      {/* User info */}
-      <div className="sidebar__user-info">
-        <PersonFill size={20} style={{ opacity: 0.4 }} />
-        <span className="username">{username}</span>
-      </div>
-    </div>
-  ) : (
-    <></>
+      <SidebarLink to="/dashboard" icon={GeoAlt} activeIcon={GeoAltFill}>
+        Places
+      </SidebarLink>
+      <SidebarLink
+        to="/alerts"
+        icon={ExclamationTriangle}
+        activeIcon={ExclamationTriangleFill}
+      >
+        Posted Alerts
+      </SidebarLink>
+      {false && isPaMessageAdmin && (
+        <SidebarLink
+          to="/pa-messages"
+          icon={VolumeUp}
+          activeIcon={VolumeUpFill}
+        >
+          PA/ESS
+        </SidebarLink>
+      )}
+      <SidebarLink
+        to="/emergency-takeover"
+        icon={Lightning}
+        activeIcon={LightningFill}
+        reloadDocument
+      >
+        Emergency Takeover
+      </SidebarLink>
+      {isScreensAdmin && (
+        <SidebarLink to="/pending" icon={Signpost} activeIcon={SignpostFill}>
+          Configure
+        </SidebarLink>
+      )}
+    </nav>
   );
 };
 
