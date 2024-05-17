@@ -27,14 +27,13 @@ const ConfirmationModal = (props: ModalProps): JSX.Element => {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      className="outfront-modal"
     >
-      <Modal.Body>
-        <div className="modal-header">
-          <div className="icon-circle">{icon}</div>
-          <div className="header-text">{header}</div>
-        </div>
-        <div className="modal-description">{description}</div>
-      </Modal.Body>
+      <Modal.Header className="text-30">
+        <div className="icon-circle">{icon}</div>
+        <Modal.Title>{header}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{description}</Modal.Body>
       <Modal.Footer>
         <button className="cancel-button" onClick={props.onHide}>
           {cancelText}
