@@ -6,7 +6,7 @@ defmodule Screenplay.PaMessages.PaMessage do
   import Ecto.Query
 
   alias Screenplay.Alerts.Cache, as: AlertsCache
-  alias Screenplay.Repo
+  alias Screenplay.{Repo, Util}
 
   use Ecto.Schema
 
@@ -29,34 +29,21 @@ defmodule Screenplay.PaMessages.PaMessage do
     timestamps(type: :utc_datetime)
   end
 
-  def get_active_messages(now_utc \\ DateTime.utc_now()) do
-    now_adjusted =
-      now_utc
-      # Shift UTC to EST to account for possible Daylight Savings Time
-      |> DateTime.shift_zone!("America/New_York")
-      # Shift time back 3 hours to account for MBTA's 3am-3am service day
-      |> DateTime.add(-180, :minute)
-      # Shift back to UTC so time can be used in DB query
-      |> DateTime.shift_zone!("Etc/UTC")
-
-    day_of_week = Date.day_of_week(now_adjusted)
-
-    current_time = DateTime.to_time(now_adjusted)
-
-    {custom_messages, alert_messages} =
-      Repo.all(
-        from m in __MODULE__,
-          where:
-            (is_nil(m.start_time_utc) and is_nil(m.end_time_utc) and not is_nil(m.alert_id)) or
-              (^day_of_week in m.days_of_week and
-                 (m.start_time_utc <= ^current_time and m.end_time_utc >= ^current_time))
-      )
-      |> Enum.split_with(&is_nil(&1.alert_id))
+  def get_active_messages(now \\ DateTime.utc_now()) do
+    current_service_day_of_week = Util.get_current_service_day(now)
 
     alert_ids = AlertsCache.alert_ids()
 
-    alert_messages =
-      Enum.filter(alert_messages, fn %{alert_id: alert_id} -> alert_id in alert_ids end)
+    {alert_messages, custom_messages} =
+      Repo.all(
+        from m in __MODULE__,
+          where:
+            ^current_service_day_of_week in m.days_of_week and
+              m.start_time <= ^now and
+              ((is_nil(m.end_time) and not is_nil(m.alert_id) and m.alert_id in ^alert_ids) or
+                 m.end_time >= ^now)
+      )
+      |> Enum.split_with(&is_nil(&1.end_time))
 
     custom_messages ++ alert_messages
   end
