@@ -14,8 +14,8 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   schema "pa_message" do
     field(:alert_id, :string)
-    field(:start_time_utc, :time)
-    field(:end_time_utc, :time)
+    field(:start_time, :utc_datetime)
+    field(:end_time, :utc_datetime)
     field(:days_of_week, {:array, :integer})
     field(:sign_ids, {:array, :string})
     field(:priority, :integer)
