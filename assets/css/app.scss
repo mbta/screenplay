@@ -123,47 +123,28 @@ footer {
   margin-top: 48px;
 }
 
-.modal-content {
-  border-radius: 8px;
-  border: none;
-  .modal-body {
-    padding: 24px;
-    .modal-header {
-      justify-content: unset;
-      border: none;
-      padding: 0 0 24px 0;
-    }
-    .header-text {
-      color: $gray-800;
-      font-weight: 700;
-      font-size: 30px;
-      line-height: 36px;
-    }
-    .modal-description {
-      margin-left: 64px;
-      color: $gray-600;
-    }
+.outfront-modal {
+  --bs-modal-border-radius: 8px;
+  --bs-modal-bg: #{$gray-200};
+  --bs-modal-padding: 16px;
+  --bs-modal-header-padding: 16px;
+}
+
+.cancel-button {
+  background-color: $gray-50;
+  border: 1px solid $gray-300;
+  color: $gray-700;
+  &:hover {
+    color: $gray-700;
+    background-color: white;
   }
-  .modal-footer {
-    background-color: $gray-200;
-    padding: 24px;
-    border-radius: 0 0 8px 8px;
-    .cancel-button {
-      background-color: $gray-50;
-      border: 1px solid $gray-300;
-      color: $gray-700;
-      &:hover {
-        background-color: white;
-      }
-    }
-    .confirm-button {
-      margin-left: 24px;
-      background-color: $cyan-700;
-      border: 1px solid $gray-300;
-      &:hover {
-        background-color: $cyan-900;
-      }
-    }
+}
+.confirm-button {
+  margin-left: 24px;
+  background-color: $cyan-700;
+  border: 1px solid $gray-300;
+  &:hover {
+    background-color: $cyan-900;
   }
 }
 
