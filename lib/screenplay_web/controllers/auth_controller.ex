@@ -3,6 +3,10 @@ defmodule ScreenplayWeb.AuthController do
 
   plug Ueberauth
 
+  def request(conn, %{"provider" => provider}) when provider != "keycloak" do
+    send_resp(conn, 404, "Not Found")
+  end
+
   def callback(conn = %{assigns: %{ueberauth_auth: auth}}, _params) do
     username = auth.uid
     name = auth.info.name
