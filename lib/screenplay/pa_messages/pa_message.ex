@@ -39,8 +39,7 @@ defmodule Screenplay.PaMessages.PaMessage do
         where:
           ^current_service_day_of_week in m.days_of_week and
             m.start_time <= ^now and
-            ((is_nil(m.end_time) and not is_nil(m.alert_id) and m.alert_id in ^alert_ids) or
-               m.end_time >= ^now)
+            ((is_nil(m.end_time) and m.alert_id in ^alert_ids) or m.end_time >= ^now)
     )
   end
 end
