@@ -34,17 +34,13 @@ defmodule Screenplay.PaMessages.PaMessage do
 
     alert_ids = AlertsCache.alert_ids()
 
-    {alert_messages, custom_messages} =
-      Repo.all(
-        from m in __MODULE__,
-          where:
-            ^current_service_day_of_week in m.days_of_week and
-              m.start_time <= ^now and
-              ((is_nil(m.end_time) and not is_nil(m.alert_id) and m.alert_id in ^alert_ids) or
-                 m.end_time >= ^now)
-      )
-      |> Enum.split_with(&is_nil(&1.end_time))
-
-    custom_messages ++ alert_messages
+    Repo.all(
+      from m in __MODULE__,
+        where:
+          ^current_service_day_of_week in m.days_of_week and
+            m.start_time <= ^now and
+            ((is_nil(m.end_time) and not is_nil(m.alert_id) and m.alert_id in ^alert_ids) or
+               m.end_time >= ^now)
+    )
   end
 end
