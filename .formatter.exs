@@ -1,5 +1,4 @@
 [
-  import_deps: [:phoenix],
-  plugins: [Phoenix.LiveView.HTMLFormatter],
-  inputs: ["*.{ex,exs}", "{config,lib,test,scripts}/**/*.{ex,exs}"]
+  import_deps: [:phoenix, :ecto, :ecto_sql],
+  inputs: ["*.{ex,exs}", "priv/repo/migrations/*", "{config,lib,test,scripts}/**/*.{ex,exs}"]
 ]
