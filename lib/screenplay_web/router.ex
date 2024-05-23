@@ -86,7 +86,7 @@ defmodule ScreenplayWeb.Router do
     ])
 
     get("/pa-messages", PaMessagesController, :index)
-    get("api/pa-messages", PaMessagesApiController, :index)
+    get("/api/pa-messages", PaMessagesApiController, :index)
   end
 
   scope "/", ScreenplayWeb do
