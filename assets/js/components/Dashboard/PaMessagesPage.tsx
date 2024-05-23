@@ -8,9 +8,11 @@ const PaMessagesPage: ComponentType = () => {
   const [paMessages, setPaMessages] = useState<PaMessage[]>([]);
 
   useEffect(() => {
-    fetchPaMessages().then((allPaMessages) => {
-      setPaMessages(allPaMessages);
-    });
+    const fetchAndSetPaMessages = async () => {
+      const allPaMessages = await fetchPaMessages()
+      setPaMessages(allPaMessages)
+    }
+    fetchAndSetPaMessages();
   }, []);
 
   return (
