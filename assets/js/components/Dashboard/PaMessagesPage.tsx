@@ -1,0 +1,114 @@
+import React, { ComponentType, useState, useEffect } from "react";
+import { Container, Row, Col, Button, FormCheck } from "react-bootstrap";
+import { PlusCircleFill } from "react-bootstrap-icons";
+import { fetchPaMessages } from "../../utils/api";
+import { PaMessage } from "../../models/pa_message";
+
+const PaMessagesPage: ComponentType = () => {
+  const [paMessages, setPaMessages] = useState<PaMessage[]>([]);
+
+  useEffect(() => {
+    fetchPaMessages().then((allPaMessages) => {
+      setPaMessages(allPaMessages);
+    });
+  }, []);
+
+  return (
+    <>
+      <div className="pa-message-page-header">PA/ESS Messages</div>
+      <Container fluid>
+        <Row>
+          <Col className="pa-message-filter-selection">
+            <div>Message state</div>
+            <div>Service type</div>
+          </Col>
+          <Col className="pa-message-table-container">
+            <Row className="pa-message-table-action-bar">
+              <Col>
+                <Button>
+                  <PlusCircleFill className="pa-message-table-action-bar__plus" />{" "}
+                  Add New
+                </Button>
+              </Col>
+              <Col className="pa-message-table-action-bar__search">
+                <div>Search</div>
+              </Col>
+              <Col className="pa-message-table-action-bar__advance-search">
+                <a>Advance Search</a>
+              </Col>
+            </Row>
+            <Row>
+              <PaMessageTable paMessages={paMessages} />
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+};
+
+interface PaMessageTableProps {
+  paMessages: PaMessage[];
+}
+
+const PaMessageTable: ComponentType<PaMessageTableProps> = ({ paMessages }) => {
+  return (
+    <>
+      <table className="pa-message-table">
+        <thead>
+          <tr>
+            <th>Message</th>
+            <th>Interval</th>
+            <th className="pa-message-table__start-end">Start-End</th>
+            <th>Save</th>
+            <th className="pa-message-table__actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {paMessages.map((paMessage: PaMessage) => {
+            return <PaMessageRow key={paMessage.id} paMessage={paMessage} />;
+          })}
+        </tbody>
+      </table>
+      {paMessages.length == 0 && (
+        <div className="pa-message-table__empty">
+          There are no active PA/ESS Messages.
+        </div>
+      )}
+    </>
+  );
+};
+
+interface PaMessageRowProps {
+  paMessage: PaMessage;
+}
+
+const PaMessageRow: ComponentType<PaMessageRowProps> = ({ paMessage }) => {
+  const start = new Date(paMessage.start_time);
+  const end = new Date(paMessage.end_time);
+
+  return (
+    <tr>
+      <td>{paMessage.visual_text}</td>
+      <td>{paMessage.interval_in_minutes} min</td>
+      <td className="pa-message-table__start-end">
+        {start.toLocaleString().replace(",", "")}
+        <br />
+        {end.toLocaleString().replace(",", "")}
+      </td>
+      <td>
+        <FormCheck />
+      </td>
+      <td className="pa-message-table__actions">
+        <a>
+          <u>Pause</u>
+        </a>
+        <a>
+          <u>Copy</u>
+        </a>
+      </td>
+    </tr>
+  );
+};
+
+export default PaMessagesPage;

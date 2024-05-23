@@ -3,6 +3,10 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
   alias Screenplay.PaMessages.PaMessage
 
+  def index(conn, _params) do
+    json(conn, PaMessage.get_all_messages())
+  end
+
   def active(conn, _params) do
     json(conn, PaMessage.get_active_messages())
   end

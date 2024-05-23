@@ -42,4 +42,8 @@ defmodule Screenplay.PaMessages.PaMessage do
             ((is_nil(m.end_time) and m.alert_id in ^alert_ids) or m.end_time >= ^now)
     )
   end
+
+  def get_all_messages() do
+    Repo.all(from(m in __MODULE__, order_by: [desc: m.inserted_at]))
+  end
 end

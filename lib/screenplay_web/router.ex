@@ -84,6 +84,9 @@ defmodule ScreenplayWeb.Router do
       :metadata,
       :ensure_pa_message_admin
     ])
+
+    get("/pa-messages", PaMessagesController, :index)
+    get("api/pa-messages", PaMessagesApiController, :index)
   end
 
   scope "/", ScreenplayWeb do
@@ -156,10 +159,10 @@ defmodule ScreenplayWeb.Router do
     )
   end
 
-  scope "/api/pa_messages", ScreenplayWeb do
+  scope "/api/pa-messages", ScreenplayWeb do
     pipe_through([:redirect_prod_http, :api, :ensure_api_auth])
 
-    get("/", PaMessagesApiController, :active)
+    get("/active", PaMessagesApiController, :active)
   end
 
   # Enables LiveDashboard only for development

@@ -1,0 +1,94 @@
+.pa-message-page-header {
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 48px;
+  text-align: left;
+  padding: 24px 40px;
+}
+
+.pa-message-filter-selection {
+  flex: none;
+  text-align: left;
+  font-size: 20px;
+  width: 200px;
+  margin: 0px 20px;
+  margin-left: 40px;
+  padding-right: 0px;
+}
+
+.pa-message-table-container {
+  padding-right: 64px;
+  padding-left: 0px;
+  margin-left: 20px;
+}
+
+.pa-message-table-action-bar {
+  button {
+    font-weight: 700;
+    height: 42px;
+    width: 129px;
+    background-color: $button-primary;
+    color: black;
+    &:hover {
+      background-color: $button-primary-hover;
+    }
+  }
+
+  &__plus {
+    margin-top: -2px;
+    margin-right: 2px;
+  }
+
+  &__search {
+    flex: none;
+    width: 261px;
+  }
+
+  &__advance-search {
+    flex: none;
+    width: 150px;
+    color: white;
+  }
+}
+
+.pa-message-table {
+  margin: 16px 14px;
+  background-color: $cool-gray-15;
+
+  th,
+  td {
+    padding-top: 10px;
+    padding-left: 16px;
+    vertical-align: top;
+  }
+
+  th {
+    border-bottom: 1px solid #495057;
+  }
+
+  td {
+    border-bottom: 1px solid #2b3741;
+  }
+
+  &__start-end {
+    min-width: 200px;
+    padding-right: 0px;
+  }
+
+  &__actions {
+    padding-top: 0px !important;
+    min-width: 102px;
+    color: $text-secondary;
+
+    a {
+      margin-bottom: 8px;
+      display: block;
+    }
+  }
+
+  &__empty {
+    font-weight: bold;
+    color: white;
+    padding-left: 30px;
+  }
+}
