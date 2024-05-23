@@ -43,7 +43,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     )
   end
 
-  def get_all_messages() do
+  def get_all_messages do
     Repo.all(from(m in __MODULE__, order_by: [desc: m.inserted_at]))
   end
 end
