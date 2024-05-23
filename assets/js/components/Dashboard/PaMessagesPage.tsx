@@ -34,7 +34,7 @@ const PaMessagesPage: ComponentType = () => {
                 <div>Search</div>
               </Col>
               <Col className="pa-message-table-action-bar__advance-search">
-                <a>Advance Search</a>
+                <a href="/pa-messages">Advance Search</a>
               </Col>
             </Row>
             <Row>
@@ -51,7 +51,9 @@ interface PaMessageTableProps {
   paMessages: PaMessage[];
 }
 
-const PaMessageTable: ComponentType<PaMessageTableProps> = ({ paMessages }) => {
+const PaMessageTable: ComponentType<PaMessageTableProps> = ({
+  paMessages,
+}: PaMessageTableProps) => {
   return (
     <>
       <table className="pa-message-table">
@@ -83,7 +85,9 @@ interface PaMessageRowProps {
   paMessage: PaMessage;
 }
 
-const PaMessageRow: ComponentType<PaMessageRowProps> = ({ paMessage }) => {
+const PaMessageRow: ComponentType<PaMessageRowProps> = ({
+  paMessage,
+}: PaMessageRowProps) => {
   const start = new Date(paMessage.start_time);
   const end = new Date(paMessage.end_time);
 
@@ -100,10 +104,10 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({ paMessage }) => {
         <FormCheck />
       </td>
       <td className="pa-message-table__actions">
-        <a>
+        <a href="/pa-messages">
           <u>Pause</u>
         </a>
-        <a>
+        <a href="/pa-messages">
           <u>Copy</u>
         </a>
       </td>
