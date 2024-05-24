@@ -72,7 +72,7 @@ const Sidebar = () => {
       >
         Posted Alerts
       </SidebarLink>
-      {false && isPaMessageAdmin && (
+      {isPaMessageAdmin && (
         <SidebarLink
           to="/pa-messages"
           icon={VolumeUp}

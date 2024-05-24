@@ -2,7 +2,7 @@
 
 Lists all PA messages that are currently eligible to play.
 
-**URL** : `/api/pa_messages`
+**URL** : `/api/pa-messages`
 
 **Method** : `GET`
 
