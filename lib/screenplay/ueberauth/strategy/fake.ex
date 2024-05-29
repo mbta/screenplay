@@ -45,7 +45,6 @@ defmodule Screenplay.Ueberauth.Strategy.Fake do
   def extra(conn) do
     %Ueberauth.Auth.Extra{
       raw_info: %UeberauthOidcc.RawInfo{
-        claims: %{"iat" => System.system_time(:second)},
         userinfo: %{
           "resource_access" => %{
             "dev-client" => %{"roles" => Helpers.options(conn)[:roles]}

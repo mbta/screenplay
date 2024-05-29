@@ -49,26 +49,12 @@ config :phoenix, :json_library, Jason
 # Use Jason for JSON parsing in ExAws
 config :ex_aws, json_codec: Jason
 
-# 12 hours in seconds
-max_session_time = 12 * 60 * 60
+config :screenplay, ScreenplayWeb.AuthManager, issuer: "screenplay"
 
-config :screenplay, ScreenplayWeb.AuthManager,
-  issuer: "screenplay",
-  secret_key: nil,
-  max_session_time: max_session_time,
-  # 30 minutes
-  idle_time: 30 * 60
-
+# Placeholder for Keycloak authentication, defined for real in environment configs
 config :ueberauth, Ueberauth,
   providers: [
-    keycloak:
-      {Ueberauth.Strategy.Oidcc,
-       issuer: :keycloak_issuer,
-       userinfo: true,
-       uid_field: "email",
-       scopes: ~w"openid email",
-       authorization_params: %{max_age: "#{max_session_time}"},
-       authorization_params_passthrough: ~w"prompt login_hint"}
+    keycloak: nil
   ]
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
