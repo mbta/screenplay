@@ -50,14 +50,14 @@ config :phoenix, :json_library, Jason
 config :ex_aws, json_codec: Jason
 
 # 12 hours in seconds
-max_session_time = 12 * 60 * 60
+max_session_time = 30
 
 config :screenplay, ScreenplayWeb.AuthManager,
   issuer: "screenplay",
   secret_key: nil,
   max_session_time: max_session_time,
   # 30 minutes
-  idle_time: 30 * 60
+  idle_time: 30
 
 config :ueberauth, Ueberauth,
   providers: [
