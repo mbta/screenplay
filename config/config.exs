@@ -54,6 +54,7 @@ max_session_time = 12 * 60 * 60
 
 config :screenplay, ScreenplayWeb.AuthManager,
   issuer: "screenplay",
+  secret_key: nil,
   max_session_time: max_session_time,
   # 30 minutes
   idle_time: 30 * 60
