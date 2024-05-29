@@ -29,7 +29,7 @@ defmodule ScreenplayWeb.AuthController do
 
     logout_url =
       case UeberauthOidcc.initiate_logout_url(auth, %{
-             post_logout_redirect_uri: "https://www.mbta.com/"
+             post_logout_redirect_uri: url(~p"/")
            }) do
         {:ok, url} ->
           url
