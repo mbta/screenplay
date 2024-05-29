@@ -49,7 +49,7 @@ defmodule Screenplay.MixProject do
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:guardian, "~> 2.3"},
       {:ueberauth, "~> 0.10.0"},
-      {:ueberauth_oidcc, "~> 0.3"},
+      {:ueberauth_oidcc, "~> 0.4"},
       {:sftp_client, "~> 2.0"},
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},

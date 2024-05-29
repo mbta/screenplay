@@ -12,6 +12,10 @@ defmodule ScreenplayWeb.AuthManager do
     "pa-message-admin" => :pa_message_admin
   }
 
+  @max_session_time Application.compile_env(:screenplay, [__MODULE__, :max_session_time])
+  @max_idle_time Application.compile_env(:screenplay, [__MODULE__, :idle_time])
+
+  @impl true
   @spec subject_for_token(
           resource :: Guardian.Token.resource(),
           claims :: Guardian.Token.claims()
@@ -20,6 +24,7 @@ defmodule ScreenplayWeb.AuthManager do
     {:ok, resource}
   end
 
+  @impl true
   @spec resource_from_claims(claims :: Guardian.Token.claims()) ::
           {:error, :invalid_claims} | {:ok, String.t()}
   def resource_from_claims(%{"sub" => username}) do
@@ -27,6 +32,21 @@ defmodule ScreenplayWeb.AuthManager do
   end
 
   def resource_from_claims(_), do: {:error, :invalid_claims}
+
+  @impl true
+  def verify_claims(claims = %{"iat" => iat, "auth_time" => auth_time}, _opts) do
+    now = System.system_time(:second)
+    # auth_time is when the user entered their password at the SSO provider
+    auth_time_expires = auth_time + @max_session_time
+    # iat is when the token was issued
+    iat_expires = iat + @max_idle_time
+    # did either timeout expire?
+    if min(auth_time_expires, iat_expires) < now do
+      {:error, {:auth_expired, claims["sub"]}}
+    else
+      {:ok, claims}
+    end
+  end
 
   @spec claims_access_level(Guardian.Token.claims()) :: list(access_level())
   def claims_access_level(%{"roles" => roles}) when not is_nil(roles) do
