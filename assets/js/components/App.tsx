@@ -19,7 +19,9 @@ const ConfigureScreensPage = React.lazy(
 const SelectScreenTypeComponent = React.lazy(
   () => import("./Dashboard/PermanentConfiguration/SelectScreenType")
 );
-const PaMessagesPage = React.lazy(() => import("./Dashboard/PaMessagesPage"));
+const PaMessagesPage = React.lazy(
+  () => import("./Dashboard/PaMessaging/PaMessagesPage")
+);
 
 class AppRoutes extends React.Component {
   render() {
