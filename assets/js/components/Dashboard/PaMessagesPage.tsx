@@ -3,9 +3,11 @@ import { Container, Row, Col, Button, FormCheck } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 import { fetchPaMessages } from "../../utils/api";
 import { PaMessage } from "../../models/pa_message";
+import { useNavigate } from "react-router-dom";
 
 const PaMessagesPage: ComponentType = () => {
   const [paMessages, setPaMessages] = useState<PaMessage[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAndSetPaMessages = async () => {
@@ -27,7 +29,7 @@ const PaMessagesPage: ComponentType = () => {
           <Col className="pa-message-table-container">
             <Row className="pa-message-table-action-bar">
               <Col>
-                <Button>
+                <Button onClick={() => navigate("/pa-messages/new")}>
                   <PlusCircleFill className="pa-message-table-action-bar__plus" />{" "}
                   Add New
                 </Button>

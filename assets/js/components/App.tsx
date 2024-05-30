@@ -4,20 +4,20 @@ import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import GlEinkWorkflow from "./Dashboard/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
 
 const OutfrontTakeoverTool = React.lazy(
-  () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool"),
+  () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool")
 );
 const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
 const PlacesPage = React.lazy(() => import("./Dashboard/PlacesPage"));
 const AlertsPage = React.lazy(() => import("./Dashboard/AlertsPage"));
 const AlertDetails = React.lazy(() => import("./Dashboard/AlertDetails"));
 const PendingScreensPage = React.lazy(
-  () => import("./Dashboard/PendingScreensPage"),
+  () => import("./Dashboard/PendingScreensPage")
 );
 const ConfigureScreensPage = React.lazy(
-  () => import("./Dashboard/PermanentConfiguration/ConfigureScreensPage"),
+  () => import("./Dashboard/PermanentConfiguration/ConfigureScreensPage")
 );
 const SelectScreenTypeComponent = React.lazy(
-  () => import("./Dashboard/PermanentConfiguration/SelectScreenType"),
+  () => import("./Dashboard/PermanentConfiguration/SelectScreenType")
 );
 const PaMessagesPage = React.lazy(() => import("./Dashboard/PaMessagesPage"));
 
@@ -47,6 +47,10 @@ class AppRoutes extends React.Component {
               <Route path="gl-eink" element={<GlEinkWorkflow />} />
             </Route>
             <Route path="pa-messages" element={<PaMessagesPage />}></Route>
+            <Route
+              path="pa-messages/new"
+              element={<div>New Message Page</div>}
+            />
           </Route>
         </Routes>
       </React.Suspense>
