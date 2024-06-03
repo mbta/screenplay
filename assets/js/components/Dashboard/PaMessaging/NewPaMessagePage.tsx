@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import _ from "lodash/fp";
 import { ArrowRightShort, PlusLg } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 enum DayItem {
   All = "All days",
@@ -93,6 +94,7 @@ const NewPaMessagePage: ComponentType = () => {
     phoneticText: "",
   };
   const [state, dispath] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
 
   return (
     <div className="new-pa-message-page">
@@ -113,6 +115,15 @@ const NewPaMessagePage: ComponentType = () => {
         <WhenCard pageState={state} dispatch={dispath} />
         <WhereCard pageState={state} dispatch={dispath} />
         <MessageCard pageState={state} dispatch={dispath} />
+        <Row
+          md="auto"
+          className="justify-content-end new-pa-message-page__form-buttons"
+        >
+          <Button className="cancel-button" onClick={() => navigate(-1)}>
+            Cancel
+          </Button>
+          <Button className="submit-button">Submit</Button>
+        </Row>
       </Container>
     </div>
   );
