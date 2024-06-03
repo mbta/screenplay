@@ -9,7 +9,7 @@ import {
   Row,
 } from "react-bootstrap";
 import _ from "lodash/fp";
-import { ArrowRightShort, PlusLg } from "react-bootstrap-icons";
+import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
 enum DayItem {
@@ -324,8 +324,8 @@ const MessageCard: ComponentType<CardProps> = ({
           <Form>
             <Form.Label>Text</Form.Label>
             <Form.Control
+              className="visual-text-input"
               as="textarea"
-              rows={8}
               value={visualText}
               onChange={(textbox) =>
                 dispatch({
@@ -351,21 +351,30 @@ const MessageCard: ComponentType<CardProps> = ({
           </Button>
         </Col>
         <Col>
-          <Form>
-            <Form.Label>Phonetic Audio</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={8}
-              disabled={phoneticText.length === 0}
-              value={phoneticText}
-              onChange={(textbox) =>
-                dispatch({
-                  type: "SET_PHONETIC_TEXT",
-                  phoneticText: textbox.target.value,
-                })
-              }
-            />
-          </Form>
+          {phoneticText.length > 0 ? (
+            <Form>
+              <Form.Label>Phonetic Audio</Form.Label>
+              <Form.Control
+                className="phonetic-text-input"
+                as="textarea"
+                disabled={phoneticText.length === 0}
+                value={phoneticText}
+                onChange={(textbox) =>
+                  dispatch({
+                    type: "SET_PHONETIC_TEXT",
+                    phoneticText: textbox.target.value,
+                  })
+                }
+              />
+            </Form>
+          ) : (
+            <Card className="review-audio-card">
+              <Button className="review-audio-button" variant="link">
+                <VolumeUpFill height={12} />
+                Review audio
+              </Button>
+            </Card>
+          )}
         </Col>
       </Row>
     </Card>

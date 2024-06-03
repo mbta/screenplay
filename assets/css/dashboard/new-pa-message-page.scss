@@ -102,8 +102,21 @@
       }
     }
 
-    .form-control {
-      height: 100%;
+    .visual-text-input,
+    .phonetic-text-input {
+      height: 250px;
+      resize: none;
+    }
+
+    .review-audio-card {
+      height: 250px;
+      background-color: $cool-gray-15;
+
+      .review-audio-button {
+        color: $button-primary;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
     }
   }
 
