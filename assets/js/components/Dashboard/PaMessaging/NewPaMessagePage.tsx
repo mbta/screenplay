@@ -1,4 +1,4 @@
-import React, { ComponentType, useReducer } from "react";
+import React, { ComponentType, useReducer, useState } from "react";
 import {
   Button,
   Card,
@@ -6,11 +6,17 @@ import {
   Container,
   Dropdown,
   Form,
+  OverlayTrigger,
+  Popover,
   Row,
 } from "react-bootstrap";
 import _ from "lodash/fp";
 import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { Value } from "react-calendar/dist/cjs/shared/types";
 
 enum DayItem {
   All = "All days",
@@ -30,6 +36,10 @@ enum DayOfWeek {
 }
 
 interface NewPaMessagePageState {
+  selectedStartDate: string;
+  selectedStartTime: string;
+  selectedEndDate: string;
+  selectedEndTime: string;
   selectedDayLabel: string;
   selectedDays: number[];
   selectedPriority: number;
@@ -39,6 +49,22 @@ interface NewPaMessagePageState {
 }
 
 type NewPaMessagePageReducerAction =
+  | {
+      type: "SET_START_DATE";
+      date: string;
+    }
+  | {
+      type: "SET_START_TIME";
+      time: string;
+    }
+  | {
+      type: "SET_END_DATE";
+      date: string;
+    }
+  | {
+      type: "SET_END_TIME";
+      time: string;
+    }
   | {
       type: "SET_DAY_LABEL";
       dayLabel: string;
@@ -69,6 +95,14 @@ const reducer = (
   action: NewPaMessagePageReducerAction
 ) => {
   switch (action.type) {
+    case "SET_START_DATE":
+      return _.set("selectedStartDate", action.date, state);
+    case "SET_START_TIME":
+      return _.set("selectedStartTime", action.time, state);
+    case "SET_END_DATE":
+      return _.set("selectedEndDate", action.date, state);
+    case "SET_END_TIME":
+      return _.set("selectedEndTime", action.time, state);
     case "SET_DAY_LABEL":
       return _.set("selectedDayLabel", action.dayLabel, state);
     case "SET_SELECTED_DAYS":
@@ -85,7 +119,12 @@ const reducer = (
 };
 
 const NewPaMessagePage: ComponentType = () => {
+  const now = moment();
   const initialState: NewPaMessagePageState = {
+    selectedStartDate: now.format("L"),
+    selectedStartTime: now.format("HH:mm"),
+    selectedEndDate: now.format("L"),
+    selectedEndTime: now.add(1, "hour").format("HH:mm"),
     selectedDayLabel: "All days",
     selectedDays: [1, 2, 3, 4, 5, 6, 7],
     selectedPriority: 2,
@@ -138,32 +177,69 @@ const WhenCard: ComponentType<CardProps> = ({
   pageState,
   dispatch,
 }: CardProps) => {
-  const { selectedDayLabel, selectedDays, selectedPriority, selectedInterval } =
-    pageState;
+  const {
+    selectedStartDate,
+    selectedStartTime,
+    selectedEndDate,
+    selectedEndTime,
+    selectedDayLabel,
+    selectedDays,
+    selectedPriority,
+    selectedInterval,
+  } = pageState;
+
   return (
     <Card className="new-pa-message-page__when">
       <div className="title">When</div>
-      <Row className="start-datetime">
-        <div className="label body--regular">Start</div>
-        <Row md="auto">
-          <Form>
-            <Form.Control type="date" />
-          </Form>
-          <Form>
-            <Form.Control type="time" />
-          </Form>
-        </Row>
+      <div className="label body--regular">Start</div>
+      <Row md="auto" className="start-datetime">
+        <DatePicker
+          selectedDate={selectedStartDate}
+          onChange={(date) => {
+            dispatch({
+              type: "SET_START_DATE",
+              date: moment(date as Date).format("L"),
+            });
+          }}
+          maxDateString={selectedEndDate}
+        />
+        <Form>
+          <Form.Control
+            type="time"
+            value={selectedStartTime}
+            onChange={(time) =>
+              dispatch({
+                type: "SET_START_TIME",
+                time: time.target.value,
+              })
+            }
+          />
+        </Form>
       </Row>
-      <Row className="end-datetime">
-        <div className="label body--regular">End</div>
-        <Row md="auto">
-          <Form>
-            <Form.Control type="date" />
-          </Form>
-          <Form>
-            <Form.Control type="time" />
-          </Form>
-        </Row>
+      <div className="label body--regular">End</div>
+      <Row md="auto" className="end-datetime">
+        <DatePicker
+          selectedDate={selectedEndDate}
+          onChange={(date) => {
+            dispatch({
+              type: "SET_END_DATE",
+              date: moment(date as Date).format("L"),
+            });
+          }}
+          minDateString={selectedStartDate}
+        />
+        <Form>
+          <Form.Control
+            type="time"
+            value={selectedEndTime}
+            onChange={(time) =>
+              dispatch({
+                type: "SET_END_TIME",
+                time: time.target.value,
+              })
+            }
+          />
+        </Form>
       </Row>
       <Row className="days">
         <div className="label body--regular">Days</div>
@@ -378,6 +454,57 @@ const MessageCard: ComponentType<CardProps> = ({
         </Col>
       </Row>
     </Card>
+  );
+};
+
+interface DatePickerProps {
+  selectedDate: string;
+  onChange: (date: Value) => void;
+  minDateString?: string;
+  maxDateString?: string;
+}
+
+const DatePicker: ComponentType<DatePickerProps> = ({
+  selectedDate,
+  onChange,
+  minDateString,
+  maxDateString,
+}: DatePickerProps) => {
+  const [show, setShow] = useState(false);
+  const minDate = minDateString ? new Date(minDateString) : new Date(-1);
+  const maxDate = maxDateString
+    ? new Date(maxDateString)
+    : new Date(Number.MAX_SAFE_INTEGER);
+
+  return (
+    <OverlayTrigger
+      placement="bottom-start"
+      rootClose
+      trigger="click"
+      overlay={
+        <Popover className="calendar-tooltip">
+          <Calendar
+            minDate={minDate}
+            maxDate={maxDate}
+            defaultValue={new Date(selectedDate)}
+            onChange={(date) => {
+              onChange(date);
+              setShow(false);
+            }}
+          />
+        </Popover>
+      }
+    >
+      {({ ref, ...triggerHandler }) => (
+        <Form ref={ref} {...triggerHandler}>
+          <Form.Control
+            readOnly
+            value={selectedDate}
+            onClick={() => setShow(!show)}
+          />
+        </Form>
+      )}
+    </OverlayTrigger>
   );
 };
 
