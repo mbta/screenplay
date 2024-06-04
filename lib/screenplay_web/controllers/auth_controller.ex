@@ -35,4 +35,14 @@ defmodule ScreenplayWeb.AuthController do
       ) do
     send_resp(conn, 401, "unauthenticated")
   end
+
+  ## Fallback handlers for unknown/unconfigured "providers"
+
+  def callback(conn, _) do
+    send_resp(conn, 404, "Not Found")
+  end
+
+  def request(conn, _) do
+    send_resp(conn, 404, "Not Found")
+  end
 end
