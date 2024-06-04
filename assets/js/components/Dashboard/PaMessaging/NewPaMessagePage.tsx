@@ -470,7 +470,6 @@ const DatePicker: ComponentType<DatePickerProps> = ({
   minDateString,
   maxDateString,
 }: DatePickerProps) => {
-  const [show, setShow] = useState(false);
   const minDate = minDateString ? new Date(minDateString) : new Date(-1);
   const maxDate = maxDateString
     ? new Date(maxDateString)
@@ -489,7 +488,7 @@ const DatePicker: ComponentType<DatePickerProps> = ({
             defaultValue={new Date(selectedDate)}
             onChange={(date) => {
               onChange(date);
-              setShow(false);
+              document.body.click();
             }}
           />
         </Popover>
@@ -497,11 +496,7 @@ const DatePicker: ComponentType<DatePickerProps> = ({
     >
       {({ ref, ...triggerHandler }) => (
         <Form ref={ref} {...triggerHandler}>
-          <Form.Control
-            readOnly
-            value={selectedDate}
-            onClick={() => setShow(!show)}
-          />
+          <Form.Control readOnly value={selectedDate} />
         </Form>
       )}
     </OverlayTrigger>
