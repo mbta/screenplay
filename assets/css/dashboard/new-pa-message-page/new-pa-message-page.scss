@@ -1,0 +1,45 @@
+.new-pa-message-page {
+  padding: 24px 40px;
+  &__header {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+  }
+
+  &__associate-alert-subtext {
+    color: $text-secondary;
+  }
+
+  &__form-buttons {
+    padding: 18px 24px;
+
+    .btn {
+      height: 38px;
+    }
+
+    .cancel-button {
+      background-color: transparent;
+      color: $text-link-primary;
+      border: none;
+    }
+
+    .submit-button {
+      background-color: $button-primary;
+      color: $button-secondary;
+    }
+  }
+
+  .days {
+    .dropdown {
+      width: 250px;
+
+      .dropdown-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+  }
+}

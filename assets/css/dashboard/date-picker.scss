@@ -1,0 +1,104 @@
+@import "react-calendar/dist/Calendar.css";
+
+.calendar-popover {
+  margin-left: 12px;
+
+  .popover-arrow {
+    display: none;
+  }
+  .react-calendar {
+    padding: 8px 12px;
+    max-width: 250px;
+    background-color: $dark-bg;
+    border-radius: 4px;
+    border: 1px solid $text-disabled;
+    font-family: Inter;
+    line-height: 21px;
+    font-weight: 400;
+    font-size: 14px;
+
+    &__navigation {
+      height: 40px;
+      margin-bottom: 0;
+      button {
+        height: 100%;
+        &:enabled:hover,
+        &:enabled:focus,
+        &:disabled {
+          background-color: transparent;
+        }
+      }
+      &__label {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      &__arrow {
+        padding: 0;
+        min-width: 22px;
+      }
+    }
+
+    &__viewContainer {
+      .react-calendar__month-view__weekdays {
+        color: $text-primary;
+        text-transform: unset;
+        flex: none;
+
+        &__weekday {
+          display: flex;
+          justify-content: center;
+          height: 30px;
+          width: 36px;
+          padding: 0;
+        }
+        abbr {
+          cursor: unset;
+          text-decoration: unset;
+          margin: auto;
+        }
+      }
+
+      .react-calendar__month-view__days {
+        .react-calendar__tile {
+          height: 30px;
+          width: 36px;
+          padding: 1.5px 4px;
+          border-radius: 4px;
+          &--now {
+            background-color: transparent;
+            border: 1px solid $text-disabled;
+            color: $text-primary;
+
+            &:enabled:hover {
+              background-color: $main-blue;
+              border-color: $button-primary;
+            }
+          }
+
+          &--active {
+            background-color: $button-primary;
+            color: $cool-gray-15;
+            border: none;
+          }
+
+          &:enabled:hover {
+            background-color: $cool-gray-20;
+          }
+          &:disabled {
+            background-color: transparent;
+            color: $text-disabled;
+          }
+        }
+
+        &__day {
+          &--weekend {
+            color: $text-primary;
+          }
+          &--neighboringMonth {
+            color: $text-disabled;
+          }
+        }
+      }
+    }
+  }
+}
