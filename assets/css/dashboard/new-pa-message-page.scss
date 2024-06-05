@@ -247,3 +247,34 @@
     }
   }
 }
+
+.time-tooltip {
+  margin-left: 12px;
+
+  .time-picker-card {
+    width: 216px;
+    overflow: hidden;
+  }
+
+  .col {
+    padding: 0;
+    overflow-y: scroll;
+  }
+
+  .hour-col,
+  .minute-col {
+    .btn {
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+
+  .popover-arrow {
+    display: none;
+  }
+
+  .row {
+    max-height: 417px;
+    flex-wrap: nowrap;
+  }
+}

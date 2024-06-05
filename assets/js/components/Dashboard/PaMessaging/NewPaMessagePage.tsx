@@ -10,7 +10,8 @@ import {
   Popover,
   Row,
 } from "react-bootstrap";
-import _ from "lodash/fp";
+import fp from "lodash/fp";
+import _ from "lodash";
 import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -96,25 +97,25 @@ const reducer = (
 ) => {
   switch (action.type) {
     case "SET_START_DATE":
-      return _.set("selectedStartDate", action.date, state);
+      return fp.set("selectedStartDate", action.date, state);
     case "SET_START_TIME":
-      return _.set("selectedStartTime", action.time, state);
+      return fp.set("selectedStartTime", action.time, state);
     case "SET_END_DATE":
-      return _.set("selectedEndDate", action.date, state);
+      return fp.set("selectedEndDate", action.date, state);
     case "SET_END_TIME":
-      return _.set("selectedEndTime", action.time, state);
+      return fp.set("selectedEndTime", action.time, state);
     case "SET_DAY_LABEL":
-      return _.set("selectedDayLabel", action.dayLabel, state);
+      return fp.set("selectedDayLabel", action.dayLabel, state);
     case "SET_SELECTED_DAYS":
-      return _.set("selectedDays", action.days, state);
+      return fp.set("selectedDays", action.days, state);
     case "SET_PRIORITY":
-      return _.set("selectedPriority", action.priority, state);
+      return fp.set("selectedPriority", action.priority, state);
     case "SET_INTERVAL":
-      return _.set("selectedInterval", action.interval, state);
+      return fp.set("selectedInterval", action.interval, state);
     case "SET_VISUAL_TEXT":
-      return _.set("visualText", action.visualText, state);
+      return fp.set("visualText", action.visualText, state);
     case "SET_PHONETIC_TEXT":
-      return _.set("phoneticText", action.phoneticText, state);
+      return fp.set("phoneticText", action.phoneticText, state);
   }
 };
 
@@ -122,9 +123,9 @@ const NewPaMessagePage: ComponentType = () => {
   const now = moment();
   const initialState: NewPaMessagePageState = {
     selectedStartDate: now.format("L"),
-    selectedStartTime: now.format("HH:mm"),
+    selectedStartTime: now.format("h:mm A"),
     selectedEndDate: now.format("L"),
-    selectedEndTime: now.add(1, "hour").format("HH:mm"),
+    selectedEndTime: now.add(1, "hour").format("h:mm A"),
     selectedDayLabel: "All days",
     selectedDays: [1, 2, 3, 4, 5, 6, 7],
     selectedPriority: 2,
@@ -132,6 +133,7 @@ const NewPaMessagePage: ComponentType = () => {
     visualText: "",
     phoneticText: "",
   };
+
   const [state, dispath] = useReducer(reducer, initialState);
   const navigate = useNavigate();
 
@@ -228,18 +230,7 @@ const WhenCard: ComponentType<CardProps> = ({
           }}
           minDateString={selectedStartDate}
         />
-        <Form>
-          <Form.Control
-            type="time"
-            value={selectedEndTime}
-            onChange={(time) =>
-              dispatch({
-                type: "SET_END_TIME",
-                time: time.target.value,
-              })
-            }
-          />
-        </Form>
+        <TimePicker selectedTime={selectedEndTime} onChange={() => undefined} />
       </Row>
       <Row className="days">
         <div className="label body--regular">Days</div>
@@ -303,12 +294,12 @@ const WhenCard: ComponentType<CardProps> = ({
                         if (checkbox.target.checked) {
                           dispatch({
                             type: "SET_SELECTED_DAYS",
-                            days: _.concat(selectedDays, [dayOfWeekValue]),
+                            days: fp.concat(selectedDays, [dayOfWeekValue]),
                           });
                         } else {
                           dispatch({
                             type: "SET_SELECTED_DAYS",
-                            days: _.pull(dayOfWeekValue, selectedDays),
+                            days: fp.pull(dayOfWeekValue, selectedDays),
                           });
                         }
                       }}
@@ -497,6 +488,87 @@ const DatePicker: ComponentType<DatePickerProps> = ({
       {({ ref, ...triggerHandler }) => (
         <Form ref={ref} {...triggerHandler}>
           <Form.Control readOnly value={selectedDate} />
+        </Form>
+      )}
+    </OverlayTrigger>
+  );
+};
+
+interface TimePickerProps {
+  selectedTime: string;
+  onChange: (time: string) => void;
+}
+
+const TimePicker: ComponentType<TimePickerProps> = ({
+  selectedTime,
+  onChange,
+}: TimePickerProps) => {
+  const timeMoment = moment(selectedTime, "h:mm A");
+  const [selectedHour, setSelectedHour] = useState(timeMoment.format("hh"));
+  const [selectedMinute, setSelectedMinute] = useState(timeMoment.format("mm"));
+  const [selectedAmPm, setSelectedAmPm] = useState(timeMoment.format("A"));
+
+  return (
+    <OverlayTrigger
+      placement="bottom-start"
+      rootClose
+      trigger="click"
+      popperConfig={{
+        modifiers: [
+          {
+            name: "preventOverflow",
+            options: {
+              rootBoundary: "document",
+              padding: 10,
+            },
+          },
+        ],
+      }}
+      overlay={
+        <Popover className="time-tooltip">
+          {/* <Calendar
+            minDate={minDate}
+            maxDate={maxDate}
+            defaultValue={new Date(selectedDate)}
+            onChange={(date) => {
+              onChange(date);
+              document.body.click();
+            }}
+          /> */}
+          <Card className="time-picker-card">
+            <Container fluid>
+              <Row>
+                <Col className="hour-col">
+                  {fp.range(0, 13).map((hour) => {
+                    return (
+                      <Button key={`hour-${hour}`}>
+                        {hour.toString().padStart(2, "0")}
+                      </Button>
+                    );
+                  })}
+                </Col>
+                <Col className="minute-col">
+                  {_.range(0, 60, 5).map((minute) => {
+                    return (
+                      <Button key={`minute-${minute}`}>
+                        {minute.toString().padStart(2, "0")}
+                      </Button>
+                    );
+                  })}
+                </Col>
+                <Col className="ampm-col">
+                  <Button>AM</Button>
+                  <Button>PM</Button>
+                </Col>
+              </Row>
+            </Container>
+          </Card>
+        </Popover>
+      }
+    >
+      {({ ref, ...triggerHandler }) => (
+        <Form ref={ref} {...triggerHandler}>
+          <Form.Control readOnly value={selectedTime} />
         </Form>
       )}
     </OverlayTrigger>
