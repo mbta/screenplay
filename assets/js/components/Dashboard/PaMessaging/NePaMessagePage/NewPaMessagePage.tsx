@@ -1,15 +1,3 @@
-/**
- * Outstanding tasks
- * - [x] Extract sub-components
- *    - [x] Use siblings for components used only by this parent
- *    - [x] Use `./components` things that are reusable
- * - [x] Move CSS import into appropriate SCSS file
- * - [x] Get Time picker rendering like (or very close to) the designs
- * - [x] BUG: Dates dropdown does not work
- * - [ ] Stretch:
- *   - [ ] Get typing into date picker working
- *   - [ ] Get typing into time picker working
- */
 import React, { ComponentType, useReducer } from "react";
 import { Button, Container, Row } from "react-bootstrap";
 import WhenCard from "./WhenCard";
