@@ -95,9 +95,9 @@ const NewPaMessagePage: ComponentType = () => {
   const now = moment();
   const initialState: NewPaMessagePageState = {
     selectedStartDate: now.format("L"),
-    selectedStartTime: now.format("hh:mm A"),
+    selectedStartTime: now.format("HH:mm"),
     selectedEndDate: now.format("L"),
-    selectedEndTime: now.add(1, "hour").format("hh:mm A"),
+    selectedEndTime: now.add(1, "hour").format("HH:mm"),
     selectedDayLabel: "All days",
     selectedDays: [1, 2, 3, 4, 5, 6, 7],
     selectedPriority: 2,

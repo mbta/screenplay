@@ -1,4 +1,4 @@
-import React, { ComponentType, useRef, useState } from "react";
+import React, { ComponentType, useEffect, useRef, useState } from "react";
 import { Card, Form, Overlay, Popover } from "react-bootstrap";
 import _ from "lodash";
 import fp from "lodash/fp";
@@ -21,12 +21,38 @@ const TimePicker: ComponentType<TimePickerProps> = ({
   const [selectedAmPm, setSelectedAmPm] = useState(timeMoment.format("A"));
   const ref = useRef(null);
 
+  const formatState = () =>
+    moment(
+      `${selectedHour}:${selectedMinute} ${selectedAmPm}`,
+      "hh:mm A",
+    ).format("HH:mm");
+
+  useEffect(() => {
+    onChange(formatState());
+  }, [selectedHour, selectedMinute, selectedAmPm]);
+
   return (
     <>
-      <Form ref={ref} onClick={() => setShowOverlay(!showOverlay)}>
-        <Form.Control readOnly value={selectedTime} />
+      <Form ref={ref} onClick={() => setShowOverlay(true)}>
+        <Form.Control
+          type="time"
+          value={selectedTime}
+          onChange={(input) => {
+            const inputValue = moment(input.target.value, "HH:mm");
+            onChange(inputValue.format("HH:mm"));
+            setSelectedHour(inputValue.format("hh"));
+            setSelectedMinute(inputValue.format("mm"));
+            setSelectedAmPm(inputValue.format("A"));
+          }}
+        />
       </Form>
-      <Overlay target={ref.current} placement="bottom-start" show={showOverlay}>
+      <Overlay
+        rootClose
+        onHide={() => setShowOverlay(false)}
+        target={ref.current}
+        placement="bottom-start"
+        show={showOverlay}
+      >
         {({
           placement: _placement,
           arrowProps: _arrowProps,
@@ -91,8 +117,7 @@ const TimePicker: ComponentType<TimePickerProps> = ({
                     type="button"
                     className="start-of-service-button"
                     onClick={() => {
-                      onChange("03:00 AM");
-                      setShowOverlay(false);
+                      onChange("03:00");
                       setSelectedHour("03");
                       setSelectedMinute("00");
                       setSelectedAmPm("AM");
@@ -104,8 +129,7 @@ const TimePicker: ComponentType<TimePickerProps> = ({
                     type="button"
                     className="end-of-service-button"
                     onClick={() => {
-                      onChange("02:59 AM");
-                      setShowOverlay(false);
+                      onChange("02:59");
                       setSelectedHour("02");
                       setSelectedMinute("59");
                       setSelectedAmPm("AM");
@@ -119,9 +143,7 @@ const TimePicker: ComponentType<TimePickerProps> = ({
                     className="ok-button"
                     type="button"
                     onClick={() => {
-                      onChange(
-                        `${selectedHour}:${selectedMinute} ${selectedAmPm}`,
-                      );
+                      onChange(formatState());
                       setShowOverlay(false);
                     }}
                   >
