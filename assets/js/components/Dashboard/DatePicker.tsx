@@ -16,7 +16,6 @@ const DatePicker = ({
   minDateString,
   maxDateString,
 }: DatePickerProps) => {
-  const [inputString, setInputString] = useState(selectedDate);
   const [showOverlay, setShowOverlay] = useState(false);
   const ref = useRef(null);
   const minDate = minDateString ? new Date(minDateString) : undefined;
@@ -29,15 +28,14 @@ const DatePicker = ({
         className="date-picker"
         onSubmit={(event) => {
           event.preventDefault();
-          onChange(inputString);
+          setShowOverlay(false);
         }}
         onClick={() => setShowOverlay(!showOverlay)}
       >
         <Form.Control
-          value={inputString}
+          value={selectedDate}
           onChange={(input) => {
             const inputValue = input.target.value;
-            setInputString(inputValue);
             onChange(inputValue);
           }}
         />
@@ -64,7 +62,6 @@ const DatePicker = ({
               defaultValue={new Date(selectedDate)}
               onChange={(date) => {
                 const newDate = moment(date as Date).format("L");
-                setInputString(newDate);
                 onChange(newDate);
               }}
             />
