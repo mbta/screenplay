@@ -7,7 +7,6 @@ import {
   NewPaMessagePageReducerAction,
 } from "./NewPaMessagePage";
 import fp from "lodash/fp";
-import moment from "moment";
 
 enum DayItem {
   All = "All days",
@@ -63,7 +62,7 @@ const WhenCard: ComponentType<Props> = ({ pageState, dispatch }: Props) => {
           onChange={(date) => {
             dispatch({
               type: "SET_START_DATE",
-              date: moment(date as Date).format("L"),
+              date: date,
             });
           }}
           maxDateString={selectedEndDate}
@@ -85,7 +84,7 @@ const WhenCard: ComponentType<Props> = ({ pageState, dispatch }: Props) => {
           onChange={(date) => {
             dispatch({
               type: "SET_END_DATE",
-              date: moment(date as Date).format("L"),
+              date: date,
             });
           }}
           minDateString={selectedStartDate}
