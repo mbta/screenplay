@@ -29,7 +29,7 @@ const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
 
   useEffect(() => {
     onChange(formattedState);
-  }, [selectedHour, selectedMinute, selectedAmPm]);
+  }, [formattedState]);
 
   return (
     <>
