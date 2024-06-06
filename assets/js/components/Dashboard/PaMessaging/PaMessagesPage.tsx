@@ -3,6 +3,7 @@ import { Container, Row, Col, Button, FormCheck } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 import { fetchPaMessages } from "../../../utils/api";
 import { PaMessage } from "../../../models/pa_message";
+import { Link } from "react-router-dom";
 
 const PaMessagesPage: ComponentType = () => {
   const [paMessages, setPaMessages] = useState<PaMessage[]>([]);
@@ -27,12 +28,12 @@ const PaMessagesPage: ComponentType = () => {
           <Col className="pa-message-table-container">
             <Row className="pa-message-table-action-bar">
               <Col>
-                <a href="/pa-messages/new">
+                <Link to="/pa-messages/new">
                   <Button>
                     <PlusCircleFill className="pa-message-table-action-bar__plus" />{" "}
                     Add New
                   </Button>
-                </a>
+                </Link>
               </Col>
               <Col className="pa-message-table-action-bar__search">
                 <div>Search</div>
