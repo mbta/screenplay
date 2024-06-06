@@ -135,7 +135,9 @@ const NewPaMessagePage = () => {
           <Button className="cancel-button" onClick={() => navigate(-1)}>
             Cancel
           </Button>
-          <Button className="submit-button">Submit</Button>
+          <Button type="submit" className="submit-button">
+            Submit
+          </Button>
         </Row>
       </Container>
     </div>
