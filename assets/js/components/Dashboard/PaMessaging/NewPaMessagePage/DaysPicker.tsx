@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown, Form, Row } from "react-bootstrap";
 import fp from "lodash/fp";
+import _ from "lodash";
 
 enum DayItem {
   All = "All days",
@@ -91,7 +92,7 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
                     if (checkbox.target.checked) {
                       onChangeDays(fp.concat(days, [value]));
                     } else {
-                      onChangeDays(fp.pull(value, days));
+                      onChangeDays(_.without(days, value));
                     }
                   }}
                 />
