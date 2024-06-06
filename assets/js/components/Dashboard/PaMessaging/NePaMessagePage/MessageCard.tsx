@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React from "react";
 import { Card, Row, Col, Form, Button } from "react-bootstrap";
 import { ArrowRightShort, VolumeUpFill } from "react-bootstrap-icons";
 import {
@@ -11,7 +11,7 @@ interface Props {
   dispatch: React.Dispatch<NewPaMessagePageReducerAction>;
 }
 
-const MessageCard: ComponentType<Props> = ({ pageState, dispatch }: Props) => {
+const MessageCard = ({ pageState, dispatch }: Props) => {
   const { visualText, phoneticText } = pageState;
   return (
     <Card className="message-card">

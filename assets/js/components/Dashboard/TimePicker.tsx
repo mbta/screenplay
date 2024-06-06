@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, Form, Overlay, Popover } from "react-bootstrap";
 import _ from "lodash";
 import fp from "lodash/fp";
@@ -10,10 +10,7 @@ interface TimePickerProps {
   onChange: (time: string) => void;
 }
 
-const TimePicker: ComponentType<TimePickerProps> = ({
-  selectedTime,
-  onChange,
-}: TimePickerProps) => {
+const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
   const timeMoment = moment(selectedTime, "h:mm A");
   const [showOverlay, setShowOverlay] = useState(false);
   const [selectedHour, setSelectedHour] = useState(timeMoment.format("hh"));

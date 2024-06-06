@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React from "react";
 import { Card, Button } from "react-bootstrap";
 import {
   NewPaMessagePageState,
@@ -11,7 +11,7 @@ interface Props {
   dispatch: React.Dispatch<NewPaMessagePageReducerAction>;
 }
 
-const WhereCard: ComponentType<Props> = (_props) => {
+const WhereCard = (_props: Props) => {
   return (
     <Card className="where-card">
       <div className="title">Where</div>

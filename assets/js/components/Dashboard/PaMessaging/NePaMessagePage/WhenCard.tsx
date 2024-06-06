@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React from "react";
 import { Card, Row, Dropdown, Form, Col } from "react-bootstrap";
 import DatePicker from "../../DatePicker";
 import TimePicker from "../../TimePicker";
@@ -40,7 +40,7 @@ interface Props {
   dispatch: React.Dispatch<NewPaMessagePageReducerAction>;
 }
 
-const WhenCard: ComponentType<Props> = ({ pageState, dispatch }: Props) => {
+const WhenCard = ({ pageState, dispatch }: Props) => {
   const {
     selectedStartDate,
     selectedStartTime,

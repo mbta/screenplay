@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { ComponentType, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Form, Overlay, Popover } from "react-bootstrap";
 import Calendar from "react-calendar";
 
@@ -10,7 +10,7 @@ interface DatePickerProps {
   maxDateString?: string;
 }
 
-const DatePicker: ComponentType<DatePickerProps> = ({
+const DatePicker = ({
   selectedDate,
   onChange,
   minDateString,

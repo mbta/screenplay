@@ -1,4 +1,4 @@
-import React, { ComponentType, useReducer } from "react";
+import React, { useReducer } from "react";
 import { Button, Container, Row } from "react-bootstrap";
 import WhenCard from "./WhenCard";
 import WhereCard from "./WhereCard";
@@ -91,7 +91,7 @@ const reducer = (
   }
 };
 
-const NewPaMessagePage: ComponentType = () => {
+const NewPaMessagePage = () => {
   const now = moment();
   const initialState: NewPaMessagePageState = {
     selectedStartDate: now.format("L"),
