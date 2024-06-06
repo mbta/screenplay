@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Card, Form, Overlay, Popover } from "react-bootstrap";
 import _ from "lodash";
 import fp from "lodash/fp";
@@ -18,14 +18,17 @@ const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
   const [selectedAmPm, setSelectedAmPm] = useState(timeMoment.format("A"));
   const ref = useRef(null);
 
-  const formatState = () =>
-    moment(
-      `${selectedHour}:${selectedMinute} ${selectedAmPm}`,
-      "hh:mm A",
-    ).format("HH:mm");
+  const formattedState = useMemo(
+    () =>
+      moment(
+        `${selectedHour}:${selectedMinute} ${selectedAmPm}`,
+        "hh:mm A"
+      ).format("HH:mm"),
+    [selectedHour, selectedMinute, selectedAmPm]
+  );
 
   useEffect(() => {
-    onChange(formatState());
+    onChange(formattedState);
   }, [selectedHour, selectedMinute, selectedAmPm]);
 
   return (
@@ -133,7 +136,7 @@ const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
                     className="ok-button"
                     type="button"
                     onClick={() => {
-                      onChange(formatState());
+                      onChange(formattedState);
                       setShowOverlay(false);
                     }}
                   >
