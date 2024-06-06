@@ -22,9 +22,9 @@ const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
     () =>
       moment(
         `${selectedHour}:${selectedMinute} ${selectedAmPm}`,
-        "hh:mm A"
+        "hh:mm A",
       ).format("HH:mm"),
-    [selectedHour, selectedMinute, selectedAmPm]
+    [selectedHour, selectedMinute, selectedAmPm],
   );
 
   useEffect(() => {
