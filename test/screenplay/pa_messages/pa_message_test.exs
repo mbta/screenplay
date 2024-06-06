@@ -62,7 +62,7 @@ defmodule Screenplay.PaMessages.PaMessageTest do
     test "returns messages linked to an existing alert" do
       now = ~U[2024-05-01T05:00:00Z]
 
-      get_json_fn = fn "alerts", %{"include" => "routes"} ->
+      get_json_fn = fn "/alerts", %{"include" => "routes"} ->
         {:ok,
          %{
            "data" => [

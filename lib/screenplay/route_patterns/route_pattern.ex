@@ -7,7 +7,7 @@ defmodule Screenplay.RoutePatterns.RoutePattern do
 
   @impl true
   def fetch_platform_ids_for_route_at_stop(stop_id, route_id) do
-    case V3Api.get_json("route_patterns", %{
+    case V3Api.get_json("/route_patterns", %{
            "include" => "representative_trip.stops",
            "filter[route]" => route_id,
            "filter[canonical]" => true
