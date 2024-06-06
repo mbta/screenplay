@@ -140,7 +140,7 @@ const WhenCard: ComponentType<Props> = ({ pageState, dispatch }: Props) => {
             </Dropdown.Menu>
           </Dropdown>
           {selectedDayLabel == DayItem.Select && (
-            <Form className="m-0">
+            <Form className="days-form">
               {DAYS_OF_WEEK.map(({ label, value }) => {
                 return (
                   <Form.Check
