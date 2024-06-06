@@ -47,14 +47,7 @@ const DatePicker = ({
         placement="bottom-start"
         show={showOverlay}
       >
-        {({
-          placement: _placement,
-          arrowProps: _arrowProps,
-          show: _show,
-          popper: _popper,
-          hasDoneInitialMeasure: _hasDoneInitialMeasure,
-          ...props
-        }) => (
+        {(props) => (
           <Popover className="calendar-popover" {...props}>
             <Calendar
               minDate={minDate}

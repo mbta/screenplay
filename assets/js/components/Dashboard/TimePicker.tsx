@@ -50,14 +50,7 @@ const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
         placement="bottom-start"
         show={showOverlay}
       >
-        {({
-          placement: _placement,
-          arrowProps: _arrowProps,
-          show: _show,
-          popper: _popper,
-          hasDoneInitialMeasure: _hasDoneInitialMeasure,
-          ...props
-        }) => (
+        {(props) => (
           <Popover className="time-popover" {...props}>
             <Card className="time-picker-card">
               <div className="time-picker-card-columns">
