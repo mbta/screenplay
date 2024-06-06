@@ -128,7 +128,12 @@ const NewPaMessagePage = () => {
           md="auto"
           className="justify-content-end new-pa-message-page__form-buttons"
         >
-          <Button className="cancel-button" onClick={() => navigate(-1)}>
+          <Button
+            className="cancel-button"
+            onClick={() =>
+              window.history.length > 1 ? navigate(-1) : window.close()
+            }
+          >
             Cancel
           </Button>
           <Button type="submit" className="submit-button">
