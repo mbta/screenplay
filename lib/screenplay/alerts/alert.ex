@@ -61,7 +61,7 @@ defmodule Screenplay.Alerts.Alert do
         }
 
   def fetch(get_json_fn \\ &V3Api.get_json/2) do
-    case get_json_fn.("alerts", %{
+    case get_json_fn.("/alerts", %{
            "include" => "routes"
          }) do
       {:ok, result} ->

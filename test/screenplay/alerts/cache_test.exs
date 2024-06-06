@@ -24,7 +24,7 @@ defmodule Screenplay.Alerts.CacheTest do
   end
 
   test "It polls an API and updates the store" do
-    get_json_fn = fn "alerts", %{"include" => "routes"} ->
+    get_json_fn = fn "/alerts", %{"include" => "routes"} ->
       {:ok, %{"data" => [alert_json("1")], "included" => []}}
     end
 
@@ -39,7 +39,7 @@ defmodule Screenplay.Alerts.CacheTest do
   end
 
   test "It handles a failed API response and does not update the store" do
-    get_json_fn = fn "alerts", %{"include" => "routes"} ->
+    get_json_fn = fn "/alerts", %{"include" => "routes"} ->
       :error
     end
 

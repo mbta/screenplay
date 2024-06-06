@@ -61,12 +61,21 @@ defmodule Screenplay.V3Api do
     error
   end
 
-  defp build_url(route, params) when map_size(params) == 0 do
-    base_url() <> route
-  end
+  @doc false
+  def build_url(route, params) do
+    query = URI.encode_query(params)
 
-  defp build_url(route, params) do
-    "#{base_url()}/#{route}?#{URI.encode_query(params)}"
+    base_url()
+    |> URI.parse()
+    |> URI.append_path(route)
+    |> then(fn url ->
+      if query == "" do
+        url
+      else
+        URI.append_query(url, query)
+      end
+    end)
+    |> URI.to_string()
   end
 
   defp base_url do
