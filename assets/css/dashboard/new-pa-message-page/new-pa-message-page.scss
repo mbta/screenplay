@@ -1,0 +1,171 @@
+.new-pa-message-page {
+  padding: 24px 40px;
+
+  &__header {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+  }
+
+  &__associate-alert-subtext {
+    color: $text-secondary;
+  }
+
+  &__form-buttons {
+    padding: 18px 24px;
+
+    .btn {
+      height: 38px;
+    }
+
+    .cancel-button {
+      background-color: transparent;
+      color: $text-link-primary;
+      border: none;
+    }
+
+    .submit-button {
+      background-color: $button-primary;
+      color: $button-secondary;
+    }
+  }
+
+  .when-card,
+  .where-card,
+  .message-card {
+    margin-top: 24px;
+    padding: 18px 24px;
+    background-color: $cool-gray-20;
+    color: white;
+
+    .title {
+      margin-bottom: 16px;
+      font-weight: 500;
+      font-size: 24px;
+    }
+
+    .dropdown-toggle,
+    .form-control {
+      background-color: $dark-bg;
+      height: 38px;
+      color: $text-secondary;
+      font-weight: 400;
+      border: 1px solid $border-primary;
+    }
+  }
+
+  .when-card {
+    .label {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      color: $text-secondary;
+    }
+
+    .start-datetime,
+    .end-datetime {
+      width: 100%;
+      height: 38px;
+
+      form {
+        width: 250px;
+      }
+    }
+
+    .days {
+      .dropdown {
+        width: 250px;
+
+        .dropdown-toggle {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+
+      .days-form {
+        height: 36px;
+        padding-top: 8px;
+        margin: 0px;
+      }
+    }
+
+    .dropdown-menu {
+      background-color: $cool-gray-30;
+    }
+
+    .dropdown-item {
+      color: $text-primary;
+      &:hover {
+        background-color: $cool-gray-20;
+      }
+
+      &.active {
+        background-color: $button-primary;
+        color: $button-secondary;
+      }
+    }
+
+    .interval {
+      width: 80px;
+      height: 38px;
+      .form-control {
+        padding: 7px 13px;
+        text-align: end;
+
+        border: 1px solid $border-primary;
+      }
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield; /* Firefox */
+      appearance: textfield;
+    }
+  }
+
+  .where-card {
+    .add-stations-zones-button {
+      background-color: $text-link-primary;
+      color: $text-invert;
+      border: 1px dashed $text-invert;
+      width: fit-content;
+      vertical-align: middle;
+    }
+  }
+
+  .message-card {
+    .copy-text-button {
+      background-color: $bg-border-disabled;
+      width: 38px;
+      height: 38px;
+
+      .bi-arrow-right-short {
+        fill: $text-disabled;
+      }
+    }
+
+    .text-input {
+      height: 250px;
+      resize: none;
+    }
+
+    .review-audio-card {
+      height: 250px;
+      background-color: $cool-gray-15;
+
+      .review-audio-button {
+        color: $button-primary;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+    }
+  }
+}

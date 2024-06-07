@@ -19,7 +19,12 @@ const ConfigureScreensPage = React.lazy(
 const SelectScreenTypeComponent = React.lazy(
   () => import("./Dashboard/PermanentConfiguration/SelectScreenType"),
 );
-const PaMessagesPage = React.lazy(() => import("./Dashboard/PaMessagesPage"));
+const PaMessagesPage = React.lazy(
+  () => import("./Dashboard/PaMessaging/PaMessagesPage"),
+);
+const NewPaMessagePage = React.lazy(
+  () => import("./Dashboard/PaMessaging/NewPaMessagePage/NewPaMessagePage"),
+);
 
 class AppRoutes extends React.Component {
   render() {
@@ -46,7 +51,8 @@ class AppRoutes extends React.Component {
               <Route path="*" element={<SelectScreenTypeComponent />} />
               <Route path="gl-eink" element={<GlEinkWorkflow />} />
             </Route>
-            <Route path="pa-messages" element={<PaMessagesPage />}></Route>
+            <Route path="pa-messages" element={<PaMessagesPage />} />
+            <Route path="pa-messages/new" element={<NewPaMessagePage />} />
           </Route>
         </Routes>
       </React.Suspense>
