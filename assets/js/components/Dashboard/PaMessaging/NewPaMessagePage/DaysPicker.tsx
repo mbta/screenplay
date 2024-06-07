@@ -79,7 +79,7 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
             </Dropdown.Menu>
           </Dropdown>
         </Col>
-        {dayLabel == DayItem.Select && (
+        {dayLabel === DayItem.Select && (
           <Col md="auto">
             {DAYS_OF_WEEK.map(({ label, value }) => {
               return (
