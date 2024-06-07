@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, Row } from "react-bootstrap";
+import { Dropdown, Form, Row } from "react-bootstrap";
 
 interface Props {
   priority: number;
@@ -7,10 +7,15 @@ interface Props {
 }
 const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
   return (
-    <>
-      <div className="label body--regular">Priority</div>
+    <Form.Group>
+      <Form.Label htmlFor="priority-picker" className="label body--regular">
+        Priority
+      </Form.Label>
       <Row md="auto" className="align-items-center">
-        <Dropdown onSelect={(eventKey) => onSelectPriority(Number(eventKey))}>
+        <Dropdown
+          id="priority-picker"
+          onSelect={(eventKey) => onSelectPriority(Number(eventKey))}
+        >
           <Dropdown.Toggle>{priority}</Dropdown.Toggle>
           <Dropdown.Menu>
             {[
@@ -33,7 +38,7 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
           </Dropdown.Menu>
         </Dropdown>
       </Row>
-    </>
+    </Form.Group>
   );
 };
 

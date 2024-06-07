@@ -8,9 +8,10 @@ import cx from "classnames";
 interface TimePickerProps {
   selectedTime: string;
   onChange: (time: string) => void;
+  id?: string;
 }
 
-const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
+const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
   const timeMoment = moment(selectedTime, "h:mm A");
   const [showOverlay, setShowOverlay] = useState(false);
   const [selectedHour, setSelectedHour] = useState(timeMoment.format("hh"));
@@ -33,19 +34,20 @@ const TimePicker = ({ selectedTime, onChange }: TimePickerProps) => {
 
   return (
     <>
-      <Form ref={ref} onClick={() => setShowOverlay(true)}>
-        <Form.Control
-          type="time"
-          value={selectedTime}
-          onChange={(input) => {
-            const inputValue = moment(input.target.value, "HH:mm");
-            onChange(inputValue.format("HH:mm"));
-            setSelectedHour(inputValue.format("hh"));
-            setSelectedMinute(inputValue.format("mm"));
-            setSelectedAmPm(inputValue.format("A"));
-          }}
-        />
-      </Form>
+      <Form.Control
+        id={id}
+        ref={ref}
+        onClick={() => setShowOverlay(true)}
+        type="time"
+        value={selectedTime}
+        onChange={(input) => {
+          const inputValue = moment(input.target.value, "HH:mm");
+          onChange(inputValue.format("HH:mm"));
+          setSelectedHour(inputValue.format("hh"));
+          setSelectedMinute(inputValue.format("mm"));
+          setSelectedAmPm(inputValue.format("A"));
+        }}
+      />
       <Overlay
         rootClose
         onHide={() => setShowOverlay(false)}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import DaysPicker from "./DaysPicker";
 import PriorityPicker from "./PriorityPicker";
 import IntervalPicker from "./IntervalPicker";
@@ -28,119 +28,149 @@ const NewPaMessagePage = () => {
 
   return (
     <div className="new-pa-message-page">
-      <div className="new-pa-message-page__header">New PA/ESS message</div>
-      <Container fluid>
-        <Row md="auto" className="align-items-center">
-          <Button variant="link" className="pr-0">
-            Associate with alert
-          </Button>
-          (Optional)
-        </Row>
-        <Row>
-          <div className="new-pa-message-page__associate-alert-subtext">
-            Linking will allow you to share end time with alert, and import
-            location and message.
-          </div>
-        </Row>
-        <Card className="when-card">
-          <div className="title">When</div>
-          <div className="label body--regular">Start</div>
-          <Row md="auto" className="start-datetime">
-            <DatePicker
-              selectedDate={startDate}
-              onChange={setStartDate}
-              maxDateString={endDate}
-            />
-            <TimePicker selectedTime={startTime} onChange={setStartTime} />
+      <Form
+        method="post"
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
+      >
+        <div className="new-pa-message-page__header">New PA/ESS message</div>
+        <Container fluid>
+          <Row md="auto" className="align-items-center">
+            <Button variant="link" className="pr-0">
+              Associate with alert
+            </Button>
+            (Optional)
           </Row>
-          <div className="label body--regular">End</div>
-          <Row md="auto" className="end-datetime">
-            <DatePicker
-              selectedDate={endDate}
-              onChange={setEndDate}
-              minDateString={startDate}
-            />
-            <TimePicker selectedTime={endTime} onChange={setEndTime} />
+          <Row>
+            <div className="new-pa-message-page__associate-alert-subtext">
+              Linking will allow you to share end time with alert, and import
+              location and message.
+            </div>
           </Row>
-          <Row className="days">
-            <DaysPicker days={days} onChangeDays={setDays} />
-          </Row>
-          <Row md="auto">
-            <Col>
-              <PriorityPicker
-                priority={priority}
-                onSelectPriority={setPriority}
-              />
-            </Col>
-            <Col>
-              <IntervalPicker
-                interval={interval}
-                onChangeInterval={setInterval}
-              />
-            </Col>
-          </Row>
-        </Card>
-        <Card className="where-card">
-          <div className="title">Where</div>
-          <Button className="add-stations-zones-button">
-            <PlusLg width={12} height={12} /> Add Stations & Zones
-          </Button>
-        </Card>
-        <Card className="message-card">
-          <div className="title">Message</div>
-          <Row className="align-items-center">
-            <Col>
-              <MessageTextBox
-                text={visualText}
-                onChangeText={setVisualText}
-                label="Text"
-              />
-            </Col>
-            <Col md="auto">
-              <Button
-                disabled={visualText.length === 0}
-                className="copy-text-button"
-                onClick={() => setPhoneticText(visualText)}
-              >
-                <ArrowRightShort />
-              </Button>
-            </Col>
-            <Col>
-              {phoneticText.length > 0 ? (
-                <MessageTextBox
-                  text={phoneticText}
-                  onChangeText={setPhoneticText}
-                  disabled={phoneticText.length === 0}
-                  label="Phonetic Audio"
+          <Card className="when-card">
+            <div className="title">When</div>
+            <Row md="auto" className="start-datetime">
+              <Form.Group>
+                <Form.Label
+                  className="label body--regular"
+                  htmlFor="start-date-picker"
+                >
+                  Start
+                </Form.Label>
+                <div className="datetime-picker-group">
+                  <DatePicker
+                    selectedDate={startDate}
+                    onChange={setStartDate}
+                    maxDateString={endDate}
+                    id="start-date-picker"
+                  />
+                  <TimePicker
+                    selectedTime={startTime}
+                    onChange={setStartTime}
+                  />
+                </div>
+              </Form.Group>
+            </Row>
+            <Row md="auto">
+              <Form.Group className="end-datetime">
+                <Form.Label
+                  className="label body--regular"
+                  htmlFor="end-date-picker"
+                >
+                  End
+                </Form.Label>
+                <div className="datetime-picker-group">
+                  <DatePicker
+                    selectedDate={endDate}
+                    onChange={setEndDate}
+                    minDateString={startDate}
+                    id="end-date-picker"
+                  />
+                  <TimePicker selectedTime={endTime} onChange={setEndTime} />
+                </div>
+              </Form.Group>
+            </Row>
+            <Row className="days">
+              <DaysPicker days={days} onChangeDays={setDays} />
+            </Row>
+            <Row md="auto">
+              <Col>
+                <PriorityPicker
+                  priority={priority}
+                  onSelectPriority={setPriority}
                 />
-              ) : (
-                <Card className="review-audio-card">
-                  <Button className="review-audio-button" variant="link">
-                    <VolumeUpFill height={12} />
-                    Review audio
-                  </Button>
-                </Card>
-              )}
-            </Col>
-          </Row>
-        </Card>
-        <Row
-          md="auto"
-          className="justify-content-end new-pa-message-page__form-buttons"
-        >
-          <Button
-            className="cancel-button"
-            onClick={() =>
-              window.history.length > 1 ? navigate(-1) : window.close()
-            }
+              </Col>
+              <Col>
+                <IntervalPicker
+                  interval={interval}
+                  onChangeInterval={setInterval}
+                />
+              </Col>
+            </Row>
+          </Card>
+          <Card className="where-card">
+            <div className="title">Where</div>
+            <Button className="add-stations-zones-button">
+              <PlusLg width={12} height={12} /> Add Stations & Zones
+            </Button>
+          </Card>
+          <Card className="message-card">
+            <div className="title">Message</div>
+            <Row className="align-items-center">
+              <Col>
+                <MessageTextBox
+                  text={visualText}
+                  onChangeText={setVisualText}
+                  label="Text"
+                />
+              </Col>
+              <Col md="auto">
+                <Button
+                  disabled={visualText.length === 0}
+                  className="copy-text-button"
+                  onClick={() => setPhoneticText(visualText)}
+                >
+                  <ArrowRightShort />
+                </Button>
+              </Col>
+              <Col>
+                {phoneticText.length > 0 ? (
+                  <MessageTextBox
+                    text={phoneticText}
+                    onChangeText={setPhoneticText}
+                    disabled={phoneticText.length === 0}
+                    label="Phonetic Audio"
+                  />
+                ) : (
+                  <Card className="review-audio-card">
+                    <Button className="review-audio-button" variant="link">
+                      <VolumeUpFill height={12} />
+                      Review audio
+                    </Button>
+                  </Card>
+                )}
+              </Col>
+            </Row>
+          </Card>
+          <Row
+            md="auto"
+            className="justify-content-end new-pa-message-page__form-buttons"
           >
-            Cancel
-          </Button>
-          <Button type="submit" className="submit-button">
-            Submit
-          </Button>
-        </Row>
-      </Container>
+            <Button
+              className="cancel-button"
+              onClick={() =>
+                window.history.length > 1 ? navigate(-1) : window.close()
+              }
+            >
+              Cancel
+            </Button>
+            <Button type="submit" className="submit-button">
+              Submit
+            </Button>
+          </Row>
+        </Container>
+      </Form>
     </div>
   );
 };

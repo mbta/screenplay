@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 interface Props {
   interval: number;
@@ -8,18 +8,20 @@ interface Props {
 
 const IntervalPicker = ({ interval, onChangeInterval }: Props) => {
   return (
-    <>
-      <div className="label body--regular">Interval (min)</div>
-      <Row md="auto" className="align-items-center">
-        <Form className="m-0 interval">
-          <Form.Control
-            value={interval}
-            type="number"
-            onChange={(input) => onChangeInterval(Number(input.target.value))}
-          />
-        </Form>
-      </Row>
-    </>
+    <Form.Group>
+      <Form.Label htmlFor="interval-picker" className="label body--regular">
+        Interval (min)
+      </Form.Label>
+      {/* <Row md="auto" className="align-items-center"> */}
+      <Form.Control
+        id="interval-picker"
+        className="m-0 interval"
+        value={interval}
+        type="number"
+        onChange={(input) => onChangeInterval(Number(input.target.value))}
+      />
+      {/* </Row> */}
+    </Form.Group>
   );
 };
 

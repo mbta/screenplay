@@ -10,7 +10,7 @@ interface Props {
 
 const MessageTextBox = ({ text, onChangeText, disabled, label }: Props) => {
   return (
-    <Form>
+    <Form.Group>
       <Form.Label>{label}</Form.Label>
       <Form.Control
         className="text-input"
@@ -19,7 +19,7 @@ const MessageTextBox = ({ text, onChangeText, disabled, label }: Props) => {
         onChange={(textbox) => onChangeText(textbox.target.value)}
         disabled={disabled}
       />
-    </Form>
+    </Form.Group>
   );
 };
 

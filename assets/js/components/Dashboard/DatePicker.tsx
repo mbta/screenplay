@@ -8,6 +8,7 @@ interface DatePickerProps {
   onChange: (date: string) => void;
   minDateString?: string;
   maxDateString?: string;
+  id?: string;
 }
 
 const DatePicker = ({
@@ -15,6 +16,7 @@ const DatePicker = ({
   onChange,
   minDateString,
   maxDateString,
+  id,
 }: DatePickerProps) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const ref = useRef(null);
@@ -23,23 +25,17 @@ const DatePicker = ({
 
   return (
     <>
-      <Form
+      <Form.Control
+        id={id}
         ref={ref}
         className="date-picker"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setShowOverlay(false);
+        value={selectedDate}
+        onChange={(input) => {
+          const inputValue = input.target.value;
+          onChange(inputValue);
         }}
         onClick={() => setShowOverlay(!showOverlay)}
-      >
-        <Form.Control
-          value={selectedDate}
-          onChange={(input) => {
-            const inputValue = input.target.value;
-            onChange(inputValue);
-          }}
-        />
-      </Form>
+      />
       <Overlay
         rootClose
         onHide={() => setShowOverlay(false)}
