@@ -4,7 +4,6 @@ import DaysPicker from "./DaysPicker";
 import PriorityPicker from "./PriorityPicker";
 import IntervalPicker from "./IntervalPicker";
 import MessageTextBox from "./MessageTextBox";
-import _ from "lodash";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import DatePicker from "../../DatePicker";

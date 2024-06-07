@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Card, Form, Overlay, Popover } from "react-bootstrap";
-import _ from "lodash";
 import fp from "lodash/fp";
 import moment from "moment";
 import cx from "classnames";
@@ -75,7 +74,7 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
                   })}
                 </div>
                 <div className="minute-col">
-                  {_.range(0, 60).map((minute) => {
+                  {fp.range(0, 60).map((minute) => {
                     const minuteValue = minute.toString().padStart(2, "0");
                     return (
                       <button
