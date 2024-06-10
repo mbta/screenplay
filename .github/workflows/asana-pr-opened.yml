@@ -2,11 +2,11 @@ name: Modify Asana ticket
 on: 
   pull_request:
     types: [opened, reopened]
-    branches-ignore: ["dependabot/**"]
 
 jobs:
   create-asana-attachment-job:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     name: Create pull request attachments on Asana tasks
     steps:
       - name: Create pull request attachments
