@@ -19,7 +19,7 @@ const NewPaMessagePage = () => {
   const [endTime, setEndTime] = useState(now.add(1, "hour").format("HH:mm"));
   const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [priority, setPriority] = useState(2);
-  const [interval, setInterval] = useState(4);
+  const [interval, setInterval] = useState("4");
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
 

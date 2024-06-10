@@ -2,8 +2,8 @@ import React from "react";
 import { Form } from "react-bootstrap";
 
 interface Props {
-  interval: number;
-  onChangeInterval: (interval: number) => void;
+  interval: string;
+  onChangeInterval: (interval: string) => void;
 }
 
 const IntervalPicker = ({ interval, onChangeInterval }: Props) => {
@@ -12,15 +12,13 @@ const IntervalPicker = ({ interval, onChangeInterval }: Props) => {
       <Form.Label htmlFor="interval-picker" className="label body--regular">
         Interval (min)
       </Form.Label>
-      {/* <Row md="auto" className="align-items-center"> */}
       <Form.Control
         id="interval-picker"
         className="m-0 interval"
-        value={interval}
         type="number"
-        onChange={(input) => onChangeInterval(Number(input.target.value))}
+        value={interval}
+        onChange={(input) => onChangeInterval(input.target.value)}
       />
-      {/* </Row> */}
     </Form.Group>
   );
 };
