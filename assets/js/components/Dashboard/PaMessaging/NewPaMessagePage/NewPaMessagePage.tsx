@@ -119,6 +119,7 @@ const NewPaMessagePage = () => {
             <Row className="align-items-center">
               <Col>
                 <MessageTextBox
+                  id="visual-text-box"
                   text={visualText}
                   onChangeText={setVisualText}
                   label="Text"
@@ -129,6 +130,7 @@ const NewPaMessagePage = () => {
                   disabled={visualText.length === 0}
                   className="copy-text-button"
                   onClick={() => setPhoneticText(visualText)}
+                  aria-label="copy-visual-to-phonetic"
                 >
                   <ArrowRightShort />
                 </Button>
@@ -136,6 +138,7 @@ const NewPaMessagePage = () => {
               <Col>
                 {phoneticText.length > 0 ? (
                   <MessageTextBox
+                    id="phonetic-audio-text-box"
                     text={phoneticText}
                     onChangeText={setPhoneticText}
                     disabled={phoneticText.length === 0}

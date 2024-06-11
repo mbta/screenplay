@@ -21,22 +21,27 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
       <Form.Control
         id={id}
         ref={ref}
-        onClick={() => setShowOverlay(true)}
         type="time"
         value={selectedTime}
         onChange={(input) =>
           onChange(moment(input.target.value, "HH:mm").format("HH:mm"))
         }
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            setShowOverlay(true);
+          }
+        }}
       />
       <Overlay
         rootClose
+        rootCloseEvent="mousedown"
         onHide={() => setShowOverlay(false)}
         target={ref.current}
         placement="bottom-start"
         show={showOverlay}
       >
         {(props) => (
-          <Popover className="time-popover" {...props}>
+          <Popover className="time-popover" {...props} id={`${id}-overlay`}>
             <Card className="time-picker-card">
               <div className="time-picker-card-columns">
                 <div className="hour-col">

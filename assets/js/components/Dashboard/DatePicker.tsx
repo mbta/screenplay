@@ -29,30 +29,30 @@ const DatePicker = ({
         id={id}
         ref={ref}
         className="date-picker"
+        name={`${id}-input`}
         value={selectedDate}
-        onChange={(input) => {
-          const inputValue = input.target.value;
-          onChange(inputValue);
+        onChange={(input) => onChange(input.target.value)}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            setShowOverlay(true);
+          }
         }}
-        onClick={() => setShowOverlay(!showOverlay)}
       />
       <Overlay
         rootClose
+        rootCloseEvent="mousedown"
         onHide={() => setShowOverlay(false)}
         target={ref.current}
         placement="bottom-start"
         show={showOverlay}
       >
         {(props) => (
-          <Popover className="calendar-popover" {...props}>
+          <Popover className="calendar-popover" {...props} id={`${id}-overlay`}>
             <Calendar
               minDate={minDate}
               maxDate={maxDate}
               defaultValue={new Date(selectedDate)}
-              onChange={(date) => {
-                const newDate = moment(date as Date).format("L");
-                onChange(newDate);
-              }}
+              onChange={(date) => onChange(moment(date as Date).format("L"))}
             />
           </Popover>
         )}

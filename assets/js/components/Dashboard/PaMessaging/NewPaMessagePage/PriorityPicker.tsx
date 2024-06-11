@@ -12,12 +12,9 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
         Priority
       </Form.Label>
       <Row md="auto" className="align-items-center">
-        <Dropdown
-          id="priority-picker"
-          onSelect={(eventKey) => onSelectPriority(Number(eventKey))}
-        >
-          <Dropdown.Toggle>{priority}</Dropdown.Toggle>
-          <Dropdown.Menu>
+        <Dropdown onSelect={(eventKey) => onSelectPriority(Number(eventKey))}>
+          <Dropdown.Toggle id="priority-picker">{priority}</Dropdown.Toggle>
+          <Dropdown.Menu role="listbox">
             {[
               "Emergency",
               "Current Service Disruption",
@@ -26,6 +23,7 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
             ].map((label, index) => {
               return (
                 <Dropdown.Item
+                  role="option"
                   key={label}
                   eventKey={index}
                   active={priority === index}

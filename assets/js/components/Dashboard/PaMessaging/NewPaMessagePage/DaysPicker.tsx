@@ -39,7 +39,9 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
 
   return (
     <Form.Group>
-      <Form.Label className="label body--regular">Days</Form.Label>
+      <Form.Label className="label body--regular" htmlFor="days-picker">
+        Days
+      </Form.Label>
       <Row md={1} lg="auto" className="align-items-center">
         <Col>
           <Dropdown
@@ -63,11 +65,12 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
               }
             }}
           >
-            <Dropdown.Toggle>{dayLabel}</Dropdown.Toggle>
-            <Dropdown.Menu>
+            <Dropdown.Toggle id="days-picker">{dayLabel}</Dropdown.Toggle>
+            <Dropdown.Menu role="listbox">
               {Object.values(DayItem).map((dayItem) => {
                 return (
                   <Dropdown.Item
+                    role="option"
                     key={dayItem}
                     eventKey={dayItem}
                     active={dayLabel === dayItem}
