@@ -129,3 +129,17 @@ export const publishScreensForPlace = async (
 
   return { status: response.status, message };
 };
+
+export const fetchAudioPreview = async (text: string) => {
+  return await fetch("/api/pa-messages/preview_audio", {
+    method: "POST",
+    body: JSON.stringify({ text: text }),
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token":
+        document?.head?.querySelector<HTMLMetaElement>(
+          "[name~=csrf-token][content]",
+        )?.content ?? "",
+    },
+  });
+};
