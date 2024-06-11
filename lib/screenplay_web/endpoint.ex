@@ -39,6 +39,7 @@ defmodule ScreenplayWeb.Endpoint do
     param_key: "request_logger",
     cookie_key: "request_logger"
 
+  plug RemoteIp
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
@@ -52,6 +53,5 @@ defmodule ScreenplayWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug ScreenplayWeb.Plugs.LoggerMetadata
   plug ScreenplayWeb.Router
 end

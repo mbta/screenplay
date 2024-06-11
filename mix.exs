@@ -68,7 +68,8 @@ defmodule Screenplay.MixProject do
       {:mox, "~> 1.0", only: :test},
       {:quantum, "~> 3.0"},
       {:tzdata, "~> 1.1"},
-      {:ex_machina, "~> 2.7", only: :test}
+      {:ex_machina, "~> 2.7", only: :test},
+      {:remote_ip, "~> 1.2"}
     ]
   end
 
