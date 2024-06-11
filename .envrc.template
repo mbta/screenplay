@@ -26,3 +26,8 @@ export DATABASE_HOSTNAME="localhost"
 
 # Access key for allowing PA Message API calls. Required for endpoints in the /api/pa-messages scope. Generate a unique random string for local use.
 export SCREENPLAY_API_KEY="local_api_key"
+
+# Host and access key needed to communicate with Watts. Required when previewing PA message audio.
+# For local use, set to the same value as your local instance of Watts.
+#export WATTS_URL=""
+#export WATTS_API_KEY=""
