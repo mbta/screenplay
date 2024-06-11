@@ -8,7 +8,7 @@ defmodule Screenplay.Watts do
   def fetch_tts(text) do
     watts_url = Application.get_env(:screenplay, :watts_url)
     watts_api_key = Application.get_env(:screenplay, :watts_api_key)
-    request_data = Jason.encode!(%{text: text, voice_id: "Matthew"})
+    request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
 
     case HTTPoison.post(
            "#{watts_url}/tts",
