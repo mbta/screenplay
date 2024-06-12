@@ -43,7 +43,7 @@ const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
         />
       </div>
       <iframe
-        className="screen-detail__iframe screen-detail__iframe--pa_ess"
+        className="screen-simulation__iframe screen-simulation__iframe--pa_ess"
         title={props.stationCode}
         src={generateSource()}
       />
