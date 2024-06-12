@@ -9,6 +9,7 @@ import moment from "moment";
 import DatePicker from "../../DatePicker";
 import TimePicker from "../../TimePicker";
 import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
+import { fetchAudioPreview } from "../../../../utils/api";
 
 const NewPaMessagePage = () => {
   const now = moment();
@@ -22,8 +23,26 @@ const NewPaMessagePage = () => {
   const [interval, setInterval] = useState("4");
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
+  const [audioPlaying, setAudioPlaying] = useState(false);
 
   const navigate = useNavigate();
+
+  const previewAudio = () => {
+    setAudioPlaying(true);
+    fetchAudioPreview(phoneticText.length ? phoneticText : visualText).then(
+      async (audioData) => {
+        const blob = await audioData.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.onended = (_e) => {
+          setAudioPlaying(false);
+          URL.revokeObjectURL(url);
+        };
+
+        audio.play();
+      }
+    );
+  };
 
   return (
     <div className="new-pa-message-page">
@@ -144,12 +163,20 @@ const NewPaMessagePage = () => {
                     label="Phonetic Audio"
                   />
                 ) : (
-                  <Card className="review-audio-card">
-                    <Button className="review-audio-button" variant="link">
-                      <VolumeUpFill height={12} />
-                      Review audio
-                    </Button>
-                  </Card>
+                  <>
+                    <div className="form-label">Phonetic Audio</div>
+                    <Card className="review-audio-card">
+                      <Button
+                        disabled={visualText.length === 0}
+                        className="review-audio-button"
+                        variant="link"
+                        onClick={previewAudio}
+                      >
+                        <VolumeUpFill height={12} />
+                        {audioPlaying ? "Reviewing audio" : "Review audio"}
+                      </Button>
+                    </Card>
+                  </>
                 )}
               </Col>
             </Row>
