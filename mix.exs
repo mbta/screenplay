@@ -59,7 +59,7 @@ defmodule Screenplay.MixProject do
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
       {:sentry, "~> 10.3"},
-      {:stream_data, "~> 0.5", only: :test},
+      {:stream_data, "~> 1.1", only: :test},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:screens_config,
