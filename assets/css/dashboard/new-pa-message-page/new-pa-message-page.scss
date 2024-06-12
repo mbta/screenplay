@@ -162,15 +162,25 @@
       resize: none;
     }
 
+    .copy-button-col {
+      margin-top: 141px;
+    }
+
+    .review-audio-button {
+      color: $button-primary;
+      margin-top: auto;
+      margin-bottom: auto;
+      padding: 0;
+
+      &:disabled {
+        color: $text-secondary;
+        text-decoration: none;
+      }
+    }
+
     .review-audio-card {
       height: 250px;
       background-color: $cool-gray-15;
-
-      .review-audio-button {
-        color: $button-primary;
-        margin-top: auto;
-        margin-bottom: auto;
-      }
     }
   }
 }

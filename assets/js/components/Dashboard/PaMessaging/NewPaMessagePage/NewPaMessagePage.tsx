@@ -134,7 +134,7 @@ const NewPaMessagePage = () => {
           </Card>
           <Card className="message-card">
             <div className="title">Message</div>
-            <Row className="align-items-center">
+            <Row>
               <Col>
                 <MessageTextBox
                   id="visual-text-box"
@@ -143,7 +143,7 @@ const NewPaMessagePage = () => {
                   label="Text"
                 />
               </Col>
-              <Col md="auto">
+              <Col md="auto" className="copy-button-col">
                 <Button
                   disabled={visualText.length === 0}
                   className="copy-text-button"
@@ -155,13 +155,23 @@ const NewPaMessagePage = () => {
               </Col>
               <Col>
                 {phoneticText.length > 0 ? (
-                  <MessageTextBox
-                    id="phonetic-audio-text-box"
-                    text={phoneticText}
-                    onChangeText={setPhoneticText}
-                    disabled={phoneticText.length === 0}
-                    label="Phonetic Audio"
-                  />
+                  <>
+                    <MessageTextBox
+                      id="phonetic-audio-text-box"
+                      text={phoneticText}
+                      onChangeText={setPhoneticText}
+                      disabled={phoneticText.length === 0}
+                      label="Phonetic Audio"
+                    />
+                    <Button
+                      className="review-audio-button"
+                      variant="link"
+                      onClick={previewAudio}
+                    >
+                      <VolumeUpFill height={12} />
+                      {audioPlaying ? "Reviewing audio" : "Review audio"}
+                    </Button>
+                  </>
                 ) : (
                   <>
                     <div className="form-label">Phonetic Audio</div>
