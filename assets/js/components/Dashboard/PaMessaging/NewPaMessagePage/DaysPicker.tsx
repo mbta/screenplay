@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Dropdown, Form, Row } from "react-bootstrap";
+import { Col, Dropdown, Form, Row } from "react-bootstrap";
 import fp from "lodash/fp";
-import _ from "lodash";
 
 enum DayItem {
   All = "All days",
@@ -39,50 +38,56 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
   const [dayLabel, setDayLabel] = useState("All days");
 
   return (
-    <>
-      <div className="label body--regular">Days</div>
-      <Row md="auto" className="align-items-center">
-        <Dropdown
-          onSelect={(eventKey) => {
-            if (eventKey === null) return;
+    <Form.Group>
+      <Form.Label className="label body--regular" htmlFor="days-picker">
+        Days
+      </Form.Label>
+      <Row md={1} lg="auto" className="align-items-center">
+        <Col>
+          <Dropdown
+            onSelect={(eventKey) => {
+              if (eventKey === null) return;
 
-            setDayLabel(eventKey);
+              setDayLabel(eventKey);
 
-            switch (eventKey) {
-              case DayItem.All:
-              case DayItem.Select:
-                onChangeDays([1, 2, 3, 4, 5, 6, 7]);
+              switch (eventKey) {
+                case DayItem.All:
+                case DayItem.Select:
+                  onChangeDays([1, 2, 3, 4, 5, 6, 7]);
 
-                break;
-              case DayItem.Weekday:
-                onChangeDays([1, 2, 3, 4, 5]);
+                  break;
+                case DayItem.Weekday:
+                  onChangeDays([1, 2, 3, 4, 5]);
 
-                break;
-              case DayItem.Weekend:
-                onChangeDays([6, 7]);
-            }
-          }}
-        >
-          <Dropdown.Toggle>{dayLabel}</Dropdown.Toggle>
-          <Dropdown.Menu>
-            {Object.values(DayItem).map((dayItem) => {
-              return (
-                <Dropdown.Item
-                  key={dayItem}
-                  eventKey={dayItem}
-                  active={dayLabel === dayItem}
-                >
-                  {dayItem}
-                </Dropdown.Item>
-              );
-            })}
-          </Dropdown.Menu>
-        </Dropdown>
-        {dayLabel == DayItem.Select && (
-          <Form className="days-form">
+                  break;
+                case DayItem.Weekend:
+                  onChangeDays([6, 7]);
+              }
+            }}
+          >
+            <Dropdown.Toggle id="days-picker">{dayLabel}</Dropdown.Toggle>
+            <Dropdown.Menu role="listbox">
+              {Object.values(DayItem).map((dayItem) => {
+                return (
+                  <Dropdown.Item
+                    role="option"
+                    key={dayItem}
+                    eventKey={dayItem}
+                    active={dayLabel === dayItem}
+                  >
+                    {dayItem}
+                  </Dropdown.Item>
+                );
+              })}
+            </Dropdown.Menu>
+          </Dropdown>
+        </Col>
+        {dayLabel === DayItem.Select && (
+          <Col md="auto">
             {DAYS_OF_WEEK.map(({ label, value }) => {
               return (
                 <Form.Check
+                  className="days-form"
                   key={value}
                   inline
                   checked={days.includes(value)}
@@ -92,16 +97,16 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
                     if (checkbox.target.checked) {
                       onChangeDays(fp.concat(days, [value]));
                     } else {
-                      onChangeDays(_.without(days, value));
+                      onChangeDays(fp.pull(value, days));
                     }
                   }}
                 />
               );
             })}
-          </Form>
+          </Col>
         )}
       </Row>
-    </>
+    </Form.Group>
   );
 };
 

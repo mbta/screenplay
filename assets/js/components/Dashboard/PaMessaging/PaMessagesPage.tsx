@@ -1,5 +1,5 @@
 import React, { ComponentType, useState, useEffect } from "react";
-import { Container, Row, Col, Button, FormCheck } from "react-bootstrap";
+import { Container, Row, Col, FormCheck } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 import { fetchPaMessages } from "../../../utils/api";
 import { PaMessage } from "../../../models/pa_message";
@@ -28,11 +28,9 @@ const PaMessagesPage: ComponentType = () => {
           <Col className="pa-message-table-container">
             <Row className="pa-message-table-action-bar">
               <Col>
-                <Link to="/pa-messages/new">
-                  <Button>
-                    <PlusCircleFill className="pa-message-table-action-bar__plus" />{" "}
-                    Add New
-                  </Button>
+                <Link to="/pa-messages/new" className="add-new-button">
+                  <PlusCircleFill className="pa-message-table-action-bar__plus" />{" "}
+                  Add New
                 </Link>
               </Col>
               <Col className="pa-message-table-action-bar__search">

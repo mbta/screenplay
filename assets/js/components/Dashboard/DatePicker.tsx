@@ -8,6 +8,7 @@ interface DatePickerProps {
   onChange: (date: string) => void;
   minDateString?: string;
   maxDateString?: string;
+  id?: string;
 }
 
 const DatePicker = ({
@@ -15,6 +16,7 @@ const DatePicker = ({
   onChange,
   minDateString,
   maxDateString,
+  id,
 }: DatePickerProps) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const ref = useRef(null);
@@ -23,40 +25,34 @@ const DatePicker = ({
 
   return (
     <>
-      <Form
+      <Form.Control
+        id={id}
         ref={ref}
         className="date-picker"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setShowOverlay(false);
+        name={`${id}-input`}
+        value={selectedDate}
+        onChange={(input) => onChange(input.target.value)}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            setShowOverlay(true);
+          }
         }}
-        onClick={() => setShowOverlay(!showOverlay)}
-      >
-        <Form.Control
-          value={selectedDate}
-          onChange={(input) => {
-            const inputValue = input.target.value;
-            onChange(inputValue);
-          }}
-        />
-      </Form>
+      />
       <Overlay
         rootClose
+        rootCloseEvent="mousedown"
         onHide={() => setShowOverlay(false)}
         target={ref.current}
         placement="bottom-start"
         show={showOverlay}
       >
         {(props) => (
-          <Popover className="calendar-popover" {...props}>
+          <Popover className="calendar-popover" {...props} id={`${id}-overlay`}>
             <Calendar
               minDate={minDate}
               maxDate={maxDate}
               defaultValue={new Date(selectedDate)}
-              onChange={(date) => {
-                const newDate = moment(date as Date).format("L");
-                onChange(newDate);
-              }}
+              onChange={(date) => onChange(moment(date as Date).format("L"))}
             />
           </Popover>
         )}
