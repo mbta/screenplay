@@ -28,7 +28,6 @@ const NewPaMessagePage = () => {
   return (
     <div className="new-pa-message-page">
       <Form
-        method="post"
         onSubmit={(event) => {
           event.preventDefault();
         }}
