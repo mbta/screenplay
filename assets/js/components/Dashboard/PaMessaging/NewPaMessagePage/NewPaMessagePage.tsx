@@ -10,6 +10,7 @@ import DatePicker from "../../DatePicker";
 import TimePicker from "../../TimePicker";
 import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
 import { fetchAudioPreview } from "../../../../utils/api";
+import cx from "classnames";
 
 const NewPaMessagePage = () => {
   const now = moment();
@@ -28,6 +29,8 @@ const NewPaMessagePage = () => {
   const navigate = useNavigate();
 
   const previewAudio = () => {
+    if (audioPlaying) return;
+
     setAudioPlaying(true);
     fetchAudioPreview(phoneticText.length ? phoneticText : visualText).then(
       async (audioData) => {
@@ -40,7 +43,7 @@ const NewPaMessagePage = () => {
         };
 
         audio.play();
-      }
+      },
     );
   };
 
@@ -163,28 +166,20 @@ const NewPaMessagePage = () => {
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                     />
-                    <Button
-                      className="review-audio-button"
-                      variant="link"
+                    <ReviewAudioButton
+                      audioPlaying={audioPlaying}
                       onClick={previewAudio}
-                    >
-                      <VolumeUpFill height={12} />
-                      {audioPlaying ? "Reviewing audio" : "Review audio"}
-                    </Button>
+                    />
                   </>
                 ) : (
                   <>
                     <div className="form-label">Phonetic Audio</div>
                     <Card className="review-audio-card">
-                      <Button
+                      <ReviewAudioButton
+                        audioPlaying={audioPlaying}
                         disabled={visualText.length === 0}
-                        className="review-audio-button"
-                        variant="link"
                         onClick={previewAudio}
-                      >
-                        <VolumeUpFill height={12} />
-                        {audioPlaying ? "Reviewing audio" : "Review audio"}
-                      </Button>
+                      />
                     </Card>
                   </>
                 )}
@@ -210,6 +205,32 @@ const NewPaMessagePage = () => {
         </Container>
       </Form>
     </div>
+  );
+};
+
+interface ReviewAudioButtonProps {
+  audioPlaying: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+}
+
+const ReviewAudioButton = ({
+  audioPlaying,
+  disabled,
+  onClick,
+}: ReviewAudioButtonProps) => {
+  return (
+    <Button
+      disabled={disabled}
+      className={cx("review-audio-button", {
+        "review-audio-button--audio-playing": audioPlaying,
+      })}
+      variant="link"
+      onClick={onClick}
+    >
+      <VolumeUpFill height={12} />
+      {audioPlaying ? "Reviewing audio" : "Review audio"}
+    </Button>
   );
 };
 

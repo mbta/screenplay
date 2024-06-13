@@ -172,6 +172,11 @@
       margin-bottom: auto;
       padding: 0;
 
+      &--audio-playing {
+        color: $text-primary;
+        text-decoration: none;
+      }
+
       &:disabled {
         color: $text-secondary;
         text-decoration: none;
