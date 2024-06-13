@@ -147,13 +147,17 @@
   }
 
   .message-card {
-    .copy-text-button {
-      background-color: $bg-border-disabled;
-      width: 38px;
-      height: 38px;
+    .copy-button-col {
+      margin-top: 141px;
 
-      .bi-arrow-right-short {
-        fill: $text-disabled;
+      .copy-text-button {
+        background-color: $bg-border-disabled;
+        width: 38px;
+        height: 38px;
+
+        .bi-arrow-right-short {
+          fill: $text-disabled;
+        }
       }
     }
 
@@ -162,14 +166,22 @@
       resize: none;
     }
 
-    .copy-button-col {
-      margin-top: 141px;
+    .audio-reviewed-text {
+      color: $text-primary;
+      margin-top: auto;
+      margin-bottom: auto;
+      align-self: center;
+
+      span {
+        vertical-align: middle;
+      }
     }
 
     .review-audio-button {
       color: $button-primary;
       margin-top: auto;
       margin-bottom: auto;
+      margin-left: 16px;
       padding: 0;
 
       &--audio-playing {

@@ -8,7 +8,12 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import DatePicker from "../../DatePicker";
 import TimePicker from "../../TimePicker";
-import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
+import {
+  ArrowRightShort,
+  CheckCircleFill,
+  PlusLg,
+  VolumeUpFill,
+} from "react-bootstrap-icons";
 import { fetchAudioPreview } from "../../../../utils/api";
 import cx from "classnames";
 
@@ -25,12 +30,16 @@ const NewPaMessagePage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioReviewed, setAudioReviewed] = useState(false);
 
   const navigate = useNavigate();
 
   const previewAudio = () => {
     if (audioPlaying) return;
 
+    if (phoneticText.length === 0) {
+      setPhoneticText(visualText);
+    }
     setAudioPlaying(true);
     fetchAudioPreview(phoneticText.length ? phoneticText : visualText).then(
       async (audioData) => {
@@ -39,6 +48,7 @@ const NewPaMessagePage = () => {
         const audio = new Audio(url);
         audio.onended = (_e) => {
           setAudioPlaying(false);
+          setAudioReviewed(true);
           URL.revokeObjectURL(url);
         };
 
@@ -168,6 +178,7 @@ const NewPaMessagePage = () => {
                     />
                     <ReviewAudioButton
                       audioPlaying={audioPlaying}
+                      audioReviewed={audioReviewed}
                       onClick={previewAudio}
                     />
                   </>
@@ -177,6 +188,7 @@ const NewPaMessagePage = () => {
                     <Card className="review-audio-card">
                       <ReviewAudioButton
                         audioPlaying={audioPlaying}
+                        audioReviewed={audioReviewed}
                         disabled={visualText.length === 0}
                         onClick={previewAudio}
                       />
@@ -210,28 +222,60 @@ const NewPaMessagePage = () => {
 
 interface ReviewAudioButtonProps {
   audioPlaying: boolean;
+  audioReviewed: boolean;
   disabled?: boolean;
   onClick: () => void;
 }
 
 const ReviewAudioButton = ({
   audioPlaying,
+  audioReviewed,
   disabled,
   onClick,
 }: ReviewAudioButtonProps) => {
-  return (
-    <Button
-      disabled={disabled}
-      className={cx("review-audio-button", {
-        "review-audio-button--audio-playing": audioPlaying,
-      })}
-      variant="link"
-      onClick={onClick}
-    >
-      <VolumeUpFill height={12} />
-      {audioPlaying ? "Reviewing audio" : "Review audio"}
-    </Button>
-  );
+  let layout = <></>;
+  if (audioPlaying) {
+    layout = (
+      <Button
+        className="review-audio-button review-audio-button--audio-playing"
+        variant="link"
+        onClick={onClick}
+      >
+        <VolumeUpFill height={12} />
+        Reviewing audio
+      </Button>
+    );
+  } else if (audioReviewed) {
+    layout = (
+      <div className="audio-reviewed-text">
+        <span>
+          <CheckCircleFill /> Audio reviewed
+        </span>
+        <Button
+          className="review-audio-button"
+          onClick={onClick}
+          variant="link"
+        >
+          Replay
+        </Button>
+      </div>
+    );
+  } else {
+    layout = (
+      <Button
+        disabled={disabled}
+        className={cx("review-audio-button", {
+          "review-audio-button--audio-playing": audioPlaying,
+        })}
+        variant="link"
+        onClick={onClick}
+      >
+        <VolumeUpFill height={16} /> Review audio
+      </Button>
+    );
+  }
+
+  return layout;
 };
 
 export default NewPaMessagePage;
