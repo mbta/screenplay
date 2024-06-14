@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
 import DaysPicker from "./DaysPicker";
 import PriorityPicker from "./PriorityPicker";
 import IntervalPicker from "./IntervalPicker";
@@ -11,6 +19,7 @@ import TimePicker from "../../TimePicker";
 import {
   ArrowRightShort,
   CheckCircleFill,
+  ExclamationTriangleFill,
   PlusLg,
   VolumeUpFill,
 } from "react-bootstrap-icons";
@@ -31,6 +40,8 @@ const NewPaMessagePage = () => {
   const [phoneticText, setPhoneticText] = useState("");
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [audioReviewed, setAudioReviewed] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -43,6 +54,15 @@ const NewPaMessagePage = () => {
     setAudioPlaying(true);
     fetchAudioPreview(phoneticText.length ? phoneticText : visualText).then(
       async (audioData) => {
+        if (audioData.status !== 200) {
+          setAudioPlaying(false);
+          setShowErrorAlert(true);
+          setErrorMessage(
+            "Error occurred while fetching audio preview. Please try again.",
+          );
+          return;
+        }
+
         const blob = await audioData.blob();
         const url = URL.createObjectURL(blob);
         const audio = new Audio(url);
@@ -179,6 +199,7 @@ const NewPaMessagePage = () => {
                     <ReviewAudioButton
                       audioPlaying={audioPlaying}
                       audioReviewed={audioReviewed}
+                      showErrorIcon={errorMessage.length > 0}
                       onClick={previewAudio}
                     />
                   </>
@@ -215,6 +236,18 @@ const NewPaMessagePage = () => {
             </Button>
           </Row>
         </Container>
+        <div className="error-alert-container">
+          <Alert
+            show={showErrorAlert}
+            variant="primary"
+            onClose={() => setShowErrorAlert(false)}
+            dismissible
+            className="error-alert"
+          >
+            <ExclamationTriangleFill className="error-alert__icon" />
+            <div className="error-alert__text">{errorMessage}</div>
+          </Alert>
+        </div>
       </Form>
     </div>
   );
@@ -224,6 +257,7 @@ interface ReviewAudioButtonProps {
   audioPlaying: boolean;
   audioReviewed: boolean;
   disabled?: boolean;
+  showErrorIcon?: boolean;
   onClick: () => void;
 }
 
@@ -231,6 +265,7 @@ const ReviewAudioButton = ({
   audioPlaying,
   audioReviewed,
   disabled,
+  showErrorIcon,
   onClick,
 }: ReviewAudioButtonProps) => {
   let layout = <></>;
@@ -241,7 +276,11 @@ const ReviewAudioButton = ({
         variant="link"
         onClick={onClick}
       >
-        <VolumeUpFill height={12} />
+        {showErrorIcon ? (
+          <ExclamationTriangleFill fill="#FFC107" height={16} />
+        ) : (
+          <VolumeUpFill height={16} />
+        )}
         Reviewing audio
       </Button>
     );
@@ -270,7 +309,12 @@ const ReviewAudioButton = ({
         variant="link"
         onClick={onClick}
       >
-        <VolumeUpFill height={16} /> Review audio
+        {showErrorIcon ? (
+          <ExclamationTriangleFill fill="#FFC107" height={16} />
+        ) : (
+          <VolumeUpFill height={16} />
+        )}
+        Review audio
       </Button>
     );
   }

@@ -17,7 +17,7 @@ defmodule ScreenplayWeb.PaMessagesApiController do
         send_download(conn, {:binary, audio_data}, filename: "preview.mp3")
 
       :error ->
-        send_resp(conn, 404, "Not found")
+        send_resp(conn, 500, "Could not fetch audio preview")
     end
   end
 end
