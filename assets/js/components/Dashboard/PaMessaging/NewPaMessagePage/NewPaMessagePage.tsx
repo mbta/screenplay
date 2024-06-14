@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -44,6 +44,10 @@ const NewPaMessagePage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!audioPlaying) setAudioReviewed(false);
+  }, [visualText, phoneticText]);
 
   const previewAudio = () => {
     if (audioPlaying) return;
