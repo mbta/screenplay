@@ -268,58 +268,32 @@ const ReviewAudioButton = ({
   showErrorIcon,
   onClick,
 }: ReviewAudioButtonProps) => {
-  let layout = <></>;
-  if (audioPlaying) {
-    layout = (
-      <Button
-        className="review-audio-button review-audio-button--audio-playing"
-        variant="link"
-        onClick={onClick}
-      >
-        {showErrorIcon ? (
-          <ExclamationTriangleFill fill="#FFC107" height={16} />
-        ) : (
-          <VolumeUpFill height={16} />
-        )}
-        Reviewing audio
+  return audioReviewed ? (
+    <div className="audio-reviewed-text">
+      <span>
+        <CheckCircleFill /> Audio reviewed
+      </span>
+      <Button className="review-audio-button" onClick={onClick} variant="link">
+        Replay
       </Button>
-    );
-  } else if (audioReviewed) {
-    layout = (
-      <div className="audio-reviewed-text">
-        <span>
-          <CheckCircleFill /> Audio reviewed
-        </span>
-        <Button
-          className="review-audio-button"
-          onClick={onClick}
-          variant="link"
-        >
-          Replay
-        </Button>
-      </div>
-    );
-  } else {
-    layout = (
-      <Button
-        disabled={disabled}
-        className={cx("review-audio-button", {
-          "review-audio-button--audio-playing": audioPlaying,
-        })}
-        variant="link"
-        onClick={onClick}
-      >
-        {showErrorIcon ? (
-          <ExclamationTriangleFill fill="#FFC107" height={16} />
-        ) : (
-          <VolumeUpFill height={16} />
-        )}
-        Review audio
-      </Button>
-    );
-  }
-
-  return layout;
+    </div>
+  ) : (
+    <Button
+      disabled={!audioPlaying && disabled}
+      className={cx("review-audio-button", {
+        "review-audio-button--audio-playing": audioPlaying,
+      })}
+      variant="link"
+      onClick={onClick}
+    >
+      {showErrorIcon ? (
+        <ExclamationTriangleFill fill="#FFC107" height={16} />
+      ) : (
+        <VolumeUpFill height={16} />
+      )}
+      {audioPlaying ? "Reviewing audio" : "Review audio"}
+    </Button>
+  );
 };
 
 export default NewPaMessagePage;
