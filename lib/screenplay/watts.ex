@@ -5,6 +5,10 @@ defmodule Screenplay.Watts do
 
   require Logger
 
+  @doc """
+  Fetches an audio file from Watts given a string.
+  """
+  @spec fetch_tts(String.t()) :: :error | {:ok, binary()}
   def fetch_tts(text) do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
