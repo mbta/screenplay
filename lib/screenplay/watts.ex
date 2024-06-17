@@ -6,8 +6,8 @@ defmodule Screenplay.Watts do
   require Logger
 
   def fetch_tts(text) do
-    watts_url = Application.get_env(:screenplay, :watts_url)
-    watts_api_key = Application.get_env(:screenplay, :watts_api_key)
+    watts_url = Application.fetch_env!(:screenplay, :watts_url)
+    watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
     request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
 
     case HTTPoison.post(
