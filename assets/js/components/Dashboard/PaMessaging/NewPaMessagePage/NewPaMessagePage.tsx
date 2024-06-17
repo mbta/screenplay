@@ -57,6 +57,7 @@ const NewPaMessagePage = () => {
     setAudioPlaying(true);
   };
 
+  // Called after the audio preview plays in full
   const onAudioEnded = () => {
     setAudioPlaying(false);
     setAudioReviewed(true);
@@ -164,7 +165,10 @@ const NewPaMessagePage = () => {
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
-                  onChangeText={setVisualText}
+                  onChangeText={(text) => {
+                    setVisualText(text);
+                    setAudioPlaying(false);
+                  }}
                   label="Text"
                 />
               </Col>
@@ -172,7 +176,10 @@ const NewPaMessagePage = () => {
                 <Button
                   disabled={visualText.length === 0}
                   className="copy-text-button"
-                  onClick={() => setPhoneticText(visualText)}
+                  onClick={() => {
+                    setPhoneticText(visualText);
+                    setAudioPlaying(false);
+                  }}
                   aria-label="copy-visual-to-phonetic"
                 >
                   <ArrowRightShort />
@@ -184,7 +191,10 @@ const NewPaMessagePage = () => {
                     <MessageTextBox
                       id="phonetic-audio-text-box"
                       text={phoneticText}
-                      onChangeText={setPhoneticText}
+                      onChangeText={(text) => {
+                        setPhoneticText(text);
+                        setAudioPlaying(false);
+                      }}
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                     />
@@ -193,9 +203,6 @@ const NewPaMessagePage = () => {
                       audioReviewed={audioReviewed}
                       showErrorIcon={errorMessage.length > 0}
                       onClick={previewAudio}
-                      audioText={phoneticText}
-                      onAudioEnded={onAudioEnded}
-                      onAudioError={onAudioError}
                     />
                   </>
                 ) : (
@@ -207,12 +214,17 @@ const NewPaMessagePage = () => {
                         audioReviewed={audioReviewed}
                         disabled={visualText.length === 0}
                         onClick={previewAudio}
-                        audioText={phoneticText}
-                        onAudioEnded={onAudioEnded}
-                        onAudioError={onAudioError}
                       />
                     </Card>
                   </>
+                )}
+                {audioPlaying && (
+                  <audio
+                    src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
+                    autoPlay
+                    onEnded={onAudioEnded}
+                    onError={onAudioError}
+                  />
                 )}
               </Col>
             </Row>
@@ -257,9 +269,6 @@ interface ReviewAudioButtonProps {
   disabled?: boolean;
   showErrorIcon?: boolean;
   onClick: () => void;
-  audioText: string;
-  onAudioEnded: () => void;
-  onAudioError: () => void;
 }
 
 const ReviewAudioButton = ({
@@ -268,57 +277,32 @@ const ReviewAudioButton = ({
   disabled,
   showErrorIcon,
   onClick,
-  audioText,
-  onAudioEnded,
-  onAudioError,
 }: ReviewAudioButtonProps) => {
-  let layout;
-  if (audioReviewed) {
-    layout = (
-      <div className="audio-reviewed-text">
-        <span>
-          <CheckCircleFill /> Audio reviewed
-        </span>
-        <Button
-          className="review-audio-button"
-          onClick={onClick}
-          variant="link"
-        >
-          Replay
-        </Button>
-      </div>
-    );
-  } else {
-    layout = (
-      <Button
-        disabled={!audioPlaying && disabled}
-        className={cx("review-audio-button", {
-          "review-audio-button--audio-playing": audioPlaying,
-        })}
-        variant="link"
-        onClick={onClick}
-      >
-        {showErrorIcon ? (
-          <ExclamationTriangleFill fill="#FFC107" height={16} />
-        ) : (
-          <VolumeUpFill height={16} />
-        )}
-        {audioPlaying ? "Reviewing audio" : "Review audio"}
+  return audioReviewed ? (
+    <div className="audio-reviewed-text">
+      <span>
+        <CheckCircleFill /> Audio reviewed
+      </span>
+      <Button className="review-audio-button" onClick={onClick} variant="link">
+        Replay
       </Button>
-    );
-  }
-  return (
-    <>
-      {layout}
-      {audioPlaying && (
-        <audio
-          src={`/api/pa-messages/preview_audio?text=${audioText}`}
-          autoPlay
-          onEnded={onAudioEnded}
-          onError={onAudioError}
-        />
+    </div>
+  ) : (
+    <Button
+      disabled={!audioPlaying && disabled}
+      className={cx("review-audio-button", {
+        "review-audio-button--audio-playing": audioPlaying,
+      })}
+      variant="link"
+      onClick={onClick}
+    >
+      {showErrorIcon ? (
+        <ExclamationTriangleFill fill="#FFC107" height={16} />
+      ) : (
+        <VolumeUpFill height={16} />
       )}
-    </>
+      {audioPlaying ? "Reviewing audio" : "Review audio"}
+    </Button>
   );
 };
 
