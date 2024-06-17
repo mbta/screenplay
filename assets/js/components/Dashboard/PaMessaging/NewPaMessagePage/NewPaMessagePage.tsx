@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -23,7 +24,6 @@ import {
   PlusLg,
   VolumeUpFill,
 } from "react-bootstrap-icons";
-import { fetchAudioPreview } from "../../../../utils/api";
 import cx from "classnames";
 
 const NewPaMessagePage = () => {
@@ -40,7 +40,6 @@ const NewPaMessagePage = () => {
   const [phoneticText, setPhoneticText] = useState("");
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [audioReviewed, setAudioReviewed] = useState(false);
-  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
@@ -56,28 +55,17 @@ const NewPaMessagePage = () => {
       setPhoneticText(visualText);
     }
     setAudioPlaying(true);
-    fetchAudioPreview(phoneticText.length ? phoneticText : visualText).then(
-      async (audioData) => {
-        if (audioData.status !== 200) {
-          setAudioPlaying(false);
-          setShowErrorAlert(true);
-          setErrorMessage(
-            "Error occurred while fetching audio preview. Please try again.",
-          );
-          return;
-        }
+  };
 
-        const blob = await audioData.blob();
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audio.onended = (_e) => {
-          setAudioPlaying(false);
-          setAudioReviewed(true);
-          URL.revokeObjectURL(url);
-        };
+  const onAudioEnded = () => {
+    setAudioPlaying(false);
+    setAudioReviewed(true);
+  };
 
-        audio.play();
-      },
+  const onAudioError = () => {
+    setAudioPlaying(false);
+    setErrorMessage(
+      "Error occurred while fetching audio preview. Please try again.",
     );
   };
 
@@ -205,6 +193,9 @@ const NewPaMessagePage = () => {
                       audioReviewed={audioReviewed}
                       showErrorIcon={errorMessage.length > 0}
                       onClick={previewAudio}
+                      audioText={phoneticText}
+                      onAudioEnded={onAudioEnded}
+                      onAudioError={onAudioError}
                     />
                   </>
                 ) : (
@@ -216,6 +207,9 @@ const NewPaMessagePage = () => {
                         audioReviewed={audioReviewed}
                         disabled={visualText.length === 0}
                         onClick={previewAudio}
+                        audioText={phoneticText}
+                        onAudioEnded={onAudioEnded}
+                        onAudioError={onAudioError}
                       />
                     </Card>
                   </>
@@ -242,9 +236,9 @@ const NewPaMessagePage = () => {
         </Container>
         <div className="error-alert-container">
           <Alert
-            show={showErrorAlert}
+            show={errorMessage.length > 0}
             variant="primary"
-            onClose={() => setShowErrorAlert(false)}
+            onClose={() => setErrorMessage("")}
             dismissible
             className="error-alert"
           >
@@ -263,6 +257,9 @@ interface ReviewAudioButtonProps {
   disabled?: boolean;
   showErrorIcon?: boolean;
   onClick: () => void;
+  audioText: string;
+  onAudioEnded: () => void;
+  onAudioError: () => void;
 }
 
 const ReviewAudioButton = ({
@@ -271,32 +268,57 @@ const ReviewAudioButton = ({
   disabled,
   showErrorIcon,
   onClick,
+  audioText,
+  onAudioEnded,
+  onAudioError,
 }: ReviewAudioButtonProps) => {
-  return audioReviewed ? (
-    <div className="audio-reviewed-text">
-      <span>
-        <CheckCircleFill /> Audio reviewed
-      </span>
-      <Button className="review-audio-button" onClick={onClick} variant="link">
-        Replay
+  let layout;
+  if (audioReviewed) {
+    layout = (
+      <div className="audio-reviewed-text">
+        <span>
+          <CheckCircleFill /> Audio reviewed
+        </span>
+        <Button
+          className="review-audio-button"
+          onClick={onClick}
+          variant="link"
+        >
+          Replay
+        </Button>
+      </div>
+    );
+  } else {
+    layout = (
+      <Button
+        disabled={!audioPlaying && disabled}
+        className={cx("review-audio-button", {
+          "review-audio-button--audio-playing": audioPlaying,
+        })}
+        variant="link"
+        onClick={onClick}
+      >
+        {showErrorIcon ? (
+          <ExclamationTriangleFill fill="#FFC107" height={16} />
+        ) : (
+          <VolumeUpFill height={16} />
+        )}
+        {audioPlaying ? "Reviewing audio" : "Review audio"}
       </Button>
-    </div>
-  ) : (
-    <Button
-      disabled={!audioPlaying && disabled}
-      className={cx("review-audio-button", {
-        "review-audio-button--audio-playing": audioPlaying,
-      })}
-      variant="link"
-      onClick={onClick}
-    >
-      {showErrorIcon ? (
-        <ExclamationTriangleFill fill="#FFC107" height={16} />
-      ) : (
-        <VolumeUpFill height={16} />
+    );
+  }
+  return (
+    <>
+      {layout}
+      {audioPlaying && (
+        <audio
+          src={`/api/pa-messages/preview_audio?text=${audioText}`}
+          autoPlay
+          onEnded={onAudioEnded}
+          onError={onAudioError}
+        />
       )}
-      {audioPlaying ? "Reviewing audio" : "Review audio"}
-    </Button>
+    </>
   );
 };
 

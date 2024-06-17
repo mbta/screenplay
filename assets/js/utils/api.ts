@@ -84,7 +84,7 @@ export const putPendingScreens = async (
   version_id: string,
 ) => {
   return await fetch("/config/put", {
-    ...postBodyAndHeaders({
+    ...getPostBodyAndHeaders({
       places_and_screens: placesAndScreens,
       screen_type: screenType,
       version_id: version_id,
@@ -103,7 +103,7 @@ export const publishScreensForPlace = async (
     hidden_from_screenplay_ids: hiddenFromScreenplayIds,
   };
   const response = await fetch(`/config/publish/${placeId}/${appId}`, {
-    ...postBodyAndHeaders(bodyData, { "if-match": etag }),
+    ...getPostBodyAndHeaders(bodyData, { "if-match": etag }),
     credentials: "include",
   });
 
@@ -117,14 +117,7 @@ export const publishScreensForPlace = async (
   return { status: response.status, message };
 };
 
-export const fetchAudioPreview = async (text: string) => {
-  return await fetch(
-    "/api/pa-messages/preview_audio",
-    postBodyAndHeaders({ text: text }),
-  );
-};
-
-const postBodyAndHeaders = (
+const getPostBodyAndHeaders = (
   bodyData: { [key: string]: any },
   extraHeaders: { [key: string]: string } = {},
 ) => {
