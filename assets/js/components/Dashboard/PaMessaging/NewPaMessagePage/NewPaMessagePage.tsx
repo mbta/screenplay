@@ -26,6 +26,8 @@ import {
 } from "react-bootstrap-icons";
 import cx from "classnames";
 
+const MAX_TEXT_LENGTH = 2000;
+
 enum AudioState {
   HasNotBeenPlayed,
   IsPlaying,
@@ -176,6 +178,7 @@ const NewPaMessagePage = () => {
                     }
                   }}
                   label="Text"
+                  maxLength={MAX_TEXT_LENGTH}
                 />
               </Col>
               <Col md="auto" className="copy-button-col">
@@ -207,6 +210,7 @@ const NewPaMessagePage = () => {
                       }}
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
+                      maxLength={MAX_TEXT_LENGTH}
                     />
                     <ReviewAudioButton
                       audioState={audioState}
