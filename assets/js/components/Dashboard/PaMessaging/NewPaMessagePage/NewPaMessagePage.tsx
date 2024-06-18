@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Button,
@@ -26,6 +26,13 @@ import {
 } from "react-bootstrap-icons";
 import cx from "classnames";
 
+enum AudioState {
+  HasNotBeenPlayed,
+  IsPlaying,
+  HasBeenReviewed,
+  NeedsReview,
+}
+
 const NewPaMessagePage = () => {
   const now = moment();
 
@@ -38,33 +45,30 @@ const NewPaMessagePage = () => {
   const [interval, setInterval] = useState("4");
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
-  const [audioPlaying, setAudioPlaying] = useState(false);
-  const [audioReviewed, setAudioReviewed] = useState(false);
+  const [audioState, setAudioState] = useState<AudioState>(
+    AudioState.HasNotBeenPlayed,
+  );
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!audioPlaying) setAudioReviewed(false);
-  }, [visualText, phoneticText]);
-
   const previewAudio = () => {
-    if (audioPlaying) return;
+    if (audioState === AudioState.IsPlaying) return;
 
     if (phoneticText.length === 0) {
       setPhoneticText(visualText);
     }
-    setAudioPlaying(true);
+
+    setAudioState(AudioState.IsPlaying);
   };
 
   // Called after the audio preview plays in full
   const onAudioEnded = () => {
-    setAudioPlaying(false);
-    setAudioReviewed(true);
+    setAudioState(AudioState.HasBeenReviewed);
   };
 
   const onAudioError = () => {
-    setAudioPlaying(false);
+    setAudioState(AudioState.NeedsReview);
     setErrorMessage(
       "Error occurred while fetching audio preview. Please try again.",
     );
@@ -167,7 +171,9 @@ const NewPaMessagePage = () => {
                   text={visualText}
                   onChangeText={(text) => {
                     setVisualText(text);
-                    setAudioPlaying(false);
+                    if (audioState !== AudioState.HasNotBeenPlayed) {
+                      setAudioState(AudioState.NeedsReview);
+                    }
                   }}
                   label="Text"
                 />
@@ -178,7 +184,9 @@ const NewPaMessagePage = () => {
                   className="copy-text-button"
                   onClick={() => {
                     setPhoneticText(visualText);
-                    setAudioPlaying(false);
+                    if (audioState !== AudioState.HasNotBeenPlayed) {
+                      setAudioState(AudioState.NeedsReview);
+                    }
                   }}
                   aria-label="copy-visual-to-phonetic"
                 >
@@ -193,15 +201,15 @@ const NewPaMessagePage = () => {
                       text={phoneticText}
                       onChangeText={(text) => {
                         setPhoneticText(text);
-                        setAudioPlaying(false);
+                        if (audioState !== AudioState.HasNotBeenPlayed) {
+                          setAudioState(AudioState.NeedsReview);
+                        }
                       }}
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                     />
                     <ReviewAudioButton
-                      audioPlaying={audioPlaying}
-                      audioReviewed={audioReviewed}
-                      showErrorIcon={errorMessage.length > 0}
+                      audioState={audioState}
                       onClick={previewAudio}
                     />
                   </>
@@ -210,15 +218,14 @@ const NewPaMessagePage = () => {
                     <div className="form-label">Phonetic Audio</div>
                     <Card className="review-audio-card">
                       <ReviewAudioButton
-                        audioPlaying={audioPlaying}
-                        audioReviewed={audioReviewed}
+                        audioState={audioState}
                         disabled={visualText.length === 0}
                         onClick={previewAudio}
                       />
                     </Card>
                   </>
                 )}
-                {audioPlaying && (
+                {audioState === AudioState.IsPlaying && (
                   <audio
                     src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
                     autoPlay
@@ -264,21 +271,18 @@ const NewPaMessagePage = () => {
 };
 
 interface ReviewAudioButtonProps {
-  audioPlaying: boolean;
-  audioReviewed: boolean;
+  audioState: AudioState;
   disabled?: boolean;
-  showErrorIcon?: boolean;
   onClick: () => void;
 }
 
 const ReviewAudioButton = ({
-  audioPlaying,
-  audioReviewed,
+  audioState,
   disabled,
-  showErrorIcon,
   onClick,
 }: ReviewAudioButtonProps) => {
-  return audioReviewed ? (
+  const audioPlaying = audioState === AudioState.IsPlaying;
+  return audioState === AudioState.HasBeenReviewed ? (
     <div className="audio-reviewed-text">
       <span>
         <CheckCircleFill /> Audio reviewed
@@ -296,7 +300,7 @@ const ReviewAudioButton = ({
       variant="link"
       onClick={onClick}
     >
-      {showErrorIcon ? (
+      {audioState === AudioState.NeedsReview ? (
         <ExclamationTriangleFill fill="#FFC107" height={16} />
       ) : (
         <VolumeUpFill height={16} />
