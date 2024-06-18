@@ -28,11 +28,11 @@ import cx from "classnames";
 
 const MAX_TEXT_LENGTH = 2000;
 
-enum AudioState {
-  HasNotBeenPlayed,
-  IsPlaying,
-  HasBeenReviewed,
-  NeedsReview,
+enum AudioPreview {
+  Unreviewed,
+  Playing,
+  Reviewed,
+  Outdated,
 }
 
 const NewPaMessagePage = () => {
@@ -47,30 +47,30 @@ const NewPaMessagePage = () => {
   const [interval, setInterval] = useState("4");
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
-  const [audioState, setAudioState] = useState<AudioState>(
-    AudioState.HasNotBeenPlayed,
+  const [audioState, setAudioState] = useState<AudioPreview>(
+    AudioPreview.Unreviewed,
   );
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
   const previewAudio = () => {
-    if (audioState === AudioState.IsPlaying) return;
+    if (audioState === AudioPreview.Playing) return;
 
     if (phoneticText.length === 0) {
       setPhoneticText(visualText);
     }
 
-    setAudioState(AudioState.IsPlaying);
+    setAudioState(AudioPreview.Playing);
   };
 
   // Called after the audio preview plays in full
   const onAudioEnded = () => {
-    setAudioState(AudioState.HasBeenReviewed);
+    setAudioState(AudioPreview.Reviewed);
   };
 
   const onAudioError = () => {
-    setAudioState(AudioState.NeedsReview);
+    setAudioState(AudioPreview.Outdated);
     setErrorMessage(
       "Error occurred while fetching audio preview. Please try again.",
     );
@@ -173,8 +173,8 @@ const NewPaMessagePage = () => {
                   text={visualText}
                   onChangeText={(text) => {
                     setVisualText(text);
-                    if (audioState !== AudioState.HasNotBeenPlayed) {
-                      setAudioState(AudioState.NeedsReview);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
                     }
                   }}
                   label="Text"
@@ -187,8 +187,8 @@ const NewPaMessagePage = () => {
                   className="copy-text-button"
                   onClick={() => {
                     setPhoneticText(visualText);
-                    if (audioState !== AudioState.HasNotBeenPlayed) {
-                      setAudioState(AudioState.NeedsReview);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
                     }
                   }}
                   aria-label="copy-visual-to-phonetic"
@@ -204,8 +204,8 @@ const NewPaMessagePage = () => {
                       text={phoneticText}
                       onChangeText={(text) => {
                         setPhoneticText(text);
-                        if (audioState !== AudioState.HasNotBeenPlayed) {
-                          setAudioState(AudioState.NeedsReview);
+                        if (audioState !== AudioPreview.Unreviewed) {
+                          setAudioState(AudioPreview.Outdated);
                         }
                       }}
                       disabled={phoneticText.length === 0}
@@ -229,7 +229,7 @@ const NewPaMessagePage = () => {
                     </Card>
                   </>
                 )}
-                {audioState === AudioState.IsPlaying && (
+                {audioState === AudioPreview.Playing && (
                   <audio
                     src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
                     autoPlay
@@ -275,7 +275,7 @@ const NewPaMessagePage = () => {
 };
 
 interface ReviewAudioButtonProps {
-  audioState: AudioState;
+  audioState: AudioPreview;
   disabled?: boolean;
   onClick: () => void;
 }
@@ -285,8 +285,8 @@ const ReviewAudioButton = ({
   disabled,
   onClick,
 }: ReviewAudioButtonProps) => {
-  const audioPlaying = audioState === AudioState.IsPlaying;
-  return audioState === AudioState.HasBeenReviewed ? (
+  const audioPlaying = audioState === AudioPreview.Playing;
+  return audioState === AudioPreview.Reviewed ? (
     <div className="audio-reviewed-text">
       <span>
         <CheckCircleFill /> Audio reviewed
@@ -304,7 +304,7 @@ const ReviewAudioButton = ({
       variant="link"
       onClick={onClick}
     >
-      {audioState === AudioState.NeedsReview ? (
+      {audioState === AudioPreview.Outdated ? (
         <ExclamationTriangleFill fill="#FFC107" height={16} />
       ) : (
         <VolumeUpFill height={16} />
