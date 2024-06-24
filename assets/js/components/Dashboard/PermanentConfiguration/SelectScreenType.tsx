@@ -61,8 +61,8 @@ const SelectScreenTypeComponent: ComponentType = () => {
         <Col>
           <ButtonImage
             fileName="solari.png"
-            label="Solari"
-            onClick={() => selectScreenType("solari")}
+            label="Sectional"
+            onClick={() => selectScreenType("sectional")}
           />
         </Col>
       </Row>
