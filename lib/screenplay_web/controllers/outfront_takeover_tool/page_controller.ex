@@ -23,10 +23,6 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageController do
     render(conn, "index.html")
   end
 
-  def root_redirect(conn, _params) do
-    redirect(conn, to: ~p"/dashboard")
-  end
-
   def stations_and_screen_orientations(conn, _params) do
     json(conn, @stations_and_screen_orientations)
   end

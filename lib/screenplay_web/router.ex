@@ -63,13 +63,13 @@ defmodule ScreenplayWeb.Router do
       :ensure_screenplay_emergency_admin_group
     ])
 
-    get("/", PageController, :root_redirect)
     get("/emergency-takeover", PageController, :index)
   end
 
   scope "/", ScreenplayWeb do
     pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth, :metadata])
 
+    get("/", DashboardController, :root_redirect)
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
     get("/unauthorized", UnauthorizedController, :index)
