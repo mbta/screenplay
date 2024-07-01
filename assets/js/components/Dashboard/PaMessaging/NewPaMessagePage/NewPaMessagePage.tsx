@@ -1,5 +1,14 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+} from "react-bootstrap";
 import DaysPicker from "./DaysPicker";
 import PriorityPicker from "./PriorityPicker";
 import IntervalPicker from "./IntervalPicker";
@@ -8,7 +17,23 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import DatePicker from "../../DatePicker";
 import TimePicker from "../../TimePicker";
-import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
+import {
+  ArrowRightShort,
+  CheckCircleFill,
+  ExclamationTriangleFill,
+  PlusLg,
+  VolumeUpFill,
+} from "react-bootstrap-icons";
+import cx from "classnames";
+
+const MAX_TEXT_LENGTH = 2000;
+
+enum AudioPreview {
+  Unreviewed,
+  Playing,
+  Reviewed,
+  Outdated,
+}
 
 const NewPaMessagePage = () => {
   const now = moment();
@@ -22,8 +47,34 @@ const NewPaMessagePage = () => {
   const [interval, setInterval] = useState("4");
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
+  const [audioState, setAudioState] = useState<AudioPreview>(
+    AudioPreview.Unreviewed,
+  );
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+
+  const previewAudio = () => {
+    if (audioState === AudioPreview.Playing) return;
+
+    if (phoneticText.length === 0) {
+      setPhoneticText(visualText);
+    }
+
+    setAudioState(AudioPreview.Playing);
+  };
+
+  // Called after the audio preview plays in full
+  const onAudioEnded = () => {
+    setAudioState(AudioPreview.Reviewed);
+  };
+
+  const onAudioError = () => {
+    setAudioState(AudioPreview.Outdated);
+    setErrorMessage(
+      "Error occurred while fetching audio preview. Please try again.",
+    );
+  };
 
   return (
     <div className="new-pa-message-page">
@@ -115,20 +166,31 @@ const NewPaMessagePage = () => {
           </Card>
           <Card className="message-card">
             <div className="title">Message</div>
-            <Row className="align-items-center">
+            <Row>
               <Col>
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
-                  onChangeText={setVisualText}
+                  onChangeText={(text) => {
+                    setVisualText(text);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
+                    }
+                  }}
                   label="Text"
+                  maxLength={MAX_TEXT_LENGTH}
                 />
               </Col>
-              <Col md="auto">
+              <Col md="auto" className="copy-button-col">
                 <Button
                   disabled={visualText.length === 0}
                   className="copy-text-button"
-                  onClick={() => setPhoneticText(visualText)}
+                  onClick={() => {
+                    setPhoneticText(visualText);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
+                    }
+                  }}
                   aria-label="copy-visual-to-phonetic"
                 >
                   <ArrowRightShort />
@@ -136,20 +198,44 @@ const NewPaMessagePage = () => {
               </Col>
               <Col>
                 {phoneticText.length > 0 ? (
-                  <MessageTextBox
-                    id="phonetic-audio-text-box"
-                    text={phoneticText}
-                    onChangeText={setPhoneticText}
-                    disabled={phoneticText.length === 0}
-                    label="Phonetic Audio"
-                  />
+                  <>
+                    <MessageTextBox
+                      id="phonetic-audio-text-box"
+                      text={phoneticText}
+                      onChangeText={(text) => {
+                        setPhoneticText(text);
+                        if (audioState !== AudioPreview.Unreviewed) {
+                          setAudioState(AudioPreview.Outdated);
+                        }
+                      }}
+                      disabled={phoneticText.length === 0}
+                      label="Phonetic Audio"
+                      maxLength={MAX_TEXT_LENGTH}
+                    />
+                    <ReviewAudioButton
+                      audioState={audioState}
+                      onClick={previewAudio}
+                    />
+                  </>
                 ) : (
-                  <Card className="review-audio-card">
-                    <Button className="review-audio-button" variant="link">
-                      <VolumeUpFill height={12} />
-                      Review audio
-                    </Button>
-                  </Card>
+                  <>
+                    <div className="form-label">Phonetic Audio</div>
+                    <Card className="review-audio-card">
+                      <ReviewAudioButton
+                        audioState={audioState}
+                        disabled={visualText.length === 0}
+                        onClick={previewAudio}
+                      />
+                    </Card>
+                  </>
+                )}
+                {audioState === AudioPreview.Playing && (
+                  <audio
+                    src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
+                    autoPlay
+                    onEnded={onAudioEnded}
+                    onError={onAudioError}
+                  />
                 )}
               </Col>
             </Row>
@@ -171,8 +257,60 @@ const NewPaMessagePage = () => {
             </Button>
           </Row>
         </Container>
+        <div className="error-alert-container">
+          <Alert
+            show={errorMessage.length > 0}
+            variant="primary"
+            onClose={() => setErrorMessage("")}
+            dismissible
+            className="error-alert"
+          >
+            <ExclamationTriangleFill className="error-alert__icon" />
+            <div className="error-alert__text">{errorMessage}</div>
+          </Alert>
+        </div>
       </Form>
     </div>
+  );
+};
+
+interface ReviewAudioButtonProps {
+  audioState: AudioPreview;
+  disabled?: boolean;
+  onClick: () => void;
+}
+
+const ReviewAudioButton = ({
+  audioState,
+  disabled,
+  onClick,
+}: ReviewAudioButtonProps) => {
+  const audioPlaying = audioState === AudioPreview.Playing;
+  return audioState === AudioPreview.Reviewed ? (
+    <div className="audio-reviewed-text">
+      <span>
+        <CheckCircleFill /> Audio reviewed
+      </span>
+      <Button className="review-audio-button" onClick={onClick} variant="link">
+        Replay
+      </Button>
+    </div>
+  ) : (
+    <Button
+      disabled={!audioPlaying && disabled}
+      className={cx("review-audio-button", {
+        "review-audio-button--audio-playing": audioPlaying,
+      })}
+      variant="link"
+      onClick={onClick}
+    >
+      {audioState === AudioPreview.Outdated ? (
+        <ExclamationTriangleFill fill="#FFC107" height={16} />
+      ) : (
+        <VolumeUpFill height={16} />
+      )}
+      {audioPlaying ? "Reviewing audio" : "Review audio"}
+    </Button>
   );
 };
 

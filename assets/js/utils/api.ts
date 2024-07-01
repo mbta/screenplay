@@ -84,17 +84,12 @@ export const putPendingScreens = async (
   version_id: string,
 ) => {
   return await fetch("/config/put", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-csrf-token": getCsrfToken(),
-    },
-    credentials: "include",
-    body: JSON.stringify({
+    ...getPostBodyAndHeaders({
       places_and_screens: placesAndScreens,
       screen_type: screenType,
       version_id: version_id,
     }),
+    credentials: "include",
   });
 };
 
@@ -104,19 +99,11 @@ export const publishScreensForPlace = async (
   hiddenFromScreenplayIds: string[],
   etag: string,
 ) => {
+  const bodyData = {
+    hidden_from_screenplay_ids: hiddenFromScreenplayIds,
+  };
   const response = await fetch(`/config/publish/${placeId}/${appId}`, {
-    method: "POST",
-    body: JSON.stringify({
-      hidden_from_screenplay_ids: hiddenFromScreenplayIds,
-    }),
-    headers: {
-      "content-type": "application/json",
-      "if-match": etag,
-      "x-csrf-token":
-        document?.head?.querySelector<HTMLMetaElement>(
-          "[name~=csrf-token][content]",
-        )?.content ?? "",
-    },
+    ...getPostBodyAndHeaders(bodyData, { "if-match": etag }),
     credentials: "include",
   });
 
@@ -128,4 +115,19 @@ export const publishScreensForPlace = async (
   }
 
   return { status: response.status, message };
+};
+
+const getPostBodyAndHeaders = (
+  bodyData: { [key: string]: any },
+  extraHeaders: { [key: string]: string } = {},
+) => {
+  return {
+    method: "POST",
+    body: JSON.stringify(bodyData),
+    headers: {
+      ...extraHeaders,
+      "content-type": "application/json",
+      "x-csrf-token": getCsrfToken(),
+    },
+  };
 };

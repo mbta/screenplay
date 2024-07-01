@@ -147,13 +147,17 @@
   }
 
   .message-card {
-    .copy-text-button {
-      background-color: $bg-border-disabled;
-      width: 38px;
-      height: 38px;
+    .copy-button-col {
+      margin-top: 141px;
 
-      .bi-arrow-right-short {
-        fill: $text-disabled;
+      .copy-text-button {
+        background-color: $bg-border-disabled;
+        width: 38px;
+        height: 38px;
+
+        .bi-arrow-right-short {
+          fill: $text-disabled;
+        }
       }
     }
 
@@ -162,15 +166,78 @@
       resize: none;
     }
 
+    .audio-reviewed-text {
+      color: $text-primary;
+      margin-top: auto;
+      margin-bottom: auto;
+      align-self: center;
+
+      span {
+        vertical-align: middle;
+      }
+    }
+
+    .review-audio-button {
+      color: $button-primary;
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-left: 16px;
+      padding: 0;
+
+      .bi {
+        margin-right: 8px;
+      }
+
+      &--audio-playing {
+        color: $text-primary;
+        text-decoration: none;
+      }
+
+      &:disabled {
+        color: $text-secondary;
+        text-decoration: none;
+      }
+    }
+
     .review-audio-card {
       height: 250px;
       background-color: $cool-gray-15;
+    }
+  }
 
-      .review-audio-button {
-        color: $button-primary;
-        margin-top: auto;
-        margin-bottom: auto;
+  .error-alert-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 40px;
+    z-index: 1001;
+  }
+
+  .error-alert {
+    width: 400px;
+    background-color: #ffdd00;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+
+    .btn-close {
+      &:hover {
+        background-color: transparent;
       }
+    }
+
+    &__icon {
+      height: 24px;
+      width: 24px;
+      opacity: 60%;
+      flex-shrink: 0;
+    }
+
+    &__text {
+      padding-left: 8px;
     }
   }
 }
