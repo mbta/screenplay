@@ -15,8 +15,8 @@ import IntervalPicker from "./IntervalPicker";
 import MessageTextBox from "./MessageTextBox";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import DatePicker from "../../DatePicker";
-import TimePicker from "../../TimePicker";
+import DatePicker from "./DatePicker";
+import TimePicker from "./TimePicker";
 import {
   ArrowRightShort,
   CheckCircleFill,

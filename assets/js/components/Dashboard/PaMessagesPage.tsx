@@ -1,8 +1,8 @@
 import React, { ComponentType, useState, useEffect } from "react";
 import { Container, Row, Col, FormCheck } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
-import { fetchPaMessages } from "../../../utils/api";
-import { PaMessage } from "../../../models/pa_message";
+import { fetchPaMessages } from "../../utils/api";
+import { PaMessage } from "../../models/pa_message";
 import { Link } from "react-router-dom";
 
 const PaMessagesPage: ComponentType = () => {
