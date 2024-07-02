@@ -149,9 +149,7 @@ defmodule Screenplay.Config.PermanentConfig do
     new_published_screens_config = get_new_published_screens(published_config, screens_to_publish)
 
     screenplay_screens_to_add =
-      screens_to_publish
-      |> Enum.into(%{})
-      |> Enum.reject(fn {_, screen} -> screen.hidden_from_screenplay end)
+      Enum.reject(screens_to_publish, fn {_, screen} -> screen.hidden_from_screenplay end)
 
     new_places_and_screens_config =
       get_new_places_and_screens_config(places_and_screens_config, screenplay_screens_to_add)
