@@ -37,9 +37,15 @@ defmodule Screenplay.Config.S3Fetch do
 
   @impl true
   def put_config(file_contents) do
+    encoded_contents =
+      case Jason.encode(file_contents, pretty: true) do
+        {:ok, contents} -> contents
+        {:error, _} -> :error
+      end
+
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment(:config)
-    put_operation = ExAws.S3.put_object(bucket, path, file_contents)
+    put_operation = ExAws.S3.put_object(bucket, path, encoded_contents)
 
     case ExAws.request(put_operation) do
       {:ok, %{status_code: 200}} -> :ok
