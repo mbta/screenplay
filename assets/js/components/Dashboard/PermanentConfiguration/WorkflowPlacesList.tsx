@@ -1,10 +1,10 @@
 import React, { ComponentType } from "react";
-import SortLabel from "../SortLabel";
-import { SORT_LABELS } from "../../../constants/constants";
-import { DirectionID } from "../../../models/direction_id";
+import SortLabel from "Components/SortLabel";
+import { SORT_LABELS } from "Constants/constants";
+import { DirectionID } from "Models/direction_id";
 import { sortByStationOrder } from "../../../util";
-import { Place } from "../../../models/place";
-import PlaceRow from "../PlaceRow";
+import { Place } from "Models/place";
+import PlaceRow from "Components/PlaceRow";
 
 interface WorkflowPlacesListProps {
   sortDirection: DirectionID;

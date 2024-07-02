@@ -2,11 +2,11 @@ import moment from "moment";
 import React from "react";
 import { Container, Fade } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
-import { ActivePeriod, Alert } from "../../models/alert";
+import { ActivePeriod, Alert } from "Models/alert";
 import classNames from "classnames";
 import { formatEffect } from "../../util";
-import { usePrevious } from "../../hooks/usePrevious";
-import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
+import { usePrevious } from "Hooks/usePrevious";
+import { useUpdateAnimation } from "Hooks/useUpdateAnimation";
 
 interface AlertCardProps {
   alert: Alert;

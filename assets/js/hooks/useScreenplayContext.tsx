@@ -11,7 +11,7 @@ import {
   ALERTS_PAGE_MODES_AND_LINES,
   SCREEN_TYPES,
   STATUSES,
-} from "../constants/constants";
+} from "Constants/constants";
 import { BannerAlert } from "../components/Dashboard/AlertBanner";
 import { ActionOutcomeToastProps } from "../components/Dashboard/ActionOutcomeToast";
 

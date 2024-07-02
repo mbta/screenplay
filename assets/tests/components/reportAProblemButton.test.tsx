@@ -1,6 +1,6 @@
 import React from "react";
 import { render, waitFor } from "@testing-library/react";
-import ReportAProblemButton from "../../js/components/Dashboard/ReportAProblemButton";
+import ReportAProblemButton from "Components/ReportAProblemButton";
 
 describe("ReportAProblemButton", () => {
   test("uses correct URL for users that are not emergency admins", async () => {

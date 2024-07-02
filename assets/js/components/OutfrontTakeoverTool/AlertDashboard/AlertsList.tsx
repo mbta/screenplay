@@ -5,7 +5,7 @@ import { ModalDetails } from "../ConfirmationModal";
 import { BanIcon } from "@heroicons/react/solid";
 import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
-import { BASE_URL } from "../../../constants/constants";
+import { BASE_URL } from "Constants/constants";
 
 interface AlertsListProps {
   startEditWizard: (data: AlertData, step: number) => void;

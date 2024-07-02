@@ -1,9 +1,9 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
-import PlaceRowAccordion from "../../js/components/Dashboard/PlaceRowAccordion";
+import PlaceRowAccordion from "Components/PlaceRowAccordion";
 import { Accordion } from "react-bootstrap";
-import { Place } from "../../js/models/place";
-import { ScreenplayProvider } from "../../js/hooks/useScreenplayContext";
+import { Place } from "Models/place";
+import { ScreenplayProvider } from "Hooks/useScreenplayContext";
 
 beforeAll(() => {
   const app = document.createElement("div");

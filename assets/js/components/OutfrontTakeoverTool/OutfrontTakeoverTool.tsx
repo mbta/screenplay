@@ -2,7 +2,7 @@ import React, { createContext } from "react";
 import AlertDashboard from "./AlertDashboard/AlertDashboard";
 import AlertWizard from "./AlertWizard/AlertWizard";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
-import { BASE_URL } from "../../constants/constants";
+import { BASE_URL } from "Constants/constants";
 
 export interface Station {
   name: string;

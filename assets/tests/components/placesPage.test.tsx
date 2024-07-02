@@ -1,6 +1,6 @@
 import React from "react";
 import { act, fireEvent, waitFor } from "@testing-library/react";
-import PlacesPage from "../../js/components/Dashboard/PlacesPage";
+import PlacesPage from "Components/PlacesPage";
 import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvider";
 
 describe("PlacesPage", () => {

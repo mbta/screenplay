@@ -1,8 +1,8 @@
 import React from "react";
-import PaessDetailContainer from "../../js/components/Dashboard/PaessDetailContainer";
-import { ScreenplayProvider } from "../../js/hooks/useScreenplayContext";
+import PaessDetailContainer from "Components/PaessDetailContainer";
+import { ScreenplayProvider } from "Hooks/useScreenplayContext";
 import { render } from "@testing-library/react";
-import { Screen } from "../../js/models/screen";
+import { Screen } from "Models/screen";
 
 beforeAll(() => {
   const app = document.createElement("div");

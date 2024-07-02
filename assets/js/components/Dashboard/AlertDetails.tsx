@@ -1,9 +1,9 @@
 import React, { ComponentType, useEffect, useReducer, useState } from "react";
-import AlertCard from "./AlertCard";
-import AlertNotFoundPage from "./AlertNotFoundPage";
-import { PlacesList } from "./PlacesPage";
+import AlertCard from "Components/AlertCard";
+import AlertNotFoundPage from "Components/AlertNotFoundPage";
+import { PlacesList } from "Components/PlacesPage";
 import { useNavigate, useParams } from "react-router-dom";
-import { Alert } from "../../models/alert";
+import { Alert } from "Models/alert";
 import { Button, Modal } from "react-bootstrap";
 import {
   ArrowLeft,
@@ -15,7 +15,7 @@ import {
   placesListReducer,
   useScreenplayContext,
   initialPlacesListState,
-} from "../../hooks/useScreenplayContext";
+} from "Hooks/useScreenplayContext";
 
 const AlertDetails: ComponentType = () => {
   const screenplayContext = useScreenplayContext();

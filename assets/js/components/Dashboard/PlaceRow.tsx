@@ -9,9 +9,9 @@ import {
 } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
-import { Place } from "../../models/place";
-import MapSegment from "./MapSegment";
-import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
+import { Place } from "Models/place";
+import MapSegment from "Components/MapSegment";
+import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import {
   capitalizeTerminalStops,
   classWithModifier,

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import classNames from "classnames";
-import { Screen } from "../../models/screen";
-import ScreenDetailActionBar from "./ScreenDetailActionBar";
+import { Screen } from "Models/screen";
+import ScreenDetailActionBar from "Components/ScreenDetailActionBar";
 
 interface ScreenDetailHeaderProps {
   screen: Screen;

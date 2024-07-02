@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link45deg } from "react-bootstrap-icons";
-import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
+import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
 
 interface CopyLinkButtonProps {
   url: string;

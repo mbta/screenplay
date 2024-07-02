@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import AlertCard from "../../js/components/Dashboard/AlertCard";
-import { Alert } from "../../js/models/alert";
+import AlertCard from "Components/AlertCard";
+import { Alert } from "Models/alert";
 
 describe("AlertCard", () => {
   test("formats effect string", async () => {

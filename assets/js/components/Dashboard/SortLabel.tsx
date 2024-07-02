@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import { DirectionID } from "../../models/direction_id";
+import { DirectionID } from "Models/direction_id";
 import { ArrowDown, ArrowUp } from "react-bootstrap-icons";
 import classNames from "classnames";
 

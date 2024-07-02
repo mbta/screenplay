@@ -1,5 +1,5 @@
 import * as React from "react";
-import ScreenDetailActionBar from "./ScreenDetailActionBar";
+import ScreenDetailActionBar from "Components/ScreenDetailActionBar";
 
 interface PaessScreenDetailProps {
   stationCode: string;

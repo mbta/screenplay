@@ -1,9 +1,9 @@
 import React, { SyntheticEvent, useContext } from "react";
-import { Screen } from "../../models/screen";
-import ScreenDetailHeader from "./ScreenDetailHeader";
-import ScreenSimulation from "./ScreenSimulation";
-import { SCREEN_TYPES } from "../../constants/constants";
-import PaessDetailContainer from "./PaessDetailContainer";
+import { Screen } from "Models/screen";
+import ScreenDetailHeader from "Components/ScreenDetailHeader";
+import ScreenSimulation from "Components/ScreenSimulation";
+import { SCREEN_TYPES } from "Constants/constants";
+import PaessDetailContainer from "Components/PaessDetailContainer";
 import classNames from "classnames";
 import { AccordionContext } from "react-bootstrap";
 

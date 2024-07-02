@@ -5,12 +5,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Place } from "../../../../../models/place";
+import { Place } from "Models/place";
 import {
   GLScreenConfiguration,
   ScreenConfiguration,
-} from "../../../../../models/screen_configuration";
-import { ValidationErrorsForScreen } from "../../../../../models/configValidationErrors";
+} from "Models/screen_configuration";
+import { ValidationErrorsForScreen } from "Models/configValidationErrors";
 import {
   Button,
   ButtonGroup,
@@ -35,11 +35,11 @@ import {
   ExistingScreens,
   ExistingScreensAtPlace,
   fetchExistingScreens,
-} from "../../../../../utils/api";
+} from "Utils/api";
 import {
   useConfigValidationContext,
   useConfigValidationDispatchContext,
-} from "../../../../../hooks/useScreenplayContext";
+} from "Hooks/useScreenplayContext";
 
 interface PlaceIdsAndExistingScreens {
   [place_id: string]: ExistingScreensAtPlace;

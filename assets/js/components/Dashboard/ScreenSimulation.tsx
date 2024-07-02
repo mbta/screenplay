@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Screen } from "../../models/screen";
+import { Screen } from "Models/screen";
 
 interface Props {
   screen: Screen;

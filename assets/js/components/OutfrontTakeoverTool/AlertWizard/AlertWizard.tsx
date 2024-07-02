@@ -7,16 +7,16 @@ import WizardNavFooter from "./WizardNavFooter";
 import WizardStepper from "./WizardStepper";
 import { AlertData, Station, StationsByLine } from "../OutfrontTakeoverTool";
 
-import CANNED_MESSAGES from "../../../constants/messages";
+import CANNED_MESSAGES from "Constants/messages";
 
 import { BanIcon, XIcon } from "@heroicons/react/solid";
 import WizardSidebar from "./WizardSidebar";
-import { svgLongSide, svgScale, svgShortSide } from "../../../constants/misc";
+import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
 import { matchStation } from "../../../util";
 
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
-import { BASE_URL } from "../../../constants/constants";
+import { BASE_URL } from "Constants/constants";
 
 interface AlertWizardProps {
   alertData: AlertData | null;

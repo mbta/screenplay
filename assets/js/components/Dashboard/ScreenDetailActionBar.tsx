@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, SyntheticEvent } from "react";
-import ReportAProblemButton from "./ReportAProblemButton";
-import CopyLinkButton from "./CopyLinkButton";
-import OpenInWindowButton from "./OpenInTabButton";
+import ReportAProblemButton from "Components/ReportAProblemButton";
+import CopyLinkButton from "Components/CopyLinkButton";
+import OpenInWindowButton from "Components/OpenInTabButton";
 import { Button, Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 import {
   Link45deg,
@@ -9,7 +9,7 @@ import {
   BoxArrowUpRight,
   ThreeDotsVertical,
 } from "react-bootstrap-icons";
-import { useScreenplayDispatchContext } from "../../hooks/useScreenplayContext";
+import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
 
 interface ScreenDetailActionBarProps {
   screenUrl: string;

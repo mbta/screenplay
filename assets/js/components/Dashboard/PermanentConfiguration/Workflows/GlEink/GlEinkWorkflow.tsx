@@ -1,18 +1,18 @@
 import React, { ComponentType, useLayoutEffect, useState } from "react";
 import ConfigureScreensWorkflowPage, {
   PlaceIdsAndNewScreens,
-} from "./ConfigureScreensPage";
-import BottomActionBar from "../../BottomActionBar";
+} from "Components/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
+import BottomActionBar from "Components/PermanentConfiguration/BottomActionBar";
 import { useLocation, useNavigate } from "react-router-dom";
-import StationSelectPage from "./StationSelectPage";
+import StationSelectPage from "Components/PermanentConfiguration/Workflows/GlEink/StationSelectPage";
 import { Alert, Button, Modal } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
   useConfigValidationContext,
   useConfigValidationDispatchContext,
-} from "../../../../../hooks/useScreenplayContext";
-import { putPendingScreens } from "../../../../../utils/api";
-import { useScreenplayContext } from "../../../../../hooks/useScreenplayContext";
+} from "Hooks/useScreenplayContext";
+import { putPendingScreens } from "Utils/api";
+import { useScreenplayContext } from "Hooks/useScreenplayContext";
 
 interface EditNavigationState {
   place_id: string;
