@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import FilterDropdown from "./FilterDropdown";
+import FilterDropdown from "Components/FilterDropdown";
 import { Col, Container, Row } from "react-bootstrap";
 import "../../../css/screenplay.scss";
 import {
@@ -7,21 +7,21 @@ import {
   SCREEN_TYPES,
   STATUSES,
   SILVER_LINE_ROUTES,
-} from "../../constants/constants";
-import { Alert, InformedEntity } from "../../models/alert";
-import { Place } from "../../models/place";
-import { Screen } from "../../models/screen";
-import { RouteType } from "../../models/route_type";
-import { ScreensByAlert } from "../../models/screensByAlert";
-import AlertCard from "./AlertCard";
+} from "Constants/constants";
+import { Alert, InformedEntity } from "Models/alert";
+import { Place } from "Models/place";
+import { Screen } from "Models/screen";
+import { RouteType } from "Models/route_type";
+import { ScreensByAlert } from "Models/screensByAlert";
+import AlertCard from "Components/AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
   useAlertsListContext,
   useAlertsListDispatchContext,
   useScreenplayContext,
-} from "../../hooks/useScreenplayContext";
-import { usePrevious } from "../../hooks/usePrevious";
+} from "Hooks/useScreenplayContext";
+import { usePrevious } from "Hooks/usePrevious";
 import moment from "moment";
 
 const AlertsPage: ComponentType = () => {

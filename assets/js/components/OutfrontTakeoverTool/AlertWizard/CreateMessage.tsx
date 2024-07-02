@@ -1,6 +1,6 @@
 import React from "react";
-import CANNED_MESSAGES from "../../../constants/messages";
-import { charLimit } from "../../../constants/misc";
+import CANNED_MESSAGES from "Constants/messages";
+import { charLimit } from "Constants/misc";
 
 interface CreateMessageProps {
   messageOption: string;

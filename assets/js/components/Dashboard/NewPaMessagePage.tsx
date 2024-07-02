@@ -10,13 +10,13 @@ import {
   Row,
 } from "react-bootstrap";
 import DaysPicker from "./DaysPicker";
-import PriorityPicker from "./PriorityPicker";
-import IntervalPicker from "./IntervalPicker";
-import MessageTextBox from "./MessageTextBox";
+import PriorityPicker from "Components/PriorityPicker";
+import IntervalPicker from "Components/IntervalPicker";
+import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import DatePicker from "./DatePicker";
-import TimePicker from "./TimePicker";
+import DatePicker from "Components/DatePicker";
+import TimePicker from "Components/TimePicker";
 import {
   ArrowRightShort,
   CheckCircleFill,

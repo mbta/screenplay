@@ -2,7 +2,7 @@ import React from "react";
 import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { Check, XCircleFill } from "react-bootstrap-icons";
 import classNames from "classnames";
-import { defaultButtonColor } from "../../constants/misc";
+import { defaultButtonColor } from "Constants/misc";
 import { classWithModifier } from "../../util";
 
 interface FilterDropdownItem {

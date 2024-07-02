@@ -1,5 +1,5 @@
 import React, { ComponentType } from "react";
-import { Station } from "../../constants/stationOrder";
+import { Station } from "Constants/stationOrder";
 import { classWithModifier, color } from "../../util";
 import TrunkTop from "./bundled_svg/TrunkTop";
 import TrunkMiddle from "./bundled_svg/TrunkMiddle";
