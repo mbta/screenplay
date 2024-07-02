@@ -4,7 +4,7 @@ defmodule Screenplay.Config.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
-  alias Screenplay.Config.PlaceAndScreens
+  alias Screenplay.Config.{Fetch, PlaceAndScreens}
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
@@ -86,7 +86,7 @@ defmodule Screenplay.Config.PermanentConfig do
     }
   end
 
-  @spec put_pending_screens(map(), screen_type(), binary()) ::
+  @spec put_pending_screens(map(), screen_type(), Fetch.version_id()) ::
           {:error,
            :version_mismatch
            | :config_not_fetched
