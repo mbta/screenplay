@@ -8,6 +8,8 @@ defmodule Screenplay.Config.LocalFetch do
     with {:ok, config_contents, version_id} <- do_get(:local_config_file_spec),
          {:ok, config_json} <- do_decode(config_contents, :local_config_file_spec) do
       {:ok, config_json, version_id}
+    else
+      _ -> :error
     end
   end
 
@@ -16,6 +18,8 @@ defmodule Screenplay.Config.LocalFetch do
     with {:ok, config_contents, version_id} <- do_get(:local_locations_file_spec),
          {:ok, config_json} <- do_decode(config_contents, :local_locations_file_spec) do
       {:ok, config_json, version_id}
+    else
+      _ -> :error
     end
   end
 
@@ -24,6 +28,8 @@ defmodule Screenplay.Config.LocalFetch do
     with {:ok, config_contents, version_id} <- do_get(:local_place_descriptions_file_spec),
          {:ok, config_json} <- do_decode(config_contents, :local_place_descriptions_file_spec) do
       {:ok, config_json, version_id}
+    else
+      _ -> :error
     end
   end
 
