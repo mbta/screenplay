@@ -50,7 +50,10 @@ defmodule Screenplay.Config.LocalFetch do
   @impl true
   # sobelow_skip ["Traversal.FileModule"]
   def commit do
-    File.rm!(local_path(:local_config_file_spec) <> ".temp")
+    case File.rm(local_path(:local_config_file_spec) <> ".temp") do
+      {:error, reason} when reason != :enoent -> :error
+      _ -> :ok
+    end
   end
 
   @impl true
