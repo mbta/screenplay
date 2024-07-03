@@ -1,6 +1,9 @@
 import React from "react";
 
-import { ExclamationIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
+import {
+  ExclamationTriangleIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/20/solid";
 
 interface IntroBlockProps {
   startAlertWizard: () => void;
@@ -10,7 +13,7 @@ const IntroBlock = (props: IntroBlockProps): JSX.Element => {
   return (
     <div className="intro-block">
       <div className="exclamation-circle">
-        <ExclamationIcon className="exclamation" />
+        <ExclamationTriangleIcon className="exclamation" />
       </div>
       <ul className="intro-text">
         <li>
