@@ -9,7 +9,7 @@ import { AlertData, Station, StationsByLine } from "../OutfrontTakeoverTool";
 
 import CANNED_MESSAGES from "Constants/messages";
 
-import { BanIcon, XIcon } from "@heroicons/react/solid";
+import { BanIcon, XIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
 import { matchStation } from "../../../util";

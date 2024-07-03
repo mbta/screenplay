@@ -3,7 +3,7 @@ import PastAlertDetails from "./PastAlertDetails";
 import {
   ArrowNarrowLeftIcon,
   ArrowNarrowRightIcon,
-} from "@heroicons/react/solid";
+} from "@heroicons/react/20/solid";
 import { AlertData } from "../../OutfrontTakeoverTool/OutfrontTakeoverTool";
 
 interface PastAlertsListProps {

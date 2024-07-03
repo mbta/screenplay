@@ -10,7 +10,7 @@ import {
   getMessageString,
   matchStation,
 } from "../../../util";
-import { BanIcon, PencilIcon } from "@heroicons/react/solid";
+import { BanIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import SVGPreviews from "../AlertWizard/SVGPreviews";
 import AlertReminder from "./AlertReminder";

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AlertDetails from "./AlertDetails";
 import { AlertData } from "../OutfrontTakeoverTool";
 import { ModalDetails } from "../ConfirmationModal";
-import { BanIcon } from "@heroicons/react/solid";
+import { BanIcon } from "@heroicons/react/20/solid";
 import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
 import { BASE_URL } from "Constants/constants";

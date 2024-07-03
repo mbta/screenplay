@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ExclamationIcon, PlusCircleIcon } from "@heroicons/react/solid";
+import { ExclamationIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
 
 interface IntroBlockProps {
   startAlertWizard: () => void;

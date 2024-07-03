@@ -3,7 +3,7 @@ import {
   ArrowNarrowLeftIcon,
   ArrowNarrowRightIcon,
   PlayIcon,
-} from "@heroicons/react/solid";
+} from "@heroicons/react/20/solid";
 
 interface WizardNavFooterProps {
   step: number;
