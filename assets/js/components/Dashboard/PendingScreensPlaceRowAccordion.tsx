@@ -4,9 +4,9 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { SCREEN_TYPES } from "../../constants/constants";
-import { ScreenConfiguration } from "../../models/screen_configuration";
-import PendingScreenDetail from "./PendingScreenDetail";
+import { SCREEN_TYPES } from "Constants/constants";
+import { ScreenConfiguration } from "Models/screen_configuration";
+import PendingScreenDetail from "Components/PendingScreenDetail";
 import {
   Accordion,
   AccordionContext,
@@ -16,8 +16,8 @@ import {
   Row,
   useAccordionButton,
 } from "react-bootstrap";
-import { Place } from "../../models/place";
-import { AccordionToggle } from "./PlaceRow";
+import { Place } from "Models/place";
+import { AccordionToggle } from "Components/PlaceRow";
 import { capitalizeTerminalStops } from "../../util";
 import { PencilSquare } from "react-bootstrap-icons";
 import classNames from "classnames";

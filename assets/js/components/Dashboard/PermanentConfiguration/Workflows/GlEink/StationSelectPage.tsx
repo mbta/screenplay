@@ -1,15 +1,17 @@
 import React, { ComponentType, useState } from "react";
 import { Container } from "react-bootstrap";
-import PlacesSearchBar, { SearchItem } from "../../PlacesSearchBar";
-import WorkflowPlacesList from "../../WorkflowPlacesList";
-import { DirectionID } from "../../../../../models/direction_id";
-import { Place } from "../../../../../models/place";
-import BottomActionBar from "../../BottomActionBar";
+import PlacesSearchBar, {
+  SearchItem,
+} from "Components/PermanentConfiguration/PlacesSearchBar";
+import WorkflowPlacesList from "Components/PermanentConfiguration/WorkflowPlacesList";
+import { DirectionID } from "Models/direction_id";
+import { Place } from "Models/place";
+import BottomActionBar from "Components/PermanentConfiguration/BottomActionBar";
 import { useNavigate } from "react-router-dom";
 import {
   useConfigValidationContext,
   useConfigValidationDispatchContext,
-} from "../../../../../hooks/useScreenplayContext";
+} from "Hooks/useScreenplayContext";
 import { PlaceIdsAndNewScreens } from "./ConfigureScreensPage";
 interface StationSelectPageProps {
   places: Place[];

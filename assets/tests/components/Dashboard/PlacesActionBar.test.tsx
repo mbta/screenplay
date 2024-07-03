@@ -1,7 +1,7 @@
 import React from "react";
 import { act, fireEvent, render } from "@testing-library/react";
-import PlacesActionBar from "../../../js/components/Dashboard/PlacesActionBar";
-import { Place } from "../../../js/models/place";
+import PlacesActionBar from "Components/PlacesActionBar";
+import { Place } from "Models/place";
 
 describe("PlacesActionBar", () => {
   const place1: Place = {

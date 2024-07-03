@@ -1,7 +1,7 @@
 import React, { ComponentType } from "react";
 import { useNavigate } from "react-router-dom";
 import { Col, Container, Row } from "react-bootstrap";
-import ButtonImage from "./ButtonImage";
+import ButtonImage from "Components/PermanentConfiguration/ButtonImage";
 
 const SelectScreenTypeComponent: ComponentType = () => {
   const navigate = useNavigate();

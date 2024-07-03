@@ -1,17 +1,17 @@
 import React, { ComponentType, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import "../../../css/screenplay.scss";
-import { Alert } from "../../models/alert";
-import Sidebar from "./Sidebar";
+import { Alert } from "Models/alert";
+import Sidebar from "Components/Sidebar";
 import {
   useScreenplayContext,
   useScreenplayDispatchContext,
-} from "../../hooks/useScreenplayContext";
-import { useInterval } from "../../hooks/useInterval";
-import { fetchAlerts, fetchPlaces } from "../../utils/api";
-import AlertBanner from "./AlertBanner";
-import LinkCopiedToast from "./LinkCopiedToast";
-import ActionOutcomeToast from "./ActionOutcomeToast";
+} from "Hooks/useScreenplayContext";
+import { useInterval } from "Hooks/useInterval";
+import { fetchAlerts, fetchPlaces } from "Utils/api";
+import AlertBanner from "Components/AlertBanner";
+import LinkCopiedToast from "Components/LinkCopiedToast";
+import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
 
 const Dashboard: ComponentType = () => {

@@ -1,6 +1,6 @@
 import * as React from "react";
-import PaessScreenDetail from "./PaessScreenDetail";
-import { Screen } from "../../models/screen";
+import PaessScreenDetail from "Components/PaessScreenDetail";
+import { Screen } from "Models/screen";
 import { Row, Col } from "react-bootstrap";
 
 interface PaessDetailContainerProps {

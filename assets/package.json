@@ -93,7 +93,12 @@
     ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/__mocks__/fileMock.js",
-      "^.+\\.(css|less|scss)$": "babel-jest"
+      "^.+\\.(css|less|scss)$": "babel-jest",
+      "^Components(.*)$": "<rootDir>/js/components/Dashboard$1",
+      "^Hooks(.*)$": "<rootDir>/js/hooks$1",
+      "^Models(.*)$": "<rootDir>/js/models$1",
+      "^Utils(.*)$": "<rootDir>/js/utils$1",
+      "^Constants(.*)$": "<rootDir>/js/constants$1"
     },
     "collectCoverage": true,
     "globalSetup": "./tests/global-setup.js",

@@ -55,6 +55,14 @@ module.exports = (env, options) => ({
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+    alias: {
+      // Please also update the "paths" list in tsconfig.json when you add aliases here!
+      Components: path.resolve(__dirname, "js/components/Dashboard"),
+      Hooks: path.resolve(__dirname, "js/hooks"),
+      Models: path.resolve(__dirname, "js/models"),
+      Utils: path.resolve(__dirname, "js/utils"),
+      Constants: path.resolve(__dirname, "js/constants"),
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: "../css/app.css" }),
