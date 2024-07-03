@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AlertDetails from "./AlertDetails";
 import { AlertData } from "../OutfrontTakeoverTool";
 import { ModalDetails } from "../ConfirmationModal";
-import { BanIcon } from "@heroicons/react/solid";
+import { NoSymbolIcon } from "@heroicons/react/20/solid";
 import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
 import { BASE_URL } from "Constants/constants";
@@ -114,14 +114,14 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
   };
 
   const clearAllModalDetails: ModalDetails = {
-    icon: <BanIcon className="icon" />,
+    icon: <NoSymbolIcon className="icon" />,
     header: "Clear all Alerts",
     description:
       "This stops all Outfront Media screen Takeovers, and returns to the regularly scheduled content loop.",
     cancelText: "Keep Alerts",
     confirmJSX: (
       <>
-        <BanIcon className="button-icon" />
+        <NoSymbolIcon className="button-icon" />
         Clear all Alerts
       </>
     ),
@@ -139,7 +139,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
                 className="clear-all-alerts-button"
                 onClick={() => props.triggerConfirmation(clearAllModalDetails)}
               >
-                <BanIcon className="button-icon" />
+                <NoSymbolIcon className="button-icon" />
                 <span className="text-16">Clear all</span>
               </button>
             )}

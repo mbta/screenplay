@@ -1,9 +1,9 @@
 import React from "react";
 import PastAlertDetails from "./PastAlertDetails";
 import {
-  ArrowNarrowLeftIcon,
-  ArrowNarrowRightIcon,
-} from "@heroicons/react/solid";
+  ArrowLongLeftIcon,
+  ArrowLongRightIcon,
+} from "@heroicons/react/20/solid";
 import { AlertData } from "../../OutfrontTakeoverTool/OutfrontTakeoverTool";
 
 interface PastAlertsListProps {
@@ -86,7 +86,7 @@ export class PastAlertsList extends React.Component<
               }
               onClick={this.backPage}
             >
-              <ArrowNarrowLeftIcon className="button-icon" />
+              <ArrowLongLeftIcon className="button-icon" />
               <span>Previous</span>
             </div>
             <div className="pages">
@@ -118,7 +118,7 @@ export class PastAlertsList extends React.Component<
               onClick={this.nextPage}
             >
               <span>Next</span>
-              <ArrowNarrowRightIcon className="button-icon right" />
+              <ArrowLongRightIcon className="button-icon right" />
             </div>
           </div>
         )}

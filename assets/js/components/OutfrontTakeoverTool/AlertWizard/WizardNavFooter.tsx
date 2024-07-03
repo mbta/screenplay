@@ -1,9 +1,9 @@
 import React from "react";
 import {
-  ArrowNarrowLeftIcon,
-  ArrowNarrowRightIcon,
+  ArrowLongLeftIcon,
+  ArrowLongRightIcon,
   PlayIcon,
-} from "@heroicons/react/solid";
+} from "@heroicons/react/20/solid";
 
 interface WizardNavFooterProps {
   step: number;
@@ -49,7 +49,7 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
     <div className="wizard-nav-footer">
       {props.step !== 1 ? (
         <button className="nav-button" onClick={props.backward}>
-          <ArrowNarrowLeftIcon className="button-icon" />
+          <ArrowLongLeftIcon className="button-icon" />
           <span>{backButton(props.step)}</span>
         </button>
       ) : null}
@@ -66,7 +66,7 @@ const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
             onClick={props.forward}
           >
             <span>{forwardButton(props.step)}</span>
-            <ArrowNarrowRightIcon className="button-icon right" />
+            <ArrowLongRightIcon className="button-icon right" />
           </button>
         </div>
       ) : (

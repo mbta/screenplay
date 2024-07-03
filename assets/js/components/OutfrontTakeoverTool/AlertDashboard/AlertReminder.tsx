@@ -1,5 +1,5 @@
 import React from "react";
-import { ClockIcon } from "@heroicons/react/solid";
+import { ClockIcon } from "@heroicons/react/20/solid";
 
 interface AlertReminderProps {
   clearAlert: () => void;

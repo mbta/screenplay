@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@fullstory/browser": "^2.0.4",
-    "@heroicons/react": "^1.0.4",
+    "@heroicons/react": "^2.1.4",
     "@sentry/fullstory": "^3.0.0",
     "@sentry/react": "^7.14.0",
     "bootstrap": "^5.1.3",

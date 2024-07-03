@@ -9,7 +9,7 @@ import { AlertData, Station, StationsByLine } from "../OutfrontTakeoverTool";
 
 import CANNED_MESSAGES from "Constants/messages";
 
-import { BanIcon, XIcon } from "@heroicons/react/solid";
+import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
 import { matchStation } from "../../../util";
@@ -428,7 +428,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       this.generatePNGs();
     }
     const modalDetails: ModalDetails = {
-      icon: <BanIcon className="icon" />,
+      icon: <NoSymbolIcon className="icon" />,
       header: "Cancel new Takeover Alert",
       description:
         "Canceling now will lose any progress you have made. This action cannot be undone.",
@@ -446,7 +446,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
                 className="wizard-cancel"
                 onClick={() => this.props.triggerConfirmation(modalDetails)}
               >
-                <XIcon className="x" />
+                <XMarkIcon className="x" />
                 <span className="text-16 weight-500">Cancel</span>
               </button>
               <div className="wizard-title text-30 weight-800">
