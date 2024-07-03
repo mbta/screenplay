@@ -16,7 +16,7 @@
     "@fullstory/browser": "^2.0.4",
     "@heroicons/react": "^2.1.4",
     "@sentry/fullstory": "^3.0.0",
-    "@sentry/react": "^7.14.0",
+    "@sentry/react": "^8.13.0",
     "bootstrap": "^5.1.3",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
