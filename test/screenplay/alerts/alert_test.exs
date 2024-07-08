@@ -63,6 +63,12 @@ defmodule Screenplay.Alerts.AlertTest do
               ]} = Alert.fetch(get_json_fn)
     end
 
+    test "returns {:ok, []} if fetch function returns an empty alerts list" do
+      get_json_fn = fn _, _ -> {:ok, %{"data" => []}} end
+
+      assert {:ok, []} = Alert.fetch(get_json_fn)
+    end
+
     test "returns :error if fetch function returns :error", context do
       %{
         x_get_json_fn: x_get_json_fn
