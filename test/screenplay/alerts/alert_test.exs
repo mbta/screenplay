@@ -69,6 +69,12 @@ defmodule Screenplay.Alerts.AlertTest do
       assert {:ok, []} = Alert.fetch(get_json_fn)
     end
 
+    test "returns {:ok, alerts} if fetch function does not return an `include` key" do
+      alerts = [alert_json("1"), alert_json("2")]
+      get_json_fn = fn _, _ -> {:ok, %{"data" => alerts}} end
+
+      assert {:ok, [%Alert{id: "1"}, %Alert{id: "2"}]} = Alert.fetch(get_json_fn)
+    end
     test "returns :error if fetch function returns :error", context do
       %{
         x_get_json_fn: x_get_json_fn
