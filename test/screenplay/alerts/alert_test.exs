@@ -75,6 +75,7 @@ defmodule Screenplay.Alerts.AlertTest do
 
       assert {:ok, [%Alert{id: "1"}, %Alert{id: "2"}]} = Alert.fetch(get_json_fn)
     end
+
     test "returns :error if fetch function returns :error", context do
       %{
         x_get_json_fn: x_get_json_fn
