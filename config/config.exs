@@ -7,15 +7,6 @@
 # General application configuration
 import Config
 
-config :screenplay, Screenplay.Repo,
-  database: "screenplay_dev",
-  username: System.get_env("DATABASE_USER", ""),
-  password: System.get_env("DATABASE_PASSWORD", ""),
-  hostname: System.get_env("DATABASE_HOST", "localhost"),
-  port: System.get_env("DATABASE_PORT", "5432") |> String.to_integer(),
-  show_sensitive_data_on_connection_error: true,
-  backoff_min: 5_000
-
 config :screenplay, ecto_repos: [Screenplay.Repo]
 
 # Configures the endpoint
