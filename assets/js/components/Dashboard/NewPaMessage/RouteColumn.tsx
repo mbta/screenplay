@@ -5,14 +5,16 @@ import { sortByStationOrder } from "../../../util";
 
 const RouteColumn = ({
   label,
-  route,
+  routes,
+  orderingRoute = routes[0],
   places,
   value,
   onChange,
   reverse = false,
 }: {
   label: string;
-  route: string;
+  routes: string[];
+  orderingRoute?: string;
   places: Place[];
   value: string[];
   onChange: (zones: string[]) => void;
@@ -20,7 +22,9 @@ const RouteColumn = ({
 }) => {
   const routeZones = places.flatMap((place) =>
     place.screens
-      .filter((screen) => screen.route_ids?.includes(route))
+      .filter(
+        (screen) => _.intersection(screen.route_ids ?? [], routes).length > 0,
+      )
       .map((screen) => screen.id),
   );
 
@@ -43,9 +47,9 @@ const RouteColumn = ({
         </label>
       </div>
       <ol>
-        {sortByStationOrder(places, route, reverse).map((place) => {
+        {sortByStationOrder(places, orderingRoute, reverse).map((place) => {
           const placeZones = place.screens
-            .filter((screen) => screen.route_ids?.includes(route))
+            .filter((screen) => _.intersection(screen.route_ids ?? [], routes))
             .map((screen) => screen.id);
           return (
             <li key={place.id}>

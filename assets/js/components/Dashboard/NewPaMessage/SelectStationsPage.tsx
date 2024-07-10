@@ -4,7 +4,7 @@ import _ from "lodash";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
-import { GREEN_LINE_ROUTES } from "Constants/constants";
+import { GREEN_LINE_ROUTES, SILVER_LINE_ROUTES } from "Constants/constants";
 
 const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -20,6 +20,18 @@ const usePlacesWithPaEss = () => {
   );
 };
 
+const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
+  "Green-B": ["Green-B"],
+  "Green-C": ["Green-C"],
+  "Green-D": ["Green-D"],
+  "Green-E": ["Green-E"],
+  Red: ["Red"],
+  Orange: ["Orange"],
+  Blue: ["Blue"],
+  Mattapan: ["Mattapan"],
+  Silver: SILVER_LINE_ROUTES,
+};
+
 const SelectStationsPage = () => {
   const [zones, setZones] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
@@ -28,7 +40,15 @@ const SelectStationsPage = () => {
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
     (acc, place) => {
       place.routes.forEach((route) => {
-        acc[route] = [...(acc[route] || []), place];
+        const groupedRoutes = PLACE_ROUTE_TO_ROUTE_IDS[route];
+        if (
+          place.screens.some(
+            (screen) =>
+              _.intersection(screen.route_ids, groupedRoutes).length > 0,
+          )
+        ) {
+          acc[route] = [...(acc[route] || []), place];
+        }
       });
       return acc;
     },
@@ -75,7 +95,7 @@ const SelectStationsPage = () => {
                 <RouteColumn
                   key={branch}
                   label={`${branch} branch`}
-                  route={route}
+                  routes={[route]}
                   places={placesByRoute[route]}
                   value={zones}
                   onChange={setZones}
@@ -85,11 +105,12 @@ const SelectStationsPage = () => {
           </ol>
         </div>
 
-        {["Red", "Orange", "Blue", "Mattapan"].map((route) => (
+        {["Red", "Orange", "Blue", "Mattapan", "Silver"].map((route) => (
           <RouteColumn
             key={route}
             label={`${route} line`}
-            route={route}
+            orderingRoute={route}
+            routes={PLACE_ROUTE_TO_ROUTE_IDS[route]}
             places={placesByRoute[route]}
             value={zones}
             onChange={setZones}
