@@ -1,4 +1,6 @@
+#!/usr/bin/env mix run
 # Script to populate `places_and_screens.json`.
+require Logger
 
 {opts, _, _} =
   System.argv()
@@ -100,13 +102,17 @@ end
 # Get live config from S3
 config =
   if environment do
+    Logger.info("Fetching config from S3")
     {:ok, body} = get_config.("mbta-ctd-config", "screens/screens-#{environment}.json")
     body
   else
+    Logger.info("Reading config from file")
     File.read!(local_path)
   end
 
 parsed = Jason.decode!(config)
+
+Logger.info("Formatting screens")
 
 formatted_screens =
   parsed["screens"]
@@ -342,6 +348,7 @@ params =
     "filter[id]" => Enum.map_join(bus_stops_with_screens, ",", fn {stop_id, _} -> stop_id end)
   })
 
+Logger.info("Fetching info for bus stops with screens")
 # Get stop info for bus stops with screens
 url = "https://api-v3.mbta.com/stops?#{params}"
 %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
@@ -369,12 +376,15 @@ bus_stops =
       %{id: id, name: name, screens: screens_at_stop}
   end)
 
+Logger.info("Fetching all parent stations")
 # Go get all parent stations
 url = "https://api-v3.mbta.com/stops?filter[location_type]=1"
 %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
 parsed = Jason.decode!(body)
 
 %{"data" => data} = parsed
+
+Logger.info("Transforming data, fetching each stop as needed")
 
 contents =
   data
@@ -423,30 +433,36 @@ contents =
       end)
   end)
   # Get the routes at each stop
-  |> Enum.map(fn %{id: id} = stop ->
-    # Not a big fan of this. Goes through each station one by one.
-    # Could not figure out how to get stops with route info all in one query.
-    url = "https://api-v3.mbta.com/routes?filter[stop]=#{id}"
-    %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
-    %{"data" => data} = Jason.decode!(body)
+  |> Task.async_stream(
+    fn %{id: id} = stop ->
+      # Not a big fan of this. Goes through each station one by one.
+      # Could not figure out how to get stops with route info all in one query.
+      url = "https://api-v3.mbta.com/routes?filter[stop]=#{id}"
+      %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
+      %{"data" => data} = Jason.decode!(body)
 
-    data
-    |> Enum.map(fn
-      %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
-      %{"id" => "CR-" <> _} -> "CR"
-      # Bus edge case I found in the data.
-      %{"id" => "34E"} -> "Bus"
-      %{"id" => route_id} -> route_id
-    end)
-    |> format_bus_routes.()
-    |> Enum.dedup()
-    |> sort_routes.()
-    |> add_routes_to_stops.(stop)
-  end)
+      data
+      |> Enum.map(fn
+        %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
+        %{"id" => "CR-" <> _} -> "CR"
+        # Bus edge case I found in the data.
+        %{"id" => "34E"} -> "Bus"
+        %{"id" => route_id} -> route_id
+      end)
+      |> format_bus_routes.()
+      |> Enum.dedup()
+      |> sort_routes.()
+      |> add_routes_to_stops.(stop)
+    end,
+    ordered: false
+  )
+  |> Enum.map(fn {:ok, result} -> result end)
   # Get rid of CR stops with no screens
   |> Enum.reject(fn %{id: id, routes: routes, screens: screens} ->
     (String.starts_with?(id, "place-CM-") or cr_or_bus_only?.(routes)) and length(screens) == 0
   end)
+
+Logger.info("Fetching realtiem_signs config from GitHub")
 
 # Because the realtime_signs config lives in the realtime_signs repo, go get it so we are always reading the latest.
 url = "https://api.github.com/repos/mbta/realtime_signs/contents/priv/signs.json"
@@ -485,15 +501,14 @@ stop_ids =
   |> Enum.map(fn %{"stop_id" => stop_id} -> stop_id end)
   |> Enum.uniq()
 
+Logger.info("Refetching all stops")
 params = URI.encode_query(%{"filter[id]" => Enum.join(stop_ids, ",")})
 url = "https://api-v3.mbta.com/stops?#{params}"
 %{status_code: 200, body: body} = HTTPoison.get!(url)
-stops_parsed = Jason.decode!(body)
+%{"data" => stops_parsed} = Jason.decode!(body)
 
-%{"data" => data} = stops_parsed
-
-platform_to_stop_map =
-  Enum.map(data, fn %{"id" => id} = stop ->
+stops_to_parent_station_ids =
+  Enum.map(stops_parsed, fn %{"id" => id} = stop ->
     {id,
      get_in(stop, [
        "relationships",
@@ -504,10 +519,10 @@ platform_to_stop_map =
   end)
   |> Enum.into(%{})
 
-get_first_not_nil = fn sources ->
+get_first_parent_station = fn sources ->
   sources
   |> Enum.map(fn %{"stop_id" => platform_id} ->
-    platform_to_stop_map[platform_id]
+    stops_to_parent_station_ids[platform_id]
   end)
   |> Enum.uniq()
   |> Enum.reject(&is_nil/1)
@@ -517,45 +532,60 @@ end
 {:ok, labels} = File.read("scripts/paess_labels.json")
 labels = Jason.decode!(labels)
 
+get_sources = fn
+  %{"source_config" => %{"sources" => sources}} ->
+    sources
+
+  %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
+    top_sources ++ bottom_sources
+
+  %{"sources" => sources} ->
+    sources
+
+  %{"configs" => configs} ->
+    Enum.flat_map(configs, & &1["sources"])
+
+  %{"top_configs" => top_configs, "bottom_configs" => bottom_configs} ->
+    Enum.flat_map(top_configs, & &1["sources"]) ++
+      Enum.flat_map(bottom_configs, & &1["sources"])
+
+  %{
+    "top_sources" => top_sources,
+    "bottom_sources" => bottom_sources
+  } ->
+    top_sources ++ bottom_sources
+end
+
+get_routes_for_pa_ess = fn config ->
+  for source <- get_sources.(config),
+      route <- source["routes"] || List.wrap(source["route_id"]),
+      uniq: true do
+    route
+  end
+end
+
+Logger.info("Getting all countdown clocks")
 # Get all countdown clocks
 pa_ess_screens =
   parsed
   |> Enum.group_by(
-    fn
-      %{"source_config" => %{"sources" => sources}} ->
-        get_first_not_nil.(sources)
-
-      %{"source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]} ->
-        get_first_not_nil.(top_sources ++ bottom_sources)
-
-      %{"sources" => sources} ->
-        get_first_not_nil.(sources)
-
-      %{"configs" => configs} ->
-        Enum.flat_map(configs, fn %{"sources" => sources} -> sources end) |> get_first_not_nil.()
-
-      %{"top_configs" => top_configs, "bottom_configs" => bottom_configs} ->
-        (Enum.flat_map(top_configs, fn %{"sources" => sources} -> sources end) ++
-           Enum.flat_map(bottom_configs, fn %{"sources" => sources} -> sources end))
-        |> get_first_not_nil.()
-
-      %{
-        "top_sources" => top_sources,
-        "bottom_sources" => bottom_sources
-      } ->
-        get_first_not_nil.(top_sources ++ bottom_sources)
+    fn config ->
+      config
+      |> get_sources.()
+      |> get_first_parent_station.()
     end,
     fn %{
          "id" => id,
          "pa_ess_loc" => station_code,
          "text_zone" => zone
-       } ->
+       } = config ->
       %{
         id: id,
         station_code: station_code,
         zone: zone,
         type: "pa_ess",
-        label: labels["#{station_code}-#{zone}"]
+        label: labels["#{station_code}-#{zone}"],
+        route_ids: get_routes_for_pa_ess.(config)
       }
     end
   )
@@ -567,4 +597,10 @@ merged_paess =
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
   end)
 
-File.write!("priv/config/places_and_screens.json", Jason.encode!(merged_paess), [:binary])
+Logger.info("Writing result to priv/config/places_and_screens.json")
+
+File.write!("priv/config/places_and_screens.json", Jason.encode!(merged_paess, pretty: true), [
+  :binary
+])
+
+Logger.info("Done!")
