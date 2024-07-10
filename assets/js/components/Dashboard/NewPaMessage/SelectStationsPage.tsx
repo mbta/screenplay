@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { Container } from "react-bootstrap";
+import _ from "lodash";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
+import { GREEN_LINE_ROUTES } from "Constants/constants";
 
 const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -33,12 +35,38 @@ const SelectStationsPage = () => {
     {},
   );
 
+  const greenLineZones = _.uniq(
+    GREEN_LINE_ROUTES.flatMap((route) => placesByRoute[route]).flatMap(
+      (place) =>
+        place.screens
+          .filter(
+            (screen) =>
+              _.intersection(screen.route_ids ?? [], GREEN_LINE_ROUTES).length >
+              0,
+          )
+          .map((screen) => screen.id),
+    ),
+  );
+
   return (
     <div className="new-pa-message-page">
       <div className="new-pa-message-page__header">Select Stations</div>
       <Container fluid>
         <div>
-          <label>Green line</label>
+          <label>
+            <input
+              type="checkbox"
+              onChange={(evt) => {
+                if (evt.target.checked) {
+                  setZones(_.union(zones, greenLineZones));
+                } else {
+                  setZones(_.without(zones, ...greenLineZones));
+                }
+              }}
+              checked={greenLineZones.every((zone) => zones.includes(zone))}
+            />
+            Green line
+          </label>
 
           <ol>
             {["B", "C", "D", "E"].map((branch) => {

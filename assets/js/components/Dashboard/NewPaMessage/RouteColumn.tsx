@@ -43,32 +43,29 @@ const RouteColumn = ({
         </label>
       </div>
       <ol>
-        {sortByStationOrder(places, route, reverse).map(
-          // TODO: Need to capitalize terminal stops
-          (place) => {
-            const placeZones = place.screens
-              .filter((screen) => screen.route_ids?.includes(route))
-              .map((screen) => screen.id);
-            return (
-              <li key={place.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={(evt) => {
-                      if (evt.target.checked) {
-                        onChange(_.union(value, placeZones));
-                      } else {
-                        onChange(_.without(value, ...placeZones));
-                      }
-                    }}
-                    checked={value.some((zone) => placeZones.includes(zone))}
-                  />
-                  {place.name}
-                </label>
-              </li>
-            );
-          },
-        )}
+        {sortByStationOrder(places, route, reverse).map((place) => {
+          const placeZones = place.screens
+            .filter((screen) => screen.route_ids?.includes(route))
+            .map((screen) => screen.id);
+          return (
+            <li key={place.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={(evt) => {
+                    if (evt.target.checked) {
+                      onChange(_.union(value, placeZones));
+                    } else {
+                      onChange(_.without(value, ...placeZones));
+                    }
+                  }}
+                  checked={value.some((zone) => placeZones.includes(zone))}
+                />
+                {place.name}
+              </label>
+            </li>
+          );
+        })}
       </ol>
     </div>
   );
