@@ -39,72 +39,80 @@ const SelectStationsPage = () => {
     {},
   );
 
-  const orangeLineZones = placesByRoute["Orange"].flatMap((place) =>
-    place.screens
-      .filter((screen) => screen.route_ids?.includes("Orange"))
-      .map((screen) => screen.id),
-  );
-
   return (
     <div className="new-pa-message-page">
       <div className="new-pa-message-page__header">Select Stations</div>
       <Container fluid>
-        <div>
-          <div>
-            <label>
-              <input
-                type="checkbox"
-                onChange={(evt) => {
-                  if (evt.target.checked) {
-                    setZones((currentZones) =>
-                      _.union(currentZones, orangeLineZones),
+        {["Red", "Orange", "Blue", 'Mattapan'].map((route) => {
+          const routeZones = placesByRoute[route].flatMap((place) =>
+            place.screens
+              .filter((screen) => screen.route_ids?.includes(route))
+              .map((screen) => screen.id),
+          );
+
+          return (
+            <div key={route}>
+              <div>
+                <label>
+                  <input
+                    type="checkbox"
+                    onChange={(evt) => {
+                      if (evt.target.checked) {
+                        setZones((currentZones) =>
+                          _.union(currentZones, routeZones),
+                        );
+                      } else {
+                        setZones((currentZones) =>
+                          _.without(currentZones, ...routeZones),
+                        );
+                      }
+                    }}
+                    checked={routeZones.every((zone) => zones.includes(zone))}
+                  />
+                  {route} line
+                </label>
+              </div>
+              <ol>
+                {sortByStationOrder(
+                  placesByRoute[route],
+                  route,
+                  route === "Blue",
+                ).map(
+                  // TODO: Need to capitalize terminal stops
+                  (place) => {
+                    const placeZones = place.screens
+                      .filter((screen) => screen.route_ids?.includes(route))
+                      .map((screen) => screen.id);
+                    return (
+                      <li key={place.id}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            onChange={(evt) => {
+                              if (evt.target.checked) {
+                                setZones((currentZones) =>
+                                  _.union(currentZones, placeZones),
+                                );
+                              } else {
+                                setZones((currentZones) =>
+                                  _.without(currentZones, ...placeZones),
+                                );
+                              }
+                            }}
+                            checked={zones.some((zone) =>
+                              placeZones.includes(zone),
+                            )}
+                          />
+                          {place.name}
+                        </label>
+                      </li>
                     );
-                  } else {
-                    setZones((currentZones) =>
-                      _.without(currentZones, ...orangeLineZones),
-                    );
-                  }
-                }}
-                checked={orangeLineZones.every((zone) => zones.includes(zone))}
-              />
-              Orange Line
-            </label>
-          </div>
-          <ol>
-            {sortByStationOrder(placesByRoute["Orange"], "Orange").map(
-              // TODO: Need to capitalize terminal stops
-              (place) => {
-                const placeZones = place.screens
-                  .filter((screen) => screen.route_ids?.includes("Orange"))
-                  .map((screen) => screen.id);
-                return (
-                  <li key={place.id}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        onChange={(evt) => {
-                          if (evt.target.checked) {
-                            setZones((currentZones) =>
-                              _.union(currentZones, placeZones),
-                            );
-                          } else {
-                            setZones((currentZones) =>
-                              _.without(currentZones, ...placeZones),
-                            );
-                          }
-                        }}
-                        checked={zones.some((zone) =>
-                          placeZones.includes(zone),
-                        )}
-                      />
-                      {place.name}
-                    </label>
-                  </li>
-                );
-              },
-            )}
-          </ol>
-        </div>
+                  },
+                )}
+              </ol>
+            </div>
+          );
+        })}
       </Container>
     </div>
   );
