@@ -20,7 +20,7 @@ const usePlacesWithPaEss = () => {
   );
 };
 
-const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
+const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
   "Green-B": ["Green-B"],
   "Green-C": ["Green-C"],
   "Green-D": ["Green-D"],
@@ -36,6 +36,22 @@ const SelectStationsPage = () => {
   const [zones, setZones] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
   if (places.length === 0) return null; // TODO: Ensure places loaded by context bofore rendering
+
+  // TODO: Extract all places / zones / routes / screens transforming logic
+  const allRoutes = _.uniq(
+    places.flatMap((place) =>
+      place.screens.flatMap((screen) => screen.route_ids ?? []),
+    ),
+  );
+  const busRoutes = _.without(
+    allRoutes,
+    ...Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
+  );
+
+  const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
+    ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+    Bus: busRoutes,
+  };
 
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
     (acc, place) => {
@@ -117,6 +133,15 @@ const SelectStationsPage = () => {
             reverse={route === "Blue"}
           />
         ))}
+
+        <RouteColumn
+          label="Bus"
+          orderingRoute="Bus"
+          routes={busRoutes}
+          places={placesByRoute["Bus"]}
+          value={zones}
+          onChange={setZones}
+        />
       </Container>
     </div>
   );

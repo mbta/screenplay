@@ -49,7 +49,10 @@ const RouteColumn = ({
       <ol>
         {sortByStationOrder(places, orderingRoute, reverse).map((place) => {
           const placeZones = place.screens
-            .filter((screen) => _.intersection(screen.route_ids ?? [], routes))
+            .filter(
+              (screen) =>
+                _.intersection(screen.route_ids ?? [], routes).length > 0,
+            )
             .map((screen) => screen.id);
           return (
             <li key={place.id}>
