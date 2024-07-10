@@ -9,7 +9,7 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
-import DaysPicker from "./DaysPicker";
+import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
