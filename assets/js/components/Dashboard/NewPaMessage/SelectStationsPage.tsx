@@ -1,20 +1,26 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Container } from "react-bootstrap";
+import _ from "lodash";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import { sortByStationOrder } from "../../../util"; // TODO: Move this file
 import type { Place } from "Models/place";
 
 const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
   return useMemo(
     () =>
-      places.filter((place) =>
-        place.screens.some((screen) => screen.type === "pa_ess"),
-      ),
+      places
+        .map((place) => ({
+          ...place,
+          screens: place.screens.filter((screen) => screen.type === "pa_ess"),
+        }))
+        .filter((place: Place) => place.screens.length > 0),
     [places],
   );
 };
 
 const SelectStationsPage = () => {
+  const [zones, setZones] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
   if (places.length === 0) return null; // TODO: Ensure places loaded by context bofore rendering
 
@@ -40,9 +46,38 @@ const SelectStationsPage = () => {
         <div>
           <div>Orange Line</div>
           <ol>
-            {placesByRoute["Orange"].map((place) => (
-              <li key={place.id}>{place.name}</li>
-            ))}
+            {sortByStationOrder(placesByRoute["Orange"], "Orange").map(
+              // TODO: Need to capitalize terminal stops
+              (place) => {
+                const placeZones = place.screens
+                  .filter((screen) => screen.route_ids?.includes("Orange"))
+                  .map((screen) => screen.id);
+                return (
+                  <li key={place.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        onChange={(evt) => {
+                          if (evt.target.checked) {
+                            setZones((currentZones) =>
+                              _.union(currentZones, placeZones),
+                            );
+                          } else {
+                            setZones((currentZones) =>
+                              _.without(currentZones, ...placeZones),
+                            );
+                          }
+                        }}
+                        checked={zones.some((zone) =>
+                          placeZones.includes(zone),
+                        )}
+                      />
+                      {place.name}
+                    </label>
+                  </li>
+                );
+              },
+            )}
           </ol>
         </div>
       </Container>
