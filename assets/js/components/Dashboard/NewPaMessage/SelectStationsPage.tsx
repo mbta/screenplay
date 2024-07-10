@@ -39,12 +39,37 @@ const SelectStationsPage = () => {
     {},
   );
 
+  const orangeLineZones = placesByRoute["Orange"].flatMap((place) =>
+    place.screens
+      .filter((screen) => screen.route_ids?.includes("Orange"))
+      .map((screen) => screen.id),
+  );
+
   return (
     <div className="new-pa-message-page">
       <div className="new-pa-message-page__header">Select Stations</div>
       <Container fluid>
         <div>
-          <div>Orange Line</div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                onChange={(evt) => {
+                  if (evt.target.checked) {
+                    setZones((currentZones) =>
+                      _.union(currentZones, orangeLineZones),
+                    );
+                  } else {
+                    setZones((currentZones) =>
+                      _.without(currentZones, ...orangeLineZones),
+                    );
+                  }
+                }}
+                checked={orangeLineZones.every((zone) => zones.includes(zone))}
+              />
+              Orange Line
+            </label>
+          </div>
           <ol>
             {sortByStationOrder(placesByRoute["Orange"], "Orange").map(
               // TODO: Need to capitalize terminal stops
