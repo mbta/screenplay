@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { Container } from "react-bootstrap";
-import _ from "lodash";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
-import { sortByStationOrder } from "../../../util"; // TODO: Move this file
 import type { Place } from "Models/place";
+import RouteColumn from "./RouteColumn";
 
 const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -43,76 +42,17 @@ const SelectStationsPage = () => {
     <div className="new-pa-message-page">
       <div className="new-pa-message-page__header">Select Stations</div>
       <Container fluid>
-        {["Red", "Orange", "Blue", 'Mattapan'].map((route) => {
-          const routeZones = placesByRoute[route].flatMap((place) =>
-            place.screens
-              .filter((screen) => screen.route_ids?.includes(route))
-              .map((screen) => screen.id),
-          );
-
-          return (
-            <div key={route}>
-              <div>
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={(evt) => {
-                      if (evt.target.checked) {
-                        setZones((currentZones) =>
-                          _.union(currentZones, routeZones),
-                        );
-                      } else {
-                        setZones((currentZones) =>
-                          _.without(currentZones, ...routeZones),
-                        );
-                      }
-                    }}
-                    checked={routeZones.every((zone) => zones.includes(zone))}
-                  />
-                  {route} line
-                </label>
-              </div>
-              <ol>
-                {sortByStationOrder(
-                  placesByRoute[route],
-                  route,
-                  route === "Blue",
-                ).map(
-                  // TODO: Need to capitalize terminal stops
-                  (place) => {
-                    const placeZones = place.screens
-                      .filter((screen) => screen.route_ids?.includes(route))
-                      .map((screen) => screen.id);
-                    return (
-                      <li key={place.id}>
-                        <label>
-                          <input
-                            type="checkbox"
-                            onChange={(evt) => {
-                              if (evt.target.checked) {
-                                setZones((currentZones) =>
-                                  _.union(currentZones, placeZones),
-                                );
-                              } else {
-                                setZones((currentZones) =>
-                                  _.without(currentZones, ...placeZones),
-                                );
-                              }
-                            }}
-                            checked={zones.some((zone) =>
-                              placeZones.includes(zone),
-                            )}
-                          />
-                          {place.name}
-                        </label>
-                      </li>
-                    );
-                  },
-                )}
-              </ol>
-            </div>
-          );
-        })}
+        {["Red", "Orange", "Blue", "Mattapan"].map((route) => (
+          <RouteColumn
+            key={route}
+            label={`${route} line`}
+            route={route}
+            places={placesByRoute[route]}
+            value={zones}
+            onChange={setZones}
+            reverse={route === "Blue"}
+          />
+        ))}
       </Container>
     </div>
   );
