@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import moment from "moment";
+import { Page } from "./types";
 
 import NewPaMessagePage from "./NewPaMessagePage";
 
 const NewPaMessage = () => {
+  const [page, navigateTo] = useState<Page>(Page.NEW);
+
   const now = moment();
 
   const [startDate, setStartDate] = useState(now.format("L"));
@@ -18,30 +21,35 @@ const NewPaMessage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <NewPaMessagePage
-      {...{
-        days,
-        endDate,
-        endTime,
-        errorMessage,
-        interval,
-        phoneticText,
-        priority,
-        setDays,
-        setEndDate,
-        setEndTime,
-        setErrorMessage,
-        setInterval,
-        setPhoneticText,
-        setPriority,
-        setStartDate,
-        setStartTime,
-        setVisualText,
-        startDate,
-        startTime,
-        visualText,
-      }}
-    />
+    <>
+      {page === Page.NEW && (
+        <NewPaMessagePage
+          {...{
+            days,
+            endDate,
+            endTime,
+            errorMessage,
+            interval,
+            navigateTo,
+            phoneticText,
+            priority,
+            setDays,
+            setEndDate,
+            setEndTime,
+            setErrorMessage,
+            setInterval,
+            setPhoneticText,
+            setPriority,
+            setStartDate,
+            setStartTime,
+            setVisualText,
+            startDate,
+            startTime,
+            visualText,
+          }}
+        />
+      )}
+    </>
   );
 };
 

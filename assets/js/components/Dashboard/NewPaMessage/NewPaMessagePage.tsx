@@ -25,6 +25,8 @@ import {
 } from "react-bootstrap-icons";
 import cx from "classnames";
 
+import { Page } from "./types";
+
 const MAX_TEXT_LENGTH = 2000;
 
 enum AudioPreview {
@@ -40,6 +42,7 @@ interface Props {
   endTime: string;
   errorMessage: string;
   interval: string;
+  navigateTo: (page: Page) => void;
   phoneticText: string;
   priority: number;
   setDays: Dispatch<SetStateAction<number[]>>;
@@ -63,6 +66,7 @@ const NewPaMessagePage = ({
   endTime,
   errorMessage,
   interval,
+  navigateTo,
   phoneticText,
   priority,
   setDays,
@@ -189,7 +193,10 @@ const NewPaMessagePage = ({
           </Card>
           <Card className="where-card">
             <div className="title">Where</div>
-            <Button className="add-stations-zones-button">
+            <Button
+              className="add-stations-zones-button"
+              onClick={() => navigateTo(Page.STATIONS)}
+            >
               <PlusLg width={12} height={12} /> Add Stations & Zones
             </Button>
           </Card>
