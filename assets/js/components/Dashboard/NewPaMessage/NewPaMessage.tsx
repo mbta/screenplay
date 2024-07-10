@@ -3,10 +3,11 @@ import moment from "moment";
 import { Page } from "./types";
 
 import NewPaMessagePage from "./NewPaMessagePage";
+import SelectStationsPage from "./SelectStationsPage";
 
 const NewPaMessage = () => {
-  const [page, navigateTo] = useState<Page>(Page.NEW);
-
+  // const [page, navigateTo] = useState<Page>(Page.NEW);
+  const [page, navigateTo] = useState<Page>(Page.STATIONS);
   const now = moment();
 
   const [startDate, setStartDate] = useState(now.format("L"));
@@ -49,6 +50,7 @@ const NewPaMessage = () => {
           }}
         />
       )}
+      {page === Page.STATIONS && <SelectStationsPage />}
     </>
   );
 };
