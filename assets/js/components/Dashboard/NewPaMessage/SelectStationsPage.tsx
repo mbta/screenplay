@@ -25,12 +25,7 @@ const SelectStationsPage = () => {
 
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
     (acc, place) => {
-      const routes = [
-        ...new Set(
-          place.routes.map((r) => (r.startsWith("Green") ? "Green" : r)),
-        ),
-      ];
-      routes.forEach((route) => {
+      place.routes.forEach((route) => {
         acc[route] = [...(acc[route] || []), place];
       });
       return acc;
@@ -42,6 +37,26 @@ const SelectStationsPage = () => {
     <div className="new-pa-message-page">
       <div className="new-pa-message-page__header">Select Stations</div>
       <Container fluid>
+        <div>
+          <label>Green line</label>
+
+          <ol>
+            {["B", "C", "D", "E"].map((branch) => {
+              const route = `Green-${branch}`;
+              return (
+                <RouteColumn
+                  key={branch}
+                  label={`${branch} branch`}
+                  route={route}
+                  places={placesByRoute[route]}
+                  value={zones}
+                  onChange={setZones}
+                />
+              );
+            })}
+          </ol>
+        </div>
+
         {["Red", "Orange", "Blue", "Mattapan"].map((route) => (
           <RouteColumn
             key={route}
