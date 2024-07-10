@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Alert,
   Button,
@@ -14,7 +14,6 @@ import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
 import DatePicker from "Components/DatePicker";
 import TimePicker from "Components/TimePicker";
 import {
@@ -41,36 +40,55 @@ enum AudioPreview {
   Outdated,
 }
 
-const NewPaMessagePage = () => {
-  const now = moment();
+interface Props {
+  days: number[];
+  endDate: string;
+  endTime: string;
+  errorMessage: string;
+  interval: string;
+  phoneticText: string;
+  priority: number;
+  setDays: Dispatch<SetStateAction<number[]>>;
+  setEndDate: Dispatch<SetStateAction<string>>;
+  setEndTime: Dispatch<SetStateAction<string>>;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
+  setInterval: Dispatch<SetStateAction<string>>;
+  setPhoneticText: Dispatch<SetStateAction<string>>;
+  setPriority: Dispatch<SetStateAction<number>>;
+  setStartDate: Dispatch<SetStateAction<string>>;
+  setStartTime: Dispatch<SetStateAction<string>>;
+  setVisualText: Dispatch<SetStateAction<string>>;
+  startDate: string;
+  startTime: string;
+  visualText: string;
+}
 
-  const associatedAlertState = useAssociatedAlertContext();
-  const { associatedAlert, importMessage, endWithEffectPeriod } =
-    associatedAlertState;
-
-  const dispatch = useAssociatedAlertDispatchContext();
-  const [startDate, setStartDate] = useState(now.format("L"));
-  const [startTime, setStartTime] = useState(now.format("HH:mm"));
-  const [endDate, setEndDate] = useState(now.format("L"));
-  const [endTime, setEndTime] = useState(
-    endWithEffectPeriod ? "" : now.add(1, "hour").format("HH:mm"),
-  );
-  const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
-  const [priority, setPriority] = useState(2);
-  const [interval, setInterval] = useState("4");
-  const [visualText, setVisualText] = useState(
-    importMessage ? associatedAlert.header : "",
-  );
-  const [phoneticText, setPhoneticText] = useState(
-    importMessage ? associatedAlert.header : "",
-  );
+const NewPaMessagePage = ({
+  days,
+  endDate,
+  endTime,
+  errorMessage,
+  interval,
+  phoneticText,
+  priority,
+  setDays,
+  setEndDate,
+  setEndTime,
+  setErrorMessage,
+  setInterval,
+  setPhoneticText,
+  setPriority,
+  setStartDate,
+  setStartTime,
+  setVisualText,
+  startDate,
+  startTime,
+  visualText,
+}: Props) => {
+  const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
   );
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const navigate = useNavigate();
-
   const previewAudio = () => {
     if (audioState === AudioPreview.Playing) return;
 

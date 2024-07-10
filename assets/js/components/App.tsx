@@ -20,9 +20,7 @@ const SelectScreenTypeComponent = React.lazy(
   () => import("Components/PermanentConfiguration/SelectScreenType"),
 );
 const PaMessagesPage = React.lazy(() => import("Components/PaMessagesPage"));
-const NewPaMessagePage = React.lazy(
-  () => import("Components/NewPaMessagePage"),
-);
+const NewPaMessage = React.lazy(() => import("Components/NewPaMessage"));
 const AssociateAlertPage = React.lazy(
   () => import("./Dashboard/AssociateAlertPage"),
 );
@@ -52,7 +50,7 @@ class AppRoutes extends React.Component {
               <Route path="gl-eink" element={<GlEinkWorkflow />} />
             </Route>
             <Route path="pa-messages" element={<PaMessagesPage />} />
-            <Route path="pa-messages/new" element={<NewPaMessagePage />} />
+            <Route path="pa-messages/new" element={<NewPaMessage />} />
             <Route
               path="pa-messages/new/associate-alert"
               element={<AssociateAlertPage />}
