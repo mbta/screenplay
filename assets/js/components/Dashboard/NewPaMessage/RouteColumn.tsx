@@ -1,7 +1,7 @@
 import React from "react";
 import _ from "lodash";
 import type { Place } from "Models/place";
-import { sortByStationOrder } from "../../../util"; // TODO: Move this file
+import { sortByStationOrder } from "../../../util";
 
 const RouteColumn = ({
   label,
