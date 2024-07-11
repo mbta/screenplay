@@ -153,7 +153,8 @@ const Dashboard: ComponentType = () => {
 
   const showSidebar =
     !pathname.startsWith("/configure-screens") &&
-    !pathname.startsWith("/emergency-takeover");
+    !pathname.startsWith("/emergency-takeover") &&
+    !pathname.includes("/associate-alert");
 
   return (
     <div className="screenplay-container">

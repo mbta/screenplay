@@ -5,7 +5,7 @@ import {
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "./constants/messages";
 import STATION_ORDER_BY_LINE from "./constants/stationOrder";
-import { Alert } from "./models/alert";
+import { Alert, ActivePeriod } from "./models/alert";
 import { Place } from "./models/place";
 import { Screen } from "./models/screen";
 import { ScreensByAlert } from "./models/screensByAlert";
@@ -257,4 +257,43 @@ export const capitalize = (str: string) => {
   } else {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+};
+
+export const getAlertEarliestStartLatestEnd = (
+  activePeriods: ActivePeriod[],
+) => {
+  const starts = activePeriods.map((activePeriod) => {
+    return new Date(activePeriod.start).getTime();
+  });
+
+  const ends = activePeriods.map((activePeriod) => {
+    return new Date(activePeriod.end).getTime();
+  });
+  const earliestStart = Math.min(...starts);
+  const latestEnd = Math.max(...ends);
+
+  const start = new Date(earliestStart)
+    .toLocaleTimeString("en-US", {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    })
+    .replace(",", "");
+
+  const end =
+    latestEnd === 0
+      ? "later today"
+      : new Date(latestEnd)
+          .toLocaleTimeString("en-US", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+          })
+          .replace(",", "");
+
+  return [start, end];
 };

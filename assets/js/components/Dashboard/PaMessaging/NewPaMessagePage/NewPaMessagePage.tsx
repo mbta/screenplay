@@ -9,21 +9,48 @@ import moment from "moment";
 import DatePicker from "../../DatePicker";
 import TimePicker from "../../TimePicker";
 import { ArrowRightShort, PlusLg, VolumeUpFill } from "react-bootstrap-icons";
+import {
+  useAssociatedAlertContext,
+  useAssociatedAlertDispatchContext,
+} from "../../../../hooks/useScreenplayContext";
+import { Alert, ActivePeriod } from "../../../../models/alert";
+import { getAlertEarliestStartLatestEnd } from "../../../../util";
 
 const NewPaMessagePage = () => {
   const now = moment();
 
+  const associatedAlertState = useAssociatedAlertContext();
+  const { associatedAlert, importMessage, endWithEffectPeriod } =
+    associatedAlertState;
+
+  const dispatch = useAssociatedAlertDispatchContext();
   const [startDate, setStartDate] = useState(now.format("L"));
   const [startTime, setStartTime] = useState(now.format("HH:mm"));
   const [endDate, setEndDate] = useState(now.format("L"));
-  const [endTime, setEndTime] = useState(now.add(1, "hour").format("HH:mm"));
+  const [endTime, setEndTime] = useState(
+    endWithEffectPeriod ? "" : now.add(1, "hour").format("HH:mm"),
+  );
   const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [priority, setPriority] = useState(2);
   const [interval, setInterval] = useState("4");
-  const [visualText, setVisualText] = useState("");
-  const [phoneticText, setPhoneticText] = useState("");
+  const [visualText, setVisualText] = useState(
+    importMessage ? associatedAlert.header : "",
+  );
+  const [phoneticText, setPhoneticText] = useState(
+    importMessage ? associatedAlert.header : "",
+  );
 
   const navigate = useNavigate();
+
+  const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
+    const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
+
+    return (
+      <div className="affect-period">
+        Alert Effect period: {start} - {end}
+      </div>
+    );
+  };
 
   return (
     <div className="new-pa-message-page">
@@ -35,17 +62,54 @@ const NewPaMessagePage = () => {
         <div className="new-pa-message-page__header">New PA/ESS message</div>
         <Container fluid>
           <Row md="auto" className="align-items-center">
-            <Button variant="link" className="pr-0">
-              Associate with alert
-            </Button>
-            (Optional)
+            {associatedAlert.id ? (
+              <div className="associated-alert-header">
+                Associated Alert: Alert ID {associatedAlert.id}
+                <Button
+                  variant="link"
+                  onClick={() => navigate("associate-alert")}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="link"
+                  onClick={() => {
+                    setVisualText("");
+                    setPhoneticText("");
+                    dispatch({
+                      type: "SET_ASSOCIATED_ALERT",
+                      associatedAlert: {} as Alert,
+                      endWithEffectPeriod: false,
+                      importLocations: false,
+                      importMessage: false,
+                    });
+                  }}
+                >
+                  Clear
+                </Button>
+                {formatActivePeriod(associatedAlert.active_period)}
+              </div>
+            ) : (
+              <>
+                <Button
+                  variant="link"
+                  className="pr-0"
+                  onClick={() => navigate("associate-alert")}
+                >
+                  Associate with alert
+                </Button>
+                (Optional)
+              </>
+            )}
           </Row>
-          <Row>
-            <div className="new-pa-message-page__associate-alert-subtext">
-              Linking will allow you to share end time with alert, and import
-              location and message.
-            </div>
-          </Row>
+          {!associatedAlert.id && (
+            <Row>
+              <div className="new-pa-message-page__associate-alert-subtext">
+                Linking will allow you to share end time with alert, and import
+                location and message.
+              </div>
+            </Row>
+          )}
           <Card className="when-card">
             <div className="title">When</div>
             <Row md="auto" className="start-datetime">
@@ -78,15 +142,36 @@ const NewPaMessagePage = () => {
                 >
                   End
                 </Form.Label>
-                <div className="datetime-picker-group">
-                  <DatePicker
-                    selectedDate={endDate}
-                    onChange={setEndDate}
-                    minDateString={startDate}
-                    id="end-date-picker"
+                {associatedAlert.id && (
+                  <Form.Check
+                    className="effect-period-switch"
+                    type="switch"
+                    checked={endWithEffectPeriod}
+                    label="At end of alert"
+                    onChange={() => {
+                      endWithEffectPeriod
+                        ? setEndTime(now.add(1, "hour").format("HH:mm"))
+                        : setEndTime("");
+
+                      dispatch({
+                        type: "SET_ASSOCIATED_ALERT",
+                        ...associatedAlertState,
+                        endWithEffectPeriod: !endWithEffectPeriod,
+                      });
+                    }}
                   />
-                  <TimePicker selectedTime={endTime} onChange={setEndTime} />
-                </div>
+                )}
+                {!endWithEffectPeriod && (
+                  <div className="datetime-picker-group">
+                    <DatePicker
+                      selectedDate={endDate}
+                      onChange={setEndDate}
+                      minDateString={startDate}
+                      id="end-date-picker"
+                    />
+                    <TimePicker selectedTime={endTime} onChange={setEndTime} />
+                  </div>
+                )}
               </Form.Group>
             </Row>
             <Row className="days">

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createGenericContext } from "../utils/createGenericContext";
 import { Place } from "../models/place";
-import { Alert } from "../models/alert";
+import { Alert, ActivePeriod } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { ConfigValidationErrors } from "../models/configValidationErrors";
@@ -77,6 +77,14 @@ type ConfigValidationReducerAction = {
   pendingScreenValidationErrors: ConfigValidationErrors;
 };
 
+type AssociatedAlertReducerAction = {
+  type: "SET_ASSOCIATED_ALERT";
+  associatedAlert: Alert;
+  endWithEffectPeriod: boolean;
+  importLocations: boolean;
+  importMessage: boolean;
+};
+
 interface FilterValue {
   label: string;
   ids: string[];
@@ -112,6 +120,13 @@ interface ScreenplayState {
 interface ConfigValidationState {
   newScreenValidationErrors: ConfigValidationErrors;
   pendingScreenValidationErrors: ConfigValidationErrors;
+}
+
+interface AssociatedAlertState {
+  associatedAlert: Alert;
+  endWithEffectPeriod: boolean;
+  importLocations: boolean;
+  importMessage: boolean;
 }
 
 const reducer = (
@@ -238,6 +253,22 @@ const configValidationReducer = (
   }
 };
 
+const associatedAlertReducer = (
+  state: AssociatedAlertState,
+  action: AssociatedAlertReducerAction,
+) => {
+  switch (action.type) {
+    case "SET_ASSOCIATED_ALERT":
+      return {
+        ...state,
+        associatedAlert: action.associatedAlert,
+        endWithEffectPeriod: action.endWithEffectPeriod,
+        importLocations: action.importLocations,
+        importMessage: action.importMessage,
+      };
+  }
+};
+
 const initialState: ScreenplayState = {
   places: [] as Place[],
   alerts: [] as Alert[],
@@ -269,6 +300,13 @@ const initialConfigValidationState: ConfigValidationState = {
   pendingScreenValidationErrors: {} as ConfigValidationErrors,
 };
 
+const initialAssociatedAlertState: AssociatedAlertState = {
+  associatedAlert: {} as Alert,
+  endWithEffectPeriod: false,
+  importLocations: false,
+  importMessage: false,
+};
+
 // Generate context
 const [useScreenplayContext, ScreenplayContextProvider] =
   createGenericContext<ScreenplayState>();
@@ -296,6 +334,14 @@ const [
   ConfigValidationDispatchContextProvider,
 ] = createGenericContext<React.Dispatch<ConfigValidationReducerAction>>();
 
+const [useAssociatedAlertContext, AssociatedAlertContextProvider] =
+  createGenericContext<AssociatedAlertState>();
+
+const [
+  useAssociatedAlertDispatchContext,
+  AssociatedAlertDispatchContextProvider,
+] = createGenericContext<React.Dispatch<AssociatedAlertReducerAction>>();
+
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
   const [screenplayState, screenplayDispatch] = useReducer(
@@ -315,6 +361,11 @@ const ScreenplayProvider = ({ children }: Props) => {
     initialConfigValidationState,
   );
 
+  const [associatedAlertState, associatedAlertDispatch] = useReducer(
+    associatedAlertReducer,
+    initialAssociatedAlertState,
+  );
+
   return (
     <ScreenplayContextProvider value={screenplayState}>
       <ScreenplayDispatchContextProvider value={screenplayDispatch}>
@@ -326,7 +377,15 @@ const ScreenplayProvider = ({ children }: Props) => {
                   <ConfigValidationDispatchContextProvider
                     value={configValidationDispatch}
                   >
-                    {children}
+                    <AssociatedAlertContextProvider
+                      value={associatedAlertState}
+                    >
+                      <AssociatedAlertDispatchContextProvider
+                        value={associatedAlertDispatch}
+                      >
+                        {children}
+                      </AssociatedAlertDispatchContextProvider>
+                    </AssociatedAlertContextProvider>
                   </ConfigValidationDispatchContextProvider>
                 </ConfigValidationContextProvider>
               </AlertsListDispatchContextProvider>
@@ -357,6 +416,8 @@ export {
   useAlertsListDispatchContext,
   useConfigValidationContext,
   useConfigValidationDispatchContext,
+  useAssociatedAlertContext,
+  useAssociatedAlertDispatchContext,
   ScreenplayProvider,
   placesListReducer,
   initialPlacesListState,

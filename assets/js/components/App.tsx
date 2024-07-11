@@ -25,7 +25,9 @@ const PaMessagesPage = React.lazy(
 const NewPaMessagePage = React.lazy(
   () => import("./Dashboard/PaMessaging/NewPaMessagePage/NewPaMessagePage"),
 );
-
+const AssociateAlertPage = React.lazy(
+  () => import("./Dashboard/PaMessaging/NewPaMessagePage/AssociateAlertPage"),
+);
 class AppRoutes extends React.Component {
   render() {
     return (
@@ -53,6 +55,10 @@ class AppRoutes extends React.Component {
             </Route>
             <Route path="pa-messages" element={<PaMessagesPage />} />
             <Route path="pa-messages/new" element={<NewPaMessagePage />} />
+            <Route
+              path="pa-messages/new/associate-alert"
+              element={<AssociateAlertPage />}
+            />
           </Route>
         </Routes>
       </React.Suspense>
