@@ -11,6 +11,9 @@ import {
   GL_D_BRANCH,
   GL_E_BRANCH,
   GLX,
+  RED_ASHMONT_BRANCH,
+  RED_BRAINTREE_BRANCH,
+  RED_TRUNK,
 } from "./StationGroups";
 
 const usePlacesWithPaEss = () => {
@@ -132,6 +135,36 @@ const SelectStationsPage = () => {
               places={places}
               routes={["Green-D", "Green-E"]}
               stations={GLX}
+              value={zones}
+              onChange={setZones}
+            />
+          </div>
+          <div>
+            <div>Red line</div>
+            <StationGroupCheckbox
+              title="Braintree Branch"
+              label="JFK-Braintree"
+              places={places}
+              routes={["Red"]}
+              stations={RED_BRAINTREE_BRANCH}
+              value={zones}
+              onChange={setZones}
+            />
+            <StationGroupCheckbox
+              title="Ashmont Branch"
+              label="JFK-Ashmont"
+              places={places}
+              routes={["Red"]}
+              stations={RED_ASHMONT_BRANCH}
+              value={zones}
+              onChange={setZones}
+            />
+            <StationGroupCheckbox
+              title="Red Line Trunk"
+              label="Alewife-JFK"
+              places={places}
+              routes={["Red"]}
+              stations={RED_TRUNK}
               value={zones}
               onChange={setZones}
             />

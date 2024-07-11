@@ -40,3 +40,36 @@ export const GLX = [
   "place-spmnl",
   "place-north",
 ];
+
+export const RED_BRAINTREE_BRANCH = [
+  "place-jfk",
+  "place-nqncy",
+  "place-wlsta",
+  "place-qnctr",
+  "place-qamnl",
+  "place-brntn",
+];
+
+export const RED_ASHMONT_BRANCH = [
+  "place-jfk",
+  "place-shmnl",
+  "place-fldcr",
+  "place-smmnl",
+  "place-asmnl",
+];
+
+export const RED_TRUNK = [
+  "place-alfcl",
+  "place-davis",
+  "place-portr",
+  "place-harsq",
+  "place-cntsq",
+  "place-knncl",
+  "place-chmnl",
+  "place-pktrm",
+  "place-dwnxg",
+  "place-sstat",
+  "place-brdwy",
+  "place-andrw",
+  "place-jfk",
+];
