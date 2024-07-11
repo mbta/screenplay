@@ -19,18 +19,4 @@ defmodule ScreenplayWeb.OutfrontTakeoverTool.PageControllerTest do
       assert %{status: 302} = conn
     end
   end
-
-  describe "root_redirect/2" do
-    @tag :authenticated_emergency_admin
-    test "redirects admin to /dashboard", %{conn: conn} do
-      conn = get(conn, "/")
-      assert redirected_to(conn) =~ "/dashboard"
-    end
-
-    @tag :authenticated
-    test "does not redirect non-admin to /dashboard", %{conn: conn} do
-      conn = get(conn, "/")
-      assert redirected_to(conn) =~ "/unauthorized"
-    end
-  end
 end

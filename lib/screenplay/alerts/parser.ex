@@ -1,9 +1,9 @@
 defmodule Screenplay.Alerts.Parser do
   @moduledoc false
 
-  def parse_result(%{"data" => data, "included" => included}) when is_list(data) do
+  def parse_result(%{"data" => data} = result) when is_list(data) do
     data
-    |> Enum.map(&parse_alert(&1, included))
+    |> Enum.map(&parse_alert(&1, result["included"]))
     |> Enum.reject(&is_nil/1)
   end
 

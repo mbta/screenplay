@@ -53,7 +53,7 @@ export const SCREEN_TYPES: { label: string; ids: string[] }[] = [
   { label: "Elevator", ids: ["elevator"] },
   { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
-  { label: "Solari", ids: ["busway_v2", "solari"] },
+  { label: "Sectional", ids: ["busway_v2", "solari"] },
   { label: "Triptych", ids: ["triptych_v2"] },
 ];
 

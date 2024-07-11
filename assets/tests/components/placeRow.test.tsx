@@ -1,8 +1,8 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
-import PlaceRow from "../../js/components/Dashboard/PlaceRow";
+import PlaceRow from "Components/PlaceRow";
 import { Accordion } from "react-bootstrap";
-import { Place } from "../../js/models/place";
+import { Place } from "Models/place";
 
 beforeAll(() => {
   const app = document.createElement("div");

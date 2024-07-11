@@ -10,7 +10,7 @@ import {
   getMessageString,
   matchStation,
 } from "../../../util";
-import { BanIcon, PencilIcon } from "@heroicons/react/solid";
+import { NoSymbolIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import SVGPreviews from "../AlertWizard/SVGPreviews";
 import AlertReminder from "./AlertReminder";
@@ -50,14 +50,14 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   const messageString = getMessageString(message);
 
   const modalDetails: ModalDetails = {
-    icon: <BanIcon className="icon" />,
+    icon: <NoSymbolIcon className="icon" />,
     header: "Clear Alert",
     description:
       "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
     cancelText: "Keep Alert",
     confirmJSX: (
       <>
-        <BanIcon className="button-icon" />
+        <NoSymbolIcon className="button-icon" />
         Clear Alert
       </>
     ),
@@ -102,7 +102,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
             Edit
           </button>
           <button className="clear-button" onClick={clearAlert}>
-            <BanIcon className="button-icon" />
+            <NoSymbolIcon className="button-icon" />
             Clear Alert
           </button>
         </div>

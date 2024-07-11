@@ -1,6 +1,6 @@
 import React from "react";
 import { act, fireEvent, waitFor } from "@testing-library/react";
-import AlertsPage from "../../js/components/Dashboard/AlertsPage";
+import AlertsPage from "Components/AlertsPage";
 import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvider";
 
 describe("Alerts Page", () => {

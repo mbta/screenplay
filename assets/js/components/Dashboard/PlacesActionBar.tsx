@@ -6,7 +6,7 @@ import {
   EyeSlashFill,
   Icon,
 } from "react-bootstrap-icons";
-import { Place } from "../../models/place";
+import { Place } from "Models/place";
 
 interface Props {
   places: Place[];

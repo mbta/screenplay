@@ -9,16 +9,16 @@ import {
   PendingAndLiveScreens,
   fetchExistingScreensAtPlacesWithPendingScreens,
   publishScreensForPlace,
-} from "../../utils/api";
+} from "Utils/api";
 import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
-import PendingScreensPlaceRowAccordion from "./PendingScreensPlaceRowAccordion";
-import { ScreenConfiguration } from "../../models/screen_configuration";
+import PendingScreensPlaceRowAccordion from "Components/PendingScreensPlaceRowAccordion";
+import { ScreenConfiguration } from "Models/screen_configuration";
 import {
   useScreenplayContext,
   useScreenplayDispatchContext,
-} from "../../hooks/useScreenplayContext";
+} from "Hooks/useScreenplayContext";
 import { format } from "date-fns/format";
-import { Place } from "../../models/place";
+import { Place } from "Models/place";
 import { useNavigate } from "react-router-dom";
 
 const PendingScreensPage: ComponentType = () => {

@@ -1,19 +1,19 @@
 import React, { ComponentType, useContext } from "react";
-import PlaceRow from "./PlaceRow";
-import { Place } from "../../models/place";
-import { Screen } from "../../models/screen";
+import PlaceRow from "Components/PlaceRow";
+import { Place } from "Models/place";
+import { Screen } from "Models/screen";
 import {
   DirectionID,
   PlacesListReducerAction,
-} from "../../hooks/useScreenplayContext";
+} from "Hooks/useScreenplayContext";
 import {
   Accordion,
   AccordionContext,
   useAccordionButton,
 } from "react-bootstrap";
-import ScreenDetail from "./ScreenDetail";
+import ScreenDetail from "Components/ScreenDetail";
 import { sortScreens } from "../../util";
-import { useUpdateAnimation } from "../../hooks/useUpdateAnimation";
+import { useUpdateAnimation } from "Hooks/useUpdateAnimation";
 import classNames from "classnames";
 
 type ScreenGroup = {

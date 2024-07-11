@@ -9,9 +9,9 @@ import {
 } from "react-bootstrap";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import classNames from "classnames";
-import { Place } from "../../models/place";
-import MapSegment from "./MapSegment";
-import STATION_ORDER_BY_LINE from "../../constants/stationOrder";
+import { Place } from "Models/place";
+import MapSegment from "Components/MapSegment";
+import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import {
   capitalizeTerminalStops,
   classWithModifier,
@@ -29,8 +29,8 @@ const typeMap: Record<string, string> = {
   gl_eink_v2: "GL E-Ink",
   bus_eink: "Bus E-Ink",
   bus_eink_v2: "Bus E-Ink",
-  solari: "Solari",
-  busway_v2: "Solari",
+  solari: "Sectional",
+  busway_v2: "Sectional",
   triptych_v2: "Triptych",
 };
 

@@ -15,7 +15,7 @@ import ReactDOM from "react-dom";
 import App from "./components/App";
 import * as Sentry from "@sentry/react";
 import { FullStory, init as initFullStory } from "@fullstory/browser";
-import SentryFullStory from "@sentry/fullstory";
+import { fullStoryIntegration } from "@sentry/fullstory";
 
 const environment = document
   .querySelector("meta[name=environment-name]")
@@ -47,7 +47,9 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     environment: environment,
-    integrations: [new SentryFullStory(SENTRY_ORG_SLUG, { client: FullStory })],
+    integrations: [
+      fullStoryIntegration(SENTRY_ORG_SLUG, { client: FullStory }),
+    ],
   });
 
   if (username) {

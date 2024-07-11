@@ -4,7 +4,7 @@ defmodule Screenplay.Config.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
-  alias Screenplay.Config.PlaceAndScreens
+  alias Screenplay.Config.{Fetch, PlaceAndScreens}
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
@@ -86,7 +86,7 @@ defmodule Screenplay.Config.PermanentConfig do
     }
   end
 
-  @spec put_pending_screens(map(), screen_type(), binary()) ::
+  @spec put_pending_screens(map(), screen_type(), Fetch.version_id()) ::
           {:error,
            :version_mismatch
            | :config_not_fetched
@@ -148,12 +148,15 @@ defmodule Screenplay.Config.PermanentConfig do
 
     new_published_screens_config = get_new_published_screens(published_config, screens_to_publish)
 
+    screenplay_screens_to_add =
+      Enum.reject(screens_to_publish, fn {_, screen} -> screen.hidden_from_screenplay end)
+
     new_places_and_screens_config =
-      get_new_places_and_screens_config(places_and_screens_config, screens_to_publish)
+      get_new_places_and_screens_config(places_and_screens_config, screenplay_screens_to_add)
 
     with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
          :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
-         :ok <- @config_fetcher.put_config(new_places_and_screens_config) do
+         :ok <- put_places_and_screens(new_places_and_screens_config, screenplay_screens_to_add) do
       PendingScreensFetch.commit()
       PublishedScreensFetch.commit()
       @config_fetcher.commit()
@@ -166,6 +169,9 @@ defmodule Screenplay.Config.PermanentConfig do
         :error
     end
   end
+
+  defp put_places_and_screens(_, []), do: :ok
+  defp put_places_and_screens(new_config, _), do: @config_fetcher.put_config(new_config)
 
   defp check_for_duplicate_screen_ids(
          deserialized,
@@ -420,15 +426,13 @@ defmodule Screenplay.Config.PermanentConfig do
     end
   end
 
-  defp get_new_places_and_screens_config(places_and_screens_config, new_published_screens) do
+  defp get_new_places_and_screens_config(places_and_screens_config, screens_to_add) do
     places_and_screens_config =
       Enum.map(places_and_screens_config, &PlaceAndScreens.from_map/1)
 
     grouped_places_and_screens =
-      new_published_screens
-      |> Enum.into(%{})
-      |> Enum.reject(fn {_, screen} -> screen.hidden_from_screenplay end)
-      |> Enum.group_by(
+      Enum.group_by(
+        screens_to_add,
         fn
           {_, %Screen{app_id: :gl_eink_v2} = config} ->
             config.app_params.footer.stop_id

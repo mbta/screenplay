@@ -26,3 +26,10 @@ export DATABASE_HOSTNAME="localhost"
 
 # Access key for allowing PA Message API calls. Required for endpoints in the /api/pa-messages scope. Generate a unique random string for local use.
 export SCREENPLAY_API_KEY="local_api_key"
+
+# Host and access key needed to communicate with Watts. Required when previewing PA message audio.
+# For local use, set to the same value as your local instance of Watts.
+# VPN is required for requests to watts-staging.
+#export WATTS_URL="https://watts-staging.mbtace.com"
+# API Key is in the Screens 1Password vault under `Watts Staging API Key`
+#export WATTS_API_KEY=""

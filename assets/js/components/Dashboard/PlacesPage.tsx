@@ -1,25 +1,25 @@
 import React, { ComponentType } from "react";
-import PlacesActionBar from "./PlacesActionBar";
-import FilterDropdown from "./FilterDropdown";
-import PlaceRowAccordion from "./PlaceRowAccordion";
-import SortLabel from "./SortLabel";
+import PlacesActionBar from "Components/PlacesActionBar";
+import FilterDropdown from "Components/FilterDropdown";
+import PlaceRowAccordion from "Components/PlaceRowAccordion";
+import SortLabel from "Components/SortLabel";
 import { Accordion, Col, Container, Row } from "react-bootstrap";
-import { Place } from "../../models/place";
+import { Place } from "Models/place";
 import {
   PLACES_PAGE_MODES_AND_LINES as MODES_AND_LINES,
   SORT_LABELS,
   SCREEN_TYPES,
   STATUSES,
-} from "../../constants/constants";
+} from "Constants/constants";
 import {
   PlacesListReducerAction,
   PlacesListState,
   usePlacesListContext,
   usePlacesListDispatchContext,
   useScreenplayContext,
-} from "../../hooks/useScreenplayContext";
-import { DirectionID } from "../../models/direction_id";
-import { usePrevious } from "../../hooks/usePrevious";
+} from "Hooks/useScreenplayContext";
+import { DirectionID } from "Models/direction_id";
+import { usePrevious } from "Hooks/usePrevious";
 import { sortByStationOrder } from "../../util";
 
 const getSortLabel = (

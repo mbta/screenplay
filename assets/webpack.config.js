@@ -55,6 +55,19 @@ module.exports = (env, options) => ({
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+    alias: {
+      // Please also update the "paths" list in tsconfig.json when you add aliases here!
+      Components: path.resolve(__dirname, "js/components/Dashboard"),
+      Hooks: path.resolve(__dirname, "js/hooks"),
+      Models: path.resolve(__dirname, "js/models"),
+      Utils: path.resolve(__dirname, "js/utils"),
+      Constants: path.resolve(__dirname, "js/constants"),
+      // Fix issue with React JSX rutime export
+      // https://github.com/facebook/react/issues/20235#issuecomment-732205073
+      // This is fixed in later versions of react so this can be removed when
+      // upgrading react. Keeping it in shouldn't hurt anything.
+      "react/jsx-runtime": require.resolve("react/jsx-runtime"),
+    },
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: "../css/app.css" }),

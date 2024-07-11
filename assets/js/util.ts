@@ -3,12 +3,12 @@ import {
   CustomMessage,
   StationsByLine,
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
-import CANNED_MESSAGES from "./constants/messages";
-import STATION_ORDER_BY_LINE from "./constants/stationOrder";
-import { Alert, ActivePeriod } from "./models/alert";
-import { Place } from "./models/place";
-import { Screen } from "./models/screen";
-import { ScreensByAlert } from "./models/screensByAlert";
+import CANNED_MESSAGES from "Constants/messages";
+import STATION_ORDER_BY_LINE from "Constants/stationOrder";
+import { Alert, ActivePeriod } from "Models/alert";
+import { Place } from "Models/place";
+import { Screen } from "Models/screen";
+import { ScreensByAlert } from "Models/screensByAlert";
 
 export const color = (line: string) => {
   switch (line) {

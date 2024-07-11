@@ -1,29 +1,27 @@
 import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ScreenplayProvider } from "../hooks/useScreenplayContext";
-import GlEinkWorkflow from "./Dashboard/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
+import GlEinkWorkflow from "Components/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool"),
 );
-const Dashboard = React.lazy(() => import("./Dashboard/Dashboard"));
-const PlacesPage = React.lazy(() => import("./Dashboard/PlacesPage"));
-const AlertsPage = React.lazy(() => import("./Dashboard/AlertsPage"));
-const AlertDetails = React.lazy(() => import("./Dashboard/AlertDetails"));
+const Dashboard = React.lazy(() => import("Components/Dashboard"));
+const PlacesPage = React.lazy(() => import("Components/PlacesPage"));
+const AlertsPage = React.lazy(() => import("Components/AlertsPage"));
+const AlertDetails = React.lazy(() => import("Components/AlertDetails"));
 const PendingScreensPage = React.lazy(
-  () => import("./Dashboard/PendingScreensPage"),
+  () => import("Components/PendingScreensPage"),
 );
 const ConfigureScreensPage = React.lazy(
-  () => import("./Dashboard/PermanentConfiguration/ConfigureScreensPage"),
+  () => import("Components/PermanentConfiguration/ConfigureScreensPage"),
 );
 const SelectScreenTypeComponent = React.lazy(
-  () => import("./Dashboard/PermanentConfiguration/SelectScreenType"),
+  () => import("Components/PermanentConfiguration/SelectScreenType"),
 );
-const PaMessagesPage = React.lazy(
-  () => import("./Dashboard/PaMessaging/PaMessagesPage"),
-);
+const PaMessagesPage = React.lazy(() => import("Components/PaMessagesPage"));
 const NewPaMessagePage = React.lazy(
-  () => import("./Dashboard/PaMessaging/NewPaMessagePage/NewPaMessagePage"),
+  () => import("Components/NewPaMessagePage"),
 );
 const AssociateAlertPage = React.lazy(
   () => import("./Dashboard/PaMessaging/NewPaMessagePage/AssociateAlertPage"),

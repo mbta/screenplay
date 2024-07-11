@@ -2,8 +2,8 @@ import React, { ComponentType } from "react";
 import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
-import { useScreenplayContext } from "../../hooks/useScreenplayContext";
-import { Alert } from "../../models/alert";
+import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import { Alert } from "Models/alert";
 
 interface BannerAlert {
   alert: Alert;

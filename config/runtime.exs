@@ -51,7 +51,9 @@ config :screenplay,
   signs_ui_url: System.get_env("SIGNS_UI_URL"),
   alerts_ui_url: System.get_env("ALERTS_UI_URL"),
   fullstory_org_id: System.get_env("FULLSTORY_ORG_ID"),
-  api_key: System.fetch_env!("SCREENPLAY_API_KEY")
+  api_key: System.fetch_env!("SCREENPLAY_API_KEY"),
+  watts_url: System.get_env("WATTS_URL"),
+  watts_api_key: System.get_env("WATTS_API_KEY")
 
 if sentry_dsn not in [nil, ""] do
   config :sentry,

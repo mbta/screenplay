@@ -9,14 +9,14 @@ import {
   Form,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useScreenplayContext } from "../../../../hooks/useScreenplayContext";
+import { useScreenplayContext } from "../../hooks/useScreenplayContext";
 import {
   useAssociatedAlertContext,
   useAssociatedAlertDispatchContext,
-} from "../../../../hooks/useScreenplayContext";
-import { Alert } from "../../../../models/alert";
+} from "../../hooks/useScreenplayContext";
+import { Alert } from "../../models/alert";
 import classNames from "classnames";
-import { getAlertEarliestStartLatestEnd } from "../../../../util";
+import { getAlertEarliestStartLatestEnd } from "../../util";
 
 const AssociateAlertPage = () => {
   const navigate = useNavigate();
