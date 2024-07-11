@@ -11,6 +11,8 @@ import {
   GL_D_BRANCH,
   GL_E_BRANCH,
   GLX,
+  ORANGE_NORTH,
+  ORANGE_SOUTH,
   RED_ASHMONT_BRANCH,
   RED_BRAINTREE_BRANCH,
   RED_TRUNK,
@@ -165,6 +167,27 @@ const SelectStationsPage = () => {
               places={places}
               routes={["Red"]}
               stations={RED_TRUNK}
+              value={zones}
+              onChange={setZones}
+            />
+          </div>
+          <div>
+            <div>Orange line</div>
+            <StationGroupCheckbox
+              title="North"
+              label="Oak Grove-North Station"
+              places={places}
+              routes={["Orange"]}
+              stations={ORANGE_NORTH}
+              value={zones}
+              onChange={setZones}
+            />
+            <StationGroupCheckbox
+              title="South"
+              label="Haymarket-Forest Hills"
+              places={places}
+              routes={["Orange"]}
+              stations={ORANGE_SOUTH}
               value={zones}
               onChange={setZones}
             />

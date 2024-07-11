@@ -73,3 +73,29 @@ export const RED_TRUNK = [
   "place-andrw",
   "place-jfk",
 ];
+
+export const ORANGE_NORTH = [
+  "place-ogmnl",
+  "place-mlmnl",
+  "place-welln",
+  "place-astao",
+  "place-sull",
+  "place-ccmnl",
+  "place-north",
+];
+
+export const ORANGE_SOUTH = [
+  "place-haecl",
+  "place-state",
+  "place-dwnxg",
+  "place-chncl",
+  "place-tumnl",
+  "place-bbsta",
+  "place-masta",
+  "place-rugg",
+  "place-rcmnl",
+  "place-jaksn",
+  "place-sbmnl",
+  "place-grnst",
+  "place-forhl",
+];
