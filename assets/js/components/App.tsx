@@ -24,7 +24,7 @@ const NewPaMessagePage = React.lazy(
   () => import("Components/NewPaMessagePage"),
 );
 const AssociateAlertPage = React.lazy(
-  () => import("./Dashboard/PaMessaging/NewPaMessagePage/AssociateAlertPage"),
+  () => import("./Dashboard/AssociateAlertPage"),
 );
 class AppRoutes extends React.Component {
   render() {
