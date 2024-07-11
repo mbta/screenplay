@@ -5,6 +5,13 @@ import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
 import { GREEN_LINE_ROUTES, SILVER_LINE_ROUTES } from "Constants/constants";
+import StationGroupCheckbox from "./StationGroupCheckbox";
+import {
+  GL_CENTRAL_SUBWAY,
+  GL_D_BRANCH,
+  GL_E_BRANCH,
+  GLX,
+} from "./StationGroups";
 
 const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -89,6 +96,48 @@ const SelectStationsPage = () => {
       <div className="new-pa-message-page__header">Select Stations</div>
       <Container fluid>
         <div>
+          <div>Station Groups</div>
+          <div>
+            <div>Green line</div>
+            <StationGroupCheckbox
+              title="Central Subway"
+              label="North Station-Kenmore"
+              places={places}
+              routes={GREEN_LINE_ROUTES}
+              stations={GL_CENTRAL_SUBWAY}
+              value={zones}
+              onChange={setZones}
+            />
+            <StationGroupCheckbox
+              title="GL D Branch"
+              label="Kenmore-Riverside"
+              places={places}
+              routes={["Green-D"]}
+              stations={GL_D_BRANCH}
+              value={zones}
+              onChange={setZones}
+            />
+            <StationGroupCheckbox
+              title="GL E Branch"
+              label="Pru, Sym, Longwood"
+              places={places}
+              routes={["Green-E"]}
+              stations={GL_E_BRANCH}
+              value={zones}
+              onChange={setZones}
+            />
+            <StationGroupCheckbox
+              title="GLX"
+              label="Medford/Tufts-North Station"
+              places={places}
+              routes={["Green-D", "Green-E"]}
+              stations={GLX}
+              value={zones}
+              onChange={setZones}
+            />
+          </div>
+        </div>
+        <div>
           <label>
             <input
               type="checkbox"
@@ -106,6 +155,9 @@ const SelectStationsPage = () => {
 
           <ol>
             {["B", "C", "D", "E"].map((branch) => {
+              // It's possible to check a station on one branch even though not all zones are checked.
+              // If you want to instead select all branches when selecting a station,
+              // pass GREEN_LINE_ROUTES to routes and pass route to orderingRoute
               const route = `Green-${branch}`;
               return (
                 <RouteColumn

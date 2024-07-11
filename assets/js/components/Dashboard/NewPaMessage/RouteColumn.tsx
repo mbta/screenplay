@@ -22,9 +22,7 @@ const RouteColumn = ({
 }) => {
   const routeZones = places.flatMap((place) =>
     place.screens
-      .filter(
-        (screen) => _.intersection(screen.route_ids ?? [], routes).length > 0,
-      )
+      .filter((screen) => _.intersection(screen.route_ids, routes).length > 0)
       .map((screen) => screen.id),
   );
 
