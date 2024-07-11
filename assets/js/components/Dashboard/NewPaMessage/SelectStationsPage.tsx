@@ -101,8 +101,8 @@ const SelectStationsPage = () => {
       <div className="header">Select Stations</div>
       <Container fluid>
         <div className="station-groups-col col">
-          <div className="col-title h5">Station Groups</div>
-          <div className="route-groups">
+          <div className="title">Station Groups</div>
+          <div className="route-groups col-content">
             <div className="h5">Green line</div>
             <StationGroupCheckbox
               title="Central Subway"
@@ -193,8 +193,8 @@ const SelectStationsPage = () => {
             />
           </div>
         </div>
-        <div className="green-line-stations-col">
-          <label>
+        <div className="route-col route-col--green col">
+          <label className="title">
             <input
               type="checkbox"
               onChange={(evt) => {
@@ -209,7 +209,7 @@ const SelectStationsPage = () => {
             Green line
           </label>
 
-          <ol>
+          <div className="branches-col">
             {["B", "C", "D", "E"].map((branch) => {
               // It's possible to check a station on one branch even though not all zones are checked.
               // If you want to instead select all branches when selecting a station,
@@ -226,11 +226,14 @@ const SelectStationsPage = () => {
                 />
               );
             })}
-          </ol>
+          </div>
         </div>
 
         {["Red", "Orange", "Blue", "Mattapan", "Silver"].map((route) => (
-          <div key={route} className={`${route}-line-stations-col`}>
+          <div
+            key={route}
+            className={`route-col route-col--${route.toLowerCase()} col`}
+          >
             <RouteColumn
               label={`${route} line`}
               orderingRoute={route}
@@ -243,7 +246,7 @@ const SelectStationsPage = () => {
           </div>
         ))}
 
-        <div className="bus-col">
+        <div className="route-col route-col--bus col">
           <RouteColumn
             label="Bus"
             orderingRoute="Bus"

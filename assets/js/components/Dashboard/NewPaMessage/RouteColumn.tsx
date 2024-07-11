@@ -29,7 +29,7 @@ const RouteColumn = ({
   return (
     <div>
       <div>
-        <label>
+        <label className="title">
           <input
             type="checkbox"
             onChange={(evt) => {
@@ -44,7 +44,7 @@ const RouteColumn = ({
           {label}
         </label>
       </div>
-      <ol>
+      <div className="col-content">
         {sortByStationOrder(places, orderingRoute, reverse).map((place) => {
           const placeZones = place.screens
             .filter(
@@ -53,8 +53,8 @@ const RouteColumn = ({
             )
             .map((screen) => screen.id);
           return (
-            <li key={place.id}>
-              <label>
+            <div key={place.id}>
+              <label className="body--regular station-name">
                 <input
                   type="checkbox"
                   onChange={(evt) => {
@@ -68,10 +68,10 @@ const RouteColumn = ({
                 />
                 {place.name}
               </label>
-            </li>
+            </div>
           );
         })}
-      </ol>
+      </div>
     </div>
   );
 };

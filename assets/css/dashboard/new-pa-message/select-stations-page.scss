@@ -2,25 +2,101 @@
   .container-fluid {
     display: flex;
     overflow-x: scroll;
+    margin-top: 40px;
+    padding-bottom: 40px;
 
-    .station-groups-col {
-      min-width: 273px;
+    .col {
       background-color: $cool-gray-20;
       height: fit-content;
       border-radius: 0px 0px 8px 8px;
 
-      .col-title {
+      &:not(:last-child) {
+        margin-right: 24px;
+      }
+
+      .col-content {
         padding: 8px 16px;
-        border-radius: 8px 8px 0px 0px;
+      }
+    }
+
+    .title {
+      padding: 8px 16px;
+      border-radius: 8px 8px 0px 0px;
+      width: 100%;
+      height: 40px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .station-groups-col {
+      min-width: 273px;
+
+      .title {
         background-color: $cool-gray-40;
       }
 
       .route-groups {
         padding: 8px 16px;
+
+        margin-bottom: 24px;
       }
 
       .group-title {
         color: $text-secondary;
+      }
+    }
+
+    .route-col {
+      min-width: 304px;
+
+      .station-name {
+        margin-bottom: 6px;
+      }
+
+      &--green {
+        .title {
+          background-color: $mbta-green;
+        }
+
+        .branches-col {
+          .title {
+            border-radius: 0;
+            background-color: #2b3741;
+            font-size: 16px;
+          }
+        }
+      }
+
+      &--red,
+      &--mattapan {
+        .title {
+          background-color: $mbta-red;
+        }
+      }
+
+      &--orange {
+        .title {
+          background-color: $mbta-orange;
+        }
+      }
+
+      &--blue {
+        .title {
+          background-color: $mbta-blue;
+        }
+      }
+
+      &--silver {
+        .title {
+          background-color: $mbta-silver;
+        }
+      }
+
+      &--bus {
+        .title {
+          color: $text-invert;
+          background-color: $mbta-bus;
+        }
       }
     }
   }
