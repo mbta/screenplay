@@ -5,14 +5,22 @@
     margin-top: 40px;
     padding-bottom: 40px;
 
+    .form-check {
+      padding: 0;
+
+      .form-check-input {
+        height: 16px;
+        width: 16px;
+        margin-left: 0;
+        margin-right: 8px;
+      }
+    }
+
     .col {
       background-color: $cool-gray-20;
       height: fit-content;
       border-radius: 0px 0px 8px 8px;
-
-      &:not(:last-child) {
-        margin-right: 24px;
-      }
+      margin-right: 24px;
 
       .col-content {
         padding: 8px 16px;
@@ -36,13 +44,25 @@
       }
 
       .route-groups {
-        padding: 8px 16px;
+        padding: 16px 16px;
+        &:not(:nth-child(2)) {
+          padding-top: 0;
+        }
 
-        margin-bottom: 24px;
+        .station-group {
+          &:not(:last-child) {
+            margin-bottom: 24px;
+          }
+        }
       }
 
       .group-title {
         color: $text-secondary;
+      }
+
+      hr {
+        margin-top: 24px;
+        margin-bottom: 8px;
       }
     }
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import _ from "lodash";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
@@ -140,6 +140,7 @@ const SelectStationsPage = () => {
               value={zones}
               onChange={setZones}
             />
+            <hr />
           </div>
           <div className="route-groups">
             <div className="h5">Red line</div>
@@ -170,6 +171,7 @@ const SelectStationsPage = () => {
               value={zones}
               onChange={setZones}
             />
+            <hr />
           </div>
           <div className="route-groups">
             <div className="h5">Orange line</div>
@@ -194,20 +196,19 @@ const SelectStationsPage = () => {
           </div>
         </div>
         <div className="route-col route-col--green col">
-          <label className="title">
-            <input
-              type="checkbox"
-              onChange={(evt) => {
-                if (evt.target.checked) {
-                  setZones(_.union(zones, greenLineZones));
-                } else {
-                  setZones(_.without(zones, ...greenLineZones));
-                }
-              }}
-              checked={greenLineZones.every((zone) => zones.includes(zone))}
-            />
-            Green line
-          </label>
+          <Form.Check
+            className="title"
+            label="Green line"
+            type="checkbox"
+            onChange={(evt) => {
+              if (evt.target.checked) {
+                setZones(_.union(zones, greenLineZones));
+              } else {
+                setZones(_.without(zones, ...greenLineZones));
+              }
+            }}
+            checked={greenLineZones.every((zone) => zones.includes(zone))}
+          />
 
           <div className="branches-col">
             {["B", "C", "D", "E"].map((branch) => {

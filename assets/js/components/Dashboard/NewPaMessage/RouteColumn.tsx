@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 import type { Place } from "Models/place";
 import { sortByStationOrder } from "../../../util";
+import { Form } from "react-bootstrap";
 
 const RouteColumn = ({
   label,
@@ -29,20 +30,19 @@ const RouteColumn = ({
   return (
     <div>
       <div>
-        <label className="title">
-          <input
-            type="checkbox"
-            onChange={(evt) => {
-              if (evt.target.checked) {
-                onChange(_.union(value, routeZones));
-              } else {
-                onChange(_.without(value, ...routeZones));
-              }
-            }}
-            checked={routeZones.every((zone) => value.includes(zone))}
-          />
-          {label}
-        </label>
+        <Form.Check
+          className="title"
+          label={label}
+          type="checkbox"
+          onChange={(evt) => {
+            if (evt.target.checked) {
+              onChange(_.union(value, routeZones));
+            } else {
+              onChange(_.without(value, ...routeZones));
+            }
+          }}
+          checked={routeZones.every((zone) => value.includes(zone))}
+        />
       </div>
       <div className="col-content">
         {sortByStationOrder(places, orderingRoute, reverse).map((place) => {
@@ -54,20 +54,19 @@ const RouteColumn = ({
             .map((screen) => screen.id);
           return (
             <div key={place.id}>
-              <label className="body--regular station-name">
-                <input
-                  type="checkbox"
-                  onChange={(evt) => {
-                    if (evt.target.checked) {
-                      onChange(_.union(value, placeZones));
-                    } else {
-                      onChange(_.without(value, ...placeZones));
-                    }
-                  }}
-                  checked={value.some((zone) => placeZones.includes(zone))}
-                />
-                {place.name}
-              </label>
+              <Form.Check
+                className="body--regular station-name"
+                label={place.name}
+                type="checkbox"
+                onChange={(evt) => {
+                  if (evt.target.checked) {
+                    onChange(_.union(value, placeZones));
+                  } else {
+                    onChange(_.without(value, ...placeZones));
+                  }
+                }}
+                checked={value.some((zone) => placeZones.includes(zone))}
+              />
             </div>
           );
         })}

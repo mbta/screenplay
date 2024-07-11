@@ -1,6 +1,7 @@
 import React from "react";
 import _ from "lodash";
 import { Place } from "Models/place";
+import { Form } from "react-bootstrap";
 
 interface Props {
   title: string;
@@ -30,10 +31,11 @@ const StationGroupCheckbox = ({
     );
 
   return (
-    <div>
+    <div className="station-group">
       <div className="group-title body--medium">{title}</div>
       <label className="group-stations body--regular">
-        <input
+        <Form.Check
+          label={label}
           type="checkbox"
           onChange={(evt) => {
             if (evt.target.checked) {
@@ -43,8 +45,7 @@ const StationGroupCheckbox = ({
             }
           }}
           checked={zones.every((zone) => value.includes(zone))}
-        />{" "}
-        {label}
+        />
       </label>
     </div>
   );
