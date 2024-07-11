@@ -1,0 +1,13 @@
+@import "./new-pa-message-page.scss";
+@import "./select-stations-page.scss";
+
+.new-pa-message {
+  padding: 24px 40px;
+
+  .header {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+  }
+}

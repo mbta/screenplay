@@ -22,7 +22,7 @@ const NewPaMessage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   return (
-    <>
+    <div className="new-pa-message">
       {page === Page.NEW && (
         <NewPaMessagePage
           {...{
@@ -51,7 +51,7 @@ const NewPaMessage = () => {
         />
       )}
       {page === Page.STATIONS && <SelectStationsPage />}
-    </>
+    </div>
   );
 };
 

@@ -116,7 +116,7 @@ const NewPaMessagePage = ({
           event.preventDefault();
         }}
       >
-        <div className="new-pa-message-page__header">New PA/ESS message</div>
+        <div className="header">New PA/ESS message</div>
         <Container fluid>
           <Row md="auto" className="align-items-center">
             <Button variant="link" className="pr-0">

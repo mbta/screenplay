@@ -31,8 +31,8 @@ const StationGroupCheckbox = ({
 
   return (
     <div>
-      <div>{title}</div>
-      <label>
+      <div className="group-title body--medium">{title}</div>
+      <label className="group-stations body--regular">
         <input
           type="checkbox"
           onChange={(evt) => {

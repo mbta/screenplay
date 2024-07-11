@@ -97,13 +97,13 @@ const SelectStationsPage = () => {
   );
 
   return (
-    <div className="new-pa-message-page">
-      <div className="new-pa-message-page__header">Select Stations</div>
+    <div className="select-stations-page">
+      <div className="header">Select Stations</div>
       <Container fluid>
-        <div>
-          <div>Station Groups</div>
-          <div>
-            <div>Green line</div>
+        <div className="station-groups-col col">
+          <div className="col-title h5">Station Groups</div>
+          <div className="route-groups">
+            <div className="h5">Green line</div>
             <StationGroupCheckbox
               title="Central Subway"
               label="North Station-Kenmore"
@@ -141,8 +141,8 @@ const SelectStationsPage = () => {
               onChange={setZones}
             />
           </div>
-          <div>
-            <div>Red line</div>
+          <div className="route-groups">
+            <div className="h5">Red line</div>
             <StationGroupCheckbox
               title="Braintree Branch"
               label="JFK-Braintree"
@@ -171,8 +171,8 @@ const SelectStationsPage = () => {
               onChange={setZones}
             />
           </div>
-          <div>
-            <div>Orange line</div>
+          <div className="route-groups">
+            <div className="h5">Orange line</div>
             <StationGroupCheckbox
               title="North"
               label="Oak Grove-North Station"
@@ -193,7 +193,7 @@ const SelectStationsPage = () => {
             />
           </div>
         </div>
-        <div>
+        <div className="green-line-stations-col">
           <label>
             <input
               type="checkbox"
@@ -230,26 +230,29 @@ const SelectStationsPage = () => {
         </div>
 
         {["Red", "Orange", "Blue", "Mattapan", "Silver"].map((route) => (
-          <RouteColumn
-            key={route}
-            label={`${route} line`}
-            orderingRoute={route}
-            routes={PLACE_ROUTE_TO_ROUTE_IDS[route]}
-            places={placesByRoute[route]}
-            value={zones}
-            onChange={setZones}
-            reverse={route === "Blue"}
-          />
+          <div key={route} className={`${route}-line-stations-col`}>
+            <RouteColumn
+              label={`${route} line`}
+              orderingRoute={route}
+              routes={PLACE_ROUTE_TO_ROUTE_IDS[route]}
+              places={placesByRoute[route]}
+              value={zones}
+              onChange={setZones}
+              reverse={route === "Blue"}
+            />
+          </div>
         ))}
 
-        <RouteColumn
-          label="Bus"
-          orderingRoute="Bus"
-          routes={busRoutes}
-          places={placesByRoute["Bus"]}
-          value={zones}
-          onChange={setZones}
-        />
+        <div className="bus-col">
+          <RouteColumn
+            label="Bus"
+            orderingRoute="Bus"
+            routes={busRoutes}
+            places={placesByRoute["Bus"]}
+            value={zones}
+            onChange={setZones}
+          />
+        </div>
       </Container>
     </div>
   );

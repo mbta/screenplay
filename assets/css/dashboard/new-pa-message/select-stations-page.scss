@@ -1,0 +1,27 @@
+.select-stations-page {
+  .container-fluid {
+    display: flex;
+    overflow-x: scroll;
+
+    .station-groups-col {
+      min-width: 273px;
+      background-color: $cool-gray-20;
+      height: fit-content;
+      border-radius: 0px 0px 8px 8px;
+
+      .col-title {
+        padding: 8px 16px;
+        border-radius: 8px 8px 0px 0px;
+        background-color: $cool-gray-40;
+      }
+
+      .route-groups {
+        padding: 8px 16px;
+      }
+
+      .group-title {
+        color: $text-secondary;
+      }
+    }
+  }
+}
