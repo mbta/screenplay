@@ -141,15 +141,16 @@ const AssociateAlertPage = () => {
               <div className="alert-description__header-id">
                 {selectedAlert.id}
               </div>
-              <a
+              <Button
                 className="alert-description__header-change-alert"
                 onClick={() => {
                   setSelectedAlert({} as Alert);
                   setShowAlertModal(false);
                 }}
+                variant="link"
               >
                 Change alert
-              </a>
+              </Button>
             </div>
             {selectedAlert.header}
           </div>
@@ -214,8 +215,8 @@ interface AssociateAlertsTableProps {
   alerts: Alert[];
   messageStateFilter: string;
   serviceTypeFilter: string;
-  setSelectedAlert: Function;
-  setShowAlertModal: Function;
+  setSelectedAlert: (alert: Alert) => void;
+  setShowAlertModal: (showAlertMoal: boolean) => void;
 }
 
 const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
@@ -269,8 +270,8 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
 
 interface AssociateAlertsTableRowProps {
   alert: Alert;
-  setSelectedAlert: Function;
-  setShowAlertModal: Function;
+  setSelectedAlert: (alert: Alert) => void;
+  setShowAlertModal: (showAlertModal: boolean) => void;
 }
 
 const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createGenericContext } from "../utils/createGenericContext";
 import { Place } from "../models/place";
-import { Alert, ActivePeriod } from "../models/alert";
+import { Alert } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { ConfigValidationErrors } from "../models/configValidationErrors";

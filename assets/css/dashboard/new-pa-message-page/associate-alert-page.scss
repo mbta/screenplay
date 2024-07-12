@@ -124,6 +124,10 @@
   &__header-change-alert {
     margin-left: 16px;
     color: $text-secondary;
+
+    &:hover {
+      color: $text-secondary;
+    }
   }
 }
 
