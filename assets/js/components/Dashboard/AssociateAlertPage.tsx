@@ -251,7 +251,9 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
           .filter((alert) => {
             return serviceTypeFilter === "All"
               ? true
-              : alert.affected_list.includes(serviceTypeFilter.toLowerCase());
+              : alert.affected_list.some((affected) =>
+                  affected.includes(serviceTypeFilter.toLowerCase()),
+                );
           })
           .map((alert: Alert) => {
             return (
