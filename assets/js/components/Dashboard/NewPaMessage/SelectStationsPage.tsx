@@ -200,6 +200,7 @@ const SelectStationsPage = () => {
             className="title"
             label="Green line"
             type="checkbox"
+            id="green-line"
             onChange={(evt) => {
               if (evt.target.checked) {
                 setZones(_.union(zones, greenLineZones));

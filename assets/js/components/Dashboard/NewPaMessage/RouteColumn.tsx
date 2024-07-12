@@ -34,6 +34,7 @@ const RouteColumn = ({
           className="title"
           label={label}
           type="checkbox"
+          id={`${label}-checkbox`}
           onChange={(evt) => {
             if (evt.target.checked) {
               onChange(_.union(value, routeZones));
@@ -57,6 +58,7 @@ const RouteColumn = ({
               <Form.Check
                 className="body--regular station-name"
                 label={place.name}
+                id={`${place.name}-${orderingRoute}`}
                 type="checkbox"
                 onChange={(evt) => {
                   if (evt.target.checked) {

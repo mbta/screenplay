@@ -37,6 +37,7 @@ const StationGroupCheckbox = ({
         <Form.Check
           label={label}
           type="checkbox"
+          id={title}
           onChange={(evt) => {
             if (evt.target.checked) {
               onChange(_.union(value, zones));
