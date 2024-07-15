@@ -103,6 +103,7 @@ const SelectStationsPage = () => {
         places={places}
         value={zones}
         onChange={setZones}
+        busRoutes={busRoutes}
       />
       <Container fluid>
         <div className="station-groups-col col">

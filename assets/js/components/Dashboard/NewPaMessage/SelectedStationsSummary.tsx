@@ -9,6 +9,7 @@ interface Props {
   value: string[];
   onChange: (zones: string[]) => void;
   places: Place[];
+  busRoutes: string[];
 }
 
 const SelectedGroupTag = ({
@@ -28,7 +29,7 @@ const SelectedGroupTag = ({
   );
 };
 
-const SelectedStationsSummary = ({ value, places }: Props) => {
+const SelectedStationsSummary = ({ value, places, busRoutes }: Props) => {
   const [placesWithSelectedScreens, setPlacesWithSelectedScreens] = useState<
     Place[]
   >([]);
@@ -69,6 +70,30 @@ const SelectedStationsSummary = ({ value, places }: Props) => {
               routeId={routeId}
             />
           ))}
+          <SelectedGroupTag
+            numPlaces={
+              placesWithSelectedScreens.filter((place) =>
+                place.screens.some((screen) =>
+                  screen.route_ids?.some((routeId) =>
+                    SILVER_LINE_ROUTES.includes(routeId),
+                  ),
+                ),
+              ).length
+            }
+            routeId="Silver"
+          />
+          <SelectedGroupTag
+            numPlaces={
+              placesWithSelectedScreens.filter((place) =>
+                place.screens.some((screen) =>
+                  screen.route_ids?.some((routeId) =>
+                    busRoutes.includes(routeId),
+                  ),
+                ),
+              ).length
+            }
+            routeId="Bus"
+          />
         </>
       )}
     </div>
