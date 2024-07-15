@@ -6,6 +6,7 @@ import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
 import { GREEN_LINE_ROUTES, SILVER_LINE_ROUTES } from "Constants/constants";
 import StationGroupCheckbox from "./StationGroupCheckbox";
+import SelectedStationsSummary from "./SelectedStationsSummary";
 import {
   GL_CENTRAL_SUBWAY,
   GL_D_BRANCH,
@@ -99,6 +100,11 @@ const SelectStationsPage = () => {
   return (
     <div className="select-stations-page">
       <div className="header">Select Stations</div>
+      <SelectedStationsSummary
+        places={places}
+        value={zones}
+        onChange={setZones}
+      />
       <Container fluid>
         <div className="station-groups-col col">
           <div className="title">Station Groups</div>

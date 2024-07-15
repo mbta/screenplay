@@ -1,0 +1,24 @@
+.selected-stations-summary {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  border-radius: 8px;
+  background-color: $cool-gray-20;
+  margin-top: 40px;
+  padding: 15px 18px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+
+  .label {
+    margin-right: 8px;
+  }
+
+  span {
+    color: $text-secondary;
+  }
+
+  .bi {
+    margin-right: 7px;
+  }
+}
