@@ -1,6 +1,6 @@
 import { Place } from "Models/place";
 import React, { useEffect, useState } from "react";
-import { GeoAltFill } from "react-bootstrap-icons";
+import { GeoAltFill, X } from "react-bootstrap-icons";
 import fp from "lodash/fp";
 import { SILVER_LINE_ROUTES } from "Constants/constants";
 import { classWithModifier } from "../../../util";
@@ -25,6 +25,14 @@ const SelectedGroupTag = ({
       className={classWithModifier("selected-group-tag", routeId.toLowerCase())}
     >
       {routeId}: {numPlaces} {pluralize("Station", numPlaces)}
+      <button
+        className={routeId.toLowerCase()}
+        onClick={() => {
+          console.log("Clicked");
+        }}
+      >
+        <X />
+      </button>
     </div>
   );
 };
