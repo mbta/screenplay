@@ -1,4 +1,5 @@
 import { Place } from "Models/place";
+import { Screen } from "Models/screen";
 import React, { useEffect, useState } from "react";
 import { GeoAltFill, X } from "react-bootstrap-icons";
 import fp from "lodash/fp";
@@ -15,9 +16,11 @@ interface Props {
 const SelectedGroupTag = ({
   numPlaces,
   routeId,
+  onClick,
 }: {
   numPlaces: number;
   routeId: string;
+  onClick: () => void;
 }) => {
   if (numPlaces === 0) return null;
   return (
@@ -25,19 +28,19 @@ const SelectedGroupTag = ({
       className={classWithModifier("selected-group-tag", routeId.toLowerCase())}
     >
       {routeId}: {numPlaces} {pluralize("Station", numPlaces)}
-      <button
-        className={routeId.toLowerCase()}
-        onClick={() => {
-          console.log("Clicked");
-        }}
-      >
+      <button className={routeId.toLowerCase()} onClick={onClick}>
         <X />
       </button>
     </div>
   );
 };
 
-const SelectedStationsSummary = ({ value, places, busRoutes }: Props) => {
+const SelectedStationsSummary = ({
+  value,
+  places,
+  busRoutes,
+  onChange,
+}: Props) => {
   const [placesWithSelectedScreens, setPlacesWithSelectedScreens] = useState<
     Place[]
   >([]);
@@ -56,6 +59,16 @@ const SelectedStationsSummary = ({ value, places, busRoutes }: Props) => {
 
     setPlacesWithSelectedScreens(t);
   }, [value]);
+
+  const removeSelectedScreens = (filterFn: (screen: Screen) => boolean) => {
+    const selectedScreens = fp.flow(
+      fp.flatMap((place: Place) => place.screens),
+      fp.filter(filterFn),
+      fp.map((screen) => screen.id),
+    )(placesWithSelectedScreens);
+
+    onChange(fp.without(selectedScreens, value));
+  };
 
   return (
     <div className="selected-stations-summary">
@@ -76,6 +89,13 @@ const SelectedStationsSummary = ({ value, places, busRoutes }: Props) => {
                 ).length
               }
               routeId={routeId}
+              onClick={() => {
+                removeSelectedScreens(
+                  (screen) =>
+                    screen.route_ids?.some((r) => r.startsWith(routeId)) ??
+                    false,
+                );
+              }}
             />
           ))}
           <SelectedGroupTag
@@ -89,6 +109,13 @@ const SelectedStationsSummary = ({ value, places, busRoutes }: Props) => {
               ).length
             }
             routeId="Silver"
+            onClick={() => {
+              removeSelectedScreens(
+                (screen) =>
+                  fp.intersection(SILVER_LINE_ROUTES, screen.route_ids).length >
+                  0,
+              );
+            }}
           />
           <SelectedGroupTag
             numPlaces={
@@ -101,6 +128,12 @@ const SelectedStationsSummary = ({ value, places, busRoutes }: Props) => {
               ).length
             }
             routeId="Bus"
+            onClick={() => {
+              removeSelectedScreens(
+                (screen) =>
+                  fp.intersection(busRoutes, screen.route_ids).length > 0,
+              );
+            }}
           />
         </>
       )}
