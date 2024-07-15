@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import fp from "lodash/fp";
 import { Place } from "Models/place";
 import { Form } from "react-bootstrap";
 
@@ -26,7 +26,9 @@ const StationGroupCheckbox = ({
     .filter((place) => stations.includes(place.id))
     .flatMap((place) =>
       place.screens
-        .filter((screen) => _.intersection(screen.route_ids, routes).length > 0)
+        .filter(
+          (screen) => fp.intersection(routes, screen.route_ids).length > 0,
+        )
         .map((screen) => screen.id),
     );
 
@@ -40,9 +42,9 @@ const StationGroupCheckbox = ({
           id={title}
           onChange={(evt) => {
             if (evt.target.checked) {
-              onChange(_.union(value, zones));
+              onChange(fp.union(zones, value));
             } else {
-              onChange(_.without(value, ...zones));
+              onChange(fp.without(zones, value));
             }
           }}
           checked={zones.every((zone) => value.includes(zone))}

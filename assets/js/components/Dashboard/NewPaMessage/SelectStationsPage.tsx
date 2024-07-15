@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Container, Form } from "react-bootstrap";
-import _ from "lodash";
+import fp from "lodash/fp";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
@@ -51,14 +51,14 @@ const SelectStationsPage = () => {
   if (places.length === 0) return null; // TODO: Ensure places loaded by context bofore rendering
 
   // TODO: Extract all places / zones / routes / screens transforming logic
-  const allRoutes = _.uniq(
+  const allRoutes = fp.uniq(
     places.flatMap((place) =>
       place.screens.flatMap((screen) => screen.route_ids ?? []),
     ),
   );
-  const busRoutes = _.without(
+  const busRoutes = fp.without(
+    Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
     allRoutes,
-    ...Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
   );
 
   const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
@@ -73,7 +73,7 @@ const SelectStationsPage = () => {
         if (
           place.screens.some(
             (screen) =>
-              _.intersection(screen.route_ids, groupedRoutes).length > 0,
+              fp.intersection(groupedRoutes, screen.route_ids).length > 0,
           )
         ) {
           acc[route] = [...(acc[route] || []), place];
@@ -84,14 +84,13 @@ const SelectStationsPage = () => {
     {},
   );
 
-  const greenLineZones = _.uniq(
+  const greenLineZones = fp.uniq(
     GREEN_LINE_ROUTES.flatMap((route) => placesByRoute[route]).flatMap(
       (place) =>
         place.screens
           .filter(
             (screen) =>
-              _.intersection(screen.route_ids ?? [], GREEN_LINE_ROUTES).length >
-              0,
+              fp.intersection(GREEN_LINE_ROUTES, screen.route_ids).length > 0,
           )
           .map((screen) => screen.id),
     ),
@@ -209,9 +208,9 @@ const SelectStationsPage = () => {
             id="green-line"
             onChange={(evt) => {
               if (evt.target.checked) {
-                setZones(_.union(zones, greenLineZones));
+                setZones(fp.union(greenLineZones, zones));
               } else {
-                setZones(_.without(zones, ...greenLineZones));
+                setZones(fp.without(greenLineZones, zones));
               }
             }}
             checked={greenLineZones.every((zone) => zones.includes(zone))}

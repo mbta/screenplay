@@ -1,7 +1,7 @@
 import { Place } from "Models/place";
 import React, { useEffect, useState } from "react";
 import { GeoAltFill } from "react-bootstrap-icons";
-import _ from "lodash";
+import fp from "lodash/fp";
 import { SILVER_LINE_ROUTES } from "Constants/constants";
 import { classWithModifier } from "../../../util";
 import pluralize from "pluralize";
@@ -33,17 +33,17 @@ const SelectedStationsSummary = ({ value, places }: Props) => {
     Place[]
   >([]);
   useEffect(() => {
-    const t = _.chain(places)
-      .map((place) => {
+    const t = fp.flow(
+      fp.map((place: Place) => {
         return {
           ...place,
           screens: place.screens.filter((screen) =>
-            _.includes(value, screen.id),
+            fp.includes(screen.id, value),
           ),
         };
-      })
-      .filter((place) => place.screens.length > 0)
-      .value();
+      }),
+      fp.filter((place) => place.screens.length > 0),
+    )(places);
 
     setPlacesWithSelectedScreens(t);
   }, [value]);

@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import fp from "lodash/fp";
 import type { Place } from "Models/place";
 import { sortByStationOrder } from "../../../util";
 import { Form } from "react-bootstrap";
@@ -23,7 +23,7 @@ const RouteColumn = ({
 }) => {
   const routeZones = places.flatMap((place) =>
     place.screens
-      .filter((screen) => _.intersection(screen.route_ids, routes).length > 0)
+      .filter((screen) => fp.intersection(routes, screen.route_ids).length > 0)
       .map((screen) => screen.id),
   );
 
@@ -37,9 +37,9 @@ const RouteColumn = ({
           id={`${label}-checkbox`}
           onChange={(evt) => {
             if (evt.target.checked) {
-              onChange(_.union(value, routeZones));
+              onChange(fp.union(routeZones, value));
             } else {
-              onChange(_.without(value, ...routeZones));
+              onChange(fp.without(routeZones, value));
             }
           }}
           checked={routeZones.every((zone) => value.includes(zone))}
@@ -49,8 +49,7 @@ const RouteColumn = ({
         {sortByStationOrder(places, orderingRoute, reverse).map((place) => {
           const placeZones = place.screens
             .filter(
-              (screen) =>
-                _.intersection(screen.route_ids ?? [], routes).length > 0,
+              (screen) => fp.intersection(routes, screen.route_ids).length > 0,
             )
             .map((screen) => screen.id);
           return (
@@ -62,9 +61,9 @@ const RouteColumn = ({
                 type="checkbox"
                 onChange={(evt) => {
                   if (evt.target.checked) {
-                    onChange(_.union(value, placeZones));
+                    onChange(fp.union(placeZones, value));
                   } else {
-                    onChange(_.without(value, ...placeZones));
+                    onChange(fp.without(placeZones, value));
                   }
                 }}
                 checked={value.some((zone) => placeZones.includes(zone))}
