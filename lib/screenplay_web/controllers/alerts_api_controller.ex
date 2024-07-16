@@ -2,17 +2,14 @@ defmodule ScreenplayWeb.AlertsApiController do
   use ScreenplayWeb, :controller
 
   alias Screenplay.Alerts.Alert
+  alias Screenplay.Alerts.Cache, as: AlertsCache
   alias Screenplay.Alerts.ScreensByAlert
 
   def index(conn, _params) do
-    # We get all alerts from the API; unfortunately can't filter it down by effect (doesn't exist) or datetime (buggy)
-    {:ok, alerts} = Alert.fetch()
+    alerts = AlertsCache.alerts()
 
     # Filter down by relevance to Screenplay
-    relevant_alerts =
-      Enum.filter(alerts, fn alert ->
-        Alert.significant?(alert) and Alert.happening_now?(alert)
-      end)
+    relevant_alerts = Enum.filter(alerts, &relevant_alert?/1)
 
     # Makes it a list of ids only
     alert_ids = Enum.map(relevant_alerts, & &1.id)
@@ -30,5 +27,9 @@ defmodule ScreenplayWeb.AlertsApiController do
       alerts: Enum.map(relevant_alerts, &Alert.to_full_map/1),
       screens_by_alert: screens_by_alerts
     })
+  end
+
+  defp relevant_alert?(alert) do
+    Alert.significant?(alert) and Alert.happening_now?(alert)
   end
 end
