@@ -6,7 +6,7 @@ import NewPaMessagePage from "./NewPaMessagePage";
 import SelectStationsPage from "./SelectStationsPage";
 
 const NewPaMessage = () => {
-  const [page, navigateTo] = useState<Page>(Page.NEW);
+  const [page, setPage] = useState<Page>(Page.NEW);
   const now = moment();
 
   const [startDate, setStartDate] = useState(now.format("L"));
@@ -30,7 +30,7 @@ const NewPaMessage = () => {
             endTime,
             errorMessage,
             interval,
-            navigateTo,
+            navigateTo: setPage,
             phoneticText,
             priority,
             setDays,
