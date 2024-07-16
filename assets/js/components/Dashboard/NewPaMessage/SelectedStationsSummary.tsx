@@ -45,7 +45,7 @@ const SelectedStationsSummary = ({
     Place[]
   >([]);
   useEffect(() => {
-    const t = fp.flow(
+    const placesWithSelectedScreens = fp.flow(
       fp.map((place: Place) => {
         return {
           ...place,
@@ -57,7 +57,7 @@ const SelectedStationsSummary = ({
       fp.filter((place) => place.screens.length > 0),
     )(places);
 
-    setPlacesWithSelectedScreens(t);
+    setPlacesWithSelectedScreens(placesWithSelectedScreens);
   }, [value]);
 
   const removeSelectedScreens = (filterFn: (screen: Screen) => boolean) => {

@@ -48,14 +48,14 @@ const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
 const SelectStationsPage = () => {
   const [zones, setZones] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
-  if (places.length === 0) return null; // TODO: Ensure places loaded by context bofore rendering
+  if (places.length === 0) return null;
 
-  // TODO: Extract all places / zones / routes / screens transforming logic
   const allRoutes = fp.uniq(
     places.flatMap((place) =>
       place.screens.flatMap((screen) => screen.route_ids ?? []),
     ),
   );
+
   const busRoutes = fp.without(
     Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
     allRoutes,
