@@ -1,4 +1,18 @@
 .select-stations-page {
+  .header {
+    display: flex;
+    justify-content: space-between;
+
+    .buttons {
+      display: flex;
+      align-items: center;
+
+      .btn {
+        height: 38px;
+      }
+    }
+  }
+
   .container-fluid {
     display: flex;
     overflow-x: scroll;

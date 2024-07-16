@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Container, Form } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 import fp from "lodash/fp";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
@@ -98,7 +98,13 @@ const SelectStationsPage = () => {
 
   return (
     <div className="select-stations-page">
-      <div className="header">Select Stations</div>
+      <div className="header">
+        <div>Select Stations</div>
+        <div className="buttons">
+          <Button className="cancel-button">Cancel</Button>
+          <Button className="submit-button">Review Zones</Button>
+        </div>
+      </div>
       <SelectedStationsSummary
         places={places}
         value={zones}

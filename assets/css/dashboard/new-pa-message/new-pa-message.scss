@@ -11,4 +11,15 @@
     line-height: 48px;
     text-align: left;
   }
+
+  .cancel-button {
+    background-color: transparent;
+    color: $text-link-primary;
+    border: none;
+  }
+
+  .submit-button {
+    background-color: $button-primary;
+    color: $button-secondary;
+  }
 }
