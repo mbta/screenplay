@@ -49,7 +49,7 @@ const NewPaMessage = () => {
           }}
         />
       )}
-      {page === Page.STATIONS && <SelectStationsPage />}
+      {page === Page.STATIONS && <SelectStationsPage navigateTo={setPage} />}
     </div>
   );
 };

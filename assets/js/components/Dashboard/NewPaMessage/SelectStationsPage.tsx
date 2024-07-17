@@ -18,6 +18,7 @@ import {
   RED_BRAINTREE_BRANCH,
   RED_TRUNK,
 } from "./StationGroups";
+import { Page } from "./types";
 
 const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -53,7 +54,11 @@ const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Silver: "route-col--silver",
 };
 
-const SelectStationsPage = () => {
+interface Props {
+  navigateTo: (page: Page) => void;
+}
+
+const SelectStationsPage = ({ navigateTo }: Props) => {
   const [zones, setZones] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
   if (places.length === 0) return null;
@@ -109,7 +114,12 @@ const SelectStationsPage = () => {
       <div className="header">
         <div>Select Stations</div>
         <div className="buttons">
-          <Button className="cancel-button">Cancel</Button>
+          <Button
+            className="cancel-button"
+            onClick={() => navigateTo(Page.NEW)}
+          >
+            Cancel
+          </Button>
           <Button className="submit-button">Review Zones</Button>
         </div>
       </div>
