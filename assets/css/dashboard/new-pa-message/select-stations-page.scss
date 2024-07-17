@@ -21,6 +21,7 @@
     padding: 0;
 
     .form-check {
+      display: flex;
       padding: 0;
 
       .form-check-input {
@@ -28,6 +29,10 @@
         width: 16px;
         margin-left: 0;
         margin-right: 8px;
+      }
+
+      .form-check-label {
+        flex-grow: 1;
       }
     }
 
