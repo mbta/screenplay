@@ -27,7 +27,7 @@ const SelectedGroupTag = ({
     <div
       className={classWithModifier("selected-group-tag", routeId.toLowerCase())}
     >
-      {routeId}: {numPlaces} {pluralize("Station", numPlaces)}
+      {routeId}: {pluralize("Station", numPlaces, true)}
       <button className={routeId.toLowerCase()} onClick={onClick}>
         <X />
       </button>
