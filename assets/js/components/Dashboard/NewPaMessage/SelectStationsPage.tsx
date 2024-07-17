@@ -144,7 +144,7 @@ const SelectStationsPage = () => {
             />
             <StationGroupCheckbox
               title="GL E Branch"
-              label="Pru, Sym, Longwood"
+              label="Prudential-Symphony"
               places={places}
               routes={["Green-E"]}
               stations={GL_E_BRANCH}
