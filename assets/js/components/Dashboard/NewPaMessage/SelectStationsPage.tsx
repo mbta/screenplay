@@ -45,6 +45,14 @@ const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
   Silver: SILVER_LINE_ROUTES,
 };
 
+const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
+  Red: "route-col--red",
+  Orange: "route-col--orange",
+  Blue: "route-col--blue",
+  Mattapan: "route-col--mattapan",
+  Silver: "route-col--silver",
+};
+
 const SelectStationsPage = () => {
   const [zones, setZones] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
@@ -243,10 +251,10 @@ const SelectStationsPage = () => {
           </div>
         </div>
 
-        {["Red", "Orange", "Blue", "Mattapan", "Silver"].map((route) => (
+        {Object.keys(ROUTE_TO_CLASS_NAMES_MAP).map((route) => (
           <div
             key={route}
-            className={`route-col route-col--${route.toLowerCase()} col`}
+            className={`route-col ${ROUTE_TO_CLASS_NAMES_MAP[route]} col`}
           >
             <RouteColumn
               label={`${route} line`}
