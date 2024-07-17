@@ -1,6 +1,6 @@
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { GeoAltFill, X } from "react-bootstrap-icons";
 import fp from "lodash/fp";
 import { SILVER_LINE_ROUTES } from "Constants/constants";
@@ -41,11 +41,8 @@ const SelectedStationsSummary = ({
   busRoutes,
   onChange,
 }: Props) => {
-  const [placesWithSelectedScreens, setPlacesWithSelectedScreens] = useState<
-    Place[]
-  >([]);
-  useEffect(() => {
-    const placesWithSelectedScreens = fp.flow(
+  const placesWithSelectedScreens = useMemo<Place[]>(() => {
+    return fp.flow(
       fp.map((place: Place) => {
         return {
           ...place,
@@ -56,8 +53,6 @@ const SelectedStationsSummary = ({
       }),
       fp.filter((place) => place.screens.length > 0),
     )(places);
-
-    setPlacesWithSelectedScreens(placesWithSelectedScreens);
   }, [value]);
 
   const removeSelectedScreens = (filterFn: (screen: Screen) => boolean) => {
