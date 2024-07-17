@@ -99,8 +99,8 @@ const NewPaMessagePage = () => {
           </Row>
           <Card className="when-card">
             <div className="title">When</div>
-            <Row md="auto" className="start-datetime">
-              <Form.Group>
+            <Row md="auto">
+              <Form.Group className="start-datetime">
                 <Form.Label
                   className="label body--regular"
                   htmlFor="start-date-picker"

@@ -1,8 +1,16 @@
 import React, { useRef, useState } from "react";
-import { Card, Form, Overlay, Popover } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Form,
+  InputGroup,
+  Overlay,
+  Popover,
+} from "react-bootstrap";
 import fp from "lodash/fp";
 import moment from "moment";
 import cx from "classnames";
+import { Clock } from "react-bootstrap-icons";
 
 interface TimePickerProps {
   selectedTime: string;
@@ -15,27 +23,31 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
   const ref = useRef(null);
 
   const selectedMoment = moment(selectedTime, "h:mm A");
+  console.log(showOverlay);
 
   return (
     <>
-      <Form.Control
-        id={id}
-        ref={ref}
-        type="time"
-        value={selectedTime}
-        onChange={(input) =>
-          onChange(moment(input.target.value, "HH:mm").format("HH:mm"))
-        }
-        onKeyUp={(e) => {
-          if (e.key === "Enter") {
-            setShowOverlay(true);
+      <InputGroup className="time-picker" ref={ref}>
+        <Form.Control
+          id={id}
+          type="time"
+          value={selectedTime}
+          onChange={(input) =>
+            onChange(moment(input.target.value, "HH:mm").format("HH:mm"))
           }
-        }}
-        className="time-picker"
-      />
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              setShowOverlay(true);
+            }
+          }}
+        />
+        <Button onClick={() => setShowOverlay(true)}>
+          <Clock />
+        </Button>
+      </InputGroup>
       <Overlay
         rootClose
-        rootCloseEvent="mousedown"
+        rootCloseEvent="click"
         onHide={() => setShowOverlay(false)}
         target={ref.current}
         placement="bottom-start"

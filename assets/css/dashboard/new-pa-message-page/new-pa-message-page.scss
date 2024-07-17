@@ -76,8 +76,7 @@
 
         .date-picker,
         .time-picker {
-          min-width: 250px;
-          width: 250px;
+          flex: 0 1 250px;
           height: 38px;
         }
       }
