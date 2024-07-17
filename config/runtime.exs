@@ -70,7 +70,7 @@ config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
 
 config :screenplay, Screenplay.Repo, pool_size: 10
 
-if config_env() in [:prod, :test] do
+if config_env() == :prod do
   config :screenplay, Screenplay.Repo,
     username: System.get_env("DATABASE_USER", ""),
     password: System.get_env("DATABASE_PASSWORD", ""),
