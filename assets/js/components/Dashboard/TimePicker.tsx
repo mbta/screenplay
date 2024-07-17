@@ -31,6 +31,7 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
             setShowOverlay(true);
           }
         }}
+        className="time-picker"
       />
       <Overlay
         rootClose

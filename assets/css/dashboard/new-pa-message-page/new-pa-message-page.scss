@@ -45,8 +45,9 @@
       font-size: 24px;
     }
 
-    .dropdown-toggle,
-    .form-control {
+    .text-input,
+    .interval,
+    .dropdown-toggle {
       background-color: $dark-bg;
       height: 38px;
       color: $text-secondary;
@@ -68,8 +69,14 @@
 
       .datetime-picker-group {
         display: flex;
-        input {
+
+        .input-group {
           margin-right: 16px;
+        }
+
+        .date-picker,
+        .time-picker {
+          min-width: 250px;
           width: 250px;
           height: 38px;
         }
@@ -239,5 +246,9 @@
     &__text {
       padding-left: 8px;
     }
+  }
+
+  input::-webkit-calendar-picker-indicator {
+    display: none;
   }
 }

@@ -1,6 +1,7 @@
 import moment from "moment";
 import React, { useRef, useState } from "react";
-import { Form, Overlay, Popover } from "react-bootstrap";
+import { Button, Form, InputGroup, Overlay, Popover } from "react-bootstrap";
+import { CalendarCheck } from "react-bootstrap-icons";
 import Calendar from "react-calendar";
 
 interface DatePickerProps {
@@ -25,19 +26,22 @@ const DatePicker = ({
 
   return (
     <>
-      <Form.Control
-        id={id}
-        ref={ref}
-        className="date-picker"
-        name={`${id}-input`}
-        value={selectedDate}
-        onChange={(input) => onChange(input.target.value)}
-        onKeyUp={(e) => {
-          if (e.key === "Enter") {
-            setShowOverlay(true);
-          }
-        }}
-      />
+      <InputGroup className="date-picker" ref={ref}>
+        <Form.Control
+          id={id}
+          name={`${id}-input`}
+          value={selectedDate}
+          onChange={(input) => onChange(input.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              setShowOverlay(true);
+            }
+          }}
+        />
+        <Button onClick={() => setShowOverlay(true)}>
+          <CalendarCheck />
+        </Button>
+      </InputGroup>
       <Overlay
         rootClose
         rootCloseEvent="mousedown"
