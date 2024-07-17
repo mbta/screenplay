@@ -28,7 +28,7 @@ const RouteColumn = ({
   );
 
   return (
-    <div>
+    <>
       <div>
         <Form.Check
           className="title"
@@ -72,7 +72,7 @@ const RouteColumn = ({
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 

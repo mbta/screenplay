@@ -1,7 +1,21 @@
+.page-content {
+  max-height: 100vh !important;
+}
+
+.new-pa-message {
+  overflow-y: hidden;
+}
+
 .select-stations-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: hidden;
+
   .header {
     display: flex;
     justify-content: space-between;
+    margin: 24px 40px 0 40px;
 
     .buttons {
       display: flex;
@@ -15,10 +29,12 @@
 
   .container-fluid {
     display: flex;
-    overflow-x: scroll;
     margin-top: 40px;
-    padding-bottom: 40px;
     padding: 0;
+    padding-bottom: 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-grow: 0;
 
     .form-check {
       display: flex;
@@ -38,9 +54,18 @@
 
     .col {
       background-color: $cool-gray-20;
-      height: fit-content;
       border-radius: 0px 0px 8px 8px;
       margin-right: 24px;
+      display: flex;
+      flex-direction: column;
+
+      &:first-child {
+        margin-left: 40px;
+      }
+
+      &:last-child {
+        margin-right: 40px;
+      }
 
       .col-content {
         padding: 8px 16px;
@@ -82,6 +107,12 @@
         }
       }
 
+      .col-content {
+        height: 100%;
+        overflow-y: auto;
+        padding-left: 0;
+      }
+
       .group-title {
         color: $text-secondary;
       }
@@ -102,9 +133,13 @@
       &--green {
         .title {
           background-color: $mbta-green;
+          height: fit-content;
         }
 
         .branches-col {
+          overflow-y: auto;
+          height: 100%;
+
           .title {
             border-radius: 0;
             background-color: #2b3741;
@@ -143,6 +178,21 @@
           color: $text-invert;
           background-color: $mbta-bus;
         }
+      }
+    }
+
+    .route-col--red,
+    .route-col--mattapan,
+    .route-col--orange,
+    .route-col--blue,
+    .route-col--silver,
+    .route-col--bus {
+      height: fit-content;
+      max-height: 100%;
+
+      .col-content {
+        flex-basis: content;
+        overflow-y: auto;
       }
     }
   }

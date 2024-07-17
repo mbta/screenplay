@@ -122,97 +122,99 @@ const SelectStationsPage = () => {
       <Container fluid>
         <div className="station-groups-col col">
           <div className="title">Station Groups</div>
-          <div className="route-groups col-content">
-            <div className="h5">Green line</div>
-            <StationGroupCheckbox
-              title="Central Subway"
-              label="North Station-Kenmore"
-              places={places}
-              routes={GREEN_LINE_ROUTES}
-              stations={GL_CENTRAL_SUBWAY}
-              value={zones}
-              onChange={setZones}
-            />
-            <StationGroupCheckbox
-              title="GL D Branch"
-              label="Kenmore-Riverside"
-              places={places}
-              routes={["Green-D"]}
-              stations={GL_D_BRANCH}
-              value={zones}
-              onChange={setZones}
-            />
-            <StationGroupCheckbox
-              title="GL E Branch"
-              label="Prudential-Symphony"
-              places={places}
-              routes={["Green-E"]}
-              stations={GL_E_BRANCH}
-              value={zones}
-              onChange={setZones}
-            />
-            <StationGroupCheckbox
-              title="GLX"
-              label="Medford/Tufts-North Station"
-              places={places}
-              routes={["Green-D", "Green-E"]}
-              stations={GLX}
-              value={zones}
-              onChange={setZones}
-            />
-            <hr />
-          </div>
-          <div className="route-groups">
-            <div className="h5">Red line</div>
-            <StationGroupCheckbox
-              title="Braintree Branch"
-              label="JFK-Braintree"
-              places={places}
-              routes={["Red"]}
-              stations={RED_BRAINTREE_BRANCH}
-              value={zones}
-              onChange={setZones}
-            />
-            <StationGroupCheckbox
-              title="Ashmont Branch"
-              label="JFK-Ashmont"
-              places={places}
-              routes={["Red"]}
-              stations={RED_ASHMONT_BRANCH}
-              value={zones}
-              onChange={setZones}
-            />
-            <StationGroupCheckbox
-              title="Red Line Trunk"
-              label="Alewife-JFK"
-              places={places}
-              routes={["Red"]}
-              stations={RED_TRUNK}
-              value={zones}
-              onChange={setZones}
-            />
-            <hr />
-          </div>
-          <div className="route-groups">
-            <div className="h5">Orange line</div>
-            <StationGroupCheckbox
-              title="North"
-              label="Oak Grove-North Station"
-              places={places}
-              routes={["Orange"]}
-              stations={ORANGE_NORTH}
-              value={zones}
-              onChange={setZones}
-            />
-            <StationGroupCheckbox
-              title="South"
-              label="Haymarket-Forest Hills"
-              places={places}
-              routes={["Orange"]}
-              stations={ORANGE_SOUTH}
-              value={zones}
-              onChange={setZones}
-            />
+          <div className="col-content">
+            <div className="route-groups ">
+              <div className="h5">Green line</div>
+              <StationGroupCheckbox
+                title="Central Subway"
+                label="North Station-Kenmore"
+                places={places}
+                routes={GREEN_LINE_ROUTES}
+                stations={GL_CENTRAL_SUBWAY}
+                value={zones}
+                onChange={setZones}
+              />
+              <StationGroupCheckbox
+                title="GL D Branch"
+                label="Kenmore-Riverside"
+                places={places}
+                routes={["Green-D"]}
+                stations={GL_D_BRANCH}
+                value={zones}
+                onChange={setZones}
+              />
+              <StationGroupCheckbox
+                title="GL E Branch"
+                label="Prudential-Symphony"
+                places={places}
+                routes={["Green-E"]}
+                stations={GL_E_BRANCH}
+                value={zones}
+                onChange={setZones}
+              />
+              <StationGroupCheckbox
+                title="GLX"
+                label="Medford/Tufts-North Station"
+                places={places}
+                routes={["Green-D", "Green-E"]}
+                stations={GLX}
+                value={zones}
+                onChange={setZones}
+              />
+              <hr />
+            </div>
+            <div className="route-groups">
+              <div className="h5">Red line</div>
+              <StationGroupCheckbox
+                title="Braintree Branch"
+                label="JFK-Braintree"
+                places={places}
+                routes={["Red"]}
+                stations={RED_BRAINTREE_BRANCH}
+                value={zones}
+                onChange={setZones}
+              />
+              <StationGroupCheckbox
+                title="Ashmont Branch"
+                label="JFK-Ashmont"
+                places={places}
+                routes={["Red"]}
+                stations={RED_ASHMONT_BRANCH}
+                value={zones}
+                onChange={setZones}
+              />
+              <StationGroupCheckbox
+                title="Red Line Trunk"
+                label="Alewife-JFK"
+                places={places}
+                routes={["Red"]}
+                stations={RED_TRUNK}
+                value={zones}
+                onChange={setZones}
+              />
+              <hr />
+            </div>
+            <div className="route-groups">
+              <div className="h5">Orange line</div>
+              <StationGroupCheckbox
+                title="North"
+                label="Oak Grove-North Station"
+                places={places}
+                routes={["Orange"]}
+                stations={ORANGE_NORTH}
+                value={zones}
+                onChange={setZones}
+              />
+              <StationGroupCheckbox
+                title="South"
+                label="Haymarket-Forest Hills"
+                places={places}
+                routes={["Orange"]}
+                stations={ORANGE_SOUTH}
+                value={zones}
+                onChange={setZones}
+              />
+            </div>
           </div>
         </div>
         <div className="route-col route-col--green col">
