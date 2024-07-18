@@ -35,7 +35,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     flex-grow: 0;
-    scrollbar-color: #495057 #2b3741;
+    scrollbar-color: $theme-secondary $bg-elevation-4;
 
     .form-check {
       display: flex;
@@ -143,7 +143,7 @@
 
           .title {
             border-radius: 0;
-            background-color: #2b3741;
+            background-color: $bg-elevation-4;
             font-size: 16px;
           }
         }
