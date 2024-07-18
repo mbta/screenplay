@@ -21,9 +21,7 @@ interface TimePickerProps {
 const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const ref = useRef(null);
-
   const selectedMoment = moment(selectedTime, "h:mm A");
-  console.log(showOverlay);
 
   return (
     <>

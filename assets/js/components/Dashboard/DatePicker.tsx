@@ -56,6 +56,11 @@ const DatePicker = ({
               minDate={minDate}
               maxDate={maxDate}
               defaultValue={new Date(selectedDate)}
+              value={
+                moment(selectedDate).isValid()
+                  ? selectedDate
+                  : moment().format("L")
+              }
               onChange={(date) => onChange(moment(date as Date).format("L"))}
             />
           </Popover>
