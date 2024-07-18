@@ -1,6 +1,10 @@
 .new-pa-message-page {
   padding: 24px 40px;
 
+  form {
+    margin: 0;
+  }
+
   &__header {
     font-size: 40px;
     font-weight: 500;
