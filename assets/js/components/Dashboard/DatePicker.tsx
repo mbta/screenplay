@@ -7,22 +7,12 @@ import Calendar from "react-calendar";
 interface DatePickerProps {
   selectedDate: string;
   onChange: (date: string) => void;
-  minDateString?: string;
-  maxDateString?: string;
   id?: string;
 }
 
-const DatePicker = ({
-  selectedDate,
-  onChange,
-  minDateString,
-  maxDateString,
-  id,
-}: DatePickerProps) => {
+const DatePicker = ({ selectedDate, onChange, id }: DatePickerProps) => {
   const [showOverlay, setShowOverlay] = useState(false);
   const ref = useRef(null);
-  const minDate = minDateString ? new Date(minDateString) : undefined;
-  const maxDate = maxDateString ? new Date(maxDateString) : undefined;
 
   return (
     <>
@@ -53,8 +43,6 @@ const DatePicker = ({
         {(props) => (
           <Popover className="calendar-popover" {...props} id={`${id}-overlay`}>
             <Calendar
-              minDate={minDate}
-              maxDate={maxDate}
               defaultValue={new Date(selectedDate)}
               value={
                 moment(selectedDate).isValid()

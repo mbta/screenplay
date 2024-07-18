@@ -121,7 +121,6 @@ const NewPaMessagePage = () => {
                   <DatePicker
                     selectedDate={startDate}
                     onChange={setStartDate}
-                    maxDateString={endDate}
                     id="start-date-picker"
                   />
                   <TimePicker
@@ -143,7 +142,6 @@ const NewPaMessagePage = () => {
                   <DatePicker
                     selectedDate={endDate}
                     onChange={setEndDate}
-                    minDateString={startDate}
                     id="end-date-picker"
                   />
                   <TimePicker selectedTime={endTime} onChange={setEndTime} />
