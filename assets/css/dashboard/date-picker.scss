@@ -92,18 +92,19 @@
 
       .react-calendar__month-view__days {
         .react-calendar__tile {
-          height: 30px;
-          width: 36px;
+          height: 24px;
+          max-width: 24px;
+          margin: 3px 8px;
           padding: 1.5px 4px;
           border-radius: 4px;
+          color: $text-disabled;
           &--now {
             background-color: transparent;
-            border: 1px solid $text-disabled;
+            border: 1px solid $button-primary;
             color: $text-primary;
 
-            &:enabled:hover {
-              background-color: $main-blue;
-              border-color: $button-primary;
+            &:hover {
+              background-color: $cool-gray-20;
             }
           }
 
@@ -113,13 +114,16 @@
             border: none;
           }
 
-          &:enabled:hover {
+          &:not(&--now):enabled:hover {
             background-color: $cool-gray-20;
-          }
-          &:disabled {
-            background-color: transparent;
             color: $text-disabled;
           }
+        }
+
+        .react-calendar__tile--now.react-calendar__tile--active {
+          background-color: $main-blue;
+          border: 1px solid $button-primary;
+          color: $text-primary;
         }
 
         &__day {
