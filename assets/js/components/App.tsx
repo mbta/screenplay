@@ -21,9 +21,7 @@ const SelectScreenTypeComponent = React.lazy(
 );
 const PaMessagesPage = React.lazy(() => import("Components/PaMessagesPage"));
 const NewPaMessage = React.lazy(() => import("Components/NewPaMessage"));
-const AssociateAlertPage = React.lazy(
-  () => import("./Dashboard/AssociateAlertPage"),
-);
+
 class AppRoutes extends React.Component {
   render() {
     return (
@@ -51,10 +49,6 @@ class AppRoutes extends React.Component {
             </Route>
             <Route path="pa-messages" element={<PaMessagesPage />} />
             <Route path="pa-messages/new" element={<NewPaMessage />} />
-            <Route
-              path="pa-messages/new/associate-alert"
-              element={<AssociateAlertPage />}
-            />
           </Route>
         </Routes>
       </React.Suspense>

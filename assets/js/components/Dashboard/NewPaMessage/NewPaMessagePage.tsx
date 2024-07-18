@@ -24,12 +24,9 @@ import {
   VolumeUpFill,
 } from "react-bootstrap-icons";
 import cx from "classnames";
-import {
-  useAssociatedAlertContext,
-  useAssociatedAlertDispatchContext,
-} from "../../hooks/useScreenplayContext";
-import { Alert as AlertModel, ActivePeriod } from "../../models/alert";
-import { getAlertEarliestStartLatestEnd } from "../../util";
+import { ActivePeriod, Alert as AlertModel } from "Models/alert";
+import { getAlertEarliestStartLatestEnd } from "../../../util";
+import moment from "moment";
 
 import { Page } from "./types";
 
@@ -61,9 +58,15 @@ interface Props {
   setStartDate: Dispatch<SetStateAction<string>>;
   setStartTime: Dispatch<SetStateAction<string>>;
   setVisualText: Dispatch<SetStateAction<string>>;
+  setAssociatedAlert: Dispatch<SetStateAction<AlertModel>>;
+  setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
+  setImportMessage: Dispatch<SetStateAction<boolean>>;
+  setImportLocations: Dispatch<SetStateAction<boolean>>;
   startDate: string;
   startTime: string;
   visualText: string;
+  associatedAlert: AlertModel;
+  endWithEffectPeriod: boolean;
 }
 
 const NewPaMessagePage = ({
@@ -85,10 +88,17 @@ const NewPaMessagePage = ({
   setStartDate,
   setStartTime,
   setVisualText,
+  setEndWithEffectPeriod,
+  setAssociatedAlert,
+  setImportMessage,
+  setImportLocations,
   startDate,
   startTime,
   visualText,
+  associatedAlert,
+  endWithEffectPeriod,
 }: Props) => {
+  const now = moment();
   const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
@@ -115,16 +125,6 @@ const NewPaMessagePage = ({
     );
   };
 
-  const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
-    const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
-
-    return (
-      <div className="affect-period">
-        Alert Effect period: {start} - {end}
-      </div>
-    );
-  };
-
   return (
     <div className="new-pa-message-page">
       <Form
@@ -134,57 +134,20 @@ const NewPaMessagePage = ({
       >
         <div className="new-pa-message-page__header">New PA/ESS message</div>
         <Container fluid>
-          <Row md="auto" className="align-items-center">
-            {associatedAlert.id ? (
-              <div className="associated-alert-header">
-                Associated Alert: Alert ID {associatedAlert.id}
-                <Button
-                  variant="link"
-                  onClick={() => navigate("associate-alert")}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="link"
-                  onClick={() => {
-                    setVisualText("");
-                    setPhoneticText("");
-                    setEndDate(now.format("L"));
-                    setEndTime(now.add(1, "hour").format("HH:mm"));
-                    dispatch({
-                      type: "SET_ASSOCIATED_ALERT",
-                      associatedAlert: {} as AlertModel,
-                      endWithEffectPeriod: false,
-                      importLocations: false,
-                      importMessage: false,
-                    });
-                  }}
-                >
-                  Clear
-                </Button>
-                {formatActivePeriod(associatedAlert.active_period)}
-              </div>
-            ) : (
-              <>
-                <Button
-                  variant="link"
-                  className="pr-0"
-                  onClick={() => navigate("associate-alert")}
-                >
-                  Associate with alert
-                </Button>
-                (Optional)
-              </>
-            )}
-          </Row>
-          {!associatedAlert.id && (
-            <Row>
-              <div className="new-pa-message-page__associate-alert-subtext">
-                Linking will allow you to share end time with alert, and import
-                location and message.
-              </div>
-            </Row>
-          )}
+          <NewPaMessageHeader
+            associatedAlert={associatedAlert}
+            visualText={visualText}
+            phoneticText={phoneticText}
+            setImportLocations={setImportLocations}
+            setImportMessage={setImportMessage}
+            setEndWithEffectPeriod={setEndWithEffectPeriod}
+            setAssociatedAlert={setAssociatedAlert}
+            setEndDate={setEndDate}
+            setEndTime={setEndTime}
+            setVisualText={setVisualText}
+            setPhoneticText={setPhoneticText}
+            navigateTo={navigateTo}
+          />
           <Card className="when-card">
             <div className="title">When</div>
             <Row md="auto" className="start-datetime">
@@ -218,9 +181,9 @@ const NewPaMessagePage = ({
                   End
                 </Form.Label>
                 {associatedAlert.id && (
-                  <Form.Check
+                  <Form.Switch
+                    id="effect-period-switch"
                     className="effect-period-switch"
-                    type="switch"
                     checked={endWithEffectPeriod}
                     label="At end of alert"
                     onChange={() => {
@@ -232,11 +195,7 @@ const NewPaMessagePage = ({
                         setEndTime(now.add(1, "hour").format("HH:mm"));
                       }
 
-                      dispatch({
-                        type: "SET_ASSOCIATED_ALERT",
-                        ...associatedAlertState,
-                        endWithEffectPeriod: !endWithEffectPeriod,
-                      });
+                      setEndWithEffectPeriod(!endWithEffectPeriod);
                     }}
                   />
                 )}
@@ -427,6 +386,94 @@ const ReviewAudioButton = ({
       )}
       {audioPlaying ? "Reviewing audio" : "Review audio"}
     </Button>
+  );
+};
+
+interface NewPaMessageHeaderProps {
+  associatedAlert: AlertModel;
+  visualText: string;
+  phoneticText: string;
+  navigateTo: (page: Page) => void;
+  setImportMessage: Dispatch<SetStateAction<boolean>>;
+  setImportLocations: Dispatch<SetStateAction<boolean>>;
+  setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
+  setAssociatedAlert: Dispatch<SetStateAction<AlertModel>>;
+  setVisualText: Dispatch<SetStateAction<string>>;
+  setPhoneticText: Dispatch<SetStateAction<string>>;
+  setEndDate: Dispatch<SetStateAction<string>>;
+  setEndTime: Dispatch<SetStateAction<string>>;
+}
+
+const NewPaMessageHeader = ({
+  associatedAlert,
+  navigateTo,
+  setImportMessage,
+  setImportLocations,
+  setEndWithEffectPeriod,
+  setAssociatedAlert,
+  setVisualText,
+  setPhoneticText,
+  setEndDate,
+  setEndTime,
+}: NewPaMessageHeaderProps) => {
+  const now = moment();
+  const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
+    const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
+    return (
+      <div className="affect-period">
+        Alert Effect period: {start} - {end}
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <Row md="auto" className="align-items-center">
+        {associatedAlert.id ? (
+          <div className="associated-alert-header">
+            Associated Alert: Alert ID {associatedAlert.id}
+            <Button variant="link" onClick={() => navigateTo(Page.ALERTS)}>
+              Edit
+            </Button>
+            <Button
+              variant="link"
+              onClick={() => {
+                setAssociatedAlert({} as AlertModel);
+                setVisualText("");
+                setPhoneticText("");
+                setEndWithEffectPeriod(false);
+                setImportLocations(false);
+                setImportMessage(false);
+                setEndDate(now.format("L"));
+                setEndTime(now.add(1, "hour").format("HH:mm"));
+              }}
+            >
+              Clear
+            </Button>
+            {formatActivePeriod(associatedAlert.active_period)}
+          </div>
+        ) : (
+          <>
+            <Button
+              variant="link"
+              className="pr-0"
+              onClick={() => navigateTo(Page.ALERTS)}
+            >
+              Associate with alert
+            </Button>
+            (Optional)
+          </>
+        )}
+      </Row>
+      {!associatedAlert.id && (
+        <Row>
+          <div className="new-pa-message-page__associate-alert-subtext">
+            Linking will allow you to share end time with alert, and import
+            location and message.
+          </div>
+        </Row>
+      )}
+    </>
   );
 };
 

@@ -1,4 +1,10 @@
-import React, { ComponentType, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  ComponentType,
+  useState,
+  useEffect,
+} from "react";
 import {
   Button,
   Container,
@@ -8,40 +14,54 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { useScreenplayContext } from "../../hooks/useScreenplayContext";
-import {
-  useAssociatedAlertContext,
-  useAssociatedAlertDispatchContext,
-} from "../../hooks/useScreenplayContext";
-import { Alert } from "../../models/alert";
+import { fetchActiveAndFutureAlerts } from "Utils/api";
+import { Alert } from "Models/alert";
 import classNames from "classnames";
-import { getAlertEarliestStartLatestEnd } from "../../util";
+import { getAlertEarliestStartLatestEnd } from "../../../util";
+import { Page } from "./types";
 
-const AssociateAlertPage = () => {
-  const navigate = useNavigate();
-  const {
-    associatedAlert,
-    endWithEffectPeriod: endWithEffectPeriodState,
-    importLocations: importLocationsState,
-    importMessage: importMessageState,
-  } = useAssociatedAlertContext();
-  const { alerts } = useScreenplayContext();
+interface AssociateAlertPageProps {
+  associatedAlert: Alert;
+  endWithEffectPeriod: boolean;
+  importLocations: boolean;
+  importMessage: boolean;
+  navigateTo: (page: Page) => void;
+  setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
+  setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
+  setImportLocations: Dispatch<SetStateAction<boolean>>;
+  setImportMessage: Dispatch<SetStateAction<boolean>>;
+  setVisualText: Dispatch<SetStateAction<string>>;
+  setPhoneticText: Dispatch<SetStateAction<string>>;
+}
+
+const AssociateAlertPage = ({
+  associatedAlert,
+  endWithEffectPeriod,
+  importLocations,
+  importMessage,
+  navigateTo,
+  setAssociatedAlert,
+  setEndWithEffectPeriod,
+  setImportLocations,
+  setImportMessage,
+  setVisualText,
+  setPhoneticText,
+}: AssociateAlertPageProps) => {
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+
+  useEffect(() => {
+    fetchActiveAndFutureAlerts().then(({ alerts: alerts }) => {
+      setAlerts(alerts);
+    });
+  }, []);
+
   const [selectedMessageState, setSelectedMessageState] =
     useState<string>("active");
-  const [showAlertModal, setShowAlertModal] = useState<boolean>(
-    Object.keys(associatedAlert).length !== 0,
-  );
   const [selectedServiceType, setSelectedServiceType] = useState<string>("All");
-  const [selectedAlert, setSelectedAlert] = useState<Alert>(associatedAlert);
-  const [endWithEffectPeriod, setEndWithEffectPeriod] = useState<boolean>(
-    endWithEffectPeriodState,
+  const [showAlertModal, setShowAlertModal] = useState<boolean>(
+    associatedAlert.id !== undefined,
   );
-  const [importLocations, setImportLocations] =
-    useState<boolean>(importLocationsState);
-  const [importMessage, setImportMessage] =
-    useState<boolean>(importMessageState);
-  const dispatch = useAssociatedAlertDispatchContext();
+
   const serviceTypes = [
     "All",
     "Green",
@@ -54,14 +74,14 @@ const AssociateAlertPage = () => {
   ];
 
   return (
-    <>
-      <Container className="associate-alert-page" fluid>
+    <div className="associate-alert-page">
+      <Container fluid>
         <Row className="associate-alert-page-header">
           <Col>
             <h1>Select alert to associate with PA/ESS Message</h1>
           </Col>
           <Col className="associate-alert-page-header__cancel">
-            <Button variant="link" onClick={() => navigate(-1)}>
+            <Button variant="link" onClick={() => navigateTo(Page.NEW)}>
               Cancel
             </Button>
           </Col>
@@ -115,7 +135,7 @@ const AssociateAlertPage = () => {
               alerts={alerts}
               messageStateFilter={selectedMessageState}
               serviceTypeFilter={selectedServiceType}
-              setSelectedAlert={setSelectedAlert}
+              setAssociatedAlert={setAssociatedAlert}
               setShowAlertModal={setShowAlertModal}
             />
           </Col>
@@ -126,7 +146,7 @@ const AssociateAlertPage = () => {
           closeButton
           closeVariant="white"
           onHide={() => {
-            setSelectedAlert({} as Alert);
+            setAssociatedAlert({} as Alert);
             setShowAlertModal(false);
           }}
         >
@@ -139,23 +159,14 @@ const AssociateAlertPage = () => {
                 Alert ID:{" "}
               </div>
               <div className="alert-description__header-id">
-                {selectedAlert.id}
+                {associatedAlert.id}
               </div>
-              <Button
-                className="alert-description__header-change-alert"
-                onClick={() => {
-                  setSelectedAlert({} as Alert);
-                  setShowAlertModal(false);
-                }}
-                variant="link"
-              >
-                Change alert
-              </Button>
             </div>
-            {selectedAlert.header}
+            {associatedAlert.header}
           </div>
           <div className="checkbox">
             <Form.Check
+              id="effect-period-checkbox"
               className="checkbox"
               label="End PA/ESS message at the end of alert effect period"
               checked={endWithEffectPeriod}
@@ -164,6 +175,7 @@ const AssociateAlertPage = () => {
           </div>
           <div className="checkbox">
             <Form.Check
+              id="import-locations-checkbox"
               label="Import locations"
               checked={importLocations}
               onChange={() => setImportLocations(!importLocations)}
@@ -172,9 +184,12 @@ const AssociateAlertPage = () => {
           </div>
           <div className="checkbox">
             <Form.Check
+              id="import-message-checkbox"
               label="Import message"
               checked={importMessage}
-              onChange={() => setImportMessage(!importMessage)}
+              onChange={() => {
+                setImportMessage(!importMessage);
+              }}
             />
             <div className="subtext">Message will be editable</div>
           </div>
@@ -182,7 +197,7 @@ const AssociateAlertPage = () => {
         <Modal.Footer>
           <Button
             onClick={() => {
-              setSelectedAlert({} as Alert);
+              setAssociatedAlert({} as Alert);
               setShowAlertModal(false);
             }}
             className="cancel-button"
@@ -192,14 +207,11 @@ const AssociateAlertPage = () => {
           </Button>
           <Button
             onClick={() => {
-              dispatch({
-                type: "SET_ASSOCIATED_ALERT",
-                associatedAlert: selectedAlert,
-                endWithEffectPeriod: endWithEffectPeriod,
-                importLocations: importLocations,
-                importMessage: importMessage,
-              });
-              navigate(-1);
+              if (importMessage) {
+                setVisualText(associatedAlert.header);
+                setPhoneticText(associatedAlert.header);
+              }
+              navigateTo(Page.NEW);
             }}
             className="apply-button"
           >
@@ -207,7 +219,7 @@ const AssociateAlertPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 
@@ -215,15 +227,15 @@ interface AssociateAlertsTableProps {
   alerts: Alert[];
   messageStateFilter: string;
   serviceTypeFilter: string;
-  setSelectedAlert: (alert: Alert) => void;
-  setShowAlertModal: (showAlertMoal: boolean) => void;
+  setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
+  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 
 const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
   alerts,
   messageStateFilter,
   serviceTypeFilter,
-  setSelectedAlert,
+  setAssociatedAlert,
   setShowAlertModal,
 }: AssociateAlertsTableProps) => {
   return (
@@ -260,7 +272,7 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
               <AssociateAlertsTableRow
                 key={alert.id}
                 alert={alert}
-                setSelectedAlert={setSelectedAlert}
+                setAssociatedAlert={setAssociatedAlert}
                 setShowAlertModal={setShowAlertModal}
               />
             );
@@ -272,13 +284,13 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
 
 interface AssociateAlertsTableRowProps {
   alert: Alert;
-  setSelectedAlert: (alert: Alert) => void;
-  setShowAlertModal: (showAlertModal: boolean) => void;
+  setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
+  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 
 const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
   alert,
-  setSelectedAlert,
+  setAssociatedAlert,
   setShowAlertModal,
 }: AssociateAlertsTableRowProps) => {
   const [start, end] = getAlertEarliestStartLatestEnd(alert.active_period);
@@ -298,7 +310,7 @@ const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
       className="associate-alert-table__row"
       onClick={() => {
         setShowAlertModal(true);
-        setSelectedAlert(alert);
+        setAssociatedAlert(alert);
       }}
     >
       <td>{alert.header}</td>
@@ -314,7 +326,7 @@ const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
           variant="link"
           onClick={() => {
             setShowAlertModal(true);
-            setSelectedAlert(alert);
+            setAssociatedAlert(alert);
           }}
         >
           Select

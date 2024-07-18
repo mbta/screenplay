@@ -1,8 +1,16 @@
+.sidebar-container:has(
+    + .page-content > .new-pa-message > .associate-alert-page
+  ) {
+  display: none !important;
+}
+
 .associate-alert-page {
   padding: 24px 48px;
 }
 
 .associate-alert-page-header {
+  padding-right: 48px;
+
   &__cancel {
     flex: none;
     width: 100px;
@@ -23,6 +31,7 @@
 
 .associate-alert-page-body {
   flex-wrap: nowrap;
+  padding-right: 48px;
 }
 
 .associate-alert-filter-selection {
@@ -52,7 +61,7 @@
 }
 
 .associate-alert-table {
-  margin: 40px 48px;
+  margin: 40px;
 
   th,
   td {
@@ -119,15 +128,6 @@
     display: inline;
     font-size: 16px;
     font-weight: 400;
-  }
-
-  &__header-change-alert {
-    margin-left: 16px;
-    color: $text-secondary;
-
-    &:hover {
-      color: $text-secondary;
-    }
   }
 }
 

@@ -111,6 +111,7 @@ defmodule ScreenplayWeb.Router do
 
     get("/dashboard", DashboardApiController, :index)
     get("/alerts", AlertsApiController, :index)
+    get("/alerts/non_access_alerts", AlertsApiController, :non_access_alerts)
   end
 
   scope "/auth", ScreenplayWeb do
