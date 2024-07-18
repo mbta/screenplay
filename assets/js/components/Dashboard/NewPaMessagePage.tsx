@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -51,8 +51,14 @@ const NewPaMessagePage = () => {
     AudioPreview.Unreviewed,
   );
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
+
+  const priorityToIntervalMap: { [priority: number]: string } = {
+    1: "1",
+    2: "4",
+    3: "10",
+    4: "12",
+  };
 
   const previewAudio = () => {
     if (audioState === AudioPreview.Playing) return;
@@ -75,6 +81,10 @@ const NewPaMessagePage = () => {
       "Error occurred while fetching audio preview. Please try again.",
     );
   };
+
+  useEffect(() => {
+    setInterval(priorityToIntervalMap[priority]);
+  }, [priority]);
 
   return (
     <div className="new-pa-message-page">
