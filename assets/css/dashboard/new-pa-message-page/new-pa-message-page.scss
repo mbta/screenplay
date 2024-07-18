@@ -17,12 +17,17 @@
 
     .btn {
       height: 38px;
+
+      &:focus {
+        box-shadow: 0px 0px 0px 4px #8ecdff80;
+      }
     }
 
     .cancel-button {
       background-color: transparent;
       color: $text-link-primary;
       border: none;
+      margin-right: 8px;
     }
 
     .submit-button {
@@ -47,12 +52,20 @@
 
     .text-input,
     .interval,
-    .dropdown-toggle {
+    .dropdown-toggle,
+    .date-picker,
+    .time-picker {
       background-color: $dark-bg;
       height: 38px;
       color: $text-secondary;
       font-weight: 400;
       border: 1px solid $border-primary;
+    }
+
+    &:focus,
+    &:focus-within {
+      border: 1px solid #a5d7ff;
+      box-shadow: 0px 0px 0px 4px #0d6efd40;
     }
   }
 
@@ -161,6 +174,11 @@
         width: 38px;
         height: 38px;
 
+        &:focus {
+          border: 1px solid #a5d7ff;
+          box-shadow: 0px 0px 0px 4px #0d6efd40;
+        }
+
         .bi-arrow-right-short {
           fill: $text-disabled;
         }
@@ -180,18 +198,23 @@
 
       span {
         vertical-align: middle;
+        margin-right: 16px;
       }
     }
 
     .review-audio-button {
       color: $button-primary;
-      margin-top: auto;
-      margin-bottom: auto;
-      margin-left: 16px;
+      margin: auto;
       padding: 0;
+      height: fit-content;
+      width: fit-content;
 
       .bi {
         margin-right: 8px;
+      }
+
+      &:focus {
+        box-shadow: 0px 0px 0px 4px #8ecdff80;
       }
 
       &--audio-playing {
@@ -208,6 +231,12 @@
     .review-audio-card {
       height: 250px;
       background-color: $cool-gray-15;
+    }
+
+    .message-text-box {
+      &:not(:only-child) {
+        margin-bottom: 8px;
+      }
     }
   }
 
