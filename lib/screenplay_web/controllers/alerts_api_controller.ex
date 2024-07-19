@@ -36,13 +36,13 @@ defmodule ScreenplayWeb.AlertsApiController do
   def non_access_alerts(conn, _params) do
     non_access_alerts =
       AlertsCache.alerts()
-      |> Enum.reject(&is_access_alert?/1)
+      |> Enum.reject(&access_alert?/1)
       |> Enum.map(&Alert.to_full_map/1)
 
     json(conn, %{alerts: non_access_alerts})
   end
 
-  defp is_access_alert?(alert) do
+  defp access_alert?(alert) do
     Enum.any?(alert.informed_entities, &(not is_nil(&1.facility)))
   end
 end
