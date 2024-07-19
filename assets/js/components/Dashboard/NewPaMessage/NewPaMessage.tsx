@@ -7,7 +7,7 @@ import NewPaMessagePage from "./NewPaMessagePage";
 import AssociateAlertPage from "./AssociateAlertPage";
 
 const NewPaMessage = () => {
-  const [page, navigateTo] = useState<Page>(Page.NEW);
+  const [page, setPage] = useState<Page>(Page.NEW);
 
   const now = moment();
 
@@ -37,7 +37,7 @@ const NewPaMessage = () => {
             endTime,
             errorMessage,
             interval,
-            navigateTo,
+            navigateTo: setPage,
             phoneticText,
             priority,
             setDays,
@@ -68,7 +68,7 @@ const NewPaMessage = () => {
           endWithEffectPeriod={endWithEffectPeriod}
           importLocations={importLocations}
           importMessage={importMessage}
-          navigateTo={navigateTo}
+          navigateTo={setPage}
           setAssociatedAlert={setAssociatedAlert}
           setEndWithEffectPeriod={setEndWithEffectPeriod}
           setImportLocations={setImportLocations}
