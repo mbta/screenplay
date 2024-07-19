@@ -40,7 +40,7 @@
     "@testing-library/react": "^12.1.2",
     "@types/date-fns": "^2.6.0",
     "@types/jest": "^29.5.12",
-    "@types/lodash": "^4.17.6",
+    "@types/lodash": "^4.17.7",
     "@types/phoenix": "^1.6.5",
     "@types/react": "^17.0.17",
     "@types/react-dom": "^17.0.9",
