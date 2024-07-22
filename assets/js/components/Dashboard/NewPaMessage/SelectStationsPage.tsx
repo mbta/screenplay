@@ -120,7 +120,12 @@ const SelectStationsPage = ({ navigateTo }: Props) => {
           >
             Cancel
           </Button>
-          <Button className="submit-button">Review Zones</Button>
+          <Button
+            className="submit-button"
+            onClick={() => navigateTo(Page.ZONES)}
+          >
+            Review Zones
+          </Button>
         </div>
       </div>
       <SelectedStationsSummary

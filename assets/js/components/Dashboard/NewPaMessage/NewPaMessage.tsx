@@ -7,6 +7,7 @@ import SelectStationsPage from "./SelectStationsPage";
 import AssociateAlertPage from "./AssociateAlertPage";
 import { Modal } from "react-bootstrap";
 import { Alert } from "Models/alert";
+import SelectZonesPage from "./SelectZonesPage";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -87,6 +88,7 @@ const NewPaMessage = () => {
           setEndWithEffectPeriod={setEndWithEffectPeriod}
         />
       )}
+      {page === Page.ZONES && <SelectZonesPage navigateTo={setPage} />}
     </div>
   );
 };
