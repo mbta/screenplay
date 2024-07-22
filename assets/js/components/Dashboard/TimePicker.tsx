@@ -30,9 +30,7 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
           id={id}
           type="time"
           value={selectedTime}
-          onChange={(event) =>
-            onChange(moment(event.target.value, "HH:mm").format("HH:mm"))
-          }
+          onChange={(event) => onChange(event.target.value)}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
               setShowOverlay(true);
