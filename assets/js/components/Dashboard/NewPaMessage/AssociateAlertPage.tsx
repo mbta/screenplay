@@ -168,7 +168,6 @@ const AssociateAlertPage = ({
           <div className="checkbox">
             <Form.Check
               id="effect-period-checkbox"
-              className="checkbox"
               label="End PA/ESS message at the end of alert effect period"
               checked={endWithEffectPeriod}
               onChange={() => setEndWithEffectPeriod(!endWithEffectPeriod)}
@@ -253,36 +252,47 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
           affected.includes(serviceTypeFilter.toLowerCase()),
         );
   };
+
+  const filteredAlerts = alerts.filter((alert) => {
+    return filterByActiveState(alert) && filterByServiceType(alert);
+  });
+
   return (
-    <table className="associate-alert-table">
-      <thead>
-        <tr>
-          <th className="associate-alert-table__message">Alert message</th>
-          <th className="associate-alert-table__id">ID</th>
-          <th className="associate-alert-table__start-end">Start-End</th>
-          <th className="associate-alert-table__last-modified">
-            Last modified
-          </th>
-          <th className="associate-alert-table__select"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {alerts
-          .filter((alert) => {
-            return filterByActiveState(alert) && filterByServiceType(alert);
-          })
-          .map((alert: Alert) => {
-            return (
-              <AssociateAlertsTableRow
-                key={alert.id}
-                alert={alert}
-                setAssociatedAlert={setAssociatedAlert}
-                setShowAlertModal={setShowAlertModal}
-              />
-            );
-          })}
-      </tbody>
-    </table>
+    <>
+      <table className="associate-alert-table">
+        <thead>
+          <tr>
+            <th className="associate-alert-table__message">Alert message</th>
+            <th className="associate-alert-table__id">ID</th>
+            <th className="associate-alert-table__start-end">Start-End</th>
+            <th className="associate-alert-table__last-modified">
+              Last modified
+            </th>
+            <th className="associate-alert-table__select"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredAlerts.length == 0 ? (
+            <tr>
+              <div className="associate-alert-table__empty">
+                There are no alerts of this type
+              </div>
+            </tr>
+          ) : (
+            filteredAlerts.map((alert: Alert) => {
+              return (
+                <AssociateAlertsTableRow
+                  key={alert.id}
+                  alert={alert}
+                  setAssociatedAlert={setAssociatedAlert}
+                  setShowAlertModal={setShowAlertModal}
+                />
+              );
+            })
+          )}
+        </tbody>
+      </table>
+    </>
   );
 };
 

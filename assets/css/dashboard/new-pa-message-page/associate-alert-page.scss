@@ -108,6 +108,13 @@
       height: 24px;
     }
   }
+
+  &__empty {
+    font-weight: bold;
+    color: white;
+    padding-top: 16px;
+    padding-left: 16px;
+  }
 }
 
 .alert-description {
@@ -164,6 +171,7 @@
 
     .checkbox {
       margin-bottom: 32px;
+      margin-left: 16px;
 
       .subtext {
         margin-top: 4px;

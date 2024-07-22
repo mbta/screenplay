@@ -456,7 +456,7 @@ const NewPaMessageHeader = ({
       <Row md="auto" className="align-items-center">
         <Button
           variant="link"
-          className="pr-0"
+          className="pr-0 associate-alert-button"
           onClick={() => navigateTo(Page.ALERTS)}
         >
           Associate with alert
