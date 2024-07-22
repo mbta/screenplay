@@ -8,6 +8,7 @@ import AssociateAlertPage from "./AssociateAlertPage";
 import { Modal } from "react-bootstrap";
 import { Alert } from "Models/alert";
 import SelectZonesPage from "./SelectZonesPage";
+import { usePlacesWithPaEss } from "./hooks";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -27,6 +28,7 @@ const NewPaMessage = () => {
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [zones, setZones] = useState<string[]>([]);
+  const places = usePlacesWithPaEss();
 
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
@@ -80,6 +82,7 @@ const NewPaMessage = () => {
         onHide={() => setPage(Page.NEW)}
       >
         <SelectStationsPage
+          places={places}
           navigateTo={setPage}
           zones={zones}
           setZones={setZones}
@@ -101,6 +104,7 @@ const NewPaMessage = () => {
           navigateTo={setPage}
           zones={zones}
           setZones={setZones}
+          places={places}
         />
       )}
     </div>

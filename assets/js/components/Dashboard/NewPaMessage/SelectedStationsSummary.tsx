@@ -6,6 +6,8 @@ import fp from "lodash/fp";
 import { SILVER_LINE_ROUTES } from "Constants/constants";
 import { classWithModifier } from "../../../util";
 import pluralize from "pluralize";
+import { usePlacesWithSelectedScreens } from "./hooks";
+
 interface Props {
   value: string[];
   onChange: (signIds: string[]) => void;
@@ -41,20 +43,7 @@ const SelectedStationsSummary = ({
   busRoutes,
   onChange,
 }: Props) => {
-  const placesWithSelectedScreens = useMemo<Place[]>(() => {
-    return fp.flow(
-      fp.map((place: Place) => {
-        return {
-          ...place,
-          screens: place.screens.filter((screen) =>
-            fp.includes(screen.id, value),
-          ),
-        };
-      }),
-      fp.filter((place) => place.screens.length > 0),
-    )(places);
-  }, [value]);
-
+  const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, value);
   const removeSelectedScreens = (filterFn: (screen: Screen) => boolean) => {
     const selectedScreens = fp.flow(
       fp.flatMap((place: Place) => place.screens),

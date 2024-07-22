@@ -1,14 +1,19 @@
 import React from "react";
 import { Page } from "./types";
 import { Button } from "react-bootstrap";
+import { Place } from "Models/place";
+import { usePlacesWithSelectedScreens } from "./hooks";
 
 interface Props {
   zones: string[];
   setZones: (zones: string[]) => void;
   navigateTo: (page: Page) => void;
+  places: Place[];
 }
 
-const SelectZonesPage = ({ zones, setZones, navigateTo }: Props) => {
+const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
+  const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, zones);
+
   return (
     <div className="select-zones-page">
       <div className="header">

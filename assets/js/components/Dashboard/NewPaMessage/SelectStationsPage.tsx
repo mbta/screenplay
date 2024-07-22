@@ -1,7 +1,6 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import fp from "lodash/fp";
-import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
 import { GREEN_LINE_ROUTES, SILVER_LINE_ROUTES } from "Constants/constants";
@@ -20,21 +19,7 @@ import {
 } from "./StationGroups";
 import { Page } from "./types";
 
-const usePlacesWithPaEss = () => {
-  const { places } = useScreenplayContext();
-  return useMemo(
-    () =>
-      places
-        .map((place) => ({
-          ...place,
-          screens: place.screens.filter((screen) => screen.type === "pa_ess"),
-        }))
-        .filter((place: Place) => place.screens.length > 0),
-    [places],
-  );
-};
-
-const BASE_ROUTE_NAME_TO_ROUTE_IDS: { [key: string]: string[] } = {
+const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
   "Green-B": ["Green-B"],
   "Green-C": ["Green-C"],
   "Green-D": ["Green-D"],
@@ -55,13 +40,13 @@ const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
 };
 
 interface Props {
+  places: Place[];
   zones: string[];
   setZones: (zone: string[]) => void;
   navigateTo: (page: Page) => void;
 }
 
-const SelectStationsPage = ({ zones, setZones, navigateTo }: Props) => {
-  const places = usePlacesWithPaEss();
+const SelectStationsPage = ({ places, zones, setZones, navigateTo }: Props) => {
   if (places.length === 0) return null;
 
   const allRoutes = fp.uniq(
@@ -71,12 +56,12 @@ const SelectStationsPage = ({ zones, setZones, navigateTo }: Props) => {
   );
 
   const busRoutes = fp.without(
-    Object.values(BASE_ROUTE_NAME_TO_ROUTE_IDS).flat(),
+    Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
     allRoutes,
   );
 
   const routeNameToRouteIds: { [key: string]: string[] } = {
-    ...BASE_ROUTE_NAME_TO_ROUTE_IDS,
+    ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
     Bus: busRoutes,
   };
 
