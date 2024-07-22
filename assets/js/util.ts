@@ -1,3 +1,4 @@
+import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
 import {
   CannedMessage,
   CustomMessage,
@@ -10,6 +11,7 @@ import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
 import moment from "moment";
+import fp from "lodash/fp";
 
 export const color = (line: string) => {
   switch (line) {
@@ -281,4 +283,19 @@ export const getAlertEarliestStartLatestEnd = (
     latestEnd === 0 ? "later today" : moment(latestEnd).format("l LT");
 
   return [start, end];
+};
+
+export const allRouteIdsAtPlaces = (places: Place[]) => {
+  return fp.uniq(
+    places.flatMap((place) =>
+      place.screens.flatMap((screen) => screen.route_ids ?? []),
+    ),
+  );
+};
+
+export const busRouteIdsAtPlaces = (places: Place[]) => {
+  return fp.without(
+    Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
+    allRouteIdsAtPlaces(places),
+  );
 };

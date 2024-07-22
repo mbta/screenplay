@@ -3,7 +3,10 @@ import { Button, Container, Form } from "react-bootstrap";
 import fp from "lodash/fp";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
-import { GREEN_LINE_ROUTES, SILVER_LINE_ROUTES } from "Constants/constants";
+import {
+  BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+  GREEN_LINE_ROUTES,
+} from "Constants/constants";
 import StationGroupCheckbox from "./StationGroupCheckbox";
 import SelectedStationsSummary from "./SelectedStationsSummary";
 import {
@@ -18,18 +21,7 @@ import {
   RED_TRUNK,
 } from "./StationGroups";
 import { Page } from "./types";
-
-const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
-  "Green-B": ["Green-B"],
-  "Green-C": ["Green-C"],
-  "Green-D": ["Green-D"],
-  "Green-E": ["Green-E"],
-  Red: ["Red"],
-  Orange: ["Orange"],
-  Blue: ["Blue"],
-  Mattapan: ["Mattapan"],
-  Silver: SILVER_LINE_ROUTES,
-};
+import { busRouteIdsAtPlaces } from "../../../util";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
@@ -49,20 +41,11 @@ interface Props {
 const SelectStationsPage = ({ places, zones, setZones, navigateTo }: Props) => {
   if (places.length === 0) return null;
 
-  const allRoutes = fp.uniq(
-    places.flatMap((place) =>
-      place.screens.flatMap((screen) => screen.route_ids ?? []),
-    ),
-  );
-
-  const busRoutes = fp.without(
-    Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
-    allRoutes,
-  );
+  const busRoutes = busRouteIdsAtPlaces(places);
 
   const routeNameToRouteIds: { [key: string]: string[] } = {
     ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
-    Bus: busRoutes,
+    Bus: busRouteIdsAtPlaces(places),
   };
 
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
