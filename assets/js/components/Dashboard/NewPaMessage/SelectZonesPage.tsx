@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Page } from "./types";
-import { Button } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 import { Place } from "Models/place";
 import { usePlacesWithSelectedScreens } from "./hooks";
+import fp from "lodash/fp";
+import { Screen } from "Models/screen";
+import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
+import { busRouteIdsAtPlaces } from "../../../util";
+import cx from "classnames";
+
+const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
+  Green: "filter-button--green",
+  Red: "filter-button--red",
+  Orange: "filter-button--orange",
+  Blue: "filter-button--blue",
+  Mattapan: "filter-button--mattapan",
+  Silver: "filter-button--silver",
+  Bus: "filter-button--bus",
+};
 
 interface Props {
   zones: string[];
@@ -13,6 +28,35 @@ interface Props {
 
 const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
   const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, zones);
+  const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
+    ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+    Bus: busRouteIdsAtPlaces(places),
+  };
+
+  const selectedRoutes = fp.flow(
+    fp.flatMap((place: Place) => place.screens),
+    fp.flatMap((screen: Screen) => screen.route_ids),
+    fp.uniq,
+    fp.groupBy((routeID: string) => {
+      if (routeID.startsWith("Green")) {
+        return "Green";
+      }
+
+      if (PLACE_ROUTE_TO_ROUTE_IDS["Bus"].includes(routeID)) {
+        return "Bus";
+      }
+
+      if (PLACE_ROUTE_TO_ROUTE_IDS["Silver"].includes(routeID)) {
+        return "Silver";
+      }
+
+      return routeID;
+    }),
+  )(placesWithSelectedScreens);
+
+  const [selectedRouteFilter, setSelectedRouteFilter] = useState(
+    Object.keys(selectedRoutes)[0],
+  );
 
   return (
     <div className="select-zones-page">
@@ -44,6 +88,33 @@ const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
           >
             Done
           </Button>
+        </div>
+      </div>
+      <div className="zone-selection">
+        <div className="filters-container">
+          <div>Service type</div>
+          <div className="filters">
+            {Object.keys(selectedRoutes).map((routeID) => {
+              return (
+                <Button
+                  key={routeID}
+                  onClick={() => setSelectedRouteFilter(routeID)}
+                  className={cx(
+                    "filter-button",
+                    ROUTE_TO_CLASS_NAMES_MAP[routeID],
+                    {
+                      selected: selectedRouteFilter === routeID,
+                    },
+                  )}
+                >
+                  {routeID}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+        <div className="zones-table-container">
+          <div className="container-header"></div>
         </div>
       </div>
     </div>
