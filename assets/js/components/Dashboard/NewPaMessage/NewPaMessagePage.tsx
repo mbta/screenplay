@@ -420,59 +420,55 @@ const NewPaMessageHeader = ({
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
     return (
-      <div className="affect-period">
+      <div className="effect-period">
         Alert Effect period: {start} - {end}
       </div>
     );
   };
 
-  return (
+  return associatedAlert.id ? (
+    <Row md="auto" className="align-items-center">
+      <div className="associated-alert-header">
+        Associated Alert: Alert ID {associatedAlert.id}
+        <Button variant="link" onClick={() => navigateTo(Page.ALERTS)}>
+          Edit
+        </Button>
+        <Button
+          variant="link"
+          onClick={() => {
+            setAssociatedAlert({} as AlertModel);
+            setVisualText("");
+            setPhoneticText("");
+            setEndWithEffectPeriod(false);
+            setImportLocations(false);
+            setImportMessage(false);
+            setEndDate(now.format("L"));
+            setEndTime(now.add(1, "hour").format("HH:mm"));
+          }}
+        >
+          Clear
+        </Button>
+        {formatActivePeriod(associatedAlert.active_period)}
+      </div>
+    </Row>
+  ) : (
     <>
       <Row md="auto" className="align-items-center">
-        {associatedAlert.id ? (
-          <div className="associated-alert-header">
-            Associated Alert: Alert ID {associatedAlert.id}
-            <Button variant="link" onClick={() => navigateTo(Page.ALERTS)}>
-              Edit
-            </Button>
-            <Button
-              variant="link"
-              onClick={() => {
-                setAssociatedAlert({} as AlertModel);
-                setVisualText("");
-                setPhoneticText("");
-                setEndWithEffectPeriod(false);
-                setImportLocations(false);
-                setImportMessage(false);
-                setEndDate(now.format("L"));
-                setEndTime(now.add(1, "hour").format("HH:mm"));
-              }}
-            >
-              Clear
-            </Button>
-            {formatActivePeriod(associatedAlert.active_period)}
-          </div>
-        ) : (
-          <>
-            <Button
-              variant="link"
-              className="pr-0"
-              onClick={() => navigateTo(Page.ALERTS)}
-            >
-              Associate with alert
-            </Button>
-            (Optional)
-          </>
-        )}
+        <Button
+          variant="link"
+          className="pr-0"
+          onClick={() => navigateTo(Page.ALERTS)}
+        >
+          Associate with alert
+        </Button>
+        (Optional)
       </Row>
-      {!associatedAlert.id && (
-        <Row>
-          <div className="new-pa-message-page__associate-alert-subtext">
-            Linking will allow you to share end time with alert, and import
-            location and message.
-          </div>
-        </Row>
-      )}
+      <Row>
+        <div className="new-pa-message-page__associate-alert-subtext">
+          Linking will allow you to share end time with alert, and import
+          location and message.
+        </div>
+      </Row>
     </>
   );
 };

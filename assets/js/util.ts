@@ -9,6 +9,7 @@ import { Alert, ActivePeriod } from "Models/alert";
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
+import moment from "moment";
 
 export const color = (line: string) => {
   switch (line) {
@@ -272,28 +273,10 @@ export const getAlertEarliestStartLatestEnd = (
   const earliestStart = Math.min(...starts);
   const latestEnd = Math.max(...ends);
 
-  const start = new Date(earliestStart)
-    .toLocaleTimeString("en-US", {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    })
-    .replace(",", "");
+  const start = moment(earliestStart).format("l LT");
 
   const end =
-    latestEnd === 0
-      ? "later today"
-      : new Date(latestEnd)
-          .toLocaleTimeString("en-US", {
-            day: "numeric",
-            month: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          })
-          .replace(",", "");
+    latestEnd === 0 ? "later today" : moment(latestEnd).format("l LT");
 
   return [start, end];
 };

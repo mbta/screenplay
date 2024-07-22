@@ -164,4 +164,9 @@ defmodule Screenplay.Alerts.Alert do
   def in_active_period({start_t, end_t}, t) do
     DateTime.compare(t, start_t) in [:gt, :eq] && DateTime.compare(t, end_t) in [:lt, :eq]
   end
+
+  @spec access_alert?(t()) :: boolean()
+  def access_alert?(alert) do
+    Enum.any?(alert.informed_entities, &(not is_nil(&1.facility)))
+  end
 end

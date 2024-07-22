@@ -19,6 +19,7 @@ import { Alert } from "Models/alert";
 import classNames from "classnames";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
 import { Page } from "./types";
+import moment from "moment";
 
 interface AssociateAlertPageProps {
   associatedAlert: Alert;
@@ -209,7 +210,6 @@ const AssociateAlertPage = ({
             onClick={() => {
               if (importMessage) {
                 setVisualText(associatedAlert.header);
-                setPhoneticText(associatedAlert.header);
               }
               navigateTo(Page.NEW);
             }}
@@ -238,6 +238,21 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
   setAssociatedAlert,
   setShowAlertModal,
 }: AssociateAlertsTableProps) => {
+  const filterByActiveState = (alert: Alert) => {
+    const alertStart = new Date(alert.active_period[0].start);
+    const currentTime = new Date();
+    return messageStateFilter === "active"
+      ? alertStart <= currentTime
+      : alertStart > currentTime;
+  };
+
+  const filterByServiceType = (alert: Alert) => {
+    return serviceTypeFilter === "All"
+      ? true
+      : alert.affected_list.some((affected) =>
+          affected.includes(serviceTypeFilter.toLowerCase()),
+        );
+  };
   return (
     <table className="associate-alert-table">
       <thead>
@@ -254,18 +269,7 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
       <tbody>
         {alerts
           .filter((alert) => {
-            const alertStart = new Date(alert.active_period[0].start);
-            const currentTime = new Date();
-            return messageStateFilter === "active"
-              ? alertStart <= currentTime
-              : alertStart > currentTime;
-          })
-          .filter((alert) => {
-            return serviceTypeFilter === "All"
-              ? true
-              : alert.affected_list.some((affected) =>
-                  affected.includes(serviceTypeFilter.toLowerCase()),
-                );
+            return filterByActiveState(alert) && filterByServiceType(alert);
           })
           .map((alert: Alert) => {
             return (
@@ -295,15 +299,7 @@ const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
 }: AssociateAlertsTableRowProps) => {
   const [start, end] = getAlertEarliestStartLatestEnd(alert.active_period);
 
-  const last_modified = new Date(alert.updated_at)
-    .toLocaleTimeString("en-US", {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    })
-    .replace(",", "");
+  const last_modified = moment(alert.updated_at).format("l LT");
 
   return (
     <tr
