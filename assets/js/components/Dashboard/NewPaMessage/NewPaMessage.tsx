@@ -26,13 +26,17 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [zones, setZones] = useState<string[]>([]);
+
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
     setEndWithEffectPeriod(false);
   };
+
   const onImportMessage = (alertMessage: string) => {
     setVisualText(alertMessage);
   };
+
   const onImportLocations = () => {};
 
   return (
@@ -75,7 +79,11 @@ const NewPaMessage = () => {
         show={page === Page.STATIONS}
         onHide={() => setPage(Page.NEW)}
       >
-        <SelectStationsPage navigateTo={setPage} />
+        <SelectStationsPage
+          navigateTo={setPage}
+          zones={zones}
+          setZones={setZones}
+        />
       </Modal>
       {page === Page.ALERTS && (
         <AssociateAlertPage
@@ -88,7 +96,13 @@ const NewPaMessage = () => {
           setEndWithEffectPeriod={setEndWithEffectPeriod}
         />
       )}
-      {page === Page.ZONES && <SelectZonesPage navigateTo={setPage} />}
+      {page === Page.ZONES && (
+        <SelectZonesPage
+          navigateTo={setPage}
+          zones={zones}
+          setZones={setZones}
+        />
+      )}
     </div>
   );
 };
