@@ -30,8 +30,8 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
           id={id}
           type="time"
           value={selectedTime}
-          onChange={(input) =>
-            onChange(moment(input.target.value, "HH:mm").format("HH:mm"))
+          onChange={(event) =>
+            onChange(moment(event.target.value, "HH:mm").format("HH:mm"))
           }
           onKeyUp={(e) => {
             if (e.key === "Enter") {

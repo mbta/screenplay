@@ -21,7 +21,7 @@ const DatePicker = ({ selectedDate, onChange, id }: DatePickerProps) => {
           id={id}
           name={`${id}-input`}
           value={selectedDate}
-          onChange={(input) => onChange(input.target.value)}
+          onChange={(event) => onChange(event.target.value)}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
               setShowOverlay(true);
