@@ -32,7 +32,6 @@ interface AssociateAlertPageProps {
   setImportLocations: Dispatch<SetStateAction<boolean>>;
   setImportMessage: Dispatch<SetStateAction<boolean>>;
   setVisualText: Dispatch<SetStateAction<string>>;
-  setPhoneticText: Dispatch<SetStateAction<string>>;
 }
 
 const AssociateAlertPage = ({
@@ -46,7 +45,6 @@ const AssociateAlertPage = ({
   setImportLocations,
   setImportMessage,
   setVisualText,
-  setPhoneticText,
 }: AssociateAlertPageProps) => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
 

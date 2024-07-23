@@ -73,7 +73,6 @@ const NewPaMessage = () => {
           setImportLocations={setImportLocations}
           setImportMessage={setImportMessage}
           setVisualText={setVisualText}
-          setPhoneticText={setPhoneticText}
         />
       )}
     </div>
