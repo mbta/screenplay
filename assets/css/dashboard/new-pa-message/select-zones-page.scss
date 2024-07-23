@@ -53,30 +53,6 @@
         .filter-button {
           border-radius: 0;
 
-          &--green {
-            background-color: $mbta-green;
-          }
-          &--red {
-            background-color: $mbta-red;
-          }
-          &--orange {
-            background-color: $mbta-orange;
-          }
-          &--blue {
-            background-color: $mbta-blue;
-          }
-          &--mattapan {
-            background-color: $mbta-red;
-          }
-          &--silver {
-            background-color: $mbta-silver;
-          }
-          &--bus {
-            background-color: $mbta-bus;
-            color: $text-invert;
-            fill: $text-invert;
-          }
-
           &:not(.selected) {
             background-color: $bg-elevation-3;
             color: $text-secondary;

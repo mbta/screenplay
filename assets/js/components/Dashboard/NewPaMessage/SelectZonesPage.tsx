@@ -10,13 +10,13 @@ import { busRouteIdsAtPlaces } from "../../../util";
 import cx from "classnames";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
-  Green: "filter-button--green",
-  Red: "filter-button--red",
-  Orange: "filter-button--orange",
-  Blue: "filter-button--blue",
-  Mattapan: "filter-button--mattapan",
-  Silver: "filter-button--silver",
-  Bus: "filter-button--bus",
+  Green: "bg-green",
+  Red: "bg-red",
+  Orange: "bg-orange",
+  Blue: "bg-blue",
+  Mattapan: "bg-mattapan",
+  Silver: "bg-silver",
+  Bus: "bg-bus",
 };
 
 interface Props {
