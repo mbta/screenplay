@@ -43,7 +43,7 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
       </InputGroup>
       <Overlay
         rootClose
-        rootCloseEvent="click"
+        rootCloseEvent="mousedown"
         onHide={() => setShowOverlay(false)}
         target={ref.current}
         placement="bottom-start"
