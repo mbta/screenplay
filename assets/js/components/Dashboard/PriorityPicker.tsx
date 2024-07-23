@@ -30,8 +30,8 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
                   eventKey={priorityIndex}
                   active={priority === priorityIndex}
                 >
-                  <div>{priorityIndex}</div>
-                  <div>{label}</div>
+                  <div className="item-value">{priorityIndex}</div>
+                  <div className="item-label">{label}</div>
                 </Dropdown.Item>
               );
             })}
