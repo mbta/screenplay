@@ -68,10 +68,6 @@
 
       .effect-period-switch {
         margin-bottom: 8px;
-        .form-check-input:checked {
-          background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(0,0,0,1.0)'/></svg>");
-        }
-
         .form-check-input:not(:checked) {
           background-color: $dark-bg;
           border-color: $border-primary;
@@ -254,6 +250,10 @@
     }
   }
 
+  .unassociated-alert-header {
+    margin-top: 40px;
+  }
+
   .associated-alert-header {
     margin: 40px 0px 0px 16px;
     font-size: 20px;
@@ -262,6 +262,7 @@
     button {
       color: $text-secondary;
       margin-left: 16px;
+      margin-bottom: 6px;
       width: auto;
       padding: 0px;
       height: 24px;
@@ -277,5 +278,10 @@
 
   .associate-alert-button {
     color: $text-link-primary;
+    font-family: Inter;
+    font-size: 20;
+    font-weight: 500;
+    height: 30px;
+    margin-bottom: 8px;
   }
 }

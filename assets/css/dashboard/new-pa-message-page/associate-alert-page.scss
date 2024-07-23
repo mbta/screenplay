@@ -41,6 +41,11 @@
   padding: 0px 12px;
   margin-top: 40px;
 
+  &__label {
+    margin-bottom: 8px;
+    margin-left: 16px;
+  }
+
   &__button-group {
     margin-bottom: 48px;
   }
@@ -62,6 +67,7 @@
 
 .associate-alert-table {
   margin: 40px;
+  max-width: 1096px;
 
   th,
   td {

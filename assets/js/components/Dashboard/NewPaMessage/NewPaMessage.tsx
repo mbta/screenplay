@@ -12,10 +12,9 @@ const NewPaMessage = () => {
   const now = moment();
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
-  const [importLocations, setImportLocations] = useState<boolean>(false);
-  const [importMessage, setImportMessage] = useState<boolean>(false);
-  const [endWithEffectPeriod, setEndWithEffectPeriod] =
-    useState<boolean>(false);
+  const [importLocations, setImportLocations] = useState<boolean>(true);
+  const [importMessage, setImportMessage] = useState<boolean>(true);
+  const [endWithEffectPeriod, setEndWithEffectPeriod] = useState<boolean>(true);
   const [startDate, setStartDate] = useState(now.format("L"));
   const [startTime, setStartTime] = useState(now.format("HH:mm"));
   const [endDate, setEndDate] = useState(now.format("L"));

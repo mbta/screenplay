@@ -453,7 +453,7 @@ const NewPaMessageHeader = ({
     </Row>
   ) : (
     <>
-      <Row md="auto" className="align-items-center">
+      <Row md="auto" className="align-items-center unassociated-alert-header">
         <Button
           variant="link"
           className="pr-0 associate-alert-button"

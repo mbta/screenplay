@@ -89,7 +89,9 @@ const AssociateAlertPage = ({
         </Row>
         <Row className="associate-alert-page-body">
           <Col className="associate-alert-filter-selection">
-            <div>Message state</div>
+            <div className="associate-alert-filter-selection__label">
+              Message state
+            </div>
             <ButtonGroup
               className="associate-alert-filter-selection__button-group"
               vertical
@@ -113,7 +115,9 @@ const AssociateAlertPage = ({
                 Future
               </Button>
             </ButtonGroup>
-            <div>Service type</div>
+            <div className="associate-alert-filter-selection__label">
+              Service type
+            </div>
             <ButtonGroup vertical>
               {serviceTypes.map((serviceType) => {
                 return (
