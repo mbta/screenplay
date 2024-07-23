@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Page } from "./types";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -33,30 +33,34 @@ const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
     Bus: busRouteIdsAtPlaces(places),
   };
 
-  const selectedRoutes = fp.flow(
-    fp.flatMap((place: Place) => place.screens),
-    fp.flatMap((screen: Screen) => screen.route_ids),
-    fp.uniq,
-    fp.groupBy((routeID: string) => {
-      if (routeID.startsWith("Green")) {
-        return "Green";
-      }
+  const selectedRoutes = useMemo(() => {
+    return fp.flow(
+      fp.flatMap((place: Place) => place.screens),
+      fp.flatMap((screen: Screen) => screen.route_ids),
+      fp.uniq,
+      fp.groupBy((routeID: string) => {
+        if (routeID.startsWith("Green")) {
+          return "Green";
+        }
 
-      if (PLACE_ROUTE_TO_ROUTE_IDS["Bus"].includes(routeID)) {
-        return "Bus";
-      }
+        if (PLACE_ROUTE_TO_ROUTE_IDS["Bus"].includes(routeID)) {
+          return "Bus";
+        }
 
-      if (PLACE_ROUTE_TO_ROUTE_IDS["Silver"].includes(routeID)) {
-        return "Silver";
-      }
+        if (PLACE_ROUTE_TO_ROUTE_IDS["Silver"].includes(routeID)) {
+          return "Silver";
+        }
 
-      return routeID;
-    }),
-  )(placesWithSelectedScreens);
+        return routeID;
+      }),
+    )(placesWithSelectedScreens);
+  }, [placesWithSelectedScreens]);
 
-  const [selectedRouteFilter, setSelectedRouteFilter] = useState(
-    Object.keys(selectedRoutes)[0],
-  );
+  const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
+
+  useEffect(() => {
+    setSelectedRouteFilter(Object.keys(selectedRoutes)[0]);
+  }, [selectedRoutes]);
 
   return (
     <div className="select-zones-page">
@@ -114,7 +118,21 @@ const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
           </div>
         </div>
         <div className="zones-table-container">
-          <div className="container-header"></div>
+          <div className="container-header">
+            <div className="title-and-route-container">
+              <div className="title h3">Zones</div>
+              <div
+                className={`route ${ROUTE_TO_CLASS_NAMES_MAP[selectedRouteFilter]}`}
+              >
+                {selectedRouteFilter} line
+              </div>
+            </div>
+            <div className="mass-select-button-container">
+              <Button>All Zones (except bus)</Button>
+              <Button>Direction 0</Button>
+              <Button>Direction 1</Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

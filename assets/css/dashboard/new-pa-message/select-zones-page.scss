@@ -45,6 +45,8 @@
 
     .filters-container {
       width: 200px;
+      margin-right: 40px;
+
       .filters {
         display: flex;
         flex-direction: column;
@@ -67,8 +69,37 @@
     }
 
     .zones-table-container {
+      width: 100%;
+      padding-right: 72px;
+      align-content: center;
+
       .container-header {
         display: flex;
+        justify-content: space-between;
+
+        .title-and-route-container {
+          display: flex;
+
+          .title {
+            margin-right: 16px;
+          }
+
+          .route {
+            height: fit-content;
+            border-radius: 30px;
+            padding: 4px 16px;
+          }
+        }
+
+        .mass-select-button-container {
+          display: flex;
+          gap: 8px;
+
+          .btn {
+            padding: 6px 12px;
+            height: fit-content;
+          }
+        }
       }
     }
   }
