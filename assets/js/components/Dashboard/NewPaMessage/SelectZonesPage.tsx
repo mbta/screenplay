@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Page } from "./types";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
 import { usePlacesWithSelectedScreens } from "./hooks";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
 import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
-import { busRouteIdsAtPlaces } from "../../../util";
+import { busRouteIdsAtPlaces, sortByStationOrder } from "../../../util";
 import cx from "classnames";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
@@ -60,6 +60,9 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
   useEffect(() => {
     setSelectedRouteFilter(Object.keys(selectedRoutes)[0]);
   }, [selectedRoutes]);
+
+  // TODO: initialize this in a more stable way
+  if (!selectedRouteFilter) return null;
 
   return (
     <div className="select-zones-page">
@@ -132,9 +135,143 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
               <Button>Direction 1</Button>
             </div>
           </div>
+          <table className="zones-table">
+            <thead>
+              <tr className="table-header">
+                <th></th>
+                <th>All</th>
+                <th>Direction 0</th>
+                <th>Middle</th>
+                <th>Direction 1</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortByStationOrder(
+                placesWithSelectedScreens,
+                selectedRouteFilter,
+              ).map((place) => (
+                <PlaceZonesRow
+                  key={place.id}
+                  place={places.find((p) => p.id === place.id)}
+                  allSelectedSigns={signs}
+                  setSigns={setSigns}
+                  route={selectedRouteFilter}
+                />
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
+  );
+};
+
+const PlaceZonesRow = ({
+  place,
+  allSelectedSigns,
+  setSigns,
+  route,
+}: {
+  place: Place | undefined;
+  allSelectedSigns: string[];
+  setSigns: (signs: string[]) => void;
+  route: string;
+}) => {
+  if (!place) return null;
+
+  const allSignsForRouteAtPlace =
+    place.screens.filter((screen) => screen.route_ids?.includes(route)) ?? [];
+
+  const selectedSignsAtPlace = fp.intersection(
+    allSignsForRouteAtPlace.map((s) => s.id),
+    allSelectedSigns,
+  );
+
+  const signsInZones = (zones: string[]) => {
+    return allSignsForRouteAtPlace.filter((sign) =>
+      fp.includes(sign.zone, zones),
+    );
+  };
+
+  const onSignButtonClick = (signID: string) => {
+    if (allSelectedSigns.includes(signID)) {
+      setSigns(fp.without([signID], allSelectedSigns));
+    } else {
+      setSigns(fp.uniq([...allSelectedSigns, signID]));
+    }
+  };
+
+  const allSignsSelected =
+    selectedSignsAtPlace.length === allSignsForRouteAtPlace.length;
+
+  return (
+    <tr className="table-row">
+      <td className="place-name">{place.name}</td>
+      <td>
+        <Button className={cx({ selected: allSignsSelected })}>All</Button>
+      </td>
+      <td>
+        {signsInZones(["s", "w"]).map((sign) => {
+          return (
+            <SignButton
+              key={sign.id}
+              onClick={() => {
+                onSignButtonClick(sign.id);
+              }}
+              isSelected={allSelectedSigns.includes(sign.id)}
+              label="Direction 0"
+            />
+          );
+        })}
+      </td>
+      <td>
+        {signsInZones(["c", "m"]).map((sign) => {
+          return (
+            <SignButton
+              key={sign.id}
+              onClick={() => {
+                onSignButtonClick(sign.id);
+              }}
+              isSelected={allSelectedSigns.includes(sign.id)}
+              label="Middle"
+            />
+          );
+        })}
+      </td>
+      <td>
+        {signsInZones(["n", "e"]).map((sign) => {
+          return (
+            <SignButton
+              key={sign.id}
+              onClick={() => {
+                onSignButtonClick(sign.id);
+              }}
+              isSelected={allSelectedSigns.includes(sign.id)}
+              label="Direction 1"
+            />
+          );
+        })}
+      </td>
+    </tr>
+  );
+};
+
+interface SignButtonProps {
+  isSelected: boolean;
+  onClick: () => void;
+  label: string;
+}
+
+const SignButton = ({ isSelected, onClick, label }: SignButtonProps) => {
+  return (
+    <Button
+      className={cx({
+        selected: isSelected,
+      })}
+      onClick={onClick}
+    >
+      {label}
+    </Button>
   );
 };
 

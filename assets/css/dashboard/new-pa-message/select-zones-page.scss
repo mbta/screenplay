@@ -76,6 +76,7 @@
       .container-header {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 16px;
 
         .title-and-route-container {
           display: flex;
@@ -98,6 +99,47 @@
           .btn {
             padding: 6px 12px;
             height: fit-content;
+          }
+        }
+      }
+
+      .zones-table {
+        background-color: $cool-gray-15;
+
+        tr,
+        th,
+        td {
+          vertical-align: middle;
+          text-align: center;
+        }
+
+        .table-header {
+          height: 72px;
+          color: $text-secondary;
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        .table-row {
+          height: 110px;
+
+          &:nth-child(odd) {
+            background-color: $bg-elevation-3;
+          }
+
+          .place-name {
+            text-align: start;
+            padding-left: 24px;
+          }
+
+          .btn {
+            padding: 6px 12px;
+            height: fit-content;
+
+            &.selected {
+              background-color: $button-primary;
+              color: $text-invert;
+            }
           }
         }
       }
