@@ -20,14 +20,15 @@ const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
 };
 
 interface Props {
-  zones: string[];
-  setZones: (zones: string[]) => void;
+  signs: string[];
+  setSigns: (signs: string[]) => void;
   navigateTo: (page: Page) => void;
   places: Place[];
 }
 
-const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
-  const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, zones);
+const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
+  const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
+  const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, signs);
   const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
     ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
     Bus: busRouteIdsAtPlaces(places),
@@ -56,8 +57,6 @@ const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
     )(placesWithSelectedScreens);
   }, [placesWithSelectedScreens]);
 
-  const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
-
   useEffect(() => {
     setSelectedRouteFilter(Object.keys(selectedRoutes)[0]);
   }, [selectedRoutes]);
@@ -80,7 +79,7 @@ const SelectZonesPage = ({ zones, setZones, navigateTo, places }: Props) => {
           <Button
             className="cancel-button"
             onClick={() => {
-              setZones([]);
+              setSigns([]);
               navigateTo(Page.NEW);
             }}
           >

@@ -27,7 +27,7 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [zones, setZones] = useState<string[]>([]);
+  const [signs, setSigns] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
 
   const onClearAssociatedAlert = () => {
@@ -84,8 +84,8 @@ const NewPaMessage = () => {
         <SelectStationsPage
           places={places}
           navigateTo={setPage}
-          zones={zones}
-          setZones={setZones}
+          signs={signs}
+          setSigns={setSigns}
         />
       </Modal>
       {page === Page.ALERTS && (
@@ -102,8 +102,8 @@ const NewPaMessage = () => {
       {page === Page.ZONES && (
         <SelectZonesPage
           navigateTo={setPage}
-          zones={zones}
-          setZones={setZones}
+          signs={signs}
+          setSigns={setSigns}
           places={places}
         />
       )}

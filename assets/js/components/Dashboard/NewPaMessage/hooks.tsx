@@ -19,7 +19,7 @@ export const usePlacesWithPaEss = () => {
 
 export const usePlacesWithSelectedScreens = (
   places: Place[],
-  zones: string[],
+  signs: string[],
 ) => {
   return useMemo<Place[]>(() => {
     return fp.flow(
@@ -27,11 +27,11 @@ export const usePlacesWithSelectedScreens = (
         return {
           ...place,
           screens: place.screens.filter((screen) =>
-            fp.includes(screen.id, zones),
+            fp.includes(screen.id, signs),
           ),
         };
       }),
       fp.filter((place) => place.screens.length > 0),
     )(places);
-  }, [zones]);
+  }, [places, signs]);
 };
