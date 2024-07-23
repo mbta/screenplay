@@ -16,7 +16,7 @@ const DatePicker = ({ selectedDate, onChange, id }: DatePickerProps) => {
 
   return (
     <>
-      <InputGroup className="date-picker" ref={ref}>
+      <InputGroup className="date-picker picker" ref={ref}>
         <Form.Control
           id={id}
           name={`${id}-input`}

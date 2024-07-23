@@ -1,37 +1,5 @@
 @import "react-calendar/dist/Calendar.css";
-
-.date-picker {
-  display: flex;
-  border-radius: 4px;
-  height: 38px;
-  padding: 7px 13px;
-
-  .form-control {
-    height: 100%;
-    padding: 0;
-    background-color: transparent;
-    color: $text-secondary;
-    font-weight: 400;
-    border: none;
-
-    &:focus {
-      box-shadow: none;
-    }
-  }
-
-  .btn {
-    height: 16px;
-    margin: auto;
-    line-height: 100%;
-    padding: 0;
-    border: none;
-    background-color: transparent;
-
-    &:focus {
-      border-radius: 0;
-    }
-  }
-}
+@import "./picker.scss";
 
 .calendar-popover {
   .popover-arrow {

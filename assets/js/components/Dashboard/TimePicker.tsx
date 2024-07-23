@@ -25,7 +25,7 @@ const TimePicker = ({ selectedTime, onChange, id }: TimePickerProps) => {
 
   return (
     <>
-      <InputGroup className="time-picker" ref={ref}>
+      <InputGroup className="time-picker picker" ref={ref}>
         <Form.Control
           id={id}
           type="time"
