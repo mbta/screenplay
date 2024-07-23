@@ -10,6 +10,7 @@
 
 .associate-alert-page-header {
   padding-right: 48px;
+  max-width: 1380px;
 
   &__cancel {
     flex: none;
@@ -43,7 +44,6 @@
 
   &__label {
     margin-bottom: 8px;
-    margin-left: 16px;
   }
 
   &__button-group {
@@ -72,7 +72,7 @@
   th,
   td {
     padding: 8px 16px;
-    border-bottom: 1px solid $border-primary;
+    border-bottom: 1px solid $cool-gray-40;
     vertical-align: top;
   }
 
@@ -112,6 +112,11 @@
     button {
       color: $text-secondary;
       height: 24px;
+
+      &:hover {
+        color: $text-secondary;
+        opacity: 84%;
+      }
     }
   }
 

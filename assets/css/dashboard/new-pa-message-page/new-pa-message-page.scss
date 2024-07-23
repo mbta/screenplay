@@ -252,6 +252,13 @@
 
   .unassociated-alert-header {
     margin-top: 40px;
+    font-size: 20px;
+    font-weight: 500;
+
+    button {
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
   }
 
   .associated-alert-header {
