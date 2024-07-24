@@ -5,7 +5,11 @@ import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
 import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
-import { busRouteIdsAtPlaces, sortByStationOrder } from "../../../util";
+import {
+  busRouteIdsAtPlaces,
+  getZoneLabel,
+  sortByStationOrder,
+} from "../../../util";
 import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
 
@@ -32,6 +36,18 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
     ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
     Bus: busRouteIdsAtPlaces(places),
   };
+
+  const directionLabels = useMemo(() => {
+    if (
+      ["Green", "Green-B", "Green-C", "Green-D", "Green-E", "Blue"].includes(
+        selectedRouteFilter,
+      )
+    ) {
+      return { left: "Westbound", right: "Eastbound" };
+    }
+
+    return { left: "Northbound", right: "Southbound" };
+  }, [selectedRouteFilter]);
 
   const selectedRoutes = useMemo(
     () =>
@@ -170,8 +186,8 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
             </div>
             <div className="mass-select-button-container">
               <Button>All Zones (except bus)</Button>
-              <Button>Direction 0</Button>
-              <Button>Direction 1</Button>
+              <Button>{directionLabels.left}</Button>
+              <Button>{directionLabels.right}</Button>
             </div>
           </div>
           <table className="zones-table">
@@ -179,9 +195,11 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
               <tr className="table-header">
                 <th></th>
                 <th>All</th>
-                <th>Direction 0</th>
-                <th>Middle</th>
-                <th>Direction 1</th>
+                <th>{directionLabels.left}</th>
+                <th>
+                  {directionLabels.left} & {directionLabels.right}
+                </th>
+                <th>{directionLabels.right}</th>
               </tr>
             </thead>
             <tbody>
@@ -264,7 +282,6 @@ const PlaceZonesRow = ({
                   onSignButtonClick(sign.id);
                 }}
                 isSelected={allSelectedSigns.includes(sign.id)}
-                defaultLabel="Direction 0"
               />
             );
           })}
@@ -281,7 +298,6 @@ const PlaceZonesRow = ({
                   onSignButtonClick(sign.id);
                 }}
                 isSelected={allSelectedSigns.includes(sign.id)}
-                defaultLabel="Middle"
               />
             );
           })}
@@ -298,7 +314,6 @@ const PlaceZonesRow = ({
                   onSignButtonClick(sign.id);
                 }}
                 isSelected={allSelectedSigns.includes(sign.id)}
-                defaultLabel="Direction 1"
               />
             );
           })}
@@ -312,14 +327,12 @@ interface SelectSignButtonProps {
   sign: Screen;
   isSelected: boolean;
   onClick: () => void;
-  defaultLabel: string;
 }
 
 const SelectSignButton = ({
   sign,
   isSelected,
   onClick,
-  defaultLabel,
 }: SelectSignButtonProps) => {
   return (
     <Button
@@ -328,7 +341,7 @@ const SelectSignButton = ({
       })}
       onClick={onClick}
     >
-      {sign.label ?? defaultLabel}
+      {sign.label ?? getZoneLabel(sign.zone!!)}
     </Button>
   );
 };

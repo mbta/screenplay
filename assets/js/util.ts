@@ -299,3 +299,22 @@ export const busRouteIdsAtPlaces = (places: Place[]) => {
     allRouteIdsAtPlaces(places),
   );
 };
+
+export const getZoneLabel = (zone: string) => {
+  switch (zone) {
+    case "m":
+      return "Mezzanine";
+    case "c":
+      return "Center";
+    case "n":
+      return "Northbound";
+    case "s":
+      return "Southbound";
+    case "e":
+      return "Eastbound";
+    case "w":
+      return "Westbound";
+    default:
+      return "";
+  }
+};
