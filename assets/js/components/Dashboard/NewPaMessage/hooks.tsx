@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import { busRouteIdsAtPlaces } from "../../../util";
+import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
 
 export const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -34,4 +36,14 @@ export const usePlacesWithSelectedScreens = (
       fp.filter((place) => place.screens.length > 0),
     )(places);
   }, [places, signs]);
+};
+
+export const useRouteToRouteIDsMap = (): { [key: string]: string[] } => {
+  const places = usePlacesWithPaEss();
+  return useMemo(() => {
+    return {
+      ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+      Bus: busRouteIdsAtPlaces(places),
+    };
+  }, []);
 };

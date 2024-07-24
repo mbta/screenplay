@@ -1,17 +1,13 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { Page } from "./types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
-import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
-import {
-  busRouteIdsAtPlaces,
-  getZoneLabel,
-  sortByStationOrder,
-} from "../../../util";
+import { getZoneLabel, sortByStationOrder } from "../../../util";
 import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
+import { useRouteToRouteIDsMap } from "./hooks";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-green",
@@ -32,10 +28,7 @@ interface Props {
 
 const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
-  const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
-    ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
-    Bus: busRouteIdsAtPlaces(places),
-  };
+  const routeToRouteIDMap = useRouteToRouteIDsMap();
 
   const directionLabels = useMemo(() => {
     if (
@@ -62,11 +55,11 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
             return "Green";
           }
 
-          if (PLACE_ROUTE_TO_ROUTE_IDS["Bus"].includes(routeID)) {
+          if (routeToRouteIDMap["Bus"].includes(routeID)) {
             return "Bus";
           }
 
-          if (PLACE_ROUTE_TO_ROUTE_IDS["Silver"].includes(routeID)) {
+          if (routeToRouteIDMap["Silver"].includes(routeID)) {
             return "Silver";
           }
 
@@ -85,7 +78,11 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
           .map((p) => p.id)
           .includes(p.id) &&
         p.screens.some((s) =>
-          s.route_ids?.some((r) => r.startsWith(selectedRouteFilter)),
+          s.route_ids?.some((r) =>
+            routeToRouteIDMap[selectedRouteFilter]?.some((a) =>
+              r.startsWith(a),
+            ),
+          ),
         ),
     );
   }, [selectedRouteFilter]);
@@ -154,6 +151,7 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
                     );
                   });
               }
+
               return (
                 <Fragment key={`route-filter-${routeID}`}>
                   <Button
@@ -211,6 +209,7 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
                     allSelectedSigns={signs}
                     setSigns={setSigns}
                     route={selectedRouteFilter}
+                    routeToRouteIDMap={routeToRouteIDMap}
                   />
                 ),
               )}
@@ -227,16 +226,21 @@ const PlaceZonesRow = ({
   allSelectedSigns,
   setSigns,
   route,
+  routeToRouteIDMap,
 }: {
   place: Place | undefined;
   allSelectedSigns: string[];
   setSigns: (signs: string[]) => void;
   route: string;
+  routeToRouteIDMap: { [key: string]: string[] };
 }) => {
   if (!place) return null;
 
   const allSignsForRouteAtPlace = place.screens.filter((screen) =>
-    fp.any((r) => r.startsWith(route), screen.route_ids),
+    fp.any(
+      (r) => routeToRouteIDMap[route]?.some((a) => r.startsWith(a)),
+      screen.route_ids,
+    ),
   );
 
   const selectedSignsAtPlace = fp.flow(
