@@ -55,6 +55,7 @@
 
         .filter-button {
           border-radius: 0;
+          text-align: start;
 
           &:not(.selected) {
             background-color: $bg-elevation-3;

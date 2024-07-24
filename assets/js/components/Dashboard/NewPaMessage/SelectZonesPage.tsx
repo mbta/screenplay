@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { Page } from "./types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -8,6 +8,7 @@ import { Screen } from "Models/screen";
 import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
 import { busRouteIdsAtPlaces, sortByStationOrder } from "../../../util";
 import cx from "classnames";
+import { Dot } from "react-bootstrap-icons";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-green",
@@ -101,20 +102,44 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
           <div>Service type</div>
           <div className="filters">
             {Object.keys(selectedRoutes).map((routeID) => {
+              let branchFilters;
+              if (routeID === "Green") {
+                branchFilters = selectedRoutes["Green"].map((branchID) => {
+                  const branch = branchID.split("-")[1];
+
+                  return (
+                    <Button
+                      key={`branch-filter-${branch}`}
+                      onClick={() => setSelectedRouteFilter(branchID)}
+                      className={cx(
+                        "filter-button",
+                        ROUTE_TO_CLASS_NAMES_MAP["Green"],
+                        {
+                          selected: selectedRouteFilter === branchID,
+                        },
+                      )}
+                    >
+                      <Dot /> {branch} Branch
+                    </Button>
+                  );
+                });
+              }
               return (
-                <Button
-                  key={routeID}
-                  onClick={() => setSelectedRouteFilter(routeID)}
-                  className={cx(
-                    "filter-button",
-                    ROUTE_TO_CLASS_NAMES_MAP[routeID],
-                    {
-                      selected: selectedRouteFilter === routeID,
-                    },
-                  )}
-                >
-                  {routeID}
-                </Button>
+                <Fragment key={`route-filter-${routeID}`}>
+                  <Button
+                    onClick={() => setSelectedRouteFilter(routeID)}
+                    className={cx(
+                      "filter-button",
+                      ROUTE_TO_CLASS_NAMES_MAP[routeID],
+                      {
+                        selected: selectedRouteFilter === routeID,
+                      },
+                    )}
+                  >
+                    {routeID}
+                  </Button>
+                  {branchFilters}
+                </Fragment>
               );
             })}
           </div>
