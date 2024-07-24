@@ -30,17 +30,16 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
-  const directionLabels = useMemo(() => {
-    if (
-      ["Green", "Green-B", "Green-C", "Green-D", "Green-E", "Blue"].includes(
-        selectedRouteFilter,
-      )
-    ) {
-      return { left: "Westbound", right: "Eastbound" };
-    }
-
-    return { left: "Northbound", right: "Southbound" };
-  }, [selectedRouteFilter]);
+  const directionLabels = [
+    "Green",
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Blue",
+  ].includes(selectedRouteFilter)
+    ? { left: "Westbound", right: "Eastbound" }
+    : { left: "Northbound", right: "Southbound" };
 
   const selectedRoutes = useMemo(
     () =>
@@ -70,22 +69,18 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
     [places],
   );
 
-  const filteredPlaces = useMemo(() => {
-    return places.filter(
-      (p) =>
-        places
-          .filter((p) => p.screens.some((s) => signs.includes(s.id)))
-          .map((p) => p.id)
-          .includes(p.id) &&
-        p.screens.some((s) =>
-          s.route_ids?.some((r) =>
-            routeToRouteIDMap[selectedRouteFilter]?.some((a) =>
-              r.startsWith(a),
-            ),
-          ),
+  const filteredPlaces = places.filter(
+    (p) =>
+      places
+        .filter((p) => p.screens.some((s) => signs.includes(s.id)))
+        .map((p) => p.id)
+        .includes(p.id) &&
+      p.screens.some((s) =>
+        s.route_ids?.some((r) =>
+          routeToRouteIDMap[selectedRouteFilter]?.some((a) => r.startsWith(a)),
         ),
-    );
-  }, [selectedRouteFilter]);
+      ),
+  );
 
   // TODO: initialize this in a more stable way
   if (!selectedRouteFilter) return null;
