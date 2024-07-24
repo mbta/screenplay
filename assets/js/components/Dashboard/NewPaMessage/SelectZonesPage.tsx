@@ -257,15 +257,27 @@ const PlaceZonesRow = ({
     }
   };
 
+  const allSignsSelected = useMemo(
+    () => selectedSignsAtPlace.length === allSignsForRouteAtPlace.length,
+    [allSelectedSigns],
+  );
+
   return (
     <tr className="table-row">
       <td className="place-name">{place.name}</td>
       <td className="all-button-cell">
         <Button
           className={cx({
-            selected:
-              selectedSignsAtPlace.length === allSignsForRouteAtPlace.length,
+            selected: allSignsSelected,
           })}
+          onClick={() => {
+            const signIDsAtPlace = allSignsForRouteAtPlace.map((s) => s.id);
+            if (allSignsSelected) {
+              setSigns(fp.without(signIDsAtPlace, allSelectedSigns));
+            } else {
+              setSigns(fp.uniq(allSignsForRouteAtPlace.map((s) => s.id)));
+            }
+          }}
         >
           All
         </Button>
