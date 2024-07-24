@@ -116,25 +116,27 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
             {Object.keys(selectedRoutes).map((routeID) => {
               let branchFilters;
               if (routeID === "Green") {
-                branchFilters = selectedRoutes["Green"].map((branchID) => {
-                  const branch = branchID.split("-")[1];
+                branchFilters = selectedRoutes["Green"]
+                  .sort()
+                  .map((branchID) => {
+                    const branch = branchID.split("-")[1];
 
-                  return (
-                    <Button
-                      key={`branch-filter-${branch}`}
-                      onClick={() => setSelectedRouteFilter(branchID)}
-                      className={cx(
-                        "filter-button",
-                        ROUTE_TO_CLASS_NAMES_MAP["Green"],
-                        {
-                          selected: selectedRouteFilter === branchID,
-                        },
-                      )}
-                    >
-                      <Dot /> {branch} Branch
-                    </Button>
-                  );
-                });
+                    return (
+                      <Button
+                        key={`branch-filter-${branch}`}
+                        onClick={() => setSelectedRouteFilter(branchID)}
+                        className={cx(
+                          "filter-button",
+                          ROUTE_TO_CLASS_NAMES_MAP["Green"],
+                          {
+                            selected: selectedRouteFilter === branchID,
+                          },
+                        )}
+                      >
+                        <Dot /> {branch} Branch
+                      </Button>
+                    );
+                  });
               }
               return (
                 <Fragment key={`route-filter-${routeID}`}>
