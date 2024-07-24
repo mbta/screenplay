@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100%;
   margin: 24px 40px 0 40px;
+  padding-right: 72px;
 
   .header {
     display: flex;
@@ -70,7 +71,6 @@
 
     .zones-table-container {
       width: 100%;
-      padding-right: 72px;
       align-content: center;
 
       .container-header {
@@ -89,6 +89,7 @@
             height: fit-content;
             border-radius: 30px;
             padding: 4px 16px;
+            text-wrap: nowrap;
           }
         }
 
@@ -105,6 +106,7 @@
 
       .zones-table {
         background-color: $cool-gray-15;
+        border-bottom: 1px solid #6c757d;
 
         tr,
         th,
@@ -115,11 +117,19 @@
           margin: auto;
         }
 
+        th,
+        td {
+          &:not(:first-child) {
+            border-left: 1px solid #41474d;
+          }
+        }
+
         .table-header {
           height: 72px;
           color: $text-secondary;
           font-size: 16px;
           font-weight: 500;
+          border-bottom: 1px solid #6c757d;
         }
 
         .table-row {
@@ -129,9 +139,39 @@
             background-color: $bg-elevation-3;
           }
 
+          td:not(:first-child) {
+            border-left: 1px solid #41474d;
+          }
+
           .place-name {
             text-align: start;
             padding-left: 24px;
+          }
+
+          .all-button-cell {
+            width: 76px;
+          }
+
+          .left-cell,
+          .middle-cell,
+          .right-cell {
+            padding: 24px 16px;
+
+            .sign-button-group {
+              display: flex;
+              flex-direction: column;
+              width: fit-content;
+              max-height: 110px;
+              margin: 0 auto;
+
+              .btn {
+                width: 200px;
+              }
+
+              .btn:not(:only-child):first-child {
+                margin-bottom: 16px;
+              }
+            }
           }
 
           .btn {
@@ -142,13 +182,6 @@
               background-color: $button-primary;
               color: $text-invert;
             }
-          }
-
-          .sign-button-group {
-            display: flex;
-            flex-direction: column;
-            width: fit-content;
-            margin: auto;
           }
         }
       }
