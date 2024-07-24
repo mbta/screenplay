@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { Page } from "./types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
-import { usePlacesWithSelectedScreens } from "./hooks";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
 import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
@@ -29,38 +28,51 @@ interface Props {
 
 const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
-  const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, signs);
   const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
     ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
     Bus: busRouteIdsAtPlaces(places),
   };
 
-  const selectedRoutes = useMemo(() => {
-    return fp.flow(
-      fp.flatMap((place: Place) => place.screens),
-      fp.flatMap((screen: Screen) => screen.route_ids),
-      fp.uniq,
-      fp.groupBy((routeID: string) => {
-        if (routeID.startsWith("Green")) {
-          return "Green";
-        }
+  const selectedRoutes = useMemo(
+    () =>
+      fp.flow(
+        fp.flatMap((place: Place) =>
+          place.screens.filter((s) => signs.includes(s.id)),
+        ),
+        fp.flatMap((screen: Screen) => screen.route_ids),
+        fp.uniq,
+        fp.groupBy((routeID: string) => {
+          if (routeID.startsWith("Green")) {
+            return "Green";
+          }
 
-        if (PLACE_ROUTE_TO_ROUTE_IDS["Bus"].includes(routeID)) {
-          return "Bus";
-        }
+          if (PLACE_ROUTE_TO_ROUTE_IDS["Bus"].includes(routeID)) {
+            return "Bus";
+          }
 
-        if (PLACE_ROUTE_TO_ROUTE_IDS["Silver"].includes(routeID)) {
-          return "Silver";
-        }
+          if (PLACE_ROUTE_TO_ROUTE_IDS["Silver"].includes(routeID)) {
+            return "Silver";
+          }
 
-        return routeID;
-      }),
-    )(placesWithSelectedScreens);
-  }, [placesWithSelectedScreens]);
+          return routeID;
+        }),
+        fp.tap((routes) => setSelectedRouteFilter(Object.keys(routes)[0])),
+      )(places),
+    [places],
+  );
 
-  useEffect(() => {
-    setSelectedRouteFilter(Object.keys(selectedRoutes)[0]);
-  }, [selectedRoutes]);
+  const filteredPlaces = useMemo(() => {
+    return places.filter(
+      (p) =>
+        places
+          .filter((p) => p.screens.some((s) => signs.includes(s.id)))
+          .map((p) => p.id)
+          .includes(p.id) &&
+        p.screens.some((s) =>
+          s.route_ids?.some((r) => r.startsWith(selectedRouteFilter)),
+        ),
+    );
+  }, [selectedRouteFilter]);
 
   // TODO: initialize this in a more stable way
   if (!selectedRouteFilter) return null;
@@ -171,18 +183,17 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
               </tr>
             </thead>
             <tbody>
-              {sortByStationOrder(
-                placesWithSelectedScreens,
-                selectedRouteFilter,
-              ).map((place) => (
-                <PlaceZonesRow
-                  key={place.id}
-                  place={places.find((p) => p.id === place.id)}
-                  allSelectedSigns={signs}
-                  setSigns={setSigns}
-                  route={selectedRouteFilter}
-                />
-              ))}
+              {sortByStationOrder(filteredPlaces, selectedRouteFilter).map(
+                (place) => (
+                  <PlaceZonesRow
+                    key={`place-zones-row-${place.id}`}
+                    place={places.find((p) => p.id === place.id)}
+                    allSelectedSigns={signs}
+                    setSigns={setSigns}
+                    route={selectedRouteFilter}
+                  />
+                ),
+              )}
             </tbody>
           </table>
         </div>
