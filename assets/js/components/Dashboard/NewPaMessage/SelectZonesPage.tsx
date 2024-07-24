@@ -179,13 +179,14 @@ const PlaceZonesRow = ({
 }) => {
   if (!place) return null;
 
-  const allSignsForRouteAtPlace =
-    place.screens.filter((screen) => screen.route_ids?.includes(route)) ?? [];
-
-  const selectedSignsAtPlace = fp.intersection(
-    allSignsForRouteAtPlace.map((s) => s.id),
-    allSelectedSigns,
+  const allSignsForRouteAtPlace = place.screens.filter((screen) =>
+    fp.any((r) => r.startsWith(route), screen.route_ids),
   );
+
+  const selectedSignsAtPlace = fp.flow(
+    fp.map((s: Screen) => s.id),
+    fp.filter((id: string) => allSelectedSigns.includes(id)),
+  )(allSignsForRouteAtPlace);
 
   const signsInZones = (zones: string[]) => {
     return allSignsForRouteAtPlace.filter((sign) =>
@@ -201,68 +202,87 @@ const PlaceZonesRow = ({
     }
   };
 
-  const allSignsSelected =
-    selectedSignsAtPlace.length === allSignsForRouteAtPlace.length;
-
   return (
     <tr className="table-row">
       <td className="place-name">{place.name}</td>
       <td>
-        <Button className={cx({ selected: allSignsSelected })}>All</Button>
+        <Button
+          className={cx({
+            selected:
+              selectedSignsAtPlace.length === allSignsForRouteAtPlace.length,
+          })}
+        >
+          All
+        </Button>
       </td>
       <td>
-        {signsInZones(["s", "w"]).map((sign) => {
-          return (
-            <SignButton
-              key={sign.id}
-              onClick={() => {
-                onSignButtonClick(sign.id);
-              }}
-              isSelected={allSelectedSigns.includes(sign.id)}
-              label="Direction 0"
-            />
-          );
-        })}
+        <div className="sign-button-group">
+          {signsInZones(["s", "w"]).map((sign) => {
+            return (
+              <SelectSignButton
+                key={sign.id}
+                sign={sign}
+                onClick={() => {
+                  onSignButtonClick(sign.id);
+                }}
+                isSelected={allSelectedSigns.includes(sign.id)}
+                defaultLabel="Direction 0"
+              />
+            );
+          })}
+        </div>
       </td>
       <td>
-        {signsInZones(["c", "m"]).map((sign) => {
-          return (
-            <SignButton
-              key={sign.id}
-              onClick={() => {
-                onSignButtonClick(sign.id);
-              }}
-              isSelected={allSelectedSigns.includes(sign.id)}
-              label="Middle"
-            />
-          );
-        })}
+        <div className="sign-button-group">
+          {signsInZones(["c", "m"]).map((sign) => {
+            return (
+              <SelectSignButton
+                sign={sign}
+                key={sign.id}
+                onClick={() => {
+                  onSignButtonClick(sign.id);
+                }}
+                isSelected={allSelectedSigns.includes(sign.id)}
+                defaultLabel="Middle"
+              />
+            );
+          })}
+        </div>
       </td>
       <td>
-        {signsInZones(["n", "e"]).map((sign) => {
-          return (
-            <SignButton
-              key={sign.id}
-              onClick={() => {
-                onSignButtonClick(sign.id);
-              }}
-              isSelected={allSelectedSigns.includes(sign.id)}
-              label="Direction 1"
-            />
-          );
-        })}
+        <div className="sign-button-group">
+          {signsInZones(["n", "e"]).map((sign) => {
+            return (
+              <SelectSignButton
+                key={sign.id}
+                sign={sign}
+                onClick={() => {
+                  onSignButtonClick(sign.id);
+                }}
+                isSelected={allSelectedSigns.includes(sign.id)}
+                defaultLabel="Direction 1"
+              />
+            );
+          })}
+        </div>
       </td>
     </tr>
   );
 };
 
-interface SignButtonProps {
+interface SelectSignButtonProps {
+  sign: Screen;
   isSelected: boolean;
   onClick: () => void;
-  label: string;
+  defaultLabel: string;
 }
 
-const SignButton = ({ isSelected, onClick, label }: SignButtonProps) => {
+const SelectSignButton = ({
+  sign,
+  isSelected,
+  onClick,
+  defaultLabel,
+}: SelectSignButtonProps) => {
   return (
     <Button
       className={cx({
@@ -270,7 +290,7 @@ const SignButton = ({ isSelected, onClick, label }: SignButtonProps) => {
       })}
       onClick={onClick}
     >
-      {label}
+      {sign.label ?? defaultLabel}
     </Button>
   );
 };
