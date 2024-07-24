@@ -273,8 +273,8 @@ const PlaceZonesRow = ({
           {signsInZones(["c", "m"]).map((sign) => {
             return (
               <SelectSignButton
-                sign={sign}
                 key={sign.id}
+                sign={sign}
                 onClick={() => {
                   onSignButtonClick(sign.id);
                 }}

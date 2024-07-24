@@ -134,8 +134,6 @@
         }
 
         .table-row {
-          height: 110px;
-
           &:nth-child(odd) {
             background-color: $bg-elevation-3;
           }
@@ -147,6 +145,7 @@
           .place-name {
             text-align: start;
             padding-left: 24px;
+            width: 264px;
           }
 
           .all-button-cell {
@@ -157,12 +156,12 @@
           .middle-cell,
           .right-cell {
             padding: 24px 16px;
+            width: 232px;
 
             .sign-button-group {
               display: flex;
               flex-direction: column;
               width: fit-content;
-              max-height: 110px;
               margin: 0 auto;
 
               .btn {
