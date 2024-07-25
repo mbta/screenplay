@@ -262,9 +262,29 @@ const PlaceZonesRow = ({
     [allSelectedSigns],
   );
 
+  const placeBranches =
+    route === "Green"
+      ? fp
+          .uniq(
+            allSignsForRouteAtPlace.flatMap((s) =>
+              s.route_ids?.map((r) => r.split("-")[1]),
+            ),
+          )
+          .sort()
+      : [];
+
   return (
     <tr className="table-row">
-      <td className="place-name">{place.name}</td>
+      <td>
+        <div className="place-name-container">
+          {placeBranches.length > 0 && (
+            <div className={`route ${ROUTE_TO_CLASS_NAMES_MAP["Green"]}`}>
+              {placeBranches.join(" ")}
+            </div>
+          )}
+          <div className="place-name">{place.name}</div>
+        </div>
+      </td>
       <td className="all-button-cell">
         <Button
           className={cx({

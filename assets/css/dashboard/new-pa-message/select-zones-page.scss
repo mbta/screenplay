@@ -74,6 +74,13 @@
       width: 100%;
       align-content: center;
 
+      .route {
+        height: fit-content;
+        border-radius: 30px;
+        padding: 4px 16px;
+        text-wrap: nowrap;
+      }
+
       .container-header {
         display: flex;
         justify-content: space-between;
@@ -84,13 +91,6 @@
 
           .title {
             margin-right: 16px;
-          }
-
-          .route {
-            height: fit-content;
-            border-radius: 30px;
-            padding: 4px 16px;
-            text-wrap: nowrap;
           }
         }
 
@@ -142,10 +142,29 @@
             border-left: 1px solid #41474d;
           }
 
-          .place-name {
-            text-align: start;
-            padding-left: 24px;
-            width: 264px;
+          .place-name-container {
+            display: flex;
+            justify-content: flex-start;
+            align-self: center;
+            margin-left: 24px;
+            padding: 24px 0 24px 24px;
+            max-width: 264px;
+
+            .place-name {
+              font-size: 20px;
+              line-height: 30px;
+              color: $text-secondary;
+              text-align: start;
+              width: 164px;
+            }
+
+            .route {
+              padding: 0 8px;
+              font-size: 16px;
+              line-height: 24px;
+              align-self: flex-start;
+              margin-right: 8px;
+            }
           }
 
           .all-button-cell {
