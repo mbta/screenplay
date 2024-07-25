@@ -285,7 +285,7 @@ const PlaceZonesRow = ({
           <div className="place-name">{place.name}</div>
         </div>
       </td>
-      <td className="all-button-cell">
+      <td className="cell all-button-cell">
         <Button
           className={cx({
             selected: allSignsSelected,
@@ -302,7 +302,7 @@ const PlaceZonesRow = ({
           All
         </Button>
       </td>
-      <td className="left-cell">
+      <td className="cell left-cell">
         <div className="sign-button-group">
           {signsInZones(["s", "w"]).map((sign) => {
             return (
@@ -318,7 +318,7 @@ const PlaceZonesRow = ({
           })}
         </div>
       </td>
-      <td className="middle-cell">
+      <td className="cell middle-cell">
         <div className="sign-button-group">
           {signsInZones(["c", "m"]).map((sign) => {
             return (
@@ -334,7 +334,7 @@ const PlaceZonesRow = ({
           })}
         </div>
       </td>
-      <td className="right-cell">
+      <td className="cell right-cell">
         <div className="sign-button-group">
           {signsInZones(["n", "e"]).map((sign) => {
             return (
