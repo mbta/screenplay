@@ -5,6 +5,11 @@
   margin: 24px 40px 0 40px;
   padding-right: 72px;
 
+  .btn.selected:not(.filter-button) {
+    background-color: $button-primary;
+    color: $text-invert;
+  }
+
   .header {
     display: flex;
     justify-content: space-between;

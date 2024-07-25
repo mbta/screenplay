@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { Page } from "./types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -28,6 +28,9 @@ interface Props {
 
 const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   const [signs, setSigns] = useState(value);
+  const [leftScreens, setLeftScreens] = useState<Screen[]>([]);
+  const [middleScreens, setMiddleScreens] = useState<Screen[]>([]);
+  const [rightScreens, setRightScreens] = useState<Screen[]>([]);
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
@@ -46,7 +49,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
     () =>
       fp.flow(
         fp.flatMap((place: Place) =>
-          place.screens.filter((s) => signs.includes(s.id)),
+          place.screens.filter((s) => value.includes(s.id)),
         ),
         fp.flatMap((screen: Screen) => screen.route_ids),
         fp.uniq,
@@ -78,10 +81,59 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
         .includes(p.id) &&
       p.screens.some((s) =>
         s.route_ids?.some((r) =>
-          routeToRouteIDMap[selectedRouteFilter]?.some((a) => r.startsWith(a)),
+          routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
         ),
       ),
   );
+
+  const allScreens = useMemo(
+    () =>
+      filteredPlaces.flatMap((p) => {
+        return p.screens.filter((s) =>
+          s.route_ids?.some((r) => r.startsWith(selectedRouteFilter)),
+        );
+      }),
+    [selectedRouteFilter],
+  );
+
+  useEffect(() => {
+    setLeftScreens(allScreens.filter((s) => ["s", "w"].includes(s.zone!!)));
+    setMiddleScreens(allScreens.filter((s) => ["c", "m"].includes(s.zone!!)));
+    setRightScreens(allScreens.filter((s) => ["n", "e"].includes(s.zone!!)));
+  }, [selectedRouteFilter]);
+
+  const selectedMassSelectButton = useMemo(() => {
+    if (!leftScreens.length && !rightScreens.length) return "";
+
+    if (
+      signs.length &&
+      [...leftScreens, ...middleScreens, ...rightScreens].every((s) =>
+        signs.includes(s.id),
+      )
+    ) {
+      return "All";
+    } else if (
+      [...leftScreens, ...middleScreens].every((s) => signs.includes(s.id))
+    ) {
+      return "Left";
+    } else if (
+      [...middleScreens, ...rightScreens].every((s) => signs.includes(s.id))
+    ) {
+      return "Right";
+    }
+  }, [signs, selectedRouteFilter]);
+
+  const massSelectScreens = (
+    screensToAdd: Screen[],
+    screensToRemove: Screen[],
+  ) => {
+    fp.flow(
+      fp.without(screensToRemove.map((s) => s.id)),
+      fp.concat(screensToAdd.map((s) => s.id)),
+      fp.uniq,
+      fp.tap((s) => setSigns(s)),
+    )(signs);
+  };
 
   // TODO: initialize this in a more stable way
   if (!selectedRouteFilter) return null;
@@ -184,9 +236,42 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
               </div>
             </div>
             <div className="mass-select-button-container">
-              <Button>All Zones (except bus)</Button>
-              <Button>{directionLabels.left}</Button>
-              <Button>{directionLabels.right}</Button>
+              <Button
+                className={cx({ selected: selectedMassSelectButton === "All" })}
+                onClick={() => {
+                  setSigns(
+                    fp.concat(fp.uniq(allScreens.map((s) => s.id)), signs),
+                  );
+                }}
+              >
+                All Zones (except bus)
+              </Button>
+              <Button
+                className={cx({
+                  selected: selectedMassSelectButton === "Left",
+                })}
+                onClick={() => {
+                  massSelectScreens(
+                    [...leftScreens, ...middleScreens],
+                    rightScreens,
+                  );
+                }}
+              >
+                {directionLabels.left}
+              </Button>
+              <Button
+                className={cx({
+                  selected: selectedMassSelectButton === "Right",
+                })}
+                onClick={() => {
+                  massSelectScreens(
+                    [...rightScreens, ...middleScreens],
+                    leftScreens,
+                  );
+                }}
+              >
+                {directionLabels.right}
+              </Button>
             </div>
           </div>
           <table className="zones-table">
@@ -265,7 +350,7 @@ const PlaceZonesRow = ({
 
   const allSignsSelected = useMemo(
     () => selectedSignsAtPlace.length === allSignsForRouteAtPlace.length,
-    [allSelectedSigns],
+    [allSelectedSigns, route],
   );
 
   const placeBranches =
