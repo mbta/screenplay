@@ -102,8 +102,8 @@ const NewPaMessage = () => {
       {page === Page.ZONES && (
         <SelectZonesPage
           navigateTo={setPage}
-          signs={signs}
-          setSigns={setSigns}
+          value={signs}
+          onChange={setSigns}
           places={places}
         />
       )}

@@ -20,13 +20,14 @@ const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
 };
 
 interface Props {
-  signs: string[];
-  setSigns: (signs: string[]) => void;
+  value: string[];
+  onChange: (signs: string[]) => void;
   navigateTo: (page: Page) => void;
   places: Place[];
 }
 
-const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
+const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
+  const [signs, setSigns] = useState(value);
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
@@ -72,7 +73,7 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
   const filteredPlaces = places.filter(
     (p) =>
       places
-        .filter((p) => p.screens.some((s) => signs.includes(s.id)))
+        .filter((p) => p.screens.some((s) => value.includes(s.id)))
         .map((p) => p.id)
         .includes(p.id) &&
       p.screens.some((s) =>
@@ -93,7 +94,10 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
           <div>
             <Button
               className="edit-button"
-              onClick={() => navigateTo(Page.STATIONS)}
+              onClick={() => {
+                onChange(signs);
+                navigateTo(Page.STATIONS);
+              }}
             >
               Edit Stations
             </Button>
@@ -103,7 +107,6 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
           <Button
             className="cancel-button"
             onClick={() => {
-              setSigns([]);
               navigateTo(Page.NEW);
             }}
           >
@@ -111,7 +114,10 @@ const SelectZonesPage = ({ signs, setSigns, navigateTo, places }: Props) => {
           </Button>
           <Button
             className="submit-button"
-            onClick={() => navigateTo(Page.NEW)}
+            onClick={() => {
+              onChange(signs);
+              navigateTo(Page.NEW);
+            }}
           >
             Done
           </Button>
