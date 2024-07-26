@@ -129,13 +129,14 @@
 
     .dropdown-item {
       color: $text-primary;
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: $cool-gray-20;
       }
 
       &.active {
-        background-color: $button-primary;
-        color: $button-secondary;
+        background-color: #0d6efd;
+        color: $text-primary;
       }
 
       .item-value {
