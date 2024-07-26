@@ -15,8 +15,6 @@ import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import DatePicker from "Components/DatePicker";
-import TimePicker from "Components/TimePicker";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -118,14 +116,19 @@ const NewPaMessagePage = () => {
                   Start
                 </Form.Label>
                 <div className="datetime-picker-group">
-                  <DatePicker
-                    selectedDate={startDate}
-                    onChange={setStartDate}
+                  <Form.Control
+                    className="date-picker picker"
+                    type="date"
                     id="start-date-picker"
+                    name="start-date-picker-input"
+                    value={startDate}
+                    onChange={(event) => setStartDate(event.target.value)}
                   />
-                  <TimePicker
-                    selectedTime={startTime}
-                    onChange={setStartTime}
+                  <Form.Control
+                    type="time"
+                    className="time-picker picker"
+                    value={startTime}
+                    onChange={(event) => setStartTime(event.target.value)}
                   />
                 </div>
               </Form.Group>
@@ -139,12 +142,20 @@ const NewPaMessagePage = () => {
                   End
                 </Form.Label>
                 <div className="datetime-picker-group">
-                  <DatePicker
-                    selectedDate={endDate}
-                    onChange={setEndDate}
+                  <Form.Control
+                    className="date-picker picker"
+                    type="date"
                     id="end-date-picker"
+                    name="end-date-picker-input"
+                    value={endDate}
+                    onChange={(event) => setEndDate(event.target.value)}
                   />
-                  <TimePicker selectedTime={endTime} onChange={setEndTime} />
+                  <Form.Control
+                    type="time"
+                    className="time-picker picker"
+                    value={endTime}
+                    onChange={(event) => setEndTime(event.target.value)}
+                  />
                 </div>
               </Form.Group>
             </Row>
