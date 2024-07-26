@@ -88,14 +88,17 @@
       .datetime-picker-group {
         display: flex;
 
-        .date-picker {
-          margin-right: 16px;
-        }
-
         .date-picker,
         .time-picker {
           flex: 0 1 250px;
           height: 38px;
+          margin-right: 16px;
+        }
+
+        .service-time-link {
+          height: fit-content;
+          color: $text-link-primary;
+          padding-left: 0;
         }
       }
     }

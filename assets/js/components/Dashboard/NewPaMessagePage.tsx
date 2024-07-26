@@ -130,6 +130,13 @@ const NewPaMessagePage = () => {
                     value={startTime}
                     onChange={(event) => setStartTime(event.target.value)}
                   />
+                  <Button
+                    className="service-time-link"
+                    variant="link"
+                    onClick={() => setStartTime("03:00")}
+                  >
+                    Start of service day
+                  </Button>
                 </div>
               </Form.Group>
             </Row>
@@ -156,6 +163,13 @@ const NewPaMessagePage = () => {
                     value={endTime}
                     onChange={(event) => setEndTime(event.target.value)}
                   />
+                  <Button
+                    className="service-time-link"
+                    variant="link"
+                    onClick={() => setEndTime("02:59")}
+                  >
+                    End of service day
+                  </Button>
                 </div>
               </Form.Group>
             </Row>
