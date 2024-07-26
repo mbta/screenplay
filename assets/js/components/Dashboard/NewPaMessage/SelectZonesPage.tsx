@@ -239,9 +239,14 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
               <Button
                 className={cx({ selected: selectedMassSelectButton === "All" })}
                 onClick={() => {
-                  setSigns(
-                    fp.concat(fp.uniq(allScreens.map((s) => s.id)), signs),
-                  );
+                  const allButBus = allScreens
+                    .filter(
+                      (s) =>
+                        fp.intersection(routeToRouteIDMap["Bus"], s.route_ids)
+                          .length === 0,
+                    )
+                    .map((s) => s.id);
+                  setSigns(fp.concat(fp.uniq(allButBus), signs));
                 }}
               >
                 All Zones (except bus)
@@ -288,16 +293,28 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
             </thead>
             <tbody>
               {sortByStationOrder(filteredPlaces, selectedRouteFilter).map(
-                (place) => (
-                  <PlaceZonesRow
-                    key={`place-zones-row-${place.id}`}
-                    place={places.find((p) => p.id === place.id)}
-                    allSelectedSigns={signs}
-                    setSigns={setSigns}
-                    route={selectedRouteFilter}
-                    routeToRouteIDMap={routeToRouteIDMap}
-                  />
-                ),
+                (place) => {
+                  return (
+                    <Fragment key={`place-zones-row-${place.id}`}>
+                      <PlaceZonesRow
+                        place={place}
+                        allSelectedSigns={signs}
+                        setSigns={setSigns}
+                        route={selectedRouteFilter}
+                        routeToRouteIDMap={routeToRouteIDMap}
+                      />
+                      {selectedRouteFilter !== "Bus" && (
+                        <PlaceZonesRow
+                          place={place}
+                          allSelectedSigns={signs}
+                          setSigns={setSigns}
+                          route={"Bus"}
+                          routeToRouteIDMap={routeToRouteIDMap}
+                        />
+                      )}
+                    </Fragment>
+                  );
+                },
               )}
             </tbody>
           </table>
@@ -314,20 +331,20 @@ const PlaceZonesRow = ({
   route,
   routeToRouteIDMap,
 }: {
-  place: Place | undefined;
+  place: Place;
   allSelectedSigns: string[];
   setSigns: (signs: string[]) => void;
   route: string;
   routeToRouteIDMap: { [key: string]: string[] };
 }) => {
-  if (!place) return null;
-
   const allSignsForRouteAtPlace = place.screens.filter((screen) =>
     fp.any(
       (r) => routeToRouteIDMap[route]?.some((a) => r.startsWith(a)),
       screen.route_ids,
     ),
   );
+
+  if (allSignsForRouteAtPlace.length === 0) return null;
 
   const selectedSignsAtPlace = fp.flow(
     fp.map((s: Screen) => s.id),
@@ -374,6 +391,11 @@ const PlaceZonesRow = ({
             </div>
           )}
           <div className="place-name">{place.name}</div>
+          {route === "Bus" && (
+            <div className={`route ${ROUTE_TO_CLASS_NAMES_MAP["Bus"]}`}>
+              Bus
+            </div>
+          )}
         </div>
       </td>
       <td className="cell all-button-cell">

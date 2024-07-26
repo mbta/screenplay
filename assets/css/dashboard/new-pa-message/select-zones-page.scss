@@ -154,7 +154,6 @@
               line-height: 30px;
               color: $text-secondary;
               text-align: start;
-              width: 164px;
             }
 
             .route {
@@ -163,6 +162,11 @@
               line-height: 24px;
               align-self: flex-start;
               margin-right: 8px;
+              &.bg-bus {
+                padding: 4px 8px;
+                border-radius: 16px;
+                margin-left: 8px;
+              }
             }
           }
 
