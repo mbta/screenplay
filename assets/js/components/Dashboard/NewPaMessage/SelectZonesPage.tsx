@@ -37,16 +37,47 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
 
   const isSelected = (id: string) => signs.includes(id);
 
-  const directionLabels = [
-    "Green",
-    "Green-B",
-    "Green-C",
-    "Green-D",
-    "Green-E",
-    "Blue",
-  ].includes(selectedRouteFilter)
-    ? { left: "Westbound", right: "Eastbound" }
-    : { left: "Northbound", right: "Southbound" };
+  const directionLabels = useMemo(() => {
+    switch (selectedRouteFilter) {
+      case "Green":
+      case "Green-B":
+      case "Green-C":
+      case "Green-D":
+      case "Green-E":
+      case "Blue":
+        return {
+          left: "Westbound",
+          middle: "Westbound & Eastbound",
+          right: "Eastbound",
+        };
+      case "Silver":
+        return { left: "To South Station/Downtown", right: "Eastbound" };
+      case "Bus":
+        return { left: "", middle: "", right: "" };
+      default:
+        return {
+          left: "Southbound",
+          middle: "Southbound & Northbound",
+          right: "Northbound",
+        };
+    }
+  }, [selectedRouteFilter]);
+
+  const massSelectButtonLabels = useMemo(() => {
+    if (selectedRouteFilter === "Silver") {
+      return {
+        left: "Both",
+        middle: "South Station/Downtown",
+        right: "Outbound Content",
+      };
+    }
+
+    return {
+      left: "All Zones (except bus)",
+      middle: directionLabels.left,
+      right: directionLabels.right,
+    };
+  }, [selectedRouteFilter]);
 
   const selectedRoutes = useMemo(
     () =>
@@ -92,8 +123,10 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   const allScreens = useMemo(
     () =>
       filteredPlaces.flatMap((p) => {
-        return p.screens.filter((s) =>
-          s.route_ids?.some((r) => r.startsWith(selectedRouteFilter)),
+        return p.screens.filter(
+          (s) =>
+            fp.intersection(routeToRouteIDMap[selectedRouteFilter], s.route_ids)
+              .length > 0,
         );
       }),
     [selectedRouteFilter],
@@ -128,6 +161,19 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
     !isAllSelected && areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
   const isRightSelected =
     !isAllSelected && areAllGroupsSelected([MIDDLE_ZONES, RIGHT_ZONES]);
+
+  const hasRailFilter = () =>
+    [
+      "Green",
+      "Green-B",
+      "Green-C",
+      "Green-D",
+      "Green-E",
+      "Blue",
+      "Red",
+      "Orange",
+      "Mattapan",
+    ].includes(selectedRouteFilter);
 
   // TODO: initialize this in a more stable way
   if (!selectedRouteFilter) return null;
@@ -229,32 +275,34 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                 {selectedRouteFilter} line
               </div>
             </div>
-            <div className="mass-select-button-container">
-              <Button
-                className={cx({ selected: isAllSelected })}
-                onClick={() =>
-                  selectGroups([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES])
-                }
-              >
-                All Zones (except bus)
-              </Button>
-              <Button
-                className={cx({
-                  selected: isLeftSelected,
-                })}
-                onClick={() => selectGroups([LEFT_ZONES, MIDDLE_ZONES])}
-              >
-                {directionLabels.left}
-              </Button>
-              <Button
-                className={cx({
-                  selected: isRightSelected,
-                })}
-                onClick={() => selectGroups([MIDDLE_ZONES, RIGHT_ZONES])}
-              >
-                {directionLabels.right}
-              </Button>
-            </div>
+            {selectedRouteFilter !== "Bus" && (
+              <div className="mass-select-button-container">
+                <Button
+                  className={cx({ selected: isAllSelected })}
+                  onClick={() =>
+                    selectGroups([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES])
+                  }
+                >
+                  {massSelectButtonLabels.left}
+                </Button>
+                <Button
+                  className={cx({
+                    selected: isLeftSelected,
+                  })}
+                  onClick={() => selectGroups([LEFT_ZONES, MIDDLE_ZONES])}
+                >
+                  {massSelectButtonLabels.middle}
+                </Button>
+                <Button
+                  className={cx({
+                    selected: isRightSelected,
+                  })}
+                  onClick={() => selectGroups([MIDDLE_ZONES, RIGHT_ZONES])}
+                >
+                  {massSelectButtonLabels.right}
+                </Button>
+              </div>
+            )}
           </div>
           <table className="zones-table">
             <thead>
@@ -262,9 +310,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                 <th></th>
                 <th>All</th>
                 <th>{directionLabels.left}</th>
-                <th>
-                  {directionLabels.left} & {directionLabels.right}
-                </th>
+                <th>{directionLabels.middle}</th>
                 <th>{directionLabels.right}</th>
               </tr>
             </thead>
@@ -280,7 +326,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                         route={selectedRouteFilter}
                         routeToRouteIDMap={routeToRouteIDMap}
                       />
-                      {selectedRouteFilter !== "Bus" && (
+                      {hasRailFilter() && (
                         <PlaceZonesRow
                           place={place}
                           allSelectedSigns={signs}
