@@ -86,6 +86,7 @@
 
     &:hover {
       background-color: $cool-gray-20;
+      cursor: pointer;
     }
   }
 
@@ -111,7 +112,7 @@
 
     button {
       color: $text-secondary;
-      height: 24px;
+      height: fit-content;
 
       &:hover {
         color: $text-secondary;
@@ -121,6 +122,10 @@
   }
 
   &__empty {
+    border-bottom: none !important;
+  }
+
+  &__empty-text {
     font-weight: bold;
     color: white;
     padding-top: 16px;
@@ -152,9 +157,12 @@
 .alert-items-modal {
   color: white;
 
+  .modal-dialog {
+    min-width: 800px;
+  }
+
   .modal-content {
     background-color: $cool-gray-20;
-    min-width: 800px;
     border: 1px solid $border-primary;
 
     button {

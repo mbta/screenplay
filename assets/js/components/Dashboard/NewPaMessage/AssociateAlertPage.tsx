@@ -276,9 +276,11 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
         <tbody>
           {filteredAlerts.length == 0 ? (
             <tr>
-              <div className="associate-alert-table__empty">
-                There are no alerts of this type
-              </div>
+              <td className="associate-alert-table__empty">
+                <div className="associate-alert-table__empty-text">
+                  There are no alerts of this type
+                </div>
+              </td>
             </tr>
           ) : (
             filteredAlerts.map((alert: Alert) => {

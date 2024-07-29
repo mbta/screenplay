@@ -26,6 +26,17 @@ const NewPaMessage = () => {
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const onClearAssociatedAlert = () => {
+    setAssociatedAlert({} as Alert);
+    setVisualText("");
+    setPhoneticText("");
+    setEndWithEffectPeriod(false);
+    setImportLocations(false);
+    setImportMessage(false);
+    setEndDate(now.format("L"));
+    setEndTime(now.add(1, "hour").format("HH:mm"));
+  };
+
   return (
     <div className="new-pa-message">
       {page === Page.NEW && (
@@ -50,6 +61,7 @@ const NewPaMessage = () => {
             setStartTime,
             setVisualText,
             setAssociatedAlert,
+            onClearAssociatedAlert,
             setEndWithEffectPeriod,
             setImportLocations,
             setImportMessage,
