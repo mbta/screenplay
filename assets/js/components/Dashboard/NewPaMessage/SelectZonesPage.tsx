@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { Page } from "./types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -36,6 +36,8 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
   const isSelected = (id: string) => signs.includes(id);
+
+  const signIDs = (signs: Screen[]) => signs.map((sign) => sign.id);
 
   const directionLabels = [
     "Green",
@@ -107,10 +109,19 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   const areAllGroupsSelected = (groups: Array<ReadonlyArray<string>>) =>
     groups.every((group) =>
       group.every((zone) => {
-        const signIDs = screensByZone[zone]?.map((s) => s.id);
-        return signIDs ? signIDs.every(isSelected) : true;
+        return signIDs(screensByZone[zone] ?? []).every(isSelected);
       }),
     );
+
+  const selectGroups = (groups: Array<ReadonlyArray<string>>) => {
+    const signsWithoutSelectedRoute = fp.without(signIDs(allScreens), signs);
+
+    const newScreens = groups.flatMap((group) =>
+      group.flatMap((zone) => signIDs(screensByZone[zone] ?? [])),
+    );
+
+    setSigns(fp.uniq([...signsWithoutSelectedRoute, ...newScreens]));
+  };
 
   const isAllSelected =
     signs.length &&
@@ -119,18 +130,6 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
     !isAllSelected && areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
   const isRightSelected =
     !isAllSelected && areAllGroupsSelected([MIDDLE_ZONES, RIGHT_ZONES]);
-
-  const massSelectScreens = (
-    screensToAdd: Screen[],
-    screensToRemove: Screen[],
-  ) => {
-    fp.flow(
-      fp.without(screensToRemove.map((s) => s.id)),
-      fp.concat(screensToAdd.map((s) => s.id)),
-      fp.uniq,
-      fp.tap((s) => setSigns(s)),
-    )(signs);
-  };
 
   // TODO: initialize this in a more stable way
   if (!selectedRouteFilter) return null;
@@ -235,16 +234,9 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
             <div className="mass-select-button-container">
               <Button
                 className={cx({ selected: isAllSelected })}
-                onClick={() => {
-                  const allButBus = allScreens
-                    .filter(
-                      (s) =>
-                        fp.intersection(routeToRouteIDMap["Bus"], s.route_ids)
-                          .length === 0,
-                    )
-                    .map((s) => s.id);
-                  setSigns(fp.concat(fp.uniq(allButBus), signs));
-                }}
+                onClick={() =>
+                  selectGroups([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES])
+                }
               >
                 All Zones (except bus)
               </Button>
@@ -252,12 +244,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                 className={cx({
                   selected: isLeftSelected,
                 })}
-                onClick={() => {
-                  massSelectScreens(
-                    [...leftScreens, ...middleScreens],
-                    rightScreens,
-                  );
-                }}
+                onClick={() => selectGroups([LEFT_ZONES, MIDDLE_ZONES])}
               >
                 {directionLabels.left}
               </Button>
@@ -265,12 +252,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                 className={cx({
                   selected: isRightSelected,
                 })}
-                onClick={() => {
-                  massSelectScreens(
-                    [...rightScreens, ...middleScreens],
-                    leftScreens,
-                  );
-                }}
+                onClick={() => selectGroups([MIDDLE_ZONES, RIGHT_ZONES])}
               >
                 {directionLabels.right}
               </Button>
