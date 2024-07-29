@@ -26,13 +26,16 @@ interface Props {
   places: Place[];
 }
 
+const LEFT_ZONES = ["s", "w"] as const;
+const MIDDLE_ZONES = ["c", "m"] as const;
+const RIGHT_ZONES = ["n", "e"] as const;
+
 const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   const [signs, setSigns] = useState(value);
-  const [leftScreens, setLeftScreens] = useState<Screen[]>([]);
-  const [middleScreens, setMiddleScreens] = useState<Screen[]>([]);
-  const [rightScreens, setRightScreens] = useState<Screen[]>([]);
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
   const routeToRouteIDMap = useRouteToRouteIDsMap();
+
+  const isSelected = (id: string) => signs.includes(id);
 
   const directionLabels = [
     "Green",
@@ -96,32 +99,26 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
     [selectedRouteFilter],
   );
 
-  useEffect(() => {
-    setLeftScreens(allScreens.filter((s) => ["s", "w"].includes(s.zone!!)));
-    setMiddleScreens(allScreens.filter((s) => ["c", "m"].includes(s.zone!!)));
-    setRightScreens(allScreens.filter((s) => ["n", "e"].includes(s.zone!!)));
-  }, [selectedRouteFilter]);
+  const screensByZone = useMemo(() => {
+    const screensWithAZone = allScreens.filter((s) => s.zone);
+    return fp.groupBy((s) => s.zone, screensWithAZone);
+  }, [allScreens]);
 
-  const selectedMassSelectButton = useMemo(() => {
-    if (!leftScreens.length && !rightScreens.length) return "";
+  const areAllGroupsSelected = (groups: Array<ReadonlyArray<string>>) =>
+    groups.every((group) =>
+      group.every((zone) => {
+        const signIDs = screensByZone[zone]?.map((s) => s.id);
+        return signIDs ? signIDs.every(isSelected) : true;
+      }),
+    );
 
-    if (
-      signs.length &&
-      [...leftScreens, ...middleScreens, ...rightScreens].every((s) =>
-        signs.includes(s.id),
-      )
-    ) {
-      return "All";
-    } else if (
-      [...leftScreens, ...middleScreens].every((s) => signs.includes(s.id))
-    ) {
-      return "Left";
-    } else if (
-      [...middleScreens, ...rightScreens].every((s) => signs.includes(s.id))
-    ) {
-      return "Right";
-    }
-  }, [signs, selectedRouteFilter]);
+  const isAllSelected =
+    signs.length &&
+    areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES]);
+  const isLeftSelected =
+    !isAllSelected && areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
+  const isRightSelected =
+    !isAllSelected && areAllGroupsSelected([MIDDLE_ZONES, RIGHT_ZONES]);
 
   const massSelectScreens = (
     screensToAdd: Screen[],
@@ -237,7 +234,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
             </div>
             <div className="mass-select-button-container">
               <Button
-                className={cx({ selected: selectedMassSelectButton === "All" })}
+                className={cx({ selected: isAllSelected })}
                 onClick={() => {
                   const allButBus = allScreens
                     .filter(
@@ -253,7 +250,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
               </Button>
               <Button
                 className={cx({
-                  selected: selectedMassSelectButton === "Left",
+                  selected: isLeftSelected,
                 })}
                 onClick={() => {
                   massSelectScreens(
@@ -266,7 +263,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
               </Button>
               <Button
                 className={cx({
-                  selected: selectedMassSelectButton === "Right",
+                  selected: isRightSelected,
                 })}
                 onClick={() => {
                   massSelectScreens(
