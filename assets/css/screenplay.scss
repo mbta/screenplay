@@ -138,3 +138,50 @@ input[type="button"] {
   color: $text-invert;
   fill: $text-invert;
 }
+
+.button-secondary-outline {
+  background-color: transparent;
+  border: 1px solid $text-primary;
+  color: $text-secondary;
+
+  &:hover {
+    background-color: #c1c7ce14;
+    border-color: $text-secondary;
+  }
+
+  &:focus {
+    border-color: #5c636a;
+    box-shadow: 0px 0px 0px 4px #6c757d80;
+  }
+}
+
+.button-primary {
+  &,
+  &:focus {
+    background-color: $button-primary;
+    color: $text-invert;
+  }
+  &:hover {
+    background-color: $button-primary-hover;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 0px 4px #8ecdff80;
+  }
+}
+
+.button-primary-outline {
+  background-color: transparent;
+  color: $button-primary;
+  border: 1px solid $button-primary;
+
+  &:hover,
+  &:focus {
+    background-color: $button-primary;
+    color: $text-invert;
+  }
+
+  &:focus {
+    box-shadow: 0px 0px 0px 4px #8ecdff80;
+  }
+}

@@ -155,7 +155,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   };
 
   const isAllSelected =
-    signs.length &&
+    signs.length > 0 &&
     areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES]);
   const isLeftSelected =
     !isAllSelected && areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
@@ -174,6 +174,9 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
       "Orange",
       "Mattapan",
     ].includes(selectedRouteFilter);
+
+  const massSelectClassName = (selected: boolean) =>
+    selected ? "button-primary" : "button-secondary-outline";
 
   // TODO: initialize this in a more stable way
   if (!selectedRouteFilter) return null;
@@ -198,14 +201,12 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
         <div className="buttons">
           <Button
             className="cancel-button"
-            onClick={() => {
-              navigateTo(Page.NEW);
-            }}
+            onClick={() => navigateTo(Page.NEW)}
           >
             Cancel
           </Button>
           <Button
-            className="submit-button"
+            className="button-primary"
             onClick={() => {
               onChange(signs);
               navigateTo(Page.NEW);
@@ -233,10 +234,9 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                         onClick={() => setSelectedRouteFilter(branchID)}
                         className={cx(
                           "filter-button",
-                          ROUTE_TO_CLASS_NAMES_MAP["Green"],
-                          {
-                            selected: selectedRouteFilter === branchID,
-                          },
+                          selectedRouteFilter === branchID
+                            ? ROUTE_TO_CLASS_NAMES_MAP["Green"]
+                            : "text-button-grey",
                         )}
                       >
                         <Dot /> {branch} Branch
@@ -251,10 +251,9 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                     onClick={() => setSelectedRouteFilter(routeID)}
                     className={cx(
                       "filter-button",
-                      ROUTE_TO_CLASS_NAMES_MAP[routeID],
-                      {
-                        selected: selectedRouteFilter === routeID,
-                      },
+                      selectedRouteFilter === routeID
+                        ? ROUTE_TO_CLASS_NAMES_MAP[routeID]
+                        : "filter-button-default",
                     )}
                   >
                     {routeID}
@@ -278,7 +277,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
             {selectedRouteFilter !== "Bus" && (
               <div className="mass-select-button-container">
                 <Button
-                  className={cx({ selected: isAllSelected })}
+                  className={massSelectClassName(isAllSelected)}
                   onClick={() =>
                     selectGroups([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES])
                   }
@@ -286,17 +285,13 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                   {massSelectButtonLabels.left}
                 </Button>
                 <Button
-                  className={cx({
-                    selected: isLeftSelected,
-                  })}
+                  className={massSelectClassName(isLeftSelected)}
                   onClick={() => selectGroups([LEFT_ZONES, MIDDLE_ZONES])}
                 >
                   {massSelectButtonLabels.middle}
                 </Button>
                 <Button
-                  className={cx({
-                    selected: isRightSelected,
-                  })}
+                  className={massSelectClassName(isRightSelected)}
                   onClick={() => selectGroups([MIDDLE_ZONES, RIGHT_ZONES])}
                 >
                   {massSelectButtonLabels.right}
@@ -405,7 +400,7 @@ const PlaceZonesRow = ({
 
   return (
     <tr className="table-row">
-      <td>
+      <td className="place-name-cell">
         <div className="place-name-container">
           {placeBranches.length > 0 && (
             <div className={`route ${ROUTE_TO_CLASS_NAMES_MAP["Green"]}`}>
@@ -422,9 +417,9 @@ const PlaceZonesRow = ({
       </td>
       <td className="cell all-button-cell">
         <Button
-          className={cx({
-            selected: allSignsSelected,
-          })}
+          className={
+            allSignsSelected ? "button-primary" : "button-primary-outline"
+          }
           onClick={() => {
             const signIDsAtPlace = allSignsForRouteAtPlace.map((s) => s.id);
             if (allSignsSelected) {
@@ -502,9 +497,7 @@ const SelectSignButton = ({
 }: SelectSignButtonProps) => {
   return (
     <Button
-      className={cx({
-        selected: isSelected,
-      })}
+      className={isSelected ? "button-primary" : "button-primary-outline"}
       onClick={onClick}
     >
       {sign.label ?? getZoneLabel(sign.zone!!)}
