@@ -57,11 +57,6 @@ config :screenplay, ScreenplayWeb.Endpoint,
     ]
   ]
 
-config :screenplay, Screenplay.Repo,
-  database: "screenplay_dev",
-  show_sensitive_data_on_connection_error: true,
-  backoff_min: 5_000
-
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

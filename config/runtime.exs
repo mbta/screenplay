@@ -69,11 +69,3 @@ scheduler_jobs =
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
 
 config :screenplay, Screenplay.Repo, pool_size: 10
-
-if config_env() == :prod do
-  config :screenplay, Screenplay.Repo,
-    username: System.get_env("DATABASE_USER", ""),
-    password: System.get_env("DATABASE_PASSWORD", ""),
-    hostname: System.get_env("DATABASE_HOST", "localhost"),
-    port: System.get_env("DATABASE_PORT", "5432") |> String.to_integer()
-end
