@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
-import { getZoneLabel, sortByStationOrder } from "../../../util";
+import { getZoneLabel, signIDs, sortByStationOrder } from "../../../util";
 import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "./hooks";
@@ -36,8 +36,6 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
   const isSelected = (id: string) => signs.includes(id);
-
-  const signIDs = (signs: Screen[]) => signs.map((sign) => sign.id);
 
   const directionLabels = [
     "Green",
@@ -325,12 +323,11 @@ const PlaceZonesRow = ({
 
   if (allSignsForRouteAtPlace.length === 0) return null;
 
-  const selectedSignsAtPlace = fp.flow(
-    fp.map((s: Screen) => s.id),
-    fp.filter((id: string) => allSelectedSigns.includes(id)),
-  )(allSignsForRouteAtPlace);
+  const selectedSignsAtPlace = signIDs(allSignsForRouteAtPlace).filter(
+    (id: string) => allSelectedSigns.includes(id),
+  );
 
-  const signsInZones = (zones: string[]) => {
+  const signsInZones = (zones: ReadonlyArray<string>) => {
     return allSignsForRouteAtPlace.filter((sign) =>
       fp.includes(sign.zone, zones),
     );
@@ -396,7 +393,7 @@ const PlaceZonesRow = ({
       </td>
       <td className="cell left-cell">
         <div className="sign-button-group">
-          {signsInZones(["s", "w"]).map((sign) => {
+          {signsInZones(LEFT_ZONES).map((sign) => {
             return (
               <SelectSignButton
                 key={sign.id}
@@ -412,7 +409,7 @@ const PlaceZonesRow = ({
       </td>
       <td className="cell middle-cell">
         <div className="sign-button-group">
-          {signsInZones(["c", "m"]).map((sign) => {
+          {signsInZones(MIDDLE_ZONES).map((sign) => {
             return (
               <SelectSignButton
                 key={sign.id}
@@ -428,7 +425,7 @@ const PlaceZonesRow = ({
       </td>
       <td className="cell right-cell">
         <div className="sign-button-group">
-          {signsInZones(["n", "e"]).map((sign) => {
+          {signsInZones(RIGHT_ZONES).map((sign) => {
             return (
               <SelectSignButton
                 key={sign.id}

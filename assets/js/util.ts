@@ -318,3 +318,5 @@ export const getZoneLabel = (zone: string) => {
       return "";
   }
 };
+
+export const signIDs = (signs: Screen[]) => signs.map((sign) => sign.id);
