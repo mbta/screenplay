@@ -4,9 +4,9 @@ import React, { useMemo } from "react";
 import { GeoAltFill, X } from "react-bootstrap-icons";
 import fp from "lodash/fp";
 import { SILVER_LINE_ROUTES } from "Constants/constants";
-import { classWithModifier } from "../../../util";
+import { classWithModifier } from "../../../../util";
 import pluralize from "pluralize";
-import { usePlacesWithSelectedScreens } from "./hooks";
+import { usePlacesWithSelectedScreens } from "../hooks";
 
 interface Props {
   value: string[];

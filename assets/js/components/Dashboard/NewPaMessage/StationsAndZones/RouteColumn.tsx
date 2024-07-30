@@ -1,7 +1,7 @@
 import React from "react";
 import fp from "lodash/fp";
 import type { Place } from "Models/place";
-import { sortByStationOrder } from "../../../util";
+import { sortByStationOrder } from "../../../../util";
 import { Form } from "react-bootstrap";
 
 const RouteColumn = ({

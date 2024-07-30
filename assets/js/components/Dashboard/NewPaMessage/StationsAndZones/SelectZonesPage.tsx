@@ -1,13 +1,13 @@
 import React, { Fragment, useMemo, useState } from "react";
-import { Page } from "./types";
+import { Page } from "../types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
-import { getZoneLabel, signIDs, sortByStationOrder } from "../../../util";
+import { getZoneLabel, signIDs, sortByStationOrder } from "../../../../util";
 import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
-import { useRouteToRouteIDsMap } from "./hooks";
+import { useRouteToRouteIDsMap } from "../hooks";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-green",
@@ -21,7 +21,8 @@ const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
 
 interface Props {
   value: string[];
-  onChange: (signs: string[]) => void;
+  onChange: (signIds: string[]) => void;
+  onSubmit: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
   places: Place[];
 }
@@ -30,12 +31,17 @@ const LEFT_ZONES = ["s", "w"] as const;
 const MIDDLE_ZONES = ["c", "m"] as const;
 const RIGHT_ZONES = ["n", "e"] as const;
 
-const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
-  const [signs, setSigns] = useState(value);
+const SelectZonesPage = ({
+  value,
+  onChange,
+  onSubmit,
+  navigateTo,
+  places,
+}: Props) => {
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
-  const isSelected = (id: string) => signs.includes(id);
+  const isSelected = (id: string) => value.includes(id);
 
   const directionLabels = useMemo(() => {
     switch (selectedRouteFilter) {
@@ -145,17 +151,17 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
     );
 
   const selectGroups = (groups: Array<ReadonlyArray<string>>) => {
-    const signsWithoutSelectedRoute = fp.without(signIDs(allScreens), signs);
+    const signsWithoutSelectedRoute = fp.without(signIDs(allScreens), value);
 
     const newScreens = groups.flatMap((group) =>
       group.flatMap((zone) => signIDs(screensByZone[zone] ?? [])),
     );
 
-    setSigns(fp.uniq([...signsWithoutSelectedRoute, ...newScreens]));
+    onChange(fp.uniq([...signsWithoutSelectedRoute, ...newScreens]));
   };
 
   const isAllSelected =
-    signs.length > 0 &&
+    value.length > 0 &&
     areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES]);
   const isLeftSelected =
     !isAllSelected && areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
@@ -189,10 +195,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
           <div>
             <Button
               className="edit-button"
-              onClick={() => {
-                onChange(signs);
-                navigateTo(Page.STATIONS);
-              }}
+              onClick={() => navigateTo(Page.STATIONS)}
             >
               Edit Stations
             </Button>
@@ -208,7 +211,7 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
           <Button
             className="button-primary"
             onClick={() => {
-              onChange(signs);
+              onSubmit(value);
               navigateTo(Page.NEW);
             }}
           >
@@ -316,16 +319,16 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
                     <Fragment key={`place-zones-row-${place.id}`}>
                       <PlaceZonesRow
                         place={place}
-                        allSelectedSigns={signs}
-                        setSigns={setSigns}
+                        allSelectedSigns={value}
+                        setSignIds={onChange}
                         route={selectedRouteFilter}
                         routeToRouteIDMap={routeToRouteIDMap}
                       />
                       {hasRailFilter() && (
                         <PlaceZonesRow
                           place={place}
-                          allSelectedSigns={signs}
-                          setSigns={setSigns}
+                          allSelectedSigns={value}
+                          setSignIds={onChange}
                           route={"Bus"}
                           routeToRouteIDMap={routeToRouteIDMap}
                         />
@@ -345,13 +348,13 @@ const SelectZonesPage = ({ value, onChange, navigateTo, places }: Props) => {
 const PlaceZonesRow = ({
   place,
   allSelectedSigns,
-  setSigns,
+  setSignIds,
   route,
   routeToRouteIDMap,
 }: {
   place: Place;
   allSelectedSigns: string[];
-  setSigns: (signs: string[]) => void;
+  setSignIds: (signs: string[]) => void;
   route: string;
   routeToRouteIDMap: { [key: string]: string[] };
 }) => {
@@ -376,9 +379,9 @@ const PlaceZonesRow = ({
 
   const onSignButtonClick = (signID: string) => {
     if (allSelectedSigns.includes(signID)) {
-      setSigns(fp.without([signID], allSelectedSigns));
+      setSignIds(fp.without([signID], allSelectedSigns));
     } else {
-      setSigns(fp.uniq([...allSelectedSigns, signID]));
+      setSignIds(fp.uniq([...allSelectedSigns, signID]));
     }
   };
 
@@ -423,9 +426,9 @@ const PlaceZonesRow = ({
           onClick={() => {
             const signIDsAtPlace = allSignsForRouteAtPlace.map((s) => s.id);
             if (allSignsSelected) {
-              setSigns(fp.without(signIDsAtPlace, allSelectedSigns));
+              setSignIds(fp.without(signIDsAtPlace, allSelectedSigns));
             } else {
-              setSigns(fp.uniq(allSignsForRouteAtPlace.map((s) => s.id)));
+              setSignIds(fp.uniq(allSignsForRouteAtPlace.map((s) => s.id)));
             }
           }}
         >

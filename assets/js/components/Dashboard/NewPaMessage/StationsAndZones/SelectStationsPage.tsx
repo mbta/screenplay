@@ -20,8 +20,8 @@ import {
   RED_BRAINTREE_BRANCH,
   RED_TRUNK,
 } from "./StationGroups";
-import { Page } from "./types";
-import { busRouteIdsAtPlaces } from "../../../util";
+import { Page } from "../types";
+import { busRouteIdsAtPlaces } from "../../../../util";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
@@ -33,12 +33,12 @@ const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
 
 interface Props {
   places: Place[];
-  signs: string[];
-  setSigns: (signs: string[]) => void;
+  value: string[];
+  onChange: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
 }
 
-const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
+const SelectStationsPage = ({ places, value, onChange, navigateTo }: Props) => {
   if (places.length === 0) return null;
 
   const busRoutes = busRouteIdsAtPlaces(places);
@@ -66,7 +66,7 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
     {},
   );
 
-  const greenLineSigns = fp.uniq(
+  const greenLineSignIds = fp.uniq(
     GREEN_LINE_ROUTES.flatMap((route) => placesByRoute[route]).flatMap(
       (place) =>
         place.screens
@@ -99,8 +99,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
       </div>
       <SelectedStationsSummary
         places={places}
-        value={signs}
-        onChange={setSigns}
+        value={value}
+        onChange={onChange}
         busRoutes={busRoutes}
       />
       <Container fluid>
@@ -115,8 +115,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={GREEN_LINE_ROUTES}
                 stations={GL_CENTRAL_SUBWAY}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <StationGroupCheckbox
                 title="GL D Branch"
@@ -124,8 +124,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Green-D"]}
                 stations={GL_D_BRANCH}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <StationGroupCheckbox
                 title="GL E Branch"
@@ -133,8 +133,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Green-E"]}
                 stations={GL_E_BRANCH}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <StationGroupCheckbox
                 title="GLX"
@@ -142,8 +142,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Green-D", "Green-E"]}
                 stations={GLX}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <hr />
             </div>
@@ -155,8 +155,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Red"]}
                 stations={RED_BRAINTREE_BRANCH}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <StationGroupCheckbox
                 title="Ashmont Branch"
@@ -164,8 +164,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Red"]}
                 stations={RED_ASHMONT_BRANCH}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <StationGroupCheckbox
                 title="Red Line Trunk"
@@ -173,8 +173,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Red"]}
                 stations={RED_TRUNK}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <hr />
             </div>
@@ -186,8 +186,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Orange"]}
                 stations={ORANGE_NORTH}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
               <StationGroupCheckbox
                 title="South"
@@ -195,8 +195,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                 places={places}
                 routes={["Orange"]}
                 stations={ORANGE_SOUTH}
-                value={signs}
-                onChange={setSigns}
+                value={value}
+                onChange={onChange}
               />
             </div>
           </div>
@@ -209,12 +209,12 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
             id="green-line"
             onChange={(evt) => {
               if (evt.target.checked) {
-                setSigns(fp.union(greenLineSigns, signs));
+                onChange(fp.union(greenLineSignIds, value));
               } else {
-                setSigns(fp.without(greenLineSigns, signs));
+                onChange(fp.without(greenLineSignIds, value));
               }
             }}
-            checked={greenLineSigns.every((sign) => signs.includes(sign))}
+            checked={greenLineSignIds.every((signId) => value.includes(signId))}
           />
 
           <div className="branches-col">
@@ -229,8 +229,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
                   label={`${branch} branch`}
                   routeIds={[route]}
                   places={placesByRoute[route]}
-                  value={signs}
-                  onChange={setSigns}
+                  value={value}
+                  onChange={onChange}
                 />
               );
             })}
@@ -247,8 +247,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
               orderingRouteId={route}
               routeIds={routeNameToRouteIds[route]}
               places={placesByRoute[route]}
-              value={signs}
-              onChange={setSigns}
+              value={value}
+              onChange={onChange}
               reverse={route === "Blue"}
             />
           </div>
@@ -259,8 +259,8 @@ const SelectStationsPage = ({ places, signs, setSigns, navigateTo }: Props) => {
             label="Bus"
             routeIds={busRoutes}
             places={placesByRoute["Bus"]}
-            value={signs}
-            onChange={setSigns}
+            value={value}
+            onChange={onChange}
           />
         </div>
       </Container>

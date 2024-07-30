@@ -3,12 +3,11 @@ import moment from "moment";
 import { Page } from "./types";
 
 import NewPaMessagePage from "./NewPaMessagePage";
-import SelectStationsPage from "./SelectStationsPage";
 import AssociateAlertPage from "./AssociateAlertPage";
-import { Modal } from "react-bootstrap";
 import { Alert } from "Models/alert";
-import SelectZonesPage from "./SelectZonesPage";
+import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "./hooks";
+import { Modal } from "react-bootstrap";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -27,7 +26,7 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [signs, setSigns] = useState<string[]>([]);
+  const [signIds, setSignIds] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
 
   const onClearAssociatedAlert = () => {
@@ -78,14 +77,15 @@ const NewPaMessage = () => {
       <Modal
         className="select-stations-page-modal"
         fullscreen
-        show={page === Page.STATIONS}
+        show={[Page.STATIONS, Page.ZONES].includes(page)}
         onHide={() => setPage(Page.NEW)}
       >
-        <SelectStationsPage
+        <SelectStationsAndZones
           places={places}
+          value={signIds}
+          onChange={setSignIds}
+          page={page}
           navigateTo={setPage}
-          signs={signs}
-          setSigns={setSigns}
         />
       </Modal>
       {page === Page.ALERTS && (
@@ -97,14 +97,6 @@ const NewPaMessage = () => {
           navigateTo={setPage}
           setAssociatedAlert={setAssociatedAlert}
           setEndWithEffectPeriod={setEndWithEffectPeriod}
-        />
-      )}
-      {page === Page.ZONES && (
-        <SelectZonesPage
-          navigateTo={setPage}
-          value={signs}
-          onChange={setSigns}
-          places={places}
         />
       )}
     </div>
