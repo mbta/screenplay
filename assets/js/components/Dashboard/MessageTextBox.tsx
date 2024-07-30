@@ -19,7 +19,7 @@ const MessageTextBox = ({
   maxLength,
 }: Props) => {
   return (
-    <Form.Group>
+    <Form.Group className="message-text-box">
       <Form.Label htmlFor={id}>{label}</Form.Label>
       <Form.Control
         id={id}
