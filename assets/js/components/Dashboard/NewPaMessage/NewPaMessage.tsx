@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { Page } from "./types";
-import { Alert } from "Models/alert";
 
 import NewPaMessagePage from "./NewPaMessagePage";
+import SelectStationsPage from "./SelectStationsPage";
 import AssociateAlertPage from "./AssociateAlertPage";
+import { Modal } from "react-bootstrap";
+import { Alert } from "Models/alert";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
-
   const now = moment();
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
@@ -25,7 +26,6 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
     setVisualText("");
@@ -73,6 +73,14 @@ const NewPaMessage = () => {
           }}
         />
       )}
+      <Modal
+        className="select-stations-page-modal"
+        fullscreen
+        show={page === Page.STATIONS}
+        onHide={() => setPage(Page.NEW)}
+      >
+        <SelectStationsPage navigateTo={setPage} />
+      </Modal>
       {page === Page.ALERTS && (
         <AssociateAlertPage
           associatedAlert={associatedAlert}

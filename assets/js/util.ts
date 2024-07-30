@@ -208,6 +208,8 @@ export const sortByStationOrder = (
 ) => {
   const stationOrder = STATION_ORDER_BY_LINE[filteredLine.toLowerCase()];
 
+  if (!stationOrder) return places;
+
   const stationOrderToIndex = Object.fromEntries(
     stationOrder.map((station, i) => [station.name.toLowerCase(), i]),
   );

@@ -1,0 +1,33 @@
+@import "./new-pa-message-page.scss";
+@import "./select-stations-page.scss";
+@import "./selected-stations-summary.scss";
+
+.new-pa-message,
+.select-stations-page-modal {
+  height: 100%;
+
+  .header {
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+  }
+
+  .cancel-button {
+    background-color: transparent;
+    color: $text-link-primary;
+    border: none;
+  }
+
+  .submit-button {
+    background-color: $button-primary;
+    color: $button-secondary;
+  }
+}
+
+.select-stations-page-modal {
+  .modal-content {
+    color: $text-primary;
+    background-color: $dark-bg;
+  }
+}

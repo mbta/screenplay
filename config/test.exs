@@ -37,7 +37,10 @@ config :ueberauth_oidcc,
 config :screenplay, Screenplay.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "screenplay_test",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"
 
 # Print only warnings and errors during test
 config :logger, level: :warning
