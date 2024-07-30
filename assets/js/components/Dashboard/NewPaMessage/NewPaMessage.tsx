@@ -4,6 +4,7 @@ import { Page } from "./types";
 
 import NewPaMessagePage from "./NewPaMessagePage";
 import SelectStationsPage from "./SelectStationsPage";
+import { Modal } from "react-bootstrap";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -49,7 +50,14 @@ const NewPaMessage = () => {
           }}
         />
       )}
-      {page === Page.STATIONS && <SelectStationsPage navigateTo={setPage} />}
+      <Modal
+        className="select-stations-page-modal"
+        fullscreen
+        show={page === Page.STATIONS}
+        onHide={() => setPage(Page.NEW)}
+      >
+        <SelectStationsPage navigateTo={setPage} />
+      </Modal>
     </div>
   );
 };

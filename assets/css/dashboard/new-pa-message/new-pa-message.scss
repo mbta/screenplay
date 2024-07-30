@@ -2,7 +2,8 @@
 @import "./select-stations-page.scss";
 @import "./selected-stations-summary.scss";
 
-.new-pa-message {
+.new-pa-message,
+.select-stations-page-modal {
   height: 100%;
 
   .header {
@@ -21,5 +22,12 @@
   .submit-button {
     background-color: $button-primary;
     color: $button-secondary;
+  }
+}
+
+.select-stations-page-modal {
+  .modal-content {
+    color: $text-primary;
+    background-color: $dark-bg;
   }
 }

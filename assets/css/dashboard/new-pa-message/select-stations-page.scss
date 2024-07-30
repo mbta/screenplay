@@ -1,11 +1,3 @@
-// Because this page is not a unique route, we cannot conditionally render
-// Sidebar the same way we do elsewhere.
-.sidebar-container:has(
-    + .page-content > .new-pa-message > .select-stations-page
-  ) {
-  display: none !important;
-}
-
 .select-stations-page {
   display: flex;
   flex-direction: column;
