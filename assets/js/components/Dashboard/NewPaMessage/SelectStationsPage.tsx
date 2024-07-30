@@ -253,7 +253,7 @@ const SelectStationsPage = ({ navigateTo }: Props) => {
                 <RouteColumn
                   key={branch}
                   label={`${branch} branch`}
-                  routes={[route]}
+                  routeIds={[route]}
                   places={placesByRoute[route]}
                   value={zones}
                   onChange={setZones}
@@ -270,8 +270,8 @@ const SelectStationsPage = ({ navigateTo }: Props) => {
           >
             <RouteColumn
               label={`${route} line`}
-              orderingRoute={route}
-              routes={PLACE_ROUTE_TO_ROUTE_IDS[route]}
+              orderingRouteId={route}
+              routeIds={PLACE_ROUTE_TO_ROUTE_IDS[route]}
               places={placesByRoute[route]}
               value={zones}
               onChange={setZones}
@@ -283,8 +283,7 @@ const SelectStationsPage = ({ navigateTo }: Props) => {
         <div className="route-col route-col--bus col">
           <RouteColumn
             label="Bus"
-            orderingRoute="Bus"
-            routes={busRoutes}
+            routeIds={busRoutes}
             places={placesByRoute["Bus"]}
             value={zones}
             onChange={setZones}

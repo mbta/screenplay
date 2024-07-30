@@ -6,16 +6,16 @@ import { Form } from "react-bootstrap";
 
 const RouteColumn = ({
   label,
-  routes,
-  orderingRoute = routes[0],
+  routeIds,
+  orderingRouteId = routeIds[0],
   places,
   value,
   onChange,
   reverse = false,
 }: {
   label: string;
-  routes: string[];
-  orderingRoute?: string;
+  routeIds: string[];
+  orderingRouteId?: string;
   places: Place[];
   value: string[];
   onChange: (zones: string[]) => void;
@@ -23,7 +23,9 @@ const RouteColumn = ({
 }) => {
   const routeZones = places.flatMap((place) =>
     place.screens
-      .filter((screen) => fp.intersection(routes, screen.route_ids).length > 0)
+      .filter(
+        (screen) => fp.intersection(routeIds, screen.route_ids).length > 0,
+      )
       .map((screen) => screen.id),
   );
 
@@ -46,10 +48,11 @@ const RouteColumn = ({
         />
       </div>
       <div className="col-content">
-        {sortByStationOrder(places, orderingRoute, reverse).map((place) => {
+        {sortByStationOrder(places, orderingRouteId, reverse).map((place) => {
           const placeZones = place.screens
             .filter(
-              (screen) => fp.intersection(routes, screen.route_ids).length > 0,
+              (screen) =>
+                fp.intersection(routeIds, screen.route_ids).length > 0,
             )
             .map((screen) => screen.id);
           return (
@@ -57,7 +60,7 @@ const RouteColumn = ({
               <Form.Check
                 className="body--regular station-name"
                 label={place.name}
-                id={`${place.name}-${orderingRoute}`}
+                id={`${place.name}-${orderingRouteId}`}
                 type="checkbox"
                 onChange={(evt) => {
                   if (evt.target.checked) {
