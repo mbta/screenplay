@@ -166,7 +166,7 @@ const NewPaMessagePage = () => {
                   <Button
                     className="service-time-link"
                     variant="link"
-                    onClick={() => setEndTime("02:59")}
+                    onClick={() => setEndTime("03:00")}
                   >
                     End of service day
                   </Button>
