@@ -126,6 +126,16 @@
     .route-col {
       min-width: 304px;
 
+      &:not(&--green) {
+        height: fit-content;
+        max-height: 100%;
+
+        .col-content {
+          flex-basis: content;
+          overflow-y: auto;
+        }
+      }
+
       .station-name {
         margin-bottom: 6px;
       }
@@ -178,21 +188,6 @@
           color: $text-invert;
           background-color: $mbta-bus;
         }
-      }
-    }
-
-    .route-col--red,
-    .route-col--mattapan,
-    .route-col--orange,
-    .route-col--blue,
-    .route-col--silver,
-    .route-col--bus {
-      height: fit-content;
-      max-height: 100%;
-
-      .col-content {
-        flex-basis: content;
-        overflow-y: auto;
       }
     }
   }
