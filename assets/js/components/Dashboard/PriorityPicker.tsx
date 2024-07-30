@@ -21,15 +21,17 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
               "Planned Service Disruption",
               "PSA Message",
             ].map((label, index) => {
+              const priorityIndex = index + 1;
+
               return (
                 <Dropdown.Item
                   role="option"
                   key={label}
-                  eventKey={index}
-                  active={priority === index}
+                  eventKey={priorityIndex}
+                  active={priority === priorityIndex}
                 >
-                  <div>{index}</div>
-                  <div>{label}</div>
+                  <div className="item-value">{priorityIndex}</div>
+                  <div className="item-label">{label}</div>
                 </Dropdown.Item>
               );
             })}
