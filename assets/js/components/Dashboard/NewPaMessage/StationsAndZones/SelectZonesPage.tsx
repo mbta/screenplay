@@ -503,7 +503,7 @@ const SelectSignButton = ({
       className={isSelected ? "button-primary" : "button-primary-outline"}
       onClick={onClick}
     >
-      {sign.label ?? getZoneLabel(sign.zone!!)}
+      {sign.label ?? getZoneLabel(sign.zone ?? "")}
     </Button>
   );
 };
