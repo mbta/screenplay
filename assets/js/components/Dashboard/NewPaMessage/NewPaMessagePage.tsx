@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -14,8 +14,6 @@ import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import DatePicker from "Components/DatePicker";
-import TimePicker from "Components/TimePicker";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -87,6 +85,14 @@ const NewPaMessagePage = ({
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
   );
+
+  const priorityToIntervalMap: { [priority: number]: string } = {
+    1: "1",
+    2: "4",
+    3: "10",
+    4: "12",
+  };
+
   const previewAudio = () => {
     if (audioState === AudioPreview.Playing) return;
 
@@ -108,6 +114,10 @@ const NewPaMessagePage = ({
       "Error occurred while fetching audio preview. Please try again.",
     );
   };
+
+  useEffect(() => {
+    setInterval(priorityToIntervalMap[priority]);
+  }, [priority]);
 
   return (
     <div className="new-pa-message-page">
@@ -132,8 +142,8 @@ const NewPaMessagePage = ({
           </Row>
           <Card className="when-card">
             <div className="title">When</div>
-            <Row md="auto" className="start-datetime">
-              <Form.Group>
+            <Row md="auto">
+              <Form.Group className="start-datetime">
                 <Form.Label
                   className="label body--regular"
                   htmlFor="start-date-picker"
@@ -141,16 +151,27 @@ const NewPaMessagePage = ({
                   Start
                 </Form.Label>
                 <div className="datetime-picker-group">
-                  <DatePicker
-                    selectedDate={startDate}
-                    onChange={setStartDate}
-                    maxDateString={endDate}
+                  <Form.Control
+                    className="date-picker picker"
+                    type="date"
                     id="start-date-picker"
+                    name="start-date-picker-input"
+                    value={startDate}
+                    onChange={(event) => setStartDate(event.target.value)}
                   />
-                  <TimePicker
-                    selectedTime={startTime}
-                    onChange={setStartTime}
+                  <Form.Control
+                    type="time"
+                    className="time-picker picker"
+                    value={startTime}
+                    onChange={(event) => setStartTime(event.target.value)}
                   />
+                  <Button
+                    className="service-time-link"
+                    variant="link"
+                    onClick={() => setStartTime("03:00")}
+                  >
+                    Start of service day
+                  </Button>
                 </div>
               </Form.Group>
             </Row>
@@ -163,13 +184,27 @@ const NewPaMessagePage = ({
                   End
                 </Form.Label>
                 <div className="datetime-picker-group">
-                  <DatePicker
-                    selectedDate={endDate}
-                    onChange={setEndDate}
-                    minDateString={startDate}
+                  <Form.Control
+                    className="date-picker picker"
+                    type="date"
                     id="end-date-picker"
+                    name="end-date-picker-input"
+                    value={endDate}
+                    onChange={(event) => setEndDate(event.target.value)}
                   />
-                  <TimePicker selectedTime={endTime} onChange={setEndTime} />
+                  <Form.Control
+                    type="time"
+                    className="time-picker picker"
+                    value={endTime}
+                    onChange={(event) => setEndTime(event.target.value)}
+                  />
+                  <Button
+                    className="service-time-link"
+                    variant="link"
+                    onClick={() => setEndTime("03:00")}
+                  >
+                    End of service day
+                  </Button>
                 </div>
               </Form.Group>
             </Row>
