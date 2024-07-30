@@ -32,3 +32,59 @@
     background-color: $dark-bg;
   }
 }
+
+.selected-group-tag {
+  height: 36px;
+  padding: 6px 12px;
+  border: 1px solid $text-secondary;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+
+  &--green {
+    background-color: $mbta-green;
+  }
+  &--red {
+    background-color: $mbta-red;
+  }
+  &--orange {
+    background-color: $mbta-orange;
+  }
+  &--blue {
+    background-color: $mbta-blue;
+  }
+  &--mattapan {
+    background-color: $mbta-red;
+  }
+  &--silver {
+    background-color: $mbta-silver;
+  }
+  &--bus {
+    background-color: $mbta-bus;
+    color: $text-invert;
+    fill: $text-invert;
+  }
+
+  button {
+    height: 24px;
+    width: 16px;
+    gap: 8px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+
+    &.bus {
+      svg {
+        fill: $text-invert;
+      }
+    }
+
+    .x-button {
+      display: block;
+    }
+  }
+}

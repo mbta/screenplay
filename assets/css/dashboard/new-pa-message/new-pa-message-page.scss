@@ -163,12 +163,18 @@
   }
 
   .where-card {
-    .add-stations-zones-button {
-      background-color: $text-link-primary;
-      color: $text-invert;
-      border: 1px dashed $text-invert;
-      width: fit-content;
-      vertical-align: middle;
+    .select-stations-and-zones-button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .add-stations-zones-button {
+        background-color: transparent;
+        color: $button-primary;
+        border: 1px dashed $button-primary;
+        width: fit-content;
+        height: fit-content;
+      }
     }
   }
 

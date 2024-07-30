@@ -3,10 +3,7 @@ import { Button, Container, Form } from "react-bootstrap";
 import fp from "lodash/fp";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
-import {
-  BASE_ROUTE_NAME_TO_ROUTE_IDS,
-  GREEN_LINE_ROUTES,
-} from "Constants/constants";
+import { GREEN_LINE_ROUTES } from "Constants/constants";
 import StationGroupCheckbox from "./StationGroupCheckbox";
 import SelectedStationsSummary from "./SelectedStationsSummary";
 import {
@@ -21,7 +18,7 @@ import {
   RED_TRUNK,
 } from "./StationGroups";
 import { Page } from "../types";
-import { busRouteIdsAtPlaces } from "../../../../util";
+import { useRouteToRouteIDsMap } from "../hooks";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
@@ -36,17 +33,19 @@ interface Props {
   value: string[];
   onChange: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
+  busRoutes: string[];
 }
 
-const SelectStationsPage = ({ places, value, onChange, navigateTo }: Props) => {
+const SelectStationsPage = ({
+  places,
+  value,
+  onChange,
+  navigateTo,
+  busRoutes,
+}: Props) => {
   if (places.length === 0) return null;
 
-  const busRoutes = busRouteIdsAtPlaces(places);
-
-  const routeNameToRouteIds: { [key: string]: string[] } = {
-    ...BASE_ROUTE_NAME_TO_ROUTE_IDS,
-    Bus: busRouteIdsAtPlaces(places),
-  };
+  const routeNameToRouteIds = useRouteToRouteIDsMap();
 
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
     (acc, place) => {

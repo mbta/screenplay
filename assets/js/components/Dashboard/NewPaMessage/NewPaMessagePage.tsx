@@ -25,8 +25,9 @@ import {
 import cx from "classnames";
 import { ActivePeriod, Alert as AlertModel } from "Models/alert";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
-
 import { Page } from "./types";
+import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
+import { Place } from "Models/place";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -63,6 +64,10 @@ interface Props {
   visualText: string;
   associatedAlert: AlertModel;
   endWithEffectPeriod: boolean;
+  signIds: string[];
+  setSignIds: (signIds: string[]) => void;
+  places: Place[];
+  busRoutes: string[];
 }
 
 const NewPaMessagePage = ({
@@ -91,6 +96,10 @@ const NewPaMessagePage = ({
   visualText,
   associatedAlert,
   endWithEffectPeriod,
+  signIds,
+  setSignIds,
+  places,
+  busRoutes,
 }: Props) => {
   const now = moment();
   const navigate = useNavigate();
@@ -255,12 +264,22 @@ const NewPaMessagePage = ({
           </Card>
           <Card className="where-card">
             <div className="title">Where</div>
-            <Button
-              className="add-stations-zones-button"
-              onClick={() => navigateTo(Page.STATIONS)}
-            >
-              <PlusLg width={12} height={12} /> Add Stations & Zones
-            </Button>
+            <div className="select-stations-and-zones-button-group">
+              {signIds.length > 0 && (
+                <SelectedSignsByRouteTags
+                  places={places}
+                  value={signIds}
+                  onChange={setSignIds}
+                  busRoutes={busRoutes}
+                />
+              )}
+              <Button
+                className="add-stations-zones-button"
+                onClick={() => navigateTo(Page.STATIONS)}
+              >
+                <PlusLg width={12} height={12} /> Add Stations & Zones
+              </Button>
+            </div>
           </Card>
           <Card className="message-card">
             <div className="title">Message</div>

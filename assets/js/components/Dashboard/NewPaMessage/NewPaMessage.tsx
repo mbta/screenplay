@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { Page } from "./types";
-
 import NewPaMessagePage from "./NewPaMessagePage";
 import AssociateAlertPage from "./AssociateAlertPage";
 import { Alert } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "./hooks";
 import { Modal } from "react-bootstrap";
+import { busRouteIdsAtPlaces } from "../../../util";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -28,6 +28,7 @@ const NewPaMessage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [signIds, setSignIds] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
+  const busRoutes = busRouteIdsAtPlaces(places);
 
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
@@ -71,6 +72,10 @@ const NewPaMessage = () => {
             visualText,
             associatedAlert,
             endWithEffectPeriod,
+            signIds,
+            setSignIds,
+            places,
+            busRoutes,
           }}
         />
       )}
@@ -86,6 +91,7 @@ const NewPaMessage = () => {
           onChange={setSignIds}
           page={page}
           navigateTo={setPage}
+          busRoutes={busRoutes}
         />
       </Modal>
       {page === Page.ALERTS && (

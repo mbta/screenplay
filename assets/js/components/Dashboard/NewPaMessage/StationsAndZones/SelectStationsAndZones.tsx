@@ -10,6 +10,7 @@ interface Props {
   onChange: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
   page: Page;
+  busRoutes: string[];
 }
 
 const SelectStationsAndZones = ({
@@ -18,6 +19,7 @@ const SelectStationsAndZones = ({
   onChange,
   navigateTo,
   page,
+  busRoutes,
 }: Props) => {
   const [signIds, setSignIds] = useState(value);
 
@@ -27,6 +29,7 @@ const SelectStationsAndZones = ({
       navigateTo={navigateTo}
       value={signIds}
       onChange={setSignIds}
+      busRoutes={busRoutes}
     />
   ) : (
     <SelectZonesPage
