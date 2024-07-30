@@ -67,7 +67,7 @@ const SelectedStationsSummary = ({
 
   return (
     <div className="selected-stations-summary">
-      <GeoAltFill width={12} />
+      <GeoAltFill className="geo-alt-fill-icon" width={12} />
       <div className="label">Stations selected:</div>
       {value.length === 0 ? (
         <span>None</span>
