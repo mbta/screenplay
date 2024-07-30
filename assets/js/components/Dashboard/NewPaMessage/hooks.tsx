@@ -3,7 +3,7 @@ import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import { busRouteIdsAtPlaces } from "../../../util";
-import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
+import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
 
 export const usePlacesWithPaEss = () => {
   const { places } = useScreenplayContext();
@@ -42,7 +42,7 @@ export const useRouteToRouteIDsMap = (): { [key: string]: string[] } => {
   const places = usePlacesWithPaEss();
   return useMemo(() => {
     return {
-      ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+      ...BASE_ROUTE_NAME_TO_ROUTE_IDS,
       Bus: busRouteIdsAtPlaces(places),
     };
   }, []);

@@ -1,6 +1,6 @@
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
-import React, { useMemo } from "react";
+import React from "react";
 import { GeoAltFill, X } from "react-bootstrap-icons";
 import fp from "lodash/fp";
 import { SILVER_LINE_ROUTES } from "Constants/constants";

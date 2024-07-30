@@ -71,7 +71,7 @@ export const BASE_URL = "/api/takeover_tool";
 
 export const GREEN_LINE_ROUTES = ["Green-B", "Green-C", "Green-D", "Green-E"];
 
-export const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
+export const BASE_ROUTE_NAME_TO_ROUTE_IDS: { [key: string]: string[] } = {
   Green: ["Green-B", "Green-C", "Green-D", "Green-E"],
   "Green-B": ["Green-B"],
   "Green-C": ["Green-C"],

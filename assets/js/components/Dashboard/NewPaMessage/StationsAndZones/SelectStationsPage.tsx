@@ -4,7 +4,7 @@ import fp from "lodash/fp";
 import type { Place } from "Models/place";
 import RouteColumn from "./RouteColumn";
 import {
-  BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+  BASE_ROUTE_NAME_TO_ROUTE_IDS,
   GREEN_LINE_ROUTES,
 } from "Constants/constants";
 import StationGroupCheckbox from "./StationGroupCheckbox";
@@ -44,7 +44,7 @@ const SelectStationsPage = ({ places, value, onChange, navigateTo }: Props) => {
   const busRoutes = busRouteIdsAtPlaces(places);
 
   const routeNameToRouteIds: { [key: string]: string[] } = {
-    ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+    ...BASE_ROUTE_NAME_TO_ROUTE_IDS,
     Bus: busRouteIdsAtPlaces(places),
   };
 

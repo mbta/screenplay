@@ -1,4 +1,4 @@
-import { BASE_PLACE_ROUTE_TO_ROUTE_IDS } from "Constants/constants";
+import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
 import {
   CannedMessage,
   CustomMessage,
@@ -295,7 +295,7 @@ export const allRouteIdsAtPlaces = (places: Place[]) => {
 
 export const busRouteIdsAtPlaces = (places: Place[]) => {
   return fp.without(
-    Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
+    Object.values(BASE_ROUTE_NAME_TO_ROUTE_IDS).flat(),
     allRouteIdsAtPlaces(places),
   );
 };
