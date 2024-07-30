@@ -10,7 +10,7 @@ interface Props {
   routes: string[];
   stations: string[];
   value: string[];
-  onChange: (zones: string[]) => void;
+  onChange: (signIds: string[]) => void;
 }
 
 const StationGroupCheckbox = ({
@@ -22,7 +22,7 @@ const StationGroupCheckbox = ({
   value,
   onChange,
 }: Props) => {
-  const zones = places
+  const signIds = places
     .filter((place) => stations.includes(place.id))
     .flatMap((place) =>
       place.screens
@@ -42,12 +42,12 @@ const StationGroupCheckbox = ({
         id={title}
         onChange={(evt) => {
           if (evt.target.checked) {
-            onChange(fp.union(zones, value));
+            onChange(fp.union(signIds, value));
           } else {
-            onChange(fp.without(zones, value));
+            onChange(fp.without(signIds, value));
           }
         }}
-        checked={zones.every((zone) => value.includes(zone))}
+        checked={signIds.every((signId) => value.includes(signId))}
       />
     </div>
   );

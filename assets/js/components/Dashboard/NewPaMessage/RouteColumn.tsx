@@ -18,10 +18,10 @@ const RouteColumn = ({
   orderingRouteId?: string;
   places: Place[];
   value: string[];
-  onChange: (zones: string[]) => void;
+  onChange: (signIds: string[]) => void;
   reverse?: boolean;
 }) => {
-  const routeZones = places.flatMap((place) =>
+  const signsIdsAtRoutes = places.flatMap((place) =>
     place.screens
       .filter(
         (screen) => fp.intersection(routeIds, screen.route_ids).length > 0,
@@ -39,17 +39,17 @@ const RouteColumn = ({
           id={`${label}-checkbox`}
           onChange={(evt) => {
             if (evt.target.checked) {
-              onChange(fp.union(routeZones, value));
+              onChange(fp.union(signsIdsAtRoutes, value));
             } else {
-              onChange(fp.without(routeZones, value));
+              onChange(fp.without(signsIdsAtRoutes, value));
             }
           }}
-          checked={routeZones.every((zone) => value.includes(zone))}
+          checked={signsIdsAtRoutes.every((signId) => value.includes(signId))}
         />
       </div>
       <div className="col-content">
         {sortByStationOrder(places, orderingRouteId, reverse).map((place) => {
-          const placeZones = place.screens
+          const signIdsAtPlace = place.screens
             .filter(
               (screen) =>
                 fp.intersection(routeIds, screen.route_ids).length > 0,
@@ -64,12 +64,14 @@ const RouteColumn = ({
                 type="checkbox"
                 onChange={(evt) => {
                   if (evt.target.checked) {
-                    onChange(fp.union(placeZones, value));
+                    onChange(fp.union(signIdsAtPlace, value));
                   } else {
-                    onChange(fp.without(placeZones, value));
+                    onChange(fp.without(signIdsAtPlace, value));
                   }
                 }}
-                checked={value.some((zone) => placeZones.includes(zone))}
+                checked={value.some((signId) =>
+                  signIdsAtPlace.includes(signId),
+                )}
               />
             </div>
           );
