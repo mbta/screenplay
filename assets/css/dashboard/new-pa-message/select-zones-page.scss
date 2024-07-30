@@ -5,16 +5,6 @@
   max-width: 1380px;
   margin: 24px 40px 0 40px;
 
-  .cancel-button {
-    color: $button-primary;
-    background-color: transparent;
-    margin-right: 16px;
-
-    &:hover {
-      background-color: #c1e4ff14;
-    }
-  }
-
   .header {
     display: flex;
     justify-content: space-between;

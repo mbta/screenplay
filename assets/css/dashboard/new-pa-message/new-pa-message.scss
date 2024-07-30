@@ -15,14 +15,14 @@
   }
 
   .cancel-button {
+    color: $button-primary;
     background-color: transparent;
-    color: $text-link-primary;
+    margin-right: 16px;
     border: none;
-  }
 
-  .submit-button {
-    background-color: $button-primary;
-    color: $button-secondary;
+    &:hover {
+      background-color: #c1e4ff14;
+    }
   }
 }
 

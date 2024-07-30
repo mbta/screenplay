@@ -350,7 +350,7 @@ const NewPaMessagePage = ({
             >
               Cancel
             </Button>
-            <Button type="submit" className="submit-button">
+            <Button type="submit" className="submit-button button-primary">
               Submit
             </Button>
           </Row>

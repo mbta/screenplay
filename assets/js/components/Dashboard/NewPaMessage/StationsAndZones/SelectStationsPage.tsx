@@ -90,7 +90,7 @@ const SelectStationsPage = ({ places, value, onChange, navigateTo }: Props) => {
             Cancel
           </Button>
           <Button
-            className="submit-button"
+            className="submit-button button-primary"
             onClick={() => navigateTo(Page.ZONES)}
           >
             Review Zones
