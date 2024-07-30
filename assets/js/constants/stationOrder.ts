@@ -11,7 +11,6 @@ interface StationsByLine {
 
 // Terminal Stations are listed in all caps
 const STATION_ORDER_BY_LINE: StationsByLine = {
-  bus: [],
   red: [
     {
       name: "Alewife",
