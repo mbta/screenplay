@@ -7,4 +7,5 @@ export interface Screen {
   label?: string;
   location?: string;
   hidden?: boolean;
+  route_ids?: string[];
 }

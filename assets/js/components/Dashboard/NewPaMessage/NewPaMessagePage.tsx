@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -9,12 +9,11 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
-import DaysPicker from "./DaysPicker";
+import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -23,6 +22,8 @@ import {
   VolumeUpFill,
 } from "react-bootstrap-icons";
 import cx from "classnames";
+
+import { Page } from "./types";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -33,23 +34,57 @@ enum AudioPreview {
   Outdated,
 }
 
-const NewPaMessagePage = () => {
-  const now = moment();
+interface Props {
+  days: number[];
+  endDate: string;
+  endTime: string;
+  errorMessage: string;
+  interval: string;
+  navigateTo: (page: Page) => void;
+  phoneticText: string;
+  priority: number;
+  setDays: Dispatch<SetStateAction<number[]>>;
+  setEndDate: Dispatch<SetStateAction<string>>;
+  setEndTime: Dispatch<SetStateAction<string>>;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
+  setInterval: Dispatch<SetStateAction<string>>;
+  setPhoneticText: Dispatch<SetStateAction<string>>;
+  setPriority: Dispatch<SetStateAction<number>>;
+  setStartDate: Dispatch<SetStateAction<string>>;
+  setStartTime: Dispatch<SetStateAction<string>>;
+  setVisualText: Dispatch<SetStateAction<string>>;
+  startDate: string;
+  startTime: string;
+  visualText: string;
+}
 
-  const [startDate, setStartDate] = useState(now.format("L"));
-  const [startTime, setStartTime] = useState(now.format("HH:mm"));
-  const [endDate, setEndDate] = useState(now.format("L"));
-  const [endTime, setEndTime] = useState(now.add(1, "hour").format("HH:mm"));
-  const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
-  const [priority, setPriority] = useState(2);
-  const [interval, setInterval] = useState("4");
-  const [visualText, setVisualText] = useState("");
-  const [phoneticText, setPhoneticText] = useState("");
+const NewPaMessagePage = ({
+  days,
+  endDate,
+  endTime,
+  errorMessage,
+  interval,
+  navigateTo,
+  phoneticText,
+  priority,
+  setDays,
+  setEndDate,
+  setEndTime,
+  setErrorMessage,
+  setInterval,
+  setPhoneticText,
+  setPriority,
+  setStartDate,
+  setStartTime,
+  setVisualText,
+  startDate,
+  startTime,
+  visualText,
+}: Props) => {
+  const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
   );
-  const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
 
   const priorityToIntervalMap: { [priority: number]: string } = {
     1: "1",
@@ -91,7 +126,7 @@ const NewPaMessagePage = () => {
           event.preventDefault();
         }}
       >
-        <div className="new-pa-message-page__header">New PA/ESS message</div>
+        <div className="header">New PA/ESS message</div>
         <Container fluid>
           <Row md="auto" className="align-items-center">
             <Button variant="link" className="pr-0">
@@ -193,7 +228,10 @@ const NewPaMessagePage = () => {
           </Card>
           <Card className="where-card">
             <div className="title">Where</div>
-            <Button className="add-stations-zones-button">
+            <Button
+              className="add-stations-zones-button"
+              onClick={() => navigateTo(Page.STATIONS)}
+            >
               <PlusLg width={12} height={12} /> Add Stations & Zones
             </Button>
           </Card>

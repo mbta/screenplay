@@ -72,11 +72,11 @@
   }
 
   th {
-    border-bottom: 1px solid #495057;
+    border-bottom: 1px solid $theme-secondary;
   }
 
   td {
-    border-bottom: 1px solid #2b3741;
+    border-bottom: 1px solid $bg-elevation-4;
   }
 
   &__start-end {

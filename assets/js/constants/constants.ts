@@ -68,3 +68,5 @@ export const STATUSES = [
 ];
 
 export const BASE_URL = "/api/takeover_tool";
+
+export const GREEN_LINE_ROUTES = ["Green-B", "Green-C", "Green-D", "Green-E"];
