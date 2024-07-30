@@ -34,7 +34,7 @@ const usePlacesWithPaEss = () => {
   );
 };
 
-const BASE_PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
+const BASE_ROUTE_NAME_TO_ROUTE_IDS: { [key: string]: string[] } = {
   "Green-B": ["Green-B"],
   "Green-C": ["Green-C"],
   "Green-D": ["Green-D"],
@@ -70,19 +70,19 @@ const SelectStationsPage = ({ navigateTo }: Props) => {
   );
 
   const busRoutes = fp.without(
-    Object.values(BASE_PLACE_ROUTE_TO_ROUTE_IDS).flat(),
+    Object.values(BASE_ROUTE_NAME_TO_ROUTE_IDS).flat(),
     allRoutes,
   );
 
-  const PLACE_ROUTE_TO_ROUTE_IDS: { [key: string]: string[] } = {
-    ...BASE_PLACE_ROUTE_TO_ROUTE_IDS,
+  const routeNameToRouteIds: { [key: string]: string[] } = {
+    ...BASE_ROUTE_NAME_TO_ROUTE_IDS,
     Bus: busRoutes,
   };
 
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
     (acc, place) => {
       place.routes.forEach((route) => {
-        const groupedRoutes = PLACE_ROUTE_TO_ROUTE_IDS[route];
+        const groupedRoutes = routeNameToRouteIds[route];
         if (
           place.screens.some(
             (screen) =>
@@ -273,7 +273,7 @@ const SelectStationsPage = ({ navigateTo }: Props) => {
             <RouteColumn
               label={`${route} line`}
               orderingRouteId={route}
-              routeIds={PLACE_ROUTE_TO_ROUTE_IDS[route]}
+              routeIds={routeNameToRouteIds[route]}
               places={placesByRoute[route]}
               value={signsIds}
               onChange={setSignsIds}

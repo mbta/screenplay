@@ -8,7 +8,7 @@ import { classWithModifier } from "../../../util";
 import pluralize from "pluralize";
 interface Props {
   value: string[];
-  onChange: (zones: string[]) => void;
+  onChange: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
 }
