@@ -239,7 +239,7 @@ const SelectZonesPage = ({
                           "filter-button",
                           selectedRouteFilter === branchID
                             ? ROUTE_TO_CLASS_NAMES_MAP["Green"]
-                            : "text-button-grey",
+                            : "filter-button-default",
                         )}
                       >
                         <Dot /> {branch} Branch
