@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, ReactNode, useMemo, useState } from "react";
 import { Page } from "../types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -6,7 +6,7 @@ import fp from "lodash/fp";
 import { Screen } from "Models/screen";
 import { getZoneLabel, signIDs, sortByStationOrder } from "../../../../util";
 import cx from "classnames";
-import { Dot } from "react-bootstrap-icons";
+import { ArrowLeftShort, ArrowRightShort, Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "../hooks";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
@@ -446,7 +446,9 @@ const PlaceZonesRow = ({
                   onSignButtonClick(sign.id);
                 }}
                 isSelected={allSelectedSigns.includes(sign.id)}
-              />
+              >
+                <ArrowLeftShort /> {sign.label ?? getZoneLabel(sign.zone ?? "")}
+              </SelectSignButton>
             );
           })}
         </div>
@@ -462,7 +464,9 @@ const PlaceZonesRow = ({
                   onSignButtonClick(sign.id);
                 }}
                 isSelected={allSelectedSigns.includes(sign.id)}
-              />
+              >
+                {sign.label ?? getZoneLabel(sign.zone ?? "")}
+              </SelectSignButton>
             );
           })}
         </div>
@@ -478,7 +482,10 @@ const PlaceZonesRow = ({
                   onSignButtonClick(sign.id);
                 }}
                 isSelected={allSelectedSigns.includes(sign.id)}
-              />
+              >
+                {sign.label ?? getZoneLabel(sign.zone ?? "")}{" "}
+                <ArrowRightShort />
+              </SelectSignButton>
             );
           })}
         </div>
@@ -491,19 +498,21 @@ interface SelectSignButtonProps {
   sign: Screen;
   isSelected: boolean;
   onClick: () => void;
+  children: ReactNode;
 }
 
 const SelectSignButton = ({
   sign,
   isSelected,
   onClick,
+  children,
 }: SelectSignButtonProps) => {
   return (
     <Button
       className={isSelected ? "button-primary" : "button-primary-outline"}
       onClick={onClick}
     >
-      {sign.label ?? getZoneLabel(sign.zone ?? "")}
+      {children}
     </Button>
   );
 };
