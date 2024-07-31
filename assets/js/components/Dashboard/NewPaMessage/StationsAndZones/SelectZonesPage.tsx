@@ -441,7 +441,6 @@ const PlaceZonesRow = ({
             return (
               <SelectSignButton
                 key={sign.id}
-                sign={sign}
                 onClick={() => {
                   onSignButtonClick(sign.id);
                 }}
@@ -459,7 +458,6 @@ const PlaceZonesRow = ({
             return (
               <SelectSignButton
                 key={sign.id}
-                sign={sign}
                 onClick={() => {
                   onSignButtonClick(sign.id);
                 }}
@@ -477,7 +475,6 @@ const PlaceZonesRow = ({
             return (
               <SelectSignButton
                 key={sign.id}
-                sign={sign}
                 onClick={() => {
                   onSignButtonClick(sign.id);
                 }}
@@ -495,14 +492,12 @@ const PlaceZonesRow = ({
 };
 
 interface SelectSignButtonProps {
-  sign: Screen;
   isSelected: boolean;
   onClick: () => void;
   children: ReactNode;
 }
 
 const SelectSignButton = ({
-  sign,
   isSelected,
   onClick,
   children,
