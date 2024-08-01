@@ -12,6 +12,7 @@ interface Props {
   navigateTo: (page: Page) => void;
   page: Page;
   busRoutes: string[];
+  onError: (message: string) => void;
 }
 
 const SelectStationsAndZones = ({
@@ -21,6 +22,7 @@ const SelectStationsAndZones = ({
   navigateTo,
   page,
   busRoutes,
+  onError,
 }: Props) => {
   const dispatch = useScreenplayDispatchContext();
   const [signIds, setSignIds] = useState(value);
@@ -38,6 +40,7 @@ const SelectStationsAndZones = ({
       value={signIds}
       onChange={setSignIds}
       busRoutes={busRoutes}
+      onError={onError}
     />
   ) : (
     <SelectZonesPage

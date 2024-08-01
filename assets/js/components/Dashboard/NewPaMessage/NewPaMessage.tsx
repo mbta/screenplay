@@ -7,6 +7,8 @@ import { Alert } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "./hooks";
 import { busRouteIdsAtPlaces } from "../../../util";
+import { Alert as AlertToast } from "react-bootstrap";
+import { ExclamationTriangleFill } from "react-bootstrap-icons";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -87,6 +89,7 @@ const NewPaMessage = () => {
             page={page}
             navigateTo={setPage}
             busRoutes={busRoutes}
+            onError={(message: string) => setErrorMessage(message)}
           />
         </div>
       )}
@@ -101,6 +104,18 @@ const NewPaMessage = () => {
           setEndWithEffectPeriod={setEndWithEffectPeriod}
         />
       )}
+      <div className="error-alert-container">
+        <AlertToast
+          show={errorMessage.length > 0}
+          variant="primary"
+          onClose={() => setErrorMessage("")}
+          dismissible
+          className="error-alert"
+        >
+          <ExclamationTriangleFill className="error-alert__icon" />
+          <div className="error-alert__text">{errorMessage}</div>
+        </AlertToast>
+      </div>
     </div>
   );
 };

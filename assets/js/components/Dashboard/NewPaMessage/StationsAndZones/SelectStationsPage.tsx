@@ -34,6 +34,7 @@ interface Props {
   onChange: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
   busRoutes: string[];
+  onError: (message: string) => void;
 }
 
 const SelectStationsPage = ({
@@ -42,6 +43,7 @@ const SelectStationsPage = ({
   onChange,
   navigateTo,
   busRoutes,
+  onError,
 }: Props) => {
   if (places.length === 0) return null;
 
@@ -90,7 +92,13 @@ const SelectStationsPage = ({
           </Button>
           <Button
             className="submit-button button-primary"
-            onClick={() => navigateTo(Page.ZONES)}
+            onClick={() => {
+              if (!value.length) {
+                onError("Select a station to review zones.");
+              } else {
+                navigateTo(Page.ZONES);
+              }
+            }}
           >
             Review Zones
           </Button>

@@ -1,14 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
@@ -42,7 +34,6 @@ interface Props {
   days: number[];
   endDate: string;
   endTime: string;
-  errorMessage: string;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
@@ -74,7 +65,6 @@ const NewPaMessagePage = ({
   days,
   endDate,
   endTime,
-  errorMessage,
   interval,
   navigateTo,
   phoneticText,
@@ -374,18 +364,6 @@ const NewPaMessagePage = ({
             </Button>
           </Row>
         </Container>
-        <div className="error-alert-container">
-          <Alert
-            show={errorMessage.length > 0}
-            variant="primary"
-            onClose={() => setErrorMessage("")}
-            dismissible
-            className="error-alert"
-          >
-            <ExclamationTriangleFill className="error-alert__icon" />
-            <div className="error-alert__text">{errorMessage}</div>
-          </Alert>
-        </div>
       </Form>
     </div>
   );
