@@ -51,6 +51,8 @@ get_config = fn bucket, path ->
   end
 end
 
+sl_route_ids = ~w[741 742 743 746 749 751]
+
 cr_or_bus_only? = fn route_ids_or_labels ->
   Enum.all?(route_ids_or_labels, &(&1 in ["Bus", "Silver", "CR"]))
 end
@@ -65,24 +67,24 @@ end
 
 format_routes = fn routes ->
   bus_routes =
-    Enum.filter(routes, fn
-      %{"attributes" => %{"short_name" => short_name, "type" => route_type}} ->
-        route_type == 3 and not String.starts_with?(short_name, "SL")
+    routes
+    |> Enum.filter(fn
+      %{"id" => id, "attributes" => %{"type" => route_type}} ->
+        route_type == 3 and id not in sl_route_ids
     end)
     |> Enum.map(& &1["id"])
 
   cr_routes =
-    Enum.filter(routes, fn
+    routes
+    |> Enum.filter(fn
       %{"attributes" => %{"type" => route_type}} ->
         route_type == 2
     end)
     |> Enum.map(& &1["id"])
 
   sl_routes =
-    Enum.filter(routes, fn
-      %{"attributes" => %{"short_name" => short_name, "type" => route_type}} ->
-        route_type == 3 and String.starts_with?(short_name, "SL")
-    end)
+    routes
+    |> Enum.filter(&(&1["id"] in sl_route_ids))
     |> Enum.map(& &1["id"])
 
   routes
