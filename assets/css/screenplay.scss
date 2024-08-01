@@ -115,30 +115,6 @@ input[type="button"] {
   }
 }
 
-.bg-green {
-  background-color: $mbta-green;
-}
-.bg-red {
-  background-color: $mbta-red;
-}
-.bg-orange {
-  background-color: $mbta-orange;
-}
-.bg-blue {
-  background-color: $mbta-blue;
-}
-.bg-mattapan {
-  background-color: $mbta-red;
-}
-.bg-silver {
-  background-color: $mbta-silver;
-}
-.bg-bus {
-  background-color: $mbta-bus;
-  color: $text-invert;
-  fill: $text-invert;
-}
-
 .button-secondary-outline {
   background-color: transparent;
   border: 1px solid $text-primary;

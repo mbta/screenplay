@@ -38,6 +38,28 @@
     }
   }
 
+  .bg-green {
+    background-color: $mbta-green;
+  }
+  .bg-red,
+  .bg-mattapan {
+    background-color: $mbta-red;
+  }
+  .bg-orange {
+    background-color: $mbta-orange;
+  }
+  .bg-blue {
+    background-color: $mbta-blue;
+  }
+  .bg-silver {
+    background-color: $mbta-silver;
+  }
+  .bg-bus {
+    background-color: $mbta-bus;
+    color: $text-invert;
+    fill: $text-invert;
+  }
+
   .zone-selection {
     display: flex;
     font-size: 20px;
@@ -60,11 +82,11 @@
           &.filter-button-default {
             background-color: $bg-elevation-3;
             color: $text-secondary;
-          }
 
-          &:hover {
-            background-color: #f8f9fa14;
-            color: $text-primary;
+            &:hover {
+              background-color: #f8f9fa14;
+              color: $text-primary;
+            }
           }
 
           &:first-child {
