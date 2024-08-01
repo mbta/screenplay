@@ -149,12 +149,6 @@ input[type="button"] {
   color: $button-primary;
   border: 1px solid $button-primary;
 
-  &:hover,
-  &:focus {
-    background-color: $button-primary;
-    color: $text-invert;
-  }
-
   &:focus {
     box-shadow: 0px 0px 0px 4px #8ecdff80;
   }
