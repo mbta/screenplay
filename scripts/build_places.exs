@@ -462,7 +462,7 @@ contents =
     (String.starts_with?(id, "place-CM-") or cr_or_bus_only?.(routes)) and length(screens) == 0
   end)
 
-Logger.info("Fetching realtiem_signs config from GitHub")
+Logger.info("Fetching realtime_signs config from GitHub")
 
 # Because the realtime_signs config lives in the realtime_signs repo, go get it so we are always reading the latest.
 url = "https://api.github.com/repos/mbta/realtime_signs/contents/priv/signs.json"
@@ -564,32 +564,37 @@ get_routes_for_pa_ess = fn config ->
   end
 end
 
+pa_ess_label = fn %{"pa_ess_loc" => station_code, "text_zone" => zone} ->
+  # Allow specifying `null` in `paess_labels.json` to hide a sign from Screenplay
+  case Map.get(labels, "#{station_code}-#{zone}", :undefined) do
+    :undefined -> nil
+    nil -> :hidden
+    label -> label
+  end
+end
+
 Logger.info("Getting all countdown clocks")
 # Get all countdown clocks
 pa_ess_screens =
   parsed
-  |> Enum.group_by(
-    fn config ->
-      config
-      |> get_sources.()
-      |> get_first_parent_station.()
-    end,
-    fn %{
-         "id" => id,
-         "pa_ess_loc" => station_code,
-         "text_zone" => zone
-       } = config ->
+  |> Enum.map(fn %{"id" => id, "pa_ess_loc" => station_code, "text_zone" => zone} = config ->
+    {
+      config |> get_sources.() |> get_first_parent_station.(),
       %{
         id: id,
         station_code: station_code,
         zone: zone,
         type: "pa_ess",
-        label: labels["#{station_code}-#{zone}"],
+        label: pa_ess_label.(config),
         route_ids: get_routes_for_pa_ess.(config)
       }
-    end
-  )
-  |> Enum.into(%{})
+    }
+  end)
+  |> Enum.filter(fn
+    {_parent_station, %{label: :hidden}} -> false
+    _ -> true
+  end)
+  |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
 
 # Merge screens and pa/ess
 merged_paess =
