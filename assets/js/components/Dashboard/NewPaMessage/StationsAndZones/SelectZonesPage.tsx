@@ -200,6 +200,14 @@ const SelectZonesPage = ({
   const massSelectClassName = (selected: boolean) =>
     selected ? "button-primary" : "button-secondary-outline";
 
+  const getFilterPillLabel = () => {
+    if (selectedRouteFilter.startsWith("Green-")) {
+      return `Green Line ${selectedRouteFilter.split("-")[1]}`;
+    } else {
+      return `${selectedRouteFilter} Line`;
+    }
+  };
+
   return (
     <div className="select-zones-page">
       <div className="header">
@@ -285,9 +293,9 @@ const SelectZonesPage = ({
             <div className="title-and-route-container">
               <div className="title h3">Zones</div>
               <div
-                className={`route ${ROUTE_TO_CLASS_NAMES_MAP[selectedRouteFilter]}`}
+                className={`route ${ROUTE_TO_CLASS_NAMES_MAP[selectedRouteFilter.split("-")[0]]}`}
               >
-                {selectedRouteFilter} line
+                {getFilterPillLabel()}
               </div>
             </div>
             {selectedRouteFilter !== "Bus" && (
