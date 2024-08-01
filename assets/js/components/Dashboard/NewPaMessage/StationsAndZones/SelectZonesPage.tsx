@@ -1,4 +1,10 @@
-import React, { Fragment, ReactNode, useMemo, useState } from "react";
+import React, {
+  Fragment,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Page } from "../types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -8,6 +14,7 @@ import { getZoneLabel, signIDs, sortByStationOrder } from "../../../../util";
 import cx from "classnames";
 import { ArrowLeftShort, ArrowRightShort, Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "../hooks";
+import { Dictionary } from "lodash";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-green",
@@ -39,6 +46,10 @@ const SelectZonesPage = ({
   places,
 }: Props) => {
   const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
+  const [newPlaces, setNewPlaces] = useState<Place[]>([]);
+  const [selectedRoutes, setSelectedRoutes] = useState<Dictionary<string[]>>(
+    {},
+  );
   const routeToRouteIDMap = useRouteToRouteIDsMap();
 
   const isSelected = (id: string) => value.includes(id);
@@ -85,46 +96,51 @@ const SelectZonesPage = ({
     };
   }, [selectedRouteFilter]);
 
-  const selectedRoutes = useMemo(
-    () =>
-      fp.flow(
-        fp.flatMap((place: Place) =>
-          place.screens.filter((s) => value.includes(s.id)),
-        ),
-        fp.flatMap((screen: Screen) => screen.route_ids),
-        fp.uniq,
-        fp.groupBy((routeID: string) => {
-          if (routeID.startsWith("Green")) {
-            return "Green";
-          }
+  useEffect(() => {
+    const routes = fp.flow(
+      fp.flatMap((place: Place) =>
+        place.screens.filter((s) => value.includes(s.id)),
+      ),
+      fp.flatMap((screen: Screen) => screen.route_ids),
+      fp.uniq,
+      fp.groupBy((routeID: string) => {
+        if (routeID.startsWith("Green")) {
+          return "Green";
+        }
 
-          if (routeToRouteIDMap["Bus"].includes(routeID)) {
-            return "Bus";
-          }
+        if (routeToRouteIDMap["Bus"].includes(routeID)) {
+          return "Bus";
+        }
 
-          if (routeToRouteIDMap["Silver"].includes(routeID)) {
-            return "Silver";
-          }
+        if (routeToRouteIDMap["Silver"].includes(routeID)) {
+          return "Silver";
+        }
 
-          return routeID;
-        }),
-        fp.tap((routes) => setSelectedRouteFilter(Object.keys(routes)[0])),
-      )(places),
-    [places],
-  );
+        return routeID;
+      }),
+    )(places);
 
-  const filteredPlaces = places.filter(
-    (p) =>
-      places
-        .filter((p) => p.screens.some((s) => value.includes(s.id)))
-        .map((p) => p.id)
-        .includes(p.id) &&
+    setSelectedRoutes(routes);
+    setSelectedRouteFilter(Object.keys(routes)[0]);
+    setNewPlaces(
+      places.filter((p) =>
+        places
+          .filter((p) => p.screens.some((s) => value.includes(s.id)))
+          .map((p) => p.id)
+          .includes(p.id),
+      ),
+    );
+  }, [places]);
+
+  const filteredPlaces = useMemo(() => {
+    return newPlaces.filter((p) =>
       p.screens.some((s) =>
         s.route_ids?.some((r) =>
           routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
         ),
       ),
-  );
+    );
+  }, [selectedRouteFilter]);
 
   const allScreens = useMemo(
     () =>
@@ -135,7 +151,7 @@ const SelectZonesPage = ({
               .length > 0,
         );
       }),
-    [selectedRouteFilter],
+    [filteredPlaces],
   );
 
   const screensByZone = useMemo(() => {
@@ -183,9 +199,6 @@ const SelectZonesPage = ({
 
   const massSelectClassName = (selected: boolean) =>
     selected ? "button-primary" : "button-secondary-outline";
-
-  // TODO: initialize this in a more stable way
-  if (!selectedRouteFilter) return null;
 
   return (
     <div className="select-zones-page">
