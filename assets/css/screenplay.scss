@@ -155,12 +155,10 @@ input[type="button"] {
   }
 }
 
-.button-primary {
-  &,
-  &:focus {
-    background-color: $button-primary;
-    color: $text-invert;
-  }
+.button-primary.btn {
+  color: $text-invert;
+  background-color: $button-primary;
+
   &:hover {
     background-color: $button-primary-hover;
   }
