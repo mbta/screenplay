@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectStationsPage from "./SelectStationsPage";
 import SelectZonesPage from "./SelectZonesPage";
 import type { Place } from "Models/place";
 import { Page } from "../types";
+import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
 
 interface Props {
   places: Place[];
@@ -21,7 +22,14 @@ const SelectStationsAndZones = ({
   page,
   busRoutes,
 }: Props) => {
+  const dispatch = useScreenplayDispatchContext();
   const [signIds, setSignIds] = useState(value);
+
+  useEffect(() => {
+    dispatch({ type: "SHOW_SIDEBAR", showSidebar: false });
+
+    return () => dispatch({ type: "SHOW_SIDEBAR", showSidebar: true });
+  }, []);
 
   return page === Page.STATIONS ? (
     <SelectStationsPage

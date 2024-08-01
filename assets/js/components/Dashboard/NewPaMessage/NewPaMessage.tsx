@@ -6,7 +6,6 @@ import AssociateAlertPage from "./AssociateAlertPage";
 import { Alert } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "./hooks";
-import { Modal } from "react-bootstrap";
 import { busRouteIdsAtPlaces } from "../../../util";
 
 const NewPaMessage = () => {
@@ -79,21 +78,18 @@ const NewPaMessage = () => {
           }}
         />
       )}
-      <Modal
-        className="select-stations-page-modal"
-        fullscreen
-        show={[Page.STATIONS, Page.ZONES].includes(page)}
-        onHide={() => setPage(Page.NEW)}
-      >
-        <SelectStationsAndZones
-          places={places}
-          value={signIds}
-          onChange={setSignIds}
-          page={page}
-          navigateTo={setPage}
-          busRoutes={busRoutes}
-        />
-      </Modal>
+      {[Page.STATIONS, Page.ZONES].includes(page) && (
+        <div className="select-stations-page-modal">
+          <SelectStationsAndZones
+            places={places}
+            value={signIds}
+            onChange={setSignIds}
+            page={page}
+            navigateTo={setPage}
+            busRoutes={busRoutes}
+          />
+        </div>
+      )}
       {page === Page.ALERTS && (
         <AssociateAlertPage
           associatedAlert={associatedAlert}

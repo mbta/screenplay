@@ -15,8 +15,13 @@ import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
 
 const Dashboard: ComponentType = () => {
-  const { alerts, bannerAlert, showLinkCopied, actionOutcomeToast } =
-    useScreenplayContext();
+  const {
+    alerts,
+    bannerAlert,
+    showLinkCopied,
+    actionOutcomeToast,
+    showSidebar,
+  } = useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
 
@@ -151,9 +156,16 @@ const Dashboard: ComponentType = () => {
   const showAlertBanner =
     !pathname.includes("configure-screens") && bannerAlert?.alert;
 
-  const showSidebar =
-    !pathname.startsWith("/configure-screens") &&
-    !pathname.startsWith("/emergency-takeover");
+  useEffect(() => {
+    if (
+      pathname.startsWith("/configure-screens") ||
+      pathname.startsWith("/emergency-takeover")
+    ) {
+      dispatch({ type: "SHOW_SIDEBAR", showSidebar: false });
+    } else {
+      dispatch({ type: "SHOW_SIDEBAR", showSidebar: true });
+    }
+  }, [pathname]);
 
   return (
     <div className="screenplay-container">

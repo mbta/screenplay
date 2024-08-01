@@ -48,6 +48,10 @@ type ReducerAction =
     >)
   | {
       type: "HIDE_ACTION_OUTCOME";
+    }
+  | {
+      type: "SHOW_SIDEBAR";
+      showSidebar: boolean;
     };
 
 type AlertsListReducerAction = {
@@ -107,6 +111,7 @@ interface ScreenplayState {
   bannerAlert?: BannerAlert;
   showLinkCopied: boolean;
   actionOutcomeToast: ActionOutcomeToastProps;
+  showSidebar: boolean;
 }
 
 interface ConfigValidationState {
@@ -151,6 +156,11 @@ const reducer = (
       return {
         ...state,
         actionOutcomeToast: { ...state.actionOutcomeToast, show: false },
+      };
+    case "SHOW_SIDEBAR":
+      return {
+        ...state,
+        showSidebar: action.showSidebar,
       };
     default:
       throw new Error(`Unknown reducer action: ${JSON.stringify(action)}`);
@@ -246,6 +256,7 @@ const initialState: ScreenplayState = {
   bannerAlert: undefined,
   showLinkCopied: false,
   actionOutcomeToast: { show: false },
+  showSidebar: true,
 };
 
 const initialPlacesListState: PlacesListState = {
