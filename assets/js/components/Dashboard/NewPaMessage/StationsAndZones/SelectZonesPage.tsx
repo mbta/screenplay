@@ -449,7 +449,12 @@ const PlaceZonesRow = ({
             if (allSignsSelected) {
               setSignIds(fp.without(signIDsAtPlace, allSelectedSigns));
             } else {
-              setSignIds(fp.uniq(allSignsForRouteAtPlace.map((s) => s.id)));
+              setSignIds(
+                fp.concat(
+                  allSignsForRouteAtPlace.map((s) => s.id),
+                  allSelectedSigns,
+                ),
+              );
             }
           }}
         >
