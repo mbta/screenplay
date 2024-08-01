@@ -452,7 +452,7 @@ const NewPaMessageHeader = ({
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
     return (
       <div className="effect-period">
-        Alert Effect period: {start} - {end}
+        Alert effect period: {start} &ndash; {end}
       </div>
     );
   };
