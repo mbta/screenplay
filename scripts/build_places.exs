@@ -51,18 +51,47 @@ get_config = fn bucket, path ->
   end
 end
 
-cr_or_bus_only? = fn routes ->
-  Enum.all?(routes, fn route ->
-    route == "CR" or route == "Bus"
-  end)
+sl_route_ids = ~w[741 742 743 746 749 751]
+
+cr_or_bus_only? = fn route_ids_or_labels ->
+  Enum.all?(route_ids_or_labels, &(&1 in ["Bus", "Silver", "CR"]))
 end
 
-format_bus_routes = fn routes ->
-  if Enum.any?(routes, &string_is_number?.(&1)) do
-    routes |> Enum.reject(&string_is_number?.(&1)) |> Enum.concat(["Bus"])
-  else
+replace_routes_with_label = fn
+  all_routes, [], _ ->
+    all_routes
+
+  all_routes, routes_to_remove, label ->
+    all_routes |> Enum.reject(&(&1 in routes_to_remove)) |> Enum.concat([label])
+end
+
+format_routes = fn routes ->
+  bus_routes =
     routes
-  end
+    |> Enum.filter(fn
+      %{"id" => id, "attributes" => %{"type" => route_type}} ->
+        route_type == 3 and id not in sl_route_ids
+    end)
+    |> Enum.map(& &1["id"])
+
+  cr_routes =
+    routes
+    |> Enum.filter(fn
+      %{"attributes" => %{"type" => route_type}} ->
+        route_type == 2
+    end)
+    |> Enum.map(& &1["id"])
+
+  sl_routes =
+    routes
+    |> Enum.filter(&(&1["id"] in sl_route_ids))
+    |> Enum.map(& &1["id"])
+
+  routes
+  |> Enum.map(& &1["id"])
+  |> replace_routes_with_label.(bus_routes, "Bus")
+  |> replace_routes_with_label.(sl_routes, "Silver")
+  |> replace_routes_with_label.(cr_routes, "CR")
 end
 
 sort_routes = fn routes ->
@@ -88,15 +117,6 @@ sort_routes = fn routes ->
         Enum.find_index(route_order, fn x -> x == b end)
     end
   )
-end
-
-# If a place's stop shows Ferry departures from a separate nearby stop, add it here.
-add_routes_to_stops = fn
-  routes, %{id: "place-aqucl"} = stop ->
-    Map.put(stop, :routes, routes ++ ["Ferry"])
-
-  routes, stop ->
-    Map.put(stop, :routes, routes)
 end
 
 # Get live config from S3
@@ -441,26 +461,22 @@ contents =
       %{status_code: 200, body: body} = HTTPoison.get!(url, headers)
       %{"data" => data} = Jason.decode!(body)
 
-      data
-      |> Enum.map(fn
-        %{"attributes" => %{"short_name" => "SL" <> _}} -> "Silver"
-        %{"id" => "CR-" <> _} -> "CR"
-        # Bus edge case I found in the data.
-        %{"id" => "34E"} -> "Bus"
-        %{"id" => route_id} -> route_id
-      end)
-      |> format_bus_routes.()
-      |> Enum.dedup()
-      |> sort_routes.()
-      |> add_routes_to_stops.(stop)
+      formatted_routes =
+        data |> format_routes.() |> Enum.uniq()
+
+      # If a place's stop shows Ferry departures from a separate nearby stop, add it here.
+      formatted_routes =
+        if id == "place-aqucl" do
+          formatted_routes ++ ["Ferry"]
+        else
+          formatted_routes
+        end
+
+      Map.put(stop, :routes, sort_routes.(formatted_routes))
     end,
     ordered: false
   )
   |> Enum.map(fn {:ok, result} -> result end)
-  # Get rid of CR stops with no screens
-  |> Enum.reject(fn %{id: id, routes: routes, screens: screens} ->
-    (String.starts_with?(id, "place-CM-") or cr_or_bus_only?.(routes)) and length(screens) == 0
-  end)
 
 Logger.info("Fetching realtime_signs config from GitHub")
 
@@ -598,8 +614,13 @@ pa_ess_screens =
 
 # Merge screens and pa/ess
 merged_paess =
-  Enum.map(contents, fn %{id: id, screens: screens} = place ->
+  contents
+  |> Enum.map(fn %{id: id, screens: screens} = place ->
     Map.put(place, :screens, screens ++ (pa_ess_screens[id] || []))
+  end)
+  # Get rid of CR and Bus stops with no screens
+  |> Enum.reject(fn %{routes: routes, screens: screens} ->
+    cr_or_bus_only?.(routes) and Enum.empty?(screens)
   end)
 
 Logger.info("Writing result to priv/config/places_and_screens.json")
