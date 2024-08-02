@@ -44,6 +44,11 @@
   margin-right: 4px;
   display: flex;
   align-items: center;
+  cursor: pointer;
+
+  .label {
+    color: $text-primary;
+  }
 
   &--green {
     background-color: $mbta-green;
@@ -65,26 +70,14 @@
   }
   &--bus {
     background-color: $mbta-bus;
-    color: $text-invert;
     fill: $text-invert;
-  }
 
-  button {
-    height: 24px;
-    width: 16px;
-    gap: 8px;
-    padding: 0;
-    background-color: transparent;
-    border: none;
-
-    &.bus {
-      svg {
-        fill: $text-invert;
-      }
+    .label {
+      color: $text-invert;
     }
 
     .x-button {
-      display: block;
+      fill: $text-invert;
     }
   }
 }

@@ -261,6 +261,7 @@ const NewPaMessagePage = ({
                   value={signIds}
                   onChange={setSignIds}
                   busRoutes={busRoutes}
+                  onTagClick={() => navigateTo(Page.STATIONS)}
                 />
               )}
               <Button

@@ -7,25 +7,32 @@ import pluralize from "pluralize";
 import fp from "lodash/fp";
 import { X } from "react-bootstrap-icons";
 import { SILVER_LINE_ROUTES } from "Constants/constants";
+import cx from "classnames";
 
 const SelectedGroupTag = ({
   numPlaces,
   routeId,
-  onClick,
+  onRemove,
+  onTagClick,
 }: {
   numPlaces: number;
   routeId: string;
-  onClick: () => void;
+  onRemove: () => void;
+  onTagClick: () => void;
 }) => {
   if (numPlaces === 0) return null;
+
   return (
     <div
       className={classWithModifier("selected-group-tag", routeId.toLowerCase())}
     >
-      {routeId}: {pluralize("Station", numPlaces, true)}
-      <button className={routeId.toLowerCase()} onClick={onClick}>
-        <X className="x-button" />
-      </button>
+      <span className="label" onClick={onTagClick}>
+        {routeId}: {pluralize("Station", numPlaces, true)}
+      </span>
+      <X
+        className={cx("x-button", { "text-inverted": routeId === "Bus" })}
+        onClick={onRemove}
+      />
     </div>
   );
 };
@@ -35,6 +42,7 @@ interface Props {
   onChange: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
+  onTagClick: () => void;
 }
 
 const SelectedSignsByRouteTags = ({
@@ -42,6 +50,7 @@ const SelectedSignsByRouteTags = ({
   value,
   onChange,
   busRoutes,
+  onTagClick = () => {},
 }: Props) => {
   const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, value);
   const removeSelectedScreens = (filterFn: (screen: Screen) => boolean) => {
@@ -66,12 +75,13 @@ const SelectedSignsByRouteTags = ({
             ).length
           }
           routeId={routeId}
-          onClick={() => {
+          onRemove={() => {
             removeSelectedScreens(
               (screen) =>
                 screen.route_ids?.some((r) => r.startsWith(routeId)) ?? false,
             );
           }}
+          onTagClick={onTagClick}
         />
       ))}
       <SelectedGroupTag
@@ -85,12 +95,13 @@ const SelectedSignsByRouteTags = ({
           ).length
         }
         routeId="Silver"
-        onClick={() => {
+        onRemove={() => {
           removeSelectedScreens(
             (screen) =>
               fp.intersection(SILVER_LINE_ROUTES, screen.route_ids).length > 0,
           );
         }}
+        onTagClick={onTagClick}
       />
       <SelectedGroupTag
         numPlaces={
@@ -101,11 +112,12 @@ const SelectedSignsByRouteTags = ({
           ).length
         }
         routeId="Bus"
-        onClick={() => {
+        onRemove={() => {
           removeSelectedScreens(
             (screen) => fp.intersection(busRoutes, screen.route_ids).length > 0,
           );
         }}
+        onTagClick={onTagClick}
       />
     </>
   );
