@@ -620,7 +620,7 @@ merged_paess =
   end)
   # Get rid of CR and Bus stops with no screens
   |> Enum.reject(fn %{routes: routes, screens: screens} ->
-    cr_or_bus_only?.(routes) and length(screens) == 0
+    cr_or_bus_only?.(routes) and Enum.empty?(screens)
   end)
 
 Logger.info("Writing result to priv/config/places_and_screens.json")
