@@ -203,6 +203,8 @@ const SelectZonesPage = ({
   const getFilterPillLabel = () => {
     if (selectedRouteFilter.startsWith("Green-")) {
       return `Green Line ${selectedRouteFilter.split("-")[1]}`;
+    } else if (selectedRouteFilter === "Bus") {
+      return "Bus";
     } else {
       return `${selectedRouteFilter} Line`;
     }
