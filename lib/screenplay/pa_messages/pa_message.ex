@@ -2,11 +2,6 @@ defmodule Screenplay.PaMessages.PaMessage do
   @moduledoc """
   Represents a PA Message that will be retrieved by RTS to play audio in stations.
   """
-
-  import Ecto.Query
-
-  alias Screenplay.Repo
-
   use Ecto.Schema
 
   @derive {Jason.Encoder, except: [:__meta__]}
@@ -43,9 +38,5 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:message_type, :string)
 
     timestamps(type: :utc_datetime)
-  end
-
-  def get_all_messages do
-    Repo.all(from(m in __MODULE__, order_by: [desc: m.inserted_at]))
   end
 end
