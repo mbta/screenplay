@@ -68,15 +68,6 @@ const SelectZonesPage = ({
     )(places);
   }, [places]);
 
-  const placesWithSelectedSigns = useMemo(() => {
-    return places.filter((p) =>
-      places
-        .filter((p) => p.screens.some((s) => value.includes(s.id)))
-        .map((p) => p.id)
-        .includes(p.id),
-    );
-  }, [places]);
-
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
     Object.keys(selectedRoutes)[0],
   );
@@ -126,22 +117,25 @@ const SelectZonesPage = ({
   }, [selectedRouteFilter]);
 
   const filteredPlaces = useMemo(() => {
+    const placesWithSelectedSigns = places.filter((p) =>
+      places
+        .filter((p) => p.screens.some((s) => value.includes(s.id)))
+        .map((p) => p.id)
+        .includes(p.id),
+    );
+
     return getPlacesFromFilter(placesWithSelectedSigns, (r) =>
       routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
     );
   }, [selectedRouteFilter]);
 
-  const allScreens = useMemo(
-    () =>
-      filteredPlaces.flatMap((p) => {
-        return p.screens.filter(
-          (s) =>
-            fp.intersection(routeToRouteIDMap[selectedRouteFilter], s.route_ids)
-              .length > 0,
-        );
-      }),
-    [filteredPlaces],
-  );
+  const allScreens = filteredPlaces.flatMap((p) => {
+    return p.screens.filter(
+      (s) =>
+        fp.intersection(routeToRouteIDMap[selectedRouteFilter], s.route_ids)
+          .length > 0,
+    );
+  });
 
   const screensByZone = useMemo(() => {
     const screensWithAZone = allScreens.filter((s) => s.zone);

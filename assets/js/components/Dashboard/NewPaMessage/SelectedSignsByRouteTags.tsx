@@ -41,7 +41,7 @@ interface Props {
   onChange: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
-  onTagClick: () => void;
+  onTagClick?: () => void;
 }
 
 const SelectedSignsByRouteTags = ({

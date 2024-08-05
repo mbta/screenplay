@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { signIDs } from "../../../../util";
@@ -44,10 +44,8 @@ const PlaceZonesRow = ({
     }
   };
 
-  const allSignsSelected = useMemo(
-    () => selectedSignsAtPlace.length === allSignsForRouteAtPlace.length,
-    [allSelectedSigns, route],
-  );
+  const allSignsSelected =
+    selectedSignsAtPlace.length === allSignsForRouteAtPlace.length;
 
   return (
     <tr className="table-row">
