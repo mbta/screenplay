@@ -33,12 +33,13 @@ const PaMessagesPage: ComponentType = () => {
                   Add New
                 </Link>
               </Col>
-              <Col className="pa-message-table-action-bar__search">
+              {/* Can remove for now because this will not be implemented until after MVP launch */}
+              {/* <Col className="pa-message-table-action-bar__search">
                 <div>Search</div>
-              </Col>
-              <Col className="pa-message-table-action-bar__advance-search">
+              </Col> */}
+              {/* <Col className="pa-message-table-action-bar__advance-search">
                 <a href="/pa-messages">Advance Search</a>
-              </Col>
+              </Col> */}
             </Row>
             <Row>
               <PaMessageTable paMessages={paMessages} />
