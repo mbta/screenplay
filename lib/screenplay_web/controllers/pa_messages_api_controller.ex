@@ -20,4 +20,8 @@ defmodule ScreenplayWeb.PaMessagesApiController do
         send_resp(conn, 500, "Could not fetch audio preview")
     end
   end
+
+  def create(conn, _) do
+    json(conn, %{success: true})
+  end
 end
