@@ -1,4 +1,8 @@
-import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
+import {
+  BASE_ROUTE_NAME_TO_ROUTE_IDS,
+  LEFT_ZONES,
+  MIDDLE_ZONES,
+} from "Constants/constants";
 import {
   CannedMessage,
   CustomMessage,
@@ -181,6 +185,24 @@ export const placesWithSelectedAlert = (
     : [];
 };
 
+export const signsByZone = (signs: Screen[]) => {
+  const groupedSigns = fp.groupBy((sign) => {
+    if (fp.includes(sign.zone, LEFT_ZONES)) {
+      return "left";
+    } else if (fp.includes(sign.zone, MIDDLE_ZONES)) {
+      return "middle";
+    } else {
+      return "right";
+    }
+  }, signs);
+
+  return {
+    left: groupedSigns["left"] ?? [],
+    middle: groupedSigns["middle"] ?? [],
+    right: groupedSigns["right"] ?? [],
+  };
+};
+
 const screenTypeOrder = [
   "dup",
   "dup_v2",
@@ -320,3 +342,12 @@ export const getZoneLabel = (zone: string) => {
 };
 
 export const signIDs = (signs: Screen[]) => signs.map((sign) => sign.id);
+
+export const getPlacesFromFilter = (
+  places: Place[],
+  filterFn: (routeId: string) => boolean,
+) => {
+  return places.filter((place) =>
+    place.screens.some((screen) => screen.route_ids?.some(filterFn)),
+  );
+};

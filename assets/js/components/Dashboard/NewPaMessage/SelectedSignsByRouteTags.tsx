@@ -1,8 +1,7 @@
 import React from "react";
 import { usePlacesWithSelectedScreens } from "./hooks";
 import { Place } from "Models/place";
-import { Screen } from "Models/screen";
-import { classWithModifier } from "../../../util";
+import { classWithModifier, getPlacesFromFilter } from "../../../util";
 import pluralize from "pluralize";
 import fp from "lodash/fp";
 import { X } from "react-bootstrap-icons";
@@ -53,69 +52,52 @@ const SelectedSignsByRouteTags = ({
   onTagClick = () => {},
 }: Props) => {
   const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, value);
-  const removeSelectedScreens = (filterFn: (screen: Screen) => boolean) => {
-    const selectedScreens = fp.flow(
-      fp.flatMap((place: Place) => place.screens),
-      fp.filter(filterFn),
-      fp.map((screen) => screen.id),
-    )(placesWithSelectedScreens);
+  const removeFilteredScreens = (filterFn: (routeId: string) => boolean) => {
+    const selectedScreens = getPlacesFromFilter(
+      placesWithSelectedScreens,
+      filterFn,
+    )
+      .flatMap((place) => place.screens)
+      .map((screen) => screen.id);
 
     onChange(fp.without(selectedScreens, value));
   };
+
+  const isSilverLine = (r: string) => SILVER_LINE_ROUTES.includes(r);
+  const isBus = (r: string) => busRoutes.includes(r);
+
   return (
     <>
       {["Green", "Red", "Orange", "Blue", "Mattapan"].map((routeId) => (
         <SelectedGroupTag
           key={routeId}
           numPlaces={
-            placesWithSelectedScreens.filter((place) =>
-              place.screens.some((screen) =>
-                screen.route_ids?.some((r) => r.startsWith(routeId)),
-              ),
+            getPlacesFromFilter(placesWithSelectedScreens, (r) =>
+              r.startsWith(routeId),
             ).length
           }
           routeId={routeId}
           onRemove={() => {
-            removeSelectedScreens(
-              (screen) =>
-                screen.route_ids?.some((r) => r.startsWith(routeId)) ?? false,
-            );
+            removeFilteredScreens((r) => r.startsWith(routeId));
           }}
           onTagClick={onTagClick}
         />
       ))}
       <SelectedGroupTag
         numPlaces={
-          placesWithSelectedScreens.filter((place) =>
-            place.screens.some((screen) =>
-              screen.route_ids?.some((routeId) =>
-                SILVER_LINE_ROUTES.includes(routeId),
-              ),
-            ),
-          ).length
+          getPlacesFromFilter(placesWithSelectedScreens, isSilverLine).length
         }
         routeId="Silver"
         onRemove={() => {
-          removeSelectedScreens(
-            (screen) =>
-              fp.intersection(SILVER_LINE_ROUTES, screen.route_ids).length > 0,
-          );
+          getPlacesFromFilter(placesWithSelectedScreens, isSilverLine);
         }}
         onTagClick={onTagClick}
       />
       <SelectedGroupTag
-        numPlaces={
-          placesWithSelectedScreens.filter((place) =>
-            place.screens.some((screen) =>
-              screen.route_ids?.some((routeId) => busRoutes.includes(routeId)),
-            ),
-          ).length
-        }
+        numPlaces={getPlacesFromFilter(placesWithSelectedScreens, isBus).length}
         routeId="Bus"
         onRemove={() => {
-          removeSelectedScreens(
-            (screen) => fp.intersection(busRoutes, screen.route_ids).length > 0,
-          );
+          removeFilteredScreens(isBus);
         }}
         onTagClick={onTagClick}
       />

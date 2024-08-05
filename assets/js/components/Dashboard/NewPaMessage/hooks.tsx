@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Place } from "Models/place";
-import fp from "lodash/fp";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import { busRouteIdsAtPlaces } from "../../../util";
 import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
@@ -21,21 +20,16 @@ export const usePlacesWithPaEss = () => {
 
 export const usePlacesWithSelectedScreens = (
   places: Place[],
-  signs: string[],
+  signIds: string[],
 ) => {
   return useMemo<Place[]>(() => {
-    return fp.flow(
-      fp.map((place: Place) => {
-        return {
-          ...place,
-          screens: place.screens.filter((screen) =>
-            fp.includes(screen.id, signs),
-          ),
-        };
-      }),
-      fp.filter((place) => place.screens.length > 0),
-    )(places);
-  }, [places, signs]);
+    return places
+      .map((place: Place) => ({
+        ...place,
+        screens: place.screens.filter((screen) => signIds.includes(screen.id)),
+      }))
+      .filter((place) => place.screens.length > 0);
+  }, [places, signIds]);
 };
 
 export const useRouteToRouteIDsMap = (): { [key: string]: string[] } => {
@@ -45,5 +39,5 @@ export const useRouteToRouteIDsMap = (): { [key: string]: string[] } => {
       ...BASE_ROUTE_NAME_TO_ROUTE_IDS,
       Bus: busRouteIdsAtPlaces(places),
     };
-  }, []);
+  }, [places]);
 };

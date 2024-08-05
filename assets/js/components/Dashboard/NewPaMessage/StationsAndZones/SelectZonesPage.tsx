@@ -1,20 +1,20 @@
-import React, {
-  Fragment,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { Page } from "../types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
 import fp from "lodash/fp";
 import { Screen } from "Models/screen";
-import { getZoneLabel, signIDs, sortByStationOrder } from "../../../../util";
+import {
+  getPlacesFromFilter,
+  signIDs,
+  signsByZone,
+  sortByStationOrder,
+} from "../../../../util";
 import cx from "classnames";
-import { ArrowLeftShort, ArrowRightShort, Dot } from "react-bootstrap-icons";
+import { Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "../hooks";
-import { Dictionary } from "lodash";
+import PlaceZonesRow from "./PlaceZonesRow";
+import { LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES } from "Constants/constants";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-green",
@@ -34,10 +34,6 @@ interface Props {
   places: Place[];
 }
 
-const LEFT_ZONES = ["s", "w"] as const;
-const MIDDLE_ZONES = ["c", "m"] as const;
-const RIGHT_ZONES = ["n", "e"] as const;
-
 const SelectZonesPage = ({
   value,
   onChange,
@@ -45,12 +41,45 @@ const SelectZonesPage = ({
   navigateTo,
   places,
 }: Props) => {
-  const [selectedRouteFilter, setSelectedRouteFilter] = useState("");
-  const [newPlaces, setNewPlaces] = useState<Place[]>([]);
-  const [selectedRoutes, setSelectedRoutes] = useState<Dictionary<string[]>>(
-    {},
-  );
   const routeToRouteIDMap = useRouteToRouteIDsMap();
+
+  const selectedRoutes = useMemo(() => {
+    return fp.flow(
+      fp.flatMap((place: Place) =>
+        place.screens.filter((s) => value.includes(s.id)),
+      ),
+      fp.flatMap((screen: Screen) => screen.route_ids),
+      fp.uniq,
+      fp.groupBy((routeID: string) => {
+        if (routeID.startsWith("Green")) {
+          return "Green";
+        }
+
+        if (routeToRouteIDMap["Bus"].includes(routeID)) {
+          return "Bus";
+        }
+
+        if (routeToRouteIDMap["Silver"].includes(routeID)) {
+          return "Silver";
+        }
+
+        return routeID;
+      }),
+    )(places);
+  }, [places]);
+
+  const placesWithSelectedSigns = useMemo(() => {
+    return places.filter((p) =>
+      places
+        .filter((p) => p.screens.some((s) => value.includes(s.id)))
+        .map((p) => p.id)
+        .includes(p.id),
+    );
+  }, [places]);
+
+  const [selectedRouteFilter, setSelectedRouteFilter] = useState(
+    Object.keys(selectedRoutes)[0],
+  );
 
   const isSelected = (id: string) => value.includes(id);
 
@@ -96,49 +125,9 @@ const SelectZonesPage = ({
     };
   }, [selectedRouteFilter]);
 
-  useEffect(() => {
-    const routes = fp.flow(
-      fp.flatMap((place: Place) =>
-        place.screens.filter((s) => value.includes(s.id)),
-      ),
-      fp.flatMap((screen: Screen) => screen.route_ids),
-      fp.uniq,
-      fp.groupBy((routeID: string) => {
-        if (routeID.startsWith("Green")) {
-          return "Green";
-        }
-
-        if (routeToRouteIDMap["Bus"].includes(routeID)) {
-          return "Bus";
-        }
-
-        if (routeToRouteIDMap["Silver"].includes(routeID)) {
-          return "Silver";
-        }
-
-        return routeID;
-      }),
-    )(places);
-
-    setSelectedRoutes(routes);
-    setSelectedRouteFilter(Object.keys(routes)[0]);
-    setNewPlaces(
-      places.filter((p) =>
-        places
-          .filter((p) => p.screens.some((s) => value.includes(s.id)))
-          .map((p) => p.id)
-          .includes(p.id),
-      ),
-    );
-  }, [places]);
-
   const filteredPlaces = useMemo(() => {
-    return newPlaces.filter((p) =>
-      p.screens.some((s) =>
-        s.route_ids?.some((r) =>
-          routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
-        ),
-      ),
+    return getPlacesFromFilter(placesWithSelectedSigns, (r) =>
+      routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
     );
   }, [selectedRouteFilter]);
 
@@ -159,7 +148,7 @@ const SelectZonesPage = ({
     return fp.groupBy((s) => s.zone, screensWithAZone);
   }, [allScreens]);
 
-  const areAllGroupsSelected = (groups: Array<ReadonlyArray<string>>) =>
+  const areGroupsSelected = (groups: Array<ReadonlyArray<string>>) =>
     groups.every((group) =>
       group.every((zone) => {
         return signIDs(screensByZone[zone] ?? []).every(isSelected);
@@ -178,36 +167,24 @@ const SelectZonesPage = ({
 
   const isAllSelected =
     value.length > 0 &&
-    areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES]);
+    areGroupsSelected([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES]);
   const isLeftSelected =
-    !isAllSelected && areAllGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
+    !isAllSelected && areGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
   const isRightSelected =
-    !isAllSelected && areAllGroupsSelected([MIDDLE_ZONES, RIGHT_ZONES]);
+    !isAllSelected && areGroupsSelected([MIDDLE_ZONES, RIGHT_ZONES]);
 
-  const hasRailFilter = () =>
-    [
-      "Green",
-      "Green-B",
-      "Green-C",
-      "Green-D",
-      "Green-E",
-      "Blue",
-      "Red",
-      "Orange",
-      "Mattapan",
-    ].includes(selectedRouteFilter);
+  const filterPillLabel = useMemo(() => {
+    return selectedRouteFilter.startsWith("Green-")
+      ? `Green Line ${selectedRouteFilter.split("-")[1]}`
+      : selectedRouteFilter === "Bus"
+        ? "Bus"
+        : `${selectedRouteFilter} Line`;
+  }, [selectedRouteFilter]);
 
-  const massSelectClassName = (selected: boolean) =>
-    selected ? "button-primary" : "button-secondary-outline";
-
-  const getFilterPillLabel = () => {
-    if (selectedRouteFilter.startsWith("Green-")) {
-      return `Green Line ${selectedRouteFilter.split("-")[1]}`;
-    } else if (selectedRouteFilter === "Bus") {
-      return "Bus";
-    } else {
-      return `${selectedRouteFilter} Line`;
-    }
+  const getSignsFromPlaceForRouteId = (place: Place, routeId: string) => {
+    return place.screens.filter((screen) =>
+      screen.route_ids?.some((id) => routeToRouteIDMap[routeId].includes(id)),
+    );
   };
 
   return (
@@ -247,40 +224,34 @@ const SelectZonesPage = ({
           <div>Service type</div>
           <div className="filters">
             {Object.keys(selectedRoutes).map((routeID) => {
-              let branchFilters;
-              if (routeID === "Green") {
-                branchFilters = selectedRoutes["Green"]
-                  .sort()
-                  .map((branchID) => {
-                    const branch = branchID.split("-")[1];
+              const branchFilters =
+                routeID === "Green"
+                  ? selectedRoutes["Green"].sort().map((branchID) => {
+                      const branch = branchID.split("-")[1];
 
-                    return (
-                      <Button
-                        key={`branch-filter-${branch}`}
-                        onClick={() => setSelectedRouteFilter(branchID)}
-                        className={cx(
-                          "filter-button",
-                          selectedRouteFilter === branchID
-                            ? ROUTE_TO_CLASS_NAMES_MAP["Green"]
-                            : "filter-button-default",
-                        )}
-                      >
-                        <Dot /> {branch} Branch
-                      </Button>
-                    );
-                  });
-              }
+                      return (
+                        <Button
+                          key={`branch-filter-${branch}`}
+                          onClick={() => setSelectedRouteFilter(branchID)}
+                          className={cx("filter-button", {
+                            [ROUTE_TO_CLASS_NAMES_MAP["Green"]]:
+                              selectedRouteFilter === branchID,
+                          })}
+                        >
+                          <Dot /> {branch} Branch
+                        </Button>
+                      );
+                    })
+                  : null;
 
               return (
                 <Fragment key={`route-filter-${routeID}`}>
                   <Button
                     onClick={() => setSelectedRouteFilter(routeID)}
-                    className={cx(
-                      "filter-button",
-                      selectedRouteFilter === routeID
-                        ? ROUTE_TO_CLASS_NAMES_MAP[routeID]
-                        : "filter-button-default",
-                    )}
+                    className={cx("filter-button", {
+                      [ROUTE_TO_CLASS_NAMES_MAP[routeID]]:
+                        selectedRouteFilter === routeID,
+                    })}
                   >
                     {routeID}
                   </Button>
@@ -295,15 +266,20 @@ const SelectZonesPage = ({
             <div className="title-and-route-container">
               <div className="title h3">Zones</div>
               <div
-                className={`route ${ROUTE_TO_CLASS_NAMES_MAP[selectedRouteFilter.split("-")[0]]}`}
+                className={cx(
+                  "route",
+                  ROUTE_TO_CLASS_NAMES_MAP[selectedRouteFilter.split("-")[0]],
+                )}
               >
-                {getFilterPillLabel()}
+                {filterPillLabel}
               </div>
             </div>
             {selectedRouteFilter !== "Bus" && (
               <div className="mass-select-button-container">
                 <Button
-                  className={massSelectClassName(isAllSelected)}
+                  className={cx("button-secondary-outline", {
+                    "button-active": isAllSelected,
+                  })}
                   onClick={() =>
                     selectGroups([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES])
                   }
@@ -311,13 +287,17 @@ const SelectZonesPage = ({
                   {massSelectButtonLabels.left}
                 </Button>
                 <Button
-                  className={massSelectClassName(isLeftSelected)}
+                  className={cx("button-secondary-outline", {
+                    "button-active": isLeftSelected,
+                  })}
                   onClick={() => selectGroups([LEFT_ZONES, MIDDLE_ZONES])}
                 >
                   {massSelectButtonLabels.middle}
                 </Button>
                 <Button
-                  className={massSelectClassName(isRightSelected)}
+                  className={cx("button-secondary-outline", {
+                    "button-active": isRightSelected,
+                  })}
                   onClick={() => selectGroups([MIDDLE_ZONES, RIGHT_ZONES])}
                 >
                   {massSelectButtonLabels.right}
@@ -338,22 +318,53 @@ const SelectZonesPage = ({
             <tbody>
               {sortByStationOrder(filteredPlaces, selectedRouteFilter).map(
                 (place) => {
+                  const allSignsForRouteFilterAtPlace =
+                    getSignsFromPlaceForRouteId(place, selectedRouteFilter);
+                  const allBusSignsForRouteAtPlace =
+                    getSignsFromPlaceForRouteId(place, "Bus");
+
+                  const signsGroupedByZone = signsByZone(
+                    allSignsForRouteFilterAtPlace,
+                  );
+                  const busSignsGroupedByZone =
+                    selectedRouteFilter === "Bus"
+                      ? signsGroupedByZone
+                      : signsByZone(allBusSignsForRouteAtPlace);
+
+                  const branches =
+                    selectedRouteFilter === "Green"
+                      ? fp
+                          .uniq(
+                            allSignsForRouteFilterAtPlace.flatMap((s) =>
+                              fp.map((r) => r.split("-")[1], s.route_ids),
+                            ),
+                          )
+                          .sort()
+                      : [];
+
                   return (
                     <Fragment key={`place-zones-row-${place.id}`}>
                       <PlaceZonesRow
                         place={place}
                         allSelectedSigns={value}
+                        allSignsForRouteAtPlace={allSignsForRouteFilterAtPlace}
                         setSignIds={onChange}
+                        leftZones={signsGroupedByZone.left}
+                        middleZones={signsGroupedByZone.middle}
+                        rightZones={signsGroupedByZone.right}
                         route={selectedRouteFilter}
-                        routeToRouteIDMap={routeToRouteIDMap}
+                        branches={branches}
                       />
-                      {hasRailFilter() && (
+                      {selectedRouteFilter !== "Bus" && (
                         <PlaceZonesRow
                           place={place}
                           allSelectedSigns={value}
+                          allSignsForRouteAtPlace={allBusSignsForRouteAtPlace}
                           setSignIds={onChange}
+                          leftZones={busSignsGroupedByZone.left}
+                          middleZones={busSignsGroupedByZone.middle}
+                          rightZones={busSignsGroupedByZone.right}
                           route={"Bus"}
-                          routeToRouteIDMap={routeToRouteIDMap}
                         />
                       )}
                     </Fragment>
@@ -365,178 +376,6 @@ const SelectZonesPage = ({
         </div>
       </div>
     </div>
-  );
-};
-
-const PlaceZonesRow = ({
-  place,
-  allSelectedSigns,
-  setSignIds,
-  route,
-  routeToRouteIDMap,
-}: {
-  place: Place;
-  allSelectedSigns: string[];
-  setSignIds: (signs: string[]) => void;
-  route: string;
-  routeToRouteIDMap: { [key: string]: string[] };
-}) => {
-  const allSignsForRouteAtPlace = place.screens.filter((screen) =>
-    fp.any(
-      (r) => routeToRouteIDMap[route]?.some((a) => r.startsWith(a)),
-      screen.route_ids,
-    ),
-  );
-
-  if (allSignsForRouteAtPlace.length === 0) return null;
-
-  const selectedSignsAtPlace = signIDs(allSignsForRouteAtPlace).filter(
-    (id: string) => allSelectedSigns.includes(id),
-  );
-
-  const signsInZones = (zones: ReadonlyArray<string>) => {
-    return allSignsForRouteAtPlace.filter((sign) =>
-      fp.includes(sign.zone, zones),
-    );
-  };
-
-  const onSignButtonClick = (signID: string) => {
-    if (allSelectedSigns.includes(signID)) {
-      setSignIds(fp.without([signID], allSelectedSigns));
-    } else {
-      setSignIds(fp.uniq([...allSelectedSigns, signID]));
-    }
-  };
-
-  const allSignsSelected = useMemo(
-    () => selectedSignsAtPlace.length === allSignsForRouteAtPlace.length,
-    [allSelectedSigns, route],
-  );
-
-  const placeBranches =
-    route === "Green"
-      ? fp
-          .uniq(
-            allSignsForRouteAtPlace.flatMap((s) =>
-              s.route_ids?.map((r) => r.split("-")[1]),
-            ),
-          )
-          .sort()
-      : [];
-
-  return (
-    <tr className="table-row">
-      <td className="place-name-cell">
-        <div className="place-name-container">
-          {placeBranches.length > 0 && (
-            <div className={`route ${ROUTE_TO_CLASS_NAMES_MAP["Green"]}`}>
-              {placeBranches.join(" ")}
-            </div>
-          )}
-          <div className="place-name">{place.name}</div>
-          {route === "Bus" && (
-            <div className={`route ${ROUTE_TO_CLASS_NAMES_MAP["Bus"]}`}>
-              Bus
-            </div>
-          )}
-        </div>
-      </td>
-      <td className="cell all-button-cell">
-        <Button
-          className={
-            allSignsSelected ? "button-primary" : "button-primary-outline"
-          }
-          onClick={() => {
-            const signIDsAtPlace = allSignsForRouteAtPlace.map((s) => s.id);
-            if (allSignsSelected) {
-              setSignIds(fp.without(signIDsAtPlace, allSelectedSigns));
-            } else {
-              setSignIds(
-                fp.concat(
-                  allSignsForRouteAtPlace.map((s) => s.id),
-                  allSelectedSigns,
-                ),
-              );
-            }
-          }}
-        >
-          All
-        </Button>
-      </td>
-      <td className="cell left-cell">
-        <div className="sign-button-group">
-          {signsInZones(LEFT_ZONES).map((sign) => {
-            return (
-              <SelectSignButton
-                key={sign.id}
-                onClick={() => {
-                  onSignButtonClick(sign.id);
-                }}
-                isSelected={allSelectedSigns.includes(sign.id)}
-              >
-                <ArrowLeftShort /> {sign.label ?? getZoneLabel(sign.zone ?? "")}
-              </SelectSignButton>
-            );
-          })}
-        </div>
-      </td>
-      <td className="cell middle-cell">
-        <div className="sign-button-group">
-          {signsInZones(MIDDLE_ZONES).map((sign) => {
-            return (
-              <SelectSignButton
-                key={sign.id}
-                onClick={() => {
-                  onSignButtonClick(sign.id);
-                }}
-                isSelected={allSelectedSigns.includes(sign.id)}
-              >
-                {sign.label ?? getZoneLabel(sign.zone ?? "")}
-              </SelectSignButton>
-            );
-          })}
-        </div>
-      </td>
-      <td className="cell right-cell">
-        <div className="sign-button-group">
-          {signsInZones(RIGHT_ZONES).map((sign) => {
-            return (
-              <SelectSignButton
-                key={sign.id}
-                onClick={() => {
-                  onSignButtonClick(sign.id);
-                }}
-                isSelected={allSelectedSigns.includes(sign.id)}
-              >
-                {sign.label ?? getZoneLabel(sign.zone ?? "")}{" "}
-                <ArrowRightShort />
-              </SelectSignButton>
-            );
-          })}
-        </div>
-      </td>
-    </tr>
-  );
-};
-
-interface SelectSignButtonProps {
-  isSelected: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}
-
-const SelectSignButton = ({
-  isSelected,
-  onClick,
-  children,
-}: SelectSignButtonProps) => {
-  return (
-    <Button
-      className={isSelected ? "button-primary" : "button-primary-outline"}
-      onClick={onClick}
-    >
-      {children}
-    </Button>
   );
 };
 
