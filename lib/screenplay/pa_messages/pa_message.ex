@@ -5,8 +5,7 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   import Ecto.Query
 
-  alias Screenplay.Alerts.Cache, as: AlertsCache
-  alias Screenplay.{Repo, Util}
+  alias Screenplay.Repo
 
   use Ecto.Schema
 
@@ -44,20 +43,6 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:message_type, :string)
 
     timestamps(type: :utc_datetime)
-  end
-
-  def get_active_messages(now \\ DateTime.utc_now()) do
-    current_service_day_of_week = Util.get_current_service_day(now)
-
-    alert_ids = AlertsCache.alert_ids()
-
-    Repo.all(
-      from m in __MODULE__,
-        where:
-          ^current_service_day_of_week in m.days_of_week and
-            m.start_time <= ^now and
-            ((is_nil(m.end_time) and m.alert_id in ^alert_ids) or m.end_time >= ^now)
-    )
   end
 
   def get_all_messages do
