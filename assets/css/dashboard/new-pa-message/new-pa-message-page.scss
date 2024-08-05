@@ -286,7 +286,16 @@
     }
   }
 
-  input::-webkit-calendar-picker-indicator {
-    display: none;
+  input[type="time"],
+  input[type="date"] {
+    position: relative;
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(0.75);
+
+      position: absolute;
+      right: 0;
+      margin-right: 8px;
+      color: $text-secondary;
+    }
   }
 }
