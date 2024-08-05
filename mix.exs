@@ -69,7 +69,8 @@ defmodule Screenplay.MixProject do
       {:quantum, "~> 3.0"},
       {:tzdata, "~> 1.1"},
       {:ex_machina, "~> 2.7", only: :test},
-      {:remote_ip, "~> 1.2"}
+      {:remote_ip, "~> 1.2"},
+      {:faker, "~> 0.18"}
     ]
   end
 
@@ -81,7 +82,8 @@ defmodule Screenplay.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "cmd npm install --prefix assets"]
+      setup: ["deps.get", "cmd npm install --prefix assets"],
+      seed: "run priv/repo/seeds.exs"
     ]
   end
 end
