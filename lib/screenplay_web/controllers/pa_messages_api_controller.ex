@@ -4,9 +4,13 @@ defmodule ScreenplayWeb.PaMessagesApiController do
   action_fallback ScreenplayWeb.FallbackController
 
   alias Screenplay.PaMessages
+  alias Screenplay.PaMessages.ListParams
 
-  def index(conn, _params) do
-    json(conn, PaMessages.get_all_messages())
+  def index(conn, params) do
+    with {:ok, opts} <- ListParams.parse(params) do
+      pa_messages = PaMessages.list_pa_messages(opts)
+      json(conn, pa_messages)
+    end
   end
 
   def active(conn, _params) do
