@@ -13,9 +13,10 @@ const NewPaMessage = () => {
   const now = moment();
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
-  const [importLocations, setImportLocations] = useState<boolean>(true);
-  const [importMessage, setImportMessage] = useState<boolean>(true);
-  const [endWithEffectPeriod, setEndWithEffectPeriod] = useState<boolean>(true);
+  const [importLocations, setImportLocations] = useState<boolean>(false);
+  const [importMessage, setImportMessage] = useState<boolean>(false);
+  const [endWithEffectPeriod, setEndWithEffectPeriod] =
+    useState<boolean>(false);
   const [startDate, setStartDate] = useState(now.format("L"));
   const [startTime, setStartTime] = useState(now.format("HH:mm"));
   const [endDate, setEndDate] = useState(now.format("L"));
@@ -26,6 +27,11 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const setAssociateAlertDefaults = () => {
+    setEndWithEffectPeriod(true);
+    setImportLocations(true);
+    setImportMessage(true);
+  };
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
 
@@ -69,9 +75,8 @@ const NewPaMessage = () => {
             setVisualText,
             setAssociatedAlert,
             onClearAssociatedAlert,
+            setAssociateAlertDefaults,
             setEndWithEffectPeriod,
-            setImportLocations,
-            setImportMessage,
             startDate,
             startTime,
             visualText,

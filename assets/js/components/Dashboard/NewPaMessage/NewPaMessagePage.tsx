@@ -57,6 +57,7 @@ interface Props {
   setStartTime: Dispatch<SetStateAction<string>>;
   setVisualText: Dispatch<SetStateAction<string>>;
   onClearAssociatedAlert: () => void;
+  setAssociateAlertDefaults: () => void;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
   startDate: string;
   startTime: string;
@@ -86,6 +87,7 @@ const NewPaMessagePage = ({
   setVisualText,
   setEndWithEffectPeriod,
   onClearAssociatedAlert,
+  setAssociateAlertDefaults,
   startDate,
   startTime,
   visualText,
@@ -143,6 +145,7 @@ const NewPaMessagePage = ({
           <NewPaMessageHeader
             associatedAlert={associatedAlert}
             onClearAssociatedAlert={onClearAssociatedAlert}
+            setAssociateAlertDefaults={setAssociateAlertDefaults}
             navigateTo={navigateTo}
           />
           <Card className="when-card">
@@ -188,52 +191,26 @@ const NewPaMessagePage = ({
                 >
                   End
                 </Form.Label>
-                {associatedAlert.id ? (
-                  <>
-                    <Form.Switch
-                      id="effect-period-switch"
-                      className="effect-period-switch"
-                      checked={endWithEffectPeriod}
-                      label="At end of alert"
-                      onChange={() => {
-                        if (!endWithEffectPeriod) {
-                          setEndDate("");
-                          setEndTime("");
-                        } else {
-                          setEndDate(now.format("L"));
-                          setEndTime(now.add(1, "hour").format("HH:mm"));
-                        }
+                {associatedAlert.id && (
+                  <Form.Switch
+                    id="effect-period-switch"
+                    className="effect-period-switch"
+                    checked={endWithEffectPeriod}
+                    label="At end of alert"
+                    onChange={() => {
+                      if (!endWithEffectPeriod) {
+                        setEndDate("");
+                        setEndTime("");
+                      } else {
+                        setEndDate(now.format("L"));
+                        setEndTime(now.add(1, "hour").format("HH:mm"));
+                      }
 
-                        setEndWithEffectPeriod(!endWithEffectPeriod);
-                      }}
-                    />
-                    {!endWithEffectPeriod && (
-                      <div className="datetime-picker-group">
-                        <Form.Control
-                          className="date-picker picker"
-                          type="date"
-                          id="end-date-picker"
-                          name="end-date-picker-input"
-                          value={endDate}
-                          onChange={(event) => setEndDate(event.target.value)}
-                        />
-                        <Form.Control
-                          type="time"
-                          className="time-picker picker"
-                          value={endTime}
-                          onChange={(event) => setEndTime(event.target.value)}
-                        />
-                        <Button
-                          className="service-time-link"
-                          variant="link"
-                          onClick={() => setEndTime("03:00")}
-                        >
-                          End of service day
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                ) : (
+                      setEndWithEffectPeriod(!endWithEffectPeriod);
+                    }}
+                  />
+                )}
+                {!endWithEffectPeriod && (
                   <div className="datetime-picker-group">
                     <Form.Control
                       className="date-picker picker"
@@ -441,12 +418,14 @@ interface NewPaMessageHeaderProps {
   associatedAlert: AlertModel;
   navigateTo: (page: Page) => void;
   onClearAssociatedAlert: () => void;
+  setAssociateAlertDefaults: () => void;
 }
 
 const NewPaMessageHeader = ({
   associatedAlert,
   navigateTo,
   onClearAssociatedAlert,
+  setAssociateAlertDefaults,
 }: NewPaMessageHeaderProps) => {
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
@@ -478,7 +457,10 @@ const NewPaMessageHeader = ({
         <Button
           variant="link"
           className="pr-0 associate-alert-button"
-          onClick={() => navigateTo(Page.ALERTS)}
+          onClick={() => {
+            setAssociateAlertDefaults();
+            navigateTo(Page.ALERTS);
+          }}
         >
           Associate with alert
         </Button>
