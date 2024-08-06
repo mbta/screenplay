@@ -28,13 +28,20 @@ const NewPaMessage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
-    setVisualText("");
-    setPhoneticText("");
+
+    if (endWithEffectPeriod) {
+      setEndDate(now.format("L"));
+      setEndTime(now.add(1, "hour").format("HH:mm"));
+    }
+
+    if (importMessage) {
+      setVisualText("");
+      setPhoneticText("");
+    }
+
     setEndWithEffectPeriod(false);
     setImportLocations(false);
     setImportMessage(false);
-    setEndDate(now.format("L"));
-    setEndTime(now.add(1, "hour").format("HH:mm"));
   };
 
   return (
