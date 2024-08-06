@@ -1,6 +1,8 @@
 defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   use ScreenplayWeb.ConnCase
 
+  import Screenplay.Factory
+
   setup_all do
     get_json_fn = fn "alerts", %{"include" => "routes"} ->
       {:ok, %{"data" => [], "included" => []}}
@@ -30,6 +32,37 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       conn = get(conn, "/api/pa-messages/active")
 
       assert %{status: 200, resp_body: "[]"} = conn
+    end
+  end
+
+  describe "GET /api/pa-messages" do
+    @tag :authenticated_pa_message_admin
+    test "responds with a list of all messages", %{conn: conn} do
+      assert [] =
+               conn
+               |> get("/api/pa-messages")
+               |> json_response(200)
+
+      insert(:pa_message, %{
+        id: 1,
+        start_time: ~U[2024-05-01T01:00:00Z],
+        end_time: ~U[2024-05-01T13:00:00Z],
+        days_of_week: [3],
+        inserted_at: ~U[2024-05-01T01:00:00Z]
+      })
+
+      insert(:pa_message, %{
+        id: 2,
+        start_time: ~U[2024-05-02T12:00:00Z],
+        end_time: ~U[2024-05-02T12:00:00Z],
+        days_of_week: [3],
+        inserted_at: ~U[2024-05-02T12:00:00Z]
+      })
+
+      assert [%{"id" => 2}, %{"id" => 1}] =
+               conn
+               |> get("/api/pa-messages")
+               |> json_response(200)
     end
   end
 end

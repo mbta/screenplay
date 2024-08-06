@@ -1,14 +1,14 @@
 defmodule ScreenplayWeb.PaMessagesApiController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.PaMessages.PaMessage
+  alias Screenplay.PaMessages
 
   def index(conn, _params) do
-    json(conn, PaMessage.get_all_messages())
+    json(conn, PaMessages.get_all_messages())
   end
 
   def active(conn, _params) do
-    json(conn, PaMessage.get_active_messages())
+    json(conn, PaMessages.get_active_messages())
   end
 
   def preview_audio(conn, %{"text" => text}) do

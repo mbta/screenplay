@@ -1,31 +1,10 @@
-defmodule Screenplay.PaMessages.PaMessageTest do
+defmodule Screenplay.PaMessagesTest do
   use ScreenplayWeb.DataCase
 
   import Screenplay.Factory
 
+  alias Screenplay.PaMessages
   alias Screenplay.PaMessages.PaMessage
-
-  defp alert_json(id, start_dt, end_dt) do
-    %{
-      "id" => id,
-      "attributes" => %{
-        "active_period" => [
-          %{"start" => DateTime.to_iso8601(start_dt), "end" => DateTime.to_iso8601(end_dt)}
-        ],
-        "created_at" => nil,
-        "updated_at" => nil,
-        "cause" => nil,
-        "effect" => nil,
-        "header" => nil,
-        "informed_entity" => [],
-        "lifecycle" => nil,
-        "severity" => nil,
-        "timeframe" => nil,
-        "url" => nil,
-        "description" => nil
-      }
-    }
-  end
 
   describe "get_all_messages/0" do
     test "returns all messages with most recent first" do
@@ -54,7 +33,7 @@ defmodule Screenplay.PaMessages.PaMessageTest do
       })
 
       assert [%PaMessage{id: 3}, %PaMessage{id: 2}, %PaMessage{id: 1}] =
-               PaMessage.get_all_messages()
+               PaMessages.get_all_messages()
     end
   end
 
@@ -89,7 +68,7 @@ defmodule Screenplay.PaMessages.PaMessageTest do
       })
 
       assert [%PaMessage{alert_id: "1"}, %PaMessage{alert_id: "2"}] =
-               PaMessage.get_active_messages(now)
+               PaMessages.get_active_messages(now)
     end
 
     test "returns custom messages if now is between start and end schedule" do
@@ -111,7 +90,7 @@ defmodule Screenplay.PaMessages.PaMessageTest do
         days_of_week: [3]
       })
 
-      assert [%PaMessage{id: 1}] = PaMessage.get_active_messages(now)
+      assert [%PaMessage{id: 1}] = PaMessages.get_active_messages(now)
     end
   end
 
@@ -147,6 +126,28 @@ defmodule Screenplay.PaMessages.PaMessageTest do
       days_of_week: [3]
     })
 
-    assert [%PaMessage{id: 1}] = PaMessage.get_active_messages(now)
+    assert [%PaMessage{id: 1}] = PaMessages.get_active_messages(now)
+  end
+
+  defp alert_json(id, start_dt, end_dt) do
+    %{
+      "id" => id,
+      "attributes" => %{
+        "active_period" => [
+          %{"start" => DateTime.to_iso8601(start_dt), "end" => DateTime.to_iso8601(end_dt)}
+        ],
+        "created_at" => nil,
+        "updated_at" => nil,
+        "cause" => nil,
+        "effect" => nil,
+        "header" => nil,
+        "informed_entity" => [],
+        "lifecycle" => nil,
+        "severity" => nil,
+        "timeframe" => nil,
+        "url" => nil,
+        "description" => nil
+      }
+    }
   end
 end
