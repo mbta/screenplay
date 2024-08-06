@@ -10,6 +10,52 @@ defmodule Screenplay.PaMessages do
   alias Screenplay.PaMessages.PaMessage
   alias Screenplay.Repo
 
+  defmodule ListParams do
+    @moduledoc false
+    use Ecto.Schema
+
+    import Ecto.Changeset
+
+    @type t :: %{
+            optional(:state) => :all | :active | :future | :past,
+            optional(:now) => DateTime.t()
+          }
+
+    @primary_key false
+
+    embedded_schema do
+      field :state, Ecto.Enum, values: [:all, :active, :future, :past], default: :all
+      field :now, :utc_datetime, autogenerate: {DateTime, :utc_now, []}
+    end
+
+    def parse(attrs) do
+      case %ListParams{}
+           |> cast(attrs, [:state, :now])
+           |> apply_action(:insert) do
+        {:ok, opts} -> {:ok, Map.drop(opts, [:__struct__, :__meta__])}
+        err -> err
+      end
+    end
+  end
+
+  @doc """
+  Lists PA Messages limited to the options passed
+  """
+  @spec list_pa_messages(ListParams.t()) :: [PaMessage.t()]
+  def list_pa_messages(opts \\ %{}) do
+    opts =
+      opts
+      |> Map.put_new_lazy(:now, &DateTime.utc_now/0)
+      |> Map.put_new(:state, :all)
+
+    alert_ids = AlertsCache.alert_ids()
+
+    PaMessage
+    |> PaMessage.Queries.state(opts[:state], alert_ids, opts[:now])
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
+  end
+
   @doc """
   Returns a list of ALL PA Messages ordered by their inserted_at timestamps
   descending.
