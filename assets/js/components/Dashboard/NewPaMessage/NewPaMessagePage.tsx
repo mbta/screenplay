@@ -1,5 +1,11 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
@@ -83,11 +89,11 @@ const NewPaMessagePage = ({
   places,
   busRoutes,
 }: Props) => {
-  const now = moment();
   const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
   );
+  const [validated, setValidated] = useState(false);
 
   const priorityToIntervalMap: { [priority: number]: string } = {
     1: "1",
@@ -122,14 +128,22 @@ const NewPaMessagePage = ({
     setInterval(priorityToIntervalMap[priority]);
   }, [priority]);
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    }
+
+    setValidated(true);
+  };
+
   return (
     <div className="new-pa-message-page">
-      <Form
-        onSubmit={(event) => {
-          event.preventDefault();
-        }}
-      >
-        <div className="new-pa-message-page__header">New PA/ESS message</div>
+      <Form onSubmit={handleSubmit} validated={validated} noValidate>
+        <div className="header">New PA/ESS message</div>
         <Container fluid>
           <NewPaMessageHeader
             associatedAlert={associatedAlert}
