@@ -3,7 +3,7 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
   require Logger
 
-  alias Screenplay.PaMessages
+  alias Screenplay.{PaMessages, Util}
 
   def index(conn, _params) do
     json(conn, PaMessages.get_all_messages())
@@ -28,8 +28,8 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       {:ok, _} ->
         json(conn, %{success: true})
 
-      {:error, error} ->
-        Logger.error(inspect(error))
+      {:error, changeset} ->
+        Logger.error("[pa_message create] #{Util.format_changeset_errors(changeset)}")
         send_resp(conn, 500, "Could not create message")
     end
   end
