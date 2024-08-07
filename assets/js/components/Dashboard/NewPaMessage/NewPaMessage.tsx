@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import moment from "moment";
+import moment, { type Moment } from "moment";
 import { Page } from "./types";
 import NewPaMessagePage from "./NewPaMessagePage";
 import AssociateAlertPage from "./AssociateAlertPage";
@@ -17,10 +17,10 @@ const NewPaMessage = () => {
   const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
   const [endWithEffectPeriod, setEndWithEffectPeriod] =
     useState<boolean>(false);
-  const [startDate, setStartDate] = useState(now.format("L"));
-  const [startTime, setStartTime] = useState(now.format("HH:mm"));
-  const [endDate, setEndDate] = useState(now.format("L"));
-  const [endTime, setEndTime] = useState(now.add(1, "hour").format("HH:mm"));
+  const [startDateTime, setStartDateTime] = useState(now);
+  const [endDateTime, setEndDateTime] = useState<Moment | null>(
+    now.add(1, "hour"),
+  );
   const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [priority, setPriority] = useState(2);
   const [interval, setInterval] = useState("4");
@@ -32,6 +32,7 @@ const NewPaMessage = () => {
   const busRoutes = busRouteIdsAtPlaces(places);
 
   const onClearAssociatedAlert = () => {
+    setEndDateTime(moment(startDateTime).add(1, "hour"));
     setAssociatedAlert({} as Alert);
     setEndWithEffectPeriod(false);
   };
@@ -48,28 +49,23 @@ const NewPaMessage = () => {
         <NewPaMessagePage
           {...{
             days,
-            endDate,
-            endTime,
-            errorMessage,
             interval,
             navigateTo: setPage,
             phoneticText,
             priority,
             setDays,
-            setEndDate,
-            setEndTime,
+            startDateTime,
+            setStartDateTime,
+            endDateTime,
+            setEndDateTime,
             setErrorMessage,
             setInterval,
             setPhoneticText,
             setPriority,
-            setStartDate,
-            setStartTime,
             setVisualText,
             setAssociatedAlert,
             onClearAssociatedAlert,
             setEndWithEffectPeriod,
-            startDate,
-            startTime,
             visualText,
             associatedAlert,
             endWithEffectPeriod,

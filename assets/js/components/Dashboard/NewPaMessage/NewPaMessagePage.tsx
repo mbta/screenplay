@@ -6,7 +6,7 @@ import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
+import moment, { type Moment } from "moment";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -32,26 +32,22 @@ enum AudioPreview {
 
 interface Props {
   days: number[];
-  endDate: string;
-  endTime: string;
+  startDateTime: Moment;
+  setStartDateTime: (datetime: Moment) => void;
+  endDateTime: Moment | null;
+  setEndDateTime: (datetime: Moment | null) => void;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
   priority: number;
   setDays: Dispatch<SetStateAction<number[]>>;
-  setEndDate: Dispatch<SetStateAction<string>>;
-  setEndTime: Dispatch<SetStateAction<string>>;
   setErrorMessage: Dispatch<SetStateAction<string>>;
   setInterval: Dispatch<SetStateAction<string>>;
   setPhoneticText: Dispatch<SetStateAction<string>>;
   setPriority: Dispatch<SetStateAction<number>>;
-  setStartDate: Dispatch<SetStateAction<string>>;
-  setStartTime: Dispatch<SetStateAction<string>>;
   setVisualText: Dispatch<SetStateAction<string>>;
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
-  startDate: string;
-  startTime: string;
   visualText: string;
   associatedAlert: AlertModel;
   endWithEffectPeriod: boolean;
@@ -63,26 +59,22 @@ interface Props {
 
 const NewPaMessagePage = ({
   days,
-  endDate,
-  endTime,
+  startDateTime,
+  setStartDateTime,
+  endDateTime,
+  setEndDateTime,
   interval,
   navigateTo,
   phoneticText,
   priority,
   setDays,
-  setEndDate,
-  setEndTime,
   setErrorMessage,
   setInterval,
   setPhoneticText,
   setPriority,
-  setStartDate,
-  setStartTime,
   setVisualText,
   setEndWithEffectPeriod,
   onClearAssociatedAlert,
-  startDate,
-  startTime,
   visualText,
   associatedAlert,
   endWithEffectPeriod,
@@ -161,19 +153,35 @@ const NewPaMessagePage = ({
                     type="date"
                     id="start-date-picker"
                     name="start-date-picker-input"
-                    value={startDate}
-                    onChange={(event) => setStartDate(event.target.value)}
+                    value={startDateTime.format("YYYY-MM-DD")}
+                    onChange={(event) =>
+                      setStartDateTime(
+                        moment(
+                          `${event.target.value} ${startDateTime.format("HH:mm")}`,
+                          "YYYY-MM-DD HH:mm",
+                        ),
+                      )
+                    }
                   />
                   <Form.Control
                     type="time"
                     className="time-picker picker"
-                    value={startTime}
-                    onChange={(event) => setStartTime(event.target.value)}
+                    value={startDateTime.format("HH:mm")}
+                    onChange={(event) =>
+                      setStartDateTime(
+                        moment(
+                          `${startDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
+                          "YYYY-MM-DD HH:mm",
+                        ),
+                      )
+                    }
                   />
                   <Button
                     className="service-time-link"
                     variant="link"
-                    onClick={() => setStartTime("03:00")}
+                    onClick={() =>
+                      setStartDateTime(moment(startDateTime).hour(3).minute(0))
+                    }
                   >
                     Start of service day
                   </Button>
@@ -196,37 +204,51 @@ const NewPaMessagePage = ({
                     label="At end of alert"
                     onChange={() => {
                       if (!endWithEffectPeriod) {
-                        setEndDate("");
-                        setEndTime("");
+                        setEndDateTime(null);
                       } else {
-                        setEndDate(now.format("L"));
-                        setEndTime(now.add(1, "hour").format("HH:mm"));
+                        setEndDateTime(moment(startDateTime).add(1, "hour"));
                       }
 
                       setEndWithEffectPeriod(!endWithEffectPeriod);
                     }}
                   />
                 )}
-                {!endWithEffectPeriod && (
+                {!endWithEffectPeriod && endDateTime !== null && (
                   <div className="datetime-picker-group">
                     <Form.Control
                       className="date-picker picker"
                       type="date"
                       id="end-date-picker"
                       name="end-date-picker-input"
-                      value={endDate}
-                      onChange={(event) => setEndDate(event.target.value)}
+                      value={endDateTime.format("YYYY-MM-DD")}
+                      onChange={(event) =>
+                        setEndDateTime(
+                          moment(
+                            `${event.target.value} ${endDateTime.format("HH:mm")}`,
+                            "YYYY-MM-DD HH:mm",
+                          ),
+                        )
+                      }
                     />
                     <Form.Control
                       type="time"
                       className="time-picker picker"
-                      value={endTime}
-                      onChange={(event) => setEndTime(event.target.value)}
+                      value={endDateTime.format("HH:mm")}
+                      onChange={(event) =>
+                        setEndDateTime(
+                          moment(
+                            `${endDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
+                            "YYYY-MM-DD HH:mm",
+                          ),
+                        )
+                      }
                     />
                     <Button
                       className="service-time-link"
                       variant="link"
-                      onClick={() => setEndTime("03:00")}
+                      onClick={() =>
+                        setEndDateTime(moment(endDateTime).hour(3).minute(0))
+                      }
                     >
                       End of service day
                     </Button>
