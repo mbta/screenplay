@@ -31,4 +31,13 @@ defmodule Screenplay.PaMessages do
     |> PaMessage.Queries.active(now)
     |> Repo.all()
   end
+
+  @doc """
+  Creates a new PA Message.
+  """
+  @spec create_message(message :: map()) ::
+          {:ok, PaMessage.t()} | {:error, Ecto.Changeset.t()}
+  def create_message(message) do
+    %PaMessage{} |> PaMessage.changeset(message) |> Repo.insert()
+  end
 end

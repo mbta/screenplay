@@ -89,7 +89,7 @@ defmodule ScreenplayWeb.Router do
     get("/pa-messages/new", PaMessagesController, :index)
     get("/api/pa-messages", PaMessagesApiController, :index)
     get("/api/pa-messages/preview_audio", PaMessagesApiController, :preview_audio)
-    post("/create", PaMessagesApiController, :create)
+    post("/api/pa-messages/create", PaMessagesApiController, :create)
   end
 
   scope "/", ScreenplayWeb do
