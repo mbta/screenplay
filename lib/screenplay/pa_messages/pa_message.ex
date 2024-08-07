@@ -3,6 +3,7 @@ defmodule Screenplay.PaMessages.PaMessage do
   Represents a PA Message that will be retrieved by RTS to play audio in stations.
   """
   use Ecto.Schema
+  import Ecto.Changeset
 
   @derive {Jason.Encoder, except: [:__meta__]}
 
@@ -38,5 +39,33 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:message_type, :string)
 
     timestamps(type: :utc_datetime)
+  end
+
+  def changeset(message, attrs \\ %{}) do
+    message
+    |> cast(attrs, [
+      :alert_id,
+      :start_time,
+      :end_time,
+      :days_of_week,
+      :sign_ids,
+      :priority,
+      :interval_in_minutes,
+      :visual_text,
+      :audio_text,
+      :paused,
+      :saved
+    ])
+    |> validate_required([
+      :start_time,
+      :days_of_week,
+      :sign_ids,
+      :priority,
+      :interval_in_minutes,
+      :visual_text,
+      :audio_text
+    ])
+    |> validate_length(:sign_ids, min: 1)
+    |> validate_subset(:days_of_week, 1..7)
   end
 end
