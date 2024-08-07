@@ -78,11 +78,16 @@
       .datetime-picker-group {
         display: flex;
 
+        .validation-group,
         .date-picker,
         .time-picker {
           flex: 0 1 250px;
-          height: 38px;
           margin-right: 16px;
+        }
+
+        .date-picker,
+        .time-picker {
+          max-height: 38px;
         }
 
         .service-time-link {

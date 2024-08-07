@@ -162,21 +162,30 @@ const NewPaMessagePage = ({
                   Start
                 </Form.Label>
                 <div className="datetime-picker-group">
-                  <Form.Control
-                    className="date-picker picker"
-                    type="date"
-                    id="start-date-picker"
-                    name="start-date-picker-input"
-                    value={startDateTime.format("YYYY-MM-DD")}
-                    onChange={(event) =>
-                      setStartDateTime(
-                        moment(
-                          `${event.target.value} ${startDateTime.format("HH:mm")}`,
-                          "YYYY-MM-DD HH:mm",
-                        ),
-                      )
-                    }
-                  />
+                  <div className="validation-group">
+                    <Form.Control
+                      className="date-picker picker"
+                      type="date"
+                      id="start-date-picker"
+                      name="start-date-picker-input"
+                      value={startDateTime.format("YYYY-MM-DD")}
+                      onChange={(event) =>
+                        setStartDateTime(
+                          moment(
+                            `${event.target.value} ${startDateTime.format("HH:mm")}`,
+                            "YYYY-MM-DD HH:mm",
+                          ),
+                        )
+                      }
+                      isValid={validated && startDateTime.isBefore(endDateTime)}
+                      isInvalid={
+                        validated && startDateTime.isSameOrAfter(endDateTime)
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Start date and time needs to be before End date and time.
+                    </Form.Control.Feedback>
+                  </div>
                   <Form.Control
                     type="time"
                     className="time-picker picker"
@@ -229,21 +238,30 @@ const NewPaMessagePage = ({
                 )}
                 {!endWithEffectPeriod && endDateTime !== null && (
                   <div className="datetime-picker-group">
-                    <Form.Control
-                      className="date-picker picker"
-                      type="date"
-                      id="end-date-picker"
-                      name="end-date-picker-input"
-                      value={endDateTime.format("YYYY-MM-DD")}
-                      onChange={(event) =>
-                        setEndDateTime(
-                          moment(
-                            `${event.target.value} ${endDateTime.format("HH:mm")}`,
-                            "YYYY-MM-DD HH:mm",
-                          ),
-                        )
-                      }
-                    />
+                    <div className="validation-group">
+                      <Form.Control
+                        className="date-picker picker"
+                        type="date"
+                        id="end-date-picker"
+                        name="end-date-picker-input"
+                        value={endDateTime.format("YYYY-MM-DD")}
+                        onChange={(event) =>
+                          setEndDateTime(
+                            moment(
+                              `${event.target.value} ${endDateTime.format("HH:mm")}`,
+                              "YYYY-MM-DD HH:mm",
+                            ),
+                          )
+                        }
+                        isValid={validated && endDateTime.isAfter(moment())}
+                        isInvalid={
+                          validated && endDateTime.isSameOrBefore(moment())
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Date is in the past.
+                      </Form.Control.Feedback>
+                    </div>
                     <Form.Control
                       type="time"
                       className="time-picker picker"
@@ -323,6 +341,8 @@ const NewPaMessagePage = ({
                   }}
                   label="Text"
                   maxLength={MAX_TEXT_LENGTH}
+                  required
+                  validationText={"Text cannot be blank."}
                 />
               </Col>
               <Col md="auto" className="copy-button-col">

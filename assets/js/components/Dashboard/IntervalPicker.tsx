@@ -18,7 +18,11 @@ const IntervalPicker = ({ interval, onChangeInterval }: Props) => {
         type="number"
         value={interval}
         onChange={(input) => onChangeInterval(input.target.value)}
+        required
       />
+      <Form.Control.Feedback type="invalid">
+        Interval value is required
+      </Form.Control.Feedback>
     </Form.Group>
   );
 };

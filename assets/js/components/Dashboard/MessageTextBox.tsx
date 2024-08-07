@@ -8,6 +8,8 @@ interface Props {
   label: string;
   id: string;
   maxLength: number;
+  required?: boolean;
+  validationText?: string;
 }
 
 const MessageTextBox = ({
@@ -17,11 +19,14 @@ const MessageTextBox = ({
   label,
   id,
   maxLength,
+  required,
+  validationText,
 }: Props) => {
   return (
     <Form.Group className="message-text-box">
       <Form.Label htmlFor={id}>{label}</Form.Label>
       <Form.Control
+        required={required}
         id={id}
         className="text-input"
         maxLength={maxLength}
@@ -30,6 +35,9 @@ const MessageTextBox = ({
         onChange={(textbox) => onChangeText(textbox.target.value)}
         disabled={disabled}
       />
+      <Form.Control.Feedback type="invalid">
+        {validationText}
+      </Form.Control.Feedback>
     </Form.Group>
   );
 };
