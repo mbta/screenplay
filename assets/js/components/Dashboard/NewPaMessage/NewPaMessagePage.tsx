@@ -14,6 +14,7 @@ import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -22,6 +23,8 @@ import {
   VolumeUpFill,
 } from "react-bootstrap-icons";
 import cx from "classnames";
+import { ActivePeriod, Alert as AlertModel } from "Models/alert";
+import { getAlertEarliestStartLatestEnd } from "../../../util";
 
 import { Page } from "./types";
 
@@ -53,9 +56,13 @@ interface Props {
   setStartDate: Dispatch<SetStateAction<string>>;
   setStartTime: Dispatch<SetStateAction<string>>;
   setVisualText: Dispatch<SetStateAction<string>>;
+  onClearAssociatedAlert: () => void;
+  setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
   startDate: string;
   startTime: string;
   visualText: string;
+  associatedAlert: AlertModel;
+  endWithEffectPeriod: boolean;
 }
 
 const NewPaMessagePage = ({
@@ -77,10 +84,15 @@ const NewPaMessagePage = ({
   setStartDate,
   setStartTime,
   setVisualText,
+  setEndWithEffectPeriod,
+  onClearAssociatedAlert,
   startDate,
   startTime,
   visualText,
+  associatedAlert,
+  endWithEffectPeriod,
 }: Props) => {
+  const now = moment();
   const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
@@ -126,20 +138,14 @@ const NewPaMessagePage = ({
           event.preventDefault();
         }}
       >
-        <div className="header">New PA/ESS message</div>
+        <div className="new-pa-message-page__header">New PA/ESS message</div>
         <Container fluid>
-          <Row md="auto" className="align-items-center">
-            <Button variant="link" className="pr-0">
-              Associate with alert
-            </Button>
-            (Optional)
-          </Row>
-          <Row>
-            <div className="new-pa-message-page__associate-alert-subtext">
-              Linking will allow you to share end time with alert, and import
-              location and message.
-            </div>
-          </Row>
+          <NewPaMessageHeader
+            associatedAlert={associatedAlert}
+            onClearAssociatedAlert={onClearAssociatedAlert}
+            navigateTo={navigateTo}
+            setEndWithEffectPeriod={setEndWithEffectPeriod}
+          />
           <Card className="when-card">
             <div className="title">When</div>
             <Row md="auto">
@@ -183,29 +189,50 @@ const NewPaMessagePage = ({
                 >
                   End
                 </Form.Label>
-                <div className="datetime-picker-group">
-                  <Form.Control
-                    className="date-picker picker"
-                    type="date"
-                    id="end-date-picker"
-                    name="end-date-picker-input"
-                    value={endDate}
-                    onChange={(event) => setEndDate(event.target.value)}
+                {associatedAlert.id && (
+                  <Form.Switch
+                    id="effect-period-switch"
+                    className="effect-period-switch"
+                    checked={endWithEffectPeriod}
+                    label="At end of alert"
+                    onChange={() => {
+                      if (!endWithEffectPeriod) {
+                        setEndDate("");
+                        setEndTime("");
+                      } else {
+                        setEndDate(now.format("L"));
+                        setEndTime(now.add(1, "hour").format("HH:mm"));
+                      }
+
+                      setEndWithEffectPeriod(!endWithEffectPeriod);
+                    }}
                   />
-                  <Form.Control
-                    type="time"
-                    className="time-picker picker"
-                    value={endTime}
-                    onChange={(event) => setEndTime(event.target.value)}
-                  />
-                  <Button
-                    className="service-time-link"
-                    variant="link"
-                    onClick={() => setEndTime("03:00")}
-                  >
-                    End of service day
-                  </Button>
-                </div>
+                )}
+                {!endWithEffectPeriod && (
+                  <div className="datetime-picker-group">
+                    <Form.Control
+                      className="date-picker picker"
+                      type="date"
+                      id="end-date-picker"
+                      name="end-date-picker-input"
+                      value={endDate}
+                      onChange={(event) => setEndDate(event.target.value)}
+                    />
+                    <Form.Control
+                      type="time"
+                      className="time-picker picker"
+                      value={endTime}
+                      onChange={(event) => setEndTime(event.target.value)}
+                    />
+                    <Button
+                      className="service-time-link"
+                      variant="link"
+                      onClick={() => setEndTime("03:00")}
+                    >
+                      End of service day
+                    </Button>
+                  </div>
+                )}
               </Form.Group>
             </Row>
             <Row className="days">
@@ -382,6 +409,68 @@ const ReviewAudioButton = ({
       )}
       {audioPlaying ? "Reviewing audio" : "Review audio"}
     </Button>
+  );
+};
+
+interface NewPaMessageHeaderProps {
+  associatedAlert: AlertModel;
+  navigateTo: (page: Page) => void;
+  onClearAssociatedAlert: () => void;
+  setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
+}
+
+const NewPaMessageHeader = ({
+  associatedAlert,
+  navigateTo,
+  onClearAssociatedAlert,
+  setEndWithEffectPeriod,
+}: NewPaMessageHeaderProps) => {
+  const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
+    const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
+    return (
+      <div className="effect-period">
+        Alert effect period: {start} &ndash; {end}
+      </div>
+    );
+  };
+
+  return associatedAlert.id ? (
+    <Row md="auto" className="align-items-center">
+      <div className="associated-alert-header">
+        Associated Alert: Alert ID {associatedAlert.id}
+        <Button
+          variant="link"
+          onClick={() => {
+            onClearAssociatedAlert();
+          }}
+        >
+          Clear
+        </Button>
+        {formatActivePeriod(associatedAlert.active_period)}
+      </div>
+    </Row>
+  ) : (
+    <>
+      <Row md="auto" className="align-items-center unassociated-alert-header">
+        <Button
+          variant="link"
+          className="pr-0 associate-alert-button"
+          onClick={() => {
+            setEndWithEffectPeriod(true);
+            navigateTo(Page.ALERTS);
+          }}
+        >
+          Associate with alert
+        </Button>
+        (Optional)
+      </Row>
+      <Row>
+        <div className="new-pa-message-page__associate-alert-subtext">
+          Linking will allow you to share end time with alert, and import
+          location and message.
+        </div>
+      </Row>
+    </>
   );
 };
 

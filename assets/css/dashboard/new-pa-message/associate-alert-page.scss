@@ -1,0 +1,228 @@
+.sidebar-container:has(
+    + .page-content > .new-pa-message > .associate-alert-page
+  ) {
+  display: none !important;
+}
+
+.associate-alert-page {
+  padding: 24px 48px;
+}
+
+.associate-alert-page-header {
+  padding-right: 48px;
+  max-width: 1380px;
+
+  &__cancel {
+    flex: none;
+    width: 100px;
+
+    button {
+      margin: 8px 16px 8px 16px;
+      height: 48px;
+      color: $text-link-primary;
+      text-decoration: none;
+
+      &:hover {
+        color: $text-link-primary;
+        background-color: $cool-gray-15;
+      }
+    }
+  }
+}
+
+.associate-alert-page-body {
+  flex-wrap: nowrap;
+  padding-right: 48px;
+}
+
+.associate-alert-filter-selection {
+  flex: none;
+  font-size: 20px;
+  width: 200px;
+  padding: 0px 12px;
+  margin-top: 40px;
+
+  &__label {
+    margin-bottom: 8px;
+  }
+
+  &__button-group {
+    margin-bottom: 48px;
+  }
+
+  &__selected {
+    color: #ffffff !important;
+    background: #d9d9d93d !important;
+  }
+
+  button {
+    text-align: left;
+    height: 38px;
+    min-width: 200px;
+    color: $text-secondary;
+    background-color: $cool-gray-20;
+    border: none;
+  }
+}
+
+.associate-alert-table {
+  margin: 40px;
+  max-width: 1096px;
+
+  th,
+  td {
+    padding: 8px 16px;
+    border-bottom: 1px solid $cool-gray-40;
+    vertical-align: top;
+  }
+
+  th {
+    padding-top: 24px;
+    height: 56px;
+  }
+
+  &__row {
+    background-color: $cool-gray-15;
+
+    &:hover {
+      background-color: $cool-gray-20;
+      cursor: pointer;
+    }
+  }
+
+  &__message {
+    min-width: 300px;
+  }
+
+  &__id {
+    width: 90px;
+  }
+
+  &__start-end {
+    min-width: 200px;
+    padding-right: 0px;
+  }
+
+  &__last-modified {
+    min-width: 220px;
+  }
+
+  &__select {
+    min-width: 102px;
+
+    button {
+      color: $text-secondary;
+      height: fit-content;
+
+      &:hover {
+        color: $text-secondary;
+        opacity: 84%;
+      }
+    }
+  }
+
+  &__empty {
+    border-bottom: none !important;
+  }
+
+  &__empty-text {
+    font-weight: bold;
+    color: white;
+    padding-top: 16px;
+    padding-left: 16px;
+  }
+}
+
+.alert-description {
+  padding: 16px;
+
+  &__header {
+    margin-bottom: 8px;
+    justify-content: center;
+  }
+
+  &__header-id-label {
+    display: inline;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  &__header-id {
+    display: inline;
+    font-size: 16px;
+    font-weight: 400;
+  }
+}
+
+.alert-items-modal {
+  color: white;
+
+  .modal-dialog {
+    min-width: 800px;
+  }
+
+  .modal-content {
+    background-color: $cool-gray-20;
+    border: 1px solid $border-primary;
+
+    button {
+      margin-left: 8px;
+      padding: 6px 12px;
+      height: 38px;
+    }
+
+    .cancel-button {
+      color: $text-link-primary;
+      text-decoration: none;
+
+      &:hover {
+        background-color: $cool-gray-30;
+      }
+    }
+
+    .apply-button {
+      background-color: $form-check-input-checked-bg-color;
+      color: black;
+      &:hover {
+        background-color: #72a4cd;
+      }
+    }
+
+    .checkbox {
+      margin-bottom: 32px;
+      margin-left: 16px;
+
+      .subtext {
+        margin-top: 4px;
+        font-family: Inter;
+        font-size: 14px;
+        color: $text-secondary;
+      }
+    }
+
+    .modal-header {
+      border-bottom: none;
+
+      .btn-close {
+        margin-left: auto;
+      }
+
+      .btn-close:hover {
+        background-color: transparent;
+      }
+    }
+
+    .modal-body {
+      .alert-description {
+        background-color: #2b3741;
+        border-radius: 8px;
+        border: 1px solid $border-primary;
+        margin-bottom: 24px;
+      }
+    }
+
+    .modal-footer {
+      border-top: none;
+    }
+  }
+}

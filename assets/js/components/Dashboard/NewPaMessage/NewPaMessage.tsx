@@ -4,12 +4,17 @@ import { Page } from "./types";
 
 import NewPaMessagePage from "./NewPaMessagePage";
 import SelectStationsPage from "./SelectStationsPage";
+import AssociateAlertPage from "./AssociateAlertPage";
 import { Modal } from "react-bootstrap";
+import { Alert } from "Models/alert";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
   const now = moment();
 
+  const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
+  const [endWithEffectPeriod, setEndWithEffectPeriod] =
+    useState<boolean>(false);
   const [startDate, setStartDate] = useState(now.format("L"));
   const [startTime, setStartTime] = useState(now.format("HH:mm"));
   const [endDate, setEndDate] = useState(now.format("L"));
@@ -20,6 +25,14 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const onClearAssociatedAlert = () => {
+    setAssociatedAlert({} as Alert);
+    setEndWithEffectPeriod(false);
+  };
+  const onImportMessage = (alertMessage: string) => {
+    setVisualText(alertMessage);
+  };
+  const onImportLocations = () => {};
 
   return (
     <div className="new-pa-message">
@@ -44,9 +57,14 @@ const NewPaMessage = () => {
             setStartDate,
             setStartTime,
             setVisualText,
+            setAssociatedAlert,
+            onClearAssociatedAlert,
+            setEndWithEffectPeriod,
             startDate,
             startTime,
             visualText,
+            associatedAlert,
+            endWithEffectPeriod,
           }}
         />
       )}
@@ -58,6 +76,17 @@ const NewPaMessage = () => {
       >
         <SelectStationsPage navigateTo={setPage} />
       </Modal>
+      {page === Page.ALERTS && (
+        <AssociateAlertPage
+          associatedAlert={associatedAlert}
+          endWithEffectPeriod={endWithEffectPeriod}
+          onImportMessage={onImportMessage}
+          onImportLocations={onImportLocations}
+          navigateTo={setPage}
+          setAssociatedAlert={setAssociatedAlert}
+          setEndWithEffectPeriod={setEndWithEffectPeriod}
+        />
+      )}
     </div>
   );
 };

@@ -27,6 +27,11 @@ export const fetchAlerts = async (): Promise<AlertsResponse> => {
   return await response.json();
 };
 
+export const fetchActiveAndFutureAlerts = async (): Promise<AlertsResponse> => {
+  const response = await fetch("/api/alerts/non_access_alerts");
+  return await response.json();
+};
+
 export interface ExistingScreens {
   [place_id: string]: ExistingScreensAtPlace;
 }

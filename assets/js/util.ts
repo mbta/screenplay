@@ -5,10 +5,11 @@ import {
 } from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
 import CANNED_MESSAGES from "Constants/messages";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
-import { Alert } from "Models/alert";
+import { Alert, ActivePeriod } from "Models/alert";
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
+import moment from "moment";
 
 export const color = (line: string) => {
   switch (line) {
@@ -259,4 +260,25 @@ export const capitalize = (str: string) => {
   } else {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+};
+
+export const getAlertEarliestStartLatestEnd = (
+  activePeriods: ActivePeriod[],
+) => {
+  const starts = activePeriods.map((activePeriod) => {
+    return new Date(activePeriod.start).getTime();
+  });
+
+  const ends = activePeriods.map((activePeriod) => {
+    return new Date(activePeriod.end).getTime();
+  });
+  const earliestStart = Math.min(...starts);
+  const latestEnd = Math.max(...ends);
+
+  const start = moment(earliestStart).format("l LT");
+
+  const end =
+    latestEnd === 0 ? "later today" : moment(latestEnd).format("l LT");
+
+  return [start, end];
 };

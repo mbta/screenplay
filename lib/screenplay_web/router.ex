@@ -87,6 +87,7 @@ defmodule ScreenplayWeb.Router do
 
     get("/pa-messages", PaMessagesController, :index)
     get("/pa-messages/new", PaMessagesController, :index)
+    get("/pa-messages/new/associate-alert", PaMessagesController, :index)
     get("/api/pa-messages/preview_audio", PaMessagesApiController, :preview_audio)
   end
 
@@ -123,6 +124,7 @@ defmodule ScreenplayWeb.Router do
 
     get("/dashboard", DashboardApiController, :index)
     get("/alerts", AlertsApiController, :index)
+    get("/alerts/non_access_alerts", AlertsApiController, :non_access_alerts)
   end
 
   scope "/auth", ScreenplayWeb do
