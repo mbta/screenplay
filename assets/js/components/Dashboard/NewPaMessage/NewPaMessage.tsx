@@ -28,8 +28,6 @@ const NewPaMessage = () => {
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
     setEndWithEffectPeriod(false);
-    setEndDate(now.format("L"));
-    setEndTime(now.add(1, "hour").format("HH:mm"));
   };
   const onImportMessage = (alertMessage: string) => {
     setVisualText(alertMessage);
