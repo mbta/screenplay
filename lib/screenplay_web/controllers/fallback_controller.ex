@@ -4,7 +4,7 @@ defmodule ScreenplayWeb.FallbackController do
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(ScreenplayWeb.ChangesetJSON)
+    |> put_view(json: ScreenplayWeb.ChangesetJSON)
     |> render(:error, changeset: changeset)
   end
 end

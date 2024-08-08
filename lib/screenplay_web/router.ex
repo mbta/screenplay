@@ -87,9 +87,21 @@ defmodule ScreenplayWeb.Router do
 
     get("/pa-messages", PaMessagesController, :index)
     get("/pa-messages/new", PaMessagesController, :index)
-    get("/api/pa-messages", PaMessagesApiController, :index)
     get("/api/pa-messages/preview_audio", PaMessagesApiController, :preview_audio)
-    post("/api/pa-messages", PaMessagesApiController, :create)
+  end
+
+  scope "/", ScreenplayWeb do
+    pipe_through [
+      :redirect_prod_http,
+      :api,
+      :auth,
+      :ensure_auth,
+      :metadata,
+      :ensure_pa_message_admin
+    ]
+
+    get "/api/pa-messages", PaMessagesApiController, :index
+    post "/api/pa-messages", PaMessagesApiController, :create
   end
 
   scope "/", ScreenplayWeb do
