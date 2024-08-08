@@ -20,18 +20,6 @@
         box-shadow: 0px 0px 0px 4px #8ecdff80;
       }
     }
-
-    .cancel-button {
-      background-color: transparent;
-      color: $text-link-primary;
-      border: none;
-      margin-right: 8px;
-    }
-
-    .submit-button {
-      background-color: $button-primary;
-      color: $button-secondary;
-    }
   }
 
   .when-card,
@@ -137,7 +125,7 @@
       }
 
       &.active {
-        background-color: #0d6efd;
+        background-color: $button-primary;
         color: $text-primary;
       }
 
@@ -175,12 +163,18 @@
   }
 
   .where-card {
-    .add-stations-zones-button {
-      background-color: $text-link-primary;
-      color: $text-invert;
-      border: 1px dashed $text-invert;
-      width: fit-content;
-      vertical-align: middle;
+    .select-stations-and-zones-button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .add-stations-zones-button {
+        background-color: transparent;
+        color: $button-primary;
+        border: 1px dashed $button-primary;
+        width: fit-content;
+        height: fit-content;
+      }
     }
   }
 

@@ -1,14 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
@@ -25,8 +17,9 @@ import {
 import cx from "classnames";
 import { ActivePeriod, Alert as AlertModel } from "Models/alert";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
-
 import { Page } from "./types";
+import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
+import { Place } from "Models/place";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -41,7 +34,6 @@ interface Props {
   days: number[];
   endDate: string;
   endTime: string;
-  errorMessage: string;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
@@ -63,13 +55,16 @@ interface Props {
   visualText: string;
   associatedAlert: AlertModel;
   endWithEffectPeriod: boolean;
+  signIds: string[];
+  setSignIds: (signIds: string[]) => void;
+  places: Place[];
+  busRoutes: string[];
 }
 
 const NewPaMessagePage = ({
   days,
   endDate,
   endTime,
-  errorMessage,
   interval,
   navigateTo,
   phoneticText,
@@ -91,6 +86,10 @@ const NewPaMessagePage = ({
   visualText,
   associatedAlert,
   endWithEffectPeriod,
+  signIds,
+  setSignIds,
+  places,
+  busRoutes,
 }: Props) => {
   const now = moment();
   const navigate = useNavigate();
@@ -255,12 +254,23 @@ const NewPaMessagePage = ({
           </Card>
           <Card className="where-card">
             <div className="title">Where</div>
-            <Button
-              className="add-stations-zones-button"
-              onClick={() => navigateTo(Page.STATIONS)}
-            >
-              <PlusLg width={12} height={12} /> Add Stations & Zones
-            </Button>
+            <div className="select-stations-and-zones-button-group">
+              {signIds.length > 0 && (
+                <SelectedSignsByRouteTags
+                  places={places}
+                  value={signIds}
+                  onChange={setSignIds}
+                  busRoutes={busRoutes}
+                  onTagClick={() => navigateTo(Page.STATIONS)}
+                />
+              )}
+              <Button
+                className="add-stations-zones-button"
+                onClick={() => navigateTo(Page.STATIONS)}
+              >
+                <PlusLg width={12} height={12} /> Add Stations & Zones
+              </Button>
+            </div>
           </Card>
           <Card className="message-card">
             <div className="title">Message</div>
@@ -350,23 +360,11 @@ const NewPaMessagePage = ({
             >
               Cancel
             </Button>
-            <Button type="submit" className="submit-button">
+            <Button type="submit" className="submit-button button-primary">
               Submit
             </Button>
           </Row>
         </Container>
-        <div className="error-alert-container">
-          <Alert
-            show={errorMessage.length > 0}
-            variant="primary"
-            onClose={() => setErrorMessage("")}
-            dismissible
-            className="error-alert"
-          >
-            <ExclamationTriangleFill className="error-alert__icon" />
-            <div className="error-alert__text">{errorMessage}</div>
-          </Alert>
-        </div>
       </Form>
     </div>
   );

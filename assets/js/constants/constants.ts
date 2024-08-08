@@ -70,3 +70,20 @@ export const STATUSES = [
 export const BASE_URL = "/api/takeover_tool";
 
 export const GREEN_LINE_ROUTES = ["Green-B", "Green-C", "Green-D", "Green-E"];
+
+export const BASE_ROUTE_NAME_TO_ROUTE_IDS: { [key: string]: string[] } = {
+  Green: ["Green-B", "Green-C", "Green-D", "Green-E"],
+  "Green-B": ["Green-B"],
+  "Green-C": ["Green-C"],
+  "Green-D": ["Green-D"],
+  "Green-E": ["Green-E"],
+  Red: ["Red"],
+  Orange: ["Orange"],
+  Blue: ["Blue"],
+  Mattapan: ["Mattapan"],
+  Silver: SILVER_LINE_ROUTES,
+};
+
+export const LEFT_ZONES = ["s", "w"] as const;
+export const MIDDLE_ZONES = ["c", "m"] as const;
+export const RIGHT_ZONES = ["n", "e"] as const;

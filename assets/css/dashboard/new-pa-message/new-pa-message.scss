@@ -1,9 +1,11 @@
 @import "./new-pa-message-page.scss";
 @import "./select-stations-page.scss";
 @import "./selected-stations-summary.scss";
+@import "./select-zones-page.scss";
+@import "./associate-alert-page.scss";
 
 .new-pa-message,
-.select-stations-page-modal {
+.select-station-and-zones-container {
   height: 100%;
 
   .header {
@@ -14,20 +16,104 @@
   }
 
   .cancel-button {
+    color: $button-primary;
     background-color: transparent;
-    color: $text-link-primary;
+    margin-right: 16px;
     border: none;
-  }
 
-  .submit-button {
-    background-color: $button-primary;
-    color: $button-secondary;
+    &:hover {
+      background-color: $text-button-blue-hover-color;
+    }
   }
 }
 
-.select-stations-page-modal {
+.select-station-and-zones-container {
   .modal-content {
     color: $text-primary;
     background-color: $dark-bg;
+  }
+}
+
+.selected-group-tag {
+  height: 36px;
+  padding: 6px 12px;
+  border: 1px solid $text-secondary;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin-right: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  .label {
+    color: $text-primary;
+  }
+
+  &--green {
+    background-color: $mbta-green;
+  }
+  &--red {
+    background-color: $mbta-red;
+  }
+  &--orange {
+    background-color: $mbta-orange;
+  }
+  &--blue {
+    background-color: $mbta-blue;
+  }
+  &--mattapan {
+    background-color: $mbta-red;
+  }
+  &--silver {
+    background-color: $mbta-silver;
+  }
+  &--bus {
+    background-color: $mbta-bus;
+    fill: $text-invert;
+
+    .label {
+      color: $text-invert;
+    }
+
+    .x-button {
+      fill: $text-invert;
+    }
+  }
+}
+
+.error-alert-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 40px;
+
+  .error-alert {
+    width: 400px;
+    background-color: $alert-yellow;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+
+    .btn-close {
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &__icon {
+      height: 24px;
+      width: 24px;
+      opacity: 60%;
+      flex-shrink: 0;
+    }
+
+    &__text {
+      padding-left: 8px;
+    }
   }
 }

@@ -1,4 +1,9 @@
 import {
+  BASE_ROUTE_NAME_TO_ROUTE_IDS,
+  LEFT_ZONES,
+  MIDDLE_ZONES,
+} from "Constants/constants";
+import {
   CannedMessage,
   CustomMessage,
   StationsByLine,
@@ -10,6 +15,7 @@ import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
 import moment from "moment";
+import fp from "lodash/fp";
 
 export const color = (line: string) => {
   switch (line) {
@@ -179,6 +185,24 @@ export const placesWithSelectedAlert = (
     : [];
 };
 
+export const signsByZone = (signs: Screen[]) => {
+  const groupedSigns = fp.groupBy((sign) => {
+    if (fp.includes(sign.zone, LEFT_ZONES)) {
+      return "left";
+    } else if (fp.includes(sign.zone, MIDDLE_ZONES)) {
+      return "middle";
+    } else {
+      return "right";
+    }
+  }, signs);
+
+  return {
+    left: groupedSigns["left"] ?? [],
+    middle: groupedSigns["middle"] ?? [],
+    right: groupedSigns["right"] ?? [],
+  };
+};
+
 const screenTypeOrder = [
   "dup",
   "dup_v2",
@@ -281,4 +305,49 @@ export const getAlertEarliestStartLatestEnd = (
     latestEnd === 0 ? "later today" : moment(latestEnd).format("l LT");
 
   return [start, end];
+};
+
+export const allRouteIdsAtPlaces = (places: Place[]) => {
+  return fp.uniq(
+    places.flatMap((place) =>
+      place.screens.flatMap((screen) => screen.route_ids ?? []),
+    ),
+  );
+};
+
+export const busRouteIdsAtPlaces = (places: Place[]) => {
+  return fp.without(
+    Object.values(BASE_ROUTE_NAME_TO_ROUTE_IDS).flat(),
+    allRouteIdsAtPlaces(places),
+  );
+};
+
+export const getZoneLabel = (zone: string) => {
+  switch (zone) {
+    case "m":
+      return "Mezzanine";
+    case "c":
+      return "Center";
+    case "n":
+      return "Northbound";
+    case "s":
+      return "Southbound";
+    case "e":
+      return "Eastbound";
+    case "w":
+      return "Westbound";
+    default:
+      return "";
+  }
+};
+
+export const signIDs = (signs: Screen[]) => signs.map((sign) => sign.id);
+
+export const getPlacesFromFilter = (
+  places: Place[],
+  filterFn: (routeId: string) => boolean,
+) => {
+  return places.filter((place) =>
+    place.screens.some((screen) => screen.route_ids?.some(filterFn)),
+  );
 };
