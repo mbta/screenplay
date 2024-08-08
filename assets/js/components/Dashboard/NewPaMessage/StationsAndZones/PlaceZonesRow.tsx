@@ -32,7 +32,7 @@ const PlaceZonesRow = ({
 }: PlaceZonesRow) => {
   if (allSignsForRouteAtPlace.length === 0) return null;
 
-  const selectedSignsAtPlace = signIDs(allSignsForRouteAtPlace).filter(
+  const selectedSignsForRouteAtPlace = signIDs(allSignsForRouteAtPlace).filter(
     (id: string) => allSelectedSigns.includes(id),
   );
 
@@ -45,7 +45,7 @@ const PlaceZonesRow = ({
   };
 
   const allSignsSelected =
-    selectedSignsAtPlace.length === allSignsForRouteAtPlace.length;
+    selectedSignsForRouteAtPlace.length === allSignsForRouteAtPlace.length;
 
   return (
     <tr className="table-row">
