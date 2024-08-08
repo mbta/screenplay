@@ -22,11 +22,13 @@ defmodule Screenplay.Migrate do
   end
 
   defp default_migrate_fn(migration_directory) do
-    Ecto.Migrator.run(
-      Screenplay.Repo,
-      Ecto.Migrator.migrations_path(Screenplay.Repo, migration_directory),
-      :up,
-      all: true
-    )
+    Ecto.Migrator.with_repo(Screenplay.Repo, fn repo ->
+      Ecto.Migrator.run(
+        repo,
+        Ecto.Migrator.migrations_path(Screenplay.Repo, migration_directory),
+        :up,
+        all: true
+      )
+    end)
   end
 end
