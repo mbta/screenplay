@@ -183,7 +183,7 @@ const NewPaMessagePage = ({
                       }
                     />
                     <Form.Control.Feedback type="invalid">
-                      Start date and time needs to be before End date and time.
+                      Start date/time needs to be before the end date/time
                     </Form.Control.Feedback>
                   </div>
                   <Form.Control
@@ -325,6 +325,11 @@ const NewPaMessagePage = ({
                 <PlusLg width={12} height={12} /> Add Stations & Zones
               </Button>
             </div>
+            {validated && signIds.length === 0 && (
+              <div className="validation-error">
+                Selecting location is required
+              </div>
+            )}
           </Card>
           <Card className="message-card">
             <div className="title">Message</div>
@@ -342,7 +347,7 @@ const NewPaMessagePage = ({
                   label="Text"
                   maxLength={MAX_TEXT_LENGTH}
                   required
-                  validationText={"Text cannot be blank."}
+                  validationText={"Text cannot be blank"}
                 />
               </Col>
               <Col md="auto" className="copy-button-col">
