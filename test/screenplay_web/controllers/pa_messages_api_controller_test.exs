@@ -65,4 +65,44 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> json_response(200)
     end
   end
+
+  describe "POST /api/pa-messages" do
+    @tag :authenticated_pa_message_admin
+    test "creates a new PaMessage", %{conn: conn} do
+      now = ~U[2024-08-07T12:12:12Z]
+
+      assert %{"success" => true} =
+               conn
+               |> post("/api/pa-messages", %{
+                 start_time: now,
+                 end_time: DateTime.add(now, 60),
+                 days_of_week: [1, 2, 3],
+                 sign_ids: ["test_sign"],
+                 priority: 1,
+                 interval_in_minutes: 4,
+                 visual_text: "Visual Text",
+                 audio_text: "Audio Text"
+               })
+               |> json_response(200)
+    end
+
+    @tag :authenticated_pa_message_admin
+    test "returns an error object when passed invalid params", %{conn: conn} do
+      now = ~U[2024-08-07T12:12:12Z]
+
+      assert %{"errors" => _} =
+               conn
+               |> post("/api/pa-messages", %{
+                 start_time: now,
+                 end_time: DateTime.add(now, 60),
+                 days_of_week: [1, 2, 3, 90],
+                 sign_ids: ["test_sign"],
+                 priority: 1,
+                 interval_in_minutes: 4,
+                 visual_text: "Visual Text",
+                 audio_text: "Audio Text"
+               })
+               |> json_response(422)
+    end
+  end
 end

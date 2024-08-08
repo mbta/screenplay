@@ -20,4 +20,11 @@ defmodule Screenplay.Util do
     |> DateTime.add(-180, :minute)
     |> Date.day_of_week()
   end
+
+  @spec format_changeset_errors(changeset :: Ecto.Changeset.t()) :: String.t()
+  def format_changeset_errors(changeset) do
+    changeset
+    |> Ecto.Changeset.traverse_errors(fn {msg, _} -> msg end)
+    |> Enum.map_join(", ", fn {field, msg} -> "#{field}: #{msg}" end)
+  end
 end

@@ -1,6 +1,8 @@
 defmodule ScreenplayWeb.PaMessagesApiController do
   use ScreenplayWeb, :controller
 
+  action_fallback ScreenplayWeb.FallbackController
+
   alias Screenplay.PaMessages
 
   def index(conn, _params) do
@@ -18,6 +20,12 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
       :error ->
         send_resp(conn, 500, "Could not fetch audio preview")
+    end
+  end
+
+  def create(conn, params) do
+    with {:ok, _} <- PaMessages.create_message(params) do
+      json(conn, %{success: true})
     end
   end
 end
