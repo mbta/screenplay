@@ -6,6 +6,7 @@ defmodule ScreenplayWeb.AuthManager.Pipeline do
     error_handler: ScreenplayWeb.AuthManager.ErrorHandler,
     module: ScreenplayWeb.AuthManager
 
+  plug :fetch_session
   plug :save_previous_path
   plug(Guardian.Plug.VerifySession, claims: %{"typ" => "access"})
   plug(Guardian.Plug.VerifyHeader, claims: %{"typ" => "access"})
@@ -14,10 +15,6 @@ defmodule ScreenplayWeb.AuthManager.Pipeline do
   # A plug to save the current path before the auth process loses it through several
   # redirects. We use this path in auth_controller to send us back to the original url
   def save_previous_path(conn, _opts) do
-    if String.contains?(conn.request_path, "/api/") do
-      conn
-    else
-      Plug.Conn.put_session(conn, :previous_path, conn.request_path)
-    end
+    Plug.Conn.put_session(conn, :previous_path, conn.request_path)
   end
 end
