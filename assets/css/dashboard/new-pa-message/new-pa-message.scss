@@ -2,9 +2,10 @@
 @import "./select-stations-page.scss";
 @import "./selected-stations-summary.scss";
 @import "./select-zones-page.scss";
+@import "./associate-alert-page.scss";
 
 .new-pa-message,
-.select-stations-page-modal {
+.select-station-and-zones-container {
   height: 100%;
 
   .header {
@@ -26,7 +27,7 @@
   }
 }
 
-.select-stations-page-modal {
+.select-station-and-zones-container {
   .modal-content {
     color: $text-primary;
     background-color: $dark-bg;

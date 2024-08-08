@@ -81,7 +81,7 @@ const NewPaMessage = () => {
         />
       )}
       {[Page.STATIONS, Page.ZONES].includes(page) && (
-        <div className="select-stations-page-modal">
+        <div className="select-station-and-zones-container">
           <SelectStationsAndZones
             places={places}
             value={signIds}
