@@ -1,8 +1,6 @@
 defmodule ScreenplayWeb.PaMessagesApiController do
   use ScreenplayWeb, :controller
 
-  require Logger
-
   action_fallback ScreenplayWeb.FallbackController
 
   alias Screenplay.PaMessages
