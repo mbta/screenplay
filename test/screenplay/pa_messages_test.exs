@@ -97,7 +97,7 @@ defmodule Screenplay.PaMessagesTest do
   test "returns messages linked to an existing alert using custom schedule" do
     now = ~U[2024-05-01T12:00:00Z]
 
-    get_json_fn = fn "alerts", %{"include" => "routes"} ->
+    get_json_fn = fn "/alerts", %{"include" => "routes"} ->
       {:ok,
        %{
          "data" => [
@@ -127,6 +127,53 @@ defmodule Screenplay.PaMessagesTest do
     })
 
     assert [%PaMessage{id: 1}] = PaMessages.get_active_messages(now)
+  end
+
+  describe "create/1" do
+    test "creates new message" do
+      now = ~U[2024-08-07T12:12:12Z]
+
+      new_message = %{
+        start_time: now,
+        end_time: DateTime.add(now, 60),
+        days_of_week: [1, 2, 3],
+        sign_ids: ["test_sign"],
+        priority: 1,
+        interval_in_minutes: 4,
+        visual_text: "Visual Text",
+        audio_text: "Audio Text"
+      }
+
+      assert {:ok, actual} = PaMessages.create_message(new_message)
+      assert actual.start_time == new_message.start_time
+      assert actual.end_time == new_message.end_time
+      assert actual.days_of_week == new_message.days_of_week
+      assert actual.sign_ids == new_message.sign_ids
+      assert actual.priority == new_message.priority
+      assert actual.interval_in_minutes == new_message.interval_in_minutes
+      assert actual.visual_text == new_message.visual_text
+      assert actual.audio_text == new_message.audio_text
+    end
+
+    test "does not create invalid message" do
+      now = DateTime.utc_now()
+
+      new_message = %{
+        start_time: now,
+        end_time: DateTime.add(now, 60),
+        days_of_week: [22],
+        sign_ids: [],
+        priority: 1,
+        visual_text: "",
+        audio_text: "Audio Text"
+      }
+
+      assert {:error, %Ecto.Changeset{} = changeset} = PaMessages.create_message(new_message)
+      assert {_, _} = changeset.errors[:days_of_week]
+      assert {_, _} = changeset.errors[:sign_ids]
+      assert {_, _} = changeset.errors[:interval_in_minutes]
+      assert {_, _} = changeset.errors[:visual_text]
+    end
   end
 
   defp alert_json(id, start_dt, end_dt) do

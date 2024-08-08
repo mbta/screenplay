@@ -21,7 +21,10 @@ defmodule ScreenplayWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: ScreenplayWeb
+      use Phoenix.Controller,
+        namespace: ScreenplayWeb,
+        formats: [:html, :json],
+        layouts: [html: {ScreenplayWeb.LayoutView, :app}]
 
       import Plug.Conn
       import ScreenplayWeb.Gettext
@@ -73,6 +76,7 @@ defmodule ScreenplayWeb do
     quote do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
+      use Phoenix.Component
 
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
