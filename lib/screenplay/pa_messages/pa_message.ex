@@ -67,5 +67,17 @@ defmodule Screenplay.PaMessages.PaMessage do
     ])
     |> validate_length(:sign_ids, min: 1)
     |> validate_subset(:days_of_week, 1..7)
+    |> validate_end_date()
+  end
+
+  defp validate_end_date(changeset) do
+    end_time = get_field(changeset, :end_time)
+    alert_id = get_field(changeset, :alert_id)
+
+    if is_nil(end_time) and is_nil(alert_id) do
+      add_error(changeset, :end_time, "can't be nil if alert_id is nil")
+    else
+      changeset
+    end
   end
 end
