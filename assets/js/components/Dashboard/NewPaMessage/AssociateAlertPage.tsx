@@ -24,29 +24,25 @@ import moment from "moment";
 interface AssociateAlertPageProps {
   associatedAlert: Alert;
   endWithEffectPeriod: boolean;
-  importLocations: boolean;
-  importMessage: boolean;
+  onImportMessage: (message: string) => void;
+  onImportLocations: () => void;
   navigateTo: (page: Page) => void;
   setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
-  setImportLocations: Dispatch<SetStateAction<boolean>>;
-  setImportMessage: Dispatch<SetStateAction<boolean>>;
-  setVisualText: Dispatch<SetStateAction<string>>;
 }
 
 const AssociateAlertPage = ({
   associatedAlert,
   endWithEffectPeriod,
-  importLocations,
-  importMessage,
+  onImportMessage,
+  onImportLocations,
   navigateTo,
   setAssociatedAlert,
   setEndWithEffectPeriod,
-  setImportLocations,
-  setImportMessage,
-  setVisualText,
 }: AssociateAlertPageProps) => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [importLocations, setImportLocations] = useState<boolean>(true);
+  const [importMessage, setImportMessage] = useState<boolean>(true);
 
   useEffect(() => {
     fetchActiveAndFutureAlerts().then(({ alerts: alerts }) => {
@@ -210,7 +206,10 @@ const AssociateAlertPage = ({
           <Button
             onClick={() => {
               if (importMessage) {
-                setVisualText(associatedAlert.header);
+                onImportMessage(associatedAlert.header);
+              }
+              if (importLocations) {
+                onImportLocations();
               }
               navigateTo(Page.NEW);
             }}

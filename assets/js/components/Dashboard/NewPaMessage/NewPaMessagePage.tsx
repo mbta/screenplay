@@ -57,7 +57,6 @@ interface Props {
   setStartTime: Dispatch<SetStateAction<string>>;
   setVisualText: Dispatch<SetStateAction<string>>;
   onClearAssociatedAlert: () => void;
-  setAssociateAlertDefaults: () => void;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
   startDate: string;
   startTime: string;
@@ -87,7 +86,6 @@ const NewPaMessagePage = ({
   setVisualText,
   setEndWithEffectPeriod,
   onClearAssociatedAlert,
-  setAssociateAlertDefaults,
   startDate,
   startTime,
   visualText,
@@ -145,8 +143,8 @@ const NewPaMessagePage = ({
           <NewPaMessageHeader
             associatedAlert={associatedAlert}
             onClearAssociatedAlert={onClearAssociatedAlert}
-            setAssociateAlertDefaults={setAssociateAlertDefaults}
             navigateTo={navigateTo}
+            setEndWithEffectPeriod={setEndWithEffectPeriod}
           />
           <Card className="when-card">
             <div className="title">When</div>
@@ -418,14 +416,14 @@ interface NewPaMessageHeaderProps {
   associatedAlert: AlertModel;
   navigateTo: (page: Page) => void;
   onClearAssociatedAlert: () => void;
-  setAssociateAlertDefaults: () => void;
+  setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
 }
 
 const NewPaMessageHeader = ({
   associatedAlert,
   navigateTo,
   onClearAssociatedAlert,
-  setAssociateAlertDefaults,
+  setEndWithEffectPeriod,
 }: NewPaMessageHeaderProps) => {
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
@@ -458,7 +456,7 @@ const NewPaMessageHeader = ({
           variant="link"
           className="pr-0 associate-alert-button"
           onClick={() => {
-            setAssociateAlertDefaults();
+            setEndWithEffectPeriod(true);
             navigateTo(Page.ALERTS);
           }}
         >

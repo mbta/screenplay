@@ -13,8 +13,6 @@ const NewPaMessage = () => {
   const now = moment();
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
-  const [importLocations, setImportLocations] = useState<boolean>(false);
-  const [importMessage, setImportMessage] = useState<boolean>(false);
   const [endWithEffectPeriod, setEndWithEffectPeriod] =
     useState<boolean>(false);
   const [startDate, setStartDate] = useState(now.format("L"));
@@ -27,28 +25,16 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const setAssociateAlertDefaults = () => {
-    setEndWithEffectPeriod(true);
-    setImportLocations(true);
-    setImportMessage(true);
-  };
   const onClearAssociatedAlert = () => {
     setAssociatedAlert({} as Alert);
-
-    if (endWithEffectPeriod) {
-      setEndDate(now.format("L"));
-      setEndTime(now.add(1, "hour").format("HH:mm"));
-    }
-
-    if (importMessage) {
-      setVisualText("");
-      setPhoneticText("");
-    }
-
     setEndWithEffectPeriod(false);
-    setImportLocations(false);
-    setImportMessage(false);
+    setEndDate(now.format("L"));
+    setEndTime(now.add(1, "hour").format("HH:mm"));
   };
+  const onImportMessage = (alertMessage: string) => {
+    setVisualText(alertMessage);
+  };
+  const onImportLocations = () => {};
 
   return (
     <div className="new-pa-message">
@@ -75,7 +61,6 @@ const NewPaMessage = () => {
             setVisualText,
             setAssociatedAlert,
             onClearAssociatedAlert,
-            setAssociateAlertDefaults,
             setEndWithEffectPeriod,
             startDate,
             startTime,
@@ -97,14 +82,11 @@ const NewPaMessage = () => {
         <AssociateAlertPage
           associatedAlert={associatedAlert}
           endWithEffectPeriod={endWithEffectPeriod}
-          importLocations={importLocations}
-          importMessage={importMessage}
+          onImportMessage={onImportMessage}
+          onImportLocations={onImportLocations}
           navigateTo={setPage}
           setAssociatedAlert={setAssociatedAlert}
           setEndWithEffectPeriod={setEndWithEffectPeriod}
-          setImportLocations={setImportLocations}
-          setImportMessage={setImportMessage}
-          setVisualText={setVisualText}
         />
       )}
     </div>
