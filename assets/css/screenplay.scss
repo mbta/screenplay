@@ -8,7 +8,7 @@ $form-check-input-checked-color: #0f1417;
 $form-check-input-checked-bg-color: #8ecdff;
 $form-check-input-bg: #0f1417;
 $form-check-input-border: 1px solid #8b9198;
-$form-feedback-invalid-color: #ffb4ab;
+$form-feedback-invalid-color: $text-error;
 
 @import "~bootstrap/scss/bootstrap";
 @import "dashboard.scss";
@@ -152,4 +152,11 @@ input[type="button"] {
   &:focus {
     box-shadow: 0px 0px 0px 4px #8ecdff80;
   }
+}
+
+.invalid-feedback,
+.validation-error {
+  color: $text-error;
+  font-size: 14px;
+  margin-top: 4px;
 }
