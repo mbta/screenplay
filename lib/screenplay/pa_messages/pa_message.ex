@@ -75,7 +75,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     alert_id = get_field(changeset, :alert_id)
 
     if is_nil(end_time) and is_nil(alert_id) do
-      add_error(changeset, :end_time, "can't be nil if alert_id is nil")
+      add_error(changeset, :end_time, "cannot have an end time if associated with an alert")
     else
       changeset
     end
