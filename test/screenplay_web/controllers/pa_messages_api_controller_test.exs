@@ -157,6 +157,53 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> get("/api/pa-messages?state=future&now=#{now}")
                |> json_response(200)
     end
+
+    @tag :authenticated_pa_message_admin
+    test "supports filtering by included sign ids", %{conn: conn} do
+      insert(:pa_message, %{
+        id: 1,
+        sign_ids: ~w[a b],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_time: ~U[2024-08-04 00:00:00Z],
+        end_time: ~U[2024-08-05 23:59:59Z]
+      })
+
+      insert(:pa_message, %{
+        id: 2,
+        sign_ids: ~w[b],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_time: ~U[2024-08-05 00:00:00Z],
+        end_time: ~U[2024-08-06 23:59:59Z]
+      })
+
+      insert(:pa_message, %{
+        id: 3,
+        sign_ids: ~w[b c],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_time: ~U[2024-08-07 00:00:00Z],
+        end_time: ~U[2024-08-08 23:59:59Z]
+      })
+
+      assert [%{"id" => 1}, %{"id" => 2}, %{"id" => 3}] =
+               conn
+               |> get("/api/pa-messages?signs[]=a&signs[]=b&signs[]=c")
+               |> json_response(200)
+
+      assert [%{"id" => 1}, %{"id" => 2}, %{"id" => 3}] =
+               conn
+               |> get("/api/pa-messages?signs[]=a&signs[]=b")
+               |> json_response(200)
+
+      assert [%{"id" => 1}] =
+               conn
+               |> get("/api/pa-messages?signs[]=a")
+               |> json_response(200)
+
+      assert [%{"id" => 3}] =
+               conn
+               |> get("/api/pa-messages?signs[]=c")
+               |> json_response(200)
+    end
   end
 
   describe "POST /api/pa-messages" do
