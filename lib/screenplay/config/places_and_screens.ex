@@ -16,10 +16,11 @@ defmodule Screenplay.Config.PlaceAndScreens do
             label: String.t() | nil,
             station_code: String.t(),
             type: String.t(),
-            zone: String.t()
+            zone: String.t(),
+            route_ids: [String.t()]
           }
 
-    @enforce_keys [:id, :label, :station_code, :type, :zone]
+    @enforce_keys [:id, :label, :station_code, :type, :zone, :route_ids]
     defstruct @enforce_keys
 
     def new(map) do

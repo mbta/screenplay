@@ -1,0 +1,47 @@
+[
+  {
+    "id": "place-one",
+    "name": "Place One",
+    "routes": ["place-one-route"],
+    "screens": [
+      {
+        "id": "place-one-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "route_ids": ["place-one-route"],
+        "station_code": "place-one-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-two",
+    "name": "Place Two",
+    "routes": ["place-one-route"],
+    "screens": [
+      {
+        "id": "place-two-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "route_ids": ["place-two-route"],
+        "station_code": "place-two-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-three",
+    "name": "Place Three",
+    "routes": ["place-three-route"],
+    "screens": [
+      {
+        "id": "place-three-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "route_ids": ["place-three-route"],
+        "station_code": "place-three-station-code"
+      }
+    ]
+  }
+]
