@@ -1,20 +1,54 @@
-import React, { ComponentType, useState, useEffect } from "react";
-import { Container, Row, Col, FormCheck } from "react-bootstrap";
+import React, { ComponentType, useState, useMemo, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  FormCheck,
+  ButtonGroup,
+  Button,
+} from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
-import { fetchPaMessages } from "Utils/api";
 import { PaMessage } from "Models/pa_message";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import cx from "classnames";
+import useSWR from "swr";
+
+type State = "active" | "future" | "past";
+
+const fetcher = (...args: Parameters<typeof fetch>) =>
+  fetch(...args).then((resp) => resp.json());
+const usePaMessages = ({ state }: { state?: State | null }) => {
+  const url = useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (state) params.set("state", state);
+
+    return `/api/pa-messages?${params.toString()}`;
+  }, [state]);
+
+  return useSWR(url, fetcher);
+};
 
 const PaMessagesPage: ComponentType = () => {
-  const [paMessages, setPaMessages] = useState<PaMessage[]>([]);
+  const [params, setParams] = useSearchParams();
+  const [state, setState] = useState<State | null>(
+    () => (params.get("state") as State) ?? null,
+  );
 
   useEffect(() => {
-    const fetchAndSetPaMessages = async () => {
-      const allPaMessages = await fetchPaMessages();
-      setPaMessages(allPaMessages);
-    };
-    fetchAndSetPaMessages();
-  }, []);
+    setParams(() => {
+      const newParams = new URLSearchParams();
+
+      if (state) newParams.set("state", state);
+
+      return newParams;
+    });
+  }, [state]);
+
+  const toggleState = (filter: State) => () =>
+    setState((f) => (f === filter ? null : filter));
+
+  const { data } = usePaMessages({ state });
 
   return (
     <>
@@ -22,8 +56,29 @@ const PaMessagesPage: ComponentType = () => {
       <Container fluid>
         <Row>
           <Col className="pa-message-filter-selection">
-            <div>Message state</div>
-            <div>Service type</div>
+            <section>
+              <header>Filter by message state</header>
+              <ButtonGroup className="button-group" vertical>
+                <Button
+                  className={cx("button", { active: state === "active" })}
+                  onClick={toggleState("active")}
+                >
+                  Active
+                </Button>
+                <Button
+                  className={cx("button", { active: state === "future" })}
+                  onClick={toggleState("future")}
+                >
+                  Future
+                </Button>
+                <Button
+                  className={cx("button", { active: state === "past" })}
+                  onClick={toggleState("past")}
+                >
+                  Past
+                </Button>
+              </ButtonGroup>
+            </section>
           </Col>
           <Col className="pa-message-table-container">
             <Row className="pa-message-table-action-bar">
@@ -42,7 +97,7 @@ const PaMessagesPage: ComponentType = () => {
               </Col> */}
             </Row>
             <Row>
-              <PaMessageTable paMessages={paMessages} />
+              {Array.isArray(data) && <PaMessageTable paMessages={data} />}
             </Row>
           </Col>
         </Row>
@@ -78,7 +133,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
       </table>
       {paMessages.length == 0 && (
         <div className="pa-message-table__empty">
-          There are no active PA/ESS Messages.
+          There are no PA/ESS Messages matching the current filters.
         </div>
       )}
     </>
