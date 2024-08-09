@@ -1,4 +1,4 @@
-import React, { ComponentType, useState, useMemo, useEffect } from "react";
+import React, { ComponentType, useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -10,33 +10,17 @@ import {
 import { PlusCircleFill } from "react-bootstrap-icons";
 import { PaMessage } from "Models/pa_message";
 import { Link, useSearchParams } from "react-router-dom";
+import {
+  usePaMessages,
+  StateFilter,
+  stateFilterSchema,
+} from "Utils/api/pa-messages/usePaMessage";
 import cx from "classnames";
-import useSWR from "swr";
-
-type StateFilter = "active" | "future" | "past";
-
-const fetcher = (...args: Parameters<typeof fetch>) =>
-  fetch(...args).then((resp) => resp.json());
-const usePaMessages = ({
-  stateFilter,
-}: {
-  stateFilter?: StateFilter | null;
-}) => {
-  const url = useMemo(() => {
-    const params = new URLSearchParams();
-
-    if (stateFilter) params.set("state", stateFilter);
-
-    return `/api/pa-messages?${params.toString()}`;
-  }, [stateFilter]);
-
-  return useSWR(url, fetcher);
-};
 
 const PaMessagesPage: ComponentType = () => {
   const [params, setParams] = useSearchParams();
-  const [stateFilter, setStateFilter] = useState<StateFilter | null>(
-    () => (params.get("state") as StateFilter) ?? null,
+  const [stateFilter, setStateFilter] = useState<StateFilter | null>(() =>
+    stateFilterSchema.nullable().catch(null).parse(params.get("state")),
   );
 
   useEffect(() => {

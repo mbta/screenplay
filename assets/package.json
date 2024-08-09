@@ -33,7 +33,8 @@
     "react-search-autocomplete": "^8.5.2",
     "react-tooltip": "^4.2.21",
     "regenerator-runtime": "^0.14.1",
-    "swr": "^2.2.5"
+    "swr": "^2.2.5",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
