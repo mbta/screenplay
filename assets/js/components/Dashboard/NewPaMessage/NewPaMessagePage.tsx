@@ -142,7 +142,7 @@ const NewPaMessagePage = ({
 
   return (
     <div className="new-pa-message-page">
-      <Form onSubmit={handleSubmit} validated={validated} noValidate>
+      <Form onSubmit={handleSubmit} noValidate>
         <div className="header">New PA/ESS message</div>
         <Container fluid>
           <NewPaMessageHeader
@@ -177,7 +177,6 @@ const NewPaMessagePage = ({
                           ),
                         )
                       }
-                      isValid={validated && startDateTime.isBefore(endDateTime)}
                       isInvalid={
                         validated && startDateTime.isSameOrAfter(endDateTime)
                       }
@@ -253,7 +252,6 @@ const NewPaMessagePage = ({
                             ),
                           )
                         }
-                        isValid={validated && endDateTime.isAfter(moment())}
                         isInvalid={
                           validated && endDateTime.isSameOrBefore(moment())
                         }
@@ -302,6 +300,7 @@ const NewPaMessagePage = ({
                 <IntervalPicker
                   interval={interval}
                   onChangeInterval={setInterval}
+                  validated={validated}
                 />
               </Col>
             </Row>
@@ -348,6 +347,7 @@ const NewPaMessagePage = ({
                   maxLength={MAX_TEXT_LENGTH}
                   required
                   validationText={"Text cannot be blank"}
+                  validated={validated}
                 />
               </Col>
               <Col md="auto" className="copy-button-col">
@@ -380,6 +380,7 @@ const NewPaMessagePage = ({
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
+                      validated={validated}
                     />
                     <ReviewAudioButton
                       audioState={audioState}

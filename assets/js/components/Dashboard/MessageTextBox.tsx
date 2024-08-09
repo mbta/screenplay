@@ -10,6 +10,7 @@ interface Props {
   maxLength: number;
   required?: boolean;
   validationText?: string;
+  validated?: boolean;
 }
 
 const MessageTextBox = ({
@@ -21,6 +22,7 @@ const MessageTextBox = ({
   maxLength,
   required,
   validationText,
+  validated,
 }: Props) => {
   return (
     <Form.Group className="message-text-box">
@@ -34,6 +36,7 @@ const MessageTextBox = ({
         value={text}
         onChange={(textbox) => onChangeText(textbox.target.value)}
         disabled={disabled}
+        isInvalid={required && validated && text.length === 0}
       />
       <Form.Control.Feedback type="invalid">
         {validationText}

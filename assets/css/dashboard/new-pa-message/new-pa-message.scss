@@ -27,9 +27,6 @@
   }
 
   // Hide the default Bootstrap validation icons.
-  .form-control.is-valid,
-  .was-validated .form-control:valid,
-  .form-control:invalid,
   .form-control.is-invalid {
     background-image: none;
     padding-right: 13px;
