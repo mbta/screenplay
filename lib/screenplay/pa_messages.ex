@@ -18,7 +18,8 @@ defmodule Screenplay.PaMessages do
 
     @type t :: %{
             optional(:state) => :all | :active | :future | :past,
-            optional(:now) => DateTime.t()
+            optional(:now) => DateTime.t(),
+            optional(:signs) => [String.t(), ...]
           }
 
     @primary_key false
@@ -26,12 +27,16 @@ defmodule Screenplay.PaMessages do
     embedded_schema do
       field :state, Ecto.Enum, values: [:all, :active, :future, :past], default: :all
       field :now, :utc_datetime, autogenerate: {DateTime, :utc_now, []}
+      field :signs, {:array, :string}
     end
 
     def parse(attrs) do
-      case %ListParams{}
-           |> cast(attrs, [:state, :now])
-           |> apply_action(:insert) do
+      changeset =
+        %ListParams{}
+        |> cast(attrs, [:state, :now, :signs])
+        |> validate_length(:signs, min: 1, message: "must include at least one sign")
+
+      case apply_action(changeset, :insert) do
         {:ok, opts} -> {:ok, Map.drop(opts, [:__struct__, :__meta__])}
         err -> err
       end
@@ -52,6 +57,7 @@ defmodule Screenplay.PaMessages do
 
     PaMessage
     |> PaMessage.Queries.state(opts[:state], alert_ids, opts[:now])
+    |> PaMessage.Queries.signs(opts[:signs])
     |> order_by(desc: :inserted_at)
     |> Repo.all()
   end

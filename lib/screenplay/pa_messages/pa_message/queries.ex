@@ -44,4 +44,17 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   def future(q \\ PaMessage, now) do
     from m in q, where: ^now < m.start_time
   end
+
+  @doc """
+  Limits the query to PaMessages that have sign ids overlapping the list of
+  sign ids passed. Passes through the queryable if an empty lists or a non-list
+  is passed.
+  """
+  def signs(q \\ PaMessage, signs)
+
+  def signs(q, sign_ids = [_ | _]) do
+    from m in q, where: fragment("? && ?", m.sign_ids, ^sign_ids)
+  end
+
+  def signs(q, _), do: q
 end
