@@ -18,7 +18,7 @@ import {
   RED_TRUNK,
 } from "./StationGroups";
 import { Page } from "../types";
-import { useRouteToRouteIDsMap } from "../hooks";
+import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
