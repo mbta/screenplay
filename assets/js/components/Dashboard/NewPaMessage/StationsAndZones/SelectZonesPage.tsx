@@ -12,7 +12,7 @@ import {
 } from "../../../../util";
 import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
-import { useRouteToRouteIDsMap } from "../hooks";
+import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import PlaceZonesRow from "./PlaceZonesRow";
 import { LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES } from "Constants/constants";
 

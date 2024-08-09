@@ -5,7 +5,7 @@ import NewPaMessagePage from "./NewPaMessagePage";
 import AssociateAlertPage from "./AssociateAlertPage";
 import { Alert } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
-import { usePlacesWithPaEss } from "./hooks";
+import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import { busRouteIdsAtPlaces } from "../../../util";
 import { Alert as AlertToast } from "react-bootstrap";
 import { ExclamationTriangleFill } from "react-bootstrap-icons";
