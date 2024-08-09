@@ -1,15 +1,9 @@
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
-import { PaMessage } from "../models/pa_message";
 import { ScreenConfiguration } from "../models/screen_configuration";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
-
-export const fetchPaMessages = async (): Promise<PaMessage[]> => {
-  const response = await fetch("/api/pa-messages");
-  return await response.json();
-};
 
 export const fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");

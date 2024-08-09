@@ -61,8 +61,10 @@ defmodule Screenplay.PaMessages do
 
     signs_for_routes = RoutesToSigns.signs_for_routes(opts[:routes])
 
+    now = opts[:now] || DateTime.utc_now()
+
     PaMessage
-    |> PaMessage.Queries.state(opts[:state], alert_ids, opts[:now])
+    |> PaMessage.Queries.state(opts[:state], alert_ids, now)
     |> PaMessage.Queries.signs(opts[:signs])
     |> PaMessage.Queries.signs(signs_for_routes)
     |> order_by(desc: :inserted_at)
