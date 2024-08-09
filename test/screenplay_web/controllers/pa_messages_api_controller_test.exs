@@ -206,6 +206,69 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
   end
 
+  describe "GET /api/pa-messages with route filters" do
+    setup do
+      existing_value = Application.get_env(:screenplay, :local_config_file_spec)
+
+      Application.put_env(
+        :screenplay,
+        :local_config_file_spec,
+        {:test, "places_and_screens_for_routes_to_signs.json"}
+      )
+
+      on_exit(fn -> Application.put_env(:screenplay, :local_config_file_spec, existing_value) end)
+    end
+
+    @tag :authenticated_pa_message_admin
+    test "supports filtering by included route ids", %{conn: conn} do
+      insert(:pa_message, %{
+        id: 1,
+        sign_ids: ~w[place-one-sign place-two-sign],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_time: ~U[2024-08-04 00:00:00Z],
+        end_time: ~U[2024-08-05 23:59:59Z]
+      })
+
+      # Red and Blue
+      insert(:pa_message, %{
+        id: 2,
+        sign_ids: ~w[place-two-sign],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_time: ~U[2024-08-05 00:00:00Z],
+        end_time: ~U[2024-08-06 23:59:59Z]
+      })
+
+      # Orange
+      insert(:pa_message, %{
+        id: 3,
+        sign_ids: ~w[place-three-sign],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_time: ~U[2024-08-07 00:00:00Z],
+        end_time: ~U[2024-08-08 23:59:59Z]
+      })
+
+      assert [%{"id" => 1}] =
+               conn
+               |> get("/api/pa-messages?routes[]=place-one-route")
+               |> json_response(200)
+
+      assert [%{"id" => 1}, %{"id" => 2}] =
+               conn
+               |> get("/api/pa-messages?routes[]=place-two-route")
+               |> json_response(200)
+
+      assert [%{"id" => 3}] =
+               conn
+               |> get("/api/pa-messages?routes[]=place-three-route")
+               |> json_response(200)
+
+      assert [%{"id" => 1}, %{"id" => 2}, %{"id" => 3}] =
+               conn
+               |> get("/api/pa-messages?routes[]=place-two-route&routes[]=place-three-route")
+               |> json_response(200)
+    end
+  end
+
   describe "POST /api/pa-messages" do
     @tag :authenticated_pa_message_admin
     test "creates a new PaMessage", %{conn: conn} do

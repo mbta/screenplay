@@ -7,6 +7,7 @@ defmodule Screenplay.PaMessages do
   import Ecto.Query
 
   alias Screenplay.Alerts.Cache, as: AlertsCache
+  alias Screenplay.Config.RoutesToSigns
   alias Screenplay.PaMessages.PaMessage
   alias Screenplay.Repo
 
@@ -19,7 +20,8 @@ defmodule Screenplay.PaMessages do
     @type t :: %{
             optional(:state) => :all | :active | :future | :past,
             optional(:now) => DateTime.t(),
-            optional(:signs) => [String.t(), ...]
+            optional(:signs) => [String.t(), ...],
+            optional(:routes) => [String.t(), ...]
           }
 
     @primary_key false
@@ -28,13 +30,15 @@ defmodule Screenplay.PaMessages do
       field :state, Ecto.Enum, values: [:all, :active, :future, :past], default: :all
       field :now, :utc_datetime, autogenerate: {DateTime, :utc_now, []}
       field :signs, {:array, :string}
+      field :routes, {:array, :string}
     end
 
     def parse(attrs) do
       changeset =
         %ListParams{}
-        |> cast(attrs, [:state, :now, :signs])
+        |> cast(attrs, [:state, :now, :signs, :routes])
         |> validate_length(:signs, min: 1, message: "must include at least one sign")
+        |> validate_length(:routes, min: 1, message: "must include at least on route")
 
       case apply_action(changeset, :insert) do
         {:ok, opts} -> {:ok, Map.drop(opts, [:__struct__, :__meta__])}
@@ -55,9 +59,12 @@ defmodule Screenplay.PaMessages do
 
     alert_ids = AlertsCache.alert_ids()
 
+    signs_for_routes = RoutesToSigns.signs_for_routes(opts[:routes])
+
     PaMessage
     |> PaMessage.Queries.state(opts[:state], alert_ids, opts[:now])
     |> PaMessage.Queries.signs(opts[:signs])
+    |> PaMessage.Queries.signs(signs_for_routes)
     |> order_by(desc: :inserted_at)
     |> Repo.all()
   end
