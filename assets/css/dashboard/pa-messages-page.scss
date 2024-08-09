@@ -14,6 +14,21 @@
   margin: 0px 20px;
   margin-left: 40px;
   padding-right: 0px;
+  display: flex;
+  flex-direction: column;
+
+  gap: 48px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    header {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
 }
 
 .pa-message-table-container {
@@ -99,5 +114,13 @@
     font-weight: bold;
     color: white;
     padding-left: 30px;
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
   }
 }
