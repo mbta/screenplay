@@ -9,8 +9,8 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   @type t() :: %__MODULE__{
           alert_id: String.t() | nil,
-          start_time: DateTime.t(),
-          end_time: DateTime.t() | nil,
+          start_datetime: DateTime.t(),
+          end_datetime: DateTime.t() | nil,
           days_of_week: [integer()] | nil,
           sign_ids: [String.t()],
           priority: integer(),
@@ -26,8 +26,8 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   schema "pa_message" do
     field(:alert_id, :string)
-    field(:start_time, :utc_datetime)
-    field(:end_time, :utc_datetime)
+    field(:start_datetime, :utc_datetime)
+    field(:end_datetime, :utc_datetime)
     field(:days_of_week, {:array, :integer})
     field(:sign_ids, {:array, :string})
     field(:priority, :integer)
@@ -45,8 +45,8 @@ defmodule Screenplay.PaMessages.PaMessage do
     message
     |> cast(attrs, [
       :alert_id,
-      :start_time,
-      :end_time,
+      :start_datetime,
+      :end_datetime,
       :days_of_week,
       :sign_ids,
       :priority,
@@ -57,7 +57,7 @@ defmodule Screenplay.PaMessages.PaMessage do
       :saved
     ])
     |> validate_required([
-      :start_time,
+      :start_datetime,
       :days_of_week,
       :sign_ids,
       :priority,
@@ -72,22 +72,22 @@ defmodule Screenplay.PaMessages.PaMessage do
   end
 
   defp validate_start_date(changeset) do
-    start_time = get_field(changeset, :start_time)
-    end_time = get_field(changeset, :end_time)
+    start_datetime = get_field(changeset, :start_datetime)
+    end_datetime = get_field(changeset, :end_datetime)
 
-    if not is_nil(end_time) and DateTime.after?(start_time, end_time) do
-      add_error(changeset, :start_time, "start time must be before end time")
+    if not is_nil(end_datetime) and DateTime.after?(start_datetime, end_datetime) do
+      add_error(changeset, :start_datetime, "start time must be before end time")
     else
       changeset
     end
   end
 
   defp validate_end_date(changeset) do
-    end_time = get_field(changeset, :end_time)
+    end_datetime = get_field(changeset, :end_datetime)
     alert_id = get_field(changeset, :alert_id)
 
-    if is_nil(end_time) and is_nil(alert_id) do
-      add_error(changeset, :end_time, "cannot have an end time if associated with an alert")
+    if is_nil(end_datetime) and is_nil(alert_id) do
+      add_error(changeset, :end_datetime, "cannot have an end time if associated with an alert")
     else
       changeset
     end

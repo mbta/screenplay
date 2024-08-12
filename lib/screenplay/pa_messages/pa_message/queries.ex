@@ -31,18 +31,19 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
     from m in q,
       where:
         ^current_service_day_of_week in m.days_of_week and
-          m.start_time <= ^now and
-          ((is_nil(m.end_time) and m.alert_id in ^alert_ids) or m.end_time >= ^now)
+          m.start_datetime <= ^now and
+          ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)
   end
 
   @doc "Limit the query to only PaMessages that are in the past"
   def past(q \\ PaMessage, alert_ids, now) do
-    from m in q, where: m.end_time < ^now or (is_nil(m.end_time) and m.alert_id not in ^alert_ids)
+    from m in q,
+      where: m.end_datetime < ^now or (is_nil(m.end_datetime) and m.alert_id not in ^alert_ids)
   end
 
   @doc "Limit the query to only PaMessages that are scheduled for the future"
   def future(q \\ PaMessage, now) do
-    from m in q, where: ^now < m.start_time
+    from m in q, where: ^now < m.start_datetime
   end
 
   @doc """

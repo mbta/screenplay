@@ -79,23 +79,23 @@ defmodule Random do
     Faker.Lorem.paragraph()
   end
 
-  def start_and_end_times(window \\ 7) do
-    start_time = window |> Faker.DateTime.backward() |> DateTime.truncate(:second)
-    end_time = window |> Faker.DateTime.forward() |> DateTime.truncate(:second)
+  def start_and_end_datetimes(window \\ 7) do
+    start_datetime = window |> Faker.DateTime.backward() |> DateTime.truncate(:second)
+    end_datetime = window |> Faker.DateTime.forward() |> DateTime.truncate(:second)
 
-    {start_time, end_time}
+    {start_datetime, end_datetime}
   end
 
-  def past_start_and_end_times(window \\ 7) do
-    {start_time, end_time} = start_and_end_times(window)
+  def past_start_and_end_datetimes(window \\ 7) do
+    {start_datetime, end_datetime} = start_and_end_datetimes(window)
 
-    {DateTime.add(start_time, -window, :day), DateTime.add(end_time, -window, :day)}
+    {DateTime.add(start_datetime, -window, :day), DateTime.add(end_datetime, -window, :day)}
   end
 
-  def future_start_and_end_times(window \\ 7) do
-    {start_time, end_time} = start_and_end_times(window)
+  def future_start_and_end_datetimes(window \\ 7) do
+    {start_datetime, end_datetime} = start_and_end_datetimes(window)
 
-    {DateTime.add(start_time, window, :day), DateTime.add(end_time, window, :day)}
+    {DateTime.add(start_datetime, window, :day), DateTime.add(end_datetime, window, :day)}
   end
 
   def days_of_week do
@@ -110,12 +110,12 @@ end
 
 # Past PaMessages
 for _ <- 1..100 do
-  {start_time, end_time} = Random.past_start_and_end_times()
+  {start_datetime, end_datetime} = Random.past_start_and_end_datetimes()
   text = Random.text()
 
   Repo.insert!(%PaMessage{
-    start_time: start_time,
-    end_time: end_time,
+    start_datetime: start_datetime,
+    end_datetime: end_datetime,
     sign_ids: Random.sign_ids(),
     priority: Random.priority(),
     days_of_week: Random.days_of_week(),
@@ -127,12 +127,12 @@ end
 
 # Current PaMessages
 for _ <- 1..100 do
-  {start_time, end_time} = Random.start_and_end_times()
+  {start_datetime, end_datetime} = Random.start_and_end_datetimes()
   text = Random.text()
 
   Repo.insert!(%PaMessage{
-    start_time: start_time,
-    end_time: end_time,
+    start_datetime: start_datetime,
+    end_datetime: end_datetime,
     sign_ids: Random.sign_ids(),
     priority: Random.priority(),
     days_of_week: Random.days_of_week(),
@@ -144,12 +144,12 @@ end
 
 # Future PaMessages
 for _ <- 1..100 do
-  {start_time, end_time} = Random.future_start_and_end_times()
+  {start_datetime, end_datetime} = Random.future_start_and_end_datetimes()
   text = Random.text()
 
   Repo.insert!(%PaMessage{
-    start_time: start_time,
-    end_time: end_time,
+    start_datetime: start_datetime,
+    end_datetime: end_datetime,
     sign_ids: Random.sign_ids(),
     priority: Random.priority(),
     days_of_week: Random.days_of_week(),

@@ -134,7 +134,6 @@ const NewPaMessagePage = ({
     event.preventDefault();
 
     const form = event.currentTarget;
-    onSubmit();
 
     if (
       form.checkValidity() === false ||

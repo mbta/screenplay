@@ -10,24 +10,24 @@ defmodule Screenplay.PaMessagesTest do
     test "returns all messages with most recent first" do
       insert(:pa_message, %{
         id: 1,
-        start_time: ~U[2024-05-01T01:00:00Z],
-        end_time: ~U[2024-05-01T13:00:00Z],
+        start_datetime: ~U[2024-05-01T01:00:00Z],
+        end_datetime: ~U[2024-05-01T13:00:00Z],
         days_of_week: [3],
         inserted_at: ~U[2024-05-01T01:00:00Z]
       })
 
       insert(:pa_message, %{
         id: 2,
-        start_time: ~U[2024-05-02T12:00:00Z],
-        end_time: ~U[2024-05-02T12:00:00Z],
+        start_datetime: ~U[2024-05-02T12:00:00Z],
+        end_datetime: ~U[2024-05-02T12:00:00Z],
         days_of_week: [3],
         inserted_at: ~U[2024-05-02T12:00:00Z]
       })
 
       insert(:pa_message, %{
         id: 3,
-        start_time: ~U[2024-05-02T12:00:00Z],
-        end_time: ~U[2024-05-02T12:00:00Z],
+        start_datetime: ~U[2024-05-02T12:00:00Z],
+        end_datetime: ~U[2024-05-02T12:00:00Z],
         days_of_week: [3],
         inserted_at: ~U[2024-05-03T12:00:00Z]
       })
@@ -57,13 +57,13 @@ defmodule Screenplay.PaMessagesTest do
 
       insert(:pa_message, %{
         alert_id: "1",
-        start_time: ~U[2024-05-01T01:00:00Z],
+        start_datetime: ~U[2024-05-01T01:00:00Z],
         days_of_week: [2]
       })
 
       insert(:pa_message, %{
         alert_id: "2",
-        start_time: ~U[2024-05-01T04:00:00Z],
+        start_datetime: ~U[2024-05-01T04:00:00Z],
         days_of_week: [2]
       })
 
@@ -78,15 +78,15 @@ defmodule Screenplay.PaMessagesTest do
 
       insert(:pa_message, %{
         id: 1,
-        start_time: ~U[2024-05-01T01:00:00Z],
-        end_time: ~U[2024-05-01T13:00:00Z],
+        start_datetime: ~U[2024-05-01T01:00:00Z],
+        end_datetime: ~U[2024-05-01T13:00:00Z],
         days_of_week: [3]
       })
 
       insert(:pa_message, %{
         id: 2,
-        start_time: ~U[2024-05-02T12:00:00Z],
-        end_time: ~U[2024-05-02T12:00:00Z],
+        start_datetime: ~U[2024-05-02T12:00:00Z],
+        end_datetime: ~U[2024-05-02T12:00:00Z],
         days_of_week: [3]
       })
 
@@ -113,16 +113,16 @@ defmodule Screenplay.PaMessagesTest do
     insert(:pa_message, %{
       id: 1,
       alert_id: "1",
-      start_time: ~U[2024-05-01T04:00:00Z],
-      end_time: ~U[2024-05-02T04:00:00Z],
+      start_datetime: ~U[2024-05-01T04:00:00Z],
+      end_datetime: ~U[2024-05-02T04:00:00Z],
       days_of_week: [3]
     })
 
     insert(:pa_message, %{
       id: 2,
       alert_id: "2",
-      start_time: ~U[2024-05-02T04:00:00Z],
-      end_time: ~U[2024-05-02T05:00:00Z],
+      start_datetime: ~U[2024-05-02T04:00:00Z],
+      end_datetime: ~U[2024-05-02T05:00:00Z],
       days_of_week: [3]
     })
 
@@ -134,8 +134,8 @@ defmodule Screenplay.PaMessagesTest do
       now = ~U[2024-08-07T12:12:12Z]
 
       new_message = %{
-        start_time: now,
-        end_time: DateTime.add(now, 60),
+        start_datetime: now,
+        end_datetime: DateTime.add(now, 60),
         days_of_week: [1, 2, 3],
         sign_ids: ["test_sign"],
         priority: 1,
@@ -145,8 +145,8 @@ defmodule Screenplay.PaMessagesTest do
       }
 
       assert {:ok, actual} = PaMessages.create_message(new_message)
-      assert actual.start_time == new_message.start_time
-      assert actual.end_time == new_message.end_time
+      assert actual.start_datetime == new_message.start_datetime
+      assert actual.end_datetime == new_message.end_datetime
       assert actual.days_of_week == new_message.days_of_week
       assert actual.sign_ids == new_message.sign_ids
       assert actual.priority == new_message.priority
@@ -159,8 +159,8 @@ defmodule Screenplay.PaMessagesTest do
       now = DateTime.utc_now()
 
       new_message = %{
-        start_time: now,
-        end_time: nil,
+        start_datetime: now,
+        end_datetime: nil,
         days_of_week: [22],
         sign_ids: [],
         priority: 1,
@@ -173,11 +173,11 @@ defmodule Screenplay.PaMessagesTest do
       assert {_, _} = changeset.errors[:sign_ids]
       assert {_, _} = changeset.errors[:interval_in_minutes]
       assert {_, _} = changeset.errors[:visual_text]
-      assert {_, _} = changeset.errors[:end_time]
+      assert {_, _} = changeset.errors[:end_datetime]
 
       new_message = %{
-        start_time: DateTime.add(now, 61),
-        end_time: DateTime.add(now, 60),
+        start_datetime: DateTime.add(now, 61),
+        end_datetime: DateTime.add(now, 60),
         days_of_week: [1],
         sign_ids: ["test_sign"],
         priority: 1,
@@ -186,7 +186,7 @@ defmodule Screenplay.PaMessagesTest do
       }
 
       assert {:error, %Ecto.Changeset{} = changeset} = PaMessages.create_message(new_message)
-      assert {_, _} = changeset.errors[:start_time]
+      assert {_, _} = changeset.errors[:start_datetime]
     end
   end
 

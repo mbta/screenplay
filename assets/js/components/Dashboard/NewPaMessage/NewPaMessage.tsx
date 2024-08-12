@@ -51,8 +51,8 @@ const NewPaMessage = () => {
   const onSubmit = async () => {
     const newMessage: PaMessage = {
       alert_id: associatedAlert.id,
-      start_time: startDateTime.toISOString(),
-      end_time: endWithEffectPeriod ? null : endDateTime.toISOString(),
+      start_datetime: startDateTime.toISOString(),
+      end_datetime: endWithEffectPeriod ? null : endDateTime.toISOString(),
       days_of_week: days,
       sign_ids: signIds,
       priority,
