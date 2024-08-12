@@ -61,6 +61,7 @@ interface Props {
   setSignIds: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
+  onSubmit: () => void;
 }
 
 const NewPaMessagePage = ({
@@ -88,6 +89,7 @@ const NewPaMessagePage = ({
   setSignIds,
   places,
   busRoutes,
+  onSubmit,
 }: Props) => {
   const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
@@ -132,9 +134,17 @@ const NewPaMessagePage = ({
     event.preventDefault();
 
     const form = event.currentTarget;
+    onSubmit();
 
-    if (form.checkValidity() === false) {
+    if (
+      form.checkValidity() === false ||
+      signIds.length === 0 ||
+      audioState !== AudioPreview.Reviewed
+    ) {
+      setErrorMessage("Correct the issue(s) noted above.");
       event.stopPropagation();
+    } else {
+      onSubmit();
     }
 
     setValidated(true);
@@ -224,14 +234,12 @@ const NewPaMessagePage = ({
                     className="effect-period-switch"
                     checked={endWithEffectPeriod}
                     label="At end of alert"
-                    onChange={() => {
-                      if (!endWithEffectPeriod) {
-                        setEndDateTime(null);
-                      } else {
+                    onChange={(event) => {
+                      if (!event.target.checked) {
                         setEndDateTime(moment(startDateTime).add(1, "hour"));
                       }
 
-                      setEndWithEffectPeriod(!endWithEffectPeriod);
+                      setEndWithEffectPeriod(event.target.checked);
                     }}
                   />
                 )}
@@ -385,6 +393,7 @@ const NewPaMessagePage = ({
                     <ReviewAudioButton
                       audioState={audioState}
                       onClick={previewAudio}
+                      validated={validated}
                     />
                   </>
                 ) : (
@@ -395,6 +404,7 @@ const NewPaMessagePage = ({
                         audioState={audioState}
                         disabled={visualText.length === 0}
                         onClick={previewAudio}
+                        validated={validated}
                       />
                     </Card>
                   </>
@@ -436,12 +446,14 @@ interface ReviewAudioButtonProps {
   audioState: AudioPreview;
   disabled?: boolean;
   onClick: () => void;
+  validated: boolean;
 }
 
 const ReviewAudioButton = ({
   audioState,
   disabled,
   onClick,
+  validated,
 }: ReviewAudioButtonProps) => {
   const audioPlaying = audioState === AudioPreview.Playing;
   return audioState === AudioPreview.Reviewed ? (
@@ -462,7 +474,7 @@ const ReviewAudioButton = ({
       variant="link"
       onClick={onClick}
     >
-      {audioState === AudioPreview.Outdated ? (
+      {validated || audioState === AudioPreview.Outdated ? (
         <ExclamationTriangleFill fill="#FFC107" height={16} />
       ) : (
         <VolumeUpFill height={16} />

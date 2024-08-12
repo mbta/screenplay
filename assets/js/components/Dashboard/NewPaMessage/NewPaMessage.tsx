@@ -8,6 +8,9 @@ import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import { busRouteIdsAtPlaces } from "../../../util";
 import ErrorToast from "Components/ErrorToast";
+import { PaMessage } from "Models/pa_message";
+import { createNewPaMessage } from "Utils/api";
+import { useNavigate } from "react-router-dom";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -44,6 +47,32 @@ const NewPaMessage = () => {
 
   const onImportLocations = () => {};
 
+  const navigate = useNavigate();
+  const onSubmit = async () => {
+    const newMessage: PaMessage = {
+      alert_id: associatedAlert.id,
+      start_time: startDateTime.toISOString(),
+      end_time: endWithEffectPeriod ? null : endDateTime.toISOString(),
+      days_of_week: days,
+      sign_ids: signIds,
+      priority,
+      interval_in_minutes: Number(interval),
+      visual_text: visualText,
+      audio_text: phoneticText,
+    };
+
+    const { status, errors } = await createNewPaMessage(newMessage);
+
+    if (status === 200) {
+      navigate("/pa-messages");
+    } else if (status === 422) {
+      setErrorMessage("Correct the following errors:");
+      setErrors(Object.keys(errors));
+    } else {
+      setErrorMessage("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <div className="new-pa-message">
       {page === Page.NEW && (
@@ -74,6 +103,7 @@ const NewPaMessage = () => {
             setSignIds,
             places,
             busRoutes,
+            onSubmit,
           }}
         />
       )}
@@ -104,7 +134,10 @@ const NewPaMessage = () => {
       <ErrorToast
         errorMessage={errorMessage}
         errors={errors}
-        onClose={() => setErrorMessage("")}
+        onClose={() => {
+          setErrors([]);
+          setErrorMessage("");
+        }}
       />
     </div>
   );
