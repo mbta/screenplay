@@ -258,42 +258,6 @@
     }
   }
 
-  .error-alert-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 40px;
-    z-index: 1001;
-  }
-
-  .error-alert {
-    width: 400px;
-    background-color: #ffdd00;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-
-    .btn-close {
-      &:hover {
-        background-color: transparent;
-      }
-    }
-
-    &__icon {
-      height: 24px;
-      width: 24px;
-      opacity: 60%;
-      flex-shrink: 0;
-    }
-
-    &__text {
-      padding-left: 8px;
-    }
-  }
-
   .unassociated-alert-header {
     margin-top: 40px;
     font-size: 20px;

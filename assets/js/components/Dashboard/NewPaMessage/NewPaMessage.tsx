@@ -7,8 +7,7 @@ import { Alert } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import { busRouteIdsAtPlaces } from "../../../util";
-import { Alert as AlertToast } from "react-bootstrap";
-import { ExclamationTriangleFill } from "react-bootstrap-icons";
+import ErrorToast from "Components/ErrorToast";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -27,6 +26,8 @@ const NewPaMessage = () => {
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
+
   const [signIds, setSignIds] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
   const busRoutes = busRouteIdsAtPlaces(places);
@@ -100,18 +101,11 @@ const NewPaMessage = () => {
           setEndWithEffectPeriod={setEndWithEffectPeriod}
         />
       )}
-      <div className="error-alert-container">
-        <AlertToast
-          show={errorMessage.length > 0}
-          variant="primary"
-          onClose={() => setErrorMessage("")}
-          dismissible
-          className="error-alert"
-        >
-          <ExclamationTriangleFill className="error-alert__icon" />
-          <div className="error-alert__text">{errorMessage}</div>
-        </AlertToast>
-      </div>
+      <ErrorToast
+        errorMessage={errorMessage}
+        errors={errors}
+        onClose={() => setErrorMessage("")}
+      />
     </div>
   );
 };

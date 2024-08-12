@@ -88,38 +88,3 @@
     }
   }
 }
-
-.error-alert-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 40px;
-
-  .error-alert {
-    width: 400px;
-    background-color: $alert-yellow;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-
-    .btn-close {
-      &:hover {
-        background-color: transparent;
-      }
-    }
-
-    &__icon {
-      height: 24px;
-      width: 24px;
-      opacity: 60%;
-      flex-shrink: 0;
-    }
-
-    &__text {
-      padding-left: 8px;
-    }
-  }
-}
