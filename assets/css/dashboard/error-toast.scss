@@ -13,7 +13,6 @@
     font-size: 16px;
     display: flex;
     align-items: center;
-    padding-bottom: 0;
 
     .btn-close {
       &:hover {
@@ -30,6 +29,10 @@
 
     &__text {
       padding-left: 8px;
+
+      ul {
+        margin-bottom: 0;
+      }
     }
   }
 }
