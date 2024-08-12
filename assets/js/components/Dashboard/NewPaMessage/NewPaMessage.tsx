@@ -3,14 +3,15 @@ import moment, { type Moment } from "moment";
 import { Page } from "./types";
 import NewPaMessagePage from "./NewPaMessagePage";
 import AssociateAlertPage from "./AssociateAlertPage";
-import { Alert } from "Models/alert";
+import { Alert, InformedEntity } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
-import { busRouteIdsAtPlaces } from "../../../util";
 import ErrorToast from "Components/ErrorToast";
 import { PaMessage } from "Models/pa_message";
 import { createNewPaMessage } from "Utils/api";
 import { useNavigate } from "react-router-dom";
+import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
+import fp from "lodash/fp";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -45,7 +46,36 @@ const NewPaMessage = () => {
     setVisualText(alertMessage);
   };
 
-  const onImportLocations = () => {};
+  const onImportLocations = (informedEntities: InformedEntity[]) => {
+    const importedSigns = informedEntities.reduce((acc, entity) => {
+      const informedPlaces = entity.stop
+        ? places.filter((place) => place.id === entity.stop)
+        : places;
+
+      if (entity.route) {
+        let signsToAdd = informedPlaces
+          .flatMap((place) => place.screens)
+          .filter((screen) =>
+            getRouteIdsForSign(screen).includes(entity.route ?? ""),
+          );
+
+        const directionId = entity.direction_id;
+        if (directionId !== null) {
+          signsToAdd = signsToAdd.filter((screen) =>
+            screen.routes
+              ?.map((route) => route.direction_id)
+              .includes(directionId),
+          );
+        }
+
+        return acc.concat(signsToAdd.map((screen) => screen.id));
+      }
+
+      return [];
+    }, signIds);
+
+    setSignIds(fp.uniq(importedSigns));
+  };
 
   const navigate = useNavigate();
   const onSubmit = async () => {

@@ -15,7 +15,7 @@ import {
   Form,
 } from "react-bootstrap";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
-import { Alert } from "Models/alert";
+import { Alert, InformedEntity } from "Models/alert";
 import classNames from "classnames";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
 import { Page } from "./types";
@@ -25,7 +25,7 @@ interface AssociateAlertPageProps {
   associatedAlert: Alert;
   endWithEffectPeriod: boolean;
   onImportMessage: (message: string) => void;
-  onImportLocations: () => void;
+  onImportLocations: (informedEntities: InformedEntity[]) => void;
   navigateTo: (page: Page) => void;
   setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
@@ -209,7 +209,7 @@ const AssociateAlertPage = ({
                 onImportMessage(associatedAlert.header);
               }
               if (importLocations) {
-                onImportLocations();
+                onImportLocations(associatedAlert.informed_entities);
               }
               navigateTo(Page.NEW);
             }}
