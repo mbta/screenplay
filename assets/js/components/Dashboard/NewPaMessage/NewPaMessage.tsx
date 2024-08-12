@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import moment from "moment";
+import moment, { type Moment } from "moment";
 import { Page } from "./types";
 import NewPaMessagePage from "./NewPaMessagePage";
 import AssociateAlertPage from "./AssociateAlertPage";
@@ -7,8 +7,10 @@ import { Alert } from "Models/alert";
 import SelectStationsAndZones from "./StationsAndZones/SelectStationsAndZones";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import { busRouteIdsAtPlaces } from "../../../util";
-import { Alert as AlertToast } from "react-bootstrap";
-import { ExclamationTriangleFill } from "react-bootstrap-icons";
+import ErrorToast from "Components/ErrorToast";
+import { PaMessage } from "Models/pa_message";
+import { createNewPaMessage } from "Utils/api";
+import { useNavigate } from "react-router-dom";
 
 const NewPaMessage = () => {
   const [page, setPage] = useState<Page>(Page.NEW);
@@ -17,21 +19,24 @@ const NewPaMessage = () => {
   const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
   const [endWithEffectPeriod, setEndWithEffectPeriod] =
     useState<boolean>(false);
-  const [startDate, setStartDate] = useState(now.format("L"));
-  const [startTime, setStartTime] = useState(now.format("HH:mm"));
-  const [endDate, setEndDate] = useState(now.format("L"));
-  const [endTime, setEndTime] = useState(now.add(1, "hour").format("HH:mm"));
+  const [startDateTime, setStartDateTime] = useState(now);
+  const [endDateTime, setEndDateTime] = useState<Moment>(
+    moment(now).add(1, "hour"),
+  );
   const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [priority, setPriority] = useState(2);
   const [interval, setInterval] = useState("4");
   const [visualText, setVisualText] = useState("");
   const [phoneticText, setPhoneticText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState<string[]>([]);
+
   const [signIds, setSignIds] = useState<string[]>([]);
   const places = usePlacesWithPaEss();
   const busRoutes = busRouteIdsAtPlaces(places);
 
   const onClearAssociatedAlert = () => {
+    setEndDateTime(moment(startDateTime).add(1, "hour"));
     setAssociatedAlert({} as Alert);
     setEndWithEffectPeriod(false);
   };
@@ -42,34 +47,55 @@ const NewPaMessage = () => {
 
   const onImportLocations = () => {};
 
+  const navigate = useNavigate();
+  const onSubmit = async () => {
+    const newMessage: PaMessage = {
+      alert_id: associatedAlert.id,
+      start_time: startDateTime.toISOString(),
+      end_time: endWithEffectPeriod ? null : endDateTime.toISOString(),
+      days_of_week: days,
+      sign_ids: signIds,
+      priority,
+      interval_in_minutes: Number(interval),
+      visual_text: visualText,
+      audio_text: phoneticText,
+    };
+
+    const { status, errors } = await createNewPaMessage(newMessage);
+
+    if (status === 200) {
+      navigate("/pa-messages");
+    } else if (status === 422) {
+      setErrorMessage("Correct the following errors:");
+      setErrors(Object.keys(errors));
+    } else {
+      setErrorMessage("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <div className="new-pa-message">
       {page === Page.NEW && (
         <NewPaMessagePage
           {...{
             days,
-            endDate,
-            endTime,
-            errorMessage,
             interval,
             navigateTo: setPage,
             phoneticText,
             priority,
             setDays,
-            setEndDate,
-            setEndTime,
+            startDateTime,
+            setStartDateTime,
+            endDateTime,
+            setEndDateTime,
             setErrorMessage,
             setInterval,
             setPhoneticText,
             setPriority,
-            setStartDate,
-            setStartTime,
             setVisualText,
             setAssociatedAlert,
             onClearAssociatedAlert,
             setEndWithEffectPeriod,
-            startDate,
-            startTime,
             visualText,
             associatedAlert,
             endWithEffectPeriod,
@@ -77,6 +103,7 @@ const NewPaMessage = () => {
             setSignIds,
             places,
             busRoutes,
+            onSubmit,
           }}
         />
       )}
@@ -104,18 +131,14 @@ const NewPaMessage = () => {
           setEndWithEffectPeriod={setEndWithEffectPeriod}
         />
       )}
-      <div className="error-alert-container">
-        <AlertToast
-          show={errorMessage.length > 0}
-          variant="primary"
-          onClose={() => setErrorMessage("")}
-          dismissible
-          className="error-alert"
-        >
-          <ExclamationTriangleFill className="error-alert__icon" />
-          <div className="error-alert__text">{errorMessage}</div>
-        </AlertToast>
-      </div>
+      <ErrorToast
+        errorMessage={errorMessage}
+        errors={errors}
+        onClose={() => {
+          setErrors([]);
+          setErrorMessage("");
+        }}
+      />
     </div>
   );
 };

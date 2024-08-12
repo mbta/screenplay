@@ -1,12 +1,18 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
+import moment, { type Moment } from "moment";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -32,26 +38,22 @@ enum AudioPreview {
 
 interface Props {
   days: number[];
-  endDate: string;
-  endTime: string;
+  startDateTime: Moment;
+  setStartDateTime: (datetime: Moment) => void;
+  endDateTime: Moment;
+  setEndDateTime: (datetime: Moment) => void;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
   priority: number;
   setDays: Dispatch<SetStateAction<number[]>>;
-  setEndDate: Dispatch<SetStateAction<string>>;
-  setEndTime: Dispatch<SetStateAction<string>>;
   setErrorMessage: Dispatch<SetStateAction<string>>;
   setInterval: Dispatch<SetStateAction<string>>;
   setPhoneticText: Dispatch<SetStateAction<string>>;
   setPriority: Dispatch<SetStateAction<number>>;
-  setStartDate: Dispatch<SetStateAction<string>>;
-  setStartTime: Dispatch<SetStateAction<string>>;
   setVisualText: Dispatch<SetStateAction<string>>;
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
-  startDate: string;
-  startTime: string;
   visualText: string;
   associatedAlert: AlertModel;
   endWithEffectPeriod: boolean;
@@ -59,30 +61,27 @@ interface Props {
   setSignIds: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
+  onSubmit: () => void;
 }
 
 const NewPaMessagePage = ({
   days,
-  endDate,
-  endTime,
+  startDateTime,
+  setStartDateTime,
+  endDateTime,
+  setEndDateTime,
   interval,
   navigateTo,
   phoneticText,
   priority,
   setDays,
-  setEndDate,
-  setEndTime,
   setErrorMessage,
   setInterval,
   setPhoneticText,
   setPriority,
-  setStartDate,
-  setStartTime,
   setVisualText,
   setEndWithEffectPeriod,
   onClearAssociatedAlert,
-  startDate,
-  startTime,
   visualText,
   associatedAlert,
   endWithEffectPeriod,
@@ -90,12 +89,13 @@ const NewPaMessagePage = ({
   setSignIds,
   places,
   busRoutes,
+  onSubmit,
 }: Props) => {
-  const now = moment();
   const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
     AudioPreview.Unreviewed,
   );
+  const [validated, setValidated] = useState(false);
 
   const priorityToIntervalMap: { [priority: number]: string } = {
     1: "1",
@@ -130,14 +130,30 @@ const NewPaMessagePage = ({
     setInterval(priorityToIntervalMap[priority]);
   }, [priority]);
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    onSubmit();
+
+    if (
+      form.checkValidity() === false ||
+      signIds.length === 0 ||
+      audioState !== AudioPreview.Reviewed
+    ) {
+      setErrorMessage("Correct the issue(s) noted above.");
+      event.stopPropagation();
+    } else {
+      onSubmit();
+    }
+
+    setValidated(true);
+  };
+
   return (
     <div className="new-pa-message-page">
-      <Form
-        onSubmit={(event) => {
-          event.preventDefault();
-        }}
-      >
-        <div className="new-pa-message-page__header">New PA/ESS message</div>
+      <Form onSubmit={handleSubmit} noValidate>
+        <div className="header">New PA/ESS message</div>
         <Container fluid>
           <NewPaMessageHeader
             associatedAlert={associatedAlert}
@@ -156,24 +172,48 @@ const NewPaMessagePage = ({
                   Start
                 </Form.Label>
                 <div className="datetime-picker-group">
-                  <Form.Control
-                    className="date-picker picker"
-                    type="date"
-                    id="start-date-picker"
-                    name="start-date-picker-input"
-                    value={startDate}
-                    onChange={(event) => setStartDate(event.target.value)}
-                  />
+                  <div className="validation-group">
+                    <Form.Control
+                      className="date-picker picker"
+                      type="date"
+                      id="start-date-picker"
+                      name="start-date-picker-input"
+                      value={startDateTime.format("YYYY-MM-DD")}
+                      onChange={(event) =>
+                        setStartDateTime(
+                          moment(
+                            `${event.target.value} ${startDateTime.format("HH:mm")}`,
+                            "YYYY-MM-DD HH:mm",
+                          ),
+                        )
+                      }
+                      isInvalid={
+                        validated && startDateTime.isSameOrAfter(endDateTime)
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Start date/time needs to be before the end date/time
+                    </Form.Control.Feedback>
+                  </div>
                   <Form.Control
                     type="time"
                     className="time-picker picker"
-                    value={startTime}
-                    onChange={(event) => setStartTime(event.target.value)}
+                    value={startDateTime.format("HH:mm")}
+                    onChange={(event) =>
+                      setStartDateTime(
+                        moment(
+                          `${startDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
+                          "YYYY-MM-DD HH:mm",
+                        ),
+                      )
+                    }
                   />
                   <Button
                     className="service-time-link"
                     variant="link"
-                    onClick={() => setStartTime("03:00")}
+                    onClick={() =>
+                      setStartDateTime(moment(startDateTime).hour(3).minute(0))
+                    }
                   >
                     Start of service day
                   </Button>
@@ -194,39 +234,59 @@ const NewPaMessagePage = ({
                     className="effect-period-switch"
                     checked={endWithEffectPeriod}
                     label="At end of alert"
-                    onChange={() => {
-                      if (!endWithEffectPeriod) {
-                        setEndDate("");
-                        setEndTime("");
-                      } else {
-                        setEndDate(now.format("L"));
-                        setEndTime(now.add(1, "hour").format("HH:mm"));
+                    onChange={(event) => {
+                      if (!event.target.checked) {
+                        setEndDateTime(moment(startDateTime).add(1, "hour"));
                       }
 
-                      setEndWithEffectPeriod(!endWithEffectPeriod);
+                      setEndWithEffectPeriod(event.target.checked);
                     }}
                   />
                 )}
-                {!endWithEffectPeriod && (
+                {!endWithEffectPeriod && endDateTime !== null && (
                   <div className="datetime-picker-group">
-                    <Form.Control
-                      className="date-picker picker"
-                      type="date"
-                      id="end-date-picker"
-                      name="end-date-picker-input"
-                      value={endDate}
-                      onChange={(event) => setEndDate(event.target.value)}
-                    />
+                    <div className="validation-group">
+                      <Form.Control
+                        className="date-picker picker"
+                        type="date"
+                        id="end-date-picker"
+                        name="end-date-picker-input"
+                        value={endDateTime.format("YYYY-MM-DD")}
+                        onChange={(event) =>
+                          setEndDateTime(
+                            moment(
+                              `${event.target.value} ${endDateTime.format("HH:mm")}`,
+                              "YYYY-MM-DD HH:mm",
+                            ),
+                          )
+                        }
+                        isInvalid={
+                          validated && endDateTime.isSameOrBefore(moment())
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Date is in the past.
+                      </Form.Control.Feedback>
+                    </div>
                     <Form.Control
                       type="time"
                       className="time-picker picker"
-                      value={endTime}
-                      onChange={(event) => setEndTime(event.target.value)}
+                      value={endDateTime.format("HH:mm")}
+                      onChange={(event) =>
+                        setEndDateTime(
+                          moment(
+                            `${endDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
+                            "YYYY-MM-DD HH:mm",
+                          ),
+                        )
+                      }
                     />
                     <Button
                       className="service-time-link"
                       variant="link"
-                      onClick={() => setEndTime("03:00")}
+                      onClick={() =>
+                        setEndDateTime(moment(endDateTime).hour(3).minute(0))
+                      }
                     >
                       End of service day
                     </Button>
@@ -248,6 +308,7 @@ const NewPaMessagePage = ({
                 <IntervalPicker
                   interval={interval}
                   onChangeInterval={setInterval}
+                  validated={validated}
                 />
               </Col>
             </Row>
@@ -271,6 +332,11 @@ const NewPaMessagePage = ({
                 <PlusLg width={12} height={12} /> Add Stations & Zones
               </Button>
             </div>
+            {validated && signIds.length === 0 && (
+              <div className="validation-error">
+                Selecting location is required
+              </div>
+            )}
           </Card>
           <Card className="message-card">
             <div className="title">Message</div>
@@ -287,6 +353,9 @@ const NewPaMessagePage = ({
                   }}
                   label="Text"
                   maxLength={MAX_TEXT_LENGTH}
+                  required
+                  validationText={"Text cannot be blank"}
+                  validated={validated}
                 />
               </Col>
               <Col md="auto" className="copy-button-col">
@@ -319,10 +388,12 @@ const NewPaMessagePage = ({
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
+                      validated={validated}
                     />
                     <ReviewAudioButton
                       audioState={audioState}
                       onClick={previewAudio}
+                      validated={validated}
                     />
                   </>
                 ) : (
@@ -333,6 +404,7 @@ const NewPaMessagePage = ({
                         audioState={audioState}
                         disabled={visualText.length === 0}
                         onClick={previewAudio}
+                        validated={validated}
                       />
                     </Card>
                   </>
@@ -374,12 +446,14 @@ interface ReviewAudioButtonProps {
   audioState: AudioPreview;
   disabled?: boolean;
   onClick: () => void;
+  validated: boolean;
 }
 
 const ReviewAudioButton = ({
   audioState,
   disabled,
   onClick,
+  validated,
 }: ReviewAudioButtonProps) => {
   const audioPlaying = audioState === AudioPreview.Playing;
   return audioState === AudioPreview.Reviewed ? (
@@ -400,7 +474,7 @@ const ReviewAudioButton = ({
       variant="link"
       onClick={onClick}
     >
-      {audioState === AudioPreview.Outdated ? (
+      {validated || audioState === AudioPreview.Outdated ? (
         <ExclamationTriangleFill fill="#FFC107" height={16} />
       ) : (
         <VolumeUpFill height={16} />

@@ -116,6 +116,18 @@ export const publishScreensForPlace = async (
   return { status: response.status, message };
 };
 
+export const createNewPaMessage = async (message: PaMessage) => {
+  const response = await fetch("/api/pa-messages", {
+    ...getPostBodyAndHeaders(message),
+    credentials: "include",
+  });
+
+  return {
+    status: response.status,
+    errors: JSON.parse(await response.text()).errors,
+  };
+};
+
 const getPostBodyAndHeaders = (
   bodyData: { [key: string]: any },
   extraHeaders: { [key: string]: string } = {},

@@ -184,7 +184,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
 }: PaMessageRowProps) => {
   const start = new Date(paMessage.start_time);
-  const end = new Date(paMessage.end_time);
+  const end = paMessage.end_time === null ? null : new Date(paMessage.end_time);
 
   return (
     <tr>
@@ -193,7 +193,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
       <td className="pa-message-table__start-end">
         {start.toLocaleString().replace(",", "")}
         <br />
-        {end.toLocaleString().replace(",", "")}
+        {end && end.toLocaleString().replace(",", "")}
       </td>
       <td>
         <FormCheck />
