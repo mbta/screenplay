@@ -160,7 +160,7 @@ defmodule Screenplay.PaMessagesTest do
 
       new_message = %{
         start_time: now,
-        end_time: DateTime.add(now, 60),
+        end_time: nil,
         days_of_week: [22],
         sign_ids: [],
         priority: 1,
@@ -173,6 +173,20 @@ defmodule Screenplay.PaMessagesTest do
       assert {_, _} = changeset.errors[:sign_ids]
       assert {_, _} = changeset.errors[:interval_in_minutes]
       assert {_, _} = changeset.errors[:visual_text]
+      assert {_, _} = changeset.errors[:end_time]
+
+      new_message = %{
+        start_time: DateTime.add(now, 61),
+        end_time: DateTime.add(now, 60),
+        days_of_week: [1],
+        sign_ids: ["test_sign"],
+        priority: 1,
+        visual_text: "Visual Text",
+        audio_text: "Audio Text"
+      }
+
+      assert {:error, %Ecto.Changeset{} = changeset} = PaMessages.create_message(new_message)
+      assert {_, _} = changeset.errors[:start_time]
     end
   end
 
