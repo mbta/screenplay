@@ -40,8 +40,8 @@ interface Props {
   days: number[];
   startDateTime: Moment;
   setStartDateTime: (datetime: Moment) => void;
-  endDateTime: Moment | null;
-  setEndDateTime: (datetime: Moment | null) => void;
+  endDateTime: Moment;
+  setEndDateTime: (datetime: Moment) => void;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
