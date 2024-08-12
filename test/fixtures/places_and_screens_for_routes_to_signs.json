@@ -9,7 +9,7 @@
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "route_ids": ["place-one-route"],
+        "routes": [{ "id": "place-one-route", "direction_id": 0 }],
         "station_code": "place-one-station-code"
       }
     ]
@@ -24,7 +24,7 @@
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "route_ids": ["place-two-route"],
+        "routes": [{ "id": "place-two-route", "direction_id": 0 }],
         "station_code": "place-two-station-code"
       }
     ]
@@ -39,7 +39,7 @@
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "route_ids": ["place-three-route"],
+        "routes": [{ "id": "place-three-route", "direction_id": 0 }],
         "station_code": "place-three-station-code"
       }
     ]

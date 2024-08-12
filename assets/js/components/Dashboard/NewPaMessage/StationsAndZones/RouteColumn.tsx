@@ -1,7 +1,7 @@
 import React from "react";
 import fp from "lodash/fp";
 import type { Place } from "Models/place";
-import { sortByStationOrder } from "../../../../util";
+import { getRouteIdsForSign, sortByStationOrder } from "../../../../util";
 import { Form } from "react-bootstrap";
 
 const RouteColumn = ({
@@ -24,7 +24,8 @@ const RouteColumn = ({
   const signsIdsAtRoutes = places.flatMap((place) =>
     place.screens
       .filter(
-        (screen) => fp.intersection(routeIds, screen.route_ids).length > 0,
+        (screen) =>
+          fp.intersection(routeIds, getRouteIdsForSign(screen)).length > 0,
       )
       .map((screen) => screen.id),
   );
@@ -52,7 +53,8 @@ const RouteColumn = ({
           const signIdsAtPlace = place.screens
             .filter(
               (screen) =>
-                fp.intersection(routeIds, screen.route_ids).length > 0,
+                fp.intersection(routeIds, getRouteIdsForSign(screen)).length >
+                0,
             )
             .map((screen) => screen.id);
           return (

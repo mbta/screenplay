@@ -2,6 +2,7 @@ import React from "react";
 import fp from "lodash/fp";
 import { Place } from "Models/place";
 import { Form } from "react-bootstrap";
+import { getRouteIdsForSign } from "../../../../util";
 
 interface Props {
   title: string;
@@ -27,7 +28,8 @@ const StationGroupCheckbox = ({
     .flatMap((place) =>
       place.screens
         .filter(
-          (screen) => fp.intersection(routes, screen.route_ids).length > 0,
+          (screen) =>
+            fp.intersection(routes, getRouteIdsForSign(screen)).length > 0,
         )
         .map((screen) => screen.id),
     );

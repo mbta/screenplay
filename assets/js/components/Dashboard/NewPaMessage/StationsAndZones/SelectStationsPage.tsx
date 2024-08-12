@@ -19,6 +19,7 @@ import {
 } from "./StationGroups";
 import { Page } from "../types";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
+import { getRouteIdsForSign } from "../../../../util";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
@@ -56,7 +57,8 @@ const SelectStationsPage = ({
         if (
           place.screens.some(
             (screen) =>
-              fp.intersection(groupedRoutes, screen.route_ids).length > 0,
+              fp.intersection(groupedRoutes, getRouteIdsForSign(screen))
+                .length > 0,
           )
         ) {
           acc[route] = [...(acc[route] || []), place];
@@ -73,7 +75,8 @@ const SelectStationsPage = ({
         place.screens
           .filter(
             (screen) =>
-              fp.intersection(GREEN_LINE_ROUTES, screen.route_ids).length > 0,
+              fp.intersection(GREEN_LINE_ROUTES, getRouteIdsForSign(screen))
+                .length > 0,
           )
           .map((screen) => screen.id),
     ),
