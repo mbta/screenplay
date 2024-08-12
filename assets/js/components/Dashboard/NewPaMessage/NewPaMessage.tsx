@@ -18,8 +18,8 @@ const NewPaMessage = () => {
   const [endWithEffectPeriod, setEndWithEffectPeriod] =
     useState<boolean>(false);
   const [startDateTime, setStartDateTime] = useState(now);
-  const [endDateTime, setEndDateTime] = useState<Moment | null>(
-    now.add(1, "hour"),
+  const [endDateTime, setEndDateTime] = useState<Moment>(
+    moment(now).add(1, "hour"),
   );
   const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [priority, setPriority] = useState(2);
