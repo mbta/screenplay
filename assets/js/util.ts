@@ -352,3 +352,21 @@ export const getPlacesFromFilter = (
 
 export const getRouteIdsForSign = (screen: Screen) =>
   screen.routes ? screen.routes.map((route) => route.id) : [];
+
+export const sortRoutes = (routes: string[]) => {
+  const routeOrder = [
+    "Green",
+    "Green-B",
+    "Green-C",
+    "Green-D",
+    "Green-E",
+    "Red",
+    "Orange",
+    "Blue",
+    "Mattapan",
+    "Silver",
+    "Bus",
+  ];
+
+  return routes.sort((a, b) => routeOrder.indexOf(a) - routeOrder.indexOf(b));
+};

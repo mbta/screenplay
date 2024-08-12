@@ -19,7 +19,7 @@ import {
 } from "./StationGroups";
 import { Page } from "../types";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
-import { getRouteIdsForSign } from "../../../../util";
+import { getRouteIdsForSign, sortRoutes } from "../../../../util";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
@@ -247,7 +247,7 @@ const SelectStationsPage = ({
           </div>
         </div>
 
-        {Object.keys(ROUTE_TO_CLASS_NAMES_MAP).map((route) => (
+        {sortRoutes(Object.keys(ROUTE_TO_CLASS_NAMES_MAP)).map((route) => (
           <div
             key={route}
             className={`route-col ${ROUTE_TO_CLASS_NAMES_MAP[route]} col`}
