@@ -67,7 +67,19 @@ defmodule Screenplay.PaMessages.PaMessage do
     ])
     |> validate_length(:sign_ids, min: 1)
     |> validate_subset(:days_of_week, 1..7)
+    |> validate_start_date()
     |> validate_end_date()
+  end
+
+  defp validate_start_date(changeset) do
+    start_time = get_field(changeset, :start_time)
+    end_time = get_field(changeset, :end_time)
+
+    if not is_nil(end_time) and DateTime.after?(start_time, end_time) do
+      add_error(changeset, :start_time, "start time must be before end time")
+    else
+      changeset
+    end
   end
 
   defp validate_end_date(changeset) do
