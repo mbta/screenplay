@@ -128,7 +128,10 @@ export const createNewPaMessage = async (message: PaMessage) => {
     credentials: "include",
   });
 
-  return { status: response.status, message };
+  return {
+    status: response.status,
+    errors: JSON.parse(await response.text()).errors,
+  };
 };
 
 const getPostBodyAndHeaders = (
