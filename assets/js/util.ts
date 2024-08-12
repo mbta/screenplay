@@ -309,9 +309,7 @@ export const getAlertEarliestStartLatestEnd = (
 
 export const allRouteIdsAtPlaces = (places: Place[]) => {
   return fp.uniq(
-    places.flatMap((place) =>
-      place.screens.flatMap((screen) => screen.route_ids ?? []),
-    ),
+    places.flatMap((place) => place.screens.flatMap(getRouteIdsForSign)),
   );
 };
 
@@ -348,6 +346,9 @@ export const getPlacesFromFilter = (
   filterFn: (routeId: string) => boolean,
 ) => {
   return places.filter((place) =>
-    place.screens.some((screen) => screen.route_ids?.some(filterFn)),
+    place.screens.some((screen) => getRouteIdsForSign(screen).some(filterFn)),
   );
 };
+
+export const getRouteIdsForSign = (screen: Screen) =>
+  screen.routes ? screen.routes.map((route) => route.id) : [];

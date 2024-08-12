@@ -576,7 +576,7 @@ get_routes_for_pa_ess = fn config ->
   for source <- get_sources.(config),
       route <- source["routes"] || List.wrap(source["route_id"]),
       uniq: true do
-    route
+    %{id: route, direction_id: source["direction_id"]}
   end
 end
 
@@ -602,7 +602,7 @@ pa_ess_screens =
         zone: zone,
         type: "pa_ess",
         label: pa_ess_label.(config),
-        route_ids: get_routes_for_pa_ess.(config)
+        routes: get_routes_for_pa_ess.(config)
       }
     }
   end)

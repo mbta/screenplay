@@ -25,7 +25,7 @@ defmodule Screenplay.Config.RoutesToSigns do
     routes_to_signs =
       pa_ess_screens
       |> Enum.flat_map(fn screen ->
-        Enum.map(screen.route_ids, &{&1, screen.id})
+        Enum.map(screen.routes, &{&1["id"], screen.id})
       end)
       |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
 

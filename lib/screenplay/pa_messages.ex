@@ -38,7 +38,7 @@ defmodule Screenplay.PaMessages do
         %ListParams{}
         |> cast(attrs, [:state, :now, :signs, :routes])
         |> validate_length(:signs, min: 1, message: "must include at least one sign")
-        |> validate_length(:routes, min: 1, message: "must include at least on route")
+        |> validate_length(:routes, min: 1, message: "must include at least one route")
 
       case apply_action(changeset, :insert) do
         {:ok, opts} -> {:ok, Map.drop(opts, [:__struct__, :__meta__])}

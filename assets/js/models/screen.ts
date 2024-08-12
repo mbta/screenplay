@@ -7,5 +7,7 @@ export interface Screen {
   label?: string;
   location?: string;
   hidden?: boolean;
-  route_ids?: string[];
+  routes?: PaEssSignRoutes[];
 }
+
+type PaEssSignRoutes = { id: string; direction_id: 0 | 1 };

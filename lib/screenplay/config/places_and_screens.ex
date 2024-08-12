@@ -11,16 +11,18 @@ defmodule Screenplay.Config.PlaceAndScreens do
 
     @derive Jason.Encoder
 
+    @type route :: %{id: String.t(), direction_id: 0 | 1}
+
     @type t :: %__MODULE__{
             id: String.t(),
             label: String.t() | nil,
             station_code: String.t(),
             type: String.t(),
             zone: String.t(),
-            route_ids: [String.t()]
+            routes: [route()]
           }
 
-    @enforce_keys [:id, :label, :station_code, :type, :zone, :route_ids]
+    @enforce_keys [:id, :label, :station_code, :type, :zone, :routes]
     defstruct @enforce_keys
 
     def new(map) do

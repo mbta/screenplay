@@ -3,9 +3,9 @@ import { Page } from "../types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
 import fp from "lodash/fp";
-import { Screen } from "Models/screen";
 import {
   getPlacesFromFilter,
+  getRouteIdsForSign,
   signIDs,
   signsByZone,
   sortByStationOrder,
@@ -48,7 +48,7 @@ const SelectZonesPage = ({
       fp.flatMap((place: Place) =>
         place.screens.filter((s) => value.includes(s.id)),
       ),
-      fp.flatMap((screen: Screen) => screen.route_ids),
+      fp.flatMap(getRouteIdsForSign),
       fp.uniq,
       fp.groupBy((routeID: string) => {
         if (routeID.startsWith("Green")) {
@@ -132,8 +132,10 @@ const SelectZonesPage = ({
   const allScreens = filteredPlaces.flatMap((p) => {
     return p.screens.filter(
       (s) =>
-        fp.intersection(routeToRouteIDMap[selectedRouteFilter], s.route_ids)
-          .length > 0,
+        fp.intersection(
+          routeToRouteIDMap[selectedRouteFilter],
+          getRouteIdsForSign(s),
+        ).length > 0,
     );
   });
 
@@ -177,7 +179,9 @@ const SelectZonesPage = ({
 
   const getSignsFromPlaceForRouteId = (place: Place, routeId: string) => {
     return place.screens.filter((screen) =>
-      screen.route_ids?.some((id) => routeToRouteIDMap[routeId].includes(id)),
+      getRouteIdsForSign(screen).some((id) =>
+        routeToRouteIDMap[routeId].includes(id),
+      ),
     );
   };
 
@@ -330,7 +334,10 @@ const SelectZonesPage = ({
                       ? fp
                           .uniq(
                             allSignsForRouteFilterAtPlace.flatMap((s) =>
-                              fp.map((r) => r.split("-")[1], s.route_ids),
+                              fp.map(
+                                (r) => r.split("-")[1],
+                                getRouteIdsForSign(s),
+                              ),
                             ),
                           )
                           .sort()
