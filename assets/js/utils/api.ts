@@ -4,6 +4,7 @@ import { ScreenConfiguration } from "../models/screen_configuration";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
+import { PaMessage } from "Models/pa_message";
 
 export const fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
