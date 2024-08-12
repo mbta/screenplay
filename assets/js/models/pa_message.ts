@@ -1,8 +1,8 @@
 export interface PaMessage {
   id?: number;
   alert_id: string | null;
-  start_time: string;
-  end_time: string | null;
+  start_datetime: string;
+  end_datetime: string | null;
   days_of_week: number[];
   sign_ids: string[];
   priority: number;

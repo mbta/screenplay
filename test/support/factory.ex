@@ -6,8 +6,8 @@ defmodule Screenplay.Factory do
   def pa_message_factory do
     %Screenplay.PaMessages.PaMessage{
       alert_id: nil,
-      start_time: nil,
-      end_time: nil,
+      start_datetime: nil,
+      end_datetime: nil,
       days_of_week: [],
       sign_ids: [],
       priority: 0,

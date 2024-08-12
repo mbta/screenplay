@@ -45,16 +45,16 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
 
       insert(:pa_message, %{
         id: 1,
-        start_time: ~U[2024-05-01T01:00:00Z],
-        end_time: ~U[2024-05-01T13:00:00Z],
+        start_datetime: ~U[2024-05-01T01:00:00Z],
+        end_datetime: ~U[2024-05-01T13:00:00Z],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
         inserted_at: ~U[2024-05-01T01:00:00Z]
       })
 
       insert(:pa_message, %{
         id: 2,
-        start_time: ~U[2024-05-02T12:00:00Z],
-        end_time: ~U[2024-05-02T12:00:00Z],
+        start_datetime: ~U[2024-05-02T12:00:00Z],
+        end_datetime: ~U[2024-05-02T12:00:00Z],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
         inserted_at: ~U[2024-05-02T12:00:00Z]
       })
@@ -72,22 +72,22 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       insert(:pa_message, %{
         id: 1,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-04 00:00:00Z],
-        end_time: ~U[2024-08-05 23:59:59Z]
+        start_datetime: ~U[2024-08-04 00:00:00Z],
+        end_datetime: ~U[2024-08-05 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 2,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-05 00:00:00Z],
-        end_time: ~U[2024-08-06 23:59:59Z]
+        start_datetime: ~U[2024-08-05 00:00:00Z],
+        end_datetime: ~U[2024-08-06 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 3,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-07 00:00:00Z],
-        end_time: ~U[2024-08-08 23:59:59Z]
+        start_datetime: ~U[2024-08-07 00:00:00Z],
+        end_datetime: ~U[2024-08-08 23:59:59Z]
       })
 
       assert [%{"id" => 2}] =
@@ -103,22 +103,22 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       insert(:pa_message, %{
         id: 1,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-04 00:00:00Z],
-        end_time: ~U[2024-08-05 23:59:59Z]
+        start_datetime: ~U[2024-08-04 00:00:00Z],
+        end_datetime: ~U[2024-08-05 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 2,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-05 00:00:00Z],
-        end_time: ~U[2024-08-06 23:59:59Z]
+        start_datetime: ~U[2024-08-05 00:00:00Z],
+        end_datetime: ~U[2024-08-06 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 3,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-07 00:00:00Z],
-        end_time: ~U[2024-08-08 23:59:59Z]
+        start_datetime: ~U[2024-08-07 00:00:00Z],
+        end_datetime: ~U[2024-08-08 23:59:59Z]
       })
 
       assert [%{"id" => 1}] =
@@ -134,22 +134,22 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       insert(:pa_message, %{
         id: 1,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-04 00:00:00Z],
-        end_time: ~U[2024-08-05 23:59:59Z]
+        start_datetime: ~U[2024-08-04 00:00:00Z],
+        end_datetime: ~U[2024-08-05 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 2,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-05 00:00:00Z],
-        end_time: ~U[2024-08-06 23:59:59Z]
+        start_datetime: ~U[2024-08-05 00:00:00Z],
+        end_datetime: ~U[2024-08-06 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 3,
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-07 00:00:00Z],
-        end_time: ~U[2024-08-08 23:59:59Z]
+        start_datetime: ~U[2024-08-07 00:00:00Z],
+        end_datetime: ~U[2024-08-08 23:59:59Z]
       })
 
       assert [%{"id" => 3}] =
@@ -164,24 +164,24 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         id: 1,
         sign_ids: ~w[a b],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-04 00:00:00Z],
-        end_time: ~U[2024-08-05 23:59:59Z]
+        start_datetime: ~U[2024-08-04 00:00:00Z],
+        end_datetime: ~U[2024-08-05 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 2,
         sign_ids: ~w[b],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-05 00:00:00Z],
-        end_time: ~U[2024-08-06 23:59:59Z]
+        start_datetime: ~U[2024-08-05 00:00:00Z],
+        end_datetime: ~U[2024-08-06 23:59:59Z]
       })
 
       insert(:pa_message, %{
         id: 3,
         sign_ids: ~w[b c],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-07 00:00:00Z],
-        end_time: ~U[2024-08-08 23:59:59Z]
+        start_datetime: ~U[2024-08-07 00:00:00Z],
+        end_datetime: ~U[2024-08-08 23:59:59Z]
       })
 
       assert [%{"id" => 1}, %{"id" => 2}, %{"id" => 3}] =
@@ -225,8 +225,8 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         id: 1,
         sign_ids: ~w[place-one-sign place-two-sign],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-04 00:00:00Z],
-        end_time: ~U[2024-08-05 23:59:59Z]
+        start_datetime: ~U[2024-08-04 00:00:00Z],
+        end_datetime: ~U[2024-08-05 23:59:59Z]
       })
 
       # Red and Blue
@@ -234,8 +234,8 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         id: 2,
         sign_ids: ~w[place-two-sign],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-05 00:00:00Z],
-        end_time: ~U[2024-08-06 23:59:59Z]
+        start_datetime: ~U[2024-08-05 00:00:00Z],
+        end_datetime: ~U[2024-08-06 23:59:59Z]
       })
 
       # Orange
@@ -243,8 +243,8 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         id: 3,
         sign_ids: ~w[place-three-sign],
         days_of_week: [1, 2, 3, 4, 5, 6, 7],
-        start_time: ~U[2024-08-07 00:00:00Z],
-        end_time: ~U[2024-08-08 23:59:59Z]
+        start_datetime: ~U[2024-08-07 00:00:00Z],
+        end_datetime: ~U[2024-08-08 23:59:59Z]
       })
 
       assert [%{"id" => 1}] =
@@ -277,8 +277,8 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       assert %{"success" => true} =
                conn
                |> post("/api/pa-messages", %{
-                 start_time: now,
-                 end_time: DateTime.add(now, 60),
+                 start_datetime: now,
+                 end_datetime: DateTime.add(now, 60),
                  days_of_week: [1, 2, 3],
                  sign_ids: ["test_sign"],
                  priority: 1,
@@ -296,8 +296,8 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       assert %{"errors" => _} =
                conn
                |> post("/api/pa-messages", %{
-                 start_time: now,
-                 end_time: DateTime.add(now, 60),
+                 start_datetime: now,
+                 end_datetime: DateTime.add(now, 60),
                  days_of_week: [1, 2, 3, 90],
                  sign_ids: ["test_sign"],
                  priority: 1,

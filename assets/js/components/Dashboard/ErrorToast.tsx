@@ -17,9 +17,9 @@ const ErrorToast = ({ errorMessage, errors, onClose }: Props) => {
         return "Visual Text";
       case "audio_text":
         return "Phoentic Audio";
-      case "start_time":
+      case "start_datetime":
         return "Start date/time";
-      case "end_time":
+      case "end_datetime":
         return "End date/time";
       default:
         return "";

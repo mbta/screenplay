@@ -183,8 +183,9 @@ interface PaMessageRowProps {
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
 }: PaMessageRowProps) => {
-  const start = new Date(paMessage.start_time);
-  const end = paMessage.end_time === null ? null : new Date(paMessage.end_time);
+  const start = new Date(paMessage.start_datetime);
+  const end =
+    paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
 
   return (
     <tr>
