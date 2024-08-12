@@ -222,44 +222,42 @@ const SelectZonesPage = ({
         <div className="filters-container">
           <div>Service type</div>
           <div className="filters">
-            {sortRoutes(Object.keys(ROUTE_TO_CLASS_NAMES_MAP)).map(
-              (routeID) => {
-                const branchFilters =
-                  routeID === "Green"
-                    ? selectedRoutes["Green"].sort().map((branchID) => {
-                        const branch = branchID.split("-")[1];
+            {sortRoutes(Object.keys(selectedRoutes)).map((routeID) => {
+              const branchFilters =
+                routeID === "Green"
+                  ? selectedRoutes["Green"].sort().map((branchID) => {
+                      const branch = branchID.split("-")[1];
 
-                        return (
-                          <Button
-                            key={`branch-filter-${branch}`}
-                            onClick={() => setSelectedRouteFilter(branchID)}
-                            className={cx("filter-button", {
-                              [ROUTE_TO_CLASS_NAMES_MAP["Green"]]:
-                                selectedRouteFilter === branchID,
-                            })}
-                          >
-                            <Dot /> {branch} Branch
-                          </Button>
-                        );
-                      })
-                    : null;
+                      return (
+                        <Button
+                          key={`branch-filter-${branch}`}
+                          onClick={() => setSelectedRouteFilter(branchID)}
+                          className={cx("filter-button", {
+                            [ROUTE_TO_CLASS_NAMES_MAP["Green"]]:
+                              selectedRouteFilter === branchID,
+                          })}
+                        >
+                          <Dot /> {branch} Branch
+                        </Button>
+                      );
+                    })
+                  : null;
 
-                return (
-                  <Fragment key={`route-filter-${routeID}`}>
-                    <Button
-                      onClick={() => setSelectedRouteFilter(routeID)}
-                      className={cx("filter-button", {
-                        [ROUTE_TO_CLASS_NAMES_MAP[routeID]]:
-                          selectedRouteFilter === routeID,
-                      })}
-                    >
-                      {routeID}
-                    </Button>
-                    {branchFilters}
-                  </Fragment>
-                );
-              },
-            )}
+              return (
+                <Fragment key={`route-filter-${routeID}`}>
+                  <Button
+                    onClick={() => setSelectedRouteFilter(routeID)}
+                    className={cx("filter-button", {
+                      [ROUTE_TO_CLASS_NAMES_MAP[routeID]]:
+                        selectedRouteFilter === routeID,
+                    })}
+                  >
+                    {routeID}
+                  </Button>
+                  {branchFilters}
+                </Fragment>
+              );
+            })}
           </div>
         </div>
         <div className="zones-table-container">
