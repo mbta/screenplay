@@ -1,20 +1,75 @@
-import React, { ComponentType, useState, useEffect } from "react";
-import { Container, Row, Col, FormCheck } from "react-bootstrap";
+import React, { ComponentType, useState, useMemo, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  FormCheck,
+  ButtonGroup,
+  Button,
+  Spinner,
+} from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
-import { fetchPaMessages } from "Utils/api";
 import { PaMessage } from "Models/pa_message";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import cx from "classnames";
+import useSWR from "swr";
+
+type StateFilter = "active" | "future" | "past";
+
+const fetcher = (...args: Parameters<typeof fetch>) =>
+  fetch(...args).then((resp) => resp.json());
+const usePaMessages = ({
+  stateFilter,
+}: {
+  stateFilter?: StateFilter | null;
+}) => {
+  const url = useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (stateFilter) params.set("state", stateFilter);
+
+    return `/api/pa-messages?${params.toString()}`;
+  }, [stateFilter]);
+
+  return useSWR<PaMessage[]>(url, fetcher, { keepPreviousData: true });
+};
+
+const useDelayedLoadingState = (value: boolean, delay = 250) => {
+  const [delayedLoadingState, setDelayedLoadingState] =
+    useState<boolean>(value);
+  useEffect(() => {
+    if (value) {
+      const timeout = setTimeout(() => {
+        setDelayedLoadingState(value);
+      }, delay);
+
+      return () => clearTimeout(timeout);
+    } else {
+      setDelayedLoadingState(value);
+    }
+  }, [delay, value]);
+
+  return delayedLoadingState;
+};
 
 const PaMessagesPage: ComponentType = () => {
-  const [paMessages, setPaMessages] = useState<PaMessage[]>([]);
+  const [params, setParams] = useSearchParams();
+  const [stateFilter, setStateFilter] = useState<StateFilter>(
+    () => (params.get("state") as StateFilter) ?? "active",
+  );
 
   useEffect(() => {
-    const fetchAndSetPaMessages = async () => {
-      const allPaMessages = await fetchPaMessages();
-      setPaMessages(allPaMessages);
-    };
-    fetchAndSetPaMessages();
-  }, []);
+    setParams(() => {
+      const newParams = new URLSearchParams();
+
+      if (stateFilter) newParams.set("state", stateFilter);
+
+      return newParams;
+    });
+  }, [stateFilter]);
+
+  const { data, isLoading } = usePaMessages({ stateFilter });
+  const shouldShowLoadingState = useDelayedLoadingState(isLoading);
 
   return (
     <>
@@ -22,8 +77,29 @@ const PaMessagesPage: ComponentType = () => {
       <Container fluid>
         <Row>
           <Col className="pa-message-filter-selection">
-            <div>Message state</div>
-            <div>Service type</div>
+            <section>
+              <header>Filter by message state</header>
+              <ButtonGroup className="button-group" vertical>
+                <Button
+                  className={cx("button", { active: stateFilter === "active" })}
+                  onClick={() => setStateFilter("active")}
+                >
+                  Active
+                </Button>
+                <Button
+                  className={cx("button", { active: stateFilter === "future" })}
+                  onClick={() => setStateFilter("future")}
+                >
+                  Future
+                </Button>
+                <Button
+                  className={cx("button", { active: stateFilter === "past" })}
+                  onClick={() => setStateFilter("past")}
+                >
+                  Past
+                </Button>
+              </ButtonGroup>
+            </section>
           </Col>
           <Col className="pa-message-table-container">
             <Row className="pa-message-table-action-bar">
@@ -42,7 +118,10 @@ const PaMessagesPage: ComponentType = () => {
               </Col> */}
             </Row>
             <Row>
-              <PaMessageTable paMessages={paMessages} />
+              <PaMessageTable
+                paMessages={data ?? []}
+                isLoading={shouldShowLoadingState}
+              />
             </Row>
           </Col>
         </Row>
@@ -53,11 +132,15 @@ const PaMessagesPage: ComponentType = () => {
 
 interface PaMessageTableProps {
   paMessages: PaMessage[];
+  isLoading: boolean;
 }
 
 const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   paMessages,
+  isLoading,
 }: PaMessageTableProps) => {
+  const data = isLoading ? [] : paMessages;
+
   return (
     <>
       <table className="pa-message-table">
@@ -71,14 +154,22 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {paMessages.map((paMessage: PaMessage) => {
+          {data.map((paMessage: PaMessage) => {
             return <PaMessageRow key={paMessage.id} paMessage={paMessage} />;
           })}
         </tbody>
       </table>
-      {paMessages.length == 0 && (
+      {data.length == 0 && (
         <div className="pa-message-table__empty">
-          There are no active PA/ESS Messages.
+          {isLoading ? (
+            <div className="pa-message-table__loading">
+              <Spinner role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            "There are no PA/ESS Messages matching the current filters."
+          )}
         </div>
       )}
     </>
