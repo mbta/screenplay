@@ -47,7 +47,7 @@ const NewPaMessage = () => {
   };
 
   const onImportLocations = (informedEntities: InformedEntity[]) => {
-    const importedSigns = informedEntities.reduce((acc, entity) => {
+    const importedSigns = informedEntities.flatMap((entity) => {
       const informedPlaces = entity.stop
         ? places.filter((place) => place.id === entity.stop)
         : places;
@@ -68,11 +68,11 @@ const NewPaMessage = () => {
           );
         }
 
-        return acc.concat(signsToAdd.map((screen) => screen.id));
+        return signsToAdd.map((screen) => screen.id);
       }
 
       return [];
-    }, signIds);
+    });
 
     setSignIds(fp.uniq(importedSigns));
   };
