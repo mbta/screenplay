@@ -5,11 +5,15 @@ defmodule Screenplay.Config.S3Fetch do
 
   @behaviour Screenplay.Config.Fetch
 
+  alias Screenplay.Config.Fetch
+
   @impl true
   def get_places_and_screens do
     with {:ok, config_contents, version_id} <- do_get(:config),
-         {:ok, config_json} <- Jason.decode(config_contents) do
-      {:ok, config_json, version_id}
+         {:ok, config_json} <- Jason.decode(config_contents),
+         {:ok, paess_labels_content, _} <- do_get(:paess_labels),
+         {:ok, paess_labels_json} <- Jason.decode(paess_labels_content) do
+      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
     else
       _ -> :error
     end
@@ -104,6 +108,9 @@ defmodule Screenplay.Config.S3Fetch do
 
       :screens ->
         "screens/screens-#{Application.get_env(:screenplay, :environment_name)}.json"
+
+      :paess_labels ->
+        "#{base_path}/paess_labels.json"
     end
   end
 

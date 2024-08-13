@@ -84,6 +84,7 @@ config :screenplay,
   local_pending_screens_config_file_spec: "../screens/priv/local_pending.json",
   local_locations_file_spec: {:priv, "screen_locations.json"},
   local_place_descriptions_file_spec: {:priv, "place_descriptions.json"},
+  local_paess_labels_file_spec: {:priv, "paess_labels.json"},
   api_v3_key: System.get_env("API_V3_KEY")
 
 config :ueberauth, Ueberauth,

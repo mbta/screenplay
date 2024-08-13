@@ -545,8 +545,8 @@ get_first_parent_station = fn sources ->
   |> hd()
 end
 
-{:ok, labels} = File.read("scripts/paess_labels.json")
-labels = Jason.decode!(labels)
+{:ok, hidden_signs} = File.read("scripts/hidden_paess_signs.json")
+hidden_signs = Jason.decode!(hidden_signs)
 
 get_sources = fn
   %{"source_config" => %{"sources" => sources}} ->
@@ -580,15 +580,6 @@ get_routes_for_pa_ess = fn config ->
   end
 end
 
-pa_ess_label = fn %{"pa_ess_loc" => station_code, "text_zone" => zone} ->
-  # Allow specifying `null` in `paess_labels.json` to hide a sign from Screenplay
-  case Map.get(labels, "#{station_code}-#{zone}", :undefined) do
-    :undefined -> nil
-    nil -> :hidden
-    label -> label
-  end
-end
-
 Logger.info("Getting all countdown clocks")
 # Get all countdown clocks
 pa_ess_screens =
@@ -601,14 +592,12 @@ pa_ess_screens =
         station_code: station_code,
         zone: zone,
         type: "pa_ess",
-        label: pa_ess_label.(config),
         routes: get_routes_for_pa_ess.(config)
       }
     }
   end)
   |> Enum.filter(fn
-    {_parent_station, %{label: :hidden}} -> false
-    _ -> true
+    {_parent_station, %{id: id}} -> id not in hidden_signs
   end)
   |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
 

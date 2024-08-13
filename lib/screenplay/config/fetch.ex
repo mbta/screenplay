@@ -12,4 +12,12 @@ defmodule Screenplay.Config.Fetch do
   @callback put_config(list(PlaceAndScreens.t())) :: :ok | :error
   @callback commit() :: :ok
   @callback revert(version_id()) :: any()
+
+  def add_labels_to_config(config, labels) do
+    update_in(
+      config,
+      [Access.all(), "screens", Access.all()],
+      &Map.put(&1, "label", Map.get(labels, &1["id"]))
+    )
+  end
 end
