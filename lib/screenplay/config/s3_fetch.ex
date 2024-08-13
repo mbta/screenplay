@@ -5,11 +5,15 @@ defmodule Screenplay.Config.S3Fetch do
 
   @behaviour Screenplay.Config.Fetch
 
+  alias Screenplay.Config.Fetch
+
   @impl true
   def get_places_and_screens do
     with {:ok, config_contents, version_id} <- do_get(:config),
-         {:ok, config_json} <- Jason.decode(config_contents) do
-      {:ok, add_labels_to_config(config_json), version_id}
+         {:ok, config_json} <- Jason.decode(config_contents),
+         {:ok, paess_labels_content, _} <- do_get(:paess_labels),
+         {:ok, paess_labels_json} <- Jason.decode(paess_labels_content) do
+      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
     else
       _ -> :error
     end
@@ -122,30 +126,6 @@ defmodule Screenplay.Config.S3Fetch do
 
       _ ->
         {:error, :config_not_written}
-    end
-  end
-
-  defp add_labels_to_config(config) do
-    with {:ok, paess_labels_content, _} <- do_get(:paess_labels),
-         {:ok, paess_labels_json} <- Jason.decode(paess_labels_content) do
-      Enum.reduce(
-        config,
-        [],
-        fn place, acc ->
-          new_screens =
-            Enum.reduce(
-              place["screens"],
-              [],
-              fn screen, acc ->
-                [Map.put(screen, "label", Map.get(paess_labels_json, screen["id"])) | acc]
-              end
-            )
-
-          [Map.put(place, "screens", new_screens) | acc]
-        end
-      )
-    else
-      _ -> config
     end
   end
 end

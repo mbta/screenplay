@@ -3,11 +3,16 @@ defmodule Screenplay.Config.LocalFetch do
 
   @behaviour Screenplay.Config.Fetch
 
+  alias Screenplay.Config.Fetch
+
   @impl true
   def get_places_and_screens do
     with {:ok, config_contents, version_id} <- do_get(:local_config_file_spec),
-         {:ok, config_json} <- do_decode(config_contents, :local_config_file_spec) do
-      {:ok, add_labels_to_config(config_json), version_id}
+         {:ok, config_json} <- do_decode(config_contents, :local_config_file_spec),
+         {:ok, paess_labels_content, _} <- do_get(:local_paess_labels_file_spec),
+         {:ok, paess_labels_json} <-
+           do_decode(paess_labels_content, :local_paess_labels_file_spec) do
+      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
     else
       _ -> :error
     end
@@ -117,29 +122,14 @@ defmodule Screenplay.Config.LocalFetch do
     end
   end
 
-  defp add_labels_to_config(config) do
+  def add_labels_to_config(config) do
     with {:ok, label_contents, _} <- do_get(:local_paess_labels_file_spec),
          {:ok, labels} <- do_decode(label_contents, :local_paess_labels_file_spec) do
-      Enum.reduce(
+      update_in(
         config,
-        [],
-        fn place, acc ->
-          new_screens =
-            Enum.reduce(
-              place["screens"],
-              [],
-              fn screen, acc ->
-                [Map.put(screen, "label", Map.get(labels, screen["id"])) | acc]
-              end
-            )
-
-          [Map.put(place, "screens", new_screens) | acc]
-        end
+        [Access.all(), "screens", Access.all()],
+        &Map.put(&1, "label", Map.get(labels, &1["id"]))
       )
-    else
-      _ ->
-        IO.warn("could not fetch PA/ESS labels")
-        config
     end
   end
 end
