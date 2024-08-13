@@ -53,11 +53,10 @@ const NewPaMessage = () => {
         : places;
 
       if (entity.route) {
+        const entityRoute = entity.route;
         let signsToAdd = informedPlaces
           .flatMap((place) => place.screens)
-          .filter((screen) =>
-            getRouteIdsForSign(screen).includes(entity.route ?? ""),
-          );
+          .filter((screen) => getRouteIdsForSign(screen).includes(entityRoute));
 
         const directionId = entity.direction_id;
         if (directionId !== null) {
