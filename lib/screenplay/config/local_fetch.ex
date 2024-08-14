@@ -121,15 +121,4 @@ defmodule Screenplay.Config.LocalFetch do
       {:error, _} -> :error
     end
   end
-
-  def add_labels_to_config(config) do
-    with {:ok, label_contents, _} <- do_get(:local_paess_labels_file_spec),
-         {:ok, labels} <- do_decode(label_contents, :local_paess_labels_file_spec) do
-      update_in(
-        config,
-        [Access.all(), "screens", Access.all()],
-        &Map.put(&1, "label", Map.get(labels, &1["id"]))
-      )
-    end
-  end
 end

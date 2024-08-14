@@ -16,7 +16,7 @@ defmodule Screenplay.Config.Fetch do
   def add_labels_to_config(config, labels) do
     update_in(
       config,
-      [Access.all(), "screens", Access.all()],
+      [Access.all(), "screens", Access.filter(&(&1["type"] == "pa_ess"))],
       &Map.put(&1, "label", Map.get(labels, &1["id"]))
     )
   end
