@@ -13,23 +13,63 @@ import { PaMessage } from "Models/pa_message";
 import { Link, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR from "swr";
+import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 
 type StateFilter = "active" | "future" | "past";
+
+type ServiceType =
+  | "Green"
+  | "Red"
+  | "Orange"
+  | "Blue"
+  | "Mattapan"
+  | "Silver"
+  | "Bus";
+
+const SERVICE_TYPES: Array<ServiceType> = [
+  "Green",
+  "Red",
+  "Orange",
+  "Blue",
+  "Mattapan",
+  "Silver",
+  "Bus",
+];
+
+const getServiceLabel = (serviceType: ServiceType): string => {
+  switch (serviceType) {
+    case "Silver":
+      return "Silver line";
+    case "Bus":
+      return "Busway";
+    default:
+      return serviceType;
+  }
+};
 
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((resp) => resp.json());
 const usePaMessages = ({
   stateFilter,
+  serviceTypes,
 }: {
   stateFilter?: StateFilter | null;
+  serviceTypes: Array<ServiceType>;
 }) => {
+  const routeToRouteIds = useRouteToRouteIDsMap();
   const url = useMemo(() => {
     const params = new URLSearchParams();
 
     if (stateFilter) params.set("state", stateFilter);
 
+    for (const serviceType of serviceTypes) {
+      for (const route of routeToRouteIds[serviceType]) {
+        params.append("routes[]", route);
+      }
+    }
+
     return `/api/pa-messages?${params.toString()}`;
-  }, [stateFilter]);
+  }, [stateFilter, serviceTypes, routeToRouteIds]);
 
   return useSWR<PaMessage[]>(url, fetcher, { keepPreviousData: true });
 };
@@ -57,18 +97,23 @@ const PaMessagesPage: ComponentType = () => {
   const [stateFilter, setStateFilter] = useState<StateFilter>(
     () => (params.get("state") as StateFilter) ?? "active",
   );
+  const [serviceTypes, setServiceTypes] = useState<Array<ServiceType>>(
+    () => (params.getAll("serviceTypes[]") as Array<ServiceType>) ?? [],
+  );
 
   useEffect(() => {
     setParams(() => {
       const newParams = new URLSearchParams();
-
       if (stateFilter) newParams.set("state", stateFilter);
+      for (const serviceType of serviceTypes) {
+        newParams.append("serviceTypes[]", serviceType);
+      }
 
       return newParams;
     });
-  }, [stateFilter]);
+  }, [stateFilter, serviceTypes]);
 
-  const { data, isLoading } = usePaMessages({ stateFilter });
+  const { data, isLoading } = usePaMessages({ serviceTypes, stateFilter });
   const shouldShowLoadingState = useDelayedLoadingState(isLoading);
 
   return (
@@ -98,6 +143,31 @@ const PaMessagesPage: ComponentType = () => {
                 >
                   Past
                 </Button>
+              </ButtonGroup>
+            </section>
+
+            <section>
+              <header>Filter by service type</header>
+              <ButtonGroup className="button-group" vertical>
+                <Button
+                  className={cx("button", {
+                    active: serviceTypes.length === 0,
+                  })}
+                  onClick={() => setServiceTypes([])}
+                >
+                  All
+                </Button>
+                {SERVICE_TYPES.map((serviceType) => (
+                  <Button
+                    key={serviceType}
+                    className={cx("button", {
+                      active: serviceTypes.includes(serviceType),
+                    })}
+                    onClick={() => setServiceTypes([serviceType])}
+                  >
+                    {getServiceLabel(serviceType)}
+                  </Button>
+                ))}
               </ButtonGroup>
             </section>
           </Col>
