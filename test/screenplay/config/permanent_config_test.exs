@@ -388,7 +388,7 @@ defmodule Screenplay.Config.PermanentConfigTest do
           "id" => "place-test",
           "name" => "Test Place",
           "screens" => [
-            %{"disabled" => false, "id" => "12345", "type" => "gl_eink_v2", "label" => nil}
+            %{"disabled" => false, "id" => "12345", "type" => "gl_eink_v2"}
           ],
           "routes" => ["Green-B"]
         }
