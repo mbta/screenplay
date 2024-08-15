@@ -5,8 +5,8 @@
   "scripts": {
     "deploy": "webpack --mode production",
     "watch": "webpack --mode development --watch",
-    "lint": "eslint --fix \"{.,**}/*.{js,json,ts,tsx}\"",
-    "lint:check": "eslint \"{.,**}/*.{js,json,ts,tsx}\"",
+    "lint": "eslint --fix \"{.,**}/*.{js,ts,tsx}\"",
+    "lint:check": "eslint \"{.,**}/*.{js,ts,tsx}\"",
     "format": "prettier --write \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
     "format:check": "prettier --check \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
     "test": "jest",

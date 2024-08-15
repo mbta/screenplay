@@ -4,4 +4,3 @@ webpack.config.js
 socket.js
 node_modules
 coverage
-*.json
