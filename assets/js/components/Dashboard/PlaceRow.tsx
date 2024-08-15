@@ -87,8 +87,7 @@ const SelectBoxToggle = ({
 interface PlaceRowProps {
   place: Place;
   eventKey?: string;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onClick: Function;
+  onClick: (arg?: any) => void;
   className?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;

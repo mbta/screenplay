@@ -93,9 +93,9 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
             onRowClick={(place: Place, checked: boolean) => {
               // Make a new Set so React knows state was changed.
               const newSet = new Set(selectedPlaces);
-              checked ? newSet.add(place.id) : newSet.delete(place.id);
 
               if (checked) {
+                newSet.add(place.id);
                 newScreenValidationErrors[place.id] = [];
                 pendingScreenValidationErrors[place.id] = [];
                 dispatch({
@@ -104,6 +104,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
                   pendingScreenValidationErrors,
                 });
               } else {
+                newSet.delete(place.id);
                 delete newScreenValidationErrors[place.id];
                 delete pendingScreenValidationErrors[place.id];
                 dispatch({
