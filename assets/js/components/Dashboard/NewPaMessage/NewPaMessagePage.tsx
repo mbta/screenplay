@@ -1,11 +1,5 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import DaysPicker from "Components/DaysPicker";
 import PriorityPicker from "Components/PriorityPicker";
@@ -125,10 +119,6 @@ const NewPaMessagePage = ({
       "Error occurred while fetching audio preview. Please try again.",
     );
   };
-
-  useEffect(() => {
-    setInterval(priorityToIntervalMap[priority]);
-  }, [priority]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -300,7 +290,10 @@ const NewPaMessagePage = ({
               <Col>
                 <PriorityPicker
                   priority={priority}
-                  onSelectPriority={setPriority}
+                  onSelectPriority={(priority) => {
+                    setInterval(priorityToIntervalMap[priority]);
+                    setPriority(priority);
+                  }}
                 />
               </Col>
               <Col>
