@@ -90,7 +90,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
             setSortDirection={setSortDirection}
             sortDirection={sortDirection}
             selectedPlaces={selectedPlaces}
-            onRowClick={(place: Place, checked: boolean) => {
+            onRowClick={(place: Place, checked?: boolean) => {
               // Make a new Set so React knows state was changed.
               const newSet = new Set(selectedPlaces);
 

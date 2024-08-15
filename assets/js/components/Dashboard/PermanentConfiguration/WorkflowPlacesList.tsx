@@ -11,7 +11,7 @@ interface WorkflowPlacesListProps {
   setSortDirection: React.Dispatch<React.SetStateAction<DirectionID>>;
   selectedPlaces: Set<string>;
   places: Place[];
-  onRowClick: (place: Place, checked: boolean) => void;
+  onRowClick: (place: Place, checked?: boolean) => void;
 }
 
 const WorkflowPlacesList: ComponentType<WorkflowPlacesListProps> = ({
@@ -48,7 +48,7 @@ const WorkflowPlacesList: ComponentType<WorkflowPlacesListProps> = ({
           defaultSort={sortDirection === 0}
           className="filtered"
           checked={selectedPlaces.has(place.id)}
-          onClick={(checked: boolean) => onRowClick(place, checked)}
+          onClick={(checked?: boolean) => onRowClick(place, checked)}
         />
       ))}
     </div>
