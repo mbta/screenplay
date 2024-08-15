@@ -55,7 +55,7 @@ const groupPaEssScreensbyRoute = (screens: Screen[]): Map<string, Screen[]> => {
     if (screen.station_code) {
       const routeLetter = screen.station_code.charAt(0);
 
-      paEssGroupedByRoute.has(routeLetter)
+      return paEssGroupedByRoute.has(routeLetter)
         ? paEssGroupedByRoute.get(routeLetter)?.push(screen)
         : paEssGroupedByRoute.set(routeLetter, [screen]);
     }

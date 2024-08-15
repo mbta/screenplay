@@ -84,20 +84,27 @@ const SelectBoxToggle = ({
   );
 };
 
-interface PlaceRowProps {
+type AccordionProps = {
+  onClick: React.EventHandler<React.SyntheticEvent>;
+  variant: "accordion";
+};
+
+type SelectBoxProps = {
+  onClick: (arg?: boolean) => void;
+  variant: "select-box";
+};
+
+type PlaceRowProps = {
   place: Place;
   eventKey?: string;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onClick: Function;
   className?: string;
   filteredLine?: string | null;
   defaultSort?: boolean;
   showAnimation?: boolean;
   disabled?: boolean;
   children?: ReactElement;
-  variant: "accordion" | "select-box";
   checked?: boolean;
-}
+} & (AccordionProps | SelectBoxProps);
 
 /**
  * Component used to display summary info about a place and its screens.
@@ -171,8 +178,8 @@ const PlaceRow = ({
       index < screenTypes.length - 1 ? `${type}  ·  ` : type,
     );
 
-  const onRowClick = () =>
-    variant === "select-box" ? onClick(!checked) : onClick();
+  const onRowClick =
+    variant === "select-box" ? () => onClick(!checked) : onClick;
 
   return (
     <div

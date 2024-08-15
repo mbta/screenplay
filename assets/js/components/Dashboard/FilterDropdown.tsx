@@ -18,15 +18,22 @@ interface FilterDropdownProps {
   disabled?: boolean;
 }
 
-interface CustomMenuProps {
-  children?: React.ReactNode;
+type CustomMenuProps = React.PropsWithChildren<{
   style: any;
   className: any;
   "aria-labelledby": any;
-}
+}>;
 
 const CustomMenu = React.forwardRef<HTMLElement, CustomMenuProps>(
-  ({ children, style, className, "aria-labelledby": labeledBy }, ref) => {
+  (
+    {
+      children,
+      style,
+      className,
+      "aria-labelledby": labeledBy,
+    }: CustomMenuProps,
+    ref,
+  ) => {
     return (
       <div
         ref={ref as any}
