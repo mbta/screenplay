@@ -129,7 +129,7 @@ defmodule Screenplay.PaMessagesTest do
     assert [%PaMessage{id: 1}] = PaMessages.get_active_messages(now)
   end
 
-  describe "create/1" do
+  describe "create_message/1" do
     test "creates new message" do
       now = ~U[2024-08-07T12:12:12Z]
 
@@ -187,6 +187,36 @@ defmodule Screenplay.PaMessagesTest do
 
       assert {:error, %Ecto.Changeset{} = changeset} = PaMessages.create_message(new_message)
       assert {_, _} = changeset.errors[:start_datetime]
+    end
+  end
+
+  describe "update_message/2" do
+    setup do
+      pa_message =
+        insert(:pa_message, %{
+          start_datetime: DateTime.utc_now(),
+          end_datetime: DateTime.utc_now() |> DateTime.add(1, :day),
+          visual_text: "Foobar",
+          audio_text: "Foo bar",
+          sign_ids: ["sign-1", "sign-2"]
+        })
+
+      [pa_message: pa_message]
+    end
+
+    test "updates an existing message", %{pa_message: pa_message} do
+      id = pa_message.id
+
+      assert {:ok, %PaMessage{id: ^id, visual_text: "Hello, World!"}} =
+               PaMessages.update_message(pa_message, %{
+                 visual_text: "Hello, World!"
+               })
+    end
+
+    test "returns an error changeset tuple if passed invalid update data", %{
+      pa_message: pa_message
+    } do
+      assert {:error, %Ecto.Changeset{}} = PaMessages.update_message(pa_message, %{sign_ids: []})
     end
   end
 
