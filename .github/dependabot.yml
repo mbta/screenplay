@@ -9,6 +9,11 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
+    groups:
+      mix-patches:
+        applies-to: version-updates
+        update-types:
+          - "patch"
   - package-ecosystem: npm
     directory: "/assets"
     schedule:
@@ -19,10 +24,8 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
     groups:
-      patches:
+      npm-patches:
         applies-to: version-updates
-        patterns:
-          - "*"
         update-types:
           - "patch"
       eslint:
