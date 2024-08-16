@@ -19,6 +19,12 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
     groups:
+      patches:
+        applies-to: version-updates
+        patterns:
+        - "*"
+        update-types:
+        - "patch"
       eslint:
         applies-to: version-updates
         patterns:
@@ -50,3 +56,7 @@ updates:
         applies-to: version-updates
         patterns:
           - "moment*"
+      sentry:
+        applies-to: version-updates
+        patterns:
+        - "@sentry/*"
