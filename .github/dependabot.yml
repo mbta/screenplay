@@ -22,9 +22,9 @@ updates:
       patches:
         applies-to: version-updates
         patterns:
-        - "*"
+          - "*"
         update-types:
-        - "patch"
+          - "patch"
       eslint:
         applies-to: version-updates
         patterns:
@@ -35,28 +35,28 @@ updates:
         patterns:
           - "react*"
           - "@types/react*"
-     testing-tools:
+      testing-tools:
         applies-to: version-updates
         patterns:
           - "ts-jest"
           - "@types/jest"
           - "jest*"
           - "@testing-library*"
-     babel:
+      babel:
         applies-to: version-updates
         patterns:
           - "babel*"
           - "@babel*"
-     webpack:
+      webpack:
         applies-to: version-updates
         patterns:
           - "webpack*"
           - "*webpack-plugin"
-     moment:
+      moment:
         applies-to: version-updates
         patterns:
           - "moment*"
       sentry:
         applies-to: version-updates
         patterns:
-        - "@sentry/*"
+          - "@sentry/*"
