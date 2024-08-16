@@ -18,3 +18,35 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
+    groups:
+      eslint:
+        applies-to: version-updates
+        patterns:
+          - "eslint*"
+          - "@typescript-eslint*"
+      react:
+        applies-to: version-updates
+        patterns:
+          - "react*"
+          - "@types/react*"
+     testing-tools:
+        applies-to: version-updates
+        patterns:
+          - "ts-jest"
+          - "@types/jest"
+          - "jest*"
+          - "@testing-library*"
+     babel:
+        applies-to: version-updates
+        patterns:
+          - "babel*"
+          - "@babel*"
+     webpack:
+        applies-to: version-updates
+        patterns:
+          - "webpack*"
+          - "*webpack-plugin"
+     moment:
+        applies-to: version-updates
+        patterns:
+          - "moment*"
