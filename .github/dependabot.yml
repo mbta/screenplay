@@ -9,6 +9,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
+    groups:
+      mix-patches:
+        update-types:
+          - "patch"
   - package-ecosystem: npm
     directory: "/assets"
     schedule:
@@ -18,3 +22,39 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
+    groups:
+      npm-patches:
+        update-types:
+          - "patch"
+      eslint:
+        patterns:
+          - "eslint*"
+          - "@typescript-eslint*"
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      testing-tools:
+        patterns:
+          - "ts-jest"
+          - "@types/jest"
+          - "jest*"
+          - "@testing-library*"
+      babel:
+        patterns:
+          - "babel*"
+          - "@babel*"
+      webpack:
+        patterns:
+          - "webpack*"
+          - "*webpack-plugin"
+          - "file-loader"
+          - "sass-loader"
+          - "css-loader"
+          - "ts-loader"
+      moment:
+        patterns:
+          - "moment*"
+      sentry:
+        patterns:
+          - "@sentry/*"
