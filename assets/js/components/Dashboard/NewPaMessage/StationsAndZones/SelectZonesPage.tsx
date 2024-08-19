@@ -15,7 +15,6 @@ import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import PlaceZonesRow from "./PlaceZonesRow";
-import { LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES } from "Constants/constants";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-green",
@@ -140,35 +139,31 @@ const SelectZonesPage = ({
     );
   });
 
-  const screensByZone = useMemo(() => {
-    const screensWithAZone = allScreens.filter((s) => s.zone);
-    return fp.groupBy((s) => s.zone, screensWithAZone);
-  }, [allScreens]);
+  const isDirectionGroupSelected = (directionId: 0 | 1) =>
+    signIDs(
+      allScreens.filter((s) =>
+        s.routes?.map((r) => r.direction_id).includes(directionId),
+      ),
+    ).every(isSelected);
 
-  const areGroupsSelected = (groups: Array<ReadonlyArray<string>>) =>
-    groups.every((group) =>
-      group.every((zone) => {
-        return signIDs(screensByZone[zone] ?? []).every(isSelected);
-      }),
-    );
-
-  const selectGroups = (groups: Array<ReadonlyArray<string>>) => {
+  const selectDirectionGroup = (directionIds: (0 | 1)[]) => {
     const signsWithoutSelectedRoute = fp.without(signIDs(allScreens), value);
 
-    const newScreens = groups.flatMap((group) =>
-      group.flatMap((zone) => signIDs(screensByZone[zone] ?? [])),
+    const newScreens = allScreens.filter(
+      (s) =>
+        fp.intersection(
+          s.routes?.map((r) => r.direction_id),
+          directionIds,
+        ).length > 0,
     );
 
-    onChange(fp.uniq([...signsWithoutSelectedRoute, ...newScreens]));
+    onChange(fp.uniq([...signsWithoutSelectedRoute, ...signIDs(newScreens)]));
   };
 
   const isAllSelected =
-    value.length > 0 &&
-    areGroupsSelected([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES]);
-  const isLeftSelected =
-    !isAllSelected && areGroupsSelected([LEFT_ZONES, MIDDLE_ZONES]);
-  const isRightSelected =
-    !isAllSelected && areGroupsSelected([MIDDLE_ZONES, RIGHT_ZONES]);
+    value.length > 0 && signIDs(allScreens).every(isSelected);
+  const isLeftSelected = !isAllSelected && isDirectionGroupSelected(0);
+  const isRightSelected = !isAllSelected && isDirectionGroupSelected(1);
 
   const filterPillLabel = useMemo(() => {
     return selectedRouteFilter.startsWith("Green-")
@@ -279,9 +274,7 @@ const SelectZonesPage = ({
                   className={cx("button-secondary-outline", {
                     "button-active": isAllSelected,
                   })}
-                  onClick={() =>
-                    selectGroups([LEFT_ZONES, MIDDLE_ZONES, RIGHT_ZONES])
-                  }
+                  onClick={() => selectDirectionGroup([0, 1])}
                 >
                   {massSelectButtonLabels.left}
                 </Button>
@@ -289,7 +282,7 @@ const SelectZonesPage = ({
                   className={cx("button-secondary-outline", {
                     "button-active": isLeftSelected,
                   })}
-                  onClick={() => selectGroups([LEFT_ZONES, MIDDLE_ZONES])}
+                  onClick={() => selectDirectionGroup([0])}
                 >
                   {massSelectButtonLabels.middle}
                 </Button>
@@ -297,7 +290,7 @@ const SelectZonesPage = ({
                   className={cx("button-secondary-outline", {
                     "button-active": isRightSelected,
                   })}
-                  onClick={() => selectGroups([MIDDLE_ZONES, RIGHT_ZONES])}
+                  onClick={() => selectDirectionGroup([1])}
                 >
                   {massSelectButtonLabels.right}
                 </Button>
