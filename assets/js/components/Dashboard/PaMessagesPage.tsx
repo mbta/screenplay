@@ -149,8 +149,6 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th>Message</th>
             <th>Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
-            <th>Save</th>
-            <th className="pa-message-table__actions"></th>
           </tr>
         </thead>
         <tbody>
@@ -195,17 +193,6 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         {start.toLocaleString().replace(",", "")}
         <br />
         {end && end.toLocaleString().replace(",", "")}
-      </td>
-      <td>
-        <FormCheck />
-      </td>
-      <td className="pa-message-table__actions">
-        <a href="/pa-messages">
-          <u>Pause</u>
-        </a>
-        <a href="/pa-messages">
-          <u>Copy</u>
-        </a>
       </td>
     </tr>
   );
