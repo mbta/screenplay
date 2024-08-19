@@ -308,4 +308,34 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> json_response(422)
     end
   end
+
+  describe "PUT /api/pa-messages/:id" do
+    @tag :authenticated_pa_message_admin
+    test "updates a pa message and returns the updated pa message", %{conn: conn} do
+      insert(:pa_message, %{
+        id: 1,
+        start_datetime: ~U[2024-05-01T01:00:00Z],
+        end_datetime: ~U[2024-05-01T13:00:00Z],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        visual_text: "Visual Text",
+        audio_text: "Audio Text"
+      })
+
+      assert %{"id" => 1, "visual_text" => "Updated Visual Text"} =
+               conn
+               |> put("/api/pa-messages/1", %{
+                 visual_text: "Updated Visual Text"
+               })
+               |> json_response(200)
+    end
+
+    @tag :authenticated_pa_message_admin
+    test "returns a 404 when the pa message does not exist", %{conn: conn} do
+      assert %{"error" => "not_found"} ==
+               conn
+               |> put("/api/pa-messages/1337", %{visual_text: "Updated Visual Text"})
+               |> json_response(404)
+    end
+  end
 end

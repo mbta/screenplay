@@ -94,11 +94,30 @@ defmodule Screenplay.PaMessages do
   end
 
   @doc """
+  Gets a PaMessage with the given ID.
+  """
+  @spec get_message(id :: String.t()) :: PaMessage.t() | nil
+  def get_message(id) do
+    Repo.get(PaMessage, id)
+  end
+
+  @doc """
   Creates a new PA Message.
   """
   @spec create_message(message :: map()) ::
           {:ok, PaMessage.t()} | {:error, Ecto.Changeset.t()}
   def create_message(message) do
     %PaMessage{} |> PaMessage.changeset(message) |> Repo.insert()
+  end
+
+  @doc """
+  Updates an existing PA Message.
+  """
+  @spec update_message(pa_message :: PaMessage.t(), changes :: map()) ::
+          {:ok, PaMessage.t()} | {:error, Ecto.Changeset.t()}
+  def update_message(pa_message, changes) do
+    pa_message
+    |> PaMessage.changeset(changes)
+    |> Repo.update()
   end
 end

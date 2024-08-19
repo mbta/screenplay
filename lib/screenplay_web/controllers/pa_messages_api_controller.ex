@@ -6,13 +6,6 @@ defmodule ScreenplayWeb.PaMessagesApiController do
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.ListParams
 
-  def index(conn, params) do
-    with {:ok, opts} <- ListParams.parse(params) do
-      pa_messages = PaMessages.list_pa_messages(opts)
-      json(conn, pa_messages)
-    end
-  end
-
   def active(conn, _params) do
     json(conn, PaMessages.get_active_messages())
   end
@@ -27,9 +20,28 @@ defmodule ScreenplayWeb.PaMessagesApiController do
     end
   end
 
+  def index(conn, params) do
+    with {:ok, opts} <- ListParams.parse(params) do
+      pa_messages = PaMessages.list_pa_messages(opts)
+      json(conn, pa_messages)
+    end
+  end
+
   def create(conn, params) do
     with {:ok, _} <- PaMessages.create_message(params) do
       json(conn, %{success: true})
+    end
+  end
+
+  def update(conn, params = %{"id" => id}) do
+    if pa_message = PaMessages.get_message(id) do
+      with {:ok, updated_pa_message} <- PaMessages.update_message(pa_message, params) do
+        json(conn, updated_pa_message)
+      end
+    else
+      conn
+      |> put_status(404)
+      |> json(%{error: "not_found"})
     end
   end
 end

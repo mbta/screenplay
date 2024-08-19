@@ -101,8 +101,7 @@ defmodule ScreenplayWeb.Router do
       :ensure_pa_message_admin
     ]
 
-    get "/api/pa-messages", PaMessagesApiController, :index
-    post "/api/pa-messages", PaMessagesApiController, :create
+    resources "/api/pa-messages", PaMessagesApiController, only: [:index, :create, :update]
   end
 
   scope "/", ScreenplayWeb do
