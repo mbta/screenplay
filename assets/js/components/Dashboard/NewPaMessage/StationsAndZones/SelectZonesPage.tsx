@@ -7,7 +7,7 @@ import {
   getPlacesFromFilter,
   getRouteIdsForSign,
   signIDs,
-  signsByZone,
+  signsByDirection,
   sortByStationOrder,
   sortRoutes,
 } from "../../../../util";
@@ -322,13 +322,13 @@ const SelectZonesPage = ({
                   const allBusSignsForRouteAtPlace =
                     getSignsFromPlaceForRouteId(place, "Bus");
 
-                  const signsGroupedByZone = signsByZone(
+                  const signsGroupedByZone = signsByDirection(
                     allSignsForRouteFilterAtPlace,
                   );
                   const busSignsGroupedByZone =
                     selectedRouteFilter === "Bus"
                       ? signsGroupedByZone
-                      : signsByZone(allBusSignsForRouteAtPlace);
+                      : signsByDirection(allBusSignsForRouteAtPlace);
 
                   const branches =
                     selectedRouteFilter === "Green"
