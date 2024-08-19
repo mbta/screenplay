@@ -31,7 +31,7 @@ interface AssociateAlertPageProps {
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
 }
 
-const AssociateAlertPage = ({
+const AssociateAlert = ({
   associatedAlert,
   endWithEffectPeriod,
   onImportMessage,
@@ -76,7 +76,7 @@ const AssociateAlertPage = ({
             <h1>Select alert to associate with PA/ESS Message</h1>
           </Col>
           <Col className="associate-alert-page-header__cancel">
-            <Button variant="link" onClick={() => navigateTo(Page.NEW)}>
+            <Button variant="link" onClick={() => navigateTo(Page.MAIN)}>
               Cancel
             </Button>
           </Col>
@@ -211,7 +211,7 @@ const AssociateAlertPage = ({
               if (importLocations) {
                 onImportLocations(associatedAlert.informed_entities);
               }
-              navigateTo(Page.NEW);
+              navigateTo(Page.MAIN);
             }}
             className="apply-button"
           >
@@ -346,4 +346,4 @@ const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
   );
 };
 
-export default AssociateAlertPage;
+export default AssociateAlert;

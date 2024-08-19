@@ -12,7 +12,7 @@ interface Props {
   navigateTo: (page: Page) => void;
   page: Page;
   busRoutes: string[];
-  onError: (message: string) => void;
+  onError: (message: string | null) => void;
 }
 
 const SelectStationsAndZones = ({

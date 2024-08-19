@@ -35,7 +35,7 @@ interface Props {
   onChange: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
   busRoutes: string[];
-  onError: (message: string) => void;
+  onError: (message: string | null) => void;
 }
 
 const SelectStationsPage = ({
@@ -89,7 +89,7 @@ const SelectStationsPage = ({
         <div className="buttons">
           <Button
             className="cancel-button"
-            onClick={() => navigateTo(Page.NEW)}
+            onClick={() => navigateTo(Page.MAIN)}
           >
             Cancel
           </Button>

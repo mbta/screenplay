@@ -1,5 +1,5 @@
 export enum Page {
-  NEW = "new",
+  MAIN = "main",
   STATIONS = "stations",
   ALERTS = "alerts",
   ZONES = "zones",

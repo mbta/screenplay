@@ -194,7 +194,7 @@ const SelectZonesPage = ({
         <div className="buttons">
           <Button
             className="cancel-button"
-            onClick={() => navigateTo(Page.NEW)}
+            onClick={() => navigateTo(Page.MAIN)}
           >
             Cancel
           </Button>
@@ -202,7 +202,7 @@ const SelectZonesPage = ({
             className="button-primary"
             onClick={() => {
               onSubmit(value);
-              navigateTo(Page.NEW);
+              navigateTo(Page.MAIN);
             }}
           >
             Done

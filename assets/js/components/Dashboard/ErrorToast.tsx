@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 import { ExclamationTriangleFill } from "react-bootstrap-icons";
 
 interface Props {
-  errorMessage: string;
+  errorMessage: string | null;
   errors: string[];
   onClose: () => void;
 }
@@ -29,7 +29,7 @@ const ErrorToast = ({ errorMessage, errors, onClose }: Props) => {
   return (
     <div className="error-alert-container">
       <Alert
-        show={errorMessage.length > 0}
+        show={errorMessage != null}
         variant="primary"
         onClose={onClose}
         dismissible

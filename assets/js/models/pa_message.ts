@@ -1,5 +1,5 @@
 export interface PaMessage {
-  id?: number;
+  id: number;
   alert_id: string | null;
   start_datetime: string;
   end_datetime: string | null;
@@ -9,7 +9,13 @@ export interface PaMessage {
   interval_in_minutes: number;
   visual_text: string;
   audio_text: string;
-  paused?: boolean;
-  saved?: boolean;
-  inserted_at?: string;
+  paused: boolean;
+  saved: boolean;
+  inserted_at: string;
 }
+
+export type NewPaMessageBody = Omit<
+  PaMessage,
+  "id" | "paused" | "saved" | "inserted_at"
+>;
+export type UpdatePaMessageBody = Partial<PaMessage>;
