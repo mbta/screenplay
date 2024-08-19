@@ -1,84 +1,56 @@
 import React from "react";
-import { act, fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import AlertsPage from "Components/AlertsPage";
 import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvider";
 
 describe("Alerts Page", () => {
   describe("filtering", () => {
     test("filters places by mode and route", async () => {
-      const { getByRole, findByRole, getByTestId, queryByTestId } =
-        renderWithScreenplayProvider(<AlertsPage />);
+      renderWithScreenplayProvider(<AlertsPage />);
 
-      await act(async () => {
-        await waitFor(() => {
-          expect(queryByTestId("1")).toBeInTheDocument();
-          // Verify alerts not present on a screen are not visible
-          expect(queryByTestId("5")).not.toBeInTheDocument();
-        });
-      });
+      expect(await screen.findByTestId("1")).toBeInTheDocument();
+      // Verify alerts not present on a screen are not visible
+      expect(screen.queryByTestId("5")).toBeNull();
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All MODES" }));
-        fireEvent.click(await findByRole("button", { name: "Blue Line" }));
-        await waitFor(() => {
-          expect(getByTestId("3")).toBeInTheDocument();
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
+      fireEvent.click(await screen.findByRole("button", { name: "Blue Line" }));
+      expect(await screen.findByTestId("3")).toBeInTheDocument();
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All MODES" }));
-        fireEvent.click(await findByRole("button", { name: "Red Line" }));
-        await waitFor(() => {
-          expect(getByTestId("10")).toBeInTheDocument();
-          expect(getByTestId("2")).toBeInTheDocument();
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
+      fireEvent.click(await screen.findByRole("button", { name: "Red Line" }));
+      expect(await screen.findByTestId("10")).toBeInTheDocument();
+      expect(await screen.findByTestId("2")).toBeInTheDocument();
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All MODES" }));
-        fireEvent.click(await findByRole("button", { name: "Bus" }));
-        await waitFor(() => {
-          expect(getByTestId("10")).toBeInTheDocument();
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
+      fireEvent.click(await screen.findByRole("button", { name: "Bus" }));
+      expect(await screen.findByTestId("10")).toBeInTheDocument();
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All MODES" }));
-        fireEvent.click(await findByRole("button", { name: "Commuter Rail" }));
-        await waitFor(() => {
-          expect(getByTestId("9")).toBeInTheDocument();
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
+      fireEvent.click(
+        await screen.findByRole("button", { name: "Commuter Rail" }),
+      );
+      expect(await screen.findByTestId("9")).toBeInTheDocument();
     });
 
     test("filters places by screen type", async () => {
-      const { getByRole, findByRole, getByTestId, queryAllByTestId } =
-        renderWithScreenplayProvider(<AlertsPage />);
+      renderWithScreenplayProvider(<AlertsPage />);
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
-        fireEvent.click(await findByRole("button", { name: "Bus Shelter" }));
-        await waitFor(() => {
-          expect(getByTestId("4")).toBeInTheDocument();
-          expect(getByTestId("6")).toBeInTheDocument();
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
+      fireEvent.click(
+        await screen.findByRole("button", { name: "Bus Shelter" }),
+      );
+      expect(await screen.findByTestId("4")).toBeInTheDocument();
+      expect(await screen.findByTestId("6")).toBeInTheDocument();
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
-        fireEvent.click(await findByRole("button", { name: "Pre Fare Duo" }));
-        await waitFor(() => {
-          expect(getByTestId("2")).toBeInTheDocument();
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
+      fireEvent.click(
+        await screen.findByRole("button", { name: "Pre Fare Duo" }),
+      );
+      expect(await screen.findByTestId("2")).toBeInTheDocument();
 
-      await act(async () => {
-        fireEvent.click(getByRole("button", { name: "All SCREEN TYPES" }));
-        fireEvent.click(await findByRole("button", { name: "PA ESS" }));
-        await waitFor(() => {
-          expect(queryAllByTestId("place-row")).toStrictEqual([]);
-        });
-      });
+      fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
+      fireEvent.click(await screen.findByRole("button", { name: "PA ESS" }));
+      expect(screen.queryAllByTestId("place-row")).toStrictEqual([]);
     });
   });
 });

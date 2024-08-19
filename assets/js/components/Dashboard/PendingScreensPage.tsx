@@ -52,7 +52,11 @@ const PendingScreensPage: ComponentType = () => {
   const dispatch = useScreenplayDispatchContext();
 
   const publish = useCallback(
-    async (placeID, appID, hiddenFromScreenplayIDs) => {
+    async (
+      placeID: string,
+      appID: string,
+      hiddenFromScreenplayIDs: string[],
+    ) => {
       if (isPublishing) {
         // Prevent multiple publish requests from being fired if user accidentally double clicks the button.
         return;

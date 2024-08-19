@@ -10,7 +10,7 @@ import "../css/app.scss";
 import "regenerator-runtime/runtime";
 
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
 import App from "./components/App";
 import * as Sentry from "@sentry/react";
@@ -57,4 +57,6 @@ if (sentryDsn) {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+const container = document.getElementById("app");
+const root = createRoot(container!);
+root.render(<App />);
