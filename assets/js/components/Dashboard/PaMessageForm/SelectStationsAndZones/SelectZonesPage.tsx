@@ -116,15 +116,17 @@ const SelectZonesPage = ({
     };
   }, [selectedRouteFilter, directionLabels.left, directionLabels.right]);
 
-  const filteredPlaces = useMemo(() => {
-    const placesWithSelectedSigns = places.filter((p) =>
+  const initialPlacesWithSelectedSigns = useMemo(() => {
+    return places.filter((p) =>
       places
         .filter((p) => p.screens.some((s) => value.includes(s.id)))
         .map((p) => p.id)
         .includes(p.id),
     );
+  }, [places]);
 
-    return getPlacesFromFilter(placesWithSelectedSigns, (r) =>
+  const filteredPlaces = useMemo(() => {
+    return getPlacesFromFilter(initialPlacesWithSelectedSigns, (r) =>
       routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
     );
   }, [selectedRouteFilter, places, routeToRouteIDMap, value]);
