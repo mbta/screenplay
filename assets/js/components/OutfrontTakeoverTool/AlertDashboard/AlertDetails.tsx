@@ -24,8 +24,13 @@ interface AlertDetailsProps {
 }
 
 const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
-  const { data, setLastChangeTime, startEditWizard, triggerConfirmation } =
-    props;
+  const {
+    data,
+    setLastChangeTime,
+    startEditWizard,
+    triggerConfirmation,
+    clearAlert: clearAlertFromProps,
+  } = props;
   const { created_by, id, message, schedule, stations } = data;
 
   const stationScreenOrientationList = useContext(
@@ -49,29 +54,27 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
 
   const messageString = getMessageString(message);
 
-  const modalDetails: ModalDetails = {
-    icon: <NoSymbolIcon className="icon" />,
-    header: "Clear Alert",
-    description:
-      "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
-    cancelText: "Keep Alert",
-    confirmJSX: (
-      <>
-        <NoSymbolIcon className="button-icon" />
-        Clear Alert
-      </>
-    ),
-    onSubmit: () => props.clearAlert(id, setLastChangeTime),
-  };
-
   const editAlert = useCallback(
     (step: number) => startEditWizard(data, step),
     [startEditWizard, data],
   );
-  const clearAlert = useCallback(
-    () => triggerConfirmation(modalDetails),
-    [triggerConfirmation, modalDetails],
-  );
+  const clearAlert = useCallback(() => {
+    const modalDetails: ModalDetails = {
+      icon: <NoSymbolIcon className="icon" />,
+      header: "Clear Alert",
+      description:
+        "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
+      cancelText: "Keep Alert",
+      confirmJSX: (
+        <>
+          <NoSymbolIcon className="button-icon" />
+          Clear Alert
+        </>
+      ),
+      onSubmit: () => clearAlertFromProps(id, setLastChangeTime),
+    };
+    triggerConfirmation(modalDetails);
+  }, [triggerConfirmation, id, clearAlertFromProps, setLastChangeTime]);
 
   return (
     <div className="alert-card">

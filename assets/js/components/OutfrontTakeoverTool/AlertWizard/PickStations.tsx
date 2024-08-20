@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import StationColumn from "./StationColumn";
 
 import WizardWarning from "./WizardWarning";
@@ -12,15 +12,14 @@ interface PickStationsProps {
 }
 
 const PickStations = (props: PickStationsProps): JSX.Element => {
-  const [filteredAlerts, setFilteredAlerts] = useState<string[]>([]);
-
-  useEffect(() => {
-    setFilteredAlerts(
-      props.activeAlertsStations.filter((station) =>
-        props.selectedStations.map((station) => station.name).includes(station),
+  const { activeAlertsStations, selectedStations } = props;
+  const filteredAlerts = useMemo(
+    () =>
+      activeAlertsStations.filter((station) =>
+        selectedStations.map((station) => station.name).includes(station),
       ),
-    );
-  }, [props.selectedStations]);
+    [activeAlertsStations, selectedStations],
+  );
 
   return (
     <>

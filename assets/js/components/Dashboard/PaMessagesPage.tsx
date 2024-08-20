@@ -110,7 +110,7 @@ const PaMessagesPage: ComponentType = () => {
 
       return newParams;
     });
-  }, [stateFilter, serviceTypes]);
+  }, [setParams, stateFilter, serviceTypes]);
 
   const { data, isLoading } = usePaMessages({ serviceTypes, stateFilter });
   const shouldShowLoadingState = useDelayedLoadingState(isLoading);

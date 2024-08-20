@@ -31,7 +31,7 @@ const SelectStationsAndZones = ({
     dispatch({ type: "SHOW_SIDEBAR", showSidebar: false });
 
     return () => dispatch({ type: "SHOW_SIDEBAR", showSidebar: true });
-  }, []);
+  }, [dispatch]);
 
   return page === Page.STATIONS ? (
     <SelectStationsPage

@@ -50,7 +50,7 @@ const AlertDetails: ComponentType = () => {
       // We loaded an alert details page that doesn't match any alert
       setContextState(screenplayContext);
     }
-  }, [screenplayContext]);
+  }, [screenplayContext, id, selectedAlert]);
 
   const [placesListState, placesListDispatch] = useReducer(
     placesListReducer,

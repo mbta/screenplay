@@ -1,6 +1,7 @@
 import React, {
   ComponentType,
   ForwardedRef,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -75,6 +76,27 @@ const ConfigureScreensWorkflowPage: ComponentType<
   const { newScreenValidationErrors, pendingScreenValidationErrors } =
     useConfigValidationContext();
   const dispatch = useConfigValidationDispatchContext();
+  const initializeExistingScreenValidationErrors = useCallback(
+    (placesAndScreens: PlaceIdsAndExistingScreens) => {
+      for (const place_id in placesAndScreens) {
+        const screens = placesAndScreens[place_id];
+
+        Object.keys(screens.pending_screens).map((_screen, index) => {
+          pendingScreenValidationErrors[place_id][index] = {
+            missingFields: [],
+            isDuplicateScreenId: false,
+          };
+        });
+      }
+
+      dispatch({
+        type: "SET_VALIDATION_ERRORS",
+        newScreenValidationErrors,
+        pendingScreenValidationErrors,
+      });
+    },
+    [dispatch, newScreenValidationErrors, pendingScreenValidationErrors],
+  );
 
   // This hook will run in two different scenarios:
   // 1. Runs at initial render if navigated to from the StationSelectPage.
@@ -91,31 +113,15 @@ const ConfigureScreensWorkflowPage: ComponentType<
         setExistingScreens(places_and_screens);
       });
     }
-  }, [selectedPlaces.length]);
+  }, [
+    selectedPlaces.length,
+    initializeExistingScreenValidationErrors,
+    selectedPlaces,
+    setConfigVersion,
+  ]);
 
   const getTitle = () =>
     isEditing ? "Edit Pending" : "Configure Green Line Stations";
-
-  const initializeExistingScreenValidationErrors = (
-    placesAndScreens: PlaceIdsAndExistingScreens,
-  ) => {
-    for (const place_id in placesAndScreens) {
-      const screens = placesAndScreens[place_id];
-
-      Object.keys(screens.pending_screens).map((_screen, index) => {
-        pendingScreenValidationErrors[place_id][index] = {
-          missingFields: [],
-          isDuplicateScreenId: false,
-        };
-      });
-    }
-
-    dispatch({
-      type: "SET_VALIDATION_ERRORS",
-      newScreenValidationErrors,
-      pendingScreenValidationErrors,
-    });
-  };
 
   return (
     <Container className="workflow-container">
@@ -191,7 +197,13 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
         },
       };
     });
-  }, [updatedPendingScreens, existingPendingScreens, newScreens]);
+  }, [
+    updatedPendingScreens,
+    existingPendingScreens,
+    newScreens,
+    place.id,
+    setPlacesAndScreensToUpdate,
+  ]);
 
   const hasRows =
     Object.keys(existingLiveScreens).length > 0 ||

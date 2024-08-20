@@ -66,7 +66,7 @@ const SelectZonesPage = ({
         return routeID;
       }),
     )(places);
-  }, [places]);
+  }, [places, routeToRouteIDMap, value]);
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
     Object.keys(selectedRoutes)[0],
@@ -114,7 +114,7 @@ const SelectZonesPage = ({
       middle: directionLabels.left,
       right: directionLabels.right,
     };
-  }, [selectedRouteFilter]);
+  }, [selectedRouteFilter, directionLabels.left, directionLabels.right]);
 
   const filteredPlaces = useMemo(() => {
     const placesWithSelectedSigns = places.filter((p) =>
@@ -127,7 +127,7 @@ const SelectZonesPage = ({
     return getPlacesFromFilter(placesWithSelectedSigns, (r) =>
       routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
     );
-  }, [selectedRouteFilter]);
+  }, [selectedRouteFilter, places, routeToRouteIDMap, value]);
 
   const allScreens = filteredPlaces.flatMap((p) => {
     return p.screens.filter(
