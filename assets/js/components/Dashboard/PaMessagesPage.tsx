@@ -3,7 +3,6 @@ import {
   Container,
   Row,
   Col,
-  FormCheck,
   ButtonGroup,
   Button,
   Spinner,
@@ -179,13 +178,6 @@ const PaMessagesPage: ComponentType = () => {
                   Add New
                 </Link>
               </Col>
-              {/* Can remove for now because this will not be implemented until after MVP launch */}
-              {/* <Col className="pa-message-table-action-bar__search">
-                <div>Search</div>
-              </Col> */}
-              {/* <Col className="pa-message-table-action-bar__advance-search">
-                <a href="/pa-messages">Advance Search</a>
-              </Col> */}
             </Row>
             <Row>
               <PaMessageTable
@@ -219,8 +211,6 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th>Message</th>
             <th>Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
-            <th>Save</th>
-            <th className="pa-message-table__actions"></th>
           </tr>
         </thead>
         <tbody>
@@ -266,7 +256,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         <br />
         {end && end.toLocaleString().replace(",", "")}
       </td>
-      <td>
+      {/* <td>
         <FormCheck />
       </td>
       <td className="pa-message-table__actions">
@@ -276,7 +266,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         <a href="/pa-messages">
           <u>Copy</u>
         </a>
-      </td>
+      </td> */}
     </tr>
   );
 };

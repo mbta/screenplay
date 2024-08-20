@@ -99,17 +99,6 @@
     padding-right: 0px;
   }
 
-  &__actions {
-    padding-top: 0px !important;
-    min-width: 102px;
-
-    a {
-      color: $text-secondary;
-      margin-bottom: 8px;
-      display: block;
-    }
-  }
-
   &__empty {
     font-weight: bold;
     color: white;
