@@ -1,8 +1,4 @@
-import {
-  BASE_ROUTE_NAME_TO_ROUTE_IDS,
-  LEFT_ZONES,
-  MIDDLE_ZONES,
-} from "Constants/constants";
+import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
 import {
   CannedMessage,
   CustomMessage,
@@ -185,12 +181,13 @@ export const placesWithSelectedAlert = (
     : [];
 };
 
-export const signsByZone = (signs: Screen[]) => {
+export const signsByDirection = (signs: Screen[]) => {
   const groupedSigns = fp.groupBy((sign) => {
-    if (fp.includes(sign.zone, LEFT_ZONES)) {
-      return "left";
-    } else if (fp.includes(sign.zone, MIDDLE_ZONES)) {
+    const directionIds = sign.routes?.map((r) => r.direction_id);
+    if (fp.intersection(directionIds, [0, 1]).length === 2) {
       return "middle";
+    } else if (directionIds?.includes(0)) {
+      return "left";
     } else {
       return "right";
     }

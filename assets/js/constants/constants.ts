@@ -83,7 +83,3 @@ export const BASE_ROUTE_NAME_TO_ROUTE_IDS: { [key: string]: string[] } = {
   Mattapan: ["Mattapan"],
   Silver: SILVER_LINE_ROUTES,
 };
-
-export const LEFT_ZONES = ["s", "w"] as const;
-export const MIDDLE_ZONES = ["c", "m"] as const;
-export const RIGHT_ZONES = ["n", "e"] as const;
