@@ -125,7 +125,7 @@ const PendingScreensPage: ComponentType = () => {
     [etag, dispatch, fetchData, isPublishing],
   );
 
-  useEffect(fetchData, []);
+  useEffect(fetchData, [fetchData]);
 
   const screens = Object.entries(existingScreens);
   let layout;

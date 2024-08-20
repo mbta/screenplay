@@ -46,9 +46,9 @@ const SelectStationsPage = ({
   busRoutes,
   onError,
 }: Props) => {
-  if (places.length === 0) return null;
-
   const routeNameToRouteIds = useRouteToRouteIDsMap();
+
+  if (places.length === 0) return null;
 
   const placesByRoute = places.reduce<{ [key: string]: Array<Place> }>(
     (acc, place) => {

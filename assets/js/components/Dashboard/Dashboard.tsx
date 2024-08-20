@@ -45,7 +45,11 @@ const Dashboard: ComponentType = () => {
     fetchPlaces().then((placesList) =>
       dispatch({ type: "SET_PLACES", places: placesList }),
     );
-  }, []);
+
+    // Tests rely on this effect **not** having any dependencies listed.
+    // This code pre-dates the addition of the react-hooks eslint rules.
+    // - sloane 2024-08-20
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch alerts every 4 seconds.
   useInterval(() => {
@@ -167,7 +171,7 @@ const Dashboard: ComponentType = () => {
     } else {
       dispatch({ type: "SHOW_SIDEBAR", showSidebar: true });
     }
-  }, [pathname]);
+  }, [pathname, dispatch]);
 
   return (
     <div className="screenplay-container">

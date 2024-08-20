@@ -60,7 +60,12 @@ const GlEinkWorkflow: ComponentType = () => {
         pendingScreenValidationErrors,
       });
     }
-  }, [location]);
+  }, [
+    location,
+    dispatch,
+    newScreenValidationErrors,
+    pendingScreenValidationErrors,
+  ]);
 
   const generateErrorMessage = (errorSet: Set<string>) => {
     if (errorSet.size === 0) {

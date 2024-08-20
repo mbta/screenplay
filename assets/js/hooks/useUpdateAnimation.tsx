@@ -21,7 +21,11 @@ export const useUpdateAnimation = (
       timer.current = undefined;
       setShowAnimation(false);
     }, 2000);
-  }, deps);
+    // Disabling this because this code predates our usage of the `react-hooks`
+    // eslint plugin. There's likely a better way to achieve this effect but
+    // we are disabling this check for now.
+    // - sloane 2024-08-20
+  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Cancel timer if component unmounts.
   useEffect(() => {
