@@ -146,15 +146,11 @@ const SelectZonesPage = ({
       ),
     ).every(isSelected);
 
-  const selectDirectionGroup = (directionIds: (0 | 1)[]) => {
+  const selectDirectionGroup = (directionId: 0 | 1) => {
     const signsWithoutSelectedRoute = fp.without(signIDs(allScreens), value);
 
-    const newScreens = allScreens.filter(
-      (s) =>
-        fp.intersection(
-          s.routes?.map((r) => r.direction_id),
-          directionIds,
-        ).length > 0,
+    const newScreens = allScreens.filter((s) =>
+      s.routes?.map((r) => r.direction_id).includes(directionId),
     );
 
     onChange(fp.uniq([...signsWithoutSelectedRoute, ...signIDs(newScreens)]));
@@ -274,7 +270,9 @@ const SelectZonesPage = ({
                   className={cx("button-secondary-outline", {
                     "button-active": isAllSelected,
                   })}
-                  onClick={() => selectDirectionGroup([0, 1])}
+                  onClick={() =>
+                    onChange(fp.uniq([...value, ...signIDs(allScreens)]))
+                  }
                 >
                   {massSelectButtonLabels.left}
                 </Button>
@@ -282,7 +280,7 @@ const SelectZonesPage = ({
                   className={cx("button-secondary-outline", {
                     "button-active": isLeftSelected,
                   })}
-                  onClick={() => selectDirectionGroup([0])}
+                  onClick={() => selectDirectionGroup(0)}
                 >
                   {massSelectButtonLabels.middle}
                 </Button>
@@ -290,7 +288,7 @@ const SelectZonesPage = ({
                   className={cx("button-secondary-outline", {
                     "button-active": isRightSelected,
                   })}
-                  onClick={() => selectDirectionGroup([1])}
+                  onClick={() => selectDirectionGroup(1)}
                 >
                   {massSelectButtonLabels.right}
                 </Button>
