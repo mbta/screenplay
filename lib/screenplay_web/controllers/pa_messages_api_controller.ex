@@ -44,4 +44,14 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       |> json(%{error: "not_found"})
     end
   end
+
+  def show(conn, %{"id" => id}) do
+    if pa_message = PaMessages.get_message(id) do
+      json(conn, pa_message)
+    else
+      conn
+      |> put_status(404)
+      |> json(%{error: "not_found"})
+    end
+  end
 end
