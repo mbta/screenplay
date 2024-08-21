@@ -22,12 +22,12 @@ import { Page } from "./types";
 import moment from "moment";
 
 interface AssociateAlertPageProps {
-  associatedAlert: Alert;
+  associatedAlert: Alert | string | null;
   endWithEffectPeriod: boolean;
   onImportMessage: (message: string) => void;
   onImportLocations: (informedEntities: InformedEntity[]) => void;
   navigateTo: (page: Page) => void;
-  setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
+  setAssociatedAlert: Dispatch<SetStateAction<Alert | string | null>>;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -54,7 +54,7 @@ const AssociateAlert = ({
     useState<string>("active");
   const [selectedServiceType, setSelectedServiceType] = useState<string>("All");
   const [showAlertModal, setShowAlertModal] = useState<boolean>(
-    associatedAlert.id !== undefined,
+    associatedAlert != null,
   );
 
   const serviceTypes = [
@@ -158,10 +158,14 @@ const AssociateAlert = ({
                 Alert ID:{" "}
               </div>
               <div className="alert-description__header-id">
-                {associatedAlert.id}
+                {typeof associatedAlert === "string"
+                  ? associatedAlert
+                  : associatedAlert?.id}
               </div>
             </div>
-            {associatedAlert.header}
+            {typeof associatedAlert === "string"
+              ? null
+              : associatedAlert?.header}
           </div>
           <div className="checkbox">
             <Form.Check
@@ -205,6 +209,11 @@ const AssociateAlert = ({
           </Button>
           <Button
             onClick={() => {
+              if (
+                associatedAlert == null ||
+                typeof associatedAlert === "string"
+              )
+                return;
               if (importMessage) {
                 onImportMessage(associatedAlert.header);
               }
@@ -227,7 +236,7 @@ interface AssociateAlertsTableProps {
   alerts: Alert[];
   messageStateFilter: string;
   serviceTypeFilter: string;
-  setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
+  setAssociatedAlert: Dispatch<SetStateAction<Alert | string | null>>;
   setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -302,7 +311,7 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
 
 interface AssociateAlertsTableRowProps {
   alert: Alert;
-  setAssociatedAlert: Dispatch<SetStateAction<Alert>>;
+  setAssociatedAlert: Dispatch<SetStateAction<Alert | string | null>>;
   setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 

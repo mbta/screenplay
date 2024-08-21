@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 import { PaMessage } from "Models/pa_message";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
@@ -243,12 +243,13 @@ interface PaMessageRowProps {
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
 }: PaMessageRowProps) => {
+  const navigate = useNavigate();
   const start = new Date(paMessage.start_datetime);
   const end =
     paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
 
   return (
-    <tr>
+    <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
       <td>{paMessage.visual_text}</td>
       <td>{paMessage.interval_in_minutes} min</td>
       <td className="pa-message-table__start-end">

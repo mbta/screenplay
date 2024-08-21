@@ -21,6 +21,7 @@ const SelectScreenTypeComponent = React.lazy(
 );
 const PaMessagesPage = React.lazy(() => import("Components/PaMessagesPage"));
 const NewPaMessage = React.lazy(() => import("Components/NewPaMessage"));
+const EditPaMessage = React.lazy(() => import("Components/EditPaMessage"));
 
 class AppRoutes extends React.Component {
   render() {
@@ -49,6 +50,7 @@ class AppRoutes extends React.Component {
             </Route>
             <Route path="pa-messages" element={<PaMessagesPage />} />
             <Route path="pa-messages/new" element={<NewPaMessage />} />
+            <Route path="pa-messages/:id/edit" element={<EditPaMessage />} />
           </Route>
         </Routes>
       </React.Suspense>

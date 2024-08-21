@@ -12,10 +12,11 @@ export interface PaMessage {
   paused: boolean;
   saved: boolean;
   inserted_at: string;
+  updated_at: string;
 }
 
 export type NewPaMessageBody = Omit<
   PaMessage,
-  "id" | "paused" | "saved" | "inserted_at"
+  "id" | "paused" | "saved" | "inserted_at" | "updated_at"
 >;
 export type UpdatePaMessageBody = Partial<PaMessage>;
