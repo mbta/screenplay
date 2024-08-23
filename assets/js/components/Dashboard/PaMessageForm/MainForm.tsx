@@ -31,6 +31,7 @@ enum AudioPreview {
 }
 
 interface Props {
+  title: string;
   days: number[];
   startDateTime: Moment;
   setStartDateTime: (datetime: Moment) => void;
@@ -41,7 +42,7 @@ interface Props {
   phoneticText: string;
   priority: number;
   setDays: Dispatch<SetStateAction<number[]>>;
-  setErrorMessage: Dispatch<SetStateAction<string>>;
+  onError: (error: string | null) => void;
   setInterval: Dispatch<SetStateAction<string>>;
   setPhoneticText: Dispatch<SetStateAction<string>>;
   setPriority: Dispatch<SetStateAction<number>>;
@@ -58,7 +59,8 @@ interface Props {
   onSubmit: () => void;
 }
 
-const NewPaMessagePage = ({
+const MainForm = ({
+  title,
   days,
   startDateTime,
   setStartDateTime,
@@ -69,7 +71,7 @@ const NewPaMessagePage = ({
   phoneticText,
   priority,
   setDays,
-  setErrorMessage,
+  onError,
   setInterval,
   setPhoneticText,
   setPriority,
@@ -115,9 +117,7 @@ const NewPaMessagePage = ({
 
   const onAudioError = () => {
     setAudioState(AudioPreview.Outdated);
-    setErrorMessage(
-      "Error occurred while fetching audio preview. Please try again.",
-    );
+    onError("Error occurred while fetching audio preview. Please try again.");
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -130,7 +130,7 @@ const NewPaMessagePage = ({
       signIds.length === 0 ||
       audioState !== AudioPreview.Reviewed
     ) {
-      setErrorMessage("Correct the issue(s) noted above.");
+      onError("Correct the issue(s) noted above.");
       event.stopPropagation();
     } else {
       onSubmit();
@@ -142,7 +142,7 @@ const NewPaMessagePage = ({
   return (
     <div className="new-pa-message-page">
       <Form onSubmit={handleSubmit} noValidate>
-        <div className="header">New PA/ESS message</div>
+        <div className="header">{title}</div>
         <Container fluid>
           <NewPaMessageHeader
             associatedAlert={associatedAlert}
@@ -538,4 +538,4 @@ const NewPaMessageHeader = ({
   );
 };
 
-export default NewPaMessagePage;
+export default MainForm;
