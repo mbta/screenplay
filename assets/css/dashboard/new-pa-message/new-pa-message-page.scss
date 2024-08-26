@@ -283,11 +283,16 @@
       height: 24px;
     }
 
-    .effect-period {
+    .effect-period,
+    .alert-ended {
       margin-top: 4px;
       font-size: 14px;
       font-weight: 400;
       width: 100%;
+    }
+
+    .alert-ended {
+      color: $text-error;
     }
   }
 

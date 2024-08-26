@@ -4,7 +4,7 @@ import { ScreenConfiguration } from "../models/screen_configuration";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
-import { NewPaMessageBody } from "Models/pa_message";
+import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 
 export const fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
@@ -126,6 +126,26 @@ export const createNewPaMessage = async (message: NewPaMessageBody) => {
   return {
     status: response.status,
     errors: JSON.parse(await response.text()).errors,
+  };
+};
+
+export const updateExistingPaMessage = async (
+  id: string | number,
+  updates: UpdatePaMessageBody,
+) => {
+  const response = await fetch(`/api/pa-messages/${id}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      "content-type": "application/json",
+      "x-csrf-token": getCsrfToken(),
+    },
+    body: JSON.stringify(updates),
+  });
+
+  return {
+    status: response.status,
+    body: await response.json(),
   };
 };
 

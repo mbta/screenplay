@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import moment, { type Moment } from "moment";
 import MainForm from "./MainForm";
-import { Page } from "./types";
+import { AudioPreview, Page } from "./types";
 import SelectStationsAndZones from "./SelectStationsAndZones";
 import AssociateAlert from "./AssociateAlert";
 import { Alert, InformedEntity } from "Models/alert";
@@ -29,6 +29,9 @@ interface Props {
   onErrorsChange: (errors: string[]) => void;
   errorMessage: string | null;
   errors: string[];
+  defaultValues?: Partial<PaMessageFormData>;
+  defaultAlert?: Alert | string | null;
+  defaultAudioState?: AudioPreview;
 }
 
 const PaMessageForm = ({
@@ -38,30 +41,61 @@ const PaMessageForm = ({
   onError,
   onErrorsChange,
   onSubmit,
+  defaultValues,
+  defaultAlert,
+  defaultAudioState,
 }: Props) => {
   const [page, setPage] = useState<Page>(Page.MAIN);
   const now = moment();
 
-  const [associatedAlert, setAssociatedAlert] = useState<Alert>({} as Alert);
-  const [endWithEffectPeriod, setEndWithEffectPeriod] =
-    useState<boolean>(false);
-  const [startDateTime, setStartDateTime] = useState(now);
-  const [endDateTime, setEndDateTime] = useState<Moment>(
-    moment(now).add(1, "hour"),
+  const [associatedAlert, setAssociatedAlert] = useState<Alert | string | null>(
+    () => {
+      if (defaultAlert) return defaultAlert;
+      return null;
+    },
   );
-  const [days, setDays] = useState([1, 2, 3, 4, 5, 6, 7]);
-  const [priority, setPriority] = useState(2);
-  const [interval, setInterval] = useState("4");
-  const [visualText, setVisualText] = useState("");
-  const [phoneticText, setPhoneticText] = useState("");
+  const [endWithEffectPeriod, setEndWithEffectPeriod] = useState<boolean>(
+    () => {
+      if (defaultAlert && defaultValues?.end_datetime === null) return true;
+      return false;
+    },
+  );
+  const [startDateTime, setStartDateTime] = useState(() => {
+    if (defaultValues?.start_datetime)
+      return moment(defaultValues.start_datetime);
+    return now;
+  });
+  const [endDateTime, setEndDateTime] = useState<Moment>(() => {
+    if (defaultValues?.end_datetime) return moment(defaultValues.end_datetime);
+    return moment(now).add(1, "hour");
+  });
+  const [days, setDays] = useState(() => {
+    return defaultValues?.days_of_week ?? [1, 2, 3, 4, 5, 6, 7];
+  });
+  const [priority, setPriority] = useState(() => {
+    return defaultValues?.priority ?? 2;
+  });
+  const [interval, setInterval] = useState(() => {
+    return defaultValues?.interval_in_minutes
+      ? `${defaultValues?.interval_in_minutes}`
+      : "4";
+  });
+  const [visualText, setVisualText] = useState(() => {
+    return defaultValues?.visual_text ?? "";
+  });
+  const [phoneticText, setPhoneticText] = useState(() => {
+    return defaultValues?.audio_text ?? "";
+  });
 
-  const [signIds, setSignIds] = useState<string[]>([]);
+  const [signIds, setSignIds] = useState<string[]>(() => {
+    return defaultValues?.sign_ids ?? [];
+  });
   const places = usePlacesWithPaEss();
   const busRoutes = busRouteIdsAtPlaces(places);
 
   const onClearAssociatedAlert = () => {
     setEndDateTime(moment(startDateTime).add(1, "hour"));
-    setAssociatedAlert({} as Alert);
+    setAssociatedAlert(null);
     setEndWithEffectPeriod(false);
   };
 
@@ -101,55 +135,57 @@ const PaMessageForm = ({
 
   return (
     <div className="new-pa-message">
-      {page === Page.MAIN && (
-        <MainForm
-          onSubmit={() => {
-            const formData: PaMessageFormData = {
-              alert_id: associatedAlert.id,
-              start_datetime: startDateTime.toISOString(),
-              end_datetime: endWithEffectPeriod
-                ? null
-                : endDateTime.toISOString(),
-              days_of_week: days,
-              sign_ids: signIds,
-              priority,
-              interval_in_minutes: Number(interval),
-              visual_text: visualText,
-              audio_text: phoneticText,
-            };
-
-            onSubmit(formData);
-          }}
-          {...{
-            title,
-            days,
-            interval,
-            navigateTo: setPage,
-            phoneticText,
+      <MainForm
+        hide={page !== Page.MAIN}
+        onSubmit={() => {
+          const formData: PaMessageFormData = {
+            alert_id:
+              typeof associatedAlert === "string"
+                ? associatedAlert
+                : associatedAlert?.id ?? null,
+            start_datetime: startDateTime.toISOString(),
+            end_datetime: endWithEffectPeriod
+              ? null
+              : endDateTime.toISOString(),
+            days_of_week: days,
+            sign_ids: signIds,
             priority,
-            setDays,
-            startDateTime,
-            setStartDateTime,
-            endDateTime,
-            setEndDateTime,
-            onError,
-            setInterval,
-            setPhoneticText,
-            setPriority,
-            setVisualText,
-            setAssociatedAlert,
-            onClearAssociatedAlert,
-            setEndWithEffectPeriod,
-            visualText,
-            associatedAlert,
-            endWithEffectPeriod,
-            signIds,
-            setSignIds,
-            places,
-            busRoutes,
-          }}
-        />
-      )}
+            interval_in_minutes: Number(interval),
+            visual_text: visualText,
+            audio_text: phoneticText,
+          };
+
+          onSubmit(formData);
+        }}
+        {...{
+          title,
+          days,
+          interval,
+          navigateTo: setPage,
+          phoneticText,
+          priority,
+          setDays,
+          startDateTime,
+          setStartDateTime,
+          endDateTime,
+          setEndDateTime,
+          onError,
+          setInterval,
+          setPhoneticText,
+          setPriority,
+          setVisualText,
+          onClearAssociatedAlert,
+          setEndWithEffectPeriod,
+          visualText,
+          associatedAlert,
+          endWithEffectPeriod,
+          signIds,
+          setSignIds,
+          places,
+          busRoutes,
+          defaultAudioState,
+        }}
+      />
       {[Page.STATIONS, Page.ZONES].includes(page) && (
         <div className="select-station-and-zones-container">
           <SelectStationsAndZones

@@ -17,18 +17,11 @@ import {
 import cx from "classnames";
 import { ActivePeriod, Alert as AlertModel } from "Models/alert";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
-import { Page } from "./types";
+import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
 
 const MAX_TEXT_LENGTH = 2000;
-
-enum AudioPreview {
-  Unreviewed,
-  Playing,
-  Reviewed,
-  Outdated,
-}
 
 interface Props {
   title: string;
@@ -50,13 +43,15 @@ interface Props {
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
   visualText: string;
-  associatedAlert: AlertModel;
+  associatedAlert: AlertModel | string | null;
   endWithEffectPeriod: boolean;
   signIds: string[];
   setSignIds: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
   onSubmit: () => void;
+  defaultAudioState?: AudioPreview;
+  hide: boolean;
 }
 
 const MainForm = ({
@@ -86,10 +81,12 @@ const MainForm = ({
   places,
   busRoutes,
   onSubmit,
+  defaultAudioState,
+  hide,
 }: Props) => {
   const navigate = useNavigate();
   const [audioState, setAudioState] = useState<AudioPreview>(
-    AudioPreview.Unreviewed,
+    () => defaultAudioState ?? AudioPreview.Unreviewed,
   );
   const [validated, setValidated] = useState(false);
 
@@ -138,6 +135,8 @@ const MainForm = ({
 
     setValidated(true);
   };
+
+  if (hide) return null;
 
   return (
     <div className="new-pa-message-page">
@@ -217,7 +216,7 @@ const MainForm = ({
                 >
                   End
                 </Form.Label>
-                {associatedAlert.id && (
+                {associatedAlert && (
                   <Form.Switch
                     id="effect-period-switch"
                     className="effect-period-switch"
@@ -477,7 +476,7 @@ const ReviewAudioButton = ({
 };
 
 interface NewPaMessageHeaderProps {
-  associatedAlert: AlertModel;
+  associatedAlert: AlertModel | string | null;
   navigateTo: (page: Page) => void;
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
@@ -498,10 +497,13 @@ const NewPaMessageHeader = ({
     );
   };
 
-  return associatedAlert.id ? (
+  return associatedAlert ? (
     <Row md="auto" className="align-items-center">
       <div className="associated-alert-header">
-        Associated Alert: Alert ID {associatedAlert.id}
+        Associated Alert: Alert ID{" "}
+        {typeof associatedAlert === "string"
+          ? associatedAlert
+          : associatedAlert.id}
         <Button
           variant="link"
           onClick={() => {
@@ -510,7 +512,13 @@ const NewPaMessageHeader = ({
         >
           Clear
         </Button>
-        {formatActivePeriod(associatedAlert.active_period)}
+        {typeof associatedAlert === "string" ? (
+          <div className="alert-ended">
+            Alert has ended and is no longer available.
+          </div>
+        ) : (
+          formatActivePeriod(associatedAlert.active_period)
+        )}
       </div>
     </Row>
   ) : (
