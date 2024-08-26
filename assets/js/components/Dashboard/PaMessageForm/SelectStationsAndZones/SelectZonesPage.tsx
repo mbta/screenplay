@@ -71,11 +71,12 @@ const SelectZonesPage = ({
   };
 
   // eslint-disable-next-line react/hook-use-state
-  const [initialPlacesWithSelectedSigns, _setInitialPlacesWithSelectedSigns] =
-    useState<Place[]>(getInitialPlacesWithSelectedSigns);
+  const [initialPlacesWithSelectedSigns] = useState<Place[]>(
+    getInitialPlacesWithSelectedSigns,
+  );
 
   // eslint-disable-next-line react/hook-use-state
-  const [initialRoutes, _setInitialRoutes] = useState(getInitialRoutes);
+  const [initialRoutes] = useState(getInitialRoutes);
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
     Object.keys(initialRoutes)[0],
