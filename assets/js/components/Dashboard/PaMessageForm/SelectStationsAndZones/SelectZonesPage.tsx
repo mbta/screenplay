@@ -42,8 +42,15 @@ const SelectZonesPage = ({
   places,
 }: Props) => {
   const routeToRouteIDMap = useRouteToRouteIDsMap();
+  const getInitialPlacesWithSelectedSigns = () =>
+    places.filter((p) =>
+      places
+        .filter((p) => p.screens.some((s) => value.includes(s.id)))
+        .map((p) => p.id)
+        .includes(p.id),
+    );
 
-  const selectedRoutes = useMemo(() => {
+  const getInitialRoutes = () => {
     return fp.flow(
       fp.flatMap((place: Place) =>
         place.screens.filter((s) => value.includes(s.id)),
@@ -66,10 +73,17 @@ const SelectZonesPage = ({
         return routeID;
       }),
     )(places);
-  }, [places, routeToRouteIDMap, value]);
+  };
+
+  // eslint-disable-next-line react/hook-use-state
+  const [initialPlacesWithSelectedSigns, _setInitialPlacesWithSelectedSigns] =
+    useState<Place[]>(getInitialPlacesWithSelectedSigns);
+
+  // eslint-disable-next-line react/hook-use-state
+  const [initialRoutes, _setInitialRoutes] = useState(getInitialRoutes);
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
-    Object.keys(selectedRoutes)[0],
+    Object.keys(initialRoutes)[0],
   );
 
   const isSelected = (id: string) => value.includes(id);
@@ -116,20 +130,11 @@ const SelectZonesPage = ({
     };
   }, [selectedRouteFilter, directionLabels.left, directionLabels.right]);
 
-  const initialPlacesWithSelectedSigns = useMemo(() => {
-    return places.filter((p) =>
-      places
-        .filter((p) => p.screens.some((s) => value.includes(s.id)))
-        .map((p) => p.id)
-        .includes(p.id),
-    );
-  }, [places]);
-
   const filteredPlaces = useMemo(() => {
     return getPlacesFromFilter(initialPlacesWithSelectedSigns, (r) =>
       routeToRouteIDMap[selectedRouteFilter]?.some((a) => r === a),
     );
-  }, [selectedRouteFilter, places, routeToRouteIDMap, value]);
+  }, [selectedRouteFilter, routeToRouteIDMap, initialPlacesWithSelectedSigns]);
 
   const allScreens = filteredPlaces.flatMap((p) => {
     return p.screens.filter(
@@ -215,10 +220,10 @@ const SelectZonesPage = ({
         <div className="filters-container">
           <div>Service type</div>
           <div className="filters">
-            {sortRoutes(Object.keys(selectedRoutes)).map((routeID) => {
+            {sortRoutes(Object.keys(initialRoutes)).map((routeID) => {
               const branchFilters =
                 routeID === "Green"
-                  ? selectedRoutes["Green"].sort().map((branchID) => {
+                  ? initialRoutes["Green"].sort().map((branchID) => {
                       const branch = branchID.split("-")[1];
 
                       return (
