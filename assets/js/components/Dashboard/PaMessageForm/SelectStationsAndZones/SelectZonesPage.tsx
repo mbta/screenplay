@@ -43,12 +43,7 @@ const SelectZonesPage = ({
 }: Props) => {
   const routeToRouteIDMap = useRouteToRouteIDsMap();
   const getInitialPlacesWithSelectedSigns = () =>
-    places.filter((p) =>
-      places
-        .filter((p) => p.screens.some((s) => value.includes(s.id)))
-        .map((p) => p.id)
-        .includes(p.id),
-    );
+    places.filter((p) => p.screens.some((s) => value.includes(s.id)));
 
   const getInitialRoutes = () => {
     return fp.flow(
