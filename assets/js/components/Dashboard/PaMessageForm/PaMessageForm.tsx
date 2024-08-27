@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment, { type Moment } from "moment";
 import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
@@ -80,18 +80,37 @@ const PaMessageForm = ({
       ? `${defaultValues?.interval_in_minutes}`
       : "4";
   });
-  const [visualText, setVisualText] = useState(() => {
-    return defaultValues?.visual_text ?? "";
-  });
-  const [phoneticText, setPhoneticText] = useState(() => {
-    return defaultValues?.audio_text ?? "";
-  });
+  const defaultVisualText = defaultValues?.visual_text ?? "";
+  const [visualText, setVisualText] = useState(defaultVisualText);
+  const defaultPhoneticText = defaultValues?.audio_text ?? "";
+  const [phoneticText, setPhoneticText] = useState(defaultPhoneticText);
 
   const [signIds, setSignIds] = useState<string[]>(() => {
     return defaultValues?.sign_ids ?? [];
   });
   const places = usePlacesWithPaEss();
   const busRoutes = busRouteIdsAtPlaces(places);
+
+  const [audioState, setAudioState] = useState<AudioPreview>(
+    () => defaultAudioState ?? AudioPreview.Unreviewed,
+  );
+
+  useEffect(() => {
+    if (
+      visualText !== defaultVisualText ||
+      phoneticText !== defaultPhoneticText
+    ) {
+      if (audioState !== AudioPreview.Unreviewed) {
+        setAudioState(AudioPreview.Outdated);
+      }
+    }
+  }, [
+    defaultPhoneticText,
+    defaultVisualText,
+    visualText,
+    phoneticText,
+    audioState,
+  ]);
 
   const onClearAssociatedAlert = () => {
     setEndDateTime(moment(startDateTime).add(1, "hour"));
@@ -183,7 +202,8 @@ const PaMessageForm = ({
           setSignIds,
           places,
           busRoutes,
-          defaultAudioState,
+          audioState,
+          setAudioState,
         }}
       />
       {[Page.STATIONS, Page.ZONES].includes(page) && (

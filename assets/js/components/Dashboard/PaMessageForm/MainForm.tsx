@@ -50,7 +50,8 @@ interface Props {
   places: Place[];
   busRoutes: string[];
   onSubmit: () => void;
-  defaultAudioState?: AudioPreview;
+  setAudioState: Dispatch<SetStateAction<AudioPreview>>;
+  audioState: AudioPreview;
   hide: boolean;
 }
 
@@ -81,13 +82,11 @@ const MainForm = ({
   places,
   busRoutes,
   onSubmit,
-  defaultAudioState,
   hide,
+  audioState,
+  setAudioState,
 }: Props) => {
   const navigate = useNavigate();
-  const [audioState, setAudioState] = useState<AudioPreview>(
-    () => defaultAudioState ?? AudioPreview.Unreviewed,
-  );
   const [validated, setValidated] = useState(false);
 
   const priorityToIntervalMap: { [priority: number]: string } = {
@@ -336,12 +335,7 @@ const MainForm = ({
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
-                  onChangeText={(text) => {
-                    setVisualText(text);
-                    if (audioState !== AudioPreview.Unreviewed) {
-                      setAudioState(AudioPreview.Outdated);
-                    }
-                  }}
+                  onChangeText={(text) => setVisualText(text)}
                   label="Text"
                   maxLength={MAX_TEXT_LENGTH}
                   required
@@ -370,12 +364,7 @@ const MainForm = ({
                     <MessageTextBox
                       id="phonetic-audio-text-box"
                       text={phoneticText}
-                      onChangeText={(text) => {
-                        setPhoneticText(text);
-                        if (audioState !== AudioPreview.Unreviewed) {
-                          setAudioState(AudioPreview.Outdated);
-                        }
-                      }}
+                      onChangeText={(text) => setPhoneticText(text)}
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
