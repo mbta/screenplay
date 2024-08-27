@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import moment, { type Moment } from "moment";
 import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
@@ -80,10 +80,12 @@ const PaMessageForm = ({
       ? `${defaultValues?.interval_in_minutes}`
       : "4";
   });
-  const defaultVisualText = defaultValues?.visual_text ?? "";
-  const [visualText, setVisualText] = useState(defaultVisualText);
-  const defaultPhoneticText = defaultValues?.audio_text ?? "";
-  const [phoneticText, setPhoneticText] = useState(defaultPhoneticText);
+  const [visualText, setVisualText] = useState(
+    defaultValues?.visual_text ?? "",
+  );
+  const [phoneticText, setPhoneticText] = useState(
+    defaultValues?.audio_text ?? "",
+  );
 
   const [signIds, setSignIds] = useState<string[]>(() => {
     return defaultValues?.sign_ids ?? [];
@@ -95,23 +97,6 @@ const PaMessageForm = ({
     () => defaultAudioState ?? AudioPreview.Unreviewed,
   );
 
-  useEffect(() => {
-    if (
-      visualText !== defaultVisualText ||
-      phoneticText !== defaultPhoneticText
-    ) {
-      if (audioState !== AudioPreview.Unreviewed) {
-        setAudioState(AudioPreview.Outdated);
-      }
-    }
-  }, [
-    defaultPhoneticText,
-    defaultVisualText,
-    visualText,
-    phoneticText,
-    audioState,
-  ]);
-
   const onClearAssociatedAlert = () => {
     setEndDateTime(moment(startDateTime).add(1, "hour"));
     setAssociatedAlert(null);
@@ -119,6 +104,8 @@ const PaMessageForm = ({
   };
 
   const onImportMessage = (alertMessage: string) => {
+    if (audioState !== AudioPreview.Unreviewed)
+      setAudioState(AudioPreview.Outdated);
     setVisualText(alertMessage);
   };
 
