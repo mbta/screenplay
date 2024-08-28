@@ -335,7 +335,12 @@ const MainForm = ({
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
-                  onChangeText={(text) => setVisualText(text)}
+                  onChangeText={(text) => {
+                    setVisualText(text);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
+                    }
+                  }}
                   label="Text"
                   maxLength={MAX_TEXT_LENGTH}
                   required
@@ -364,7 +369,12 @@ const MainForm = ({
                     <MessageTextBox
                       id="phonetic-audio-text-box"
                       text={phoneticText}
-                      onChangeText={(text) => setPhoneticText(text)}
+                      onChangeText={(text) => {
+                        setPhoneticText(text);
+                        if (audioState !== AudioPreview.Unreviewed) {
+                          setAudioState(AudioPreview.Outdated);
+                        }
+                      }}
                       disabled={phoneticText.length === 0}
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
