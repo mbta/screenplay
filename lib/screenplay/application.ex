@@ -8,6 +8,9 @@ defmodule Screenplay.Application do
   def start(_type, _args) do
     children =
       [
+        {Ecto.Migrator, repos: Application.fetch_env!(:screenplay, :ecto_repos)},
+        # Start the Ecto repository
+        Screenplay.Repo,
         # Start the Telemetry supervisor
         ScreenplayWeb.Telemetry,
         # Start the PubSub system
@@ -17,9 +20,7 @@ defmodule Screenplay.Application do
         Screenplay.OutfrontTakeoverTool.Alerts.State,
         Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
         {Screenplay.Cache.Owner, engine_module: Screenplay.ScreensConfig.Cache.Engine},
-        Screenplay.Scheduler,
-        Screenplay.Repo,
-        Screenplay.Migrate
+        Screenplay.Scheduler
       ] ++
         if Application.get_env(:screenplay, :start_alerts_cache) do
           [Screenplay.Alerts.Cache]
