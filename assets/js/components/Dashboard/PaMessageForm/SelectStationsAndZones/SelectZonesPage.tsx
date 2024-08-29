@@ -45,12 +45,14 @@ const SelectZonesPage = ({
   const getInitialPlacesWithSelectedSigns = () =>
     places.filter((p) => p.screens.some((s) => value.includes(s.id)));
 
+  // eslint-disable-next-line react/hook-use-state
+  const [initialPlacesWithSelectedSigns] = useState<Place[]>(
+    getInitialPlacesWithSelectedSigns,
+  );
+
   const getInitialRoutes = () => {
     return fp.flow(
-      fp.flatMap((place: Place) =>
-        place.screens.filter((s) => value.includes(s.id)),
-      ),
-      fp.flatMap(getRouteIdsForSign),
+      fp.flatMap((place: Place) => place.screens.flatMap(getRouteIdsForSign)),
       fp.uniq,
       fp.groupBy((routeID: string) => {
         if (routeID.startsWith("Green")) {
@@ -67,16 +69,10 @@ const SelectZonesPage = ({
 
         return routeID;
       }),
-    )(places);
+    )(initialPlacesWithSelectedSigns);
   };
 
-  // eslint-disable-next-line react/hook-use-state
-  const [initialPlacesWithSelectedSigns] = useState<Place[]>(
-    getInitialPlacesWithSelectedSigns,
-  );
-
-  // eslint-disable-next-line react/hook-use-state
-  const [initialRoutes] = useState(getInitialRoutes);
+  const initialRoutes = getInitialRoutes();
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
     Object.keys(initialRoutes)[0],
