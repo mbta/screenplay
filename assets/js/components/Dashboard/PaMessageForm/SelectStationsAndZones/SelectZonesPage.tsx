@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useRef, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { Page } from "../types";
 import { Button } from "react-bootstrap";
 import { Place } from "Models/place";
@@ -42,9 +42,11 @@ const SelectZonesPage = ({
   places,
 }: Props) => {
   const routeToRouteIDMap = useRouteToRouteIDsMap();
+  const getInitialPlacesWithSelectedSigns = () =>
+    places.filter((p) => p.screens.some((s) => value.includes(s.id)));
 
-  const { current: initialPlacesWithSelectedSigns } = useRef(
-    places.filter((p) => p.screens.some((s) => value.includes(s.id))),
+  const [initialPlacesWithSelectedSigns] = useState<Place[]>(
+    getInitialPlacesWithSelectedSigns,
   );
 
   const getInitialRoutes = () => {
