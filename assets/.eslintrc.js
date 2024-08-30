@@ -41,7 +41,6 @@ module.exports = {
         unnamedComponents: "arrow-function",
       },
     ],
-    "react/hook-use-state": "error",
     "react/no-danger": "error",
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-a11y/click-events-have-key-events": "off",
