@@ -1,5 +1,7 @@
 import Config
 
+require Logger
+
 config :screenplay, ScreenplayWeb.AuthManager, secret_key: System.get_env("GUARDIAN_SECRET_KEY")
 
 config :screenplay, ScreenplayWeb.Endpoint,
@@ -30,6 +32,24 @@ if config_env() == :prod do
     ],
     providers: [
       keycloak: keycloak_opts
+    ]
+
+  hostname = System.get_env("DATABASE_HOST")
+
+  config :screenplay, Screenplay.Repo,
+    username: System.get_env("DATABASE_USER"),
+    hostname: hostname,
+    port: System.get_env("DATABASE_PORT", "5432") |> String.to_integer(),
+    pool_size: 15,
+    configure: {Screenplay.Repo, :add_prod_credentials, []},
+    timeout: 30_000,
+    ssl: true,
+    ssl_opts: [
+      cacertfile: "priv/aws-cert-bundle.pem",
+      verify: :verify_peer,
+      server_name_indication: String.to_charlist(hostname),
+      verify_fun:
+        {&:ssl_verify_hostname.verify_fun/3, [check_hostname: String.to_charlist(hostname)]}
     ]
 end
 
@@ -67,13 +87,3 @@ scheduler_jobs =
     else: []
 
 config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
-
-config :screenplay, Screenplay.Repo, pool_size: 10
-
-if config_env() == :prod do
-  config :screenplay, Screenplay.Repo,
-    username: System.get_env("DATABASE_USER", ""),
-    password: System.get_env("DATABASE_PASSWORD", ""),
-    hostname: System.get_env("DATABASE_HOST", "localhost"),
-    port: System.get_env("DATABASE_PORT", "5432") |> String.to_integer()
-end

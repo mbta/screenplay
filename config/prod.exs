@@ -33,10 +33,7 @@ config :ueberauth, Ueberauth,
 
 config :screenplay, Screenplay.Repo,
   database: "screenplay",
-  ssl: true,
-  show_sensitive_data_on_connection_error: false,
-  configure: {Screenplay.Repo, :add_prod_credentials, []},
-  pool_size: 15
+  show_sensitive_data_on_connection_error: false
 
 # ## SSL Support
 #

@@ -7,6 +7,11 @@
 # General application configuration
 import Config
 
+config :screenplay, Screenplay.Repo,
+  database: "screenplay_dev",
+  show_sensitive_data_on_connection_error: true,
+  backoff_min: 5_000
+
 config :screenplay, ecto_repos: [Screenplay.Repo]
 
 # Configures the endpoint
