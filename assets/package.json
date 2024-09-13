@@ -41,7 +41,7 @@
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.1",
     "@types/date-fns": "^2.6.0",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.13",
     "@types/lodash": "^4.17.7",
     "@types/phoenix": "^1.6.5",
     "@types/react": "^18.3.5",
