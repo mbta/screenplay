@@ -31,7 +31,6 @@ const typeMap: Record<string, string> = {
   bus_eink_v2: "Bus E-Ink",
   solari: "Sectional",
   busway_v2: "Sectional",
-  triptych_v2: "Triptych",
 };
 
 const inlineMap = (place: Place, line: string) => {

@@ -36,7 +36,6 @@ const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
 const ScreenCard = (props: ScreenDetailProps) => {
   const { screens, eventKey, isMultipleScreens } = props;
   const isPaess = screens.every((screen) => screen.type === "pa_ess");
-  const isTriptych = screens.every((screen) => screen.type === "triptych_v2");
   const paessRouteLetter = screens[0].station_code
     ? screens[0].station_code.charAt(0).toLowerCase()
     : "";
@@ -62,22 +61,9 @@ const ScreenCard = (props: ScreenDetailProps) => {
     }
   };
 
-  const getTriptychPlatform = (routeId: string, directionId: number) => {
-    if (["Orange", "Red"].includes(routeId)) {
-      return directionId === 0 ? "Southbound" : "Northbound";
-    } else {
-      return directionId === 0 ? "Westbound" : "Eastbound";
-    }
-  };
-
   const getScreenLocation = () => {
     if (isPaess) {
       return `/ ${getPaessRoute(paessRouteLetter)}`;
-    } else if (isTriptych) {
-      const [_prefix, _stationName, routeId, directionId, _index] =
-        screens[0].id.split("-");
-
-      return `/ ${getTriptychPlatform(routeId, parseInt(directionId))}`;
     } else if (screens[0].location) {
       return `/ ${screens[0].location}`;
     } else {
