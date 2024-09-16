@@ -257,8 +257,8 @@ formatted_screens =
 
 # Most screen types store their stop_id in a different place. Broke all types out in case anything changes.
 live_screens =
-  formatted_screens
-  |> Enum.group_by(
+  Enum.group_by(
+    formatted_screens,
     fn
       {_id, %{"app_id" => "bus_eink", "app_params" => %{"stop_id" => stop_id}}} ->
         stop_id
@@ -321,13 +321,6 @@ live_screens =
 
       {_id,
        %{
-         "app_id" => "triptych_v2",
-         "app_params" => %{"train_crowding" => %{"station_id" => stop_id}}
-       }} ->
-        stop_id
-
-      {_id,
-       %{
          "app_id" => app_id,
          "stop" => stop_id
        }}
@@ -347,14 +340,6 @@ live_screens =
         %{id: id, type: app_id, disabled: disabled, direction_id: direction_id}
     end
   )
-  |> Map.new(fn {id, screen_list} ->
-    one_triptych_per_platform =
-      Enum.filter(screen_list, fn screen ->
-        screen.type != "triptych_v2" or String.last(screen.id) == "1"
-      end)
-
-    {id, one_triptych_per_platform}
-  end)
 
 # We only need to store bus stops in places if there is a screen there.
 bus_stops_with_screens =
