@@ -49,9 +49,15 @@ const SelectZonesPage = ({
     getInitialPlacesWithSelectedSigns,
   );
 
+  const isSelected = (id: string) => value.includes(id);
+
   const getInitialRoutes = () => {
     return fp.flow(
-      fp.flatMap((place: Place) => place.screens.flatMap(getRouteIdsForSign)),
+      fp.flatMap((place: Place) =>
+        place.screens
+          .filter((s) => isSelected(s.id))
+          .flatMap(getRouteIdsForSign),
+      ),
       fp.uniq,
       fp.groupBy((routeID: string) => {
         if (routeID.startsWith("Green")) {
