@@ -77,11 +77,11 @@ const SelectZonesPage = ({
     )(initialPlacesWithSelectedSigns);
   };
 
-  const initialRoutes = getInitialRoutes();
-  const routeFilterLabels = sortRoutes(Object.keys(initialRoutes));
+  const routeFilterGroups = getInitialRoutes();
+  const routeFilterIds = sortRoutes(Object.keys(routeFilterGroups));
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
-    routeFilterLabels[0],
+    routeFilterIds[0],
   );
 
   const directionLabels = useMemo(() => {
@@ -216,10 +216,10 @@ const SelectZonesPage = ({
         <div className="filters-container">
           <div>Service type</div>
           <div className="filters">
-            {routeFilterLabels.map((routeID) => {
+            {routeFilterIds.map((routeID) => {
               const branchFilters =
                 routeID === "Green"
-                  ? initialRoutes["Green"].sort().map((branchID) => {
+                  ? routeFilterGroups["Green"].sort().map((branchID) => {
                       const branch = branchID.split("-")[1];
 
                       return (
