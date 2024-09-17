@@ -51,7 +51,7 @@ const SelectZonesPage = ({
 
   const isSelected = (id: string) => value.includes(id);
 
-  const getInitialRoutes = () => {
+  const getRouteFilterGroups = () => {
     return fp.flow(
       fp.flatMap((place: Place) =>
         place.screens
@@ -77,7 +77,7 @@ const SelectZonesPage = ({
     )(initialPlacesWithSelectedSigns);
   };
 
-  const routeFilterGroups = getInitialRoutes();
+  const routeFilterGroups = getRouteFilterGroups();
   const routeFilterIds = sortRoutes(Object.keys(routeFilterGroups));
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
