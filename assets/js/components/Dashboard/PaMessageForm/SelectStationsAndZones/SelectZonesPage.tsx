@@ -49,9 +49,15 @@ const SelectZonesPage = ({
     getInitialPlacesWithSelectedSigns,
   );
 
-  const getInitialRoutes = () => {
+  const isSelected = (id: string) => value.includes(id);
+
+  const getRouteFilterGroups = () => {
     return fp.flow(
-      fp.flatMap((place: Place) => place.screens.flatMap(getRouteIdsForSign)),
+      fp.flatMap((place: Place) =>
+        place.screens
+          .filter((s) => isSelected(s.id))
+          .flatMap(getRouteIdsForSign),
+      ),
       fp.uniq,
       fp.groupBy((routeID: string) => {
         if (routeID.startsWith("Green")) {
@@ -71,13 +77,12 @@ const SelectZonesPage = ({
     )(initialPlacesWithSelectedSigns);
   };
 
-  const initialRoutes = getInitialRoutes();
+  const routeFilterGroups = getRouteFilterGroups();
+  const routeFilterIds = sortRoutes(Object.keys(routeFilterGroups));
 
   const [selectedRouteFilter, setSelectedRouteFilter] = useState(
-    Object.keys(initialRoutes)[0],
+    routeFilterIds[0],
   );
-
-  const isSelected = (id: string) => value.includes(id);
 
   const directionLabels = useMemo(() => {
     switch (selectedRouteFilter) {
@@ -211,10 +216,10 @@ const SelectZonesPage = ({
         <div className="filters-container">
           <div>Service type</div>
           <div className="filters">
-            {sortRoutes(Object.keys(initialRoutes)).map((routeID) => {
+            {routeFilterIds.map((routeID) => {
               const branchFilters =
                 routeID === "Green"
-                  ? initialRoutes["Green"].sort().map((branchID) => {
+                  ? routeFilterGroups["Green"].sort().map((branchID) => {
                       const branch = branchID.split("-")[1];
 
                       return (
