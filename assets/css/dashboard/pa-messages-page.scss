@@ -16,8 +16,42 @@
   padding-right: 0px;
   display: flex;
   flex-direction: column;
-
   gap: 48px;
+
+  .add-new-button,
+  .system-log-link {
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .add-new-button {
+    border-radius: 4px;
+    height: 38px;
+    width: 118px;
+    background-color: $button-primary;
+    text-decoration: none;
+    color: black;
+    padding: 6px 12px;
+
+    &:hover {
+      background-color: $button-primary-hover;
+    }
+
+    .add-new-icon {
+      margin-right: 2px;
+    }
+  }
+
+  .system-log-link {
+    text-decoration: none;
+    margin-top: 8px;
+    color: $text-secondary;
+    .link-text {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      margin-right: 8px;
+    }
+  }
 
   section {
     display: flex;
@@ -35,44 +69,6 @@
   padding-right: 64px;
   padding-left: 0px;
   margin-left: 20px;
-}
-
-.pa-message-table-action-bar {
-  .add-new-button {
-    display: inline-block;
-    font-weight: 700;
-    padding: 8px 16px;
-    border-radius: 4.8px;
-    height: 42px;
-    width: 129px;
-    background-color: $button-primary;
-    text-decoration: none;
-    color: black;
-
-    &:hover {
-      background-color: $button-primary-hover;
-    }
-  }
-
-  &__plus {
-    margin-top: -2px;
-    margin-right: 2px;
-  }
-
-  &__search {
-    flex: none;
-    width: 261px;
-  }
-
-  &__advance-search {
-    flex: none;
-    width: 150px;
-
-    a {
-      color: white;
-      text-decoration: none;
-    }
-  }
 }
 
 .pa-message-table {
