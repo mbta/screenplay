@@ -7,7 +7,7 @@ import {
   Button,
   Spinner,
 } from "react-bootstrap";
-import { PlusCircleFill } from "react-bootstrap-icons";
+import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
 import { PaMessage } from "Models/pa_message";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
@@ -122,6 +122,19 @@ const PaMessagesPage: ComponentType = () => {
         <Row>
           <Col className="pa-message-filter-selection">
             <section>
+              <Link to="/pa-messages/new" className="add-new-button">
+                <PlusCircleFill className="add-new-icon" /> Add New
+              </Link>
+              <Link
+                to="https://mbta.splunkcloud.com/en-US/app/search/paess__pa_message_annoucement_log"
+                target="_blank"
+                className="system-log-link"
+              >
+                <span className="link-text">System Log</span>
+                <BoxArrowUpRight />
+              </Link>
+            </section>
+            <section>
               <header>Filter by message state</header>
               <ButtonGroup className="button-group" vertical>
                 <Button
@@ -171,14 +184,6 @@ const PaMessagesPage: ComponentType = () => {
             </section>
           </Col>
           <Col className="pa-message-table-container">
-            <Row className="pa-message-table-action-bar">
-              <Col>
-                <Link to="/pa-messages/new" className="add-new-button">
-                  <PlusCircleFill className="pa-message-table-action-bar__plus" />{" "}
-                  Add New
-                </Link>
-              </Col>
-            </Row>
             <Row>
               <PaMessageTable
                 paMessages={data ?? []}
