@@ -3,7 +3,7 @@
   font-weight: 500;
   line-height: 48px;
   text-align: left;
-  padding: 24px 40px;
+  padding: 24px 40px 40px;
 }
 
 .pa-message-filter-selection {
@@ -72,26 +72,27 @@
 }
 
 .pa-message-table {
-  margin: 16px 14px;
+  margin: 0 14px 16px;
   background-color: $cool-gray-15;
   max-width: 1096px;
 
   th,
   td {
-    padding-top: 10px;
-    padding-left: 16px;
     vertical-align: top;
   }
 
   th {
     border-bottom: 1px solid $theme-secondary;
+    height: 47px;
+    padding: 15px 6px 8px 16px;
   }
 
   td {
+    padding: 10px 16px;
     border-bottom: 1px solid $bg-elevation-4;
   }
 
-  tr:hover {
+  tbody tr:hover {
     background-color: $cool-gray-20;
     cursor: pointer;
   }
@@ -104,6 +105,7 @@
   &__start-end {
     min-width: 200px;
     padding-right: 0px;
+    text-wrap: nowrap;
   }
 
   &__empty {
