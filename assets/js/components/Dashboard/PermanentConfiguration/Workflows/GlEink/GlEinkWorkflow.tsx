@@ -1,4 +1,9 @@
-import React, { ComponentType, useLayoutEffect, useState } from "react";
+import React, {
+  ComponentType,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import ConfigureScreensWorkflowPage, {
   PlaceIdsAndNewScreens,
 } from "Components/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
@@ -188,6 +193,11 @@ const GlEinkWorkflow: ComponentType = () => {
     });
   };
 
+  const filteredPlaces = useMemo(
+    () => places.filter((place) => selectedPlaces.has(place.id)),
+    [places, selectedPlaces],
+  );
+
   const handleVersionMismatchResponse = () => {
     setShowErrorModal(true);
   };
@@ -295,9 +305,7 @@ const GlEinkWorkflow: ComponentType = () => {
             </Modal.Footer>
           </Modal>
           <ConfigureScreensWorkflowPage
-            selectedPlaces={places.filter((place) =>
-              selectedPlaces.has(place.id),
-            )}
+            selectedPlaces={filteredPlaces}
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
             setConfigVersion={setConfigVersion}
             isEditing={isEditing}
