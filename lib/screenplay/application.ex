@@ -20,7 +20,8 @@ defmodule Screenplay.Application do
         Screenplay.OutfrontTakeoverTool.Alerts.State,
         Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
         Screenplay.ScreensConfig,
-        Screenplay.Scheduler
+        Screenplay.Scheduler,
+        Screenplay.Config.Supervisor
       ] ++
         if Application.get_env(:screenplay, :start_alerts_cache) do
           [Screenplay.Alerts.Cache]
