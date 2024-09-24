@@ -84,37 +84,17 @@ defmodule Screenplay.Config.Builder do
     # Add on bus stops
     |> Enum.concat(get_bus_stops(live_screens))
     |> Enum.group_by(fn %{id: id} -> id end)
-    |> Enum.map(fn
-      {_id, [place]} ->
-        place
-
-      {_id, places} ->
-        # Combine entries that reference the same stop by merging their list of screens.
-        Enum.reduce(places, fn x, y ->
-          Map.merge(x, y, fn
-            # Always try to use the station id. If there isn't one, just use the id from the first entry
-            :id, "place-" <> _ = v1, _v2 ->
-              v1
-
-            :id, _v1, "place-" <> _ = v2 ->
-              v2
-
-            :id, v1, _v2 ->
-              v1
-
-            :name, v1, _ ->
-              v1
-
-            # Combine the list of screens
-            :screens, v1, v2 ->
-              Enum.uniq(v1 ++ v2)
-
-            _k, v1, _v2 ->
-              v1
-          end)
-        end)
-    end)
+    |> Enum.map(&merge_duplicate_places/1)
     # Get the routes at each stop
+    |> append_routes_to_places()
+    # Get rid of CR and Bus stops with no screens
+    |> Enum.reject(fn %{routes: routes, screens: screens} ->
+      cr_or_bus_only?(routes) and Enum.empty?(screens)
+    end)
+  end
+
+  defp append_routes_to_places(places) do
+    places
     |> Task.async_stream(
       fn %{id: id} = stop ->
         # Not a big fan of this. Goes through each station one by one.
@@ -137,9 +117,33 @@ defmodule Screenplay.Config.Builder do
       ordered: false
     )
     |> Enum.map(fn {:ok, result} -> result end)
-    # Get rid of CR and Bus stops with no screens
-    |> Enum.reject(fn %{routes: routes, screens: screens} ->
-      cr_or_bus_only?(routes) and Enum.empty?(screens)
+  end
+
+  defp merge_duplicate_places({_id, [place]}), do: place
+  # Combine entries that reference the same stop by merging their list of screens.
+  defp merge_duplicate_places({_id, places}) do
+    Enum.reduce(places, fn x, y ->
+      Map.merge(x, y, fn
+        # Always try to use the station id. If there isn't one, just use the id from the first entry
+        :id, "place-" <> _ = v1, _v2 ->
+          v1
+
+        :id, _v1, "place-" <> _ = v2 ->
+          v2
+
+        :id, v1, _v2 ->
+          v1
+
+        :name, v1, _ ->
+          v1
+
+        # Combine the list of screens
+        :screens, v1, v2 ->
+          Enum.uniq(v1 ++ v2)
+
+        _k, v1, _v2 ->
+          v1
+      end)
     end)
   end
 
