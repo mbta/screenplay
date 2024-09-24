@@ -42,11 +42,12 @@ defmodule Screenplay.Places.Place do
     @type t :: %__MODULE__{
             id: String.t(),
             type: String.t(),
-            disabled: boolean()
+            disabled: boolean(),
+            direction_id: String.t()
           }
 
     @enforce_keys [:id, :type, :disabled]
-    defstruct @enforce_keys
+    defstruct @enforce_keys ++ [:direction_id]
 
     def new(map) do
       map
