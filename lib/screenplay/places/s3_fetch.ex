@@ -35,39 +35,6 @@ defmodule Screenplay.Places.S3Fetch do
     end
   end
 
-  @impl true
-  def put_config(file_contents) do
-    encoded_contents =
-      case Jason.encode(file_contents, pretty: true) do
-        {:ok, contents} -> contents
-        {:error, _} -> :error
-      end
-
-    bucket = Application.get_env(:screenplay, :config_s3_bucket)
-    path = config_path_for_environment(:config)
-    put_operation = ExAws.S3.put_object(bucket, path, encoded_contents)
-
-    case ExAws.request(put_operation) do
-      {:ok, %{status_code: 200}} -> :ok
-      _ -> :error
-    end
-  end
-
-  @impl true
-  def commit, do: :ok
-
-  @impl true
-  def revert(version) do
-    bucket = Application.get_env(:screenplay, :config_s3_bucket)
-    path = config_path_for_environment(:config)
-
-    get_operation = ExAws.S3.get_object(bucket, path, version_id: version)
-    %{body: body, status_code: 200} = ExAws.request!(get_operation)
-
-    put_operation = ExAws.S3.put_object(bucket, path, body)
-    ExAws.request!(put_operation)
-  end
-
   defp do_get(file_spec) do
     bucket = Application.get_env(:screenplay, :config_s3_bucket)
     path = config_path_for_environment(file_spec)
@@ -93,9 +60,6 @@ defmodule Screenplay.Places.S3Fetch do
     base_path = "screenplay/#{Application.get_env(:screenplay, :environment_name)}"
 
     case file_spec do
-      :config ->
-        "#{base_path}/places_and_screens.json"
-
       :screen_locations ->
         "#{base_path}/screen_locations.json"
 

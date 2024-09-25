@@ -11,4 +11,6 @@ defmodule Screenplay.Places.Fetch do
   @callback get_paess_labels() :: {:ok, list(map())} | :error
   @callback commit() :: :ok
   @callback revert(version_id()) :: any()
+
+  @optional_callbacks put_config: 1, commit: 0, revert: 1
 end
