@@ -1,6 +1,10 @@
 defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   use ScreenplayWeb.ConnCase
 
+  alias Screenplay.Config.Cache
+  alias Screenplay.Places.Place
+  alias Screenplay.Places.Place.PaEssScreen
+
   import Screenplay.Factory
 
   setup_all do
@@ -208,15 +212,22 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
 
   describe "GET /api/pa-messages with route filters" do
     setup do
-      existing_value = Application.get_env(:screenplay, :local_config_file_spec)
+      fixture_path =
+        Path.join(~w[#{File.cwd!()} test fixtures places_and_screens_for_routes_to_signs.json])
 
-      Application.put_env(
-        :screenplay,
-        :local_config_file_spec,
-        {:test, "places_and_screens_for_routes_to_signs.json"}
-      )
+      contents =
+        fixture_path
+        |> File.read!()
+        |> Jason.decode!(keys: :atoms)
+        |> Enum.map(fn %{screens: screens} = place ->
+          struct(Place, %{place | screens: Enum.map(screens, &struct(PaEssScreen, &1))})
+        end)
 
-      on_exit(fn -> Application.put_env(:screenplay, :local_config_file_spec, existing_value) end)
+      Cache.update_places_and_screens(contents)
+
+      on_exit(fn ->
+        Cache.PlacesAndScreens.delete_all()
+      end)
     end
 
     @tag :authenticated_pa_message_admin

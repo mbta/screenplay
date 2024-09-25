@@ -3,6 +3,9 @@ defmodule Screenplay.PermanentConfigTest do
 
   import Mox
 
+  alias Screenplay.Config.Cache
+  alias Screenplay.Places.Place
+  alias Screenplay.Places.Place.ShowtimeScreen
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig
   alias Screenplay.Places.LocalFetch
@@ -373,45 +376,52 @@ defmodule Screenplay.PermanentConfigTest do
 
       File.write(pending_screens_path, config)
 
-      on_exit(fn ->
-        fresh_config = [%{id: "place-test", name: "Test Place", screens: [], routes: ["Green-B"]}]
+      Cache.update_places_and_screens(%Place{
+        id: "place-test",
+        name: "Test Place",
+        routes: ["Green-B"],
+        screens: [],
+        description: nil
+      })
 
-        File.write(get_fixture_path("places_and_screens.json"), Jason.encode!(fresh_config))
+      on_exit(fn ->
+        Cache.PlacesAndScreens.delete_all()
       end)
     end
 
     test "publishes pending screens and adds screen to places_and_screens" do
-      assert PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, []) == :ok
-
-      expected_places_and_screens = [
-        %{
-          "id" => "place-test",
-          "name" => "Test Place",
-          "screens" => [
-            %{"disabled" => false, "id" => "12345", "type" => "gl_eink_v2"}
-          ],
-          "routes" => ["Green-B"]
-        }
-      ]
-
-      {:ok, config, _} = LocalFetch.get_places_and_screens()
-      assert expected_places_and_screens == config
+      assert {:ok,
+              [
+                %Place{
+                  id: "place-test",
+                  name: "Test Place",
+                  routes: ["Green-B"],
+                  screens: [
+                    %ShowtimeScreen{
+                      id: "12345",
+                      type: :gl_eink_v2,
+                      disabled: false,
+                      direction_id: nil,
+                      location: ""
+                    }
+                  ],
+                  description: nil
+                }
+              ]} = PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, [])
     end
 
     test "publishes pending screens but does not add to places_and_screens" do
-      assert PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["12345"]) == :ok
-
-      expected_places_and_screens = [
-        %{
-          "id" => "place-test",
-          "name" => "Test Place",
-          "screens" => [],
-          "routes" => ["Green-B"]
-        }
-      ]
-
-      {:ok, config, _} = LocalFetch.get_places_and_screens()
-      assert expected_places_and_screens == config
+      assert {:ok,
+              [
+                %Place{
+                  id: "place-test",
+                  name: "Test Place",
+                  routes: ["Green-B"],
+                  screens: [],
+                  description: nil
+                }
+              ]} =
+               PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["12345"])
     end
   end
 end
