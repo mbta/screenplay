@@ -414,16 +414,16 @@ defmodule Screenplay.Config.Builder do
 
     signs
     |> Enum.map(fn %{"id" => id, "pa_ess_loc" => station_code, "text_zone" => zone} = config ->
+      sources_for_sign = get_paess_sources(config)
+
       {
-        config
-        |> get_paess_sources()
-        |> get_first_parent_station_from_sources(stops_to_parent_station_ids),
+        get_first_parent_station_from_sources(sources_for_sign, stops_to_parent_station_ids),
         %PaEssScreen{
           id: id,
           station_code: station_code,
           zone: zone,
           type: "pa_ess",
-          routes: get_routes_for_paess(sources),
+          routes: get_routes_for_paess(sources_for_sign),
           label: Map.get(labels, id)
         }
       }
