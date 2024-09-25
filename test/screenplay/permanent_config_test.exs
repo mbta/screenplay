@@ -3,12 +3,10 @@ defmodule Screenplay.PermanentConfigTest do
 
   import Mox
 
-  alias Screenplay.Config.Cache
-  alias Screenplay.Places.Place
+  alias Screenplay.Places.{Cache, Place}
   alias Screenplay.Places.Place.ShowtimeScreen
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig
-  alias Screenplay.Places.LocalFetch
   alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 
@@ -376,16 +374,20 @@ defmodule Screenplay.PermanentConfigTest do
 
       File.write(pending_screens_path, config)
 
-      Cache.update_places_and_screens(%Place{
-        id: "place-test",
-        name: "Test Place",
-        routes: ["Green-B"],
-        screens: [],
-        description: nil
-      })
+      [
+        %Place{
+          id: "place-test",
+          name: "Test Place",
+          routes: ["Green-B"],
+          screens: [],
+          description: nil
+        }
+      ]
+      |> Enum.map(&{&1.id, &1})
+      |> Cache.put_all()
 
       on_exit(fn ->
-        Cache.PlacesAndScreens.delete_all()
+        Cache.delete_all()
       end)
     end
 

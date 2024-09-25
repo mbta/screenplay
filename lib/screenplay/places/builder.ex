@@ -1,8 +1,17 @@
-defmodule Screenplay.Config.Builder do
-  alias Screenplay.Config.Cache
-  alias Screenplay.ScreensConfig, as: ScreensConfigStore
+defmodule Screenplay.Places.Builder do
+  @moduledoc """
+  Module used to build the Screenplay config from
+  Showtime and PA/ESS screen configurations. Final configuration is
+  saved to a Nebulex cache.
+
+  Config is rebuilt and saved every 15 minutes.
+  """
+
+  alias Screenplay.Places
+  alias Screenplay.Places.Place
   alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
   alias Screenplay.Routes.Route
+  alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.Stops.Stop
   alias ScreensConfig.{Screen, Solari}
   alias ScreensConfig.V2.Departures.{Query, Section}
@@ -41,7 +50,7 @@ defmodule Screenplay.Config.Builder do
   def handle_info(:poll, state) do
     {:ok, _} =
       build()
-      |> Cache.update_places_and_screens()
+      |> Places.update_places_and_screens()
 
     Process.send_after(self(), :poll, @polling_interval)
 
@@ -49,39 +58,20 @@ defmodule Screenplay.Config.Builder do
   end
 
   defp build do
-    live_showtime_screens =
-      ScreensConfigStore.screens()
-      |> Enum.filter(fn {_, config} -> not config.hidden_from_screenplay end)
-      |> Enum.flat_map(&split_multi_place_screens/1)
-      |> Enum.group_by(&get_stop_id/1, fn
-        {id, %ScreensConfig.Screen{app_id: app_id, disabled: disabled}} ->
-          %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
-
-        {id,
-         %ScreensConfig.Screen{
-           app_id: app_id,
-           disabled: disabled,
-           app_params: %_app{direction_id: direction_id}
-         }} ->
-          %ShowtimeScreen{
-            id: id,
-            type: app_id,
-            disabled: disabled,
-            direction_id: direction_id
-          }
-      end)
-
+    live_showtime_screens = get_showtime_screens()
     paess_places = get_paess_places()
 
+    # All parent stations should be displayed in Screenplay,
+    # but we only want to show bus stops that have screens
     Stop.fetch_all_parent_stations()
-    # Transform data
+    # Add showtime screens to parent stations
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
       screens_at_stop = live_showtime_screens[id]
 
       if is_nil(screens_at_stop) do
         %{id: id, name: name, screens: []}
       else
-        %{id: id, name: name, screens: Enum.dedup(screens_at_stop)}
+        %{id: id, name: name, screens: Enum.uniq(screens_at_stop)}
       end
     end)
     # Add on bus stops
@@ -90,6 +80,7 @@ defmodule Screenplay.Config.Builder do
     |> Enum.map(&merge_duplicate_places/1)
     # Get the routes at each stop
     |> append_routes_to_places()
+    # Add on PA/ESS signs
     |> Enum.map(fn %{id: id, screens: screens} = place ->
       Map.put(place, :screens, screens ++ (paess_places[id] || []))
     end)
@@ -97,7 +88,30 @@ defmodule Screenplay.Config.Builder do
     |> Enum.reject(fn %{routes: routes, screens: screens} ->
       cr_or_bus_only?(routes) and Enum.empty?(screens)
     end)
-    |> Enum.map(&struct(PlaceAndScreens, &1))
+    |> Enum.map(&struct(Place, &1))
+  end
+
+  defp get_showtime_screens do
+    ScreensConfigStore.screens()
+    |> Enum.filter(fn {_, config} -> not config.hidden_from_screenplay end)
+    |> Enum.flat_map(&split_multi_place_screens/1)
+    |> Enum.group_by(&get_stop_id/1, fn
+      {id, %ScreensConfig.Screen{app_id: app_id, disabled: disabled}} ->
+        %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
+
+      {id,
+       %ScreensConfig.Screen{
+         app_id: app_id,
+         disabled: disabled,
+         app_params: %_app{direction_id: direction_id}
+       }} ->
+        %ShowtimeScreen{
+          id: id,
+          type: app_id,
+          disabled: disabled,
+          direction_id: direction_id
+        }
+    end)
   end
 
   defp append_routes_to_places(places) do

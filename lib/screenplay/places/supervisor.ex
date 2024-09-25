@@ -1,7 +1,7 @@
 defmodule Screenplay.Config.Supervisor do
   use Supervisor
 
-  alias Screenplay.Config.{Builder, Cache}
+  alias Screenplay.Places.{Builder, Cache}
 
   @spec start_link(any()) :: Supervisor.on_start()
   def start_link(_) do

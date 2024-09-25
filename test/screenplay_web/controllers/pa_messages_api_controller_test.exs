@@ -1,8 +1,7 @@
 defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   use ScreenplayWeb.ConnCase
 
-  alias Screenplay.Config.Cache
-  alias Screenplay.Places.Place
+  alias Screenplay.Places.{Cache, Place}
   alias Screenplay.Places.Place.PaEssScreen
 
   import Screenplay.Factory
@@ -223,10 +222,12 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
           struct(Place, %{place | screens: Enum.map(screens, &struct(PaEssScreen, &1))})
         end)
 
-      Cache.update_places_and_screens(contents)
+      contents
+      |> Enum.map(&{&1.id, &1})
+      |> Cache.put_all()
 
       on_exit(fn ->
-        Cache.PlacesAndScreens.delete_all()
+        Cache.delete_all()
       end)
     end
 

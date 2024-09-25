@@ -4,7 +4,7 @@ defmodule Screenplay.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
-  alias Screenplay.Config.Cache
+  alias Screenplay.Places
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places.{Fetch, Place}
   alias Screenplay.Places.Place.ShowtimeScreen
@@ -127,7 +127,7 @@ defmodule Screenplay.PermanentConfig do
       pending_config |> Jason.decode!() |> PendingConfig.from_json()
 
     {published_config, published_version_id} = get_current_published_config()
-    places_and_screens_config = Cache.get_places_and_screens()
+    places_and_screens_config = Places.get_places_and_screens()
 
     {screens_to_publish, new_pending_screens} =
       pending_screens
@@ -157,7 +157,7 @@ defmodule Screenplay.PermanentConfig do
          :ok <- PublishedScreensFetch.put_config(new_published_screens_config) do
       PendingScreensFetch.commit()
       PublishedScreensFetch.commit()
-      Cache.update_places_and_screens(new_places_and_screens_config)
+      Places.update_places_and_screens(new_places_and_screens_config)
     else
       _ ->
         PendingScreensFetch.revert(pending_version_id)

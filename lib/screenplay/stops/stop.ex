@@ -1,4 +1,8 @@
 defmodule Screenplay.Stops.Stop do
+  @moduledoc """
+  Functions used to fetch stop data from the V3 API.
+  """
+
   alias Screenplay.V3Api
 
   def fetch_stops(stop_ids) do

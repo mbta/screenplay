@@ -1,13 +1,13 @@
 defmodule ScreenplayWeb.DashboardApiController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.Config.Cache
+  alias Screenplay.Places
   alias Screenplay.Places.Place
 
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   def index(conn, _params) do
-    config = Cache.get_places_and_screens()
+    config = Places.get_places_and_screens()
     {:ok, locations, _} = @config_fetcher.get_locations()
     {:ok, descriptions, _} = @config_fetcher.get_place_descriptions()
 

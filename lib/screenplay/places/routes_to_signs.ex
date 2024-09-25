@@ -4,15 +4,15 @@ defmodule Screenplay.Places.RoutesToSigns do
   configuration.
   """
 
-  alias Screenplay.Config.Cache
   alias Screenplay.Places.Place.PaEssScreen
+  alias Screenplay.Places
 
   @spec routes_to_signs() :: %{
           (route_id :: String.t()) => [sign_id :: String.t()]
         }
   def routes_to_signs do
     pa_ess_screens =
-      Cache.get_places_and_screens()
+      Places.get_places_and_screens()
       |> Enum.flat_map(fn place ->
         Enum.filter(place.screens, &match?(%PaEssScreen{}, &1))
       end)

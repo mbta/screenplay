@@ -1,4 +1,4 @@
-defmodule Screenplay.Config.Cache.PlacesAndScreens do
+defmodule Screenplay.Places.Cache.PlacesAndScreens do
   alias Screenplay.Places.Place
 
   use Nebulex.Cache,
