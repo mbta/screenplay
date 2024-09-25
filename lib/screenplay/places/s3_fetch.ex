@@ -5,20 +5,6 @@ defmodule Screenplay.Places.S3Fetch do
 
   @behaviour Screenplay.Places.Fetch
 
-  alias Screenplay.Places.Fetch
-
-  @impl true
-  def get_places_and_screens do
-    with {:ok, config_contents, version_id} <- do_get(:config),
-         {:ok, config_json} <- Jason.decode(config_contents),
-         {:ok, paess_labels_content, _} <- do_get(:paess_labels),
-         {:ok, paess_labels_json} <- Jason.decode(paess_labels_content) do
-      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
-    else
-      _ -> :error
-    end
-  end
-
   @impl true
   def get_locations do
     with {:ok, location_contents, version_id} <- do_get(:screen_locations),
@@ -34,6 +20,16 @@ defmodule Screenplay.Places.S3Fetch do
     with {:ok, place_description_contents, version_id} <- do_get(:place_descriptions),
          {:ok, place_description_json} <- Jason.decode(place_description_contents) do
       {:ok, place_description_json, version_id}
+    else
+      _ -> :error
+    end
+  end
+
+  @impl true
+  def get_paess_labels do
+    with {:ok, paess_labels_contents, _} <- do_get(:paess_labels),
+         {:ok, paess_labels_json} <- Jason.decode(paess_labels_contents) do
+      {:ok, paess_labels_json}
     else
       _ -> :error
     end

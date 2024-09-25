@@ -24,6 +24,7 @@ defmodule Screenplay.Config.Builder do
   @sl_route_ids ~w[741 742 743 746 749 751]
 
   @polling_interval :timer.minutes(15)
+  @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
@@ -405,6 +406,12 @@ defmodule Screenplay.Config.Builder do
           []
       end
 
+    labels =
+      case @config_fetcher.get_paess_labels() do
+        {:ok, labels} -> labels
+        _ -> %{}
+      end
+
     signs
     |> Enum.map(fn %{"id" => id, "pa_ess_loc" => station_code, "text_zone" => zone} = config ->
       {
@@ -417,7 +424,7 @@ defmodule Screenplay.Config.Builder do
           zone: zone,
           type: "pa_ess",
           routes: get_routes_for_paess(sources),
-          label: ""
+          label: Map.get(labels, id)
         }
       }
     end)

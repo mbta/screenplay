@@ -3,21 +3,6 @@ defmodule Screenplay.Places.LocalFetch do
 
   @behaviour Screenplay.Places.Fetch
 
-  alias Screenplay.Places.Fetch
-
-  @impl true
-  def get_places_and_screens do
-    with {:ok, config_contents, version_id} <- do_get(:local_config_file_spec),
-         {:ok, config_json} <- do_decode(config_contents, :local_config_file_spec),
-         {:ok, paess_labels_content, _} <- do_get(:local_paess_labels_file_spec),
-         {:ok, paess_labels_json} <-
-           do_decode(paess_labels_content, :local_paess_labels_file_spec) do
-      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
-    else
-      _ -> :error
-    end
-  end
-
   @impl true
   def get_locations do
     with {:ok, config_contents, version_id} <- do_get(:local_locations_file_spec),
@@ -33,6 +18,16 @@ defmodule Screenplay.Places.LocalFetch do
     with {:ok, config_contents, version_id} <- do_get(:local_place_descriptions_file_spec),
          {:ok, config_json} <- do_decode(config_contents, :local_place_descriptions_file_spec) do
       {:ok, config_json, version_id}
+    else
+      _ -> :error
+    end
+  end
+
+  @impl true
+  def get_paess_labels do
+    with {:ok, config_contents, _} <- do_get(:local_paess_labels_file_spec),
+         {:ok, config_json} <- do_decode(config_contents, :local_paess_labels_file_spec) do
+      {:ok, config_json}
     else
       _ -> :error
     end
