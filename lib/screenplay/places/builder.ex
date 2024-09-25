@@ -8,9 +8,9 @@ defmodule Screenplay.Config.Builder do
   alias ScreensConfig.V2.Departures.{Query, Section}
 
   alias ScreensConfig.V2.{
-    Busway,
     BusEink,
     BusShelter,
+    Busway,
     Departures,
     Dup,
     Footer,
@@ -38,9 +38,9 @@ defmodule Screenplay.Config.Builder do
 
   @impl true
   def handle_info(:poll, state) do
-    build()
-    |> Enum.map(&{&1.id, &1})
-    |> Cache.update_places_and_screens()
+    {:ok, _} =
+      build()
+      |> Cache.update_places_and_screens()
 
     Process.send_after(self(), :poll, @polling_interval)
 
@@ -77,10 +77,10 @@ defmodule Screenplay.Config.Builder do
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
       screens_at_stop = live_showtime_screens[id]
 
-      if not is_nil(screens_at_stop) do
-        %{id: id, name: name, screens: Enum.dedup(screens_at_stop)}
-      else
+      if is_nil(screens_at_stop) do
         %{id: id, name: name, screens: []}
+      else
+        %{id: id, name: name, screens: Enum.dedup(screens_at_stop)}
       end
     end)
     # Add on bus stops

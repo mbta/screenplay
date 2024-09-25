@@ -4,7 +4,7 @@ defmodule Screenplay.Places.RoutesToSigns do
   configuration.
   """
 
-  alias Screenplay.Config.{Cache}
+  alias Screenplay.Config.Cache
   alias Screenplay.Places.Place.PaEssScreen
 
   @spec routes_to_signs() :: %{
