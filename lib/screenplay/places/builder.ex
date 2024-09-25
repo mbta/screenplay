@@ -1,11 +1,11 @@
 defmodule Screenplay.Config.Builder do
   alias Screenplay.Config.Cache
-  alias Screenplay.Places.Place
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
+  alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
   alias Screenplay.Routes.Route
   alias Screenplay.Stops.Stop
-  alias ScreensConfig.V2.Departures.{Query, Section}
   alias ScreensConfig.{Screen, Solari}
+  alias ScreensConfig.V2.Departures.{Query, Section}
 
   alias ScreensConfig.V2.{
     Busway,
@@ -48,13 +48,13 @@ defmodule Screenplay.Config.Builder do
   end
 
   defp build do
-    live_screens =
+    live_showtime_screens =
       ScreensConfigStore.screens()
       |> Enum.filter(fn {_, config} -> not config.hidden_from_screenplay end)
       |> Enum.flat_map(&split_multi_place_screens/1)
       |> Enum.group_by(&get_stop_id/1, fn
         {id, %ScreensConfig.Screen{app_id: app_id, disabled: disabled}} ->
-          %Place.ShowtimeScreen{id: id, type: app_id, disabled: disabled}
+          %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
 
         {id,
          %ScreensConfig.Screen{
@@ -62,7 +62,7 @@ defmodule Screenplay.Config.Builder do
            disabled: disabled,
            app_params: %_app{direction_id: direction_id}
          }} ->
-          %Place.ShowtimeScreen{
+          %ShowtimeScreen{
             id: id,
             type: app_id,
             disabled: disabled,
@@ -70,27 +70,33 @@ defmodule Screenplay.Config.Builder do
           }
       end)
 
+    paess_places = get_paess_places()
+
     Stop.fetch_all_parent_stations()
     # Transform data
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
-      screens_at_stop = live_screens[id]
+      screens_at_stop = live_showtime_screens[id]
 
       if not is_nil(screens_at_stop) do
-        %Place{id: id, name: name, screens: Enum.dedup(screens_at_stop)}
+        %{id: id, name: name, screens: Enum.dedup(screens_at_stop)}
       else
-        %Place{id: id, name: name, screens: []}
+        %{id: id, name: name, screens: []}
       end
     end)
     # Add on bus stops
-    |> Enum.concat(get_bus_stops(live_screens))
+    |> Enum.concat(get_bus_stops(live_showtime_screens))
     |> Enum.group_by(fn %{id: id} -> id end)
     |> Enum.map(&merge_duplicate_places/1)
     # Get the routes at each stop
     |> append_routes_to_places()
+    |> Enum.map(fn %{id: id, screens: screens} = place ->
+      Map.put(place, :screens, screens ++ (paess_places[id] || []))
+    end)
     # Get rid of CR and Bus stops with no screens
     |> Enum.reject(fn %{routes: routes, screens: screens} ->
       cr_or_bus_only?(routes) and Enum.empty?(screens)
     end)
+    |> Enum.map(&struct(PlaceAndScreens, &1))
   end
 
   defp append_routes_to_places(places) do
@@ -365,5 +371,117 @@ defmodule Screenplay.Config.Builder do
           Enum.find_index(route_order, fn x -> x == b end)
       end
     )
+  end
+
+  defp get_paess_places do
+    signs = fetch_signs_json()
+    sources = Enum.flat_map(signs, &get_paess_sources/1)
+
+    stops_to_parent_station_ids =
+      sources
+      |> get_stop_id_from_sources()
+      |> Enum.join(",")
+      |> Stop.fetch_stops()
+      |> Enum.map(fn %{"id" => id} = stop ->
+        {id,
+         get_in(stop, [
+           "relationships",
+           "parent_station",
+           "data",
+           "id"
+         ])}
+      end)
+      |> Enum.into(%{})
+
+    hidden_signs_path =
+      Path.join([:code.priv_dir(:screenplay), "config", "hidden_paess_signs.json"])
+
+    hidden_signs =
+      case File.read(hidden_signs_path) do
+        {:ok, contents} ->
+          Jason.decode!(contents)
+
+        _ ->
+          []
+      end
+
+    signs
+    |> Enum.map(fn %{"id" => id, "pa_ess_loc" => station_code, "text_zone" => zone} = config ->
+      {
+        config
+        |> get_paess_sources()
+        |> get_first_parent_station_from_sources(stops_to_parent_station_ids),
+        %PaEssScreen{
+          id: id,
+          station_code: station_code,
+          zone: zone,
+          type: "pa_ess",
+          routes: get_routes_for_paess(sources),
+          label: ""
+        }
+      }
+    end)
+    |> Enum.filter(fn
+      {_parent_station, %{id: id}} -> id not in hidden_signs
+    end)
+    |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
+  end
+
+  defp get_stop_id_from_sources(sources) do
+    sources
+    |> Enum.map(fn %{"stop_id" => stop_id} -> stop_id end)
+    |> Enum.uniq()
+  end
+
+  defp get_paess_sources(%{"source_config" => %{"sources" => sources}}), do: sources
+  defp get_paess_sources(%{"sources" => sources}), do: sources
+
+  defp get_paess_sources(%{
+         "source_config" => [%{"sources" => top_sources}, %{"sources" => bottom_sources}]
+       }),
+       do: top_sources ++ bottom_sources
+
+  defp get_paess_sources(%{"configs" => configs}), do: Enum.flat_map(configs, & &1["sources"])
+
+  defp get_paess_sources(%{"top_configs" => top_configs, "bottom_configs" => bottom_configs}) do
+    Enum.flat_map(top_configs, & &1["sources"]) ++
+      Enum.flat_map(bottom_configs, & &1["sources"])
+  end
+
+  defp get_paess_sources(%{
+         "top_sources" => top_sources,
+         "bottom_sources" => bottom_sources
+       }),
+       do: top_sources ++ bottom_sources
+
+  defp get_routes_for_paess(sources) do
+    for source <- sources,
+        route <- source["routes"] || List.wrap(source["route_id"]),
+        uniq: true do
+      %{id: route, direction_id: source["direction_id"]}
+    end
+  end
+
+  defp get_first_parent_station_from_sources(sources, stops_to_parent_station_ids) do
+    sources
+    |> Enum.map(fn %{"stop_id" => platform_id} ->
+      stops_to_parent_station_ids[platform_id]
+    end)
+    |> Enum.uniq()
+    |> Enum.reject(&is_nil/1)
+    |> hd()
+  end
+
+  defp fetch_signs_json do
+    url = "https://api.github.com/repos/mbta/realtime_signs/contents/priv/signs.json"
+
+    case HTTPoison.get(url) do
+      {:ok, %{status_code: 200, body: body}} ->
+        %{"content" => signs_json_file} = Jason.decode!(body)
+        signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
+
+      _ ->
+        []
+    end
   end
 end
