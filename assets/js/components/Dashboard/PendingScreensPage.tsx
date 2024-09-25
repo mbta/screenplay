@@ -67,7 +67,7 @@ const PendingScreensPage: ComponentType = () => {
         // We know etag is not null at this point because it's not possible for a "Publish" button
         // to be rendered without the ETag also being set--both state values are set together in
         // `fetchData`.
-        const { status, message } = await publishScreensForPlace(
+        const { status, message, newConfig } = await publishScreensForPlace(
           placeID,
           appID,
           hiddenFromScreenplayIDs,
@@ -77,6 +77,10 @@ const PendingScreensPage: ComponentType = () => {
         const defaultErrorMessage = "Server error. Please contact an engineer.";
         switch (status) {
           case 200:
+            if (newConfig) {
+              dispatch({ type: "SET_PLACES", places: newConfig });
+            }
+
             dispatch({
               type: "SHOW_ACTION_OUTCOME",
               isSuccessful: true,

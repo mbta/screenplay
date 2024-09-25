@@ -93,6 +93,11 @@ export const putPendingScreens = async (
   });
 };
 
+interface PublishScreensForPlaceResponse {
+  message: string;
+  new_config?: Place[];
+}
+
 export const publishScreensForPlace = async (
   placeId: string,
   appId: string,
@@ -107,14 +112,13 @@ export const publishScreensForPlace = async (
     credentials: "include",
   });
 
-  let message;
-  // Guard against unexpectedly long response bodies,
-  // e.g. when an exception is raised on the server
-  if (!response.headers.get("content-type")?.includes("text/html")) {
-    message = await response.text();
-  }
+  const json: PublishScreensForPlaceResponse = await response.json();
 
-  return { status: response.status, message };
+  return {
+    status: response.status,
+    message: json.message,
+    newConfig: json.new_config ?? [],
+  };
 };
 
 export const createNewPaMessage = async (message: NewPaMessageBody) => {

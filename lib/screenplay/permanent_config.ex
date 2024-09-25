@@ -7,6 +7,7 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.Config.Cache
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places.{Fetch, Place}
+  alias Screenplay.Places.Place.ShowtimeScreen
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
@@ -14,8 +15,6 @@ defmodule Screenplay.PermanentConfig do
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias ScreensConfig.V2.Header.Destination
-
-  @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   @type screen_type :: :gl_eink_v2
 
@@ -155,23 +154,17 @@ defmodule Screenplay.PermanentConfig do
       get_new_places_and_screens_config(places_and_screens_config, screenplay_screens_to_add)
 
     with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
-         :ok <- PublishedScreensFetch.put_config(new_published_screens_config),
-         :ok <- put_places_and_screens(new_places_and_screens_config, screenplay_screens_to_add) do
+         :ok <- PublishedScreensFetch.put_config(new_published_screens_config) do
       PendingScreensFetch.commit()
       PublishedScreensFetch.commit()
-      @config_fetcher.commit()
-      :ok
+      Cache.update_places_and_screens(new_places_and_screens_config)
     else
       _ ->
         PendingScreensFetch.revert(pending_version_id)
         PublishedScreensFetch.revert(published_version_id)
-        @config_fetcher.revert("")
         :error
     end
   end
-
-  defp put_places_and_screens(_, []), do: :ok
-  defp put_places_and_screens(new_config, _), do: @config_fetcher.put_config(new_config)
 
   defp check_for_duplicate_screen_ids(
          deserialized,
@@ -417,35 +410,21 @@ defmodule Screenplay.PermanentConfig do
   end
 
   defp get_new_places_and_screens_config(places_and_screens_config, screens_to_add) do
-    places_and_screens_config =
-      Enum.map(places_and_screens_config, &Place.from_map/1)
-
-    grouped_places_and_screens =
-      Enum.group_by(
-        screens_to_add,
-        fn
+    Enum.map(places_and_screens_config, fn %Place{id: id, screens: screens} = place ->
+      new_screens_at_place =
+        screens_to_add
+        |> Enum.filter(fn
           {_, %Screen{app_id: :gl_eink_v2} = config} ->
-            config.app_params.footer.stop_id
+            config.app_params.footer.stop_id == id
 
           _ ->
             raise("Not implemented")
-        end,
-        fn {screen_id, config} ->
-          %Screen{app_id: app_id, disabled: disabled} = config
-          %{id: screen_id, type: app_id, disabled: disabled}
-        end
-      )
+        end)
+        |> Enum.map(fn {screen_id, %Screen{app_id: app_id, disabled: disabled}} ->
+          %ShowtimeScreen{id: screen_id, type: app_id, disabled: disabled}
+        end)
 
-    Enum.reduce(places_and_screens_config, [], fn
-      %{id: place_id} = place_and_screens, acc
-      when is_map_key(grouped_places_and_screens, place_id) ->
-        new_screens = grouped_places_and_screens[place_id]
-        %{screens: existing_screens} = place_and_screens
-
-        [%{place_and_screens | screens: existing_screens ++ new_screens} | acc]
-
-      map, acc ->
-        [map | acc]
+      %{place | screens: screens ++ new_screens_at_place}
     end)
   end
 
