@@ -14,6 +14,6 @@ defmodule Screenplay.Config.Cache do
 
   @spec get_places_and_screens() :: list
   def get_places_and_screens do
-    Cache.PlacesAndScreens.all(nil, return: :values)
+    Cache.PlacesAndScreens.all(nil, return: :value)
   end
 end

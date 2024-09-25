@@ -4,6 +4,7 @@ defmodule Screenplay.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
+  alias Screenplay.Config.Cache
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places.{Fetch, Place}
   alias Screenplay.RoutePatterns.RoutePattern
@@ -127,7 +128,7 @@ defmodule Screenplay.PermanentConfig do
       pending_config |> Jason.decode!() |> PendingConfig.from_json()
 
     {published_config, published_version_id} = get_current_published_config()
-    {places_and_screens_config, places_and_screens_version_id} = get_current_places_and_screens()
+    places_and_screens_config = Cache.get_places_and_screens()
 
     {screens_to_publish, new_pending_screens} =
       pending_screens
@@ -164,7 +165,7 @@ defmodule Screenplay.PermanentConfig do
       _ ->
         PendingScreensFetch.revert(pending_version_id)
         PublishedScreensFetch.revert(published_version_id)
-        @config_fetcher.revert(places_and_screens_version_id)
+        @config_fetcher.revert("")
         :error
     end
   end
@@ -413,16 +414,6 @@ defmodule Screenplay.PermanentConfig do
       |> Map.merge(published_screens)
 
     %Config{screens: screens, devops: devops}
-  end
-
-  defp get_current_places_and_screens do
-    case @config_fetcher.get_places_and_screens() do
-      {:ok, places_and_screens_config, version_id} ->
-        {places_and_screens_config, version_id}
-
-      _ ->
-        {:error, "Could not fetch places_and_screens"}
-    end
   end
 
   defp get_new_places_and_screens_config(places_and_screens_config, screens_to_add) do
