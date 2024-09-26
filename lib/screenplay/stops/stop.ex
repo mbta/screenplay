@@ -8,9 +8,9 @@ defmodule Screenplay.Stops.Stop do
   alias Screenplay.V3Api
 
   @impl true
-  def fetch_stops(stop_ids) do
+  def fetch_parent_stops(stop_ids) do
     case V3Api.get_json("/stops", %{
-           "filter[id]" => stop_ids
+           "filter[id]" => Enum.join(stop_ids, ",")
          }) do
       {:ok, %{"data" => data}} -> data
       _ -> []

@@ -10,9 +10,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.Places
   alias Screenplay.Places.Place
   alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
-  alias Screenplay.Routes.Route
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias Screenplay.Stops.Stop
   alias ScreensConfig.{Screen, Solari}
   alias ScreensConfig.V2.Departures.{Query, Section}
 
@@ -35,13 +33,15 @@ defmodule Screenplay.Places.Builder do
   @polling_interval :timer.minutes(15)
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  @spec start_link(stops_mod: module(), routes_mod: module()) :: GenServer.on_start()
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
   @impl true
-  def init(state) do
+  def init(stops_mod: stops_mod, routes_mod: routes_mod) do
     send(self(), :poll)
+    state = %{stops_mod: stops_mod, routes_mod: routes_mod}
 
     {:ok, state}
   end
@@ -49,7 +49,7 @@ defmodule Screenplay.Places.Builder do
   @impl true
   def handle_info(:poll, state) do
     {:ok, _} =
-      build()
+      build(state)
       |> Places.update_places_and_screens()
 
     Process.send_after(self(), :poll, @polling_interval)
@@ -57,13 +57,13 @@ defmodule Screenplay.Places.Builder do
     {:noreply, state}
   end
 
-  defp build do
+  defp build(%{stops_mod: stops_mod, routes_mod: routes_mod}) do
     live_showtime_screens = get_showtime_screens()
-    paess_places = get_paess_places()
+    paess_places = get_paess_places(stops_mod)
 
     # All parent stations should be displayed in Screenplay,
     # but we only want to show bus stops that have screens
-    stops_mod().fetch_all_parent_stations()
+    stops_mod.fetch_all_parent_stations()
     # Add showtime screens to parent stations
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
       screens_at_stop = live_showtime_screens[id]
@@ -75,11 +75,11 @@ defmodule Screenplay.Places.Builder do
       end
     end)
     # Add on bus stops
-    |> Enum.concat(get_bus_stops(live_showtime_screens))
+    |> Enum.concat(get_bus_stops(live_showtime_screens, stops_mod))
     |> Enum.group_by(fn %{id: id} -> id end)
     |> Enum.map(&merge_duplicate_places/1)
     # Get the routes at each stop
-    |> append_routes_to_places()
+    |> append_routes_to_places(routes_mod)
     # Add on PA/ESS signs
     |> Enum.map(fn %{id: id, screens: screens} = place ->
       Map.put(place, :screens, screens ++ (paess_places[id] || []))
@@ -114,13 +114,13 @@ defmodule Screenplay.Places.Builder do
     end)
   end
 
-  defp append_routes_to_places(places) do
+  defp append_routes_to_places(places, routes_mod) do
     places
     |> Task.async_stream(
       fn %{id: id} = stop ->
         # Not a big fan of this. Goes through each station one by one.
         # Could not figure out how to get stops with route info all in one query.
-        data = routes_mod().fetch_routes_for_stop(id)
+        data = routes_mod.fetch_routes_for_stop(id)
 
         formatted_routes =
           data |> format_routes() |> Enum.uniq()
@@ -168,7 +168,7 @@ defmodule Screenplay.Places.Builder do
     end)
   end
 
-  defp get_bus_stops(screens) do
+  defp get_bus_stops(screens, stops_mod) do
     bus_stops_with_screens =
       Enum.filter(screens, fn
         {stop_id, _} ->
@@ -176,8 +176,8 @@ defmodule Screenplay.Places.Builder do
       end)
 
     bus_stops_with_screens
-    |> Enum.map_join(",", fn {stop_id, _} -> stop_id end)
-    |> stops_mod().fetch_stops()
+    |> Enum.map(fn {stop_id, _} -> stop_id end)
+    |> stops_mod.fetch_parent_stops()
     |> Enum.map(fn
       %{
         "id" => id,
@@ -388,15 +388,14 @@ defmodule Screenplay.Places.Builder do
     )
   end
 
-  defp get_paess_places do
+  defp get_paess_places(stops_mod) do
     signs = fetch_signs_json()
     sources = Enum.flat_map(signs, &get_paess_sources/1)
 
     stops_to_parent_station_ids =
       sources
       |> get_stop_id_from_sources()
-      |> Enum.join(",")
-      |> stops_mod().fetch_stops()
+      |> stops_mod.fetch_parent_stops()
       |> Enum.map(fn %{"id" => id} = stop ->
         {id,
          get_in(stop, [
@@ -508,13 +507,5 @@ defmodule Screenplay.Places.Builder do
       _ ->
         []
     end
-  end
-
-  defp stops_mod do
-    Application.get_env(:screenplay, :stops_mod, Stop)
-  end
-
-  defp routes_mod do
-    Application.get_env(:screenplay, :routes_mod, Route)
   end
 end
