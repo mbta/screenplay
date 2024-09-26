@@ -1,6 +1,6 @@
 defmodule Screenplay.Places do
   @moduledoc """
-  Supervisor and public interface for fetching Screenplay data.
+  Supervisor and public interface for fetching and updating Screenplay data.
   """
 
   use Supervisor
