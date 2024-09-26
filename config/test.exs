@@ -18,7 +18,8 @@ config :screenplay,
   local_screens_config_file_spec: {:test, "screens_config.json"},
   local_pending_screens_config_file_spec: {:test, "pending_config.json"},
   api_v3_url: [:no_api_requests_allowed_during_testing],
-  sftp_client_module: Screenplay.Outfront.FakeSFTPClient
+  sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
+  github_api_client: Screenplay.GithubApi.FakeClient
 
 config :ueberauth, Ueberauth,
   providers: [

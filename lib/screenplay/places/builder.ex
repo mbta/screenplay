@@ -32,6 +32,7 @@ defmodule Screenplay.Places.Builder do
 
   @polling_interval :timer.minutes(15)
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
+  @github_api_client Application.compile_env(:screenplay, :github_api_client)
 
   @spec start_link(stops_mod: module(), routes_mod: module()) :: GenServer.on_start()
   def start_link(opts) do
@@ -191,7 +192,7 @@ defmodule Screenplay.Places.Builder do
 
       %{"id" => id, "attributes" => %{"name" => name}} ->
         {_, screens_at_stop} =
-          Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
+          Enum.find(bus_stops_with_screens, {nil, []}, fn {stop_id, _} -> id == stop_id end)
 
         %{id: id, name: name, screens: screens_at_stop}
     end)
@@ -497,12 +498,9 @@ defmodule Screenplay.Places.Builder do
   end
 
   defp fetch_signs_json do
-    url = "https://api.github.com/repos/mbta/realtime_signs/contents/priv/signs.json"
-
-    case HTTPoison.get(url) do
-      {:ok, %{status_code: 200, body: body}} ->
-        %{"content" => signs_json_file} = Jason.decode!(body)
-        signs_json_file |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
+    case @github_api_client.get_file_contents_from_repo("realtime_signs", "priv/signs.json") do
+      {:ok, contents} ->
+        contents
 
       _ ->
         []
