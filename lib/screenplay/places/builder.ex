@@ -63,7 +63,7 @@ defmodule Screenplay.Places.Builder do
 
     # All parent stations should be displayed in Screenplay,
     # but we only want to show bus stops that have screens
-    Stop.fetch_all_parent_stations()
+    stops_mod().fetch_all_parent_stations()
     # Add showtime screens to parent stations
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
       screens_at_stop = live_showtime_screens[id]
@@ -120,7 +120,7 @@ defmodule Screenplay.Places.Builder do
       fn %{id: id} = stop ->
         # Not a big fan of this. Goes through each station one by one.
         # Could not figure out how to get stops with route info all in one query.
-        data = Route.fetch_routes_for_stop(id)
+        data = routes_mod().fetch_routes_for_stop(id)
 
         formatted_routes =
           data |> format_routes() |> Enum.uniq()
@@ -177,7 +177,7 @@ defmodule Screenplay.Places.Builder do
 
     bus_stops_with_screens
     |> Enum.map_join(",", fn {stop_id, _} -> stop_id end)
-    |> Stop.fetch_stops()
+    |> stops_mod().fetch_stops()
     |> Enum.map(fn
       %{
         "id" => id,
@@ -396,7 +396,7 @@ defmodule Screenplay.Places.Builder do
       sources
       |> get_stop_id_from_sources()
       |> Enum.join(",")
-      |> Stop.fetch_stops()
+      |> stops_mod().fetch_stops()
       |> Enum.map(fn %{"id" => id} = stop ->
         {id,
          get_in(stop, [
@@ -504,5 +504,13 @@ defmodule Screenplay.Places.Builder do
       _ ->
         []
     end
+  end
+
+  defp stops_mod do
+    Application.get_env(:screenplay, :stops_mod, Stop)
+  end
+
+  defp routes_mod do
+    Application.get_env(:screenplay, :routes_mod, Route)
   end
 end

@@ -3,8 +3,11 @@ defmodule Screenplay.Stops.Stop do
   Functions used to fetch stop data from the V3 API.
   """
 
+  @behaviour Screenplay.Stops.Behaviour
+
   alias Screenplay.V3Api
 
+  @impl true
   def fetch_stops(stop_ids) do
     case V3Api.get_json("/stops", %{
            "filter[id]" => stop_ids
@@ -14,6 +17,7 @@ defmodule Screenplay.Stops.Stop do
     end
   end
 
+  @impl true
   def fetch_all_parent_stations do
     case V3Api.get_json("/stops", %{
            "filter[location_type]" => 1
