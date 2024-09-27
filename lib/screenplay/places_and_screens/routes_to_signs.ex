@@ -1,11 +1,10 @@
-defmodule Screenplay.Config.RoutesToSigns do
+defmodule Screenplay.PlacesAndScreens.RoutesToSigns do
   @moduledoc """
   Helper to derive a mapping of route to sign id from "places and screens"
   configuration.
   """
 
-  alias Screenplay.Config.PlaceAndScreens
-  alias Screenplay.Config.PlaceAndScreens.PaEssScreen
+  alias Screenplay.PlacesAndScreens.PlaceAndScreens
 
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
@@ -19,7 +18,7 @@ defmodule Screenplay.Config.RoutesToSigns do
 
     pa_ess_screens =
       Enum.flat_map(places_and_screens, fn place ->
-        Enum.filter(place.screens, &match?(%PaEssScreen{}, &1))
+        Enum.filter(place.screens, &match?(%PlaceAndScreens.PaEssScreen{}, &1))
       end)
 
     routes_to_signs =

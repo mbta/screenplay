@@ -4,7 +4,7 @@ defmodule ScreenplayWeb.ConfigController do
 
   require Logger
 
-  alias Screenplay.Config.PermanentConfig
+  alias Screenplay.PermanentConfig
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensConfig
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
   alias ScreensConfig.Screen

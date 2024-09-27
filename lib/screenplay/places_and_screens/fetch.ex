@@ -1,7 +1,7 @@
-defmodule Screenplay.Config.Fetch do
+defmodule Screenplay.PlacesAndScreens.Fetch do
   @moduledoc false
 
-  alias Screenplay.Config.PlaceAndScreens
+  alias Screenplay.PlacesAndScreens.PlaceAndScreens
 
   @type version_id :: String.t()
 

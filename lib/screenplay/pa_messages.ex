@@ -7,7 +7,7 @@ defmodule Screenplay.PaMessages do
   import Ecto.Query
 
   alias Screenplay.Alerts.Cache, as: AlertsCache
-  alias Screenplay.Config.RoutesToSigns
+  alias Screenplay.PlacesAndScreens.RoutesToSigns
   alias Screenplay.PaMessages.PaMessage
   alias Screenplay.Repo
 

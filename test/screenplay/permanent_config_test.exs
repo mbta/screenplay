@@ -1,10 +1,10 @@
-defmodule Screenplay.Config.PermanentConfigTest do
+defmodule Screenplay.PermanentConfigTest do
   use ExUnit.Case
 
   import Mox
 
-  alias Screenplay.Config.LocalFetch
-  alias Screenplay.Config.PermanentConfig
+  alias Screenplay.PlacesAndScreens.LocalFetch
+  alias Screenplay.PermanentConfig
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
