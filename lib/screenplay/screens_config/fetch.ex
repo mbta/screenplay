@@ -4,12 +4,12 @@ defmodule Screenplay.ScreensConfig.Fetch do
   the screens config file.
   """
 
-  alias Screenplay.Cache.Engine
   alias ScreensConfig.Config
 
-  @type fetch_result :: {:ok, String.t(), Engine.table_version()} | :unchanged | :error
+  @type config_version :: any | nil
+  @type fetch_result :: {:ok, String.t(), config_version()} | :unchanged | :error
 
-  @callback fetch_config(Engine.table_version()) :: fetch_result
+  @callback fetch_config(config_version()) :: fetch_result
   @callback fetch_config() :: fetch_result
   @callback commit() :: :ok
   @callback revert(String.t()) :: :ok
