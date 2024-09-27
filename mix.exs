@@ -70,7 +70,8 @@ defmodule Screenplay.MixProject do
       {:tzdata, "~> 1.1"},
       {:ex_machina, "~> 2.7", only: :test},
       {:remote_ip, "~> 1.2"},
-      {:faker, "~> 0.18"}
+      {:faker, "~> 0.18"},
+      {:nebulex, "~> 2.6"}
     ]
   end
 
