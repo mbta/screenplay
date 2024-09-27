@@ -76,7 +76,8 @@ defmodule ScreenplayWeb.ConfigController do
         end
 
         live_screens =
-          ScreensConfigCache.screens(filter_fn)
+          ScreensConfigCache.screens()
+          |> Enum.filter(filter_fn)
           |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
           |> Enum.into(%{})
 
