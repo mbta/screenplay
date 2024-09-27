@@ -1,4 +1,7 @@
 defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
+  @moduledoc """
+  GenServer that fetches and caches the Screens app config
+  """
   use GenServer
 
   alias Screenplay.ScreensConfig, as: ScreensConfigUpdater
