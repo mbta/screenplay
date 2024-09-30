@@ -7,7 +7,7 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places.{Fetch, Place}
   alias Screenplay.RoutePatterns.RoutePattern
-  alias Screenplay.ScreensConfig, as: ScreensConfigCache
+  alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias ScreensConfig.{Config, PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
@@ -53,7 +53,7 @@ defmodule Screenplay.PermanentConfig do
       |> Enum.group_by(fn {_, screen} -> {screen_to_place_id(screen), screen.app_id} end)
       |> Map.new(fn {{place_id, app_id}, pending_screens_at_place} ->
         live_screens_of_same_type_at_place =
-          ScreensConfigCache.screens()
+          ScreensConfigStore.screens()
           |> Enum.filter(fn {_id, screen} ->
             screen.app_id == app_id and screen_to_place_id(screen) == place_id
           end)

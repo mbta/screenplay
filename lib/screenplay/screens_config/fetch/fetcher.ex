@@ -4,7 +4,7 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
   """
   use GenServer
 
-  alias Screenplay.ScreensConfig, as: ScreensConfigUpdater
+  alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch
   alias ScreensConfig.Config
 
@@ -29,7 +29,7 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
     deserialized
     |> Config.from_json()
     |> config_to_cache_entries()
-    |> ScreensConfigUpdater.update_cache()
+    |> ScreensConfigStore.update_cache()
 
     Process.send_after(self(), :update, @update_interval)
 
