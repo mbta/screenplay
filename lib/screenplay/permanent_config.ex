@@ -1,11 +1,11 @@
-defmodule Screenplay.Config.PermanentConfig do
+defmodule Screenplay.PermanentConfig do
   @moduledoc false
 
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
-  alias Screenplay.Config.{Fetch, PlaceAndScreens}
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
+  alias Screenplay.Places.{Fetch, Place}
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
@@ -428,7 +428,7 @@ defmodule Screenplay.Config.PermanentConfig do
 
   defp get_new_places_and_screens_config(places_and_screens_config, screens_to_add) do
     places_and_screens_config =
-      Enum.map(places_and_screens_config, &PlaceAndScreens.from_map/1)
+      Enum.map(places_and_screens_config, &Place.from_map/1)
 
     grouped_places_and_screens =
       Enum.group_by(

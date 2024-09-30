@@ -1,11 +1,11 @@
-defmodule Screenplay.Config.S3Fetch do
+defmodule Screenplay.Places.S3Fetch do
   @moduledoc false
 
   require Logger
 
-  @behaviour Screenplay.Config.Fetch
+  @behaviour Screenplay.Places.Fetch
 
-  alias Screenplay.Config.Fetch
+  alias Screenplay.Places.Fetch
 
   @impl true
   def get_places_and_screens do
