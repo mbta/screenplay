@@ -5,7 +5,7 @@ defmodule Screenplay.PermanentConfigTest do
 
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig
-  alias Screenplay.PlacesAndScreens.LocalFetch
+  alias Screenplay.Places.LocalFetch
   alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 

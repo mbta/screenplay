@@ -1,7 +1,7 @@
-defmodule Screenplay.PlacesAndScreens.Fetch do
+defmodule Screenplay.Places.Fetch do
   @moduledoc false
 
-  alias Screenplay.PlacesAndScreens.PlaceAndScreens
+  alias Screenplay.Places.Place
 
   @type version_id :: String.t()
 
@@ -9,7 +9,7 @@ defmodule Screenplay.PlacesAndScreens.Fetch do
   @callback get_places_and_screens() :: {:ok, list(map()), version_id()} | :error
   @callback get_locations() :: {:ok, list(map()), version_id()} | :error
   @callback get_place_descriptions() :: {:ok, list(map()), version_id()} | :error
-  @callback put_config(list(PlaceAndScreens.t())) :: :ok | :error
+  @callback put_config(list(Place.t())) :: :ok | :error
   @callback commit() :: :ok
   @callback revert(version_id()) :: any()
 

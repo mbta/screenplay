@@ -8,7 +8,7 @@ defmodule Screenplay.PaMessages do
 
   alias Screenplay.Alerts.Cache, as: AlertsCache
   alias Screenplay.PaMessages.PaMessage
-  alias Screenplay.PlacesAndScreens.RoutesToSigns
+  alias Screenplay.Places.RoutesToSigns
   alias Screenplay.Repo
 
   defmodule ListParams do

@@ -1,4 +1,4 @@
-defmodule Screenplay.PlacesAndScreens.PlaceAndScreens do
+defmodule Screenplay.Places.Place do
   @moduledoc """
   Module used to define struct for screen configs stored in places_and_screens.json.
   A screen config can either be a `PaEssScreen.t()` or a `ShowtimeScreen.t()`.
