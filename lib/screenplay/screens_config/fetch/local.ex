@@ -62,8 +62,8 @@ defmodule Screenplay.ScreensConfig.Fetch.Local do
   end
 
   defp get_last_modified(path) do
-    case File.stat(path) do
-      {:ok, %File.Stat{mtime: mtime}} -> {:ok, mtime}
+    case File.stat(path, time: :posix) do
+      {:ok, %File.Stat{mtime: mtime}} -> {:ok, to_string(mtime)}
       {:error, _} -> :error
     end
   end

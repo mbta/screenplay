@@ -6,7 +6,7 @@ defmodule ScreenplayWeb.ConfigController do
 
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensConfig
   alias Screenplay.PermanentConfig
-  alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
+  alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.Screen
   alias ScreensConfig.V2.GlEink
 
@@ -76,7 +76,8 @@ defmodule ScreenplayWeb.ConfigController do
         end
 
         live_screens =
-          ScreensConfigCache.screens(filter_fn)
+          ScreensConfigStore.screens()
+          |> Enum.filter(filter_fn)
           |> Enum.map(fn {k, v} -> {k, Screen.to_json(v)} end)
           |> Enum.into(%{})
 

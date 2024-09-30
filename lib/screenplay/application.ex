@@ -19,7 +19,7 @@ defmodule Screenplay.Application do
         ScreenplayWeb.Endpoint,
         Screenplay.OutfrontTakeoverTool.Alerts.State,
         Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
-        {Screenplay.Cache.Owner, engine_module: Screenplay.ScreensConfig.Cache.Engine},
+        Screenplay.ScreensConfig,
         Screenplay.Scheduler
       ] ++
         if Application.get_env(:screenplay, :start_alerts_cache) do
