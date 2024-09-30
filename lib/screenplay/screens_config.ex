@@ -24,22 +24,14 @@ defmodule Screenplay.ScreensConfig do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  @spec screen(String.t()) :: Screen.t() | nil
-  def screen(screen_id) do
-    Cache.get(screen_id)
-  end
-
-  @spec screen_ids() :: list(String.t())
-  def screen_ids do
-    Cache.all(nil, return: :key)
-  end
-
+  @spec screens() :: list(Screen.t())
   def screens do
     Cache.all(nil, return: {:key, :value})
   end
 
   @spec update_cache(list({String.t(), Screen.t()})) :: :ok
   def update_cache(screens) do
+    Cache.delete_all()
     Cache.put_all(screens)
   end
 end

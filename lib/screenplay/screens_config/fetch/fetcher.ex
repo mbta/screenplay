@@ -37,8 +37,6 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
   end
 
   defp config_to_cache_entries(config) do
-    Enum.map(config.screens, fn {screen_id, screen_config} ->
-      {screen_id, screen_config}
-    end)
+    Map.to_list(config.screens)
   end
 end

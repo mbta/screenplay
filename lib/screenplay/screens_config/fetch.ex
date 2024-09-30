@@ -6,7 +6,7 @@ defmodule Screenplay.ScreensConfig.Fetch do
 
   alias ScreensConfig.Config
 
-  @type config_version :: any | nil
+  @type config_version :: String.t()
   @type fetch_result :: {:ok, String.t(), config_version()} | :unchanged | :error
 
   @callback fetch_config(config_version()) :: fetch_result
