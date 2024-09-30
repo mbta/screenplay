@@ -31,7 +31,13 @@ defmodule Screenplay.ScreensConfig do
 
   @spec update_cache(list({String.t(), Screen.t()})) :: :ok
   def update_cache(screens) do
-    Cache.delete_all()
+    delete_old_screens(screens)
     Cache.put_all(screens)
+  end
+
+  defp delete_old_screens(screens) do
+    existing_screen_ids = Cache.all(nil, return: :key)
+    new_screen_ids = Enum.map(screens, &elem(&1, 0))
+    Enum.each(existing_screen_ids -- new_screen_ids, &Cache.delete/1)
   end
 end
