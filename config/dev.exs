@@ -86,7 +86,7 @@ config :screenplay,
   local_paess_labels_file_spec: {:priv, "paess_labels.json"},
   api_v3_key: System.get_env("API_V3_KEY"),
   github_api_client: Screenplay.GithubApi.FakeClient,
-  local_signs_json_path: "../signs_ui/priv/signs.json"
+  local_signs_json_path: "../realtime_signs/priv/signs.json"
 
 config :ueberauth, Ueberauth,
   providers: [
