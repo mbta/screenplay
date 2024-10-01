@@ -127,7 +127,7 @@ defmodule Screenplay.PermanentConfig do
       pending_config |> Jason.decode!() |> PendingConfig.from_json()
 
     {published_config, published_version_id} = get_current_published_config()
-    places_and_screens_config = Places.get_places_and_screens()
+    places_config = Places.get_places()
 
     {screens_to_publish, new_pending_screens} =
       pending_screens
@@ -150,14 +150,14 @@ defmodule Screenplay.PermanentConfig do
     screenplay_screens_to_add =
       Enum.reject(screens_to_publish, fn {_, screen} -> screen.hidden_from_screenplay end)
 
-    new_places_and_screens_config =
-      get_new_places_and_screens_config(places_and_screens_config, screenplay_screens_to_add)
+    new_places_config =
+      get_new_places_config(places_config, screenplay_screens_to_add)
 
     with :ok <- PendingScreensFetch.put_config(new_pending_screens_config),
          :ok <- PublishedScreensFetch.put_config(new_published_screens_config) do
       PendingScreensFetch.commit()
       PublishedScreensFetch.commit()
-      Places.update_places_and_screens(new_places_and_screens_config)
+      Places.update_places(new_places_config)
     else
       _ ->
         PendingScreensFetch.revert(pending_version_id)
@@ -409,8 +409,8 @@ defmodule Screenplay.PermanentConfig do
     %Config{screens: screens, devops: devops}
   end
 
-  defp get_new_places_and_screens_config(places_and_screens_config, screens_to_add) do
-    Enum.map(places_and_screens_config, fn %Place{id: id, screens: screens} = place ->
+  defp get_new_places_config(places_config, screens_to_add) do
+    Enum.map(places_config, fn %Place{id: id, screens: screens} = place ->
       new_screens_at_place =
         screens_to_add
         |> Enum.filter(fn

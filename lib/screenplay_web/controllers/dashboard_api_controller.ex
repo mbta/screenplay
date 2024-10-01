@@ -7,7 +7,7 @@ defmodule ScreenplayWeb.DashboardApiController do
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
 
   def index(conn, _params) do
-    config = Places.get_places_and_screens()
+    config = Places.get_places()
     {:ok, locations, _} = @config_fetcher.get_locations()
     {:ok, descriptions, _} = @config_fetcher.get_place_descriptions()
 

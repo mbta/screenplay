@@ -12,7 +12,7 @@ defmodule Screenplay.Places.RoutesToSigns do
         }
   def routes_to_signs do
     pa_ess_screens =
-      Places.get_places_and_screens()
+      Places.get_places()
       |> Enum.flat_map(fn place ->
         Enum.filter(place.screens, &match?(%PaEssScreen{}, &1))
       end)
