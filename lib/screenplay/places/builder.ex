@@ -41,19 +41,19 @@ defmodule Screenplay.Places.Builder do
 
   @impl true
   def init(stops_mod: stops_mod, routes_mod: routes_mod) do
-    send(self(), :poll)
+    send(self(), :build)
     state = %{stops_mod: stops_mod, routes_mod: routes_mod}
 
     {:ok, state}
   end
 
   @impl true
-  def handle_info(:poll, state) do
+  def handle_info(:build, state) do
     {:ok, _} =
       build(state)
       |> Places.update_places_and_screens()
 
-    Process.send_after(self(), :poll, @polling_interval)
+    Process.send_after(self(), :build, @polling_interval)
 
     {:noreply, state}
   end
