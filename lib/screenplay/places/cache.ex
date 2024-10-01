@@ -6,5 +6,5 @@ defmodule Screenplay.Places.Cache do
     adapter: Nebulex.Adapters.Local
 
   @type key :: place_id :: String.t()
-  @type value :: place_and_screens :: Place.t()
+  @type value :: place :: Place.t()
 end

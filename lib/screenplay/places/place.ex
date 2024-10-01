@@ -1,12 +1,12 @@
 defmodule Screenplay.Places.Place do
   @moduledoc """
-  Module used to define struct for screen configs stored in places_and_screens.json.
+  Module used to define struct for screen configs stored in `Screenplay.Places.Cache`.
   A screen config can either be a `PaEssScreen.t()` or a `ShowtimeScreen.t()`.
   """
 
   defmodule PaEssScreen do
     @moduledoc """
-    Module used to define struct for PA/ESS screen configs stored in `places_and_screens.json`.
+    Module used to define struct for PA/ESS screen configs stored in `Screenplay.Places.Cache`.
     """
 
     @derive Jason.Encoder
@@ -35,7 +35,7 @@ defmodule Screenplay.Places.Place do
 
   defmodule ShowtimeScreen do
     @moduledoc """
-    Module used to define struct for Showtime screen configs stored in `places_and_screens.json`.
+    Module used to define struct for Showtime screen configs stored in `Screenplay.Places.Cache`.
     """
 
     @derive Jason.Encoder
@@ -73,9 +73,8 @@ defmodule Screenplay.Places.Place do
   @derive Jason.Encoder
   defstruct id: nil, name: nil, routes: [], screens: [], description: nil
 
-  def from_map(place_and_screens_map) do
-    %{"id" => id, "name" => name, "routes" => routes, "screens" => screens} =
-      place_and_screens_map
+  def from_map(place_map) do
+    %{"id" => id, "name" => name, "routes" => routes, "screens" => screens} = place_map
 
     screens =
       Enum.map(screens, fn
