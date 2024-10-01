@@ -46,6 +46,7 @@ defmodule Screenplay.GithubApi.FakeClient do
   @behaviour Screenplay.GithubApi.ClientBehaviour
 
   @impl true
+  # sobelow_skip ["Traversal.FileModule"]
   def get_file_contents_from_repo(_, _) do
     path =
       case Application.get_env(:screenplay, :local_signs_json_path) do
