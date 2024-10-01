@@ -37,6 +37,13 @@ defmodule Screenplay.GithubApi.FakeClient do
 
   @impl true
   def get_file_contents_from_repo(_, _) do
-    {:ok, []}
+    path =
+      case Application.get_env(:screenplay, :local_signs_json_path) do
+        {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
+        file_name -> file_name
+      end
+
+    contents = path |> File.read!() |> Jason.decode!()
+    {:ok, contents}
   end
 end

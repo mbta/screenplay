@@ -84,7 +84,9 @@ config :screenplay,
   local_locations_file_spec: {:priv, "screen_locations.json"},
   local_place_descriptions_file_spec: {:priv, "place_descriptions.json"},
   local_paess_labels_file_spec: {:priv, "paess_labels.json"},
-  api_v3_key: System.get_env("API_V3_KEY")
+  api_v3_key: System.get_env("API_V3_KEY"),
+  github_api_client: Screenplay.GithubApi.FakeClient,
+  local_signs_json_path: "../signs_ui/priv/signs.json"
 
 config :ueberauth, Ueberauth,
   providers: [
