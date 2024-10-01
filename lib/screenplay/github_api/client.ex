@@ -41,6 +41,8 @@ defmodule Screenplay.GithubApi.FakeClient do
   Client used to fetch signs.json from local RTS repo
   """
 
+  require Logger
+
   @behaviour Screenplay.GithubApi.ClientBehaviour
 
   @impl true
@@ -51,7 +53,13 @@ defmodule Screenplay.GithubApi.FakeClient do
         file_name -> file_name
       end
 
-    contents = path |> File.read!() |> Jason.decode!()
-    {:ok, contents}
+    case File.read(path) do
+      {:ok, file} ->
+        {:ok, Jason.decode!(file)}
+
+      {:error, _} ->
+        Logger.error("Could not fetch local signs.json. Please ensure RTS repo has been cloned.")
+        :error
+    end
   end
 end
