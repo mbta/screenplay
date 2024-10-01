@@ -76,7 +76,7 @@ defmodule Screenplay.Places.Builder do
       end
     end)
     # Add on bus stops
-    |> Enum.concat(get_bus_stops(live_showtime_screens, stops_mod))
+    |> Enum.concat(get_child_stops(live_showtime_screens, stops_mod))
     |> Enum.group_by(fn %{id: id} -> id end)
     |> Enum.map(&merge_duplicate_places/1)
     # Get the routes at each stop
@@ -169,7 +169,7 @@ defmodule Screenplay.Places.Builder do
     end)
   end
 
-  defp get_bus_stops(screens, stops_mod) do
+  defp get_child_stops(screens, stops_mod) do
     bus_stops_with_screens =
       Enum.filter(screens, fn
         {stop_id, _} ->
@@ -186,7 +186,7 @@ defmodule Screenplay.Places.Builder do
         "relationships" => %{"parent_station" => %{"data" => %{"id" => parent_stop_id}}}
       } ->
         {_, screens_at_stop} =
-          Enum.find(bus_stops_with_screens, [], fn {stop_id, _} -> id == stop_id end)
+          Enum.find(bus_stops_with_screens, {nil, []}, fn {stop_id, _} -> id == stop_id end)
 
         %{id: parent_stop_id, name: name, screens: screens_at_stop}
 
@@ -494,7 +494,7 @@ defmodule Screenplay.Places.Builder do
     end)
     |> Enum.uniq()
     |> Enum.reject(&is_nil/1)
-    |> hd()
+    |> List.first()
   end
 
   defp fetch_signs_json do
