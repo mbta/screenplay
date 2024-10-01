@@ -5,6 +5,10 @@ defmodule Screenplay.GithubApi.ClientBehaviour do
 end
 
 defmodule Screenplay.GithubApi.Client do
+  @moduledoc """
+  Client used to fetch signs.json from the RTS GitHub repo
+  """
+
   require Logger
 
   @behaviour Screenplay.GithubApi.ClientBehaviour
@@ -33,6 +37,10 @@ defmodule Screenplay.GithubApi.Client do
 end
 
 defmodule Screenplay.GithubApi.FakeClient do
+  @moduledoc """
+  Client used to fetch signs.json from local RTS repo
+  """
+
   @behaviour Screenplay.GithubApi.ClientBehaviour
 
   @impl true

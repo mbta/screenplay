@@ -3,10 +3,10 @@ defmodule Screenplay.PermanentConfigTest do
 
   import Mox
 
-  alias Screenplay.Places.{Cache, Place}
-  alias Screenplay.Places.Place.ShowtimeScreen
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig
+  alias Screenplay.Places.{Cache, Place}
+  alias Screenplay.Places.Place.ShowtimeScreen
   alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 

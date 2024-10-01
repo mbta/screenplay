@@ -4,8 +4,8 @@ defmodule Screenplay.Places.RoutesToSigns do
   configuration.
   """
 
-  alias Screenplay.Places.Place.PaEssScreen
   alias Screenplay.Places
+  alias Screenplay.Places.Place.PaEssScreen
 
   @spec routes_to_signs() :: %{
           (route_id :: String.t()) => [sign_id :: String.t()]

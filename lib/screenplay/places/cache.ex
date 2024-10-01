@@ -1,4 +1,8 @@
 defmodule Screenplay.Places.Cache do
+  @moduledoc """
+  Cache of the Screenplay places config
+  """
+
   alias Screenplay.Places.Place
 
   use Nebulex.Cache,

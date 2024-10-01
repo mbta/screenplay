@@ -4,8 +4,8 @@ defmodule Screenplay.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
-  alias Screenplay.Places
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
+  alias Screenplay.Places
   alias Screenplay.Places.{Fetch, Place}
   alias Screenplay.Places.Place.ShowtimeScreen
   alias Screenplay.RoutePatterns.RoutePattern
