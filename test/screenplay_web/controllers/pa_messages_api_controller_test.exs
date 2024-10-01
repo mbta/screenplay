@@ -12,6 +12,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     _ = start_supervised({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
+    _ = start_supervised(Screenplay.Places.Cache)
 
     :ok
   end

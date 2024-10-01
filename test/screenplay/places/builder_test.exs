@@ -7,6 +7,11 @@ defmodule Screenplay.Places.BuilderTest do
   alias Screenplay.Places.{Builder, Place}
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
 
+  setup_all do
+    _ = start_supervised(Screenplay.Places.Cache)
+    :ok
+  end
+
   describe "handle_info/2" do
     setup do
       seed_screens_config_cache()

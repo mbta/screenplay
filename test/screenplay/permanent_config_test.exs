@@ -20,6 +20,8 @@ defmodule Screenplay.PermanentConfigTest do
   end
 
   setup_all do
+    _ = start_supervised(Screenplay.Places.Cache)
+
     on_exit(fn ->
       empty_config = %{screens: %{}}
       pending_screens_path = get_fixture_path("pending_config.json")
