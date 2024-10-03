@@ -47,7 +47,11 @@ defmodule Screenplay.Places.Builder do
 
   @impl true
   def init(state) do
-    send(self(), :build)
+    {:ok, _} =
+      build()
+      |> Places.update()
+
+    Process.send_after(self(), :build, @polling_interval)
 
     {:ok, state}
   end
