@@ -70,10 +70,11 @@ defmodule Screenplay.Places.Builder do
   defp build() do
     live_showtime_screens = get_showtime_screens()
     paess_places = get_paess_places()
+    {:ok, parent_stations} = @stops_mod.fetch_all_parent_stations()
 
     # All parent stations should be displayed in Screenplay,
     # but we only want to show bus stops that have screens
-    @stops_mod.fetch_all_parent_stations()
+    parent_stations
     # Add showtime screens to parent stations
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
       screens_at_stop = live_showtime_screens[id]
@@ -130,7 +131,7 @@ defmodule Screenplay.Places.Builder do
       fn %{id: id} = stop ->
         # Not a big fan of this. Goes through each station one by one.
         # Could not figure out how to get stops with route info all in one query.
-        data = @routes_mod.fetch_routes_for_stop(id)
+        {:ok, data} = @routes_mod.fetch_routes_for_stop(id)
 
         formatted_routes =
           data |> format_routes() |> Enum.uniq()
@@ -185,10 +186,12 @@ defmodule Screenplay.Places.Builder do
           string_is_number?(stop_id)
       end)
 
-    bus_stops_with_screens
-    |> Enum.map(fn {stop_id, _} -> stop_id end)
-    |> @stops_mod.fetch_parent_stops()
-    |> Enum.map(fn
+    {:ok, parent_stops} =
+      bus_stops_with_screens
+      |> Enum.map(fn {stop_id, _} -> stop_id end)
+      |> @stops_mod.fetch_parent_stops()
+
+    Enum.map(parent_stops, fn
       %{
         "id" => id,
         "attributes" => %{"name" => name},
@@ -402,10 +405,13 @@ defmodule Screenplay.Places.Builder do
     signs = fetch_signs_json()
     sources = Enum.flat_map(signs, &get_paess_sources/1)
 
-    stops_to_parent_station_ids =
+    {:ok, parent_stops} =
       sources
       |> get_stop_id_from_sources()
       |> @stops_mod.fetch_parent_stops()
+
+    stops_to_parent_station_ids =
+      parent_stops
       |> Enum.map(fn %{"id" => id} = stop ->
         {id,
          get_in(stop, [

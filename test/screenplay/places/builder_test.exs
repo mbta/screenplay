@@ -23,19 +23,18 @@ defmodule Screenplay.Places.BuilderTest do
     end
 
     test "adds all parent stations as places" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
-        []
-      end)
+      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids -> {:ok, []} end)
 
       expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
-        [
-          %{"id" => "place-test", "attributes" => %{"name" => "Test Place"}},
-          %{"id" => "place-tapst", "attributes" => %{"name" => "Tappan Street"}}
-        ]
+        {:ok,
+         [
+           %{"id" => "place-test", "attributes" => %{"name" => "Test Place"}},
+           %{"id" => "place-tapst", "attributes" => %{"name" => "Tappan Street"}}
+         ]}
       end)
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 2, fn _ ->
-        [%{"id" => "Red", "attributes" => %{"type" => 1}}]
+        {:ok, [%{"id" => "Red", "attributes" => %{"type" => 1}}]}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
@@ -68,15 +67,13 @@ defmodule Screenplay.Places.BuilderTest do
 
     test "adds bus stops with screens" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
-        [%{"id" => "7412", "attributes" => %{"name" => "Lynn St @ Beach St"}}]
+        {:ok, [%{"id" => "7412", "attributes" => %{"name" => "Lynn St @ Beach St"}}]}
       end)
 
-      expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
-        []
-      end)
+      expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn -> {:ok, []} end)
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 2, fn _ ->
-        [%{"id" => "108", "attributes" => %{"type" => 3}}]
+        {:ok, [%{"id" => "108", "attributes" => %{"type" => 3}}]}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
@@ -102,35 +99,37 @@ defmodule Screenplay.Places.BuilderTest do
 
     test "splits mutil-place screens" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
-        [
-          %{"id" => "117", "attributes" => %{"name" => "Congress St @ Haymarket Sta"}},
-          %{
-            "id" => "70203",
-            "attributes" => %{"name" => "Haymarket"},
-            "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-haecl"}}}
-          },
-          %{
-            "id" => "70204",
-            "attributes" => %{"name" => "Haymarket"},
-            "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-haecl"}}}
-          }
-        ]
+        {:ok,
+         [
+           %{"id" => "117", "attributes" => %{"name" => "Congress St @ Haymarket Sta"}},
+           %{
+             "id" => "70203",
+             "attributes" => %{"name" => "Haymarket"},
+             "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-haecl"}}}
+           },
+           %{
+             "id" => "70204",
+             "attributes" => %{"name" => "Haymarket"},
+             "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-haecl"}}}
+           }
+         ]}
       end)
 
       expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
-        [%{"id" => "place-haecl", "attributes" => %{"name" => "Haymarket"}}]
+        {:ok, [%{"id" => "place-haecl", "attributes" => %{"name" => "Haymarket"}}]}
       end)
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 2, fn
         "117" ->
-          [%{"id" => "4", "attributes" => %{"type" => 3}}]
+          {:ok, [%{"id" => "4", "attributes" => %{"type" => 3}}]}
 
         "place-haecl" ->
-          [
-            %{"id" => "Orange", "attributes" => %{"type" => 1}},
-            %{"id" => "Green-D", "attributes" => %{"type" => 0}},
-            %{"id" => "Green-E", "attributes" => %{"type" => 0}}
-          ]
+          {:ok,
+           [
+             %{"id" => "Orange", "attributes" => %{"type" => 1}},
+             %{"id" => "Green-D", "attributes" => %{"type" => 0}},
+             %{"id" => "Green-E", "attributes" => %{"type" => 0}}
+           ]}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
@@ -170,16 +169,14 @@ defmodule Screenplay.Places.BuilderTest do
     end
 
     test "omits screens with hidden_from_screenplay: true" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
-        []
-      end)
+      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids -> {:ok, []} end)
 
       expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
-        [%{"id" => "place-mvbcl", "attributes" => %{"name" => "Maverick"}}]
+        {:ok, [%{"id" => "place-mvbcl", "attributes" => %{"name" => "Maverick"}}]}
       end)
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 1, fn _ ->
-        [%{"id" => "Blue", "attributes" => %{"type" => 1}}]
+        {:ok, [%{"id" => "Blue", "attributes" => %{"type" => 1}}]}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
@@ -197,48 +194,51 @@ defmodule Screenplay.Places.BuilderTest do
 
     test "adds PA/ESS screens" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
-        [
-          %{
-            "id" => "70036",
-            "attributes" => %{"name" => "Oak Grove"},
-            "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-ogmnl"}}}
-          },
-          %{
-            "id" => "Oak Grove-01",
-            "attributes" => %{"name" => "Oak Grove"},
-            "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-ogmnl"}}}
-          },
-          %{
-            "id" => "Oak Grove-02",
-            "attributes" => %{"name" => "Oak Grove"},
-            "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-ogmnl"}}}
-          },
-          %{
-            "id" => "74615",
-            "attributes" => %{"name" => "World Trade Center - Silver Line - South Station"},
-            "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-wtcst"}}}
-          }
-        ]
+        {:ok,
+         [
+           %{
+             "id" => "70036",
+             "attributes" => %{"name" => "Oak Grove"},
+             "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-ogmnl"}}}
+           },
+           %{
+             "id" => "Oak Grove-01",
+             "attributes" => %{"name" => "Oak Grove"},
+             "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-ogmnl"}}}
+           },
+           %{
+             "id" => "Oak Grove-02",
+             "attributes" => %{"name" => "Oak Grove"},
+             "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-ogmnl"}}}
+           },
+           %{
+             "id" => "74615",
+             "attributes" => %{"name" => "World Trade Center - Silver Line - South Station"},
+             "relationships" => %{"parent_station" => %{"data" => %{"id" => "place-wtcst"}}}
+           }
+         ]}
       end)
 
       expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
-        [
-          %{"id" => "place-ogmnl", "attributes" => %{"name" => "Oak Grove"}},
-          %{"id" => "place-wtcst", "attributes" => %{"name" => "World Trade Center"}}
-        ]
+        {:ok,
+         [
+           %{"id" => "place-ogmnl", "attributes" => %{"name" => "Oak Grove"}},
+           %{"id" => "place-wtcst", "attributes" => %{"name" => "World Trade Center"}}
+         ]}
       end)
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 2, fn
         id when id in ["place-wtcst", "74615", "74613"] ->
-          [
-            %{"id" => "741", "attributes" => %{"type" => 3}},
-            %{"id" => "742", "attributes" => %{"type" => 3}},
-            %{"id" => "743", "attributes" => %{"type" => 3}},
-            %{"id" => "746", "attributes" => %{"type" => 3}}
-          ]
+          {:ok,
+           [
+             %{"id" => "741", "attributes" => %{"type" => 3}},
+             %{"id" => "742", "attributes" => %{"type" => 3}},
+             %{"id" => "743", "attributes" => %{"type" => 3}},
+             %{"id" => "746", "attributes" => %{"type" => 3}}
+           ]}
 
         _ ->
-          [%{"id" => "Orange", "attributes" => %{"type" => 1}}]
+          {:ok, [%{"id" => "Orange", "attributes" => %{"type" => 1}}]}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
