@@ -189,7 +189,7 @@ defmodule Screenplay.Places.Builder do
     {:ok, parent_stops} =
       bus_stops_with_screens
       |> Enum.map(fn {stop_id, _} -> stop_id end)
-      |> @stops_mod.fetch_parent_stops()
+      |> @stops_mod.fetch_by_ids()
 
     Enum.map(parent_stops, fn
       %{
@@ -408,7 +408,7 @@ defmodule Screenplay.Places.Builder do
     {:ok, parent_stops} =
       sources
       |> get_stop_id_from_sources()
-      |> @stops_mod.fetch_parent_stops()
+      |> @stops_mod.fetch_by_ids()
 
     stops_to_parent_station_ids =
       parent_stops

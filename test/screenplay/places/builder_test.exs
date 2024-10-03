@@ -23,7 +23,7 @@ defmodule Screenplay.Places.BuilderTest do
     end
 
     test "adds all parent stations as places" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids -> {:ok, []} end)
+      expect(Screenplay.Stops.Mock, :fetch_by_ids, 2, fn _stop_ids -> {:ok, []} end)
 
       expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
         {:ok,
@@ -66,7 +66,7 @@ defmodule Screenplay.Places.BuilderTest do
     end
 
     test "adds bus stops with screens" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
+      expect(Screenplay.Stops.Mock, :fetch_by_ids, 2, fn _stop_ids ->
         {:ok, [%{"id" => "7412", "attributes" => %{"name" => "Lynn St @ Beach St"}}]}
       end)
 
@@ -97,8 +97,8 @@ defmodule Screenplay.Places.BuilderTest do
              ] = PlacesCache.all(nil, return: :value)
     end
 
-    test "splits mutil-place screens" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
+    test "splits multi-place screens" do
+      expect(Screenplay.Stops.Mock, :fetch_by_ids, 2, fn _stop_ids ->
         {:ok,
          [
            %{"id" => "117", "attributes" => %{"name" => "Congress St @ Haymarket Sta"}},
@@ -169,7 +169,7 @@ defmodule Screenplay.Places.BuilderTest do
     end
 
     test "omits screens with hidden_from_screenplay: true" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids -> {:ok, []} end)
+      expect(Screenplay.Stops.Mock, :fetch_by_ids, 2, fn _stop_ids -> {:ok, []} end)
 
       expect(Screenplay.Stops.Mock, :fetch_all_parent_stations, 1, fn ->
         {:ok, [%{"id" => "place-mvbcl", "attributes" => %{"name" => "Maverick"}}]}
@@ -193,7 +193,7 @@ defmodule Screenplay.Places.BuilderTest do
     end
 
     test "adds PA/ESS screens" do
-      expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
+      expect(Screenplay.Stops.Mock, :fetch_by_ids, 2, fn _stop_ids ->
         {:ok,
          [
            %{

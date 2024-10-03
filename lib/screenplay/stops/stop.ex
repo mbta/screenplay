@@ -6,8 +6,8 @@ defmodule Screenplay.Stops.Stop do
   require Logger
   alias Screenplay.V3Api
 
-  @callback fetch_parent_stops(list(String.t())) :: {:ok, list(map())} | :error
-  def fetch_parent_stops(stop_ids) do
+  @callback fetch_by_ids(list(String.t())) :: {:ok, list(map())} | :error
+  def fetch_by_ids(stop_ids) do
     case V3Api.get_json("/stops", %{
            "filter[id]" => Enum.join(stop_ids, ",")
          }) do
