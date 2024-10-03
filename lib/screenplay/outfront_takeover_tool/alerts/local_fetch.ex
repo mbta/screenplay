@@ -14,5 +14,5 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.LocalFetch do
     :ok
   end
 
-  defp file_path, do: :code.priv_dir(:screenplay) |> Path.join("alerts.json")
+  defp file_path, do: Path.join([:code.priv_dir(:screenplay), "local", "alerts.json"])
 end

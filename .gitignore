@@ -37,9 +37,7 @@ npm-debug.log
 # All config files in /priv/ are going to be for local development
 # so do not need to be tracked.
 /priv/alerts.json
-/priv/config/paess_labels.json
-/priv/config/place_descriptions.json
-/priv/config/screen_locations.json
+/priv/local/
 
 .envrc
 
