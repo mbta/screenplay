@@ -82,7 +82,7 @@ export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
   screenType: "gl_eink_v2" | null,
   version_id: string,
-) => {
+): Promise<Response> => {
   return await fetch("/config/put", {
     ...getPostBodyAndHeaders({
       places_and_screens: placesAndScreens,
@@ -103,7 +103,7 @@ export const publishScreensForPlace = async (
   appId: string,
   hiddenFromScreenplayIds: string[],
   etag: string,
-) => {
+): Promise<{ status: number; message: string; newConfig: Place[] }> => {
   const bodyData = {
     hidden_from_screenplay_ids: hiddenFromScreenplayIds,
   };
@@ -121,7 +121,9 @@ export const publishScreensForPlace = async (
   };
 };
 
-export const createNewPaMessage = async (message: NewPaMessageBody) => {
+export const createNewPaMessage = async (
+  message: NewPaMessageBody,
+): Promise<{ status: number; errors: any }> => {
   const response = await fetch("/api/pa-messages", {
     ...getPostBodyAndHeaders(message),
     credentials: "include",
@@ -136,7 +138,7 @@ export const createNewPaMessage = async (message: NewPaMessageBody) => {
 export const updateExistingPaMessage = async (
   id: string | number,
   updates: UpdatePaMessageBody,
-) => {
+): Promise<{ status: number; body: any }> => {
   const response = await fetch(`/api/pa-messages/${id}`, {
     method: "PUT",
     credentials: "include",
