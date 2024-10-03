@@ -242,7 +242,28 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
   ],
   silver: [
     {
+      name: "Nubian",
+    },
+    {
+      name: "South Station",
+    },
+    {
+      name: "Courthouse",
+    },
+    {
       name: "World Trade Center",
+    },
+    {
+      name: "Eastern Avenue",
+    },
+    {
+      name: "Box District",
+    },
+    {
+      name: "Bellingham Square",
+    },
+    {
+      name: "Chelsea",
     },
   ],
   green: [
