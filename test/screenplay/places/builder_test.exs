@@ -20,11 +20,9 @@ defmodule Screenplay.Places.BuilderTest do
         PlacesCache.delete_all()
         ScreensConfigCache.delete_all()
       end)
-
-      %{state: %{stops_mod: Screenplay.Stops.Mock, routes_mod: Screenplay.Routes.Mock}}
     end
 
-    test "adds all parent stations as places", %{state: state} do
+    test "adds all parent stations as places" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
         []
       end)
@@ -40,7 +38,7 @@ defmodule Screenplay.Places.BuilderTest do
         [%{"id" => "Red", "attributes" => %{"type" => 1}}]
       end)
 
-      assert {:noreply, _} = Builder.handle_info(:build, state)
+      assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
                %Place{
@@ -68,7 +66,7 @@ defmodule Screenplay.Places.BuilderTest do
              ] = PlacesCache.all(nil, return: :value)
     end
 
-    test "adds bus stops with screens", %{state: state} do
+    test "adds bus stops with screens" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
         [%{"id" => "7412", "attributes" => %{"name" => "Lynn St @ Beach St"}}]
       end)
@@ -81,7 +79,7 @@ defmodule Screenplay.Places.BuilderTest do
         [%{"id" => "108", "attributes" => %{"type" => 3}}]
       end)
 
-      assert {:noreply, _} = Builder.handle_info(:build, state)
+      assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
                %Place{
@@ -102,7 +100,7 @@ defmodule Screenplay.Places.BuilderTest do
              ] = PlacesCache.all(nil, return: :value)
     end
 
-    test "splits mutil-place screens", %{state: state} do
+    test "splits mutil-place screens" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
         [
           %{"id" => "117", "attributes" => %{"name" => "Congress St @ Haymarket Sta"}},
@@ -135,7 +133,7 @@ defmodule Screenplay.Places.BuilderTest do
           ]
       end)
 
-      assert {:noreply, _} = Builder.handle_info(:build, state)
+      assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
                %Place{
@@ -171,7 +169,7 @@ defmodule Screenplay.Places.BuilderTest do
              ] = PlacesCache.all(nil, return: :value)
     end
 
-    test "omits screens with hidden_from_screenplay: true", %{state: state} do
+    test "omits screens with hidden_from_screenplay: true" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
         []
       end)
@@ -184,7 +182,7 @@ defmodule Screenplay.Places.BuilderTest do
         [%{"id" => "Blue", "attributes" => %{"type" => 1}}]
       end)
 
-      assert {:noreply, _} = Builder.handle_info(:build, state)
+      assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
                %Place{
@@ -197,7 +195,7 @@ defmodule Screenplay.Places.BuilderTest do
              ] = PlacesCache.all(nil, return: :value)
     end
 
-    test "adds PA/ESS screens", %{state: state} do
+    test "adds PA/ESS screens" do
       expect(Screenplay.Stops.Mock, :fetch_parent_stops, 2, fn _stop_ids ->
         [
           %{
@@ -243,7 +241,7 @@ defmodule Screenplay.Places.BuilderTest do
           [%{"id" => "Orange", "attributes" => %{"type" => 1}}]
       end)
 
-      assert {:noreply, _} = Builder.handle_info(:build, state)
+      assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
                %Place{

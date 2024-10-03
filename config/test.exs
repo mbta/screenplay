@@ -20,7 +20,9 @@ config :screenplay,
   api_v3_url: [:no_api_requests_allowed_during_testing],
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
   github_api_client: Screenplay.GithubApi.FakeClient,
-  local_signs_json_path: {:test, "signs.json"}
+  local_signs_json_path: {:test, "signs.json"},
+  stops_mod: Screenplay.Stops.Mock,
+  routes_mod: Screenplay.Routes.Mock
 
 config :ueberauth, Ueberauth,
   providers: [

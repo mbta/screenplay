@@ -32,17 +32,22 @@ defmodule Screenplay.Places.Builder do
 
   @polling_interval :timer.minutes(15)
   @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
-  @github_api_client Application.compile_env(:screenplay, :github_api_client)
+  @stops_mod Application.compile_env(:screenplay, :stops_mod, Screenplay.Stops.Stop)
+  @routes_mod Application.compile_env(:screenplay, :routes_mod, Screenplay.Routes.Route)
+  @github_api_client Application.compile_env(
+                       :screenplay,
+                       :github_api_client,
+                       Screenplay.GithubApi.Client
+                     )
 
-  @spec start_link(stops_mod: module(), routes_mod: module()) :: GenServer.on_start()
+  @spec start_link(keyword()) :: GenServer.on_start()
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
   @impl true
-  def init(stops_mod: stops_mod, routes_mod: routes_mod) do
+  def init(state) do
     send(self(), :build)
-    state = %{stops_mod: stops_mod, routes_mod: routes_mod}
 
     {:ok, state}
   end
@@ -50,7 +55,7 @@ defmodule Screenplay.Places.Builder do
   @impl true
   def handle_info(:build, state) do
     {:ok, _} =
-      build(state)
+      build()
       |> Places.update()
 
     Process.send_after(self(), :build, @polling_interval)
@@ -58,13 +63,13 @@ defmodule Screenplay.Places.Builder do
     {:noreply, state}
   end
 
-  defp build(%{stops_mod: stops_mod, routes_mod: routes_mod}) do
+  defp build() do
     live_showtime_screens = get_showtime_screens()
-    paess_places = get_paess_places(stops_mod)
+    paess_places = get_paess_places()
 
     # All parent stations should be displayed in Screenplay,
     # but we only want to show bus stops that have screens
-    stops_mod.fetch_all_parent_stations()
+    @stops_mod.fetch_all_parent_stations()
     # Add showtime screens to parent stations
     |> Enum.map(fn %{"id" => id, "attributes" => %{"name" => name}} ->
       screens_at_stop = live_showtime_screens[id]
@@ -76,11 +81,11 @@ defmodule Screenplay.Places.Builder do
       end
     end)
     # Add on bus stops
-    |> Enum.concat(get_child_stops(live_showtime_screens, stops_mod))
+    |> Enum.concat(get_child_stops(live_showtime_screens))
     |> Enum.group_by(fn %{id: id} -> id end)
     |> Enum.map(&merge_duplicate_places/1)
     # Get the routes at each stop
-    |> append_routes_to_places(routes_mod)
+    |> append_routes_to_places()
     # Add on PA/ESS signs
     |> Enum.map(fn %{id: id, screens: screens} = place ->
       Map.put(place, :screens, screens ++ (paess_places[id] || []))
@@ -115,13 +120,13 @@ defmodule Screenplay.Places.Builder do
     end)
   end
 
-  defp append_routes_to_places(places, routes_mod) do
+  defp append_routes_to_places(places) do
     places
     |> Task.async_stream(
       fn %{id: id} = stop ->
         # Not a big fan of this. Goes through each station one by one.
         # Could not figure out how to get stops with route info all in one query.
-        data = routes_mod.fetch_routes_for_stop(id)
+        data = @routes_mod.fetch_routes_for_stop(id)
 
         formatted_routes =
           data |> format_routes() |> Enum.uniq()
@@ -169,7 +174,7 @@ defmodule Screenplay.Places.Builder do
     end)
   end
 
-  defp get_child_stops(screens, stops_mod) do
+  defp get_child_stops(screens) do
     bus_stops_with_screens =
       Enum.filter(screens, fn
         {stop_id, _} ->
@@ -178,7 +183,7 @@ defmodule Screenplay.Places.Builder do
 
     bus_stops_with_screens
     |> Enum.map(fn {stop_id, _} -> stop_id end)
-    |> stops_mod.fetch_parent_stops()
+    |> @stops_mod.fetch_parent_stops()
     |> Enum.map(fn
       %{
         "id" => id,
@@ -389,14 +394,14 @@ defmodule Screenplay.Places.Builder do
     )
   end
 
-  defp get_paess_places(stops_mod) do
+  defp get_paess_places() do
     signs = fetch_signs_json()
     sources = Enum.flat_map(signs, &get_paess_sources/1)
 
     stops_to_parent_station_ids =
       sources
       |> get_stop_id_from_sources()
-      |> stops_mod.fetch_parent_stops()
+      |> @stops_mod.fetch_parent_stops()
       |> Enum.map(fn %{"id" => id} = stop ->
         {id,
          get_in(stop, [

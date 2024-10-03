@@ -7,17 +7,16 @@ defmodule Screenplay.Places do
 
   alias Screenplay.Places.{Builder, Cache, Place}
 
-  @spec start_link(stops_mod: module(), routes_mod: module()) :: Supervisor.on_start()
-  def start_link(stops_mod: stops_mod, routes_mod: routes_mod) do
-    opts = %{stops_mod: stops_mod, routes_mod: routes_mod}
-    Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
+  @spec start_link(keyword()) :: Supervisor.on_start()
+  def start_link(_) do
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   @impl true
-  def init(%{stops_mod: stops_mod, routes_mod: routes_mod}) do
+  def init(_) do
     children = [
       Cache,
-      {Builder, stops_mod: stops_mod, routes_mod: routes_mod}
+      Builder
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

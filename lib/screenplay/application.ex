@@ -23,12 +23,7 @@ defmodule Screenplay.Application do
         Screenplay.Scheduler
       ] ++
         if Application.get_env(:screenplay, :start_cache_processes) do
-          [
-            Screenplay.Alerts.Cache,
-            {Screenplay.Places,
-             stops_mod: Application.get_env(:screenplay, :stops_mod, Screenplay.Stops.Stop),
-             routes_mod: Application.get_env(:screenplay, :routes_mod, Screenplay.Routes.Route)}
-          ]
+          [Screenplay.Alerts.Cache, Screenplay.Places]
         else
           []
         end
