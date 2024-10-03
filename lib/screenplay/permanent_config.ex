@@ -127,7 +127,7 @@ defmodule Screenplay.PermanentConfig do
       pending_config |> Jason.decode!() |> PendingConfig.from_json()
 
     {published_config, published_version_id} = get_current_published_config()
-    places_config = Places.get_places()
+    places_config = Places.get()
 
     {screens_to_publish, new_pending_screens} =
       pending_screens
@@ -157,7 +157,7 @@ defmodule Screenplay.PermanentConfig do
          :ok <- PublishedScreensFetch.put_config(new_published_screens_config) do
       PendingScreensFetch.commit()
       PublishedScreensFetch.commit()
-      Places.update_places(new_places_config)
+      Places.update(new_places_config)
     else
       _ ->
         PendingScreensFetch.revert(pending_version_id)

@@ -51,7 +51,7 @@ defmodule Screenplay.Places.Builder do
   def handle_info(:build, state) do
     {:ok, _} =
       build(state)
-      |> Places.update_places()
+      |> Places.update()
 
     Process.send_after(self(), :build, @polling_interval)
 

@@ -23,17 +23,17 @@ defmodule Screenplay.Places do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  @spec update_places(list(Place.t())) :: {:ok, list(Place.t())}
-  def update_places(places) do
+  @spec update(list(Place.t())) :: {:ok, list(Place.t())}
+  def update(places) do
     places
     |> Enum.map(&{&1.id, &1})
     |> Cache.put_all()
 
-    {:ok, get_places()}
+    {:ok, get()}
   end
 
-  @spec get_places() :: list(Place.t())
-  def get_places do
+  @spec get() :: list(Place.t())
+  def get do
     Cache.all(nil, return: :value)
   end
 end
