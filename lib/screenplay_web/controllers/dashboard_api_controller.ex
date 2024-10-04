@@ -23,7 +23,9 @@ defmodule ScreenplayWeb.DashboardApiController do
     Enum.map(config, fn %Place{screens: screens} = place ->
       new_screens =
         Enum.map(screens, fn %{id: id} = screen ->
-          location = Enum.find(locations, "", &match?(%{"id" => ^id}, &1))
+          location =
+            Enum.find(locations, %{"location" => ""}, &match?(%{"id" => ^id}, &1))["location"]
+
           %{screen | location: location}
         end)
 
@@ -33,7 +35,11 @@ defmodule ScreenplayWeb.DashboardApiController do
 
   defp update_config_with_place_descriptions(config, descriptions) do
     Enum.map(config, fn %Place{id: id} = place ->
-      description = Enum.find(descriptions, "", &match?(%{"id" => ^id}, &1))
+      description =
+        Enum.find(descriptions, %{"description" => ""}, &match?(%{"id" => ^id}, &1))[
+          "description"
+        ]
+
       %{place | description: description}
     end)
   end
