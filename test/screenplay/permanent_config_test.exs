@@ -368,6 +368,55 @@ defmodule Screenplay.PermanentConfigTest do
                 platform_location: "back"
               },
               tags: []
+            },
+            "23456" => %Screen{
+              vendor: :mercury,
+              device_id: nil,
+              name: nil,
+              app_id: :gl_eink_v2,
+              refresh_if_loaded_before: nil,
+              disabled: false,
+              hidden_from_screenplay: false,
+              app_params: %GlEink{
+                departures: %Departures{
+                  sections: [
+                    %Departures.Section{
+                      query: %Departures.Query{
+                        params: %Departures.Query.Params{
+                          stop_ids: ["place-test"],
+                          route_ids: ["Green-B"],
+                          direction_id: 1
+                        }
+                      }
+                    }
+                  ]
+                },
+                footer: %Footer{stop_id: "place-test"},
+                header: %Header.Destination{
+                  route_id: "Green-B",
+                  direction_id: 1
+                },
+                alerts: %Alerts{stop_id: "456"},
+                line_map: %LineMap{
+                  stop_id: "456",
+                  station_id: "place-test",
+                  direction_id: 1,
+                  route_id: "Green-B"
+                },
+                evergreen_content: [],
+                audio: %Audio{
+                  start_time: ~T[00:00:00],
+                  stop_time: ~T[23:59:59],
+                  daytime_start_time: ~T[00:00:00],
+                  daytime_stop_time: ~T[00:00:00],
+                  days_active: [1, 2, 3, 4, 5, 6, 7],
+                  daytime_volume: 0.0,
+                  nighttime_volume: 0.0,
+                  interval_offset_seconds: 0
+                },
+                platform_location: "back"
+              },
+              tags: []
             }
           }
         }
@@ -393,7 +442,7 @@ defmodule Screenplay.PermanentConfigTest do
       end)
     end
 
-    test "publishes pending screens and adds screen to places_and_screens" do
+    test "publishes pending screens" do
       assert {:ok,
               [
                 %Place{
@@ -411,21 +460,7 @@ defmodule Screenplay.PermanentConfigTest do
                   ],
                   description: nil
                 }
-              ]} = PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, [])
-    end
-
-    test "publishes pending screens but does not add to places_and_screens" do
-      assert {:ok,
-              [
-                %Place{
-                  id: "place-test",
-                  name: "Test Place",
-                  routes: ["Green-B"],
-                  screens: [],
-                  description: nil
-                }
-              ]} =
-               PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["12345"])
+              ]} = PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["23456"])
     end
   end
 end
