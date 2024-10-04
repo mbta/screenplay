@@ -30,8 +30,8 @@ defmodule Screenplay.Places.Builder do
 
   @sl_route_ids ~w[741 742 743 746 749 751]
 
-  @polling_interval :timer.minutes(15)
-  @config_fetcher Application.compile_env(:screenplay, :config_fetcher)
+  @polling_interval :timer.minutes(5)
+  @config_fetcher Application.compile_env!(:screenplay, :config_fetcher)
   @stops_mod Application.compile_env(:screenplay, :stops_mod, Screenplay.Stops.Stop)
   @routes_mod Application.compile_env(:screenplay, :routes_mod, Screenplay.Routes.Route)
   @github_api_client Application.compile_env(
@@ -47,24 +47,22 @@ defmodule Screenplay.Places.Builder do
 
   @impl true
   def init(state) do
-    {:ok, _} =
-      build()
-      |> Places.update()
-
-    Process.send_after(self(), :build, @polling_interval)
-
+    update_and_schedule()
     {:ok, state}
   end
 
   @impl true
   def handle_info(:build, state) do
+    update_and_schedule()
+    {:noreply, state}
+  end
+
+  defp update_and_schedule do
     {:ok, _} =
       build()
       |> Places.update()
 
     Process.send_after(self(), :build, @polling_interval)
-
-    {:noreply, state}
   end
 
   defp build do
