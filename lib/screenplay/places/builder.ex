@@ -107,9 +107,6 @@ defmodule Screenplay.Places.Builder do
     |> Enum.filter(fn {_, config} -> not config.hidden_from_screenplay end)
     |> Enum.flat_map(&split_multi_place_screens/1)
     |> Enum.group_by(&get_stop_id/1, fn
-      {id, %ScreensConfig.Screen{app_id: app_id, disabled: disabled}} ->
-        %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
-
       {id,
        %ScreensConfig.Screen{
          app_id: app_id,
@@ -122,6 +119,9 @@ defmodule Screenplay.Places.Builder do
           disabled: disabled,
           direction_id: direction_id
         }
+
+      {id, %ScreensConfig.Screen{app_id: app_id, disabled: disabled}} ->
+        %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
     end)
   end
 
