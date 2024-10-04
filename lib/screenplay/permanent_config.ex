@@ -410,21 +410,25 @@ defmodule Screenplay.PermanentConfig do
   end
 
   defp get_new_places_config(places_config, screens_to_add) do
-    Enum.map(places_config, fn %Place{id: id, screens: screens} = place ->
-      new_screens_at_place =
-        screens_to_add
-        |> Enum.filter(fn
-          {_, %Screen{app_id: :gl_eink_v2} = config} ->
-            config.app_params.footer.stop_id == id
+    screens_to_add
+    |> Enum.group_by(
+      fn
+        {_, %Screen{app_id: :gl_eink_v2} = config} ->
+          config.app_params.footer.stop_id
 
-          _ ->
-            raise("Not implemented")
-        end)
-        |> Enum.map(fn {screen_id, %Screen{app_id: app_id, disabled: disabled}} ->
-          %ShowtimeScreen{id: screen_id, type: app_id, disabled: disabled}
-        end)
-
-      %{place | screens: screens ++ new_screens_at_place}
+        _ ->
+          raise("Not implemented")
+      end,
+      fn {screen_id, %Screen{app_id: app_id, disabled: disabled}} ->
+        %ShowtimeScreen{id: screen_id, type: app_id, disabled: disabled}
+      end
+    )
+    |> Enum.reduce(places_config, fn {stop_id, screens}, acc ->
+      update_in(
+        acc,
+        [Access.filter(&(&1.id == stop_id)), Access.key!(:screens)],
+        &(&1 ++ screens)
+      )
     end)
   end
 
