@@ -392,13 +392,7 @@ defmodule Screenplay.Places.Builder do
       "Red"
     ]
 
-    Enum.sort(
-      routes,
-      fn a, b ->
-        Enum.find_index(route_order, fn x -> x == a end) <
-          Enum.find_index(route_order, fn x -> x == b end)
-      end
-    )
+    Enum.sort_by(routes, fn route -> Enum.find_index(route_order, &(&1 == route)) end)
   end
 
   defp get_paess_places() do
