@@ -67,7 +67,7 @@ defmodule Screenplay.Places.Builder do
     {:noreply, state}
   end
 
-  defp build() do
+  defp build do
     live_showtime_screens = get_showtime_screens()
     paess_places = get_paess_places()
     {:ok, parent_stations} = @stops_mod.fetch_all_parent_stations()
@@ -395,7 +395,7 @@ defmodule Screenplay.Places.Builder do
     Enum.sort_by(routes, fn route -> Enum.find_index(route_order, &(&1 == route)) end)
   end
 
-  defp get_paess_places() do
+  defp get_paess_places do
     signs = fetch_signs_json()
     sources = Enum.flat_map(signs, &get_paess_sources/1)
 
