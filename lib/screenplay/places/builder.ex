@@ -4,7 +4,7 @@ defmodule Screenplay.Places.Builder do
   Showtime and PA/ESS screen configurations. Final configuration is
   saved to a Nebulex cache.
 
-  Config is rebuilt and saved every 15 minutes.
+  Config is rebuilt periodically.
   """
 
   alias Screenplay.Places

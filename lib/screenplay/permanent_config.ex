@@ -6,7 +6,7 @@ defmodule Screenplay.PermanentConfig do
 
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
-  alias Screenplay.Places.{Fetch, Place}
+  alias Screenplay.Places.Fetch
   alias Screenplay.Places.Place.ShowtimeScreen
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig, as: ScreensConfigStore

@@ -8,7 +8,7 @@ defmodule Screenplay.Places.BuilderTest do
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
 
   setup_all do
-    _ = start_supervised(Screenplay.Places.Cache)
+    start_supervised!(Screenplay.Places.Cache)
     :ok
   end
 
@@ -84,7 +84,7 @@ defmodule Screenplay.Places.BuilderTest do
                  name: "Lynn St @ Beach St",
                  routes: ["Bus"],
                  screens: [
-                   %Screenplay.Places.Place.ShowtimeScreen{
+                   %Place.ShowtimeScreen{
                      direction_id: nil,
                      disabled: false,
                      id: "EIB-124",
@@ -250,7 +250,7 @@ defmodule Screenplay.Places.BuilderTest do
                  name: "Oak Grove",
                  routes: ["Orange"],
                  screens: [
-                   %Screenplay.Places.Place.PaEssScreen{
+                   %Place.PaEssScreen{
                      id: "oak_grove_mezzanine_southbound",
                      label: nil,
                      station_code: "OOAK",
@@ -266,7 +266,7 @@ defmodule Screenplay.Places.BuilderTest do
                  name: "World Trade Center - Silver Line - South Station",
                  routes: ["Silver"],
                  screens: [
-                   %Screenplay.Places.Place.PaEssScreen{
+                   %Place.PaEssScreen{
                      id: "Silver_Line.World_Trade_Ctr_mezz",
                      label: nil,
                      station_code: "SWTC",
