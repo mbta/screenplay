@@ -21,7 +21,7 @@
         # You can give explicit globs or simply directories.
         # In the latter case `**/*.{ex,exs}` will be used.
         #
-        included: ["lib/"],
+        included: ["lib/", "test/"],
         excluded: []
       },
       checks: %{
