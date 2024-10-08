@@ -1,0 +1,120 @@
+[
+  {
+    "id": "oak_grove_mezzanine_southbound",
+    "type": "realtime",
+    "pa_ess_loc": "OOAK",
+    "scu_id": "OOAKSCU001",
+    "read_loop_offset": 120,
+    "text_zone": "m",
+    "audio_zones": ["m"],
+    "source_config": {
+      "headway_group": "orange_trunk",
+      "headway_direction_name": "Forest Hills",
+      "sources": [
+        {
+          "stop_id": "70036",
+          "routes": ["Orange"],
+          "direction_id": 0,
+          "platform": null,
+          "terminal": true,
+          "announce_arriving": false,
+          "announce_boarding": true
+        },
+        {
+          "stop_id": "Oak Grove-01",
+          "routes": ["Orange"],
+          "direction_id": 0,
+          "platform": null,
+          "terminal": true,
+          "announce_arriving": false,
+          "announce_boarding": true
+        },
+        {
+          "stop_id": "Oak Grove-02",
+          "routes": ["Orange"],
+          "direction_id": 0,
+          "platform": null,
+          "terminal": true,
+          "announce_arriving": false,
+          "announce_boarding": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "Silver_Line.World_Trade_Ctr_mezz",
+    "pa_ess_loc": "SWTC",
+    "scu_id": "SWTCSCU001",
+    "read_loop_interval": 360,
+    "read_loop_offset": 120,
+    "text_zone": "m",
+    "audio_zones": ["m"],
+    "type": "bus",
+    "top_configs": [
+      {
+        "sources": [
+          {
+            "stop_id": "74615",
+            "route_id": "741",
+            "direction_id": 1
+          },
+          {
+            "stop_id": "74615",
+            "route_id": "742",
+            "direction_id": 1
+          },
+          {
+            "stop_id": "74615",
+            "route_id": "743",
+            "direction_id": 1
+          },
+          {
+            "stop_id": "74615",
+            "route_id": "746",
+            "direction_id": 1
+          }
+        ]
+      }
+    ],
+    "bottom_configs": [
+      {
+        "sources": [
+          {
+            "stop_id": "74613",
+            "route_id": "741",
+            "direction_id": 0
+          }
+        ]
+      },
+      {
+        "sources": [
+          {
+            "stop_id": "74613",
+            "route_id": "742",
+            "direction_id": 0
+          }
+        ]
+      },
+      {
+        "sources": [
+          {
+            "stop_id": "74613",
+            "route_id": "743",
+            "direction_id": 0
+          }
+        ]
+      },
+      {
+        "sources": [
+          {
+            "stop_id": "74613",
+            "route_id": "746",
+            "direction_id": 0
+          }
+        ]
+      }
+    ],
+    "chelsea_bridge": "audio",
+    "max_minutes": 30
+  }
+]

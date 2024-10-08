@@ -16,13 +16,23 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
 
   @impl true
   def init(state) do
-    send(self(), :update)
+    update()
+
+    Process.send_after(self(), :update, @update_interval)
 
     {:ok, state}
   end
 
   @impl true
   def handle_info(:update, state) do
+    update()
+
+    Process.send_after(self(), :update, @update_interval)
+
+    {:noreply, state}
+  end
+
+  defp update do
     {:ok, body, _new_version} = Fetch.fetch_config()
     {:ok, deserialized} = Jason.decode(body)
 
@@ -30,10 +40,6 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
     |> Config.from_json()
     |> config_to_cache_entries()
     |> ScreensConfigStore.update_cache()
-
-    Process.send_after(self(), :update, @update_interval)
-
-    {:noreply, state}
   end
 
   defp config_to_cache_entries(config) do

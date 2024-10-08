@@ -1,0 +1,575 @@
+{
+  "screens": {
+    "EIG-546": {
+      "disabled": false,
+      "name": "EIG-546 Tappan IB Back",
+      "tags": [],
+      "app_params": {
+        "header": {
+          "direction_id": 1,
+          "route_id": "Green-C"
+        },
+        "alerts": {
+          "stop_id": "70232"
+        },
+        "audio": {
+          "start_time": "00:00:00",
+          "days_active": [1, 2, 3, 4, 5, 6, 7],
+          "daytime_start_time": "00:00:00",
+          "daytime_stop_time": "23:59:59",
+          "daytime_volume": 1,
+          "interval_offset_seconds": 0,
+          "nighttime_volume": 1,
+          "stop_time": "23:59:59"
+        },
+        "departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": 1,
+                  "route_ids": ["Green-C"],
+                  "route_type": null,
+                  "stop_ids": ["place-tapst"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 1,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            }
+          ]
+        },
+        "evergreen_content": [],
+        "footer": {
+          "stop_id": "place-tapst"
+        },
+        "line_map": {
+          "direction_id": 1,
+          "stop_id": "70232",
+          "route_id": "Green-C",
+          "station_id": "place-tapst"
+        },
+        "platform_location": null
+      },
+      "hidden_from_screenplay": false,
+      "refresh_if_loaded_before": "2023-02-21T18:39:42.530350Z",
+      "app_id": "gl_eink_v2",
+      "vendor": "mercury",
+      "device_id": ""
+    },
+    "DUP-WTC-DUP-003": {
+      "disabled": false,
+      "name": "WTC",
+      "tags": [],
+      "refresh_if_loaded_before": null,
+      "app_id": "dup_v2",
+      "app_params": {
+        "header": {
+          "stop_name": "World Trade Ctr"
+        },
+        "alerts": {
+          "stop_id": "place-wtcst"
+        },
+        "evergreen_content": [],
+        "primary_departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": [],
+                  "route_type": null,
+                  "stop_ids": ["place-wtcst"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 1,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            }
+          ]
+        },
+        "secondary_departures": {
+          "sections": []
+        }
+      },
+      "vendor": "outfront",
+      "device_id": null,
+      "hidden_from_screenplay": true
+    },
+    "EIB-124": {
+      "disabled": false,
+      "name": "EIB-124 Lynn-Beach 108",
+      "tags": [],
+      "refresh_if_loaded_before": "2023-02-21T18:39:53.231766Z",
+      "app_id": "bus_eink_v2",
+      "app_params": {
+        "header": {
+          "stop_id": "7412"
+        },
+        "alerts": {
+          "stop_id": "7412"
+        },
+        "departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": [],
+                  "route_type": null,
+                  "stop_ids": ["7412"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 1,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            }
+          ]
+        },
+        "evergreen_content": [],
+        "footer": {
+          "stop_id": "7412"
+        }
+      },
+      "vendor": "gds",
+      "device_id": "100301",
+      "hidden_from_screenplay": false
+    },
+    "BUS-105": {
+      "disabled": false,
+      "name": "BUS-105 Columbus-Weld OB",
+      "tags": [],
+      "refresh_if_loaded_before": "2022-10-24T19:53:36.701399Z",
+      "app_id": "bus_shelter_v2",
+      "app_params": {
+        "header": {
+          "type": "current_stop_name",
+          "stop_name": "Weld Avenue"
+        },
+        "alerts": {
+          "stop_id": "10413"
+        },
+        "audio": {
+          "start_time": "04:45:00",
+          "days_active": [1, 2, 3, 4, 5, 6, 7],
+          "daytime_start_time": "07:00:00",
+          "daytime_stop_time": "21:00:00",
+          "daytime_volume": 1,
+          "interval_offset_seconds": 150,
+          "nighttime_volume": 0.5,
+          "stop_time": "01:45:00"
+        },
+        "departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": [],
+                  "route_type": null,
+                  "stop_ids": ["10413"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 1,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            }
+          ]
+        },
+        "evergreen_content": [
+          {
+            "priority": [2, 3],
+            "schedule": [
+              {
+                "end_dt": "2023-10-29T06:30:00Z",
+                "start_dt": "2023-10-07T06:30:00Z"
+              }
+            ],
+            "slot_names": ["large"],
+            "asset_path": "images/bus-shelter/RL-Surge/RLSurge-BusShelter-English.3.png",
+            "text_for_audio": null,
+            "audio_priority": null
+          },
+          {
+            "priority": [2, 3],
+            "schedule": [
+              {
+                "end_dt": "2023-10-29T06:30:00Z",
+                "start_dt": "2023-10-07T06:30:00Z"
+              }
+            ],
+            "slot_names": ["large"],
+            "asset_path": "images/bus-shelter/RL-Surge/RLSurge-BusShelter-Spanish.3.png",
+            "text_for_audio": null,
+            "audio_priority": null
+          },
+          {
+            "priority": [2, 3, 1],
+            "schedule": [
+              {
+                "end_dt": null,
+                "start_dt": null
+              }
+            ],
+            "slot_names": ["medium_left", "medium_right"],
+            "asset_path": "images/bus-shelter/MBTA SEE SAY_ColumbusAve_screens.png",
+            "text_for_audio": null,
+            "audio_priority": null
+          },
+          {
+            "priority": [2, 3, 2],
+            "schedule": [
+              {
+                "end_dt": null,
+                "start_dt": null
+              }
+            ],
+            "slot_names": ["medium_left", "medium_right"],
+            "asset_path": "videos/autopay.mp4",
+            "text_for_audio": null,
+            "audio_priority": null
+          },
+          {
+            "priority": [2, 3, 3],
+            "schedule": [
+              {
+                "end_dt": "2023-04-22T00:00:00Z",
+                "start_dt": null
+              }
+            ],
+            "slot_names": ["medium_left", "medium_right"],
+            "asset_path": "images/bus-shelter/HR_Recruitment.jpg",
+            "text_for_audio": null,
+            "audio_priority": null
+          },
+          {
+            "priority": [2, 3, 3],
+            "schedule": [
+              {
+                "end_dt": null,
+                "start_dt": "2023-04-22T04:00:00Z"
+              }
+            ],
+            "slot_names": ["medium_left", "medium_right"],
+            "asset_path": "videos/youth-pass.mp4",
+            "text_for_audio": null,
+            "audio_priority": null
+          }
+        ],
+        "footer": {
+          "stop_id": "10413"
+        },
+        "survey": {
+          "enabled": true,
+          "large_asset_path": "images/bus-shelter/survey/10413-weld-sb-large.png",
+          "medium_asset_path": "images/bus-shelter/survey/10413-weld-sb-medium.png"
+        }
+      },
+      "vendor": "lg-mri",
+      "device_id": "TEST",
+      "hidden_from_screenplay": false
+    },
+    "MUL-114-V2": {
+      "disabled": false,
+      "name": "MUL-114 Haymarket-Congress",
+      "tags": [],
+      "refresh_if_loaded_before": "2022-10-24T19:53:36.701399Z",
+      "app_id": "busway_v2",
+      "app_params": {
+        "header": {
+          "stop_name": "Haymarket"
+        },
+        "audio": {
+          "start_time": "00:00:00",
+          "days_active": [1, 2, 3, 4, 5, 6, 7],
+          "daytime_start_time": "00:00:00",
+          "daytime_stop_time": "00:00:00",
+          "daytime_volume": 0,
+          "interval_offset_seconds": 0,
+          "nighttime_volume": 0,
+          "stop_time": "23:59:59"
+        },
+        "departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": [],
+                  "route_type": null,
+                  "stop_ids": ["117"]
+                }
+              },
+              "layout": {
+                "max": 8,
+                "min": 1,
+                "base": 8,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            },
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": "Green Line"
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": [],
+                  "route_type": null,
+                  "stop_ids": ["70203", "70204"]
+                }
+              },
+              "layout": {
+                "max": 4,
+                "min": 1,
+                "base": 4,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            },
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": "Orange Line"
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": [],
+                  "route_type": null,
+                  "stop_ids": ["70025", "70024"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 2,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": true
+            }
+          ]
+        },
+        "evergreen_content": []
+      },
+      "vendor": "solari",
+      "device_id": "SOL03",
+      "hidden_from_screenplay": false
+    },
+    "DUP-MAV-DUP-005": {
+      "disabled": false,
+      "name": "Maverick",
+      "tags": [],
+      "refresh_if_loaded_before": null,
+      "app_id": "dup_v2",
+      "app_params": {
+        "header": {
+          "stop_id": "place-mvbcl"
+        },
+        "alerts": {
+          "stop_id": "place-mvbcl"
+        },
+        "evergreen_content": [],
+        "primary_departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": ["Blue"],
+                  "route_type": null,
+                  "stop_ids": ["place-mvbcl"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 1,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": "blue_trunk"
+              },
+              "bidirectional": false
+            }
+          ]
+        },
+        "secondary_departures": {
+          "sections": [
+            {
+              "header": {
+                "title": null,
+                "arrow": null,
+                "read_as": null
+              },
+              "filters": {
+                "max_minutes": null,
+                "route_directions": null
+              },
+              "query": {
+                "opts": {
+                  "include_schedules": false
+                },
+                "params": {
+                  "direction_id": "both",
+                  "route_ids": ["114", "116", "117", "120", "121"],
+                  "route_type": null,
+                  "stop_ids": ["place-mvbcl"]
+                }
+              },
+              "layout": {
+                "max": null,
+                "min": 1,
+                "base": null,
+                "include_later": false
+              },
+              "headway": {
+                "override": null,
+                "headway_id": null
+              },
+              "bidirectional": false
+            }
+          ]
+        }
+      },
+      "vendor": "outfront",
+      "device_id": null,
+      "hidden_from_screenplay": true
+    }
+  }
+}

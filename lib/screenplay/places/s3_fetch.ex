@@ -5,20 +5,6 @@ defmodule Screenplay.Places.S3Fetch do
 
   @behaviour Screenplay.Places.Fetch
 
-  alias Screenplay.Places.Fetch
-
-  @impl true
-  def get_places_and_screens do
-    with {:ok, config_contents, version_id} <- do_get(:config),
-         {:ok, config_json} <- Jason.decode(config_contents),
-         {:ok, paess_labels_content, _} <- do_get(:paess_labels),
-         {:ok, paess_labels_json} <- Jason.decode(paess_labels_content) do
-      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
-    else
-      _ -> :error
-    end
-  end
-
   @impl true
   def get_locations do
     with {:ok, location_contents, version_id} <- do_get(:screen_locations),
@@ -40,36 +26,13 @@ defmodule Screenplay.Places.S3Fetch do
   end
 
   @impl true
-  def put_config(file_contents) do
-    encoded_contents =
-      case Jason.encode(file_contents, pretty: true) do
-        {:ok, contents} -> contents
-        {:error, _} -> :error
-      end
-
-    bucket = Application.get_env(:screenplay, :config_s3_bucket)
-    path = config_path_for_environment(:config)
-    put_operation = ExAws.S3.put_object(bucket, path, encoded_contents)
-
-    case ExAws.request(put_operation) do
-      {:ok, %{status_code: 200}} -> :ok
+  def get_paess_labels do
+    with {:ok, paess_labels_contents, _} <- do_get(:paess_labels),
+         {:ok, paess_labels_json} <- Jason.decode(paess_labels_contents) do
+      {:ok, paess_labels_json}
+    else
       _ -> :error
     end
-  end
-
-  @impl true
-  def commit, do: :ok
-
-  @impl true
-  def revert(version) do
-    bucket = Application.get_env(:screenplay, :config_s3_bucket)
-    path = config_path_for_environment(:config)
-
-    get_operation = ExAws.S3.get_object(bucket, path, version_id: version)
-    %{body: body, status_code: 200} = ExAws.request!(get_operation)
-
-    put_operation = ExAws.S3.put_object(bucket, path, body)
-    ExAws.request!(put_operation)
   end
 
   defp do_get(file_spec) do
@@ -97,9 +60,6 @@ defmodule Screenplay.Places.S3Fetch do
     base_path = "screenplay/#{Application.get_env(:screenplay, :environment_name)}"
 
     case file_spec do
-      :config ->
-        "#{base_path}/places_and_screens.json"
-
       :screen_locations ->
         "#{base_path}/screen_locations.json"
 

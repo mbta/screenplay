@@ -1,12 +1,12 @@
 defmodule Screenplay.Places.Place do
   @moduledoc """
-  Module used to define struct for screen configs stored in places_and_screens.json.
+  Module used to define struct for screen configs stored in `Screenplay.Places.Cache`.
   A screen config can either be a `PaEssScreen.t()` or a `ShowtimeScreen.t()`.
   """
 
   defmodule PaEssScreen do
     @moduledoc """
-    Module used to define struct for PA/ESS screen configs stored in `places_and_screens.json`.
+    Module used to define struct for PA/ESS screen configs stored in `Screenplay.Places.Cache`.
     """
 
     @derive Jason.Encoder
@@ -19,11 +19,12 @@ defmodule Screenplay.Places.Place do
             station_code: String.t(),
             type: String.t(),
             zone: String.t(),
-            routes: [route()]
+            routes: [route()],
+            location: String.t() | nil
           }
 
     @enforce_keys [:id, :label, :station_code, :type, :zone, :routes]
-    defstruct @enforce_keys
+    defstruct @enforce_keys ++ [:location]
 
     def new(map) do
       map
@@ -34,7 +35,7 @@ defmodule Screenplay.Places.Place do
 
   defmodule ShowtimeScreen do
     @moduledoc """
-    Module used to define struct for Showtime screen configs stored in `places_and_screens.json`.
+    Module used to define struct for Showtime screen configs stored in `Screenplay.Places.Cache`.
     """
 
     @derive Jason.Encoder
@@ -42,11 +43,13 @@ defmodule Screenplay.Places.Place do
     @type t :: %__MODULE__{
             id: String.t(),
             type: String.t(),
-            disabled: boolean()
+            disabled: boolean(),
+            direction_id: String.t(),
+            location: String.t()
           }
 
     @enforce_keys [:id, :type, :disabled]
-    defstruct @enforce_keys
+    defstruct @enforce_keys ++ [:direction_id, location: ""]
 
     def new(map) do
       map
@@ -57,29 +60,21 @@ defmodule Screenplay.Places.Place do
 
   @type route :: String.t()
 
-  @type pa_ess_screen :: PaEssScreen.t()
-
-  @type showtime_screen :: %{
-          id: String.t(),
-          type: String.t(),
-          disabled: boolean()
-        }
-
-  @type screen :: pa_ess_screen() | showtime_screen()
+  @type screen :: PaEssScreen.t() | ShowtimeScreen.t()
 
   @type t :: %__MODULE__{
           id: String.t(),
           name: String.t(),
           routes: list(route()),
-          screens: list(screen())
+          screens: list(screen()),
+          description: String.t() | nil
         }
 
   @derive Jason.Encoder
-  defstruct id: nil, name: nil, routes: [], screens: []
+  defstruct id: nil, name: nil, routes: [], screens: [], description: nil
 
-  def from_map(place_and_screens_map) do
-    %{"id" => id, "name" => name, "routes" => routes, "screens" => screens} =
-      place_and_screens_map
+  def from_map(place_map) do
+    %{"id" => id, "name" => name, "routes" => routes, "screens" => screens} = place_map
 
     screens =
       Enum.map(screens, fn

@@ -130,8 +130,13 @@ defmodule ScreenplayWeb.ConfigController do
            app_id_atom,
            hidden_from_screenplay_ids
          ) do
-      :ok -> send_resp(conn, 200, "OK")
-      _ -> send_resp(conn, 500, "Could not publish screens. Please contact an engineer.")
+      {:ok, new_config} ->
+        json(conn, %{message: "OK", new_config: new_config})
+
+      _ ->
+        conn
+        |> put_status(500)
+        |> json(%{message: "Could not publish screens. Please contact an engineer."})
     end
   end
 

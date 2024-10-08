@@ -74,7 +74,7 @@ defmodule Screenplay.PaMessagesTest do
     test "returns custom messages if now is between start and end schedule" do
       now = ~U[2024-05-01T12:00:00Z]
 
-      start_supervised(Screenplay.Alerts.Cache)
+      start_supervised!(Screenplay.Alerts.Cache)
 
       insert(:pa_message, %{
         id: 1,

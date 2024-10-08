@@ -10,7 +10,6 @@ config :screenplay,
   redirect_http?: false,
   alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.TestFetch,
   config_fetcher: Screenplay.Places.LocalFetch,
-  local_config_file_spec: {:test, "places_and_screens.json"},
   local_locations_file_spec: {:test, "screen_locations.json"},
   local_place_descriptions_file_spec: {:test, "place_descriptions.json"},
   local_paess_labels_file_spec: {:test, "paess_labels.json"},
@@ -19,7 +18,11 @@ config :screenplay,
   local_screens_config_file_spec: {:test, "screens_config.json"},
   local_pending_screens_config_file_spec: {:test, "pending_config.json"},
   api_v3_url: [:no_api_requests_allowed_during_testing],
-  sftp_client_module: Screenplay.Outfront.FakeSFTPClient
+  sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
+  github_api_client: Screenplay.GithubApi.FakeClient,
+  local_signs_json_path: {:test, "signs.json"},
+  stops_mod: Screenplay.Stops.Mock,
+  routes_mod: Screenplay.Routes.Mock
 
 config :ueberauth, Ueberauth,
   providers: [

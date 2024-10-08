@@ -5,7 +5,8 @@ defmodule Screenplay.PermanentConfigTest do
 
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig
-  alias Screenplay.Places.LocalFetch
+  alias Screenplay.Places.{Cache, Place}
+  alias Screenplay.Places.Place.ShowtimeScreen
   alias ScreensConfig.{PendingConfig, Screen}
   alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, Header, LineMap}
 
@@ -19,6 +20,8 @@ defmodule Screenplay.PermanentConfigTest do
   end
 
   setup_all do
+    start_supervised!(Screenplay.Places.Cache)
+
     on_exit(fn ->
       empty_config = %{screens: %{}}
       pending_screens_path = get_fixture_path("pending_config.json")
@@ -365,6 +368,55 @@ defmodule Screenplay.PermanentConfigTest do
                 platform_location: "back"
               },
               tags: []
+            },
+            "23456" => %Screen{
+              vendor: :mercury,
+              device_id: nil,
+              name: nil,
+              app_id: :gl_eink_v2,
+              refresh_if_loaded_before: nil,
+              disabled: false,
+              hidden_from_screenplay: false,
+              app_params: %GlEink{
+                departures: %Departures{
+                  sections: [
+                    %Departures.Section{
+                      query: %Departures.Query{
+                        params: %Departures.Query.Params{
+                          stop_ids: ["place-test"],
+                          route_ids: ["Green-B"],
+                          direction_id: 1
+                        }
+                      }
+                    }
+                  ]
+                },
+                footer: %Footer{stop_id: "place-test"},
+                header: %Header.Destination{
+                  route_id: "Green-B",
+                  direction_id: 1
+                },
+                alerts: %Alerts{stop_id: "456"},
+                line_map: %LineMap{
+                  stop_id: "456",
+                  station_id: "place-test",
+                  direction_id: 1,
+                  route_id: "Green-B"
+                },
+                evergreen_content: [],
+                audio: %Audio{
+                  start_time: ~T[00:00:00],
+                  stop_time: ~T[23:59:59],
+                  daytime_start_time: ~T[00:00:00],
+                  daytime_stop_time: ~T[00:00:00],
+                  days_active: [1, 2, 3, 4, 5, 6, 7],
+                  daytime_volume: 0.0,
+                  nighttime_volume: 0.0,
+                  interval_offset_seconds: 0
+                },
+                platform_location: "back"
+              },
+              tags: []
             }
           }
         }
@@ -373,45 +425,42 @@ defmodule Screenplay.PermanentConfigTest do
 
       File.write(pending_screens_path, config)
 
-      on_exit(fn ->
-        fresh_config = [%{id: "place-test", name: "Test Place", screens: [], routes: ["Green-B"]}]
+      [
+        %Place{
+          id: "place-test",
+          name: "Test Place",
+          routes: ["Green-B"],
+          screens: [],
+          description: nil
+        }
+      ]
+      |> Enum.map(&{&1.id, &1})
+      |> Cache.put_all()
 
-        File.write(get_fixture_path("places_and_screens.json"), Jason.encode!(fresh_config))
+      on_exit(fn ->
+        Cache.delete_all()
       end)
     end
 
-    test "publishes pending screens and adds screen to places_and_screens" do
-      assert PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, []) == :ok
-
-      expected_places_and_screens = [
-        %{
-          "id" => "place-test",
-          "name" => "Test Place",
-          "screens" => [
-            %{"disabled" => false, "id" => "12345", "type" => "gl_eink_v2"}
-          ],
-          "routes" => ["Green-B"]
-        }
-      ]
-
-      {:ok, config, _} = LocalFetch.get_places_and_screens()
-      assert expected_places_and_screens == config
-    end
-
-    test "publishes pending screens but does not add to places_and_screens" do
-      assert PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["12345"]) == :ok
-
-      expected_places_and_screens = [
-        %{
-          "id" => "place-test",
-          "name" => "Test Place",
-          "screens" => [],
-          "routes" => ["Green-B"]
-        }
-      ]
-
-      {:ok, config, _} = LocalFetch.get_places_and_screens()
-      assert expected_places_and_screens == config
+    test "publishes pending screens" do
+      assert {:ok,
+              [
+                %Place{
+                  id: "place-test",
+                  name: "Test Place",
+                  routes: ["Green-B"],
+                  screens: [
+                    %ShowtimeScreen{
+                      id: "12345",
+                      type: :gl_eink_v2,
+                      disabled: false,
+                      direction_id: nil,
+                      location: ""
+                    }
+                  ],
+                  description: nil
+                }
+              ]} = PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["23456"])
     end
   end
 end

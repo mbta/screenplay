@@ -3,21 +3,6 @@ defmodule Screenplay.Places.LocalFetch do
 
   @behaviour Screenplay.Places.Fetch
 
-  alias Screenplay.Places.Fetch
-
-  @impl true
-  def get_places_and_screens do
-    with {:ok, config_contents, version_id} <- do_get(:local_config_file_spec),
-         {:ok, config_json} <- do_decode(config_contents, :local_config_file_spec),
-         {:ok, paess_labels_content, _} <- do_get(:local_paess_labels_file_spec),
-         {:ok, paess_labels_json} <-
-           do_decode(paess_labels_content, :local_paess_labels_file_spec) do
-      {:ok, Fetch.add_labels_to_config(config_json, paess_labels_json), version_id}
-    else
-      _ -> :error
-    end
-  end
-
   @impl true
   def get_locations do
     with {:ok, config_contents, version_id} <- do_get(:local_locations_file_spec),
@@ -39,43 +24,13 @@ defmodule Screenplay.Places.LocalFetch do
   end
 
   @impl true
-  # sobelow_skip ["Traversal.FileModule"]
-  def put_config(file_contents) do
-    encoded_contents =
-      case Jason.encode(file_contents, pretty: true) do
-        {:ok, contents} -> contents
-        {:error, _} -> :error
-      end
-
-    File.copy!(
-      local_path(:local_config_file_spec),
-      local_path(:local_config_file_spec) <> ".temp"
-    )
-
-    case File.write(local_path(:local_config_file_spec), encoded_contents) do
-      :ok -> :ok
-      {:error, _} -> :error
+  def get_paess_labels do
+    with {:ok, config_contents, _} <- do_get(:local_paess_labels_file_spec),
+         {:ok, config_json} <- do_decode(config_contents, :local_paess_labels_file_spec) do
+      {:ok, config_json}
+    else
+      _ -> :error
     end
-  end
-
-  @impl true
-  # sobelow_skip ["Traversal.FileModule"]
-  def commit do
-    case File.rm(local_path(:local_config_file_spec) <> ".temp") do
-      {:error, reason} when reason != :enoent -> :error
-      _ -> :ok
-    end
-  end
-
-  @impl true
-  # sobelow_skip ["Traversal.FileModule"]
-  def revert(_) do
-    File.copy!(
-      local_path(:local_config_file_spec) <> ".temp",
-      local_path(:local_config_file_spec)
-    )
-
-    File.rm!(local_path(:local_config_file_spec) <> ".temp")
   end
 
   # sobelow_skip ["Traversal.FileModule"]
@@ -110,7 +65,7 @@ defmodule Screenplay.Places.LocalFetch do
 
   defp local_path(file_spec) do
     case Application.get_env(:screenplay, file_spec) do
-      {:priv, file_name} -> Path.join([:code.priv_dir(:screenplay), "config", file_name])
+      {:priv, file_name} -> Path.join([:code.priv_dir(:screenplay), "local", file_name])
       {:test, file_name} -> Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
     end
   end
