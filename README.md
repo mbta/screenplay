@@ -19,7 +19,7 @@ Screenplay requires the Screens config to be available at `../screens/priv/local
 
 ### Realtime-Signs
 
-This repo expects Realtime Signs to be cloned and for `realtime_signs/priv/signs.json` to be available. This can be done by doing the following:
+This repo expects Realtime Signs to be cloned and for `../realtime_signs/priv/signs.json` to be available. This can be done by doing the following:
 
 1. `cd ..`
 1. `git clone git@github.com:mbta/realtime_signs.git`
