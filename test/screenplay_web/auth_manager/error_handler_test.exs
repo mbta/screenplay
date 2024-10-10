@@ -10,7 +10,7 @@ defmodule ScreenplayWeb.AuthManager.ErrorHandlerTest do
         |> init_test_session(%{})
         |> ErrorHandler.auth_error({:some_type, :reason}, [])
 
-      assert html_response(conn, 302) =~ "\"/auth/keycloak\""
+      assert html_response(conn, 302) =~ "\"/auth/keycloak\?prompt%3Dlogin"
     end
   end
 end
