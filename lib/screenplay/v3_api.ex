@@ -1,6 +1,8 @@
 defmodule Screenplay.V3Api do
   @moduledoc false
 
+  use Retry
+
   require Logger
 
   @default_opts [
@@ -20,20 +22,14 @@ defmodule Screenplay.V3Api do
     url = build_url(route, params)
 
     with {:http_request, {:ok, response}} <-
-           {:http_request,
-            HTTPoison.get(
-              url,
-              headers,
-              Keyword.merge(@default_opts, opts)
-            )},
+           {:http_request, do_fetch(url, headers, opts)},
          {:response_success, %{status_code: 200, body: body}} <-
            {:response_success, response},
          {:parse, {:ok, parsed}} <- {:parse, Jason.decode(body)} do
       {:ok, parsed}
     else
       {:http_request, e} ->
-        {:error, httpoison_error} = e
-        log_api_error({:http_fetch_error, e}, message: Exception.message(httpoison_error))
+        e
 
       {:response_success, %{status_code: 304}} ->
         :not_modified
@@ -48,6 +44,21 @@ defmodule Screenplay.V3Api do
 
       e ->
         log_api_error({:error, e})
+    end
+  end
+
+  defp do_fetch(url, headers, opts) do
+    retry with: Stream.take(constant_backoff(500), 3) do
+      HTTPoison.get(
+        url,
+        headers,
+        Keyword.merge(@default_opts, opts)
+      )
+    else
+      httpoison_error ->
+        log_api_error({:http_fetch_error, {:error, httpoison_error}},
+          message: Exception.message(httpoison_error)
+        )
     end
   end
 

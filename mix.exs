@@ -20,7 +20,7 @@ defmodule Screenplay.MixProject do
   def application do
     [
       mod: {Screenplay.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :retry]
     ]
   end
 
@@ -71,7 +71,8 @@ defmodule Screenplay.MixProject do
       {:ex_machina, "~> 2.7", only: :test},
       {:remote_ip, "~> 1.2"},
       {:faker, "~> 0.18"},
-      {:nebulex, "~> 2.6"}
+      {:nebulex, "~> 2.6"},
+      {:retry, "~> 0.18"}
     ]
   end
 
