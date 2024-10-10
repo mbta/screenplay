@@ -13,7 +13,8 @@ defmodule Screenplay.V3Api do
         route,
         params \\ %{},
         extra_headers \\ [],
-        opts \\ []
+        opts \\ [],
+        retry \\ 3
       ) do
     headers = extra_headers ++ api_key_headers(Application.get_env(:screenplay, :api_v3_key))
 
@@ -32,8 +33,12 @@ defmodule Screenplay.V3Api do
       {:ok, parsed}
     else
       {:http_request, e} ->
-        {:error, httpoison_error} = e
-        log_api_error({:http_fetch_error, e}, message: Exception.message(httpoison_error))
+        if retry == 0 do
+          {:error, httpoison_error} = e
+          log_api_error({:http_fetch_error, e}, message: Exception.message(httpoison_error))
+        else
+          get_json(route, params, extra_headers, opts, retry - 1)
+        end
 
       {:response_success, %{status_code: 304}} ->
         :not_modified
