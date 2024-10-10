@@ -1,6 +1,8 @@
 defmodule Screenplay.V3Api do
   @moduledoc false
 
+  use Retry
+
   require Logger
 
   @default_opts [
@@ -13,32 +15,21 @@ defmodule Screenplay.V3Api do
         route,
         params \\ %{},
         extra_headers \\ [],
-        opts \\ [],
-        retry \\ 3
+        opts \\ []
       ) do
     headers = extra_headers ++ api_key_headers(Application.get_env(:screenplay, :api_v3_key))
 
     url = build_url(route, params)
 
     with {:http_request, {:ok, response}} <-
-           {:http_request,
-            HTTPoison.get(
-              url,
-              headers,
-              Keyword.merge(@default_opts, opts)
-            )},
+           {:http_request, do_fetch(url, headers, opts)},
          {:response_success, %{status_code: 200, body: body}} <-
            {:response_success, response},
          {:parse, {:ok, parsed}} <- {:parse, Jason.decode(body)} do
       {:ok, parsed}
     else
       {:http_request, e} ->
-        if retry == 0 do
-          {:error, httpoison_error} = e
-          log_api_error({:http_fetch_error, e}, message: Exception.message(httpoison_error))
-        else
-          get_json(route, params, extra_headers, opts, retry - 1)
-        end
+        e
 
       {:response_success, %{status_code: 304}} ->
         :not_modified
@@ -53,6 +44,22 @@ defmodule Screenplay.V3Api do
 
       e ->
         log_api_error({:error, e})
+    end
+  end
+
+  defp do_fetch(url, headers, opts) do
+    retry with: Stream.take(constant_backoff(500), 3) do
+      HTTPoison.get(
+        url,
+        headers,
+        Keyword.merge(@default_opts, opts)
+      )
+    after
+      result -> result
+    else
+      e ->
+        Logger.info("[api_v3_get_json_error] error_type=http_request")
+        e
     end
   end
 
