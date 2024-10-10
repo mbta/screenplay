@@ -48,7 +48,7 @@ defmodule ScreenplayWeb.AuthManager do
   end
 
   @impl true
-  def verify_claims(%{"iat" => iat, "auth_time" => auth_time} = claims, _opts) do
+  def verify_claims(claims = %{"iat" => iat, "auth_time" => auth_time}, _opts) do
     now = System.system_time(:second)
     # auth_time is when the user entered their password at the SSO provider
     auth_time_expires = auth_time + max_session_time()
