@@ -67,7 +67,7 @@ config :ueberauth, Ueberauth,
        userinfo: true,
        uid_field: "email",
        scopes: ~w(openid email),
-       authorization_params: %{max_age: max_session_time},
+       authorization_params: %{max_age: "#{max_session_time}"},
        authorization_params_passthrough: ~w(prompt login_hint)}
   ]
 
