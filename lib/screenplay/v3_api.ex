@@ -57,9 +57,8 @@ defmodule Screenplay.V3Api do
     after
       result -> result
     else
-      e ->
-        Logger.info("[api_v3_get_json_error] error_type=http_request")
-        e
+      {:error, httpoison_error} = e ->
+        log_api_error({:http_fetch_error, e}, message: Exception.message(httpoison_error))
     end
   end
 
