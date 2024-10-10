@@ -16,7 +16,6 @@ sftp_client_module =
 
 if config_env() == :prod do
   keycloak_opts = [
-    issuer: :keycloak_issuer,
     client_id: System.fetch_env!("KEYCLOAK_CLIENT_ID"),
     client_secret: System.fetch_env!("KEYCLOAK_CLIENT_SECRET")
   ]

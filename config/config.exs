@@ -63,17 +63,12 @@ config :ueberauth, Ueberauth,
   providers: [
     keycloak:
       {Ueberauth.Strategy.Oidcc,
+       issuer: :keycloak_issuer,
        userinfo: true,
        uid_field: "email",
        scopes: ~w(openid email),
        authorization_params: %{max_age: max_session_time},
        authorization_params_passthrough: ~w(prompt login_hint)}
-  ]
-
-# Placeholder for Keycloak authentication, defined for real in environment configs
-config :ueberauth, Ueberauth,
-  providers: [
-    keycloak: nil
   ]
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
