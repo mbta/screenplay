@@ -54,8 +54,6 @@ defmodule Screenplay.V3Api do
         headers,
         Keyword.merge(@default_opts, opts)
       )
-    after
-      result -> result
     else
       httpoison_error ->
         log_api_error({:http_fetch_error, {:error, httpoison_error}},
