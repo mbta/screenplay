@@ -13,6 +13,7 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
+import { Button, Modal } from "react-bootstrap";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -24,6 +25,8 @@ const Dashboard: ComponentType = () => {
   } = useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
+  const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchAlerts().then(
@@ -52,23 +55,31 @@ const Dashboard: ComponentType = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch alerts every 4 seconds.
-  useInterval(() => {
-    fetchAlerts().then(
-      ({
-        all_alert_ids: allAPIalertIds,
-        alerts: newAlerts,
-        screens_by_alert: screensByAlertMap,
-      }) => {
-        findAndSetBannerAlert(alerts, newAlerts);
-        dispatch({
-          type: "SET_ALERTS",
-          alerts: newAlerts,
-          allAPIAlertIds: allAPIalertIds,
-          screensByAlertMap: screensByAlertMap,
+  useInterval(
+    () => {
+      fetchAlerts()
+        .then(
+          ({
+            all_alert_ids: allAPIalertIds,
+            alerts: newAlerts,
+            screens_by_alert: screensByAlertMap,
+          }) => {
+            findAndSetBannerAlert(alerts, newAlerts);
+            dispatch({
+              type: "SET_ALERTS",
+              alerts: newAlerts,
+              allAPIAlertIds: allAPIalertIds,
+              screensByAlertMap: screensByAlertMap,
+            });
+          },
+        )
+        .catch(() => {
+          setIsAlertsIntervalRunning(false);
+          setShowModal(true);
         });
-      },
-    );
-  }, 4000);
+    },
+    isAlertsIntervalRunning ? 4000 : null,
+  );
 
   const findAndSetBannerAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
     const now = new Date();
@@ -187,6 +198,25 @@ const Dashboard: ComponentType = () => {
         )}
         <Outlet />
       </div>
+      <Modal show={showModal} className="error-modal">
+        <Modal.Body>
+          Your session has expired, please refresh your browser.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={() => setShowModal(false)}
+            className="error-modal__cancel-button"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => window.location.reload()}
+            className="error-modal__refresh-button"
+          >
+            Refresh now
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
