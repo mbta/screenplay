@@ -14,6 +14,7 @@ import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
 import { Button, Modal } from "react-bootstrap";
+import ErrorModal from "Components/ErrorModal";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -198,25 +199,14 @@ const Dashboard: ComponentType = () => {
         )}
         <Outlet />
       </div>
-      <Modal show={showModal} className="error-modal">
-        <Modal.Body>
-          Your session has expired, please refresh your browser.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={() => setShowModal(false)}
-            className="error-modal__cancel-button"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => window.location.reload()}
-            className="error-modal__refresh-button"
-          >
-            Refresh now
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ErrorModal
+        title="Session expired"
+        showErrorModal={showModal}
+        onHide={() => setShowModal(false)}
+        errorMessage="Your session has expired, please refresh your browser."
+        confirmButtonLabel="Refresh now"
+        onConfirm={() => window.location.reload()}
+      />
     </div>
   );
 };
