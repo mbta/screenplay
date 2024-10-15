@@ -44,6 +44,7 @@ $form-feedback-invalid-color: $text-error;
 @import "search-bar.scss";
 @import "dashboard/picker.scss";
 @import "dashboard/error-toast.scss";
+@import "error-modal.scss";
 
 html {
   font-size: 16px;
