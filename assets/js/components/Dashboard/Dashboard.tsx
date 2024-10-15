@@ -74,9 +74,13 @@ const Dashboard: ComponentType = () => {
             });
           },
         )
-        .catch(() => {
-          setIsAlertsIntervalRunning(false);
-          setShowModal(true);
+        .catch((response: Response) => {
+          if (response.status === 403) {
+            setIsAlertsIntervalRunning(false);
+            setShowModal(true);
+          } else {
+            throw response;
+          }
         });
     },
     isAlertsIntervalRunning ? 4000 : null,
