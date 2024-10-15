@@ -13,7 +13,6 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
-import { Button, Modal } from "react-bootstrap";
 import ErrorModal from "Components/ErrorModal";
 
 const Dashboard: ComponentType = () => {

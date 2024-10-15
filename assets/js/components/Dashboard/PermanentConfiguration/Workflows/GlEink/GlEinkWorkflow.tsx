@@ -10,7 +10,7 @@ import ConfigureScreensWorkflowPage, {
 import BottomActionBar from "Components/PermanentConfiguration/BottomActionBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import StationSelectPage from "Components/PermanentConfiguration/Workflows/GlEink/StationSelectPage";
-import { Alert, Button, Modal } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
   useConfigValidationContext,
