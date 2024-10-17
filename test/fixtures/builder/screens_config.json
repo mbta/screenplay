@@ -345,7 +345,7 @@
           "medium_asset_path": "images/bus-shelter/survey/10413-weld-sb-medium.png"
         }
       },
-      "vendor": "lg-mri",
+      "vendor": "lg_mri",
       "device_id": "TEST",
       "hidden_from_screenplay": false
     },
