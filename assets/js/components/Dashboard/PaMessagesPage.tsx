@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Button,
   Spinner,
+  Dropdown,
 } from "react-bootstrap";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
 import { PaMessage } from "Models/pa_message";
@@ -13,6 +14,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
+import ThreeDotsDropdown from "./ThreeDotsDropdown";
 
 type StateFilter = "active" | "future" | "past";
 
@@ -216,6 +218,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th>Message</th>
             <th>Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -273,6 +276,13 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
           <u>Copy</u>
         </a>
       </td> */}
+      <td onClick={(e) => e.stopPropagation()}>
+        <ThreeDotsDropdown>
+          <Dropdown.Item className="three-dots-vertical-dropdown__item">
+            End Now
+          </Dropdown.Item>
+        </ThreeDotsDropdown>
+      </td>
     </tr>
   );
 };
