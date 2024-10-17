@@ -190,6 +190,7 @@ const PaMessagesPage: ComponentType = () => {
               <PaMessageTable
                 paMessages={data ?? []}
                 isLoading={shouldShowLoadingState}
+                filter={stateFilter}
               />
             </Row>
           </Col>
@@ -202,11 +203,13 @@ const PaMessagesPage: ComponentType = () => {
 interface PaMessageTableProps {
   paMessages: PaMessage[];
   isLoading: boolean;
+  filter: "active" | "future" | "past";
 }
 
 const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   paMessages,
   isLoading,
+  filter,
 }: PaMessageTableProps) => {
   const data = isLoading ? [] : paMessages;
 
@@ -218,12 +221,18 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th>Message</th>
             <th>Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
-            <th></th>
+            {filter === "active" && <th></th>}
           </tr>
         </thead>
         <tbody>
           {data.map((paMessage: PaMessage) => {
-            return <PaMessageRow key={paMessage.id} paMessage={paMessage} />;
+            return (
+              <PaMessageRow
+                key={paMessage.id}
+                paMessage={paMessage}
+                filter={filter}
+              />
+            );
           })}
         </tbody>
       </table>
@@ -246,10 +255,12 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
 
 interface PaMessageRowProps {
   paMessage: PaMessage;
+  filter: "active" | "future" | "past";
 }
 
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
+  filter,
 }: PaMessageRowProps) => {
   const navigate = useNavigate();
   const start = new Date(paMessage.start_datetime);
@@ -276,13 +287,15 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
           <u>Copy</u>
         </a>
       </td> */}
-      <td onClick={(e) => e.stopPropagation()}>
-        <ThreeDotsDropdown>
-          <Dropdown.Item className="three-dots-vertical-dropdown__item">
-            End Now
-          </Dropdown.Item>
-        </ThreeDotsDropdown>
-      </td>
+      {filter === "active" && (
+        <td onClick={(e) => e.stopPropagation()}>
+          <ThreeDotsDropdown>
+            <Dropdown.Item className="three-dots-vertical-dropdown__item">
+              End Now
+            </Dropdown.Item>
+          </ThreeDotsDropdown>
+        </td>
+      )}
     </tr>
   );
 };
