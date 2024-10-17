@@ -23,11 +23,12 @@ type ScreenGroup = {
 
 const groupScreens = (screens: Screen[]): ScreenGroup[] => {
   const inlineScreens = screens.filter((screen) =>
-    ["busway_v2", "solari"].includes(screen.type),
+    ["busway_v2", "solari", "elevator_v2"].includes(screen.type),
   );
   const paEssScreens = screens.filter((screen) => screen.type === "pa_ess");
   const otherScreens = screens.filter(
-    (screen) => !["busway_v2", "pa_ess", "solari"].includes(screen.type),
+    (screen) =>
+      !["busway_v2", "pa_ess", "solari", "elevator_v2"].includes(screen.type),
   );
 
   const groups = otherScreens.map((screen) => ({
