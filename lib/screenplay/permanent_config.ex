@@ -12,7 +12,7 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
   alias ScreensConfig.{Config, PendingConfig, Screen}
-  alias ScreensConfig.V2.{Alerts, Audio, Departures, Footer, GlEink, LineMap}
+  alias ScreensConfig.V2.{Alerts, Departures, Footer, GlEink, LineMap}
   alias ScreensConfig.V2.Departures.{Query, Section}
   alias ScreensConfig.V2.Header.Destination
 
@@ -290,7 +290,6 @@ defmodule Screenplay.PermanentConfig do
       app_id: :gl_eink_v2,
       app_params:
         struct(GlEink,
-          audio: default_enabled_audio_config(),
           departures:
             struct(Departures,
               sections: [
@@ -362,14 +361,6 @@ defmodule Screenplay.PermanentConfig do
           json_to_struct(config, :gl_eink_v2, place_id, platform_ids)
         )
     end)
-  end
-
-  defp default_enabled_audio_config do
-    %Audio{
-      start_time: ~T[00:00:00],
-      stop_time: ~T[23:59:59],
-      days_active: [1, 2, 3, 4, 5, 6, 7]
-    }
   end
 
   # Each screen type will look in a different part of the configuration to find it's physical location
