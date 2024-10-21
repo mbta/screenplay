@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Button,
   Spinner,
+  FormCheck,
 } from "react-bootstrap";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
 import { PaMessage } from "Models/pa_message";
@@ -13,6 +14,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
+import { updateExistingPaMessage } from "Utils/api";
+import { UpdatePaMessageBody } from "Models/pa_message";
 
 type StateFilter = "active" | "future" | "past";
 
@@ -141,7 +144,7 @@ const PaMessagesPage: ComponentType = () => {
                   className={cx("button", { active: stateFilter === "active" })}
                   onClick={() => setStateFilter("active")}
                 >
-                  Active
+                  Now
                 </Button>
                 <Button
                   className={cx("button", { active: stateFilter === "future" })}
@@ -188,6 +191,7 @@ const PaMessagesPage: ComponentType = () => {
               <PaMessageTable
                 paMessages={data ?? []}
                 isLoading={shouldShowLoadingState}
+                stateFilter={stateFilter}
               />
             </Row>
           </Col>
@@ -200,11 +204,13 @@ const PaMessagesPage: ComponentType = () => {
 interface PaMessageTableProps {
   paMessages: PaMessage[];
   isLoading: boolean;
+  stateFilter: StateFilter;
 }
 
 const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   paMessages,
   isLoading,
+  stateFilter,
 }: PaMessageTableProps) => {
   const data = isLoading ? [] : paMessages;
 
@@ -216,11 +222,18 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th>Message</th>
             <th>Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
+            {stateFilter == "active" && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
           {data.map((paMessage: PaMessage) => {
-            return <PaMessageRow key={paMessage.id} paMessage={paMessage} />;
+            return (
+              <PaMessageRow
+                key={paMessage.id}
+                paMessage={paMessage}
+                stateFilter={stateFilter}
+              />
+            );
           })}
         </tbody>
       </table>
@@ -243,15 +256,27 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
 
 interface PaMessageRowProps {
   paMessage: PaMessage;
+  stateFilter: StateFilter;
 }
 
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
+  stateFilter,
 }: PaMessageRowProps) => {
   const navigate = useNavigate();
   const start = new Date(paMessage.start_datetime);
   const end =
     paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
+
+  const [paused, setPaused] = useState(!!paMessage.paused);
+
+  const stopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    updateExistingPaMessage(paMessage.id, {
+      paused: !paused,
+    } as UpdatePaMessageBody);
+    setPaused(!paused);
+  };
 
   return (
     <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
@@ -262,17 +287,29 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         <br />
         {end && end.toLocaleString().replace(",", "")}
       </td>
-      {/* <td>
-        <FormCheck />
-      </td>
-      <td className="pa-message-table__actions">
-        <a href="/pa-messages">
-          <u>Pause</u>
-        </a>
-        <a href="/pa-messages">
-          <u>Copy</u>
-        </a>
-      </td> */}
+      {stateFilter == "active" && (
+        <td>
+          <div
+            className="pause-active-switch-container"
+            onClick={stopPropagation}
+          >
+            <FormCheck
+              className={"pause-active-switch"}
+              type="switch"
+              checked={!paused}
+              onChange={() => {}}
+            />
+            <div
+              className={cx("switch-text", {
+                paused: paused,
+                active: !paused,
+              })}
+            >
+              {paused ? "Paused" : "Active"}
+            </div>
+          </div>
+        </td>
+      )}
     </tr>
   );
 };
