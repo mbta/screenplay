@@ -119,7 +119,7 @@ defmodule Screenplay.PaMessages.PaMessage do
   end
 
   defp in_active_period?(now, start_datetime, end_datetime) do
-    start_datetime && DateTime.after?(now, start_datetime) &&
+    not is_nil(start_datetime) and DateTime.after?(now, start_datetime) and
       (end_datetime == nil or
          DateTime.before?(now, end_datetime))
   end
