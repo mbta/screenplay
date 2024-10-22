@@ -15,6 +15,8 @@ import cx from "classnames";
 import useSWR from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import ThreeDotsDropdown from "./ThreeDotsDropdown";
+import { endMessage } from "Utils/api";
+import CustomToast from "Components/CustomToast";
 
 type StateFilter = "active" | "future" | "past";
 
@@ -262,41 +264,64 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
   filter,
 }: PaMessageRowProps) => {
+  const [toastProps, setToastProps] = useState<{
+    variant: "info" | "warning";
+    message: string;
+    autoHide?: boolean;
+  } | null>();
   const navigate = useNavigate();
   const start = new Date(paMessage.start_datetime);
   const end =
     paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
 
   return (
-    <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
-      <td>{paMessage.visual_text}</td>
-      <td>{paMessage.interval_in_minutes} min</td>
-      <td className="pa-message-table__start-end">
-        {start.toLocaleString().replace(",", "")}
-        <br />
-        {end && end.toLocaleString().replace(",", "")}
-      </td>
-      {/* <td>
-        <FormCheck />
-      </td>
-      <td className="pa-message-table__actions">
-        <a href="/pa-messages">
-          <u>Pause</u>
-        </a>
-        <a href="/pa-messages">
-          <u>Copy</u>
-        </a>
-      </td> */}
-      {filter === "active" && (
-        <td onClick={(e) => e.stopPropagation()}>
-          <ThreeDotsDropdown>
-            <Dropdown.Item className="three-dots-vertical-dropdown__item">
-              End Now
-            </Dropdown.Item>
-          </ThreeDotsDropdown>
+    <>
+      <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
+        <td>{paMessage.visual_text}</td>
+        <td>{paMessage.interval_in_minutes} min</td>
+        <td className="pa-message-table__start-end">
+          {start.toLocaleString().replace(",", "")}
+          <br />
+          {end && end.toLocaleString().replace(",", "")}
         </td>
+        {filter === "active" && (
+          <td onClick={(e) => e.stopPropagation()}>
+            <ThreeDotsDropdown>
+              <Dropdown.Item
+                className="three-dots-vertical-dropdown__item"
+                onClick={() => {
+                  endMessage(paMessage.id).then(({ status }) => {
+                    if (status === 200) {
+                      setToastProps({
+                        variant: "info",
+                        message:
+                          "PA/ESS message has ended, and moved to “Done.",
+                        autoHide: true,
+                      });
+                    } else {
+                      setToastProps({
+                        variant: "warning",
+                        message: "Something went wrong. Please try again.",
+                      });
+                    }
+                  });
+                }}
+              >
+                End Now
+              </Dropdown.Item>
+            </ThreeDotsDropdown>
+          </td>
+        )}
+      </tr>
+      {toastProps != null && (
+        <CustomToast
+          {...toastProps}
+          onClose={() => {
+            setToastProps(null);
+          }}
+        />
       )}
-    </tr>
+    </>
   );
 };
 
