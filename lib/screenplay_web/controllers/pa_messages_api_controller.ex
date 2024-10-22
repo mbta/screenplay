@@ -56,4 +56,19 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       |> json(%{error: "not_found"})
     end
   end
+
+  def end_message(conn, %{"id" => id}) do
+    if pa_message = PaMessages.get_message(id) do
+      with {:ok, updated_pa_message} <-
+             PaMessages.update_message(pa_message, %{
+               end_datetime: DateTime.add(DateTime.utc_now(), -1)
+             }) do
+        json(conn, updated_pa_message)
+      end
+    else
+      conn
+      |> put_status(404)
+      |> json(%{error: "not_found"})
+    end
+  end
 end
