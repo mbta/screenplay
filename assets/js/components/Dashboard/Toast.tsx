@@ -11,9 +11,16 @@ interface ToastProps {
   message: string | null;
   errors?: string[];
   onClose?: () => void;
+  autoHide?: boolean;
 }
 
-const Toast = ({ message, errors = [], onClose, variant }: ToastProps) => {
+const Toast = ({
+  message,
+  errors = [],
+  onClose,
+  variant,
+  autoHide,
+}: ToastProps) => {
   const getErrorMessageFromField = (error: string) => {
     switch (error) {
       case "sign_ids":
@@ -40,7 +47,7 @@ const Toast = ({ message, errors = [], onClose, variant }: ToastProps) => {
         show={message != null}
         onClose={onClose}
         delay={5000}
-        autohide={true}
+        autohide={autoHide}
       >
         <BSToast.Header className={classWithModifier("toast", variant)}>
           {<Icon className="toast__icon" />}
