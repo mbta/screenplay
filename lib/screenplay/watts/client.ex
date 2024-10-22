@@ -64,7 +64,7 @@ defmodule Screenplay.Watts.FakeClient do
 
     case File.read(path) do
       {:ok, file} ->
-        {:ok, Jason.decode!(file)}
+        {:ok, file}
 
       {:error, _} ->
         Logger.error("Could not fetch static.mp3.")
