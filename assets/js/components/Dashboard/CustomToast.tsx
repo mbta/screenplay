@@ -11,6 +11,7 @@ interface CustomToastProps {
   message: string | null;
   errors?: string[];
   onClose: () => void;
+  autoHide?: boolean;
 }
 
 const CustomToast = ({
@@ -18,6 +19,7 @@ const CustomToast = ({
   errors = [],
   onClose,
   variant,
+  autoHide,
 }: CustomToastProps) => {
   const getErrorMessageFromField = (error: string) => {
     switch (error) {
@@ -45,7 +47,7 @@ const CustomToast = ({
         show={message != null}
         onClose={onClose}
         delay={5000}
-        autohide={true}
+        autohide={autoHide}
       >
         <Toast.Header className={classWithModifier("toast", variant)}>
           {<Icon className="toast__icon" />}
