@@ -116,7 +116,11 @@ const PaMessagesPage: ComponentType = () => {
     });
   }, [setParams, stateFilter, serviceTypes]);
 
-  const { data, isLoading } = usePaMessages({ serviceTypes, stateFilter });
+  const { data, isLoading, mutate } = usePaMessages({
+    serviceTypes,
+    stateFilter,
+  });
+
   const shouldShowLoadingState = useDelayedLoadingState(isLoading);
 
   return (
@@ -193,6 +197,7 @@ const PaMessagesPage: ComponentType = () => {
                 paMessages={data ?? []}
                 isLoading={shouldShowLoadingState}
                 filter={stateFilter}
+                updateData={() => mutate()}
               />
             </Row>
           </Col>
@@ -206,12 +211,14 @@ interface PaMessageTableProps {
   paMessages: PaMessage[];
   isLoading: boolean;
   filter: "active" | "future" | "past";
+  updateData: () => void;
 }
 
 const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   paMessages,
   isLoading,
   filter,
+  updateData,
 }: PaMessageTableProps) => {
   const data = isLoading ? [] : paMessages;
 
@@ -233,6 +240,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
                 key={paMessage.id}
                 paMessage={paMessage}
                 filter={filter}
+                onEndNow={updateData}
               />
             );
           })}
@@ -258,11 +266,13 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
 interface PaMessageRowProps {
   paMessage: PaMessage;
   filter: "active" | "future" | "past";
+  onEndNow: () => void;
 }
 
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
   filter,
+  onEndNow,
 }: PaMessageRowProps) => {
   const [toastProps, setToastProps] = useState<{
     variant: "info" | "warning";
@@ -292,6 +302,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
                 onClick={() => {
                   endMessage(paMessage.id).then(({ status }) => {
                     if (status === 200) {
+                      onEndNow();
                       setToastProps({
                         variant: "info",
                         message:
