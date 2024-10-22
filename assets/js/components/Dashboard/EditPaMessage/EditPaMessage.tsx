@@ -105,6 +105,7 @@ const EditPaMessage = ({ paMessage, alert }: Props) => {
       defaultValues={paMessage}
       defaultAlert={alert ?? paMessage.alert_id}
       defaultAudioState={AudioPreview.Reviewed}
+      paused={paMessage.paused}
       onSubmit={async (data) => {
         const result = await updateExistingPaMessage(paMessage.id, data);
 

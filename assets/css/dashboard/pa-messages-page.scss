@@ -121,4 +121,40 @@
     align-items: center;
     margin-top: 48px;
   }
+
+  .pause-active-switch-container {
+    position: relative;
+
+    .pause-active-switch {
+      margin-bottom: 8px;
+      width: 86px;
+
+      .form-check-input {
+        width: 86px;
+        height: 25px;
+      }
+
+      .form-check-input:not(:checked) {
+        background-color: $dark-bg;
+        border-color: $border-primary;
+        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,.25)'/></svg>");
+      }
+    }
+
+    .switch-text {
+      font-size: 14px;
+      line-height: 21px;
+      position: absolute;
+      top: 2px;
+    }
+
+    .paused {
+      left: 28px;
+    }
+
+    .active {
+      color: black;
+      left: 8px;
+    }
+  }
 }

@@ -53,6 +53,7 @@ interface Props {
   setAudioState: Dispatch<SetStateAction<AudioPreview>>;
   audioState: AudioPreview;
   hide: boolean;
+  paused: boolean;
 }
 
 const MainForm = ({
@@ -85,6 +86,7 @@ const MainForm = ({
   hide,
   audioState,
   setAudioState,
+  paused,
 }: Props) => {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
@@ -140,7 +142,11 @@ const MainForm = ({
   return (
     <div className="new-pa-message-page">
       <Form onSubmit={handleSubmit} noValidate>
-        <div className="header">{title}</div>
+        <div className="header">
+          {title}
+          {paused && <div className="paused-pill">Paused</div>}
+        </div>
+
         <Container fluid>
           <NewPaMessageHeader
             associatedAlert={associatedAlert}

@@ -83,13 +83,13 @@ defmodule Screenplay.PaMessages do
   end
 
   @doc """
-  Returns a list of the currently active PA Messages.
+  Returns a list of the currently active PA Messages, excluding ones that are paused
   """
   @spec get_active_messages() :: [PaMessage.t()]
   @spec get_active_messages(now :: DateTime.t()) :: [PaMessage.t()]
   def get_active_messages(now \\ DateTime.utc_now()) do
     AlertsCache.alert_ids()
-    |> PaMessage.Queries.active(now)
+    |> PaMessage.Queries.active_exclude_paused(now)
     |> Repo.all()
   end
 

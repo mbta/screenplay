@@ -13,6 +13,23 @@
     font-weight: 500;
     line-height: 48px;
     text-align: left;
+    display: flex;
+  }
+
+  .paused-pill {
+    padding: 8px 16px;
+    margin-left: 16px;
+    background-color: $theme-secondary;
+    border-radius: 200px;
+    height: 40px;
+    align-self: center;
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+
+    text {
+      position: relative;
+    }
   }
 
   .cancel-button {
