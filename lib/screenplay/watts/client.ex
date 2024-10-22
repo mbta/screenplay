@@ -1,14 +1,22 @@
-defmodule Screenplay.Watts.Client do
-  @moduledoc """
-  Module used to fetch TTS audio files from the Watts app.
-  """
-
-  require Logger
+defmodule Screenplay.Watts.ClientBehaviour do
+  @moduledoc false
 
   @doc """
   Fetches an audio file from Watts given a string.
   """
-  @spec fetch_tts(String.t()) :: :error | {:ok, binary()}
+  @callback fetch_tts(String.t()) :: {:ok, binary()} | :error
+end
+
+defmodule Screenplay.Watts.Client do
+  @moduledoc """
+  Client used to fetch TTS audio files from the Watts app.
+  """
+
+  require Logger
+
+  @behaviour Screenplay.Watts.ClientBehaviour
+
+  @impl true
   def fetch_tts(text) do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
@@ -39,5 +47,28 @@ defmodule Screenplay.Watts.Client do
     )
 
     :error
+  end
+end
+
+defmodule Screenplay.Watts.FakeClient do
+  @moduledoc false
+
+  require Logger
+
+  @behaviour Screenplay.Watts.ClientBehaviour
+
+  @impl true
+  # sobelow_skip ["Traversal.FileModule"]
+  def fetch_tts(_) do
+    path = Path.join(:code.priv_dir(:screenplay), "static.mp3")
+
+    case File.read(path) do
+      {:ok, file} ->
+        {:ok, Jason.decode!(file)}
+
+      {:error, _} ->
+        Logger.error("Could not fetch static.mp3.")
+        :error
+    end
   end
 end
