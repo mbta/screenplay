@@ -236,7 +236,8 @@ defmodule Screenplay.Places.Builder do
 
   defp get_stop_id({_id, %{app_params: %Elevator{elevator_id: elevator_id}}}) do
     {:ok, facility} = @facilities_mod.fetch(elevator_id)
-    get_in(facility, ~w[relationships stop data id])
+    %{"relationships" => %{"stop" => %{"data" => %{"id" => stop_id}}}} = facility
+    stop_id
   end
 
   defp split_multi_place_screens(
