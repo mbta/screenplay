@@ -1,4 +1,4 @@
-defmodule Screenplay.Watts do
+defmodule Screenplay.Watts.Client do
   @moduledoc """
   Module used to fetch TTS audio files from the Watts app.
   """
