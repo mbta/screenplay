@@ -19,7 +19,7 @@ import { updateExistingPaMessage } from "Utils/api";
 import CustomToast from "Components/CustomToast";
 import moment from "moment";
 
-type StateFilter = "active" | "future" | "past";
+type StateFilter = "active" | "future" | "done";
 
 type ServiceType =
   | "Green"
@@ -159,10 +159,10 @@ const PaMessagesPage: ComponentType = () => {
                   Future
                 </Button>
                 <Button
-                  className={cx("button", { active: stateFilter === "past" })}
-                  onClick={() => setStateFilter("past")}
+                  className={cx("button", { active: stateFilter === "done" })}
+                  onClick={() => setStateFilter("done")}
                 >
-                  Past
+                  Done
                 </Button>
               </ButtonGroup>
             </section>
@@ -217,7 +217,7 @@ type ToastProps = {
 interface PaMessageTableProps {
   paMessages: PaMessage[];
   isLoading: boolean;
-  filter: "active" | "future" | "past";
+  filter: "active" | "future" | "done";
   updateData: () => void;
 }
 
@@ -294,7 +294,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
 
 interface PaMessageRowProps {
   paMessage: PaMessage;
-  filter: "active" | "future" | "past";
+  filter: "active" | "future" | "done";
   onEndNow: () => void;
   onError: () => void;
 }
