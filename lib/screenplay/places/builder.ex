@@ -20,6 +20,7 @@ defmodule Screenplay.Places.Builder do
     Busway,
     Departures,
     Dup,
+    Elevator,
     Footer,
     GlEink,
     Header,
@@ -34,6 +35,11 @@ defmodule Screenplay.Places.Builder do
   @config_fetcher Application.compile_env!(:screenplay, :config_fetcher)
   @stops_mod Application.compile_env(:screenplay, :stops_mod, Screenplay.Stops.Stop)
   @routes_mod Application.compile_env(:screenplay, :routes_mod, Screenplay.Routes.Route)
+  @facilities_mod Application.compile_env(
+                    :screenplay,
+                    :facilities_mod,
+                    Screenplay.Facilities.Facility
+                  )
   @github_api_client Application.compile_env(
                        :screenplay,
                        :github_api_client,
@@ -225,6 +231,12 @@ defmodule Screenplay.Places.Builder do
 
   defp get_stop_id({_id, %{app_id: app_id, stop: stop_id}})
        when app_id in [:solari, :busway_v2, :dup_v2] do
+    stop_id
+  end
+
+  defp get_stop_id({_id, %{app_params: %Elevator{elevator_id: elevator_id}}}) do
+    {:ok, facility} = @facilities_mod.fetch(elevator_id)
+    %{"relationships" => %{"stop" => %{"data" => %{"id" => stop_id}}}} = facility
     stop_id
   end
 

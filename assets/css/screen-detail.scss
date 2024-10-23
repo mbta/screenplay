@@ -1,6 +1,8 @@
 .screen-detail__inline-layout {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .screen-detail__container {
