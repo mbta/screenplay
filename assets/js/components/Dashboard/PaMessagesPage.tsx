@@ -285,6 +285,27 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   const end =
     paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
 
+  const endMessage = (paMessage: PaMessage) => {
+    updateExistingPaMessage(paMessage.id, {
+      ...paMessage,
+      end_datetime: moment().utc().add(-1, "second").toISOString(),
+    }).then(({ status }) => {
+      if (status === 200) {
+        onEndNow();
+        setToastProps({
+          variant: "info",
+          message: "PA/ESS message has ended, and moved to “Done.",
+          autoHide: true,
+        });
+      } else {
+        setToastProps({
+          variant: "warning",
+          message: "Something went wrong. Please try again.",
+        });
+      }
+    });
+  };
+
   return (
     <>
       <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
@@ -300,30 +321,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
             <ThreeDotsDropdown>
               <Dropdown.Item
                 className="three-dots-vertical-dropdown__item"
-                onClick={() => {
-                  updateExistingPaMessage(paMessage.id, {
-                    ...paMessage,
-                    end_datetime: moment()
-                      .utc()
-                      .add(-1, "second")
-                      .toISOString(),
-                  }).then(({ status }) => {
-                    if (status === 200) {
-                      onEndNow();
-                      setToastProps({
-                        variant: "info",
-                        message:
-                          "PA/ESS message has ended, and moved to “Done.",
-                        autoHide: true,
-                      });
-                    } else {
-                      setToastProps({
-                        variant: "warning",
-                        message: "Something went wrong. Please try again.",
-                      });
-                    }
-                  });
-                }}
+                onClick={() => endMessage(paMessage)}
               >
                 End Now
               </Dropdown.Item>
