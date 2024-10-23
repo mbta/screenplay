@@ -208,6 +208,12 @@ const PaMessagesPage: ComponentType = () => {
   );
 };
 
+type ToastProps = {
+  variant: "info" | "warning";
+  message: string;
+  autoHide?: boolean;
+};
+
 interface PaMessageTableProps {
   paMessages: PaMessage[];
   isLoading: boolean;
@@ -221,6 +227,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   filter,
   updateData,
 }: PaMessageTableProps) => {
+  const [toastProps, setToastProps] = useState<ToastProps | null>();
   const data = isLoading ? [] : paMessages;
 
   return (
@@ -241,12 +248,33 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
                 key={paMessage.id}
                 paMessage={paMessage}
                 filter={filter}
-                onEndNow={updateData}
+                onEndNow={() => {
+                  setToastProps({
+                    variant: "info",
+                    message: "PA/ESS message has ended, and moved to “Done.",
+                    autoHide: true,
+                  });
+                  updateData();
+                }}
+                onError={() =>
+                  setToastProps({
+                    variant: "warning",
+                    message: "Something went wrong. Please try again.",
+                  })
+                }
               />
             );
           })}
         </tbody>
       </table>
+      {toastProps != null && (
+        <CustomToast
+          {...toastProps}
+          onClose={() => {
+            setToastProps(null);
+          }}
+        />
+      )}
       {data.length == 0 && (
         <div className="pa-message-table__empty">
           {isLoading ? (
@@ -268,18 +296,15 @@ interface PaMessageRowProps {
   paMessage: PaMessage;
   filter: "active" | "future" | "past";
   onEndNow: () => void;
+  onError: () => void;
 }
 
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
   filter,
   onEndNow,
+  onError,
 }: PaMessageRowProps) => {
-  const [toastProps, setToastProps] = useState<{
-    variant: "info" | "warning";
-    message: string;
-    autoHide?: boolean;
-  } | null>();
   const navigate = useNavigate();
   const start = new Date(paMessage.start_datetime);
   const end =
@@ -292,16 +317,8 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
     }).then(({ status }) => {
       if (status === 200) {
         onEndNow();
-        setToastProps({
-          variant: "info",
-          message: "PA/ESS message has ended, and moved to “Done.",
-          autoHide: true,
-        });
       } else {
-        setToastProps({
-          variant: "warning",
-          message: "Something went wrong. Please try again.",
-        });
+        onError();
       }
     });
   };
@@ -329,14 +346,6 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
           </td>
         )}
       </tr>
-      {toastProps != null && (
-        <CustomToast
-          {...toastProps}
-          onClose={() => {
-            setToastProps(null);
-          }}
-        />
-      )}
     </>
   );
 };
