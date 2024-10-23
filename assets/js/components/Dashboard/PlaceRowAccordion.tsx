@@ -15,6 +15,7 @@ import ScreenDetail from "Components/ScreenDetail";
 import { sortScreens } from "../../util";
 import { useUpdateAnimation } from "Hooks/useUpdateAnimation";
 import classNames from "classnames";
+import _ from "lodash";
 
 type ScreenGroup = {
   screens: Screen[];
@@ -22,13 +23,14 @@ type ScreenGroup = {
 };
 
 const groupScreens = (screens: Screen[]): ScreenGroup[] => {
+  const inlineScreenTypes = ["busway_v2", "solari", "elevator_v2"];
+
   const inlineScreens = screens.filter((screen) =>
-    ["busway_v2", "solari", "elevator_v2"].includes(screen.type),
+    inlineScreenTypes.includes(screen.type),
   );
   const paEssScreens = screens.filter((screen) => screen.type === "pa_ess");
   const otherScreens = screens.filter(
-    (screen) =>
-      !["busway_v2", "pa_ess", "solari", "elevator_v2"].includes(screen.type),
+    (screen) => ![...inlineScreenTypes, "pa_ess"].includes(screen.type),
   );
 
   const groups = otherScreens.map((screen) => ({
@@ -37,7 +39,14 @@ const groupScreens = (screens: Screen[]): ScreenGroup[] => {
   }));
 
   if (inlineScreens.length > 0) {
-    groups.push({ screens: inlineScreens, isInline: true });
+    const groupedInlineScreens = _.chain(inlineScreens)
+      .groupBy((screen) => screen.type)
+      .map((screens, _) => screens)
+      .value();
+
+    groupedInlineScreens.forEach((screens) =>
+      groups.push({ screens: screens, isInline: true }),
+    );
   }
 
   if (paEssScreens.length > 0) {
