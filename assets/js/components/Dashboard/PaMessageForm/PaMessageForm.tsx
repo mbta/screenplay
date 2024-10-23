@@ -6,7 +6,7 @@ import SelectStationsAndZones from "./SelectStationsAndZones";
 import AssociateAlert from "./AssociateAlert";
 import { Alert, InformedEntity } from "Models/alert";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
-import ErrorToast from "Components/ErrorToast";
+import CustomToast from "Components/CustomToast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
 import fp from "lodash/fp";
 
@@ -217,8 +217,9 @@ const PaMessageForm = ({
           setEndWithEffectPeriod={setEndWithEffectPeriod}
         />
       )}
-      <ErrorToast
-        errorMessage={errorMessage}
+      <CustomToast
+        variant="warning"
+        message={errorMessage}
         errors={errors}
         onClose={() => {
           onErrorsChange([]);
