@@ -155,22 +155,6 @@ export const updateExistingPaMessage = async (
   };
 };
 
-export const endMessage = async (
-  id: string | number,
-): Promise<{ status: number }> => {
-  const response = await fetch(`/api/pa-messages/end/${id}`, {
-    method: "PUT",
-    credentials: "include",
-    headers: {
-      "content-type": "application/json",
-      "x-csrf-token": getCsrfToken(),
-    },
-    body: JSON.stringify({ id: id }),
-  });
-
-  return { status: response.status };
-};
-
 const getPostBodyAndHeaders = (
   bodyData: { [key: string]: any },
   extraHeaders: { [key: string]: string } = {},

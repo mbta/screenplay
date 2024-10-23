@@ -90,7 +90,6 @@ defmodule ScreenplayWeb.Router do
     get("/pa-messages/new/associate-alert", PaMessagesController, :index)
     get("/pa-messages/:id/edit", PaMessagesController, :index)
     get("/api/pa-messages/preview_audio", PaMessagesApiController, :preview_audio)
-    put("/api/pa-messages/end/:id", PaMessagesApiController, :end_message)
   end
 
   scope "/", ScreenplayWeb do

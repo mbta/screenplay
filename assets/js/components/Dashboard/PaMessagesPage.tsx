@@ -15,8 +15,9 @@ import cx from "classnames";
 import useSWR from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import ThreeDotsDropdown from "./ThreeDotsDropdown";
-import { endMessage } from "Utils/api";
+import { updateExistingPaMessage } from "Utils/api";
 import CustomToast from "Components/CustomToast";
+import moment from "moment";
 
 type StateFilter = "active" | "future" | "past";
 
@@ -300,7 +301,13 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
               <Dropdown.Item
                 className="three-dots-vertical-dropdown__item"
                 onClick={() => {
-                  endMessage(paMessage.id).then(({ status }) => {
+                  updateExistingPaMessage(paMessage.id, {
+                    ...paMessage,
+                    end_datetime: moment()
+                      .utc()
+                      .add(-1, "second")
+                      .toISOString(),
+                  }).then(({ status }) => {
                     if (status === 200) {
                       onEndNow();
                       setToastProps({
