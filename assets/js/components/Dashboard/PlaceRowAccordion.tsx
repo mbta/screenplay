@@ -15,7 +15,7 @@ import ScreenDetail from "Components/ScreenDetail";
 import { sortScreens } from "../../util";
 import { useUpdateAnimation } from "Hooks/useUpdateAnimation";
 import classNames from "classnames";
-import _ from "lodash";
+import fp from "lodash/fp";
 
 type ScreenGroup = {
   screens: Screen[];
@@ -39,10 +39,10 @@ const groupScreens = (screens: Screen[]): ScreenGroup[] => {
   }));
 
   if (inlineScreens.length > 0) {
-    const groupedInlineScreens = _.chain(inlineScreens)
-      .groupBy((screen) => screen.type)
-      .map((screens, _) => screens)
-      .value();
+    const groupedInlineScreens: Screen[][] = fp.flow(
+      fp.groupBy((screen: Screen) => screen.type),
+      fp.map((screens) => screens),
+    )(inlineScreens);
 
     groupedInlineScreens.forEach((screens) =>
       groups.push({ screens: screens, isInline: true }),
