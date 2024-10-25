@@ -41,5 +41,7 @@ config :ueberauth_oidcc,
 
 config :screenplay, Screenplay.Repo, database: "screenplay_test", pool: Ecto.Adapters.SQL.Sandbox
 
+config :screenplay, Oban, testing: :inline
+
 # Print only warnings and errors during test
 config :logger, level: :warning

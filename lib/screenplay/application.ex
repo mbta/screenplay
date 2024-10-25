@@ -11,6 +11,7 @@ defmodule Screenplay.Application do
         {Ecto.Migrator, repos: Application.fetch_env!(:screenplay, :ecto_repos)},
         # Start the Ecto repository
         Screenplay.Repo,
+        {Oban, Application.fetch_env!(:screenplay, Oban)},
         # Start the Telemetry supervisor
         ScreenplayWeb.Telemetry,
         # Start the PubSub system
@@ -19,8 +20,7 @@ defmodule Screenplay.Application do
         ScreenplayWeb.Endpoint,
         Screenplay.OutfrontTakeoverTool.Alerts.State,
         Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
-        Screenplay.ScreensConfig,
-        Screenplay.Scheduler
+        Screenplay.ScreensConfig
       ] ++
         if Application.get_env(:screenplay, :start_cache_processes) do
           [Screenplay.Alerts.Cache, Screenplay.Places]

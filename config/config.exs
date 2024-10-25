@@ -73,6 +73,11 @@ config :ueberauth, Ueberauth,
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
+config :screenplay, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [default: 10],
+  repo: Screenplay.Repo
+
 import_config "outfront_takeover_tool_screens.exs"
 
 # Import environment specific config. This must remain at the bottom

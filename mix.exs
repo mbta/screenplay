@@ -66,12 +66,12 @@ defmodule Screenplay.MixProject do
        git: "https://github.com/mbta/screens-config-lib.git",
        ref: "8ec6e1684a129b089edc5e867a32dfc90028b2e0"},
       {:mox, "~> 1.0", only: :test},
-      {:quantum, "~> 3.0"},
       {:tzdata, "~> 1.1"},
       {:ex_machina, "~> 2.7", only: :test},
       {:remote_ip, "~> 1.2"},
       {:faker, "~> 0.18"},
-      {:nebulex, "~> 2.6"}
+      {:nebulex, "~> 2.6"},
+      {:oban, "~> 2.18"}
     ]
   end
 
