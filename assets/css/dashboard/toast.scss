@@ -1,0 +1,52 @@
+.toast-container {
+  margin-bottom: 40px;
+
+  .toast {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+
+    .btn-close {
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &--warning {
+      background-color: $alert-yellow;
+    }
+
+    &--info {
+      background-color: $accessibility-blue;
+      color: white;
+    }
+
+    &__icon {
+      height: 24px;
+      width: 24px;
+      opacity: 60%;
+      flex-shrink: 0;
+    }
+
+    &__text {
+      padding-left: 8px;
+
+      ul {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .toast-header {
+    .btn-close {
+      margin-right: 4px;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    border: none;
+    border-radius: 4px;
+  }
+}
