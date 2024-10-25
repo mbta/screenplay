@@ -1,24 +1,19 @@
 import React from "react";
-import { Toast, ToastContainer } from "react-bootstrap";
+import { Toast as BSToast, ToastContainer } from "react-bootstrap";
 import {
   CheckCircleFill,
   ExclamationTriangleFill,
 } from "react-bootstrap-icons";
 import { classWithModifier } from "../../util";
 
-interface CustomToastProps {
+interface ToastProps {
   variant: "warning" | "info";
   message: string | null;
   errors?: string[];
-  onClose: () => void;
+  onClose?: () => void;
 }
 
-const CustomToast = ({
-  message,
-  errors = [],
-  onClose,
-  variant,
-}: CustomToastProps) => {
+const Toast = ({ message, errors = [], onClose, variant }: ToastProps) => {
   const getErrorMessageFromField = (error: string) => {
     switch (error) {
       case "sign_ids":
@@ -26,7 +21,7 @@ const CustomToast = ({
       case "visual_text":
         return "Visual Text";
       case "audio_text":
-        return "Phoentic Audio";
+        return "Phonetic Audio";
       case "start_datetime":
         return "Start date/time";
       case "end_datetime":
@@ -41,13 +36,13 @@ const CustomToast = ({
 
   return (
     <ToastContainer position="bottom-center" className="toast-container">
-      <Toast
+      <BSToast
         show={message != null}
         onClose={onClose}
         delay={5000}
         autohide={true}
       >
-        <Toast.Header className={classWithModifier("toast", variant)}>
+        <BSToast.Header className={classWithModifier("toast", variant)}>
           {<Icon className="toast__icon" />}
           <div className="toast__text">
             {message}
@@ -59,10 +54,10 @@ const CustomToast = ({
               </ul>
             )}
           </div>
-        </Toast.Header>
-      </Toast>
+        </BSToast.Header>
+      </BSToast>
     </ToastContainer>
   );
 };
 
-export default CustomToast;
+export default Toast;
