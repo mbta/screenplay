@@ -65,7 +65,7 @@ if env == "prod" do
     plugins: [
       {Oban.Plugins.Cron,
        crontab: [
-         {"* * * * *", Screenplay.Jobs.TakeoverToolTestingJob}
+         {"0 7 * * *", Screenplay.Jobs.TakeoverToolTestingJob}
        ]}
     ]
 end
