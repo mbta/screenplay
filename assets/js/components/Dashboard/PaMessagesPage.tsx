@@ -16,7 +16,7 @@ import useSWR from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import ThreeDotsDropdown from "./ThreeDotsDropdown";
 import { updateExistingPaMessage } from "Utils/api";
-import CustomToast from "Components/CustomToast";
+import Toast from "Components/Toast";
 import moment from "moment";
 
 type StateFilter = "active" | "future" | "done";
@@ -268,7 +268,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
         </tbody>
       </table>
       {toastProps != null && (
-        <CustomToast
+        <Toast
           {...toastProps}
           onClose={() => {
             setToastProps(null);
