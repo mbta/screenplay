@@ -544,6 +544,20 @@
       "vendor": "outfront",
       "device_id": null,
       "hidden_from_screenplay": true
+    },
+    "ELE-101": {
+      "disabled": false,
+      "name": "",
+      "tags": [],
+      "app_id": "elevator_v2",
+      "app_params": {
+        "evergreen_content": [],
+        "elevator_id": "842"
+      },
+      "refresh_if_loaded_before": null,
+      "hidden_from_screenplay": false,
+      "vendor": "mimo",
+      "device_id": ""
     }
   }
 }
