@@ -22,7 +22,8 @@ config :screenplay,
   github_api_client: Screenplay.GithubApi.FakeClient,
   local_signs_json_path: {:test, "signs.json"},
   stops_mod: Screenplay.Stops.Mock,
-  routes_mod: Screenplay.Routes.Mock
+  routes_mod: Screenplay.Routes.Mock,
+  facilities_mod: Screenplay.Facilities.Mock
 
 config :ueberauth, Ueberauth,
   providers: [
@@ -38,13 +39,9 @@ config :ueberauth_oidcc,
     ]
   ]
 
-config :screenplay, Screenplay.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  database: "screenplay_test",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost"
+config :screenplay, Screenplay.Repo, database: "screenplay_test", pool: Ecto.Adapters.SQL.Sandbox
+
+config :screenplay, Oban, testing: :inline
 
 # Print only warnings and errors during test
 config :logger, level: :warning

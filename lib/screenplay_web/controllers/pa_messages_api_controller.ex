@@ -6,12 +6,14 @@ defmodule ScreenplayWeb.PaMessagesApiController do
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.ListParams
 
+  @watts_client Application.compile_env(:screenplay, :watts_client, Screenplay.Watts.Client)
+
   def active(conn, _params) do
     json(conn, PaMessages.get_active_messages())
   end
 
   def preview_audio(conn, %{"text" => text}) do
-    case Screenplay.Watts.fetch_tts(text) do
+    case @watts_client.fetch_tts(text) do
       {:ok, audio_data} ->
         send_download(conn, {:binary, audio_data}, filename: "preview.mp3")
 

@@ -60,11 +60,17 @@ if sentry_dsn not in [nil, ""] do
     environment_name: env
 end
 
-scheduler_jobs =
-  if env == "prod",
-    do: [{"0 7 * * *", {Screenplay.Jobs.TakeoverToolTestingJob, :run, []}}],
-    else: []
-
-config :screenplay, Screenplay.Scheduler, jobs: scheduler_jobs
+if env == "prod" do
+  config :screenplay, Oban,
+    plugins: [
+      {Oban.Plugins.Cron,
+       crontab: [
+         {"0 7 * * *", Screenplay.Jobs.TakeoverToolTestingJob}
+       ]},
+      Oban.Plugins.Pruner,
+      Oban.Plugins.Lifeline,
+      Oban.Plugins.Reindexer
+    ]
+end
 
 config :screenplay, Screenplay.Repo, pool_size: 10
