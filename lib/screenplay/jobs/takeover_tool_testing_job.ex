@@ -7,6 +7,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   """
   @dialyzer {:no_match, write_image: 3, delete_image: 2}
 
+  use Oban.Worker, unique: true
+
   alias Screenplay.Outfront.SFTP
 
   require Logger
@@ -16,7 +18,8 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @test_image :screenplay |> :code.priv_dir() |> Path.join("takeover_test.png") |> File.read!()
 
-  def run do
+  @impl Oban.Worker
+  def perform(_) do
     SFTP.run(fn conn ->
       test_creating_and_removing_images(conn)
       test_all_directories_exist(conn)

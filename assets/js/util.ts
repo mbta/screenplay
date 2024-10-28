@@ -212,6 +212,7 @@ const screenTypeOrder = [
   "gl_eink_double",
   "gl_eink_v2",
   "pre_fare_v2",
+  "elevator_v2",
   "pa_ess",
 ];
 
