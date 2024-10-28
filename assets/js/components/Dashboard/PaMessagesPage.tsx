@@ -16,7 +16,7 @@ import useSWR, { mutate } from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
-import ErrorToast from "Components/ErrorToast";
+import Toast from "Components/Toast";
 
 type StateFilter = "active" | "future" | "past";
 
@@ -214,9 +214,9 @@ const PaMessagesPage: ComponentType = () => {
           </Col>
         </Row>
       </Container>
-      <ErrorToast
-        errorMessage={errorMessage}
-        errors={[]}
+      <Toast
+        variant="warning"
+        message={errorMessage}
         onClose={() => {
           setErrorMessage(null);
         }}
