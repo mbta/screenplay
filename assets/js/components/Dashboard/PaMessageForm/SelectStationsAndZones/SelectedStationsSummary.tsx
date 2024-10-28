@@ -21,14 +21,16 @@ const SelectedStationsSummary = ({
       <GeoAltFill className="geo-alt-fill-icon" width={12} />
       <div className="label">Stations selected:</div>
       {value.length === 0 ? (
-        <span>None</span>
+        <div className="no-tags">None</div>
       ) : (
-        <SelectedSignsByRouteTags
-          places={places}
-          value={value}
-          onChange={onChange}
-          busRoutes={busRoutes}
-        />
+        <div className="selected-stations-tags">
+          <SelectedSignsByRouteTags
+            places={places}
+            value={value}
+            onChange={onChange}
+            busRoutes={busRoutes}
+          />
+        </div>
       )}
     </div>
   );
