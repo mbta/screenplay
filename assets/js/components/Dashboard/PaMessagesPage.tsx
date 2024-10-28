@@ -18,7 +18,7 @@ import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
 import Toast from "Components/Toast";
 
-type StateFilter = "active" | "future" | "past";
+type StateFilter = "current" | "future" | "past";
 
 type ServiceType =
   | "Green"
@@ -98,7 +98,7 @@ const useDelayedLoadingState = (value: boolean, delay = 250) => {
 const PaMessagesPage: ComponentType = () => {
   const [params, setParams] = useSearchParams();
   const [stateFilter, setStateFilter] = useState<StateFilter>(
-    () => (params.get("state") as StateFilter) ?? "active",
+    () => (params.get("state") as StateFilter) ?? "current",
   );
   const [serviceTypes, setServiceTypes] = useState<Array<ServiceType>>(
     () => (params.getAll("serviceTypes[]") as Array<ServiceType>) ?? [],
@@ -156,8 +156,10 @@ const PaMessagesPage: ComponentType = () => {
               <header>Filter by message state</header>
               <ButtonGroup className="button-group" vertical>
                 <Button
-                  className={cx("button", { active: stateFilter === "active" })}
-                  onClick={() => setStateFilter("active")}
+                  className={cx("button", {
+                    active: stateFilter === "current",
+                  })}
+                  onClick={() => setStateFilter("current")}
                 >
                   Now
                 </Button>
@@ -250,7 +252,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th>Message</th>
             <th>Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
-            {stateFilter == "active" && <th>Actions</th>}
+            {stateFilter == "current" && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -324,7 +326,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         <br />
         {end && end.toLocaleString().replace(",", "")}
       </td>
-      {stateFilter == "active" && (
+      {stateFilter == "current" && (
         <td>
           <div className="pause-active-switch-container" onClick={togglePaused}>
             <FormCheck
