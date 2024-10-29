@@ -453,18 +453,6 @@ defmodule Screenplay.PermanentConfig do
     screen.app_params.alerts.stop_id
   end
 
-  defp screen_to_place_id(screen = %Screen{app_id: :gl_eink_single}) do
-    screen.app_params.stop_id
-  end
-
-  defp screen_to_place_id(%Screen{app_id: solari_v1_app})
-       when solari_v1_app in [:solari, :solari_large] do
-    # Solari screens frequently show info for multiple stop IDs in different sections.
-    # (Try `jq '.screens | map_values(select(.app_id == "solari")) | map_values(.app_params.sections | map(.query.params.stop_ids))' git/screens/priv/local.json` in your shell to see)
-    # So there isn't a straightforward implementation for that case, at the moment.
-    raise("screen_to_place_id/1 not implemented for app_id: #{solari_v1_app}")
-  end
-
   defp screen_to_place_id(%Screen{app_id: app_id}),
     do: raise("screen_to_place_id/1 not implemented for app_id: #{app_id}")
 end

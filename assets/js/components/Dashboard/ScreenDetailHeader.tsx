@@ -17,7 +17,7 @@ const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
     <div className="screen-detail__header">
       <div className={classNames("screen-detail__screen-type-location")}>
         {props.translatedScreenType} {props.screenLocation}
-        {["dup", "dup_v2"].includes(props.screen.type) && (
+        {props.screen.type === "dup_v2" && (
           <div className="screen-detail__dup-ad-text">
             Cycle in the ad loop for 7.5 seconds every 45 seconds
           </div>
@@ -31,26 +31,12 @@ const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
   );
 };
 
-const generateSource = (screen: Screen) => {
-  const { id, type } = screen;
-  // @ts-ignore Suppressing "object could be null" warning
+const generateSource = ({ id }: Screen) => {
   const screensUrl = document
     .querySelector("meta[name=screens-url]")
     ?.getAttribute("content");
 
-  if (type.includes("v2")) {
-    return `${screensUrl}/v2/screen/${id}`;
-  }
-  if (["bus_eink", "gl_eink_single", "gl_eink_double"].includes(type)) {
-    return `${screensUrl}/screen/${id}`;
-  }
-  if (type === "solari") {
-    // Solari app disables scrolling unless this param is added.
-    // (Due to quirks of running on a very old browser in the past)
-    return `${screensUrl}/screen/${id}?scroll=true`;
-  }
-
-  return "";
+  return `${screensUrl}/v2/screen/${id}`;
 };
 
 export default ScreenDetailHeader;

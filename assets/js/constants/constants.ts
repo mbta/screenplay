@@ -44,16 +44,13 @@ export const SORT_LABELS: Record<string, [string, string]> = {
 export const SCREEN_TYPES: { label: string; ids: string[] }[] = [
   { label: "All SCREEN TYPES", ids: ["All"] },
   { label: "Bus Shelter", ids: ["bus_shelter_v2"] },
-  { label: "DUP", ids: ["dup", "dup_v2"] },
-  { label: "E-Ink: Bus", ids: ["bus_eink", "bus_eink_v2"] },
-  {
-    label: "E-Ink: Green Line",
-    ids: ["gl_eink_single", "gl_eink_double", "gl_eink_v2"],
-  },
+  { label: "DUP", ids: ["dup_v2"] },
+  { label: "E-Ink: Bus", ids: ["bus_eink_v2"] },
+  { label: "E-Ink: Green Line", ids: ["gl_eink_v2"] },
   { label: "Elevator", ids: ["elevator_v2"] },
   { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre Fare Duo", ids: ["pre_fare_v2"] },
-  { label: "Sectional", ids: ["busway_v2", "solari"] },
+  { label: "Sectional", ids: ["busway_v2"] },
 ];
 
 export const STATUSES = [
