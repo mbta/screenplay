@@ -306,14 +306,13 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
 
   const togglePaused = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    const result = await updateExistingPaMessage(paMessage.id, {
-      paused: !paMessage.paused,
-    } as UpdatePaMessageBody);
-
-    if (result.status === 200) {
+    try {
+      await updateExistingPaMessage(paMessage.id, {
+        paused: !paMessage.paused,
+      } as UpdatePaMessageBody);
       updatePaMessage({ ...paMessage, paused: !paMessage.paused });
-    } else {
-      setErrorMessage("Something went wrong. Please try again.");
+    } catch (error) {
+      setErrorMessage((error as Error).message);
     }
   };
 

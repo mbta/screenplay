@@ -149,6 +149,17 @@ export const updateExistingPaMessage = async (
     body: JSON.stringify(updates),
   });
 
+  if (response.status === 422) {
+    const body = await response.json();
+    const error = Object.keys(body.errors);
+
+    throw error;
+  } else if (!response.ok) {
+    const error = new Error(`Error: ${response.status} ${response.statusText}`);
+
+    throw error;
+  }
+
   return {
     status: response.status,
     body: await response.json(),
