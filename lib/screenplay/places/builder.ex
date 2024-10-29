@@ -11,7 +11,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.Places.Place
   alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias ScreensConfig.{Screen, Solari}
+  alias ScreensConfig.Screen
   alias ScreensConfig.V2.Departures.{Query, Section}
 
   alias ScreensConfig.V2.{
@@ -112,7 +112,7 @@ defmodule Screenplay.Places.Builder do
     |> Enum.flat_map(&split_multi_place_screens/1)
     |> Enum.group_by(&get_stop_id/1, fn
       {id,
-       %ScreensConfig.Screen{
+       %Screen{
          app_id: app_id,
          disabled: disabled,
          app_params: %_app{direction_id: direction_id}
@@ -124,7 +124,7 @@ defmodule Screenplay.Places.Builder do
           direction_id: direction_id
         }
 
-      {id, %ScreensConfig.Screen{app_id: app_id, disabled: disabled}} ->
+      {id, %Screen{app_id: app_id, disabled: disabled}} ->
         %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
     end)
   end
@@ -225,12 +225,8 @@ defmodule Screenplay.Places.Builder do
     stop_id
   end
 
-  defp get_stop_id({_id, %{app_params: %ScreensConfig.Gl{stop_id: stop_id}}}) do
-    stop_id
-  end
-
   defp get_stop_id({_id, %{app_id: app_id, stop: stop_id}})
-       when app_id in [:solari, :busway_v2, :dup_v2] do
+       when app_id in [:busway_v2, :dup_v2] do
     stop_id
   end
 
@@ -307,30 +303,6 @@ defmodule Screenplay.Places.Builder do
       end)
       |> Enum.map(fn stop_id ->
         {id, Map.put(screen, :stop, stop_id)}
-      end)
-
-    stops
-  end
-
-  defp split_multi_place_screens(
-         {id,
-          %Screen{
-            app_id: :solari,
-            app_params: %Solari{
-              sections: sections
-            }
-          } = stuff}
-       ) do
-    stops =
-      Enum.flat_map(sections, fn %Solari.Section{
-                                   query: %ScreensConfig.Query{
-                                     params: %ScreensConfig.Query.Params{stop_ids: stop_ids}
-                                   }
-                                 } ->
-        stop_ids
-      end)
-      |> Enum.map(fn stop_id ->
-        {id, Map.put(stuff, :stop, stop_id)}
       end)
 
     stops

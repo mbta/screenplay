@@ -23,7 +23,7 @@
     "name": "Davis",
     "routes": ["Bus", "Red"],
     "screens": [
-      { "disabled": false, "id": "Landscape255", "type": "dup" },
+      { "disabled": false, "id": "Landscape255", "type": "dup_v2" },
       {
         "id": "davis_mezzanine",
         "station_code": "RDAV",
@@ -101,7 +101,7 @@
     "name": "Malden Center",
     "routes": ["Bus", "CR", "Orange"],
     "screens": [
-      { "disabled": false, "id": "DUP-Malden", "type": "dup" },
+      { "disabled": false, "id": "DUP-Malden", "type": "dup_v2" },
       {
         "id": "malden_lobby",
         "station_code": "OMAL",
@@ -312,7 +312,7 @@
     "name": "Haymarket",
     "routes": ["Green-D", "Green-E", "Orange"],
     "screens": [
-      { "disabled": false, "id": "DUP-Haymarket", "type": "dup" },
+      { "disabled": false, "id": "DUP-Haymarket", "type": "dup_v2" },
       {
         "id": "orange_haymarket_mezzanine",
         "station_code": "OHAY",
@@ -532,7 +532,7 @@
       {
         "disabled": false,
         "id": "EIB-101",
-        "type": "bus_eink"
+        "type": "bus_eink_v2"
       }
     ]
   },
@@ -544,22 +544,22 @@
       {
         "disabled": true,
         "id": "EIG-401",
-        "type": "gl_eink_single"
+        "type": "gl_eink_v2"
       },
       {
         "disabled": false,
         "id": "EIG-404",
-        "type": "gl_eink_single"
+        "type": "gl_eink_v2"
       },
       {
         "disabled": true,
         "id": "EIG-403",
-        "type": "gl_eink_single"
+        "type": "gl_eink_v2"
       },
       {
         "disabled": true,
         "id": "EIG-402",
-        "type": "gl_eink_single"
+        "type": "gl_eink_v2"
       }
     ]
   },
@@ -571,7 +571,7 @@
       {
         "disabled": false,
         "id": "MUL-101",
-        "type": "solari"
+        "type": "busway_v2"
       },
       {
         "disabled": false,

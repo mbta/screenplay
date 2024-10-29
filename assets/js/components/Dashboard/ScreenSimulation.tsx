@@ -28,29 +28,15 @@ const ScreenSimulation = ({
   );
 };
 
-const generateSource = (screen: Screen, isPending: boolean) => {
-  const { id, type } = screen;
-  // @ts-ignore Suppressing "object could be null" warning
+const generateSource = ({ id }: Screen, isPending: boolean) => {
   const screensUrl = document
     .querySelector("meta[name=screens-url]")
     ?.getAttribute("content");
   const queryParams = "requestor=screenplay";
 
-  if (type.includes("v2")) {
-    return `${screensUrl}/v2/screen${
-      isPending ? "/pending/" : "/"
-    }${id}/simulation?${queryParams}`;
-  }
-  if (
-    ["bus_eink", "gl_eink_single", "gl_eink_double", "solari"].includes(type)
-  ) {
-    return `${screensUrl}/screen/${id}?${queryParams}`;
-  }
-  if (type === "dup") {
-    return `${screensUrl}/screen/${id}/simulation?${queryParams}`;
-  }
-
-  return "";
+  return `${screensUrl}/v2/screen${
+    isPending ? "/pending/" : "/"
+  }${id}/simulation?${queryParams}`;
 };
 
 export default ScreenSimulation;

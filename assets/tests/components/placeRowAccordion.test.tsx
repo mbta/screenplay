@@ -19,8 +19,8 @@ describe("PlaceRowAccordion", () => {
       routes: ["CR", "Red", "Green-B"],
       status: "Auto",
       screens: [
-        { id: "1111", type: "dup", disabled: false },
-        { id: "2222", type: "solari", disabled: false },
+        { id: "1111", type: "dup_v2", disabled: false },
+        { id: "2222", type: "busway_v2", disabled: false },
         { id: "3333", type: "bus_shelter_v2", disabled: false },
       ],
     };
