@@ -15,6 +15,7 @@ const NewPaMessage = () => {
       errorMessage={errorMessage}
       onError={setErrorMessage}
       onErrorsChange={setErrors}
+      paused={false}
       onSubmit={async (formData) => {
         const { status, errors } = await createNewPaMessage(formData);
 
