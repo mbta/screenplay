@@ -211,13 +211,23 @@ const PaMessageForm = ({
       )}
       {page === Page.ALERTS && (
         <AssociateAlert
-          associatedAlert={associatedAlert}
-          endWithEffectPeriod={endWithEffectPeriod}
-          onImportMessage={onImportMessage}
-          onImportLocations={onImportLocations}
-          navigateTo={setPage}
-          setAssociatedAlert={setAssociatedAlert}
-          setEndWithEffectPeriod={setEndWithEffectPeriod}
+          onApply={(
+            alert,
+            endWithEffectPeriod,
+            importLocations,
+            importMessage,
+          ) => {
+            setAssociatedAlert(alert);
+            setEndWithEffectPeriod(endWithEffectPeriod);
+            if (importLocations) {
+              onImportLocations(alert.informed_entities);
+            }
+            if (importMessage) {
+              onImportMessage(alert.header);
+            }
+            setPage(Page.MAIN);
+          }}
+          onCancel={() => setPage(Page.MAIN)}
         />
       )}
       <Toast
