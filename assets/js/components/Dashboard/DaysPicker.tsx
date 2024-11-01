@@ -29,13 +29,24 @@ const DAYS_OF_WEEK = [
   { label: "Sun", value: DayOfWeek.Sunday },
 ];
 
+const DAY_MAPPINGS = [
+  { key: DayItem.All, value: [1, 2, 3, 4, 5, 6, 7] },
+  { key: DayItem.Weekday, value: [1, 2, 3, 4, 5] },
+  { key: DayItem.Weekend, value: [6, 7] },
+];
+
 interface Props {
   days: number[];
   onChangeDays: (days: number[]) => void;
 }
 
 const DaysPicker = ({ days, onChangeDays }: Props) => {
-  const [dayLabel, setDayLabel] = useState("All days");
+  const [dayLabel, setDayLabel] = useState(
+    fp.find(
+      ({ value }) => fp.isEqual(value, fp.sortBy(fp.identity, days)),
+      DAY_MAPPINGS,
+    )?.key ?? DayItem.Select,
+  );
 
   return (
     <Form.Group>
@@ -48,21 +59,12 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
             onSelect={(eventKey) => {
               if (eventKey === null) return;
 
-              setDayLabel(eventKey);
-
-              switch (eventKey) {
-                case DayItem.All:
-                case DayItem.Select:
-                  onChangeDays([1, 2, 3, 4, 5, 6, 7]);
-
-                  break;
-                case DayItem.Weekday:
-                  onChangeDays([1, 2, 3, 4, 5]);
-
-                  break;
-                case DayItem.Weekend:
-                  onChangeDays([6, 7]);
-              }
+              setDayLabel(eventKey as DayItem);
+              onChangeDays(
+                fp.find(({ key }) => key === eventKey, DAY_MAPPINGS)?.value ?? [
+                  1, 2, 3, 4, 5, 6, 7,
+                ],
+              );
             }}
           >
             <Dropdown.Toggle id="days-picker">{dayLabel}</Dropdown.Toggle>
