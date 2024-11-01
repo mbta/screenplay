@@ -19,9 +19,8 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   @doc """
   Limit the query to only PaMessages that are currently active.
 
-  A PaMessage is considered "active" if its start time is in the past and
-  either its end time is in the future or it has no end time and its associated
-  alert is in passed list of alert IDs and is also not paused.
+  A PaMessage is considered "active" if it is "current" and not suppressed by
+  other criteria, like being paused, or being limited to a different day.
   """
   @spec active(
           queryable :: Ecto.Queryable.t(),
@@ -30,7 +29,10 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
         ) ::
           Ecto.Query.t()
   def active(q \\ PaMessage, alert_ids, now) do
-    current(q, alert_ids, now) |> where([m], is_nil(m.paused) or not m.paused)
+    current_service_day = Util.get_current_service_day(now)
+
+    current(q, alert_ids, now)
+    |> where([m], (is_nil(m.paused) or not m.paused) and ^current_service_day in m.days_of_week)
   end
 
   @doc """
@@ -43,12 +45,9 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   @spec active(queryable :: Ecto.Queryable.t(), alert_ids :: [String.t()], now :: DateTime.t()) ::
           Ecto.Query.t()
   def current(q \\ PaMessage, alert_ids, now) do
-    current_service_day_of_week = Util.get_current_service_day(now)
-
     from m in q,
       where:
-        ^current_service_day_of_week in m.days_of_week and
-          m.start_datetime <= ^now and
+        m.start_datetime <= ^now and
           ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)
   end
 

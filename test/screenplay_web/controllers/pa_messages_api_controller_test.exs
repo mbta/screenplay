@@ -82,7 +82,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
 
       insert(:pa_message, %{
         id: 2,
-        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        days_of_week: [1],
         start_datetime: ~U[2024-08-05 00:00:00Z],
         end_datetime: ~U[2024-08-06 23:59:59Z]
       })
