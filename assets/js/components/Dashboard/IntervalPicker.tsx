@@ -18,12 +18,13 @@ const IntervalPicker = ({ interval, onChangeInterval, validated }: Props) => {
         className="m-0 interval"
         type="number"
         value={interval}
+        min={1}
         onChange={(input) => onChangeInterval(input.target.value)}
         required
-        isInvalid={validated && interval.length === 0}
+        isInvalid={validated && (!Number.isInteger(+interval) || +interval < 1)}
       />
       <Form.Control.Feedback type="invalid">
-        Interval value is required
+        Interval value must be a positive integer
       </Form.Control.Feedback>
     </Form.Group>
   );
