@@ -6,13 +6,13 @@ import {
 } from "react-bootstrap-icons";
 import { classWithModifier } from "../../util";
 
-interface ToastProps {
+export type ToastProps = {
   variant: "warning" | "info";
   message: string | null;
   errors?: string[];
   onClose?: () => void;
   autoHide?: boolean;
-}
+};
 
 const Toast = ({
   message,

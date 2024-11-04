@@ -19,7 +19,7 @@ import KebabMenu from "Components/KebabMenu";
 import moment from "moment";
 import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
-import Toast from "Components/Toast";
+import Toast, { type ToastProps } from "Components/Toast";
 
 type StateFilter = "current" | "future" | "done";
 
@@ -219,12 +219,6 @@ const PaMessagesPage: ComponentType = () => {
       />
     </>
   );
-};
-
-type ToastProps = {
-  variant: "info" | "warning";
-  message: string;
-  autoHide?: boolean;
 };
 
 interface PaMessageTableProps {
