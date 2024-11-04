@@ -245,13 +245,13 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
       <table className="pa-message-table">
         <thead>
           <tr>
-            <th>Message</th>
-            <th>Interval</th>
+            <th className="pa-message-table__message">Message</th>
+            <th className="pa-message-table__interval">Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
             {showMoreActions && (
               <>
-                <th>Actions</th>
-                <th></th>
+                <th className="pa-message-table__actions">Actions</th>
+                <th className="pa-message-table__kebab"></th>
               </>
             )}
           </tr>
@@ -358,8 +358,10 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
 
   return (
     <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
-      <td>{paMessage.visual_text}</td>
-      <td>{paMessage.interval_in_minutes} min</td>
+      <td className="pa-message-table__message">{paMessage.visual_text}</td>
+      <td className="pa-message-table__interval">
+        {paMessage.interval_in_minutes} min
+      </td>
       <td className="pa-message-table__start-end">
         {start.toLocaleString().replace(",", "")}
         <br />
@@ -367,7 +369,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
       </td>
       {showMoreActions && (
         <>
-          <td>
+          <td className="pa-message-table__actions">
             <div
               className="pause-active-switch-container"
               onClick={togglePaused}
@@ -388,7 +390,10 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
               </div>
             </div>
           </td>
-          <td onClick={(e) => e.stopPropagation()}>
+          <td
+            onClick={(e) => e.stopPropagation()}
+            className="pa-message-table__kebab"
+          >
             <KebabMenu>
               <Dropdown.Item
                 className="kebab-menu-dropdown__item"
