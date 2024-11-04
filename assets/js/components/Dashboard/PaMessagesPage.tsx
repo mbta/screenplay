@@ -323,7 +323,9 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
       <td className="pa-message-table__start-end">
         {start.toLocaleString().replace(",", "")}
         <br />
-        {end && end.toLocaleString().replace(",", "")}
+        {end
+          ? end.toLocaleString().replace(",", "")
+          : `At end of alert ${paMessage.alert_id}`}
       </td>
       {stateFilter == "current" && (
         <td>
