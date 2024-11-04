@@ -265,7 +265,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
                 onEndNow={() => {
                   setToastProps({
                     variant: "info",
-                    message: "PA/ESS message has ended, and moved to “Done.",
+                    message: "PA/ESS message has ended, and moved to “Done.“",
                     autoHide: true,
                   });
                   onUpdate();
