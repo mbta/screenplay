@@ -15,7 +15,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR, { mutate } from "swr";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
-import ThreeDotsDropdown from "./ThreeDotsDropdown";
+import KebabMenu from "Components/KebabMenu";
 import moment from "moment";
 import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
@@ -388,14 +388,14 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
       )}
       {stateFilter == "current" && (
         <td onClick={(e) => e.stopPropagation()}>
-          <ThreeDotsDropdown>
+          <KebabMenu>
             <Dropdown.Item
-              className="three-dots-vertical-dropdown__item"
+              className="kebab-menu-dropdown__item"
               onClick={() => endMessage(paMessage)}
             >
               End Now
             </Dropdown.Item>
-          </ThreeDotsDropdown>
+          </KebabMenu>
         </td>
       )}
     </tr>

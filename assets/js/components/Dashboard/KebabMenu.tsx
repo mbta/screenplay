@@ -19,14 +19,14 @@ const CustomToggle = React.forwardRef(
       }
     >
       <Button
-        className="three-dots-vertical-button"
+        className="kebab-menu-button"
         ref={ref}
         onClick={(e) => {
           e.preventDefault();
           props.onClick(e);
         }}
       >
-        <ThreeDotsVertical className="three-dots-vertical-button__icon" />
+        <ThreeDotsVertical className="kebab-menu-button__icon" />
         {props.children}
       </Button>
     </OverlayTrigger>
@@ -38,7 +38,7 @@ interface Props extends PropsWithChildren {
   tooltipText?: string;
 }
 
-const ThreeDotsDropdown = ({ children, tooltipText }: Props) => {
+const KebabMenu = ({ children, tooltipText }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -61,7 +61,7 @@ const ThreeDotsDropdown = ({ children, tooltipText }: Props) => {
 
   return (
     <Dropdown
-      className="three-dots-vertical-dropdown"
+      className="kebab-menu-dropdown"
       show={isOpen}
       ref={dropdownRef}
       drop={"down"}
@@ -71,11 +71,11 @@ const ThreeDotsDropdown = ({ children, tooltipText }: Props) => {
         onClick={() => setIsOpen(!isOpen)}
         tooltipText={tooltipText}
       />
-      <Dropdown.Menu className="three-dots-vertical-dropdown__menu">
+      <Dropdown.Menu className="kebab-menu-dropdown__menu">
         {children}
       </Dropdown.Menu>
     </Dropdown>
   );
 };
 
-export default ThreeDotsDropdown;
+export default KebabMenu;

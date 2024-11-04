@@ -5,7 +5,7 @@ import OpenInWindowButton from "Components/OpenInTabButton";
 import { Dropdown } from "react-bootstrap";
 import { Link45deg, FlagFill, BoxArrowUpRight } from "react-bootstrap-icons";
 import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
-import ThreeDotsDropdown from "Components/ThreeDotsDropdown";
+import KebabMenu from "Components/KebabMenu";
 
 interface ScreenDetailActionBarProps {
   screenUrl: string;
@@ -40,9 +40,9 @@ const ScreenDetailActionBar = (
 
   if (props.isCollapsed) {
     actionBar = (
-      <ThreeDotsDropdown tooltipText="Copy, report and more">
+      <KebabMenu tooltipText="Copy, report and more">
         <Dropdown.Item
-          className="three-dots-vertical-dropdown__item"
+          className="kebab-menu-dropdown__item"
           href={props.screenUrl}
           target="_blank"
           onClick={(e: SyntheticEvent) => e.stopPropagation()}
@@ -51,7 +51,7 @@ const ScreenDetailActionBar = (
           tab
         </Dropdown.Item>
         <Dropdown.Item
-          className="three-dots-vertical-dropdown__item"
+          className="kebab-menu-dropdown__item"
           onClick={() => {
             navigator.clipboard.writeText(props.screenUrl);
             dispatch({ type: "SHOW_LINK_COPIED", showLinkCopied: true });
@@ -61,7 +61,7 @@ const ScreenDetailActionBar = (
           <Link45deg className="copy-link-button__icon" /> Copy link
         </Dropdown.Item>
         <Dropdown.Item
-          className="three-dots-vertical-dropdown__item"
+          className="kebab-menu-dropdown__item"
           href={reportAProblemURL}
           onClick={(e: SyntheticEvent) => e.stopPropagation()}
           target="_blank"
@@ -69,7 +69,7 @@ const ScreenDetailActionBar = (
           <FlagFill className="report-a-problem-button__icon" /> Report a
           problem
         </Dropdown.Item>
-      </ThreeDotsDropdown>
+      </KebabMenu>
     );
   } else {
     actionBar = (
