@@ -67,8 +67,11 @@ defmodule Screenplay.PaMessages.PaMessage do
     ])
     |> validate_length(:sign_ids, min: 1)
     |> validate_subset(:days_of_week, 1..7)
+    |> validate_number(:interval_in_minutes, greater_than: 0)
+    |> validate_inclusion(:priority, 1..4)
     |> validate_start_date()
     |> validate_end_date()
+    |> maybe_unpause()
   end
 
   defp validate_start_date(changeset) do
@@ -91,5 +94,35 @@ defmodule Screenplay.PaMessages.PaMessage do
     else
       changeset
     end
+  end
+
+  defp maybe_unpause(changeset) do
+    now = DateTime.utc_now()
+
+    currently_active? =
+      in_active_period?(
+        now,
+        changeset.data.start_datetime,
+        changeset.data.end_datetime
+      )
+
+    will_be_active? =
+      in_active_period?(
+        now,
+        get_field(changeset, :start_datetime) || changeset.data.start_datetime,
+        get_field(changeset, :end_datetime) || changeset.data.end_datetime
+      )
+
+    if currently_active? != will_be_active? do
+      put_change(changeset, :paused, false)
+    else
+      changeset
+    end
+  end
+
+  defp in_active_period?(now, start_datetime, end_datetime) do
+    not is_nil(start_datetime) and DateTime.after?(now, start_datetime) and
+      (end_datetime == nil or
+         DateTime.before?(now, end_datetime))
   end
 end

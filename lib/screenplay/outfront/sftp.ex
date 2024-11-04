@@ -10,6 +10,7 @@ defmodule Screenplay.Outfront.SFTP do
   @portrait_dir Application.compile_env!(:screenplay, :portrait_dir)
   @retries 3
 
+  @spec run((SFTPClient.Conn.t() -> :ok)) :: :ok
   def run(work_fn) do
     conn = start_connection()
 

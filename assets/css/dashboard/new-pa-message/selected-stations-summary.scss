@@ -1,7 +1,7 @@
 .selected-stations-summary {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  height: 52px;
   border-radius: 8px;
   background-color: $cool-gray-30;
   margin: 40px 40px 0 40px;
@@ -9,6 +9,7 @@
   font-weight: 500;
   font-size: 20px;
   line-height: 30px;
+  white-space: nowrap;
 
   .label {
     margin-right: 8px;
@@ -20,5 +21,17 @@
 
   .geo-alt-fill-icon {
     margin-right: 7px;
+  }
+
+  .no-tags {
+    // same height as the tags; avoids layout jumping when number of tags goes
+    // from 0 to 1 or vice-versa
+    line-height: 36px;
+  }
+
+  .selected-stations-tags {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 4px;
   }
 }
