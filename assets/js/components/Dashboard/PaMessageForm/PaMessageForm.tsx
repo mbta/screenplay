@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import moment, { type Moment } from "moment";
+import moment from "moment";
 import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
 import SelectStationsAndZones from "./SelectStationsAndZones";
@@ -60,15 +60,31 @@ const PaMessageForm = ({
       return false;
     },
   );
-  const [startDateTime, setStartDateTime] = useState(() => {
+
+  const [startDate, setStartDate] = useState(() => {
     if (defaultValues?.start_datetime)
-      return moment(defaultValues.start_datetime);
-    return now;
+      return moment(defaultValues.start_datetime).format("YYYY-MM-DD");
+    return now.format("YYYY-MM-DD");
   });
-  const [endDateTime, setEndDateTime] = useState<Moment>(() => {
-    if (defaultValues?.end_datetime) return moment(defaultValues.end_datetime);
-    return moment(now).add(1, "hour");
+
+  const [startTime, setStartTime] = useState(() => {
+    if (defaultValues?.start_datetime)
+      return moment(defaultValues.start_datetime).format("HH:mm");
+    return now.format("HH:mm");
   });
+
+  const [endDate, setEndDate] = useState(() => {
+    if (defaultValues?.end_datetime)
+      return moment(defaultValues.end_datetime).format("YYYY-MM-DD");
+    return now.format("YYYY-MM-DD");
+  });
+
+  const [endTime, setEndTime] = useState(() => {
+    if (defaultValues?.end_datetime)
+      return moment(defaultValues.end_datetime).format("HH:mm");
+    return now.add(1, "hour").format("HH:mm");
+  });
+
   const [days, setDays] = useState(() => {
     return defaultValues?.days_of_week ?? [1, 2, 3, 4, 5, 6, 7];
   });
@@ -98,7 +114,8 @@ const PaMessageForm = ({
   );
 
   const onClearAssociatedAlert = () => {
-    setEndDateTime(moment(startDateTime).add(1, "hour"));
+    setEndDate(startDate);
+    setEndTime(moment(startTime, "HH:mm").add(1, "hour").format("HH:mm"));
     setAssociatedAlert(null);
     setEndWithEffectPeriod(false);
   };
@@ -139,6 +156,9 @@ const PaMessageForm = ({
     setSignIds(fp.uniq(importedSigns));
   };
 
+  const startDateTime = moment(`${startDate} ${startTime}`, "YYYY-MM-DD HH:mm");
+  const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
+
   return (
     <div className="new-pa-message">
       <MainForm
@@ -171,10 +191,14 @@ const PaMessageForm = ({
           phoneticText,
           priority,
           setDays,
-          startDateTime,
-          setStartDateTime,
-          endDateTime,
-          setEndDateTime,
+          startDate,
+          setStartDate,
+          startTime,
+          setStartTime,
+          endDate,
+          setEndDate,
+          endTime,
+          setEndTime,
           onError,
           setInterval,
           setPhoneticText,

@@ -6,7 +6,7 @@ import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import moment, { type Moment } from "moment";
+import moment from "moment";
 import {
   ArrowRightShort,
   CheckCircleFill,
