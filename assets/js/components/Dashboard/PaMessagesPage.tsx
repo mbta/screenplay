@@ -6,17 +6,20 @@ import {
   ButtonGroup,
   Button,
   Spinner,
+  Dropdown,
   FormCheck,
 } from "react-bootstrap";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
-import { PaMessage } from "Models/pa_message";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR, { mutate } from "swr";
+import moment from "moment";
+import { PaMessage } from "Models/pa_message";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
+import KebabMenu from "Components/KebabMenu";
 import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
-import Toast from "Components/Toast";
+import Toast, { type ToastProps } from "Components/Toast";
 
 type StateFilter = "current" | "future" | "past";
 
@@ -116,20 +119,12 @@ const PaMessagesPage: ComponentType = () => {
     });
   }, [setParams, stateFilter, serviceTypes]);
 
-  const { data, isLoading } = usePaMessages({ serviceTypes, stateFilter });
+  const { data, isLoading } = usePaMessages({
+    serviceTypes,
+    stateFilter,
+  });
+
   const shouldShowLoadingState = useDelayedLoadingState(isLoading);
-
-  const updatePaMessage = (updatedPaMessage: PaMessage) => {
-    if (!data) return;
-
-    const updatedData = data.map((paMessage) => {
-      return paMessage.id === updatedPaMessage.id
-        ? updatedPaMessage
-        : paMessage;
-    });
-
-    mutate(`/api/pa-messages?${params.toString()}`, updatedData, false);
-  };
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -173,11 +168,10 @@ const PaMessagesPage: ComponentType = () => {
                   className={cx("button", { active: stateFilter === "past" })}
                   onClick={() => setStateFilter("past")}
                 >
-                  Past
+                  Done
                 </Button>
               </ButtonGroup>
             </section>
-
             <section>
               <header>Filter by service type</header>
               <ButtonGroup className="button-group" vertical>
@@ -209,7 +203,7 @@ const PaMessagesPage: ComponentType = () => {
                 paMessages={data ?? []}
                 isLoading={shouldShowLoadingState}
                 stateFilter={stateFilter}
-                updatePaMessage={updatePaMessage}
+                onUpdate={() => mutate(`/api/pa-messages?${params.toString()}`)}
                 setErrorMessage={setErrorMessage}
               />
             </Row>
@@ -231,7 +225,7 @@ interface PaMessageTableProps {
   paMessages: PaMessage[];
   isLoading: boolean;
   stateFilter: StateFilter;
-  updatePaMessage: (paMessage: PaMessage) => void;
+  onUpdate: () => void;
   setErrorMessage: (message: string | null) => void;
 }
 
@@ -239,20 +233,27 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   paMessages,
   isLoading,
   stateFilter,
-  updatePaMessage,
+  onUpdate,
   setErrorMessage,
 }: PaMessageTableProps) => {
+  const [toastProps, setToastProps] = useState<ToastProps | null>();
   const data = isLoading ? [] : paMessages;
+  const showMoreActions = stateFilter == "current";
 
   return (
     <>
       <table className="pa-message-table">
         <thead>
           <tr>
-            <th>Message</th>
-            <th>Interval</th>
+            <th className="pa-message-table__message">Message</th>
+            <th className="pa-message-table__interval">Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
-            {stateFilter == "current" && <th>Actions</th>}
+            {showMoreActions && (
+              <>
+                <th className="pa-message-table__actions">Actions</th>
+                <th className="pa-message-table__kebab"></th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -261,14 +262,36 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
               <PaMessageRow
                 key={paMessage.id}
                 paMessage={paMessage}
-                stateFilter={stateFilter}
-                updatePaMessage={updatePaMessage}
+                onEndNow={() => {
+                  setToastProps({
+                    variant: "info",
+                    message: "PA/ESS message has ended, and moved to “Done.”",
+                    autoHide: true,
+                  });
+                  onUpdate();
+                }}
+                onError={() =>
+                  setToastProps({
+                    variant: "warning",
+                    message: "Something went wrong. Please try again.",
+                  })
+                }
+                showMoreActions={showMoreActions}
+                onUpdate={onUpdate}
                 setErrorMessage={setErrorMessage}
               />
             );
           })}
         </tbody>
       </table>
+      {toastProps != null && (
+        <Toast
+          {...toastProps}
+          onClose={() => {
+            setToastProps(null);
+          }}
+        />
+      )}
       {data.length == 0 && (
         <div className="pa-message-table__empty">
           {isLoading ? (
@@ -288,15 +311,19 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
 
 interface PaMessageRowProps {
   paMessage: PaMessage;
-  stateFilter: StateFilter;
-  updatePaMessage: (paMessage: PaMessage) => void;
+  onEndNow: () => void;
+  onError: () => void;
+  showMoreActions: boolean;
+  onUpdate: () => void;
   setErrorMessage: (message: string | null) => void;
 }
 
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   paMessage,
-  stateFilter,
-  updatePaMessage,
+  onEndNow,
+  onError,
+  showMoreActions,
+  onUpdate,
   setErrorMessage,
 }: PaMessageRowProps) => {
   const navigate = useNavigate();
@@ -304,13 +331,26 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   const end =
     paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
 
+  const endMessage = (paMessage: PaMessage) => {
+    updateExistingPaMessage(paMessage.id, {
+      ...paMessage,
+      end_datetime: moment().utc().add(-1, "second").toISOString(),
+    }).then(({ status }) => {
+      if (status === 200) {
+        onEndNow();
+      } else {
+        onError();
+      }
+    });
+  };
+
   const togglePaused = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     try {
       await updateExistingPaMessage(paMessage.id, {
         paused: !paMessage.paused,
       } as UpdatePaMessageBody);
-      updatePaMessage({ ...paMessage, paused: !paMessage.paused });
+      onUpdate();
     } catch (error) {
       setErrorMessage((error as Error).message);
     }
@@ -318,8 +358,10 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
 
   return (
     <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
-      <td>{paMessage.visual_text}</td>
-      <td>{paMessage.interval_in_minutes} min</td>
+      <td className="pa-message-table__message">{paMessage.visual_text}</td>
+      <td className="pa-message-table__interval">
+        {paMessage.interval_in_minutes} min
+      </td>
       <td className="pa-message-table__start-end">
         {start.toLocaleString().replace(",", "")}
         <br />
@@ -327,25 +369,43 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
           ? end.toLocaleString().replace(",", "")
           : `At end of alert ${paMessage.alert_id}`}
       </td>
-      {stateFilter == "current" && (
-        <td>
-          <div className="pause-active-switch-container" onClick={togglePaused}>
-            <FormCheck
-              className={"pause-active-switch"}
-              type="switch"
-              checked={!paMessage.paused}
-              onChange={() => {}}
-            />
+      {showMoreActions && (
+        <>
+          <td className="pa-message-table__actions">
             <div
-              className={cx("switch-text", {
-                paused: paMessage.paused,
-                active: !paMessage.paused,
-              })}
+              className="pause-active-switch-container"
+              onClick={togglePaused}
             >
-              {paMessage.paused ? "Paused" : "Active"}
+              <FormCheck
+                className={"pause-active-switch"}
+                type="switch"
+                checked={!paMessage.paused}
+                onChange={() => {}}
+              />
+              <div
+                className={cx("switch-text", {
+                  paused: paMessage.paused,
+                  active: !paMessage.paused,
+                })}
+              >
+                {paMessage.paused ? "Paused" : "Active"}
+              </div>
             </div>
-          </div>
-        </td>
+          </td>
+          <td
+            onClick={(e) => e.stopPropagation()}
+            className="pa-message-table__kebab"
+          >
+            <KebabMenu>
+              <Dropdown.Item
+                className="kebab-menu-dropdown__item"
+                onClick={() => endMessage(paMessage)}
+              >
+                End Now
+              </Dropdown.Item>
+            </KebabMenu>
+          </td>
+        </>
       )}
     </tr>
   );

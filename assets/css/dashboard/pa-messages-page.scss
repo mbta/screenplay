@@ -83,7 +83,6 @@
 
   th {
     border-bottom: 1px solid $theme-secondary;
-    height: 47px;
     padding: 15px 6px 8px 16px;
   }
 
@@ -97,13 +96,29 @@
     cursor: pointer;
   }
 
+  &__message {
+    width: 586px;
+  }
+
+  &__interval {
+    width: 91px;
+  }
+
+  &__actions {
+    width: 110px;
+  }
+
+  &__kebab {
+    width: 40px;
+  }
+
   &__text {
     color: $text-primary;
     text-decoration: none;
   }
 
   &__start-end {
-    min-width: 200px;
+    width: 200px;
     padding-right: 0px;
     text-wrap: nowrap;
   }
