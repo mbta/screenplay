@@ -20,16 +20,19 @@ import { getAlertEarliestStartLatestEnd } from "../../../util";
 import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
-
 const MAX_TEXT_LENGTH = 2000;
 
 interface Props {
   title: string;
   days: number[];
-  startDateTime: Moment;
-  setStartDateTime: (datetime: Moment) => void;
-  endDateTime: Moment;
-  setEndDateTime: (datetime: Moment) => void;
+  startDate: string;
+  setStartDate: (date: string) => void;
+  startTime: string;
+  setStartTime: (time: string) => void;
+  endDate: string;
+  setEndDate: (date: string) => void;
+  endTime: string;
+  setEndTime: (time: string) => void;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
@@ -58,10 +61,14 @@ interface Props {
 const MainForm = ({
   title,
   days,
-  startDateTime,
-  setStartDateTime,
-  endDateTime,
-  setEndDateTime,
+  startDate,
+  setStartDate,
+  startTime,
+  setStartTime,
+  endDate,
+  setEndDate,
+  endTime,
+  setEndTime,
   interval,
   navigateTo,
   phoneticText,
@@ -137,6 +144,9 @@ const MainForm = ({
 
   if (hide) return null;
 
+  const startDateTime = moment(`${startDate} ${startTime}`, "YYYY-MM-DD HH:mm");
+  const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
+
   return (
     <div className="new-pa-message-page">
       <Form onSubmit={handleSubmit} noValidate>
@@ -165,15 +175,8 @@ const MainForm = ({
                       type="date"
                       id="start-date-picker"
                       name="start-date-picker-input"
-                      value={startDateTime.format("YYYY-MM-DD")}
-                      onChange={(event) =>
-                        setStartDateTime(
-                          moment(
-                            `${event.target.value} ${startDateTime.format("HH:mm")}`,
-                            "YYYY-MM-DD HH:mm",
-                          ),
-                        )
-                      }
+                      value={startDate}
+                      onChange={(event) => setStartDate(event.target.value)}
                       isInvalid={
                         validated && startDateTime.isSameOrAfter(endDateTime)
                       }
@@ -185,22 +188,13 @@ const MainForm = ({
                   <Form.Control
                     type="time"
                     className="time-picker picker"
-                    value={startDateTime.format("HH:mm")}
-                    onChange={(event) =>
-                      setStartDateTime(
-                        moment(
-                          `${startDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
-                          "YYYY-MM-DD HH:mm",
-                        ),
-                      )
-                    }
+                    value={startTime}
+                    onChange={(event) => setStartTime(event.target.value)}
                   />
                   <Button
                     className="service-time-link"
                     variant="link"
-                    onClick={() =>
-                      setStartDateTime(moment(startDateTime).hour(3).minute(0))
-                    }
+                    onClick={() => setStartTime("03:00")}
                   >
                     Start of service day
                   </Button>
@@ -223,14 +217,18 @@ const MainForm = ({
                     label="At end of alert"
                     onChange={(event) => {
                       if (!event.target.checked) {
-                        setEndDateTime(moment(startDateTime).add(1, "hour"));
+                        setEndTime(
+                          moment(startTime, "HH:mm")
+                            .add(1, "hour")
+                            .format("HH:mm"),
+                        );
                       }
 
                       setEndWithEffectPeriod(event.target.checked);
                     }}
                   />
                 )}
-                {!endWithEffectPeriod && endDateTime !== null && (
+                {!endWithEffectPeriod && (
                   <div className="datetime-picker-group">
                     <div className="validation-group">
                       <Form.Control
@@ -238,15 +236,8 @@ const MainForm = ({
                         type="date"
                         id="end-date-picker"
                         name="end-date-picker-input"
-                        value={endDateTime.format("YYYY-MM-DD")}
-                        onChange={(event) =>
-                          setEndDateTime(
-                            moment(
-                              `${event.target.value} ${endDateTime.format("HH:mm")}`,
-                              "YYYY-MM-DD HH:mm",
-                            ),
-                          )
-                        }
+                        value={endDate}
+                        onChange={(event) => setEndDate(event.target.value)}
                         isInvalid={
                           validated && endDateTime.isSameOrBefore(moment())
                         }
@@ -258,22 +249,13 @@ const MainForm = ({
                     <Form.Control
                       type="time"
                       className="time-picker picker"
-                      value={endDateTime.format("HH:mm")}
-                      onChange={(event) =>
-                        setEndDateTime(
-                          moment(
-                            `${endDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
-                            "YYYY-MM-DD HH:mm",
-                          ),
-                        )
-                      }
+                      value={endTime}
+                      onChange={(event) => setEndTime(event.target.value)}
                     />
                     <Button
                       className="service-time-link"
                       variant="link"
-                      onClick={() =>
-                        setEndDateTime(moment(endDateTime).hour(3).minute(0))
-                      }
+                      onClick={() => setEndTime("03:00")}
                     >
                       End of service day
                     </Button>
