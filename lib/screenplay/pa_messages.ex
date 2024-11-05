@@ -18,7 +18,7 @@ defmodule Screenplay.PaMessages do
     import Ecto.Changeset
 
     @type t :: %{
-            optional(:state) => :all | :current | :future | :done,
+            optional(:state) => :all | :current | :future | :past,
             optional(:now) => DateTime.t(),
             optional(:signs) => [String.t(), ...],
             optional(:routes) => [String.t(), ...]
@@ -27,7 +27,7 @@ defmodule Screenplay.PaMessages do
     @primary_key false
 
     embedded_schema do
-      field :state, Ecto.Enum, values: [:all, :current, :future, :done], default: :all
+      field :state, Ecto.Enum, values: [:all, :current, :future, :past], default: :all
       field :now, :utc_datetime, autogenerate: {DateTime, :utc_now, []}
       field :signs, {:array, :string}
       field :routes, {:array, :string}

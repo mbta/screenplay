@@ -13,7 +13,7 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   def state(q \\ PaMessage, state, alert_ids, now)
   def state(q, :current, alert_ids, now), do: current(q, alert_ids, now)
   def state(q, :future, _alert_ids, now), do: future(q, now)
-  def state(q, :done, alert_ids, now), do: done(q, alert_ids, now)
+  def state(q, :past, alert_ids, now), do: past(q, alert_ids, now)
   def state(q, :all, _, _), do: q
 
   @doc """
@@ -51,8 +51,11 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
           ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)
   end
 
-  @doc "Limit the query to only PaMessages that are done playing"
-  def done(q \\ PaMessage, alert_ids, now) do
+  @doc """
+  Limit the query to only PaMessages that have an end_datetime in the past or
+  are associated with a past alert.
+  """
+  def past(q \\ PaMessage, alert_ids, now) do
     from m in q,
       where: m.end_datetime < ^now or (is_nil(m.end_datetime) and m.alert_id not in ^alert_ids)
   end

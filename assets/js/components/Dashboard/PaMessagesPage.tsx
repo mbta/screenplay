@@ -10,18 +10,18 @@ import {
   FormCheck,
 } from "react-bootstrap";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
-import { PaMessage } from "Models/pa_message";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import cx from "classnames";
 import useSWR, { mutate } from "swr";
+import moment from "moment";
+import { PaMessage } from "Models/pa_message";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import KebabMenu from "Components/KebabMenu";
-import moment from "moment";
 import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
 import Toast, { type ToastProps } from "Components/Toast";
 
-type StateFilter = "current" | "future" | "done";
+type StateFilter = "current" | "future" | "past";
 
 type ServiceType =
   | "Green"
@@ -165,8 +165,8 @@ const PaMessagesPage: ComponentType = () => {
                   Future
                 </Button>
                 <Button
-                  className={cx("button", { active: stateFilter === "done" })}
-                  onClick={() => setStateFilter("done")}
+                  className={cx("button", { active: stateFilter === "past" })}
+                  onClick={() => setStateFilter("past")}
                 >
                   Done
                 </Button>
@@ -265,7 +265,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
                 onEndNow={() => {
                   setToastProps({
                     variant: "info",
-                    message: "PA/ESS message has ended, and moved to “Done.“",
+                    message: "PA/ESS message has ended, and moved to “Done.”",
                     autoHide: true,
                   });
                   onUpdate();

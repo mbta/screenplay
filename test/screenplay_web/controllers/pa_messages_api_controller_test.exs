@@ -101,7 +101,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :authenticated_pa_message_admin
-    test "responds with only the done messages when filtered by state=done", %{conn: conn} do
+    test "responds with only the past messages when filtered by state=past", %{conn: conn} do
       now = "2024-08-06T15:10:00Z"
 
       insert(:pa_message, %{
@@ -127,7 +127,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
 
       assert [%{"id" => 1}] =
                conn
-               |> get("/api/pa-messages?state=done&now=#{now}")
+               |> get("/api/pa-messages?state=past&now=#{now}")
                |> json_response(200)
     end
 
