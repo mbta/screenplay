@@ -1,6 +1,4 @@
 .kebab-menu-dropdown {
-  float: right;
-
   &__menu {
     background-color: $cool-gray-30;
 
@@ -24,13 +22,10 @@
 }
 
 .kebab-menu-button {
-  width: 36px;
-  margin-left: 8px;
-  float: right;
+  padding: 0;
   background-color: transparent;
   border-radius: 6px;
   border: 1px solid rgba(23, 31, 38, 0.3);
-  height: 36px;
 
   &:hover,
   &:focus {
@@ -40,11 +35,5 @@
   &:focus {
     outline: none;
     box-shadow: none;
-  }
-
-  &__icon {
-    position: relative;
-    right: 3px;
-    bottom: 2px;
   }
 }

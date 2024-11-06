@@ -249,10 +249,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             <th className="pa-message-table__interval">Interval</th>
             <th className="pa-message-table__start-end">Start-End</th>
             {showMoreActions && (
-              <>
-                <th className="pa-message-table__actions">Actions</th>
-                <th className="pa-message-table__kebab"></th>
-              </>
+              <th className="pa-message-table__actions">Actions</th>
             )}
           </tr>
         </thead>
@@ -373,37 +370,37 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         <>
           <td className="pa-message-table__actions">
             <div
-              className="pause-active-switch-container"
-              onClick={togglePaused}
+              className="actions-container"
+              onClick={(e) => e.stopPropagation()}
             >
-              <FormCheck
-                className={"pause-active-switch"}
-                type="switch"
-                checked={!paMessage.paused}
-                onChange={() => {}}
-              />
               <div
-                className={cx("switch-text", {
-                  paused: paMessage.paused,
-                  active: !paMessage.paused,
-                })}
+                className="pause-active-switch-container"
+                onClick={togglePaused}
               >
-                {paMessage.paused ? "Paused" : "Active"}
+                <FormCheck
+                  className={"pause-active-switch"}
+                  type="switch"
+                  checked={!paMessage.paused}
+                  onChange={() => {}}
+                />
+                <div
+                  className={cx("switch-text", {
+                    paused: paMessage.paused,
+                    active: !paMessage.paused,
+                  })}
+                >
+                  {paMessage.paused ? "Paused" : "Active"}
+                </div>
               </div>
+              <KebabMenu>
+                <Dropdown.Item
+                  className="kebab-menu-dropdown__item"
+                  onClick={() => endMessage(paMessage)}
+                >
+                  End Now
+                </Dropdown.Item>
+              </KebabMenu>
             </div>
-          </td>
-          <td
-            onClick={(e) => e.stopPropagation()}
-            className="pa-message-table__kebab"
-          >
-            <KebabMenu>
-              <Dropdown.Item
-                className="kebab-menu-dropdown__item"
-                onClick={() => endMessage(paMessage)}
-              >
-                End Now
-              </Dropdown.Item>
-            </KebabMenu>
           </td>
         </>
       )}
