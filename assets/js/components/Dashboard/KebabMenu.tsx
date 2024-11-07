@@ -26,7 +26,11 @@ const CustomToggle = React.forwardRef(
           props.onClick(e);
         }}
       >
-        <ThreeDotsVertical className="kebab-menu-button__icon" />
+        <ThreeDotsVertical
+          width={24}
+          height={24}
+          className="kebab-menu-button__icon"
+        />
         {props.children}
       </Button>
     </OverlayTrigger>
