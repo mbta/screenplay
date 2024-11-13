@@ -23,7 +23,8 @@ config :screenplay,
   local_signs_json_path: {:test, "signs.json"},
   stops_mod: Screenplay.Stops.Mock,
   routes_mod: Screenplay.Routes.Mock,
-  facilities_mod: Screenplay.Facilities.Mock
+  facilities_mod: Screenplay.Facilities.Mock,
+  static_template_file_spec: {:test, "static_templates.json"}
 
 config :ueberauth, Ueberauth,
   providers: [

@@ -32,7 +32,8 @@ config :screenplay,
   pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.S3,
   config_s3_bucket: "mbta-ctd-config",
   record_sentry: false,
-  start_cache_processes: config_env() != :test
+  start_cache_processes: config_env() != :test,
+  static_template_file_spec: {:priv, "static_templates.json"}
 
 # Include 2 logger backends
 config :logger,
