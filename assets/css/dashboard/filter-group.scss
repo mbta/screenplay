@@ -1,0 +1,24 @@
+.filter-group {
+  width: 200px;
+  margin-bottom: 48px;
+
+  .header {
+    font-size: 16px;
+    margin-bottom: 8px;
+    line-height: 24px;
+  }
+
+  .button-group {
+    .filter-button {
+      height: 38px;
+      min-width: 200px;
+      color: $text-secondary;
+      background-color: $cool-gray-20;
+    }
+
+    .selected {
+      color: #ffffff;
+      background: #d9d9d93d;
+    }
+  }
+}
