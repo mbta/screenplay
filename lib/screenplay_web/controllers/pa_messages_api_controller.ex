@@ -5,6 +5,7 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.ListParams
+  alias Screenplay.PaMessages.StaticTemplates
 
   @watts_client Application.compile_env(:screenplay, :watts_client, Screenplay.Watts.Client)
 
@@ -55,5 +56,15 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       |> put_status(404)
       |> json(%{error: "not_found"})
     end
+  end
+
+  def static_templates(conn, _) do
+    templates =
+      case StaticTemplates.get() do
+        {:ok, templates} -> templates
+        :error -> []
+      end
+
+    json(conn, %{templates: templates})
   end
 end
