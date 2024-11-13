@@ -296,13 +296,23 @@
     }
   }
 
-  .associate-alert-button {
-    color: $text-link-primary;
-    font-family: Inter;
-    font-size: 20;
-    font-weight: 500;
-    height: 30px;
-    margin-bottom: 8px;
+  .associate-container {
+    display: flex;
+    align-items: center;
+    padding: 0;
+
+    .associate-alert-button,
+    .psa-emergency-button {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      height: 30px;
+      color: $text-link-primary;
+      font-family: Inter;
+      font-size: 20px;
+      font-weight: 500;
+      text-decoration: none;
+    }
   }
 
   .unassociated-alert-header {
@@ -341,7 +351,7 @@
   .associate-alert-button {
     color: $text-link-primary;
     font-family: Inter;
-    font-size: 20;
+    font-size: 20px;
     font-weight: 500;
     height: 30px;
     margin-bottom: 8px;

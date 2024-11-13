@@ -527,8 +527,8 @@ const NewPaMessageHeader = ({
       </div>
     </Row>
   ) : (
-    <>
-      <Row md="auto" className="align-items-center unassociated-alert-header">
+    <Row md="auto" className="align-items-center unassociated-alert-header">
+      <div className="associate-container">
         <Button
           variant="link"
           className="pr-0 associate-alert-button"
@@ -539,15 +539,19 @@ const NewPaMessageHeader = ({
         >
           Associate with alert
         </Button>
+        |
+        <Button
+          variant="link"
+          className="pr-0 psa-emergency-button"
+          onClick={() => {
+            navigateTo(Page.TEMPLATES);
+          }}
+        >
+          Select PSA or Emergency messages
+        </Button>
         (Optional)
-      </Row>
-      <Row>
-        <div className="new-pa-message-page__associate-alert-subtext">
-          Linking will allow you to share end time with alert, and import
-          location and message.
-        </div>
-      </Row>
-    </>
+      </div>
+    </Row>
   );
 };
 

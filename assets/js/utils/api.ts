@@ -171,7 +171,7 @@ export const updateExistingPaMessage = async (
   };
 };
 
-export const getStaticTemplates = async (): Promise<{
+export const fetchStaticTemplates = async (): Promise<{
   templates: StaticTemplate[];
 }> => {
   const response = await fetch("/api/pa-messages/static-templates");
