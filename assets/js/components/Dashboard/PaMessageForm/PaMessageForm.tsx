@@ -4,7 +4,7 @@ import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
 import SelectStationsAndZones from "./SelectStationsAndZones";
 import AssociateAlert from "./AssociateAlert";
-import StaticTemplateTable from "./StaticTemplateTable";
+import StaticTemplatePage from "./StaticTemplatePage";
 import { Alert, InformedEntity } from "Models/alert";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import Toast from "Components/Toast";
@@ -231,7 +231,9 @@ const PaMessageForm = ({
           onCancel={() => setPage(Page.MAIN)}
         />
       )}
-      {page === Page.TEMPLATES && <StaticTemplateTable />}
+      {page === Page.TEMPLATES && (
+        <StaticTemplatePage onCancel={() => setPage(Page.MAIN)} />
+      )}
       <Toast
         variant="warning"
         message={errorMessage}

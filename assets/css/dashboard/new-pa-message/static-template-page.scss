@@ -1,0 +1,88 @@
+.static-template-page {
+  padding: 24px 48px;
+
+  .header-container {
+    padding-right: 48px;
+    max-width: 1380px;
+    max-height: 48px;
+    margin-bottom: 40px;
+
+    .header,
+    .cancel-button-col,
+    .cancel-button {
+      height: 48px;
+    }
+
+    .cancel-button-col {
+      flex: none;
+      width: 100px;
+
+      .cancel-button {
+        color: $text-link-primary;
+        text-decoration: none;
+
+        &:hover {
+          color: $text-link-primary;
+          background-color: $cool-gray-15;
+        }
+      }
+    }
+  }
+
+  .static-template-page-body {
+    .filter-group-col {
+      max-width: 200px;
+      margin-right: 48px;
+    }
+
+    .static-template-table-container {
+      max-width: 1096px;
+
+      .table-header {
+        font-size: 32px;
+      }
+
+      .static-template-table {
+        width: 100%;
+
+        .header-row {
+          height: 55px;
+          vertical-align: bottom;
+          border-bottom: 1px solid $border-primary;
+
+          .message-column-header {
+            padding-bottom: 8px;
+            padding-left: 16px;
+          }
+        }
+
+        .template-row {
+          background-color: $cool-gray-15;
+          border-bottom: 1px solid $divider-secondary;
+
+          .title {
+            font-weight: 700;
+          }
+
+          .message-cell {
+            padding: 8px 16px;
+
+            .message {
+              white-space: pre-line;
+            }
+          }
+
+          .select-button-cell {
+            vertical-align: top;
+            padding: 16px 38px 0 16px;
+
+            .select-button {
+              padding: 0;
+              color: $text-secondary;
+            }
+          }
+        }
+      }
+    }
+  }
+}
