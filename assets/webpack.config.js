@@ -62,6 +62,7 @@ module.exports = (env, options) => ({
       Models: path.resolve(__dirname, "js/models"),
       Utils: path.resolve(__dirname, "js/utils"),
       Constants: path.resolve(__dirname, "js/constants"),
+      Styles: path.resolve(__dirname, "css"),
       // Fix issue with React JSX rutime export
       // https://github.com/facebook/react/issues/20235#issuecomment-732205073
       // This is fixed in later versions of react so this can be removed when

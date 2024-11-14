@@ -1,5 +1,6 @@
 import React from "react";
 import { Dropdown, Form, Row } from "react-bootstrap";
+import * as paMessageStyles from "Styles/pa-messages.module.scss";
 
 interface Props {
   priority: number;
@@ -8,11 +9,17 @@ interface Props {
 const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
   return (
     <Form.Group>
-      <Form.Label htmlFor="priority-picker" className="label body--regular">
+      <Form.Label
+        htmlFor="priority-picker"
+        className={paMessageStyles.formLabel}
+      >
         Priority
       </Form.Label>
       <Row md="auto" className="align-items-center">
-        <Dropdown onSelect={(eventKey) => onSelectPriority(Number(eventKey))}>
+        <Dropdown
+          className={paMessageStyles.dropdown}
+          onSelect={(eventKey) => onSelectPriority(Number(eventKey))}
+        >
           <Dropdown.Toggle id="priority-picker">{priority}</Dropdown.Toggle>
           <Dropdown.Menu role="listbox">
             {[
@@ -30,8 +37,8 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
                   eventKey={priorityIndex}
                   active={priority === priorityIndex}
                 >
-                  <div className="item-value">{priorityIndex}</div>
-                  <div className="item-label">{label}</div>
+                  <div>{priorityIndex}</div>
+                  <div className={paMessageStyles.smaller}>{label}</div>
                 </Dropdown.Item>
               );
             })}
