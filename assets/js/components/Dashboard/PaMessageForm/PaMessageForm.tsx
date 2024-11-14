@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment, { type Moment } from "moment";
 import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
@@ -10,6 +10,7 @@ import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import Toast from "Components/Toast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
 import fp from "lodash/fp";
+import { StaticTemplate } from "Models/static_template";
 
 interface PaMessageFormData {
   alert_id: string | null;
@@ -100,6 +101,9 @@ const PaMessageForm = ({
     () => defaultAudioState ?? AudioPreview.Unreviewed,
   );
 
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<StaticTemplate | null>(null);
+
   const onClearAssociatedAlert = () => {
     setEndDateTime(moment(startDateTime).add(1, "hour"));
     setAssociatedAlert(null);
@@ -141,6 +145,16 @@ const PaMessageForm = ({
 
     setSignIds(fp.uniq(importedSigns));
   };
+
+  useEffect(() => {
+    const priorityToIntervalMap: { [priority: number]: string } = {
+      1: "1",
+      2: "4",
+      3: "10",
+      4: "12",
+    };
+    setInterval(priorityToIntervalMap[priority]);
+  }, [priority]);
 
   return (
     <div className="new-pa-message">
@@ -195,6 +209,8 @@ const PaMessageForm = ({
           audioState,
           setAudioState,
           paused,
+          selectedTemplate,
+          setSelectedTemplate,
         }}
       />
       {[Page.STATIONS, Page.ZONES].includes(page) && (
@@ -232,7 +248,17 @@ const PaMessageForm = ({
         />
       )}
       {page === Page.TEMPLATES && (
-        <StaticTemplatePage onCancel={() => setPage(Page.MAIN)} />
+        <StaticTemplatePage
+          onCancel={() => setPage(Page.MAIN)}
+          onSelect={(template) => {
+            setSelectedTemplate(template);
+            setVisualText(template.audio_text);
+            setPhoneticText(template.audio_text);
+            setPriority(template.type === "psa" ? 4 : 1);
+            setAudioState(AudioPreview.Reviewed);
+            setPage(Page.MAIN);
+          }}
+        />
       )}
       <Toast
         variant="warning"
