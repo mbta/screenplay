@@ -11,6 +11,7 @@ import Toast from "Components/Toast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
 import fp from "lodash/fp";
 import { StaticTemplate } from "Models/static_template";
+import { MessageType } from "Models/pa_message";
 
 interface PaMessageFormData {
   alert_id: string | null;
@@ -22,6 +23,7 @@ interface PaMessageFormData {
   interval_in_minutes: number;
   visual_text: string;
   audio_text: string;
+  message_type: MessageType;
 }
 
 interface Props {
@@ -176,6 +178,7 @@ const PaMessageForm = ({
             interval_in_minutes: Number(interval),
             visual_text: visualText,
             audio_text: phoneticText,
+            message_type: selectedTemplate?.type ?? null,
           };
 
           onSubmit(formData);

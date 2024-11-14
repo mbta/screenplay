@@ -13,7 +13,10 @@ export interface PaMessage {
   saved: boolean;
   inserted_at: string;
   updated_at: string;
+  message_type: MessageType;
 }
+
+export type MessageType = null | "psa" | "emergency";
 
 export type NewPaMessageBody = Omit<
   PaMessage,
