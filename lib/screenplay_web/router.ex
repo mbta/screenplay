@@ -91,6 +91,7 @@ defmodule ScreenplayWeb.Router do
     get("/pa-messages/:id/edit", PaMessagesController, :index)
     get("/api/pa-messages/preview_audio", PaMessagesApiController, :preview_audio)
     get("/api/pa-messages/static-templates", PaMessagesApiController, :static_templates)
+    get("/api/pa-messages/static-templates/:id", PaMessagesApiController, :static_template)
   end
 
   scope "/", ScreenplayWeb do

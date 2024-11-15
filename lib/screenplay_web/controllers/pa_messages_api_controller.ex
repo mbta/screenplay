@@ -3,6 +3,7 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
   action_fallback ScreenplayWeb.FallbackController
 
+  alias Screenplay.Alerts.Cache, as: AlertsCache
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.ListParams
   alias Screenplay.PaMessages.StaticTemplates
@@ -50,7 +51,9 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
   def show(conn, %{"id" => id}) do
     if pa_message = PaMessages.get_message(id) do
-      json(conn, pa_message)
+      {:ok, template} = StaticTemplates.get_template(pa_message.template_id)
+      alert = AlertsCache.alert(pa_message.alert_id)
+      json(conn, %{pa_message: pa_message, template: template, alert: alert})
     else
       conn
       |> put_status(404)
@@ -58,9 +61,19 @@ defmodule ScreenplayWeb.PaMessagesApiController do
     end
   end
 
+  def static_template(conn, %{"id" => id}) do
+    template =
+      case StaticTemplates.get_template(id) do
+        {:ok, template} -> template
+        :error -> nil
+      end
+
+    json(conn, template)
+  end
+
   def static_templates(conn, _) do
     templates =
-      case StaticTemplates.get() do
+      case StaticTemplates.get_all() do
         {:ok, templates} -> templates
         :error -> []
       end

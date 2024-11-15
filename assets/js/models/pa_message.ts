@@ -1,3 +1,5 @@
+import { StaticTemplate } from "./static_template";
+
 export interface PaMessage {
   id: number;
   alert_id: string | null;
@@ -14,6 +16,7 @@ export interface PaMessage {
   inserted_at: string;
   updated_at: string;
   message_type: MessageType;
+  template_id: number | null;
 }
 
 export type MessageType = null | "psa" | "emergency";

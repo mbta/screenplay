@@ -1,8 +1,8 @@
 defmodule Screenplay.PaMessages.StaticTemplates do
   require Logger
 
-  @spec get :: {:ok, list(map())} | :error
-  def get do
+  @spec get_all :: {:ok, list(map())} | :error
+  def get_all do
     with {:ok, contents} <- file_path() |> File.read(),
          {:ok, json} <- Jason.decode(contents) do
       {:ok, json}
@@ -10,6 +10,17 @@ defmodule Screenplay.PaMessages.StaticTemplates do
       {:error, err} ->
         Logger.error("static_template_fetch_error #{inspect(err)}")
         :error
+    end
+  end
+
+  @spec get_template(nil) :: nil
+  @spec get_template(non_neg_integer()) :: {:ok, map()} | :error
+  def get_template(nil), do: {:ok, nil}
+
+  def get_template(id) do
+    case get_all() do
+      {:ok, templates} -> {:ok, Enum.find(templates, fn template -> template["id"] == id end)}
+      :error -> :error
     end
   end
 

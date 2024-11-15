@@ -24,6 +24,7 @@ interface PaMessageFormData {
   visual_text: string;
   audio_text: string;
   message_type: MessageType;
+  template_id: number | null;
 }
 
 interface Props {
@@ -35,6 +36,7 @@ interface Props {
   errors: string[];
   defaultValues?: Partial<PaMessageFormData>;
   defaultAlert?: Alert | string | null;
+  defaultTemplate?: StaticTemplate | null;
   defaultAudioState?: AudioPreview;
   paused: boolean;
 }
@@ -48,6 +50,7 @@ const PaMessageForm = ({
   onSubmit,
   defaultValues,
   defaultAlert,
+  defaultTemplate,
   defaultAudioState,
   paused,
 }: Props) => {
@@ -103,9 +106,8 @@ const PaMessageForm = ({
   const [audioState, setAudioState] = useState<AudioPreview>(
     () => defaultAudioState ?? AudioPreview.Unreviewed,
   );
-
   const [selectedTemplate, setSelectedTemplate] =
-    useState<StaticTemplate | null>(null);
+    useState<StaticTemplate | null>(defaultTemplate ?? null);
 
   const onClearAssociatedAlert = () => {
     setEndDateTime(moment(startDateTime).add(1, "hour"));
@@ -188,6 +190,7 @@ const PaMessageForm = ({
             visual_text: visualText,
             audio_text: phoneticText,
             message_type: selectedTemplate?.type ?? null,
+            template_id: selectedTemplate?.id ?? null,
           };
 
           onSubmit(formData);
