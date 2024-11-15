@@ -12,6 +12,7 @@ interface Props {
   filters: Filter[];
   selectedFilter: string;
   onFilterSelect: (value: string) => void;
+  className?: string;
 }
 
 const FilterGroup = ({
@@ -19,9 +20,10 @@ const FilterGroup = ({
   filters,
   selectedFilter,
   onFilterSelect,
+  className,
 }: Props) => {
   return (
-    <div className="filter-group">
+    <div className={classNames("filter-group", className)}>
       <div className="header">{header}</div>
       <ButtonGroup className="button-group" vertical>
         {filters.map((filter) => {

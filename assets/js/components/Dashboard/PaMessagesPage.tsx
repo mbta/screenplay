@@ -148,11 +148,11 @@ const PaMessagesPage: ComponentType = () => {
               </Link>
             </section>
             <FilterGroup
+              className="mb-5"
               header="Filter by message state"
-              onFilterSelect={(selected) => {
-                const stateFilter = selected.toLowerCase() as StateFilter;
-                setStateFilter(stateFilter);
-              }}
+              onFilterSelect={(selected) =>
+                setStateFilter(selected as StateFilter)
+              }
               selectedFilter={stateFilter.toLowerCase()}
               filters={[
                 { label: "Now", value: "current" },

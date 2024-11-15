@@ -60,6 +60,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
         <Row className="associate-alert-page-body">
           <Col className="associate-alert-filter-selection">
             <FilterGroup
+              className="mb-5"
               header="Message state"
               selectedFilter={selectedMessageState}
               onFilterSelect={setSelectedMessageState}
