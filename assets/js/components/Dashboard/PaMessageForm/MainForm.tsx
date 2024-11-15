@@ -56,7 +56,7 @@ interface Props {
   hide: boolean;
   paused: boolean;
   selectedTemplate: StaticTemplate | null;
-  setSelectedTemplate: (template: StaticTemplate | null) => void;
+  onClearSelectedTemplate: () => void;
 }
 
 const MainForm = ({
@@ -91,7 +91,7 @@ const MainForm = ({
   setAudioState,
   paused,
   selectedTemplate,
-  setSelectedTemplate,
+  onClearSelectedTemplate,
 }: Props) => {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
@@ -152,7 +152,7 @@ const MainForm = ({
             navigateTo={navigateTo}
             setEndWithEffectPeriod={setEndWithEffectPeriod}
             selectedTemplate={selectedTemplate}
-            onClearSelectedTemplate={() => setSelectedTemplate(null)}
+            onClearSelectedTemplate={onClearSelectedTemplate}
           />
           <Card className="when-card">
             <div className="title">When</div>

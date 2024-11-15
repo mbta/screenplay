@@ -53,6 +53,7 @@ const PaMessageForm = ({
 }: Props) => {
   const [page, setPage] = useState<Page>(Page.MAIN);
   const now = moment();
+  const defaultPriority = 2;
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert | string | null>(
     () => {
@@ -79,7 +80,7 @@ const PaMessageForm = ({
     return defaultValues?.days_of_week ?? [1, 2, 3, 4, 5, 6, 7];
   });
   const [priority, setPriority] = useState(() => {
-    return defaultValues?.priority ?? 2;
+    return defaultValues?.priority ?? defaultPriority;
   });
   const [interval, setInterval] = useState(() => {
     return defaultValues?.interval_in_minutes
@@ -110,6 +111,14 @@ const PaMessageForm = ({
     setEndDateTime(moment(startDateTime).add(1, "hour"));
     setAssociatedAlert(null);
     setEndWithEffectPeriod(false);
+  };
+
+  const onClearSelectedTemplate = () => {
+    setSelectedTemplate(null);
+    setVisualText("");
+    setPhoneticText("");
+    setAudioState(AudioPreview.Unreviewed);
+    setPriority(defaultPriority);
   };
 
   const onImportMessage = (alertMessage: string) => {
@@ -213,7 +222,7 @@ const PaMessageForm = ({
           setAudioState,
           paused,
           selectedTemplate,
-          setSelectedTemplate,
+          onClearSelectedTemplate,
         }}
       />
       {[Page.STATIONS, Page.ZONES].includes(page) && (
