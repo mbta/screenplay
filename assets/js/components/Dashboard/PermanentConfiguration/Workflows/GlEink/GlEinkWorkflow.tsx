@@ -10,7 +10,7 @@ import ConfigureScreensWorkflowPage, {
 import BottomActionBar from "Components/PermanentConfiguration/BottomActionBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import StationSelectPage from "Components/PermanentConfiguration/Workflows/GlEink/StationSelectPage";
-import { Alert, Button, Modal } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
   useConfigValidationContext,
@@ -18,6 +18,7 @@ import {
 } from "Hooks/useScreenplayContext";
 import { putPendingScreens } from "Utils/api";
 import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import ErrorModal from "Components/ErrorModal";
 
 interface EditNavigationState {
   place_id: string;
@@ -275,35 +276,15 @@ const GlEinkWorkflow: ComponentType = () => {
       };
       layout = (
         <>
-          <Modal
-            show={showErrorModal}
-            className="error-modal"
+          <ErrorModal
+            title="Someone else is configuring these screens"
+            showErrorModal={showErrorModal}
             onHide={() => setShowErrorModal(false)}
-          >
-            <Modal.Header closeButton closeVariant="white">
-              <Modal.Title>
-                Someone else is configuring these screens
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              In order not to overwrite each others work, please refresh your
-              browser and fill-out the form again.
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                onClick={() => setShowErrorModal(false)}
-                className="error-modal__cancel-button"
-              >
-                Cancel
-              </Button>
-              <Button
-                className="error-modal__refresh-button"
-                onClick={() => window.location.reload()}
-              >
-                Refresh now
-              </Button>
-            </Modal.Footer>
-          </Modal>
+            errorMessage="In order not to overwrite each others work, please refresh your
+              browser and fill-out the form again."
+            confirmButtonLabel="Refresh now"
+            onConfirm={() => window.location.reload()}
+          />
           <ConfigureScreensWorkflowPage
             selectedPlaces={filteredPlaces}
             setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}

@@ -13,6 +13,7 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
+import ErrorModal from "Components/ErrorModal";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -24,6 +25,8 @@ const Dashboard: ComponentType = () => {
   } = useScreenplayContext();
   const dispatch = useScreenplayDispatchContext();
   const [bannerDone, setBannerDone] = useState(false);
+  const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchAlerts().then(
@@ -52,23 +55,35 @@ const Dashboard: ComponentType = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch alerts every 4 seconds.
-  useInterval(() => {
-    fetchAlerts().then(
-      ({
-        all_alert_ids: allAPIalertIds,
-        alerts: newAlerts,
-        screens_by_alert: screensByAlertMap,
-      }) => {
-        findAndSetBannerAlert(alerts, newAlerts);
-        dispatch({
-          type: "SET_ALERTS",
-          alerts: newAlerts,
-          allAPIAlertIds: allAPIalertIds,
-          screensByAlertMap: screensByAlertMap,
+  useInterval(
+    () => {
+      fetchAlerts()
+        .then(
+          ({
+            all_alert_ids: allAPIalertIds,
+            alerts: newAlerts,
+            screens_by_alert: screensByAlertMap,
+          }) => {
+            findAndSetBannerAlert(alerts, newAlerts);
+            dispatch({
+              type: "SET_ALERTS",
+              alerts: newAlerts,
+              allAPIAlertIds: allAPIalertIds,
+              screensByAlertMap: screensByAlertMap,
+            });
+          },
+        )
+        .catch((response: Response) => {
+          if (response.status === 403) {
+            setIsAlertsIntervalRunning(false);
+            setShowModal(true);
+          } else {
+            throw response;
+          }
         });
-      },
-    );
-  }, 4000);
+    },
+    isAlertsIntervalRunning ? 4000 : null,
+  );
 
   const findAndSetBannerAlert = (oldAlerts: Alert[], newAlerts: Alert[]) => {
     const now = new Date();
@@ -187,6 +202,14 @@ const Dashboard: ComponentType = () => {
         )}
         <Outlet />
       </div>
+      <ErrorModal
+        title="Session expired"
+        showErrorModal={showModal}
+        onHide={() => setShowModal(false)}
+        errorMessage="Your session has expired, please refresh your browser."
+        confirmButtonLabel="Refresh now"
+        onConfirm={() => window.location.reload()}
+      />
     </div>
   );
 };

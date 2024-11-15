@@ -33,6 +33,7 @@ beforeEach(() => {
     .fn()
     .mockReturnValueOnce(
       Promise.resolve({
+        status: 200,
         json: () =>
           Promise.resolve({
             all_alert_ids: allAPIAlertIds,
