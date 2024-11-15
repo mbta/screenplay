@@ -9,7 +9,7 @@ defmodule ScreenplayWeb.AuthManager.ErrorHandler do
 
   @impl Guardian.Plug.ErrorHandler
   def auth_error(conn, error, _opts) do
-    if Plug.Conn.get_session(conn, :previous_path) =~ "api" do
+    if conn.request_path =~ "api" or Plug.Conn.get_session(conn, :previous_path) =~ "api" do
       Plug.Conn.send_resp(conn, 403, "Session expired")
     else
       auth_params = auth_params_for_error(error)
