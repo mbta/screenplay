@@ -7,6 +7,8 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   @derive {Jason.Encoder, except: [:__meta__]}
 
+  @type message_type :: nil | :psa | :emergency
+
   @type t() :: %__MODULE__{
           alert_id: String.t() | nil,
           start_datetime: DateTime.t(),
@@ -19,10 +21,10 @@ defmodule Screenplay.PaMessages.PaMessage do
           audio_text: String.t(),
           paused: boolean() | nil,
           saved: boolean() | nil,
-          message_type: String.t(),
+          message_type: message_type(),
+          template_id: non_neg_integer() | nil,
           inserted_at: DateTime.t(),
-          updated_at: DateTime.t(),
-          template_id: non_neg_integer() | nil
+          updated_at: DateTime.t()
         }
 
   schema "pa_message" do
@@ -37,7 +39,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:audio_text, :string)
     field(:paused, :boolean)
     field(:saved, :boolean)
-    field(:message_type, :string)
+    field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
     field(:template_id, :integer)
 
     timestamps(type: :utc_datetime)
@@ -57,6 +59,7 @@ defmodule Screenplay.PaMessages.PaMessage do
       :audio_text,
       :paused,
       :saved,
+      :message_type,
       :template_id
     ])
     |> validate_required([
