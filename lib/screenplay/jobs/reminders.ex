@@ -49,7 +49,7 @@ defmodule Screenplay.Jobs.Reminders do
           type: "section",
           text: %{
             type: "mrkdwn",
-            text: "Please review this Alert: #{ScreenplayWeb.Endpoint.url()}"
+            text: "Please review this alert: #{ScreenplayWeb.Endpoint.url()}/emergency-takeover"
           }
         }
       ]
