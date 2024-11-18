@@ -379,10 +379,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
               </div>
             </div>
           </td>
-          <td
-            onClick={(e) => e.stopPropagation()}
-            className="pa-message-table__kebab"
-          >
+          <td className="pa-message-table__kebab">
             <KebabMenu>
               <Dropdown.Item
                 className="kebab-menu-dropdown__item"
