@@ -17,9 +17,7 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
     useState<MessageType>("psa");
 
   useEffect(() => {
-    fetchStaticTemplates().then(({ templates }) =>
-      setStaticTemplates(templates),
-    );
+    fetchStaticTemplates().then((templates) => setStaticTemplates(templates));
   }, []);
 
   return (

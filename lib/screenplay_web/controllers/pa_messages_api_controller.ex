@@ -84,6 +84,6 @@ defmodule ScreenplayWeb.PaMessagesApiController do
         :error -> []
       end
 
-    json(conn, %{templates: templates})
+    json(conn, templates)
   end
 end
