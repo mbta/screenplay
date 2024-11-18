@@ -345,7 +345,14 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
 
   return (
     <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
-      <td className="pa-message-table__message">{paMessage.visual_text}</td>
+      <td className="pa-message-table__message">
+        <a
+          href={`/pa-messages/${paMessage.id}/edit`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {paMessage.visual_text}
+        </a>
+      </td>
       <td className="pa-message-table__interval">
         {paMessage.interval_in_minutes} min
       </td>
