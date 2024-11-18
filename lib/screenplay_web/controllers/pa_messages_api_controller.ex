@@ -67,16 +67,6 @@ defmodule ScreenplayWeb.PaMessagesApiController do
     end
   end
 
-  def static_template(conn, %{"id" => id}) do
-    template =
-      case StaticTemplates.get_template(id) do
-        {:ok, template} -> template
-        :error -> nil
-      end
-
-    json(conn, template)
-  end
-
   def static_templates(conn, _) do
     templates =
       case StaticTemplates.get_all() do
