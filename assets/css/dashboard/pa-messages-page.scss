@@ -92,6 +92,11 @@
 
   &__message {
     width: 586px;
+
+    a {
+      color: $text-primary;
+      text-decoration: none;
+    }
   }
 
   &__interval {
@@ -100,11 +105,6 @@
 
   &__actions {
     width: 110px;
-  }
-
-  &__text {
-    color: $text-primary;
-    text-decoration: none;
   }
 
   &__start-end {
