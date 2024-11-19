@@ -21,6 +21,7 @@ import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
 import { StaticTemplate } from "Models/static_template";
+import { MessageType } from "Models/pa_message";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -509,6 +510,17 @@ const NewPaMessageHeader = ({
     );
   };
 
+  const formatMessageType = (messageType: MessageType) => {
+    switch (messageType) {
+      case "psa":
+        return "PSA";
+      case "emergency":
+        return "Emergency";
+      default:
+        return "";
+    }
+  };
+
   let content;
 
   if (associatedAlert) {
@@ -540,7 +552,8 @@ const NewPaMessageHeader = ({
     content = (
       <Row md="auto" className="align-items-center">
         <div className="selected-template-header">
-          Template: {selectedTemplate.title}
+          Template:{" "}
+          {`${formatMessageType(selectedTemplate.type)} - ${selectedTemplate.title}`}
           <Button
             variant="link"
             onClick={onClearSelectedTemplate}
