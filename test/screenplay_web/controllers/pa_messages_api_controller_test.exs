@@ -363,10 +363,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         audio_text: "Audio Text"
       })
 
-      assert %{"pa_message" => %{"id" => 1}, "alert" => nil} =
-               conn
-               |> get("/api/pa-messages/1")
-               |> json_response(200)
+      assert %{"id" => 1} = conn |> get("/api/pa-messages/1") |> json_response(200)
     end
 
     @tag :authenticated_pa_message_admin
@@ -382,10 +379,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         alert_id: "1"
       })
 
-      assert %{"pa_message" => %{"id" => 1}, "alert" => %{"id" => "1"}} =
-               conn
-               |> get("/api/pa-messages/1")
-               |> json_response(200)
+      assert %{"id" => 1} = conn |> get("/api/pa-messages/1") |> json_response(200)
     end
 
     @tag :authenticated_pa_message_admin
