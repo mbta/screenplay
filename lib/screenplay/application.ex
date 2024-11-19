@@ -19,7 +19,6 @@ defmodule Screenplay.Application do
         # Start the Endpoint (http/https)
         ScreenplayWeb.Endpoint,
         Screenplay.OutfrontTakeoverTool.Alerts.State,
-        Screenplay.OutfrontTakeoverTool.Alerts.Reminders,
         Screenplay.ScreensConfig
       ] ++
         if Application.get_env(:screenplay, :start_cache_processes) do
