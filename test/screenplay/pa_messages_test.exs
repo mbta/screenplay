@@ -5,6 +5,7 @@ defmodule Screenplay.PaMessagesTest do
 
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.PaMessage
+  alias Screenplay.AlertsCacheHelpers
 
   describe "get_all_messages/0" do
     test "returns all messages with most recent first" do
@@ -41,19 +42,7 @@ defmodule Screenplay.PaMessagesTest do
     test "returns messages linked to an existing alert" do
       now = ~U[2024-05-01T05:00:00Z]
 
-      get_json_fn = fn "/alerts", %{"include" => "routes"} ->
-        {:ok,
-         %{
-           "data" => [
-             alert_json("1", ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z]),
-             alert_json("2", ~U[2024-04-01T04:00:00Z], ~U[2024-04-01T06:00:00Z])
-           ],
-           "included" => []
-         }}
-      end
-
-      {:ok, fetcher} = start_supervised({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
-      send(fetcher, :fetch)
+      AlertsCacheHelpers.seed_alerts_cache(2, ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z])
 
       insert(:pa_message, %{
         alert_id: "1",
@@ -97,18 +86,7 @@ defmodule Screenplay.PaMessagesTest do
   test "returns messages linked to an existing alert using custom schedule" do
     now = ~U[2024-05-01T12:00:00Z]
 
-    get_json_fn = fn "/alerts", %{"include" => "routes"} ->
-      {:ok,
-       %{
-         "data" => [
-           alert_json("1", ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z])
-         ],
-         "included" => []
-       }}
-    end
-
-    {:ok, fetcher} = start_supervised({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
-    send(fetcher, :fetch)
+    AlertsCacheHelpers.seed_alerts_cache(1, ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z])
 
     insert(:pa_message, %{
       id: 1,
@@ -218,27 +196,5 @@ defmodule Screenplay.PaMessagesTest do
     } do
       assert {:error, %Ecto.Changeset{}} = PaMessages.update_message(pa_message, %{sign_ids: []})
     end
-  end
-
-  defp alert_json(id, start_dt, end_dt) do
-    %{
-      "id" => id,
-      "attributes" => %{
-        "active_period" => [
-          %{"start" => DateTime.to_iso8601(start_dt), "end" => DateTime.to_iso8601(end_dt)}
-        ],
-        "created_at" => nil,
-        "updated_at" => nil,
-        "cause" => nil,
-        "effect" => nil,
-        "header" => nil,
-        "informed_entity" => [],
-        "lifecycle" => nil,
-        "severity" => nil,
-        "timeframe" => nil,
-        "url" => nil,
-        "description" => nil
-      }
-    }
   end
 end
