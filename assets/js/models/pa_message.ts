@@ -1,5 +1,3 @@
-import { StaticTemplate } from "./static_template";
-
 export interface PaMessage {
   id: number;
   alert_id: string | null;
