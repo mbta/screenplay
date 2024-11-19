@@ -1,4 +1,8 @@
 defmodule Screenplay.AlertsCacheHelpers do
+  @moduledoc """
+  Helper functions for seeding Screenplay.Alerts.Cache.
+  """
+
   use ExUnit.CaseTemplate
 
   alias Screenplay.Alerts.Cache, as: AlertsCache

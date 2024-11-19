@@ -1,4 +1,8 @@
 defmodule Screenplay.PaMessages.StaticTemplates do
+  @moduledoc """
+  Functions needed to access static templates in priv/config/static_templates.json.
+  """
+
   require Logger
 
   @spec get_all :: {:ok, list(map())} | :error

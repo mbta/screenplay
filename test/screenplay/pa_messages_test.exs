@@ -3,9 +3,9 @@ defmodule Screenplay.PaMessagesTest do
 
   import Screenplay.Factory
 
+  alias Screenplay.AlertsCacheHelpers
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.PaMessage
-  alias Screenplay.AlertsCacheHelpers
 
   describe "get_all_messages/0" do
     test "returns all messages with most recent first" do

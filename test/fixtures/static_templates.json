@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "title": "Bicycles (English)",
+    "visual_text": "To make space for other passengers, bicycles are not permitted on trains during rush hour, or at any time of day on the Green Line. For details visit mbta.com/bikes.",
+    "audio_text": "To make space for other passengers, bicycles are not permitted on trains during rush hour, or at any time of day on the Green Line. For details visit mbta.com/bikes.",
+    "type": "psa"
+  },
+  {
+    "id": 2,
+    "title": "Backpacks (English)",
+    "visual_text": "To make space for other passengers and speed up boarding, please take off your backpack before entering the train and hold it at your side.",
+    "audio_text": "To make space for other passengers and speed up boarding, please take off your backpack before entering the train and hold it at your side.",
+    "type": "psa"
+  }
+]

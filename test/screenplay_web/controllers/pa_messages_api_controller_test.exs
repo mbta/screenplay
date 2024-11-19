@@ -1,17 +1,15 @@
 defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   use ScreenplayWeb.ConnCase
 
+  alias Screenplay.AlertsCacheHelpers
   alias Screenplay.Places.{Cache, Place}
   alias Screenplay.Places.Place.PaEssScreen
 
   import Screenplay.Factory
 
   setup_all do
-    get_json_fn = fn "alerts", %{"include" => "routes"} ->
-      {:ok, %{"data" => [], "included" => []}}
-    end
+    AlertsCacheHelpers.seed_alerts_cache(2, ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z])
 
-    start_supervised!({Screenplay.Alerts.Cache, get_json_fn: get_json_fn})
     start_supervised!(Screenplay.Places.Cache)
 
     :ok
@@ -365,7 +363,45 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         audio_text: "Audio Text"
       })
 
-      assert %{"id" => 1} =
+      assert %{"pa_message" => %{"id" => 1}, "alert" => nil, "template" => nil} =
+               conn
+               |> get("/api/pa-messages/1")
+               |> json_response(200)
+    end
+
+    @tag :authenticated_pa_message_admin
+    test "returns the PA message with the given ID and its associated alert", %{conn: conn} do
+      insert(:pa_message, %{
+        id: 1,
+        start_datetime: ~U[2024-05-01T01:00:00Z],
+        end_datetime: ~U[2024-05-01T13:00:00Z],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        visual_text: "Visual Text",
+        audio_text: "Audio Text",
+        alert_id: "1"
+      })
+
+      assert %{"pa_message" => %{"id" => 1}, "alert" => %{"id" => "1"}, "template" => nil} =
+               conn
+               |> get("/api/pa-messages/1")
+               |> json_response(200)
+    end
+
+    @tag :authenticated_pa_message_admin
+    test "returns the PA message with the given ID and its associated template", %{conn: conn} do
+      insert(:pa_message, %{
+        id: 1,
+        start_datetime: ~U[2024-05-01T01:00:00Z],
+        end_datetime: ~U[2024-05-01T13:00:00Z],
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        visual_text: "Visual Text",
+        audio_text: "Audio Text",
+        template_id: 1
+      })
+
+      assert %{"pa_message" => %{"id" => 1}, "alert" => nil, "template" => %{"id" => 1}} =
                conn
                |> get("/api/pa-messages/1")
                |> json_response(200)
@@ -377,6 +413,14 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                conn
                |> get("/api/pa-messages/1234")
                |> json_response(404)
+    end
+  end
+
+  describe "GET /api/static-templates" do
+    @tag :authenticated_pa_message_admin
+    test "returns all static templates", %{conn: conn} do
+      assert [%{"id" => 1}, %{"id" => 2}] =
+               conn |> get("/api/pa-messages/static-templates") |> json_response(200)
     end
   end
 end
