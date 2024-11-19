@@ -38,6 +38,12 @@ module.exports = (env, options) => ({
           MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
+            options: {
+              modules: {
+                auto: true,
+                localIdentName: "[local]__[hash:base64]",
+              },
+            },
           },
           {
             loader: "sass-loader",
