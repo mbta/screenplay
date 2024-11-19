@@ -1,6 +1,9 @@
 defmodule Screenplay.PaMessages.StaticTemplates do
   @moduledoc """
   Functions needed to access static templates in priv/config/static_templates.json.
+
+  Static template should never be deleted. If a template is no longer in use, set
+  its `archived` field to `true`.
   """
 
   require Logger
@@ -10,7 +13,7 @@ defmodule Screenplay.PaMessages.StaticTemplates do
   def get_all do
     with {:ok, contents} <- file_path() |> File.read(),
          {:ok, json} <- Jason.decode(contents) do
-      {:ok, json}
+      {:ok, Enum.reject(json, & &1["archived"])}
     else
       {:error, err} ->
         Logger.error("static_template_fetch_error #{inspect(err)}")
