@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { StaticTemplate } from "Models/static_template";
-import { fetchStaticTemplates } from "Utils/api";
 import FilterGroup from "Components/FilterGroup";
+import _staticTemplates from "../../../../static/static_templates.json";
 
 interface Props {
   onCancel: () => void;
@@ -11,14 +11,11 @@ interface Props {
 
 type MessageType = "psa" | "emergency";
 
+export const STATIC_TEMPLATES = _staticTemplates as StaticTemplate[];
+
 const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
-  const [staticTemplates, setStaticTemplates] = useState<StaticTemplate[]>([]);
   const [selectedMessageType, setSelectedMessageType] =
     useState<MessageType>("psa");
-
-  useEffect(() => {
-    fetchStaticTemplates().then((templates) => setStaticTemplates(templates));
-  }, []);
 
   return (
     <div className="static-template-page">
@@ -51,7 +48,7 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
           </Col>
           <Col>
             <StaticTemplateTable
-              templates={staticTemplates.filter(
+              templates={STATIC_TEMPLATES.filter(
                 (template) => template.type === selectedMessageType,
               )}
               selectedMessageType={selectedMessageType}

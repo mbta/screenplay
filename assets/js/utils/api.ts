@@ -5,7 +5,6 @@ import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
-import { StaticTemplate } from "Models/static_template";
 
 export const fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
@@ -169,11 +168,6 @@ export const updateExistingPaMessage = async (
     status: response.status,
     body: await response.json(),
   };
-};
-
-export const fetchStaticTemplates = async (): Promise<StaticTemplate[]> => {
-  const response = await fetch("/api/pa-messages/static-templates");
-  return await response.json();
 };
 
 const getPostBodyAndHeaders = (

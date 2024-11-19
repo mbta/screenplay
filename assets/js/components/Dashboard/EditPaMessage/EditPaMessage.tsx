@@ -6,12 +6,11 @@ import PaMessageForm from "../PaMessageForm";
 import { updateExistingPaMessage } from "Utils/api";
 import { Alert } from "Models/alert";
 import { AudioPreview } from "Components/PaMessageForm/types";
-import { StaticTemplate } from "Models/static_template";
+import { STATIC_TEMPLATES } from "Components/PaMessageForm/StaticTemplatePage";
 
 interface PaMessageResponse {
   pa_message: PaMessage;
   alert: Alert | null;
-  template: StaticTemplate | null;
 }
 
 const usePaMessage = (id: string | number) => {
@@ -43,13 +42,7 @@ const FetchPaMessage = ({ id }: { id: string | number }) => {
 
   if (isLoading || error || data?.pa_message == null) return null;
 
-  return (
-    <EditPaMessage
-      paMessage={data.pa_message}
-      alert={data.alert}
-      template={data.template}
-    />
-  );
+  return <EditPaMessage paMessage={data.pa_message} alert={data.alert} />;
 };
 
 const EditPaMessageContainer = () => {
@@ -68,10 +61,9 @@ const EditPaMessageContainer = () => {
 interface Props {
   paMessage: PaMessage;
   alert?: Alert | null;
-  template?: StaticTemplate | null;
 }
 
-const EditPaMessage = ({ paMessage, alert, template }: Props) => {
+const EditPaMessage = ({ paMessage, alert }: Props) => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
@@ -86,7 +78,9 @@ const EditPaMessage = ({ paMessage, alert, template }: Props) => {
       onErrorsChange={setErrors}
       defaultValues={paMessage}
       defaultAlert={alert ?? paMessage.alert_id}
-      defaultTemplate={template}
+      defaultTemplate={STATIC_TEMPLATES.find(
+        (t) => t.id === paMessage.template_id,
+      )}
       defaultAudioState={AudioPreview.Reviewed}
       paused={paMessage.paused}
       onSubmit={async (data) => {

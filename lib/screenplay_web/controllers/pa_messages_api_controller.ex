@@ -7,7 +7,6 @@ defmodule ScreenplayWeb.PaMessagesApiController do
   alias Screenplay.Alerts.Cache, as: AlertsCache
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.ListParams
-  alias Screenplay.PaMessages.StaticTemplates
 
   @watts_client Application.compile_env(:screenplay, :watts_client, Screenplay.Watts.Client)
 
@@ -52,12 +51,10 @@ defmodule ScreenplayWeb.PaMessagesApiController do
 
   def show(conn, %{"id" => id}) do
     if pa_message = PaMessages.get_message(id) do
-      {:ok, template} = StaticTemplates.get_template(pa_message.template_id)
       alert = AlertsCache.alert(pa_message.alert_id)
 
       json(conn, %{
         pa_message: pa_message,
-        template: template,
         alert: if(is_nil(alert), do: alert, else: Alert.to_full_map(alert))
       })
     else
@@ -65,15 +62,5 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       |> put_status(404)
       |> json(%{error: "not_found"})
     end
-  end
-
-  def static_templates(conn, _) do
-    templates =
-      case StaticTemplates.get_all() do
-        {:ok, templates} -> templates
-        :error -> []
-      end
-
-    json(conn, templates)
   end
 end
