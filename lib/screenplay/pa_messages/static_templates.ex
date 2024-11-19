@@ -6,6 +6,7 @@ defmodule Screenplay.PaMessages.StaticTemplates do
   require Logger
 
   @spec get_all :: {:ok, list(map())} | :error
+  # sobelow_skip ["Traversal.FileModule"]
   def get_all do
     with {:ok, contents} <- file_path() |> File.read(),
          {:ok, json} <- Jason.decode(contents) do
