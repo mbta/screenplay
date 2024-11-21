@@ -339,7 +339,7 @@ const MainForm = ({
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
-                  readonly={selectedTemplate !== null}
+                  disabled={selectedTemplate !== null}
                   onChangeText={(text) => {
                     setVisualText(text);
                     if (audioState !== AudioPreview.Unreviewed) {
@@ -374,7 +374,6 @@ const MainForm = ({
                 {phoneticText.length > 0 ? (
                   <>
                     <MessageTextBox
-                      readonly={selectedTemplate !== null}
                       id="phonetic-audio-text-box"
                       text={phoneticText}
                       onChangeText={(text) => {
@@ -383,7 +382,9 @@ const MainForm = ({
                           setAudioState(AudioPreview.Outdated);
                         }
                       }}
-                      disabled={phoneticText.length === 0}
+                      disabled={
+                        phoneticText.length === 0 || selectedTemplate !== null
+                      }
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
                       validated={validated}
@@ -586,7 +587,7 @@ const NewPaMessageHeader = ({
               navigateTo(Page.TEMPLATES);
             }}
           >
-            Select PSA or Emergency messages
+            Select PSA or Emergency template
           </Button>
           (Optional)
         </div>

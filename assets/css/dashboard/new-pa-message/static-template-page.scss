@@ -81,6 +81,11 @@
               color: $text-secondary;
             }
           }
+
+          &:hover {
+            background-color: $cool-gray-20;
+            cursor: pointer;
+          }
         }
       }
     }

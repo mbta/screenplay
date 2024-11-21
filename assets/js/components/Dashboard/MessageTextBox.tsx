@@ -11,7 +11,6 @@ interface Props {
   required?: boolean;
   validationText?: string;
   validated?: boolean;
-  readonly?: boolean;
 }
 
 const MessageTextBox = ({
@@ -24,13 +23,11 @@ const MessageTextBox = ({
   required,
   validationText,
   validated,
-  readonly,
 }: Props) => {
   return (
     <Form.Group className="message-text-box">
       <Form.Label htmlFor={id}>{label}</Form.Label>
       <Form.Control
-        readOnly={readonly}
         required={required}
         id={id}
         className="text-input"

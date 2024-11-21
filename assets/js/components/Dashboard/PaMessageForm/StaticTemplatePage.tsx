@@ -9,13 +9,13 @@ interface Props {
   onSelect: (template: StaticTemplate) => void;
 }
 
-type MessageType = "psa" | "emergency";
+type TemplateType = "psa" | "emergency";
 
 export const STATIC_TEMPLATES = _staticTemplates as StaticTemplate[];
 
 const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
-  const [selectedMessageType, setSelectedMessageType] =
-    useState<MessageType>("psa");
+  const [selectedTemplateType, setSelectedTemplateType] =
+    useState<TemplateType>("psa");
 
   return (
     <div className="static-template-page">
@@ -35,10 +35,10 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
         <Row className="static-template-page-body">
           <Col className="filter-group-col">
             <FilterGroup
-              header="Message state"
-              selectedFilter={selectedMessageType}
-              onFilterSelect={(messageType) =>
-                setSelectedMessageType(messageType as MessageType)
+              header="Template type"
+              selectedFilter={selectedTemplateType}
+              onFilterSelect={(templateType) =>
+                setSelectedTemplateType(templateType as TemplateType)
               }
               filters={[
                 { label: "PSAs", value: "psa" },
@@ -49,9 +49,9 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
           <Col>
             <StaticTemplateTable
               templates={STATIC_TEMPLATES.filter(
-                (template) => template.type === selectedMessageType,
+                (template) => template.type === selectedTemplateType,
               )}
-              selectedMessageType={selectedMessageType}
+              selectedTemplateType={selectedTemplateType}
               onSelect={onSelect}
             />
           </Col>
@@ -63,19 +63,19 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
 
 interface StaticTemplateTableProps {
   templates: StaticTemplate[];
-  selectedMessageType: MessageType;
+  selectedTemplateType: TemplateType;
   onSelect: (template: StaticTemplate) => void;
 }
 
 const StaticTemplateTable = ({
   templates,
-  selectedMessageType,
+  selectedTemplateType,
   onSelect,
 }: StaticTemplateTableProps) => {
   return (
     <div className="static-template-table-container">
       <div className="table-header">
-        {selectedMessageType === "psa" ? "PSAs" : "Emergency"}
+        {selectedTemplateType === "psa" ? "PSAs" : "Emergency"}
       </div>
       <table className="static-template-table">
         <thead>
@@ -87,7 +87,11 @@ const StaticTemplateTable = ({
         <tbody>
           {templates.map((template) => {
             return (
-              <tr className="template-row" key={template.title}>
+              <tr
+                className="template-row"
+                key={template.title}
+                onClick={() => onSelect(template)}
+              >
                 <td className="message-cell">
                   <div className="title">{template.title}</div>
                   <div className="message">{template.visual_text}</div>
