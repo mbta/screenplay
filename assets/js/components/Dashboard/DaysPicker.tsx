@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Col, Dropdown, Form, Row } from "react-bootstrap";
 import fp from "lodash/fp";
+import cx from "classnames";
 
 enum DayItem {
   All = "All days",
@@ -38,9 +39,10 @@ const DAY_MAPPINGS = [
 interface Props {
   days: number[];
   onChangeDays: (days: number[]) => void;
+  error: string | null;
 }
 
-const DaysPicker = ({ days, onChangeDays }: Props) => {
+const DaysPicker = ({ days, onChangeDays, error }: Props) => {
   const [dayLabel, setDayLabel] = useState(
     fp.find(
       ({ value }) => fp.isEqual(value, fp.sortBy(fp.identity, days)),
@@ -53,7 +55,11 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
       <Form.Label className="label body--regular" htmlFor="days-picker">
         Days
       </Form.Label>
-      <Row md={1} lg="auto" className="align-items-center">
+      <Row
+        md={1}
+        lg="auto"
+        className={cx("align-items-center", { "is-invalid": !!error })}
+      >
         <Col>
           <Dropdown
             onSelect={(eventKey) => {
@@ -108,6 +114,7 @@ const DaysPicker = ({ days, onChangeDays }: Props) => {
           </Col>
         )}
       </Row>
+      <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
     </Form.Group>
   );
 };

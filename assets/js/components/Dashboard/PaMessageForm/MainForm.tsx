@@ -125,6 +125,7 @@ const MainForm = ({
 
     if (
       form.checkValidity() === false ||
+      days.length === 0 ||
       signIds.length === 0 ||
       audioState !== AudioPreview.Reviewed
     ) {
@@ -288,7 +289,13 @@ const MainForm = ({
               </Form.Group>
             </Row>
             <Row className="days">
-              <DaysPicker days={days} onChangeDays={setDays} />
+              <DaysPicker
+                days={days}
+                onChangeDays={setDays}
+                error={
+                  validated && !days.length ? "Select at least one day" : null
+                }
+              />
             </Row>
             <Row md="auto">
               <Col>
