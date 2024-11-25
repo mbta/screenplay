@@ -2,6 +2,7 @@ defmodule Screenplay.Util do
   @moduledoc """
   Utility functions
   """
+  require Logger
 
   @spec trim_username(String.t()) :: String.t()
   def trim_username(nil), do: nil
@@ -26,5 +27,15 @@ defmodule Screenplay.Util do
     changeset
     |> Ecto.Changeset.traverse_errors(fn {msg, _} -> msg end)
     |> Enum.map_join(", ", fn {field, msg} -> "#{field}: #{msg}" end)
+  end
+
+  @doc """
+  Log structured data. All passed values must implement the Jason.Encoder protocol
+  """
+  @spec log(String.t(), keyword()) :: :ok
+  def log(event, extras) do
+    ([event: event] ++ extras)
+    |> Enum.map_join(" ", fn {k, v} -> "#{k}=#{Jason.encode!(v)}" end)
+    |> Logger.info()
   end
 end

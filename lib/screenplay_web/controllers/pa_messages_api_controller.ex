@@ -30,7 +30,8 @@ defmodule ScreenplayWeb.PaMessagesApiController do
   end
 
   def create(conn, params) do
-    with {:ok, _} <- PaMessages.create_message(params) do
+    with {:ok, message} <- PaMessages.create_message(params) do
+      log_pa_message("pa_message_created", message, conn)
       json(conn, %{success: true})
     end
   end
@@ -38,6 +39,7 @@ defmodule ScreenplayWeb.PaMessagesApiController do
   def update(conn, params = %{"id" => id}) do
     if pa_message = PaMessages.get_message(id) do
       with {:ok, updated_pa_message} <- PaMessages.update_message(pa_message, params) do
+        log_pa_message("pa_message_updated", updated_pa_message, conn)
         json(conn, updated_pa_message)
       end
     else
@@ -55,5 +57,18 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       |> put_status(404)
       |> json(%{error: "not_found"})
     end
+  end
+
+  defp log_pa_message(event, message, conn) do
+    Screenplay.Util.log(event,
+      visual_text: message.visual_text,
+      audio_text: message.audio_text,
+      sign_ids: message.sign_ids,
+      start_datetime: message.start_datetime,
+      end_datetime: message.end_datetime,
+      priority: message.priority,
+      interval: message.interval_in_minutes,
+      user: get_session(conn, "username") |> Screenplay.Util.trim_username()
+    )
   end
 end
