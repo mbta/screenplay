@@ -1,30 +1,21 @@
-defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
+defmodule Screenplay.Jobs.Reminders do
   @moduledoc """
-  Runs every minute and sends slack reminders to @pios in #ctd-pio-livepa if outdated alerts are still active.
+  Runs every minute and sends slack reminders to @oios in #tid-oio if outdated alerts are still active.
   """
+  use Oban.Worker, unique: true
+
   require Logger
-  use GenServer
 
   alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
 
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, %{})
-  end
-
-  def init(state) do
-    schedule_work()
-    {:ok, state}
-  end
-
-  def handle_info(:work, state) do
-    schedule_work()
-
+  @impl Oban.Worker
+  def perform(_) do
     case Application.get_env(:screenplay, :slack_webhook_url) do
       v when v in [nil, ""] -> Logger.info("No Slack Webhook URL found")
       url -> send_slack_messages_for_outdated_alerts(url)
     end
 
-    {:noreply, state}
+    :ok
   end
 
   defp send_slack_messages_for_outdated_alerts(url) do
@@ -58,7 +49,7 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
           type: "section",
           text: %{
             type: "mrkdwn",
-            text: "Please review this Alert: #{ScreenplayWeb.Endpoint.url()}"
+            text: "Please review this alert: #{ScreenplayWeb.Endpoint.url()}/emergency-takeover"
           }
         }
       ]
@@ -79,10 +70,5 @@ defmodule Screenplay.OutfrontTakeoverTool.Alerts.Reminders do
           "Failed to send Slack message, error: '#{error}'"
         end)
     end
-  end
-
-  defp schedule_work do
-    # runs every minute
-    Process.send_after(self(), :work, 60 * 1000)
   end
 end

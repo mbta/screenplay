@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  ButtonGroup,
-  Modal,
-  Form,
-} from "react-bootstrap";
+import { Button, Container, Row, Col, Modal, Form } from "react-bootstrap";
+import moment from "moment";
+import FilterGroup from "Components/FilterGroup";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
-import classNames from "classnames";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
-import moment from "moment";
 
 interface AssociateAlertPageProps {
   onApply: (
@@ -67,51 +59,24 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
         </Row>
         <Row className="associate-alert-page-body">
           <Col className="associate-alert-filter-selection">
-            <div className="associate-alert-filter-selection__label">
-              Message state
-            </div>
-            <ButtonGroup
-              className="associate-alert-filter-selection__button-group"
-              vertical
-            >
-              <Button
-                className={classNames({
-                  "associate-alert-filter-selection__selected":
-                    selectedMessageState === "active",
-                })}
-                onClick={() => setSelectedMessageState("active")}
-              >
-                Active
-              </Button>
-              <Button
-                className={classNames({
-                  "associate-alert-filter-selection__selected":
-                    selectedMessageState === "future",
-                })}
-                onClick={() => setSelectedMessageState("future")}
-              >
-                Future
-              </Button>
-            </ButtonGroup>
-            <div className="associate-alert-filter-selection__label">
-              Service type
-            </div>
-            <ButtonGroup vertical>
-              {serviceTypes.map((serviceType) => {
-                return (
-                  <Button
-                    key={serviceType}
-                    className={classNames({
-                      "associate-alert-filter-selection__selected":
-                        selectedServiceType === serviceType,
-                    })}
-                    onClick={() => setSelectedServiceType(serviceType)}
-                  >
-                    {serviceType}
-                  </Button>
-                );
+            <FilterGroup
+              className="mb-5"
+              header="Message state"
+              selectedFilter={selectedMessageState}
+              onFilterSelect={setSelectedMessageState}
+              filters={[
+                { label: "Active", value: "active" },
+                { label: "Future", value: "future" },
+              ]}
+            />
+            <FilterGroup
+              header="Service type"
+              selectedFilter={selectedServiceType}
+              onFilterSelect={setSelectedServiceType}
+              filters={serviceTypes.map((serviceType) => {
+                return { label: serviceType, value: serviceType };
               })}
-            </ButtonGroup>
+            />
           </Col>
           <Col>
             <AssociateAlertsTable

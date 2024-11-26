@@ -21,6 +21,8 @@ import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
 import * as paMessageStyles from "Styles/pa-messages.module.scss";
+import { StaticTemplate } from "Models/static_template";
+import { MessageType } from "Models/pa_message";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -55,6 +57,8 @@ interface Props {
   audioState: AudioPreview;
   hide: boolean;
   paused: boolean;
+  selectedTemplate: StaticTemplate | null;
+  onClearSelectedTemplate: () => void;
 }
 
 const MainForm = ({
@@ -88,16 +92,11 @@ const MainForm = ({
   audioState,
   setAudioState,
   paused,
+  selectedTemplate,
+  onClearSelectedTemplate,
 }: Props) => {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
-
-  const priorityToIntervalMap: { [priority: number]: string } = {
-    1: "1",
-    2: "4",
-    3: "10",
-    4: "12",
-  };
 
   const previewAudio = () => {
     if (audioState === AudioPreview.Playing) return;
@@ -126,6 +125,7 @@ const MainForm = ({
 
     if (
       form.checkValidity() === false ||
+      days.length === 0 ||
       signIds.length === 0 ||
       audioState !== AudioPreview.Reviewed
     ) {
@@ -154,6 +154,8 @@ const MainForm = ({
             onClearAssociatedAlert={onClearAssociatedAlert}
             navigateTo={navigateTo}
             setEndWithEffectPeriod={setEndWithEffectPeriod}
+            selectedTemplate={selectedTemplate}
+            onClearSelectedTemplate={onClearSelectedTemplate}
           />
           <Card className={paMessageStyles.card}>
             <div className={paMessageStyles.cardTitle}>When</div>
@@ -297,16 +299,19 @@ const MainForm = ({
               </Form.Group>
             </Row>
             <Row>
-              <DaysPicker days={days} onChangeDays={setDays} />
+              <DaysPicker
+                days={days}
+                onChangeDays={setDays}
+                error={
+                  validated && !days.length ? "Select at least one day" : null
+                }
+              />
             </Row>
             <Row md="auto">
               <Col>
                 <PriorityPicker
                   priority={priority}
-                  onSelectPriority={(priority) => {
-                    setInterval(priorityToIntervalMap[priority]);
-                    setPriority(priority);
-                  }}
+                  onSelectPriority={setPriority}
                 />
               </Col>
               <Col>
@@ -350,6 +355,7 @@ const MainForm = ({
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
+                  disabled={selectedTemplate !== null}
                   onChangeText={(text) => {
                     setVisualText(text);
                     if (audioState !== AudioPreview.Unreviewed) {
@@ -365,7 +371,9 @@ const MainForm = ({
               </Col>
               <Col md="auto" className={paMessageStyles.copyButtonCol}>
                 <Button
-                  disabled={visualText.length === 0}
+                  disabled={
+                    visualText.length === 0 || selectedTemplate !== null
+                  }
                   className={paMessageStyles.copyTextButton}
                   onClick={() => {
                     setPhoneticText(visualText);
@@ -390,17 +398,21 @@ const MainForm = ({
                           setAudioState(AudioPreview.Outdated);
                         }
                       }}
-                      disabled={phoneticText.length === 0}
+                      disabled={
+                        phoneticText.length === 0 || selectedTemplate !== null
+                      }
                       className="mb-2"
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
                       validated={validated}
                     />
-                    <ReviewAudioButton
-                      audioState={audioState}
-                      onClick={previewAudio}
-                      validated={validated}
-                    />
+                    {!selectedTemplate && (
+                      <ReviewAudioButton
+                        audioState={audioState}
+                        onClick={previewAudio}
+                        validated={validated}
+                      />
+                    )}
                   </>
                 ) : (
                   <>
@@ -505,6 +517,8 @@ interface NewPaMessageHeaderProps {
   navigateTo: (page: Page) => void;
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
+  selectedTemplate: StaticTemplate | null;
+  onClearSelectedTemplate: () => void;
 }
 
 const NewPaMessageHeader = ({
@@ -512,18 +526,60 @@ const NewPaMessageHeader = ({
   navigateTo,
   onClearAssociatedAlert,
   setEndWithEffectPeriod,
+  selectedTemplate,
+  onClearSelectedTemplate,
 }: NewPaMessageHeaderProps) => {
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
     return (
-      <div className={cx("ms-3 mt-1", paMessageStyles.smaller)}>
+      <div className={cx("mt-1", paMessageStyles.smaller)}>
         Alert effect period: {start} &ndash; {end}
       </div>
     );
   };
 
-  return associatedAlert ? (
-    <>
+  const formatMessageType = (messageType: MessageType) => {
+    switch (messageType) {
+      case "psa":
+        return "PSA";
+      case "emergency":
+        return "Emergency";
+      default:
+        return "";
+    }
+  };
+
+  if (associatedAlert) {
+    return (
+      <div className={cx("ms-3", paMessageStyles.alertHeader)}>
+        <div className="d-flex align-items-center">
+          <span className={paMessageStyles.larger}>
+            Associated Alert: Alert ID{" "}
+            {typeof associatedAlert === "string"
+              ? associatedAlert
+              : associatedAlert.id}
+          </span>
+          <Button
+            variant="link"
+            className={paMessageStyles.clearAlertButton}
+            onClick={() => {
+              onClearAssociatedAlert();
+            }}
+          >
+            Clear
+          </Button>
+        </div>
+        {typeof associatedAlert === "string" ? (
+          <div className={cx("mt-1", paMessageStyles.alertEndedText)}>
+            Alert has ended and is no longer available.
+          </div>
+        ) : (
+          formatActivePeriod(associatedAlert.active_period)
+        )}
+      </div>
+    );
+  } else if (selectedTemplate) {
+    return (
       <div
         className={cx(
           "d-flex align-items-center ms-3",
@@ -531,37 +587,29 @@ const NewPaMessageHeader = ({
         )}
       >
         <span className={paMessageStyles.larger}>
-          Associated Alert: Alert ID{" "}
-          {typeof associatedAlert === "string"
-            ? associatedAlert
-            : associatedAlert.id}
+          Template: {formatMessageType(selectedTemplate.type)} -{" "}
+          {selectedTemplate.title}
         </span>
         <Button
           variant="link"
+          onClick={onClearSelectedTemplate}
           className={paMessageStyles.clearAlertButton}
-          onClick={() => {
-            onClearAssociatedAlert();
-          }}
         >
           Clear
         </Button>
       </div>
-      {typeof associatedAlert === "string" ? (
-        <div className={cx("ms-3 mt-1", paMessageStyles.alertEndedText)}>
-          Alert has ended and is no longer available.
-        </div>
-      ) : (
-        formatActivePeriod(associatedAlert.active_period)
-      )}
-    </>
-  ) : (
-    <>
+    );
+  } else {
+    return (
       <div
-        className={cx("d-flex align-items-center", paMessageStyles.alertHeader)}
+        className={cx(
+          "d-flex align-items-center ms-3",
+          paMessageStyles.alertHeader,
+        )}
       >
         <Button
           variant="link"
-          className={paMessageStyles.associateAlertButton}
+          className={cx("ps-0", paMessageStyles.associateButton)}
           onClick={() => {
             setEndWithEffectPeriod(true);
             navigateTo(Page.ALERTS);
@@ -569,14 +617,20 @@ const NewPaMessageHeader = ({
         >
           Associate with alert
         </Button>
+        <span className={paMessageStyles.larger}>|</span>
+        <Button
+          variant="link"
+          className={paMessageStyles.associateButton}
+          onClick={() => {
+            navigateTo(Page.TEMPLATES);
+          }}
+        >
+          Select PSA or Emergency template
+        </Button>
         <span className={paMessageStyles.larger}>(Optional)</span>
       </div>
-      <div className={paMessageStyles.associateAlertSubtext}>
-        Linking will allow you to share end time with alert, and import location
-        and message.
-      </div>
-    </>
-  );
+    );
+  }
 };
 
 export default MainForm;

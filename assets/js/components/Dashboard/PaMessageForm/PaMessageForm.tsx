@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import moment, { type Moment } from "moment";
 import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
 import SelectStationsAndZones from "./SelectStationsAndZones";
 import AssociateAlert from "./AssociateAlert";
+import StaticTemplatePage from "./StaticTemplatePage";
 import { Alert, InformedEntity } from "Models/alert";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import Toast from "Components/Toast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
 import fp from "lodash/fp";
+import { StaticTemplate } from "Models/static_template";
+import { MessageType } from "Models/pa_message";
 
 interface PaMessageFormData {
   alert_id: string | null;
@@ -20,6 +23,8 @@ interface PaMessageFormData {
   interval_in_minutes: number;
   visual_text: string;
   audio_text: string;
+  message_type: MessageType;
+  template_id: number | null;
 }
 
 interface Props {
@@ -31,6 +36,7 @@ interface Props {
   errors: string[];
   defaultValues?: Partial<PaMessageFormData>;
   defaultAlert?: Alert | string | null;
+  defaultTemplate?: StaticTemplate | null;
   defaultAudioState?: AudioPreview;
   paused: boolean;
 }
@@ -44,11 +50,13 @@ const PaMessageForm = ({
   onSubmit,
   defaultValues,
   defaultAlert,
+  defaultTemplate,
   defaultAudioState,
   paused,
 }: Props) => {
   const [page, setPage] = useState<Page>(Page.MAIN);
   const now = moment();
+  const defaultPriority = 2;
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert | string | null>(
     () => {
@@ -75,7 +83,7 @@ const PaMessageForm = ({
     return defaultValues?.days_of_week ?? [1, 2, 3, 4, 5, 6, 7];
   });
   const [priority, setPriority] = useState(() => {
-    return defaultValues?.priority ?? 2;
+    return defaultValues?.priority ?? defaultPriority;
   });
   const [interval, setInterval] = useState(() => {
     return defaultValues?.interval_in_minutes
@@ -98,11 +106,21 @@ const PaMessageForm = ({
   const [audioState, setAudioState] = useState<AudioPreview>(
     () => defaultAudioState ?? AudioPreview.Unreviewed,
   );
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<StaticTemplate | null>(defaultTemplate ?? null);
 
   const onClearAssociatedAlert = () => {
     setEndDateTime(moment(startDateTime).add(1, "hour"));
     setAssociatedAlert(null);
     setEndWithEffectPeriod(false);
+  };
+
+  const onClearSelectedTemplate = () => {
+    setSelectedTemplate(null);
+    setVisualText("");
+    setPhoneticText("");
+    setAudioState(AudioPreview.Unreviewed);
+    setPriority(defaultPriority);
   };
 
   const onImportMessage = (alertMessage: string) => {
@@ -141,6 +159,16 @@ const PaMessageForm = ({
     setSignIds(fp.uniq(importedSigns));
   };
 
+  useEffect(() => {
+    const priorityToIntervalMap: { [priority: number]: string } = {
+      1: "1",
+      2: "4",
+      3: "10",
+      4: "12",
+    };
+    setInterval(priorityToIntervalMap[priority]);
+  }, [priority]);
+
   return (
     <div className="new-pa-message">
       <MainForm
@@ -161,6 +189,8 @@ const PaMessageForm = ({
             interval_in_minutes: Number(interval),
             visual_text: visualText,
             audio_text: phoneticText,
+            message_type: selectedTemplate?.type ?? null,
+            template_id: selectedTemplate?.id ?? null,
           };
 
           onSubmit(formData);
@@ -194,6 +224,8 @@ const PaMessageForm = ({
           audioState,
           setAudioState,
           paused,
+          selectedTemplate,
+          onClearSelectedTemplate,
         }}
       />
       {[Page.STATIONS, Page.ZONES].includes(page) && (
@@ -228,6 +260,19 @@ const PaMessageForm = ({
             setPage(Page.MAIN);
           }}
           onCancel={() => setPage(Page.MAIN)}
+        />
+      )}
+      {page === Page.TEMPLATES && (
+        <StaticTemplatePage
+          onCancel={() => setPage(Page.MAIN)}
+          onSelect={(template) => {
+            setSelectedTemplate(template);
+            setVisualText(template.visual_text);
+            setPhoneticText(template.audio_text);
+            setPriority(template.type === "psa" ? 4 : 1);
+            setAudioState(AudioPreview.Reviewed);
+            setPage(Page.MAIN);
+          }}
         />
       )}
       <Toast

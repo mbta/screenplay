@@ -62,12 +62,13 @@
   color: $text-error;
 }
 
-.associateAlertButton {
+.associateButton {
   @include flat-button;
   --bs-btn-color: #{$text-link-primary};
+  --bs-btn-line-height: 0.8;
+  text-decoration: none;
   font-size: 20px;
   font-weight: 500;
-  padding-left: 0;
 }
 
 .copyTextButton {

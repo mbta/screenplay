@@ -7,6 +7,8 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   @derive {Jason.Encoder, except: [:__meta__]}
 
+  @type message_type :: nil | :psa | :emergency
+
   @type t() :: %__MODULE__{
           alert_id: String.t() | nil,
           start_datetime: DateTime.t(),
@@ -19,7 +21,8 @@ defmodule Screenplay.PaMessages.PaMessage do
           audio_text: String.t(),
           paused: boolean() | nil,
           saved: boolean() | nil,
-          message_type: String.t() | nil,
+          message_type: message_type(),
+          template_id: non_neg_integer() | nil,
           inserted_at: DateTime.t(),
           updated_at: DateTime.t()
         }
@@ -36,7 +39,8 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:audio_text, :string)
     field(:paused, :boolean)
     field(:saved, :boolean)
-    field(:message_type, :string)
+    field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
+    field(:template_id, :integer)
 
     timestamps(type: :utc_datetime)
   end
@@ -54,7 +58,9 @@ defmodule Screenplay.PaMessages.PaMessage do
       :visual_text,
       :audio_text,
       :paused,
-      :saved
+      :saved,
+      :message_type,
+      :template_id
     ])
     |> validate_required([
       :start_datetime,
@@ -67,6 +73,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     ])
     |> validate_length(:sign_ids, min: 1)
     |> validate_subset(:days_of_week, 1..7)
+    |> validate_length(:days_of_week, min: 1)
     |> validate_number(:interval_in_minutes, greater_than: 0)
     |> validate_inclusion(:priority, 1..4)
     |> validate_start_date()

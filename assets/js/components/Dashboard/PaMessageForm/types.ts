@@ -10,4 +10,5 @@ export enum Page {
   STATIONS = "stations",
   ALERTS = "alerts",
   ZONES = "zones",
+  TEMPLATES = "templates",
 }

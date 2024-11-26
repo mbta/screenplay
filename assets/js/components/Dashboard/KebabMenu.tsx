@@ -72,7 +72,10 @@ const KebabMenu = ({ children, tooltipText }: Props) => {
     >
       <Dropdown.Toggle
         as={CustomToggle}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         tooltipText={tooltipText}
       />
       <Dropdown.Menu className="kebab-menu-dropdown__menu">

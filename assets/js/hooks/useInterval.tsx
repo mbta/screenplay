@@ -6,7 +6,7 @@ function noop() {
   // do nothing
 }
 
-export function useInterval(callback: () => void, delay: number) {
+export function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef<() => void>(noop);
 
   // Remember the latest callback.

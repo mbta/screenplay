@@ -3,8 +3,6 @@ import {
   Container,
   Row,
   Col,
-  ButtonGroup,
-  Button,
   Spinner,
   Dropdown,
   FormCheck,
@@ -20,10 +18,12 @@ import KebabMenu from "Components/KebabMenu";
 import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
 import Toast, { type ToastProps } from "Components/Toast";
+import FilterGroup from "./FilterGroup";
 
 type StateFilter = "current" | "future" | "past";
 
 type ServiceType =
+  | "All"
   | "Green"
   | "Red"
   | "Orange"
@@ -147,55 +147,42 @@ const PaMessagesPage: ComponentType = () => {
                 <BoxArrowUpRight />
               </Link>
             </section>
-            <section>
-              <header>Filter by message state</header>
-              <ButtonGroup className="button-group" vertical>
-                <Button
-                  className={cx("button", {
-                    active: stateFilter === "current",
-                  })}
-                  onClick={() => setStateFilter("current")}
-                >
-                  Now
-                </Button>
-                <Button
-                  className={cx("button", { active: stateFilter === "future" })}
-                  onClick={() => setStateFilter("future")}
-                >
-                  Future
-                </Button>
-                <Button
-                  className={cx("button", { active: stateFilter === "past" })}
-                  onClick={() => setStateFilter("past")}
-                >
-                  Done
-                </Button>
-              </ButtonGroup>
-            </section>
-            <section>
-              <header>Filter by service type</header>
-              <ButtonGroup className="button-group" vertical>
-                <Button
-                  className={cx("button", {
-                    active: serviceTypes.length === 0,
-                  })}
-                  onClick={() => setServiceTypes([])}
-                >
-                  All
-                </Button>
-                {SERVICE_TYPES.map((serviceType) => (
-                  <Button
-                    key={serviceType}
-                    className={cx("button", {
-                      active: serviceTypes.includes(serviceType),
-                    })}
-                    onClick={() => setServiceTypes([serviceType])}
-                  >
-                    {getServiceLabel(serviceType)}
-                  </Button>
-                ))}
-              </ButtonGroup>
-            </section>
+            <FilterGroup
+              className="mb-5"
+              header="Filter by message state"
+              onFilterSelect={(selected) =>
+                setStateFilter(selected as StateFilter)
+              }
+              selectedFilter={stateFilter.toLowerCase()}
+              filters={[
+                { label: "Now", value: "current" },
+                { label: "Future", value: "future" },
+                { label: "Done", value: "past" },
+              ]}
+            />
+            <FilterGroup
+              header="Filter by service type"
+              onFilterSelect={(selected) => {
+                const serviceType = selected as ServiceType;
+                if (serviceType === "All") {
+                  setServiceTypes([]);
+                } else {
+                  setServiceTypes([serviceType]);
+                }
+              }}
+              selectedFilter={
+                serviceTypes.length === 0 ? "All" : serviceTypes[0]
+              }
+              filters={[
+                { label: "All", value: "All" },
+                ...SERVICE_TYPES.map((serviceType) => {
+                  return {
+                    label: getServiceLabel(serviceType),
+                    value: serviceType,
+                  };
+                }),
+              ]}
+            />
           </Col>
           <Col className="pa-message-table-container">
             <Row>
@@ -358,7 +345,14 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
 
   return (
     <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
-      <td className="pa-message-table__message">{paMessage.visual_text}</td>
+      <td className="pa-message-table__message">
+        <a
+          href={`/pa-messages/${paMessage.id}/edit`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {paMessage.visual_text}
+        </a>
+      </td>
       <td className="pa-message-table__interval">
         {paMessage.interval_in_minutes} min
       </td>
@@ -392,10 +386,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
               </div>
             </div>
           </td>
-          <td
-            onClick={(e) => e.stopPropagation()}
-            className="pa-message-table__kebab"
-          >
+          <td className="pa-message-table__kebab">
             <KebabMenu>
               <Dropdown.Item
                 className="kebab-menu-dropdown__item"

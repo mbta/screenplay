@@ -19,7 +19,11 @@ interface AlertsResponse {
 
 export const fetchAlerts = async (): Promise<AlertsResponse> => {
   const response = await fetch("/api/alerts");
-  return await response.json();
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    throw response;
+  }
 };
 
 export const fetchActiveAndFutureAlerts = async (): Promise<AlertsResponse> => {

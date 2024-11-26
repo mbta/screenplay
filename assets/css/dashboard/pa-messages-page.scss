@@ -16,7 +16,6 @@
   padding-right: 0px;
   display: flex;
   flex-direction: column;
-  gap: 48px;
 
   .add-new-button,
   .system-log-link {
@@ -44,7 +43,7 @@
 
   .system-log-link {
     text-decoration: none;
-    margin-top: 8px;
+    margin-top: 16px;
     color: $text-secondary;
     .link-text {
       text-decoration: underline;
@@ -56,12 +55,7 @@
   section {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-
-    header {
-      font-size: 16px;
-      line-height: 24px;
-    }
+    margin-bottom: 48px;
   }
 }
 
@@ -98,6 +92,11 @@
 
   &__message {
     width: 586px;
+
+    a {
+      color: $text-primary;
+      text-decoration: none;
+    }
   }
 
   &__interval {
@@ -106,11 +105,6 @@
 
   &__actions {
     width: 110px;
-  }
-
-  &__text {
-    color: $text-primary;
-    text-decoration: none;
   }
 
   &__start-end {
