@@ -68,6 +68,7 @@ defmodule ScreenplayWeb.PaMessagesApiController do
       end_datetime: message.end_datetime,
       priority: message.priority,
       interval: message.interval_in_minutes,
+      alert_id: message.alert_id,
       user: get_session(conn, "username") |> Screenplay.Util.trim_username()
     )
   end
