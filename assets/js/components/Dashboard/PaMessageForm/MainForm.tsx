@@ -185,12 +185,20 @@ const MainForm = ({
                       Start date/time needs to be before the end date/time
                     </Form.Control.Feedback>
                   </div>
-                  <Form.Control
-                    type="time"
-                    className="time-picker picker"
-                    value={startTime}
-                    onChange={(event) => setStartTime(event.target.value)}
-                  />
+                  <div className="validation-group">
+                    <Form.Control
+                      type="time"
+                      className="time-picker picker"
+                      value={startTime}
+                      onChange={(event) => setStartTime(event.target.value)}
+                      isInvalid={
+                        validated && !moment(startTime, "HH:mm").isValid()
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Start time needs to be in the correct format.
+                    </Form.Control.Feedback>
+                  </div>
                   <Button
                     className="service-time-link"
                     variant="link"
@@ -246,12 +254,20 @@ const MainForm = ({
                         Date is in the past.
                       </Form.Control.Feedback>
                     </div>
-                    <Form.Control
-                      type="time"
-                      className="time-picker picker"
-                      value={endTime}
-                      onChange={(event) => setEndTime(event.target.value)}
-                    />
+                    <div className="validation-group">
+                      <Form.Control
+                        type="time"
+                        className="time-picker picker"
+                        value={endTime}
+                        onChange={(event) => setEndTime(event.target.value)}
+                        isInvalid={
+                          validated && !moment(endTime, "HH:mm").isValid()
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        End time needs to be in the correct format.
+                      </Form.Control.Feedback>
+                    </div>
                     <Button
                       className="service-time-link"
                       variant="link"
