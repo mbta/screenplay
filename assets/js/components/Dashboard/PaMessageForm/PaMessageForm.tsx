@@ -267,7 +267,7 @@ const PaMessageForm = ({
           onCancel={() => setPage(Page.MAIN)}
           onSelect={(template) => {
             setSelectedTemplate(template);
-            setVisualText(template.audio_text);
+            setVisualText(template.visual_text);
             setPhoneticText(template.audio_text);
             setPriority(template.type === "psa" ? 4 : 1);
             setAudioState(AudioPreview.Reviewed);

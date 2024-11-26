@@ -522,10 +522,8 @@ const NewPaMessageHeader = ({
     }
   };
 
-  let content;
-
   if (associatedAlert) {
-    content = (
+    return (
       <Row md="auto" className="align-items-center">
         <div className="associated-alert-header">
           Associated Alert: Alert ID{" "}
@@ -550,7 +548,7 @@ const NewPaMessageHeader = ({
       </Row>
     );
   } else if (selectedTemplate) {
-    content = (
+    return (
       <Row md="auto" className="align-items-center">
         <div className="selected-template-header">
           Template:{" "}
@@ -566,7 +564,7 @@ const NewPaMessageHeader = ({
       </Row>
     );
   } else {
-    content = (
+    return (
       <Row md="auto" className="align-items-center alert-template-header">
         <div className="alert-template-container">
           <Button
@@ -594,8 +592,6 @@ const NewPaMessageHeader = ({
       </Row>
     );
   }
-
-  return content;
 };
 
 export default MainForm;
