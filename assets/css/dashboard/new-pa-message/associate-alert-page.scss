@@ -11,6 +11,7 @@
 .associate-alert-page-header {
   padding-right: 48px;
   max-width: 1380px;
+  height: 48px;
 
   &__cancel {
     flex: none;
@@ -33,40 +34,16 @@
 .associate-alert-page-body {
   flex-wrap: nowrap;
   padding-right: 48px;
+  margin-top: 40px;
 }
 
 .associate-alert-filter-selection {
-  flex: none;
-  font-size: 20px;
-  width: 200px;
-  padding: 0px 12px;
-  margin-top: 40px;
-
-  &__label {
-    margin-bottom: 8px;
-  }
-
-  &__button-group {
-    margin-bottom: 48px;
-  }
-
-  &__selected {
-    color: #ffffff !important;
-    background: #d9d9d93d !important;
-  }
-
-  button {
-    text-align: left;
-    height: 38px;
-    min-width: 200px;
-    color: $text-secondary;
-    background-color: $cool-gray-20;
-    border: none;
-  }
+  max-width: 200px;
+  padding: 0;
 }
 
 .associate-alert-table {
-  margin: 40px;
+  margin: 0 40px;
   max-width: 1096px;
 
   th,

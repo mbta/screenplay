@@ -6,6 +6,7 @@ import PaMessageForm from "../PaMessageForm";
 import { updateExistingPaMessage } from "Utils/api";
 import { Alert } from "Models/alert";
 import { AudioPreview } from "Components/PaMessageForm/types";
+import { STATIC_TEMPLATES } from "Components/PaMessageForm/StaticTemplatePage";
 
 const useAlert = (id: string | null | undefined) => {
   const { data: alerts, isLoading } = useSWR<Array<Alert>>(
@@ -104,18 +105,23 @@ const EditPaMessage = ({ paMessage, alert }: Props) => {
       onErrorsChange={setErrors}
       defaultValues={paMessage}
       defaultAlert={alert ?? paMessage.alert_id}
+      defaultTemplate={STATIC_TEMPLATES.find(
+        (t) => t.id === paMessage.template_id,
+      )}
       defaultAudioState={AudioPreview.Reviewed}
+      paused={paMessage.paused}
       onSubmit={async (data) => {
-        const result = await updateExistingPaMessage(paMessage.id, data);
-
-        if (result.status === 200) {
+        try {
+          await updateExistingPaMessage(paMessage.id, data);
           mutate(`/api/pa-messages/${paMessage.id}`);
           navigate("/pa-messages");
-        } else if (result.status === 422) {
-          setErrorMessage("Correct the following errors:");
-          setErrors(Object.keys(result.body.errors));
-        } else {
-          setErrorMessage("Something went wrong. Please try again.");
+        } catch (error) {
+          if (Array.isArray(error)) {
+            setErrorMessage("Correct the following errors:");
+            setErrors(error);
+          } else {
+            setErrorMessage((error as Error).message);
+          }
         }
       }}
     />

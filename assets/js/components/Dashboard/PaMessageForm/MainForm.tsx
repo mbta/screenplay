@@ -20,6 +20,9 @@ import { getAlertEarliestStartLatestEnd } from "../../../util";
 import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
+import { StaticTemplate } from "Models/static_template";
+import { MessageType } from "Models/pa_message";
+
 const MAX_TEXT_LENGTH = 2000;
 
 interface Props {
@@ -56,6 +59,9 @@ interface Props {
   setAudioState: Dispatch<SetStateAction<AudioPreview>>;
   audioState: AudioPreview;
   hide: boolean;
+  paused: boolean;
+  selectedTemplate: StaticTemplate | null;
+  onClearSelectedTemplate: () => void;
 }
 
 const MainForm = ({
@@ -92,16 +98,12 @@ const MainForm = ({
   hide,
   audioState,
   setAudioState,
+  paused,
+  selectedTemplate,
+  onClearSelectedTemplate,
 }: Props) => {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
-
-  const priorityToIntervalMap: { [priority: number]: string } = {
-    1: "1",
-    2: "4",
-    3: "10",
-    4: "12",
-  };
 
   const previewAudio = () => {
     if (audioState === AudioPreview.Playing) return;
@@ -130,6 +132,7 @@ const MainForm = ({
 
     if (
       form.checkValidity() === false ||
+      days.length === 0 ||
       signIds.length === 0 ||
       audioState !== AudioPreview.Reviewed
     ) {
@@ -150,13 +153,19 @@ const MainForm = ({
   return (
     <div className="new-pa-message-page">
       <Form onSubmit={handleSubmit} noValidate>
-        <div className="header">{title}</div>
+        <div className="header">
+          {title}
+          {paused && <div className="paused-pill">Paused</div>}
+        </div>
+
         <Container fluid>
           <NewPaMessageHeader
             associatedAlert={associatedAlert}
             onClearAssociatedAlert={onClearAssociatedAlert}
             navigateTo={navigateTo}
             setEndWithEffectPeriod={setEndWithEffectPeriod}
+            selectedTemplate={selectedTemplate}
+            onClearSelectedTemplate={onClearSelectedTemplate}
           />
           <Card className="when-card">
             <div className="title">When</div>
@@ -280,16 +289,19 @@ const MainForm = ({
               </Form.Group>
             </Row>
             <Row className="days">
-              <DaysPicker days={days} onChangeDays={setDays} />
+              <DaysPicker
+                days={days}
+                onChangeDays={setDays}
+                error={
+                  validated && !days.length ? "Select at least one day" : null
+                }
+              />
             </Row>
             <Row md="auto">
               <Col>
                 <PriorityPicker
                   priority={priority}
-                  onSelectPriority={(priority) => {
-                    setInterval(priorityToIntervalMap[priority]);
-                    setPriority(priority);
-                  }}
+                  onSelectPriority={setPriority}
                 />
               </Col>
               <Col>
@@ -333,6 +345,7 @@ const MainForm = ({
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
+                  disabled={selectedTemplate !== null}
                   onChangeText={(text) => {
                     setVisualText(text);
                     if (audioState !== AudioPreview.Unreviewed) {
@@ -348,7 +361,9 @@ const MainForm = ({
               </Col>
               <Col md="auto" className="copy-button-col">
                 <Button
-                  disabled={visualText.length === 0}
+                  disabled={
+                    visualText.length === 0 || selectedTemplate !== null
+                  }
                   className="copy-text-button"
                   onClick={() => {
                     setPhoneticText(visualText);
@@ -373,16 +388,20 @@ const MainForm = ({
                           setAudioState(AudioPreview.Outdated);
                         }
                       }}
-                      disabled={phoneticText.length === 0}
+                      disabled={
+                        phoneticText.length === 0 || selectedTemplate !== null
+                      }
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
                       validated={validated}
                     />
-                    <ReviewAudioButton
-                      audioState={audioState}
-                      onClick={previewAudio}
-                      validated={validated}
-                    />
+                    {!selectedTemplate && (
+                      <ReviewAudioButton
+                        audioState={audioState}
+                        onClick={previewAudio}
+                        validated={validated}
+                      />
+                    )}
                   </>
                 ) : (
                   <>
@@ -477,6 +496,8 @@ interface NewPaMessageHeaderProps {
   navigateTo: (page: Page) => void;
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
+  selectedTemplate: StaticTemplate | null;
+  onClearSelectedTemplate: () => void;
 }
 
 const NewPaMessageHeader = ({
@@ -484,6 +505,8 @@ const NewPaMessageHeader = ({
   navigateTo,
   onClearAssociatedAlert,
   setEndWithEffectPeriod,
+  selectedTemplate,
+  onClearSelectedTemplate,
 }: NewPaMessageHeaderProps) => {
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
@@ -494,53 +517,87 @@ const NewPaMessageHeader = ({
     );
   };
 
-  return associatedAlert ? (
-    <Row md="auto" className="align-items-center">
-      <div className="associated-alert-header">
-        Associated Alert: Alert ID{" "}
-        {typeof associatedAlert === "string"
-          ? associatedAlert
-          : associatedAlert.id}
-        <Button
-          variant="link"
-          onClick={() => {
-            onClearAssociatedAlert();
-          }}
-        >
-          Clear
-        </Button>
-        {typeof associatedAlert === "string" ? (
-          <div className="alert-ended">
-            Alert has ended and is no longer available.
-          </div>
-        ) : (
-          formatActivePeriod(associatedAlert.active_period)
-        )}
-      </div>
-    </Row>
-  ) : (
-    <>
-      <Row md="auto" className="align-items-center unassociated-alert-header">
-        <Button
-          variant="link"
-          className="pr-0 associate-alert-button"
-          onClick={() => {
-            setEndWithEffectPeriod(true);
-            navigateTo(Page.ALERTS);
-          }}
-        >
-          Associate with alert
-        </Button>
-        (Optional)
-      </Row>
-      <Row>
-        <div className="new-pa-message-page__associate-alert-subtext">
-          Linking will allow you to share end time with alert, and import
-          location and message.
+  const formatMessageType = (messageType: MessageType) => {
+    switch (messageType) {
+      case "psa":
+        return "PSA";
+      case "emergency":
+        return "Emergency";
+      default:
+        return "";
+    }
+  };
+
+  if (associatedAlert) {
+    return (
+      <Row md="auto" className="align-items-center">
+        <div className="associated-alert-header">
+          Associated Alert: Alert ID{" "}
+          {typeof associatedAlert === "string"
+            ? associatedAlert
+            : associatedAlert.id}
+          <Button
+            variant="link"
+            onClick={onClearAssociatedAlert}
+            className="clear-button"
+          >
+            Clear
+          </Button>
+          {typeof associatedAlert === "string" ? (
+            <div className="alert-ended">
+              Alert has ended and is no longer available.
+            </div>
+          ) : (
+            formatActivePeriod(associatedAlert.active_period)
+          )}
         </div>
       </Row>
-    </>
-  );
+    );
+  } else if (selectedTemplate) {
+    return (
+      <Row md="auto" className="align-items-center">
+        <div className="selected-template-header">
+          Template:{" "}
+          {`${formatMessageType(selectedTemplate.type)} - ${selectedTemplate.title}`}
+          <Button
+            variant="link"
+            onClick={onClearSelectedTemplate}
+            className="clear-button"
+          >
+            Clear
+          </Button>
+        </div>
+      </Row>
+    );
+  } else {
+    return (
+      <Row md="auto" className="align-items-center alert-template-header">
+        <div className="alert-template-container">
+          <Button
+            variant="link"
+            className="pr-0 associate-alert-button"
+            onClick={() => {
+              setEndWithEffectPeriod(true);
+              navigateTo(Page.ALERTS);
+            }}
+          >
+            Associate with alert
+          </Button>
+          |
+          <Button
+            variant="link"
+            className="pr-0 psa-emergency-button"
+            onClick={() => {
+              navigateTo(Page.TEMPLATES);
+            }}
+          >
+            Select PSA or Emergency template
+          </Button>
+          (Optional)
+        </div>
+      </Row>
+    );
+  }
 };
 
 export default MainForm;

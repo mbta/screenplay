@@ -7,6 +7,8 @@ defmodule Screenplay.PaMessages.PaMessage do
 
   @derive {Jason.Encoder, except: [:__meta__]}
 
+  @type message_type :: nil | :psa | :emergency
+
   @type t() :: %__MODULE__{
           alert_id: String.t() | nil,
           start_datetime: DateTime.t(),
@@ -19,7 +21,8 @@ defmodule Screenplay.PaMessages.PaMessage do
           audio_text: String.t(),
           paused: boolean() | nil,
           saved: boolean() | nil,
-          message_type: String.t() | nil,
+          message_type: message_type(),
+          template_id: non_neg_integer() | nil,
           inserted_at: DateTime.t(),
           updated_at: DateTime.t()
         }
@@ -36,7 +39,8 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:audio_text, :string)
     field(:paused, :boolean)
     field(:saved, :boolean)
-    field(:message_type, :string)
+    field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
+    field(:template_id, :integer)
 
     timestamps(type: :utc_datetime)
   end
@@ -54,7 +58,9 @@ defmodule Screenplay.PaMessages.PaMessage do
       :visual_text,
       :audio_text,
       :paused,
-      :saved
+      :saved,
+      :message_type,
+      :template_id
     ])
     |> validate_required([
       :start_datetime,
@@ -67,8 +73,12 @@ defmodule Screenplay.PaMessages.PaMessage do
     ])
     |> validate_length(:sign_ids, min: 1)
     |> validate_subset(:days_of_week, 1..7)
+    |> validate_length(:days_of_week, min: 1)
+    |> validate_number(:interval_in_minutes, greater_than: 0)
+    |> validate_inclusion(:priority, 1..4)
     |> validate_start_date()
     |> validate_end_date()
+    |> maybe_unpause()
   end
 
   defp validate_start_date(changeset) do
@@ -91,5 +101,35 @@ defmodule Screenplay.PaMessages.PaMessage do
     else
       changeset
     end
+  end
+
+  defp maybe_unpause(changeset) do
+    now = DateTime.utc_now()
+
+    currently_active? =
+      in_active_period?(
+        now,
+        changeset.data.start_datetime,
+        changeset.data.end_datetime
+      )
+
+    will_be_active? =
+      in_active_period?(
+        now,
+        get_field(changeset, :start_datetime) || changeset.data.start_datetime,
+        get_field(changeset, :end_datetime) || changeset.data.end_datetime
+      )
+
+    if currently_active? != will_be_active? do
+      put_change(changeset, :paused, false)
+    else
+      changeset
+    end
+  end
+
+  defp in_active_period?(now, start_datetime, end_datetime) do
+    not is_nil(start_datetime) and DateTime.after?(now, start_datetime) and
+      (end_datetime == nil or
+         DateTime.before?(now, end_datetime))
   end
 end

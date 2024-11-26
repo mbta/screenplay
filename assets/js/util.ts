@@ -201,15 +201,10 @@ export const signsByDirection = (signs: Screen[]) => {
 };
 
 const screenTypeOrder = [
-  "dup",
   "dup_v2",
   "busway_v2",
-  "solari",
   "bus_shelter_v2",
-  "bus_eink",
   "bus_eink_v2",
-  "gl_eink_single",
-  "gl_eink_double",
   "gl_eink_v2",
   "pre_fare_v2",
   "elevator_v2",

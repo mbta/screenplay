@@ -1,0 +1,39 @@
+.kebab-menu-dropdown {
+  &__menu {
+    background-color: $cool-gray-30;
+
+    &:hover {
+      background-color: $cool-gray-15;
+    }
+  }
+
+  &__item {
+    background-color: transparent;
+    color: white;
+    padding-right: 20px;
+    padding-left: 20px;
+
+    &:hover,
+    &:focus {
+      background-color: $cool-gray-15;
+      color: white;
+    }
+  }
+}
+
+.kebab-menu-button {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 6px;
+  border: 1px solid rgba(23, 31, 38, 0.3);
+
+  &:hover,
+  &:focus {
+    background-color: $cool-gray-15;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}

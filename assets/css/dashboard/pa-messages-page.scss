@@ -16,7 +16,6 @@
   padding-right: 0px;
   display: flex;
   flex-direction: column;
-  gap: 48px;
 
   .add-new-button,
   .system-log-link {
@@ -44,7 +43,7 @@
 
   .system-log-link {
     text-decoration: none;
-    margin-top: 8px;
+    margin-top: 16px;
     color: $text-secondary;
     .link-text {
       text-decoration: underline;
@@ -56,12 +55,7 @@
   section {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-
-    header {
-      font-size: 16px;
-      line-height: 24px;
-    }
+    margin-bottom: 48px;
   }
 }
 
@@ -83,7 +77,6 @@
 
   th {
     border-bottom: 1px solid $theme-secondary;
-    height: 47px;
     padding: 15px 6px 8px 16px;
   }
 
@@ -97,13 +90,25 @@
     cursor: pointer;
   }
 
-  &__text {
-    color: $text-primary;
-    text-decoration: none;
+  &__message {
+    width: 586px;
+
+    a {
+      color: $text-primary;
+      text-decoration: none;
+    }
+  }
+
+  &__interval {
+    width: 91px;
+  }
+
+  &__actions {
+    width: 110px;
   }
 
   &__start-end {
-    min-width: 200px;
+    width: 200px;
     padding-right: 0px;
     text-wrap: nowrap;
   }
@@ -120,5 +125,39 @@
     justify-content: center;
     align-items: center;
     margin-top: 48px;
+  }
+
+  .pause-active-switch-container {
+    position: relative;
+
+    .pause-active-switch {
+      .form-check-input {
+        width: 86px;
+        height: 24px;
+        margin-top: 0;
+      }
+
+      .form-check-input:not(:checked) {
+        background-color: $dark-bg;
+        border-color: $border-primary;
+        background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,.25)'/></svg>");
+      }
+    }
+
+    .switch-text {
+      font-size: 14px;
+      line-height: 21px;
+      position: absolute;
+      top: 2px;
+    }
+
+    .paused {
+      left: 28px;
+    }
+
+    .active {
+      color: black;
+      left: 8px;
+    }
   }
 }

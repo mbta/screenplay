@@ -19,7 +19,11 @@ interface AlertsResponse {
 
 export const fetchAlerts = async (): Promise<AlertsResponse> => {
   const response = await fetch("/api/alerts");
-  return await response.json();
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    throw response;
+  }
 };
 
 export const fetchActiveAndFutureAlerts = async (): Promise<AlertsResponse> => {
@@ -148,6 +152,17 @@ export const updateExistingPaMessage = async (
     },
     body: JSON.stringify(updates),
   });
+
+  if (response.status === 422) {
+    const body = await response.json();
+    const error = Object.keys(body.errors);
+
+    throw error;
+  } else if (!response.ok) {
+    const error = new Error(`Error: ${response.status} ${response.statusText}`);
+
+    throw error;
+  }
 
   return {
     status: response.status,

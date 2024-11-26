@@ -1,46 +1,25 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  ComponentType,
-  useState,
-  useEffect,
-} from "react";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  ButtonGroup,
-  Modal,
-  Form,
-} from "react-bootstrap";
-import { fetchActiveAndFutureAlerts } from "Utils/api";
-import { Alert, InformedEntity } from "Models/alert";
-import classNames from "classnames";
-import { getAlertEarliestStartLatestEnd } from "../../../util";
-import { Page } from "./types";
+import React, { useState, useEffect } from "react";
+import { Button, Container, Row, Col, Modal, Form } from "react-bootstrap";
 import moment from "moment";
+import FilterGroup from "Components/FilterGroup";
+import { fetchActiveAndFutureAlerts } from "Utils/api";
+import { Alert } from "Models/alert";
+import { getAlertEarliestStartLatestEnd } from "../../../util";
 
 interface AssociateAlertPageProps {
-  associatedAlert: Alert | string | null;
-  endWithEffectPeriod: boolean;
-  onImportMessage: (message: string) => void;
-  onImportLocations: (informedEntities: InformedEntity[]) => void;
-  navigateTo: (page: Page) => void;
-  setAssociatedAlert: Dispatch<SetStateAction<Alert | string | null>>;
-  setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
+  onApply: (
+    alert: Alert,
+    endWithEffectPeriod: boolean,
+    importLocations: boolean,
+    importMessage: boolean,
+  ) => void;
+  onCancel: () => void;
 }
 
-const AssociateAlert = ({
-  associatedAlert,
-  endWithEffectPeriod,
-  onImportMessage,
-  onImportLocations,
-  navigateTo,
-  setAssociatedAlert,
-  setEndWithEffectPeriod,
-}: AssociateAlertPageProps) => {
+const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
+  const [endWithEffectPeriod, setEndWithEffectPeriod] = useState<boolean>(true);
   const [importLocations, setImportLocations] = useState<boolean>(true);
   const [importMessage, setImportMessage] = useState<boolean>(true);
 
@@ -53,9 +32,6 @@ const AssociateAlert = ({
   const [selectedMessageState, setSelectedMessageState] =
     useState<string>("active");
   const [selectedServiceType, setSelectedServiceType] = useState<string>("All");
-  const [showAlertModal, setShowAlertModal] = useState<boolean>(
-    associatedAlert != null,
-  );
 
   const serviceTypes = [
     "All",
@@ -76,78 +52,47 @@ const AssociateAlert = ({
             <h1>Select alert to associate with PA/ESS Message</h1>
           </Col>
           <Col className="associate-alert-page-header__cancel">
-            <Button variant="link" onClick={() => navigateTo(Page.MAIN)}>
+            <Button variant="link" onClick={() => onCancel()}>
               Cancel
             </Button>
           </Col>
         </Row>
         <Row className="associate-alert-page-body">
           <Col className="associate-alert-filter-selection">
-            <div className="associate-alert-filter-selection__label">
-              Message state
-            </div>
-            <ButtonGroup
-              className="associate-alert-filter-selection__button-group"
-              vertical
-            >
-              <Button
-                className={classNames({
-                  "associate-alert-filter-selection__selected":
-                    selectedMessageState === "active",
-                })}
-                onClick={() => setSelectedMessageState("active")}
-              >
-                Active
-              </Button>
-              <Button
-                className={classNames({
-                  "associate-alert-filter-selection__selected":
-                    selectedMessageState === "future",
-                })}
-                onClick={() => setSelectedMessageState("future")}
-              >
-                Future
-              </Button>
-            </ButtonGroup>
-            <div className="associate-alert-filter-selection__label">
-              Service type
-            </div>
-            <ButtonGroup vertical>
-              {serviceTypes.map((serviceType) => {
-                return (
-                  <Button
-                    key={serviceType}
-                    className={classNames({
-                      "associate-alert-filter-selection__selected":
-                        selectedServiceType === serviceType,
-                    })}
-                    onClick={() => setSelectedServiceType(serviceType)}
-                  >
-                    {serviceType}
-                  </Button>
-                );
+            <FilterGroup
+              className="mb-5"
+              header="Message state"
+              selectedFilter={selectedMessageState}
+              onFilterSelect={setSelectedMessageState}
+              filters={[
+                { label: "Active", value: "active" },
+                { label: "Future", value: "future" },
+              ]}
+            />
+            <FilterGroup
+              header="Service type"
+              selectedFilter={selectedServiceType}
+              onFilterSelect={setSelectedServiceType}
+              filters={serviceTypes.map((serviceType) => {
+                return { label: serviceType, value: serviceType };
               })}
-            </ButtonGroup>
+            />
           </Col>
           <Col>
             <AssociateAlertsTable
               alerts={alerts}
+              onSelectAlert={setSelectedAlert}
               messageStateFilter={selectedMessageState}
               serviceTypeFilter={selectedServiceType}
-              setAssociatedAlert={setAssociatedAlert}
-              setShowAlertModal={setShowAlertModal}
             />
           </Col>
         </Row>
       </Container>
-      <Modal className="alert-items-modal" show={showAlertModal} centered>
+      <Modal className="alert-items-modal" show={!!selectedAlert} centered>
         <Modal.Header
           closeButton
           closeVariant="white"
-          onHide={() => {
-            setAssociatedAlert({} as Alert);
-            setShowAlertModal(false);
-          }}
+          onHide={() => setSelectedAlert(null)}
         >
           Select items from alert
         </Modal.Header>
@@ -158,14 +103,10 @@ const AssociateAlert = ({
                 Alert ID:{" "}
               </div>
               <div className="alert-description__header-id">
-                {typeof associatedAlert === "string"
-                  ? associatedAlert
-                  : associatedAlert?.id}
+                {selectedAlert?.id}
               </div>
             </div>
-            {typeof associatedAlert === "string"
-              ? null
-              : associatedAlert?.header}
+            {selectedAlert?.header}
           </div>
           <div className="checkbox">
             <Form.Check
@@ -198,10 +139,7 @@ const AssociateAlert = ({
         </Modal.Body>
         <Modal.Footer>
           <Button
-            onClick={() => {
-              setAssociatedAlert({} as Alert);
-              setShowAlertModal(false);
-            }}
+            onClick={() => setSelectedAlert(null)}
             className="cancel-button"
             variant="link"
           >
@@ -209,18 +147,14 @@ const AssociateAlert = ({
           </Button>
           <Button
             onClick={() => {
-              if (
-                associatedAlert == null ||
-                typeof associatedAlert === "string"
-              )
-                return;
-              if (importMessage) {
-                onImportMessage(associatedAlert.header);
+              if (selectedAlert) {
+                onApply(
+                  selectedAlert,
+                  endWithEffectPeriod,
+                  importLocations,
+                  importMessage,
+                );
               }
-              if (importLocations) {
-                onImportLocations(associatedAlert.informed_entities);
-              }
-              navigateTo(Page.MAIN);
             }}
             className="apply-button"
           >
@@ -234,18 +168,16 @@ const AssociateAlert = ({
 
 interface AssociateAlertsTableProps {
   alerts: Alert[];
+  onSelectAlert: (alert: Alert) => void;
   messageStateFilter: string;
   serviceTypeFilter: string;
-  setAssociatedAlert: Dispatch<SetStateAction<Alert | string | null>>;
-  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
+const AssociateAlertsTable = ({
   alerts,
+  onSelectAlert,
   messageStateFilter,
   serviceTypeFilter,
-  setAssociatedAlert,
-  setShowAlertModal,
 }: AssociateAlertsTableProps) => {
   const filterByActiveState = (alert: Alert) => {
     const alertStart = new Date(alert.active_period[0].start);
@@ -297,8 +229,7 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
                 <AssociateAlertsTableRow
                   key={alert.id}
                   alert={alert}
-                  setAssociatedAlert={setAssociatedAlert}
-                  setShowAlertModal={setShowAlertModal}
+                  onSelect={() => onSelectAlert(alert)}
                 />
               );
             })
@@ -311,27 +242,19 @@ const AssociateAlertsTable: ComponentType<AssociateAlertsTableProps> = ({
 
 interface AssociateAlertsTableRowProps {
   alert: Alert;
-  setAssociatedAlert: Dispatch<SetStateAction<Alert | string | null>>;
-  setShowAlertModal: Dispatch<SetStateAction<boolean>>;
+  onSelect: () => void;
 }
 
-const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
+const AssociateAlertsTableRow = ({
   alert,
-  setAssociatedAlert,
-  setShowAlertModal,
+  onSelect,
 }: AssociateAlertsTableRowProps) => {
   const [start, end] = getAlertEarliestStartLatestEnd(alert.active_period);
 
   const last_modified = moment(alert.updated_at).format("l LT");
 
   return (
-    <tr
-      className="associate-alert-table__row"
-      onClick={() => {
-        setShowAlertModal(true);
-        setAssociatedAlert(alert);
-      }}
-    >
+    <tr className="associate-alert-table__row" onClick={() => onSelect()}>
       <td>{alert.header}</td>
       <td>{alert.id}</td>
       <td>
@@ -341,13 +264,7 @@ const AssociateAlertsTableRow: ComponentType<AssociateAlertsTableRowProps> = ({
       </td>
       <td>{last_modified}</td>
       <td className="associate-alert-table__select">
-        <Button
-          variant="link"
-          onClick={() => {
-            setShowAlertModal(true);
-            setAssociatedAlert(alert);
-          }}
-        >
+        <Button variant="link" onClick={() => onSelect()}>
           Select
         </Button>
       </td>
