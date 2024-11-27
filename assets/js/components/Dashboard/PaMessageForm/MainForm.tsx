@@ -187,12 +187,20 @@ const MainForm = ({
                       value={startDate}
                       onChange={(event) => setStartDate(event.target.value)}
                       isInvalid={
-                        validated && startDateTime.isSameOrAfter(endDateTime)
+                        validated &&
+                        (startDateTime.isSameOrAfter(endDateTime) ||
+                          !startDateTime.isValid())
                       }
                     />
-                    <Form.Control.Feedback type="invalid">
-                      Start date/time needs to be before the end date/time
-                    </Form.Control.Feedback>
+                    {startDateTime.isValid() ? (
+                      <Form.Control.Feedback type="invalid">
+                        Start date/time needs to be before the end date/time
+                      </Form.Control.Feedback>
+                    ) : (
+                      <Form.Control.Feedback type="invalid">
+                        Date needs to be in the correct format
+                      </Form.Control.Feedback>
+                    )}
                   </div>
                   <div className="validation-group">
                     <Form.Control
@@ -205,7 +213,7 @@ const MainForm = ({
                       }
                     />
                     <Form.Control.Feedback type="invalid">
-                      Start time needs to be in the correct format.
+                      Start time needs to be in the correct format
                     </Form.Control.Feedback>
                   </div>
                   <Button
@@ -256,12 +264,20 @@ const MainForm = ({
                         value={endDate}
                         onChange={(event) => setEndDate(event.target.value)}
                         isInvalid={
-                          validated && endDateTime.isSameOrBefore(moment())
+                          validated &&
+                          (endDateTime.isSameOrBefore(moment()) ||
+                            !endDateTime.isValid())
                         }
                       />
-                      <Form.Control.Feedback type="invalid">
-                        Date is in the past.
-                      </Form.Control.Feedback>
+                      {endDateTime.isValid() ? (
+                        <Form.Control.Feedback type="invalid">
+                          Date is in the past
+                        </Form.Control.Feedback>
+                      ) : (
+                        <Form.Control.Feedback type="invalid">
+                          Date needs to be in the correct format
+                        </Form.Control.Feedback>
+                      )}
                     </div>
                     <div className="validation-group">
                       <Form.Control
@@ -274,7 +290,7 @@ const MainForm = ({
                         }
                       />
                       <Form.Control.Feedback type="invalid">
-                        End time needs to be in the correct format.
+                        End time needs to be in the correct format
                       </Form.Control.Feedback>
                     </div>
                     <Button
