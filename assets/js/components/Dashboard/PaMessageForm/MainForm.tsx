@@ -203,10 +203,10 @@ const MainForm = ({
                       </Form.Control.Feedback>
                     )}
                   </div>
-                  <div className="validation-group">
+                  <div className={paMessageStyles.startEndItem}>
                     <Form.Control
                       type="time"
-                      className="time-picker picker"
+                      className={cx(paMessageStyles.inputField, "picker")}
                       value={startTime}
                       onChange={(event) => setStartTime(event.target.value)}
                       isInvalid={
@@ -217,16 +217,6 @@ const MainForm = ({
                       Start time needs to be in the correct format
                     </Form.Control.Feedback>
                   </div>
-                  <Form.Control
-                    type="time"
-                    className={cx(
-                      paMessageStyles.inputField,
-                      paMessageStyles.startEndItem,
-                      "picker",
-                    )}
-                    value={startTime}
-                    onChange={(event) => setStartTime(event.target.value)}
-                  />
                   <Button
                     className={paMessageStyles.serviceTimeButton}
                     variant="link"
@@ -290,10 +280,10 @@ const MainForm = ({
                         </Form.Control.Feedback>
                       )}
                     </div>
-                    <div className="validation-group">
+                    <div className={paMessageStyles.startEndItem}>
                       <Form.Control
                         type="time"
-                        className="time-picker picker"
+                        className={cx(paMessageStyles.inputField, "picker")}
                         value={endTime}
                         onChange={(event) => setEndTime(event.target.value)}
                         isInvalid={
@@ -304,16 +294,6 @@ const MainForm = ({
                         End time needs to be in the correct format
                       </Form.Control.Feedback>
                     </div>
-                    <Form.Control
-                      type="time"
-                      className={cx(
-                        paMessageStyles.inputField,
-                        paMessageStyles.startEndItem,
-                        "picker",
-                      )}
-                      value={endTime}
-                      onChange={(event) => setEndTime(event.target.value)}
-                    />
                     <Button
                       className={paMessageStyles.serviceTimeButton}
                       variant="link"
