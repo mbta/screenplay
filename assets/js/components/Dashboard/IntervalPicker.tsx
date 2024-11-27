@@ -1,5 +1,7 @@
 import React from "react";
 import { Form } from "react-bootstrap";
+import cx from "classnames";
+import * as paMessageStyles from "Styles/pa-messages.module.scss";
 
 interface Props {
   interval: string;
@@ -10,12 +12,18 @@ interface Props {
 const IntervalPicker = ({ interval, onChangeInterval, validated }: Props) => {
   return (
     <Form.Group>
-      <Form.Label htmlFor="interval-picker" className="label body--regular">
+      <Form.Label
+        htmlFor="interval-picker"
+        className={paMessageStyles.formLabel}
+      >
         Interval (min)
       </Form.Label>
       <Form.Control
         id="interval-picker"
-        className="m-0 interval"
+        className={cx(
+          paMessageStyles.intervalInput,
+          paMessageStyles.inputField,
+        )}
         type="number"
         value={interval}
         min={1}
