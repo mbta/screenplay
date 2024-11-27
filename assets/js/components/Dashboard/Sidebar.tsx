@@ -16,6 +16,7 @@ import {
 import TLogo from "../../../static/images/t-logo.svg";
 import TLogoBlack from "../../../static/images/t-logo-black.svg";
 import cx from "classnames";
+import * as sidebarStyles from "Styles/sidebar.module.scss";
 
 const SidebarLink = ({
   to,
@@ -33,14 +34,16 @@ const SidebarLink = ({
   return (
     <NavLink
       to={to}
-      className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+      className={({ isActive }) =>
+        cx(sidebarStyles.link, { [sidebarStyles.active]: isActive })
+      }
       reloadDocument={reloadDocument}
     >
       {({ isActive }) => {
         const IconComponent = isActive ? activeIcon : icon;
         return (
           <>
-            <span className="sidebar-link-highlight">
+            <span className={sidebarStyles.linkHighlight}>
               <IconComponent size={36} />
             </span>
             <span>{children}</span>
@@ -64,14 +67,14 @@ const Sidebar = () => {
       ?.getAttribute("content") ?? "prod";
 
   return (
-    <nav className="sidebar-container">
-      <a href="/dashboard" className={cx("sidebar-logo", environment)}>
+    <nav className={sidebarStyles.container}>
+      <a href="/dashboard" className={cx(sidebarStyles.logo, environment)}>
         <img
           src={environment === "prod" ? TLogo : TLogoBlack}
           alt="Screenplay Logo"
           style={{ width: 32 }}
         />
-        <span className="sidebar-environment-name">
+        <span className={sidebarStyles.environmentName}>
           {{ dev: "Dev", "dev-green": "Dev-Green" }[environment]}
         </span>
       </a>

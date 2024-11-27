@@ -1,9 +1,3 @@
-.sidebar-container:has(
-    + .page-content > .new-pa-message > .associate-alert-page
-  ) {
-  display: none !important;
-}
-
 .associate-alert-page {
   padding: 24px 48px;
 }
