@@ -1,0 +1,205 @@
+@import "./variables.scss";
+
+@mixin flat-button {
+  --bs-btn-active-color: var(--bs-btn-color);
+  --bs-btn-hover-color: var(--bs-btn-color);
+  --bs-btn-active-bg: var(--bs-btn-bg);
+  --bs-btn-hover-bg: var(--bs-btn-bg);
+  --bs-btn-active-border-color: var(--bs-btn-border-color);
+  --bs-btn-hover-border-color: var(--bs-btn-border-color);
+}
+
+.editPage {
+  padding: 24px 40px;
+  max-width: 900px;
+}
+
+.associateAlertSubtext {
+  color: $text-secondary;
+}
+
+.formButtons {
+  padding: 18px 24px;
+}
+
+.formButton {
+  --bs-btn-focus-box-shadow: 0px 0px 0px 4px #8ecdff80;
+}
+
+.card {
+  margin-top: 24px;
+  padding: 18px 24px;
+  background-color: $cool-gray-20;
+  color: white;
+}
+
+.cardTitle {
+  margin-bottom: 16px;
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.formLabel {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  color: $text-secondary;
+}
+
+.larger {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.smaller {
+  font-size: 14px;
+}
+
+.alertHeader {
+  margin-top: 40px;
+}
+
+.alertEndedText {
+  color: $text-error;
+}
+
+.associateButton {
+  @include flat-button;
+  --bs-btn-color: #{$text-link-primary};
+  --bs-btn-line-height: 0.8;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.copyTextButton {
+  width: 38px;
+  height: 38px;
+  --bs-btn-color: #{$text-disabled};
+  --bs-btn-active-color: var(--bs-btn-color);
+  --bs-btn-hover-color: var(--bs-btn-color);
+  --bs-btn-bg: #{$bg-border-disabled};
+  --bs-btn-active-bg: var(--bs-btn-bg);
+  --bs-btn-hover-bg: var(--bs-btn-bg);
+  --bs-btn-focus-box-shadow: 0px 0px 0px 4px #0d6efd40;
+  &:focus-visible {
+    --bs-btn-hover-border-color: #a5d7ff;
+  }
+}
+
+.copyButtonCol {
+  margin-top: 141px;
+}
+
+.audioText {
+  height: 250px;
+  resize: none;
+}
+
+.reviewAudioCard {
+  height: 250px;
+  background-color: $cool-gray-15;
+}
+
+.clearAlertButton {
+  @include flat-button;
+  --bs-btn-color: #{$text-secondary};
+  margin-left: 16px;
+  padding: 0px;
+}
+
+.addStationsZonesButton {
+  @include flat-button;
+  --bs-btn-color: #{$button-primary};
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: #{$button-primary};
+  border: 1px dashed;
+}
+
+.reviewAudioButton {
+  @include flat-button;
+  --bs-btn-color: #{$button-primary};
+  margin: auto;
+  padding: 0;
+  --bs-btn-focus-box-shadow: 0px 0px 0px 4px #8ecdff80;
+  &.playing {
+    --bs-btn-color: #{$text-primary};
+    text-decoration: none;
+  }
+  &:disabled {
+    --bs-btn-disabled-color: #{$text-secondary};
+    text-decoration: none;
+  }
+}
+
+.serviceTimeButton {
+  @include flat-button;
+  --bs-btn-color: #{$text-link-primary};
+  padding-left: 0;
+}
+
+.audioReviewedText {
+  color: $text-primary;
+}
+
+.daysDropdown {
+  width: 250px;
+}
+
+.intervalInput {
+  width: 80px;
+}
+
+.inputField {
+  --bs-body-bg: #{$dark-bg};
+  --bs-body-color: #{$text-secondary};
+  --bs-border-color: #{$border-primary};
+  &[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  &[type="time"],
+  &[type="date"] {
+    position: relative;
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(0.75);
+      position: absolute;
+      right: 0;
+      margin-right: 8px;
+      color: $text-secondary;
+    }
+  }
+}
+
+.startEndItem {
+  flex: 0 1 250px;
+}
+
+.dropdown {
+  :global(.dropdown-toggle) {
+    @include flat-button;
+    --bs-btn-bg: #{$dark-bg};
+    --bs-btn-color: #{$text-secondary};
+    --bs-btn-border-color: #{$border-primary};
+    --bs-btn-focus-box-shadow: 0px 0px 0px 4px #0d6efd40;
+    &:focus-visible {
+      --bs-btn-hover-border-color: #86b7fe;
+    }
+  }
+  :global(.dropdown-menu) {
+    --bs-dropdown-bg: #{$cool-gray-30};
+    --bs-dropdown-link-color: #{$text-primary};
+    --bs-dropdown-link-hover-color: #{$text-primary};
+    --bs-dropdown-link-hover-bg: #{$cool-gray-20};
+    --bs-dropdown-link-active-bg: #{$button-primary};
+  }
+}
+
+.switch :global(.form-check-input) {
+  --bs-form-switch-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,.25)'/></svg>");
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Col, Dropdown, Form, Row } from "react-bootstrap";
 import fp from "lodash/fp";
 import cx from "classnames";
+import * as paMessageStyles from "Styles/pa-messages.module.scss";
 
 enum DayItem {
   All = "All days",
@@ -52,7 +53,7 @@ const DaysPicker = ({ days, onChangeDays, error }: Props) => {
 
   return (
     <Form.Group>
-      <Form.Label className="label body--regular" htmlFor="days-picker">
+      <Form.Label className={paMessageStyles.formLabel} htmlFor="days-picker">
         Days
       </Form.Label>
       <Row
@@ -62,6 +63,10 @@ const DaysPicker = ({ days, onChangeDays, error }: Props) => {
       >
         <Col>
           <Dropdown
+            className={cx(
+              paMessageStyles.dropdown,
+              paMessageStyles.daysDropdown,
+            )}
             onSelect={(eventKey) => {
               if (eventKey === null) return;
 
@@ -73,7 +78,12 @@ const DaysPicker = ({ days, onChangeDays, error }: Props) => {
               );
             }}
           >
-            <Dropdown.Toggle id="days-picker">{dayLabel}</Dropdown.Toggle>
+            <Dropdown.Toggle
+              id="days-picker"
+              className="w-100 d-flex align-items-center justify-content-between"
+            >
+              {dayLabel}
+            </Dropdown.Toggle>
             <Dropdown.Menu role="listbox">
               {Object.values(DayItem).map((dayItem) => {
                 return (
@@ -95,7 +105,7 @@ const DaysPicker = ({ days, onChangeDays, error }: Props) => {
             {DAYS_OF_WEEK.map(({ label, value }) => {
               return (
                 <Form.Check
-                  className="days-form"
+                  className="pb-1 pt-2 mb-0 me-3"
                   key={value}
                   inline
                   checked={days.includes(value)}

@@ -20,6 +20,7 @@ import { getAlertEarliestStartLatestEnd } from "../../../util";
 import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
+import * as paMessageStyles from "Styles/pa-messages.module.scss";
 import { StaticTemplate } from "Models/static_template";
 import { MessageType } from "Models/pa_message";
 
@@ -151,8 +152,8 @@ const MainForm = ({
   const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
 
   return (
-    <div className="new-pa-message-page">
-      <Form onSubmit={handleSubmit} noValidate>
+    <div className={paMessageStyles.editPage}>
+      <Form onSubmit={handleSubmit} noValidate className="m-0">
         <div className="header">
           {title}
           {paused && <div className="paused-pill">Paused</div>}
@@ -167,20 +168,20 @@ const MainForm = ({
             selectedTemplate={selectedTemplate}
             onClearSelectedTemplate={onClearSelectedTemplate}
           />
-          <Card className="when-card">
-            <div className="title">When</div>
-            <Row md="auto">
-              <Form.Group className="start-datetime">
+          <Card className={paMessageStyles.card}>
+            <div className={paMessageStyles.cardTitle}>When</div>
+            <Row>
+              <Form.Group>
                 <Form.Label
-                  className="label body--regular"
+                  className={paMessageStyles.formLabel}
                   htmlFor="start-date-picker"
                 >
                   Start
                 </Form.Label>
-                <div className="datetime-picker-group">
-                  <div className="validation-group">
+                <div className="d-flex gap-3">
+                  <div className={paMessageStyles.startEndItem}>
                     <Form.Control
-                      className="date-picker picker"
+                      className={cx(paMessageStyles.inputField, "picker")}
                       type="date"
                       id="start-date-picker"
                       name="start-date-picker-input"
@@ -216,8 +217,18 @@ const MainForm = ({
                       Start time needs to be in the correct format
                     </Form.Control.Feedback>
                   </div>
+                  <Form.Control
+                    type="time"
+                    className={cx(
+                      paMessageStyles.inputField,
+                      paMessageStyles.startEndItem,
+                      "picker",
+                    )}
+                    value={startTime}
+                    onChange={(event) => setStartTime(event.target.value)}
+                  />
                   <Button
-                    className="service-time-link"
+                    className={paMessageStyles.serviceTimeButton}
                     variant="link"
                     onClick={() => setStartTime("03:00")}
                   >
@@ -226,10 +237,10 @@ const MainForm = ({
                 </div>
               </Form.Group>
             </Row>
-            <Row md="auto">
-              <Form.Group className="end-datetime">
+            <Row>
+              <Form.Group>
                 <Form.Label
-                  className="label body--regular"
+                  className={paMessageStyles.formLabel}
                   htmlFor="end-date-picker"
                 >
                   End
@@ -237,7 +248,7 @@ const MainForm = ({
                 {associatedAlert && (
                   <Form.Switch
                     id="effect-period-switch"
-                    className="effect-period-switch"
+                    className={cx("mb-2", paMessageStyles.switch)}
                     checked={endWithEffectPeriod}
                     label="At end of alert"
                     onChange={(event) => {
@@ -254,10 +265,10 @@ const MainForm = ({
                   />
                 )}
                 {!endWithEffectPeriod && (
-                  <div className="datetime-picker-group">
-                    <div className="validation-group">
+                  <div className="d-flex gap-3">
+                    <div className={paMessageStyles.startEndItem}>
                       <Form.Control
-                        className="date-picker picker"
+                        className={cx(paMessageStyles.inputField, "picker")}
                         type="date"
                         id="end-date-picker"
                         name="end-date-picker-input"
@@ -293,8 +304,18 @@ const MainForm = ({
                         End time needs to be in the correct format
                       </Form.Control.Feedback>
                     </div>
+                    <Form.Control
+                      type="time"
+                      className={cx(
+                        paMessageStyles.inputField,
+                        paMessageStyles.startEndItem,
+                        "picker",
+                      )}
+                      value={endTime}
+                      onChange={(event) => setEndTime(event.target.value)}
+                    />
                     <Button
-                      className="service-time-link"
+                      className={paMessageStyles.serviceTimeButton}
                       variant="link"
                       onClick={() => setEndTime("03:00")}
                     >
@@ -304,7 +325,7 @@ const MainForm = ({
                 )}
               </Form.Group>
             </Row>
-            <Row className="days">
+            <Row>
               <DaysPicker
                 days={days}
                 onChangeDays={setDays}
@@ -329,9 +350,9 @@ const MainForm = ({
               </Col>
             </Row>
           </Card>
-          <Card className="where-card">
-            <div className="title">Where</div>
-            <div className="select-stations-and-zones-button-group">
+          <Card className={paMessageStyles.card}>
+            <div className={paMessageStyles.cardTitle}>Where</div>
+            <div className="d-flex flex-wrap gap-2">
               {signIds.length > 0 && (
                 <SelectedSignsByRouteTags
                   places={places}
@@ -342,7 +363,7 @@ const MainForm = ({
                 />
               )}
               <Button
-                className="add-stations-zones-button"
+                className={paMessageStyles.addStationsZonesButton}
                 onClick={() => navigateTo(Page.STATIONS)}
               >
                 <PlusLg width={12} height={12} /> Add Stations & Zones
@@ -354,8 +375,8 @@ const MainForm = ({
               </div>
             )}
           </Card>
-          <Card className="message-card">
-            <div className="title">Message</div>
+          <Card className={paMessageStyles.card}>
+            <div className={paMessageStyles.cardTitle}>Message</div>
             <Row>
               <Col>
                 <MessageTextBox
@@ -375,12 +396,12 @@ const MainForm = ({
                   validated={validated}
                 />
               </Col>
-              <Col md="auto" className="copy-button-col">
+              <Col md="auto" className={paMessageStyles.copyButtonCol}>
                 <Button
                   disabled={
                     visualText.length === 0 || selectedTemplate !== null
                   }
-                  className="copy-text-button"
+                  className={paMessageStyles.copyTextButton}
                   onClick={() => {
                     setPhoneticText(visualText);
                     if (audioState !== AudioPreview.Unreviewed) {
@@ -407,6 +428,7 @@ const MainForm = ({
                       disabled={
                         phoneticText.length === 0 || selectedTemplate !== null
                       }
+                      className="mb-2"
                       label="Phonetic Audio"
                       maxLength={MAX_TEXT_LENGTH}
                       validated={validated}
@@ -422,7 +444,7 @@ const MainForm = ({
                 ) : (
                   <>
                     <div className="form-label">Phonetic Audio</div>
-                    <Card className="review-audio-card">
+                    <Card className={paMessageStyles.reviewAudioCard}>
                       <ReviewAudioButton
                         audioState={audioState}
                         disabled={visualText.length === 0}
@@ -445,17 +467,23 @@ const MainForm = ({
           </Card>
           <Row
             md="auto"
-            className="justify-content-end new-pa-message-page__form-buttons"
+            className={cx("justify-content-end", paMessageStyles.formButtons)}
           >
             <Button
-              className="cancel-button"
+              className={cx("cancel-button", paMessageStyles.formButton)}
               onClick={() =>
                 window.history.length > 1 ? navigate(-1) : window.close()
               }
             >
               Cancel
             </Button>
-            <Button type="submit" className="submit-button button-primary">
+            <Button
+              type="submit"
+              className={cx(
+                "submit-button button-primary",
+                paMessageStyles.formButton,
+              )}
+            >
               Submit
             </Button>
           </Row>
@@ -480,27 +508,31 @@ const ReviewAudioButton = ({
 }: ReviewAudioButtonProps) => {
   const audioPlaying = audioState === AudioPreview.Playing;
   return audioState === AudioPreview.Reviewed ? (
-    <div className="audio-reviewed-text">
-      <span>
+    <div className={paMessageStyles.audioReviewedText}>
+      <span className="align-middle me-3">
         <CheckCircleFill /> Audio reviewed
       </span>
-      <Button className="review-audio-button" onClick={onClick} variant="link">
+      <Button
+        className={paMessageStyles.reviewAudioButton}
+        onClick={onClick}
+        variant="link"
+      >
         Replay
       </Button>
     </div>
   ) : (
     <Button
       disabled={!audioPlaying && disabled}
-      className={cx("review-audio-button", {
-        "review-audio-button--audio-playing": audioPlaying,
+      className={cx(paMessageStyles.reviewAudioButton, {
+        [paMessageStyles.playing]: audioPlaying,
       })}
       variant="link"
       onClick={onClick}
     >
       {validated || audioState === AudioPreview.Outdated ? (
-        <ExclamationTriangleFill fill="#FFC107" height={16} />
+        <ExclamationTriangleFill className="me-2" fill="#FFC107" height={16} />
       ) : (
-        <VolumeUpFill height={16} />
+        <VolumeUpFill className="me-2" height={16} />
       )}
       {audioPlaying ? "Reviewing audio" : "Review audio"}
     </Button>
@@ -527,7 +559,7 @@ const NewPaMessageHeader = ({
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
     return (
-      <div className="effect-period">
+      <div className={cx("mt-1", paMessageStyles.smaller)}>
         Alert effect period: {start} &ndash; {end}
       </div>
     );
@@ -546,72 +578,84 @@ const NewPaMessageHeader = ({
 
   if (associatedAlert) {
     return (
-      <Row md="auto" className="align-items-center">
-        <div className="associated-alert-header">
-          Associated Alert: Alert ID{" "}
-          {typeof associatedAlert === "string"
-            ? associatedAlert
-            : associatedAlert.id}
+      <div className={cx("ms-3", paMessageStyles.alertHeader)}>
+        <div className="d-flex align-items-center">
+          <span className={paMessageStyles.larger}>
+            Associated Alert: Alert ID{" "}
+            {typeof associatedAlert === "string"
+              ? associatedAlert
+              : associatedAlert.id}
+          </span>
           <Button
             variant="link"
-            onClick={onClearAssociatedAlert}
-            className="clear-button"
+            className={paMessageStyles.clearAlertButton}
+            onClick={() => {
+              onClearAssociatedAlert();
+            }}
           >
             Clear
           </Button>
-          {typeof associatedAlert === "string" ? (
-            <div className="alert-ended">
-              Alert has ended and is no longer available.
-            </div>
-          ) : (
-            formatActivePeriod(associatedAlert.active_period)
-          )}
         </div>
-      </Row>
+        {typeof associatedAlert === "string" ? (
+          <div className={cx("mt-1", paMessageStyles.alertEndedText)}>
+            Alert has ended and is no longer available.
+          </div>
+        ) : (
+          formatActivePeriod(associatedAlert.active_period)
+        )}
+      </div>
     );
   } else if (selectedTemplate) {
     return (
-      <Row md="auto" className="align-items-center">
-        <div className="selected-template-header">
-          Template:{" "}
-          {`${formatMessageType(selectedTemplate.type)} - ${selectedTemplate.title}`}
-          <Button
-            variant="link"
-            onClick={onClearSelectedTemplate}
-            className="clear-button"
-          >
-            Clear
-          </Button>
-        </div>
-      </Row>
+      <div
+        className={cx(
+          "d-flex align-items-center ms-3",
+          paMessageStyles.alertHeader,
+        )}
+      >
+        <span className={paMessageStyles.larger}>
+          Template: {formatMessageType(selectedTemplate.type)} -{" "}
+          {selectedTemplate.title}
+        </span>
+        <Button
+          variant="link"
+          onClick={onClearSelectedTemplate}
+          className={paMessageStyles.clearAlertButton}
+        >
+          Clear
+        </Button>
+      </div>
     );
   } else {
     return (
-      <Row md="auto" className="align-items-center alert-template-header">
-        <div className="alert-template-container">
-          <Button
-            variant="link"
-            className="pr-0 associate-alert-button"
-            onClick={() => {
-              setEndWithEffectPeriod(true);
-              navigateTo(Page.ALERTS);
-            }}
-          >
-            Associate with alert
-          </Button>
-          |
-          <Button
-            variant="link"
-            className="pr-0 psa-emergency-button"
-            onClick={() => {
-              navigateTo(Page.TEMPLATES);
-            }}
-          >
-            Select PSA or Emergency template
-          </Button>
-          (Optional)
-        </div>
-      </Row>
+      <div
+        className={cx(
+          "d-flex align-items-center ms-3",
+          paMessageStyles.alertHeader,
+        )}
+      >
+        <Button
+          variant="link"
+          className={cx("ps-0", paMessageStyles.associateButton)}
+          onClick={() => {
+            setEndWithEffectPeriod(true);
+            navigateTo(Page.ALERTS);
+          }}
+        >
+          Associate with alert
+        </Button>
+        <span className={paMessageStyles.larger}>|</span>
+        <Button
+          variant="link"
+          className={paMessageStyles.associateButton}
+          onClick={() => {
+            navigateTo(Page.TEMPLATES);
+          }}
+        >
+          Select PSA or Emergency template
+        </Button>
+        <span className={paMessageStyles.larger}>(Optional)</span>
+      </div>
     );
   }
 };
