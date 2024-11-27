@@ -14,6 +14,8 @@ import {
   Icon,
 } from "react-bootstrap-icons";
 import TLogo from "../../../static/images/t-logo.svg";
+import TLogoBlack from "../../../static/images/t-logo-black.svg";
+import cx from "classnames";
 
 const SidebarLink = ({
   to,
@@ -56,11 +58,22 @@ const Sidebar = () => {
   const isPaMessageAdmin = !!document.querySelector(
     "meta[name=is-pa-message-admin]",
   );
+  const environment =
+    document
+      .querySelector("meta[name=environment-name]")
+      ?.getAttribute("content") ?? "prod";
 
   return (
     <nav className="sidebar-container">
-      <a href="/dashboard" className="sidebar-logo">
-        <img src={TLogo} alt="Screenplay Logo" style={{ width: 32 }} />
+      <a href="/dashboard" className={cx("sidebar-logo", environment)}>
+        <img
+          src={environment === "prod" ? TLogo : TLogoBlack}
+          alt="Screenplay Logo"
+          style={{ width: 32 }}
+        />
+        <span className="sidebar-environment-name">
+          {{ dev: "Dev", "dev-green": "Dev-Green" }[environment]}
+        </span>
       </a>
       <SidebarLink to="/dashboard" icon={GeoAlt} activeIcon={GeoAltFill}>
         Places
