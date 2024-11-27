@@ -189,11 +189,12 @@ const MainForm = ({
                       onChange={(event) => setStartDate(event.target.value)}
                       isInvalid={
                         validated &&
-                        (startDateTime.isSameOrAfter(endDateTime) ||
-                          !startDateTime.isValid())
+                        ((moment(startTime, "HH:mm").isValid() &&
+                          startDateTime.isSameOrAfter(endDateTime)) ||
+                          !moment(startDate, "YYYY-MM-DD").isValid())
                       }
                     />
-                    {startDateTime.isValid() ? (
+                    {moment(startDate, "YYYY-MM-DD").isValid() ? (
                       <Form.Control.Feedback type="invalid">
                         Start date/time needs to be before the end date/time
                       </Form.Control.Feedback>
@@ -266,11 +267,12 @@ const MainForm = ({
                         onChange={(event) => setEndDate(event.target.value)}
                         isInvalid={
                           validated &&
-                          (endDateTime.isSameOrBefore(moment()) ||
-                            !endDateTime.isValid())
+                          ((moment(endTime, "HH:mm").isValid() &&
+                            endDateTime.isSameOrBefore(moment())) ||
+                            !moment(endDate, "YYYY-MM-DD").isValid())
                         }
                       />
-                      {endDateTime.isValid() ? (
+                      {moment(endDate, "YYYY-MM-DD").isValid() ? (
                         <Form.Control.Feedback type="invalid">
                           Date is in the past
                         </Form.Control.Feedback>
