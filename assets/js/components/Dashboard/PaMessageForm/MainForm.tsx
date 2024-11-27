@@ -218,13 +218,15 @@ const MainForm = ({
                       Start time needs to be in the correct format
                     </Form.Control.Feedback>
                   </div>
-                  <Button
-                    className={paMessageStyles.serviceTimeButton}
-                    variant="link"
-                    onClick={() => setStartTime("03:00")}
-                  >
-                    Start of service day
-                  </Button>
+                  <div className={paMessageStyles.startEndItem}>
+                    <Button
+                      className={paMessageStyles.serviceTimeButton}
+                      variant="link"
+                      onClick={() => setStartTime("03:00")}
+                    >
+                      Start of service day
+                    </Button>
+                  </div>
                 </div>
               </Form.Group>
             </Row>
@@ -296,13 +298,15 @@ const MainForm = ({
                         End time needs to be in the correct format
                       </Form.Control.Feedback>
                     </div>
-                    <Button
-                      className={paMessageStyles.serviceTimeButton}
-                      variant="link"
-                      onClick={() => setEndTime("03:00")}
-                    >
-                      End of service day
-                    </Button>
+                    <div className={paMessageStyles.startEndItem}>
+                      <Button
+                        className={paMessageStyles.serviceTimeButton}
+                        variant="link"
+                        onClick={() => setEndTime("03:00")}
+                      >
+                        End of service day
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Form.Group>
