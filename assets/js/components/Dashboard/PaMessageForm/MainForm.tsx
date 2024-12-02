@@ -302,7 +302,17 @@ const MainForm = ({
                       <Button
                         className={paMessageStyles.serviceTimeButton}
                         variant="link"
-                        onClick={() => setEndTime("03:00")}
+                        onClick={() => {
+                          if (moment(endTime, "HH:mm").hour() >= 3) {
+                            setEndDate(
+                              moment(endDate, "YYYY-MM-DD")
+                                .add(1, "d")
+                                .format("YYYY-MM-DD"),
+                            );
+                          }
+
+                          setEndTime("03:00");
+                        }}
                       >
                         End of service day
                       </Button>
