@@ -1,10 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import DaysPicker from "Components/DaysPicker";
-import PriorityPicker from "Components/PriorityPicker";
-import IntervalPicker from "Components/IntervalPicker";
-import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import {
@@ -15,6 +11,11 @@ import {
   VolumeUpFill,
 } from "react-bootstrap-icons";
 import cx from "classnames";
+import DaysPicker from "Components/DaysPicker";
+import PriorityPicker from "Components/PriorityPicker";
+import IntervalPicker from "Components/IntervalPicker";
+import MessageTextBox from "Components/MessageTextBox";
+import InfoPopover from "Components/InfoPopover";
 import { ActivePeriod, Alert as AlertModel } from "Models/alert";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
 import { AudioPreview, Page } from "./types";
@@ -178,7 +179,7 @@ const MainForm = ({
                 >
                   Start
                 </Form.Label>
-                <div className="d-flex gap-3">
+                <div className="d-flex gap-3 align-items-center">
                   <div className={paMessageStyles.startEndItem}>
                     <Form.Control
                       className={cx(paMessageStyles.inputField, "picker")}
@@ -226,6 +227,10 @@ const MainForm = ({
                     >
                       Start of service day
                     </Button>
+                    <InfoPopover
+                      placement="top"
+                      popoverText="A service day starts at 3:00 AM, and ends at 3:00 AM the following day"
+                    />
                   </div>
                 </div>
               </Form.Group>
@@ -258,7 +263,7 @@ const MainForm = ({
                   />
                 )}
                 {!endWithEffectPeriod && (
-                  <div className="d-flex gap-3">
+                  <div className="d-flex gap-3 align-items-center">
                     <div className={paMessageStyles.startEndItem}>
                       <Form.Control
                         className={cx(paMessageStyles.inputField, "picker")}
@@ -316,6 +321,10 @@ const MainForm = ({
                       >
                         End of service day
                       </Button>
+                      <InfoPopover
+                        placement="top"
+                        popoverText="A service day starts at 3:00 AM, and ends at 3:00 AM the following day"
+                      />
                     </div>
                   </div>
                 )}

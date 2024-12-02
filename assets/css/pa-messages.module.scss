@@ -135,6 +135,7 @@
   @include flat-button;
   --bs-btn-color: #{$text-link-primary};
   padding-left: 0;
+  padding-right: 8px;
 }
 
 .audioReviewedText {
