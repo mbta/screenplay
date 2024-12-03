@@ -6,7 +6,7 @@ import PriorityPicker from "Components/PriorityPicker";
 import IntervalPicker from "Components/IntervalPicker";
 import MessageTextBox from "Components/MessageTextBox";
 import { useNavigate } from "react-router-dom";
-import moment, { type Moment } from "moment";
+import moment from "moment";
 import {
   ArrowRightShort,
   CheckCircleFill,
@@ -29,10 +29,14 @@ const MAX_TEXT_LENGTH = 2000;
 interface Props {
   title: string;
   days: number[];
-  startDateTime: Moment;
-  setStartDateTime: (datetime: Moment) => void;
-  endDateTime: Moment;
-  setEndDateTime: (datetime: Moment) => void;
+  startDate: string;
+  setStartDate: (date: string) => void;
+  startTime: string;
+  setStartTime: (time: string) => void;
+  endDate: string;
+  setEndDate: (date: string) => void;
+  endTime: string;
+  setEndTime: (time: string) => void;
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
@@ -64,10 +68,14 @@ interface Props {
 const MainForm = ({
   title,
   days,
-  startDateTime,
-  setStartDateTime,
-  endDateTime,
-  setEndDateTime,
+  startDate,
+  setStartDate,
+  startTime,
+  setStartTime,
+  endDate,
+  setEndDate,
+  endTime,
+  setEndTime,
   interval,
   navigateTo,
   phoneticText,
@@ -140,6 +148,9 @@ const MainForm = ({
 
   if (hide) return null;
 
+  const startDateTime = moment(`${startDate} ${startTime}`, "YYYY-MM-DD HH:mm");
+  const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
+
   return (
     <div className={paMessageStyles.editPage}>
       <Form onSubmit={handleSubmit} noValidate className="m-0">
@@ -174,49 +185,48 @@ const MainForm = ({
                       type="date"
                       id="start-date-picker"
                       name="start-date-picker-input"
-                      value={startDateTime.format("YYYY-MM-DD")}
-                      onChange={(event) =>
-                        setStartDateTime(
-                          moment(
-                            `${event.target.value} ${startDateTime.format("HH:mm")}`,
-                            "YYYY-MM-DD HH:mm",
-                          ),
-                        )
-                      }
+                      value={startDate}
+                      onChange={(event) => setStartDate(event.target.value)}
                       isInvalid={
-                        validated && startDateTime.isSameOrAfter(endDateTime)
+                        validated &&
+                        ((moment(startTime, "HH:mm").isValid() &&
+                          startDateTime.isSameOrAfter(endDateTime)) ||
+                          !moment(startDate, "YYYY-MM-DD").isValid())
+                      }
+                    />
+                    {moment(startDate, "YYYY-MM-DD").isValid() ? (
+                      <Form.Control.Feedback type="invalid">
+                        Start date/time needs to be before the end date/time
+                      </Form.Control.Feedback>
+                    ) : (
+                      <Form.Control.Feedback type="invalid">
+                        Date needs to be in the correct format
+                      </Form.Control.Feedback>
+                    )}
+                  </div>
+                  <div className={paMessageStyles.startEndItem}>
+                    <Form.Control
+                      type="time"
+                      className={cx(paMessageStyles.inputField, "picker")}
+                      value={startTime}
+                      onChange={(event) => setStartTime(event.target.value)}
+                      isInvalid={
+                        validated && !moment(startTime, "HH:mm").isValid()
                       }
                     />
                     <Form.Control.Feedback type="invalid">
-                      Start date/time needs to be before the end date/time
+                      Start time needs to be in the correct format
                     </Form.Control.Feedback>
                   </div>
-                  <Form.Control
-                    type="time"
-                    className={cx(
-                      paMessageStyles.inputField,
-                      paMessageStyles.startEndItem,
-                      "picker",
-                    )}
-                    value={startDateTime.format("HH:mm")}
-                    onChange={(event) =>
-                      setStartDateTime(
-                        moment(
-                          `${startDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
-                          "YYYY-MM-DD HH:mm",
-                        ),
-                      )
-                    }
-                  />
-                  <Button
-                    className={paMessageStyles.serviceTimeButton}
-                    variant="link"
-                    onClick={() =>
-                      setStartDateTime(moment(startDateTime).hour(3).minute(0))
-                    }
-                  >
-                    Start of service day
-                  </Button>
+                  <div className={paMessageStyles.startEndItem}>
+                    <Button
+                      className={paMessageStyles.serviceTimeButton}
+                      variant="link"
+                      onClick={() => setStartTime("03:00")}
+                    >
+                      Start of service day
+                    </Button>
+                  </div>
                 </div>
               </Form.Group>
             </Row>
@@ -236,14 +246,18 @@ const MainForm = ({
                     label="At end of alert"
                     onChange={(event) => {
                       if (!event.target.checked) {
-                        setEndDateTime(moment(startDateTime).add(1, "hour"));
+                        setEndTime(
+                          moment(startTime, "HH:mm")
+                            .add(1, "hour")
+                            .format("HH:mm"),
+                        );
                       }
 
                       setEndWithEffectPeriod(event.target.checked);
                     }}
                   />
                 )}
-                {!endWithEffectPeriod && endDateTime !== null && (
+                {!endWithEffectPeriod && (
                   <div className="d-flex gap-3">
                     <div className={paMessageStyles.startEndItem}>
                       <Form.Control
@@ -251,49 +265,48 @@ const MainForm = ({
                         type="date"
                         id="end-date-picker"
                         name="end-date-picker-input"
-                        value={endDateTime.format("YYYY-MM-DD")}
-                        onChange={(event) =>
-                          setEndDateTime(
-                            moment(
-                              `${event.target.value} ${endDateTime.format("HH:mm")}`,
-                              "YYYY-MM-DD HH:mm",
-                            ),
-                          )
-                        }
+                        value={endDate}
+                        onChange={(event) => setEndDate(event.target.value)}
                         isInvalid={
-                          validated && endDateTime.isSameOrBefore(moment())
+                          validated &&
+                          ((moment(endTime, "HH:mm").isValid() &&
+                            endDateTime.isSameOrBefore(moment())) ||
+                            !moment(endDate, "YYYY-MM-DD").isValid())
+                        }
+                      />
+                      {moment(endDate, "YYYY-MM-DD").isValid() ? (
+                        <Form.Control.Feedback type="invalid">
+                          Date is in the past
+                        </Form.Control.Feedback>
+                      ) : (
+                        <Form.Control.Feedback type="invalid">
+                          Date needs to be in the correct format
+                        </Form.Control.Feedback>
+                      )}
+                    </div>
+                    <div className={paMessageStyles.startEndItem}>
+                      <Form.Control
+                        type="time"
+                        className={cx(paMessageStyles.inputField, "picker")}
+                        value={endTime}
+                        onChange={(event) => setEndTime(event.target.value)}
+                        isInvalid={
+                          validated && !moment(endTime, "HH:mm").isValid()
                         }
                       />
                       <Form.Control.Feedback type="invalid">
-                        Date is in the past.
+                        End time needs to be in the correct format
                       </Form.Control.Feedback>
                     </div>
-                    <Form.Control
-                      type="time"
-                      className={cx(
-                        paMessageStyles.inputField,
-                        paMessageStyles.startEndItem,
-                        "picker",
-                      )}
-                      value={endDateTime.format("HH:mm")}
-                      onChange={(event) =>
-                        setEndDateTime(
-                          moment(
-                            `${endDateTime.format("YYYY-MM-DD")} ${event.target.value}`,
-                            "YYYY-MM-DD HH:mm",
-                          ),
-                        )
-                      }
-                    />
-                    <Button
-                      className={paMessageStyles.serviceTimeButton}
-                      variant="link"
-                      onClick={() =>
-                        setEndDateTime(moment(endDateTime).hour(3).minute(0))
-                      }
-                    >
-                      End of service day
-                    </Button>
+                    <div className={paMessageStyles.startEndItem}>
+                      <Button
+                        className={paMessageStyles.serviceTimeButton}
+                        variant="link"
+                        onClick={() => setEndTime("03:00")}
+                      >
+                        End of service day
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Form.Group>
