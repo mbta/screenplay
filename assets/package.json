@@ -29,7 +29,7 @@
     "react-bootstrap": "^2.10.6",
     "react-bootstrap-icons": "^1.8.2",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^7.0.2",
     "react-search-autocomplete": "^8.5.2",
     "react-tooltip": "^4.2.21",
     "regenerator-runtime": "^0.14.1",
