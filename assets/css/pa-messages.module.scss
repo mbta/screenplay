@@ -90,11 +90,6 @@
   margin-top: 141px;
 }
 
-.audioText {
-  height: 250px;
-  resize: none;
-}
-
 .reviewAudioCard {
   height: 250px;
   background-color: $cool-gray-15;
@@ -174,6 +169,13 @@
       color: $text-secondary;
     }
   }
+}
+
+.messageTextBox {
+  height: 250px;
+  resize: none;
+  --bs-secondary-bg: #{$bg-elevation-4};
+  --bs-border-color: #{$cool-gray-30};
 }
 
 .startEndItem {

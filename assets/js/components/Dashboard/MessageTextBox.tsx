@@ -34,7 +34,10 @@ const MessageTextBox = ({
       <Form.Control
         required={required}
         id={id}
-        className={cx(paMessageStyles.audioText, paMessageStyles.inputField)}
+        className={cx(
+          paMessageStyles.messageTextBox,
+          paMessageStyles.inputField,
+        )}
         maxLength={maxLength}
         as="textarea"
         value={text}
