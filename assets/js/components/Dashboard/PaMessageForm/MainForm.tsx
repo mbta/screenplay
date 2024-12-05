@@ -151,6 +151,8 @@ const MainForm = ({
 
   const startDateTime = moment(`${startDate} ${startTime}`, "YYYY-MM-DD HH:mm");
   const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
+  const popoverText =
+    "A service day starts at 3:00 AM, and ends at 3:00 AM the following day";
 
   return (
     <div className={paMessageStyles.editPage}>
@@ -227,10 +229,7 @@ const MainForm = ({
                     >
                       Start of service day
                     </Button>
-                    <InfoPopover
-                      placement="top"
-                      popoverText="A service day starts at 3:00 AM, and ends at 3:00 AM the following day"
-                    />
+                    <InfoPopover placement="top" popoverText={popoverText} />
                   </div>
                 </div>
               </Form.Group>
@@ -321,10 +320,7 @@ const MainForm = ({
                       >
                         End of service day
                       </Button>
-                      <InfoPopover
-                        placement="top"
-                        popoverText="A service day starts at 3:00 AM, and ends at 3:00 AM the following day"
-                      />
+                      <InfoPopover placement="top" popoverText={popoverText} />
                     </div>
                   </div>
                 )}
