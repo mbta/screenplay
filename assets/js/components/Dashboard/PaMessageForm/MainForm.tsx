@@ -154,6 +154,8 @@ const MainForm = ({
   const popoverText =
     "A service day starts at 3:00 AM, and ends at 3:00 AM the following day";
 
+  const isEndTimeInvalid = validated && !moment(endTime, "HH:mm").isValid();
+
   return (
     <div className={paMessageStyles.editPage}>
       <Form onSubmit={handleSubmit} noValidate className="m-0">
@@ -294,9 +296,7 @@ const MainForm = ({
                         className={cx(paMessageStyles.inputField, "picker")}
                         value={endTime}
                         onChange={(event) => setEndTime(event.target.value)}
-                        isInvalid={
-                          validated && !moment(endTime, "HH:mm").isValid()
-                        }
+                        isInvalid={isEndTimeInvalid}
                       />
                       <Form.Control.Feedback type="invalid">
                         End time needs to be in the correct format
@@ -307,6 +307,8 @@ const MainForm = ({
                         className={paMessageStyles.serviceTimeButton}
                         variant="link"
                         onClick={() => {
+                          if (isEndTimeInvalid) return;
+
                           if (moment(endTime, "HH:mm").hour() >= 3) {
                             setEndDate(
                               moment(endDate, "YYYY-MM-DD")
