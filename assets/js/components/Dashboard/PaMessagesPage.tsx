@@ -143,7 +143,15 @@ const PaMessagesPage: ComponentType = () => {
                 target="_blank"
                 className="system-log-link"
               >
-                <span className="link-text">System Log</span>
+                <span className="link-text">Announcement Log</span>
+                <BoxArrowUpRight />
+              </Link>
+              <Link
+                to="https://mbta.splunkcloud.com/en-US/app/search/paess_device_status_by_station_clone"
+                target="_blank"
+                className="system-log-link"
+              >
+                <span className="link-text">Device Status</span>
                 <BoxArrowUpRight />
               </Link>
             </section>
