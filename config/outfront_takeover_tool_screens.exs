@@ -62,7 +62,7 @@ config :screenplay,
       %{
         name: "South Station",
         portrait: true,
-        landscape: false,
+        landscape: true,
         sftp_dir_name: "003_XFER_RED_SILVER_CR_SOUTHSTATION"
       },
       %{
