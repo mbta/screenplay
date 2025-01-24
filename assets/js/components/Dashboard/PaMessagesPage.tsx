@@ -19,6 +19,7 @@ import { updateExistingPaMessage } from "Utils/api";
 import { UpdatePaMessageBody } from "Models/pa_message";
 import Toast, { type ToastProps } from "Components/Toast";
 import FilterGroup from "./FilterGroup";
+import { isPaMessageAdmin } from "Utils/auth";
 
 type StateFilter = "current" | "future" | "past";
 
@@ -106,6 +107,7 @@ const PaMessagesPage: ComponentType = () => {
   const [serviceTypes, setServiceTypes] = useState<Array<ServiceType>>(
     () => (params.getAll("serviceTypes[]") as Array<ServiceType>) ?? [],
   );
+  const isReadOnly = !isPaMessageAdmin();
 
   useEffect(() => {
     setParams(() => {
@@ -135,9 +137,11 @@ const PaMessagesPage: ComponentType = () => {
         <Row>
           <Col className="pa-message-filter-selection">
             <section>
-              <Link to="/pa-messages/new" className="add-new-button">
-                <PlusCircleFill className="add-new-icon" /> Add New
-              </Link>
+              {!isReadOnly && (
+                <Link to="/pa-messages/new" className="add-new-button">
+                  <PlusCircleFill className="add-new-icon" /> Add New
+                </Link>
+              )}
               <Link
                 to="https://mbta.splunkcloud.com/en-US/app/search/paess__pa_message_annoucement_log"
                 target="_blank"
@@ -200,6 +204,7 @@ const PaMessagesPage: ComponentType = () => {
                 stateFilter={stateFilter}
                 onUpdate={() => mutate(`/api/pa-messages?${params.toString()}`)}
                 setErrorMessage={setErrorMessage}
+                isReadOnly={isReadOnly}
               />
             </Row>
           </Col>
@@ -222,6 +227,7 @@ interface PaMessageTableProps {
   stateFilter: StateFilter;
   onUpdate: () => void;
   setErrorMessage: (message: string | null) => void;
+  isReadOnly: boolean;
 }
 
 const PaMessageTable: ComponentType<PaMessageTableProps> = ({
@@ -230,6 +236,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
   stateFilter,
   onUpdate,
   setErrorMessage,
+  isReadOnly,
 }: PaMessageTableProps) => {
   const [toastProps, setToastProps] = useState<ToastProps | null>();
   const data = isLoading ? [] : paMessages;
@@ -246,7 +253,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
             {showMoreActions && (
               <>
                 <th className="pa-message-table__actions">Actions</th>
-                <th className="pa-message-table__kebab"></th>
+                {!isReadOnly && <th className="pa-message-table__kebab"></th>}
               </>
             )}
           </tr>
@@ -274,6 +281,7 @@ const PaMessageTable: ComponentType<PaMessageTableProps> = ({
                 showMoreActions={showMoreActions}
                 onUpdate={onUpdate}
                 setErrorMessage={setErrorMessage}
+                isReadOnly={isReadOnly}
               />
             );
           })}
@@ -311,6 +319,7 @@ interface PaMessageRowProps {
   showMoreActions: boolean;
   onUpdate: () => void;
   setErrorMessage: (message: string | null) => void;
+  isReadOnly: boolean;
 }
 
 const PaMessageRow: ComponentType<PaMessageRowProps> = ({
@@ -320,6 +329,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   showMoreActions,
   onUpdate,
   setErrorMessage,
+  isReadOnly,
 }: PaMessageRowProps) => {
   const navigate = useNavigate();
   const start = new Date(paMessage.start_datetime);
@@ -375,14 +385,21 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
         <>
           <td className="pa-message-table__actions">
             <div
-              className="pause-active-switch-container"
-              onClick={togglePaused}
+              className={`pause-active-switch-container`}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isReadOnly) {
+                  return;
+                }
+                togglePaused(e);
+              }}
             >
               <FormCheck
                 className={"pause-active-switch"}
                 type="switch"
                 checked={!paMessage.paused}
                 onChange={() => {}}
+                disabled={isReadOnly}
               />
               <div
                 className={cx("switch-text", {
@@ -394,16 +411,18 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
               </div>
             </div>
           </td>
-          <td className="pa-message-table__kebab">
-            <KebabMenu>
-              <Dropdown.Item
-                className="kebab-menu-dropdown__item"
-                onClick={() => endMessage(paMessage)}
-              >
-                End Now
-              </Dropdown.Item>
-            </KebabMenu>
-          </td>
+          {!isReadOnly && (
+            <td className="pa-message-table__kebab">
+              <KebabMenu>
+                <Dropdown.Item
+                  className="kebab-menu-dropdown__item"
+                  onClick={() => endMessage(paMessage)}
+                >
+                  End Now
+                </Dropdown.Item>
+              </KebabMenu>
+            </td>
+          )}
         </>
       )}
     </tr>
