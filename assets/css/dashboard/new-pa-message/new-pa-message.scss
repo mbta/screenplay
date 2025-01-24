@@ -42,6 +42,10 @@
     }
   }
 
+  .close-button {
+    margin-right: 0;
+  }
+
   // Hide the default Bootstrap validation icons.
   .form-control.is-invalid {
     background-image: none;

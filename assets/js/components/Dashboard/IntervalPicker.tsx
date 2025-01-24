@@ -7,9 +7,15 @@ interface Props {
   interval: string;
   onChangeInterval: (interval: string) => void;
   validated: boolean;
+  disabled?: boolean;
 }
 
-const IntervalPicker = ({ interval, onChangeInterval, validated }: Props) => {
+const IntervalPicker = ({
+  interval,
+  onChangeInterval,
+  validated,
+  disabled = false,
+}: Props) => {
   return (
     <Form.Group>
       <Form.Label
@@ -30,6 +36,7 @@ const IntervalPicker = ({ interval, onChangeInterval, validated }: Props) => {
         onChange={(input) => onChangeInterval(input.target.value)}
         required
         isInvalid={validated && (!Number.isInteger(+interval) || +interval < 1)}
+        disabled={disabled}
       />
       <Form.Control.Feedback type="invalid">
         Interval value must be a positive integer

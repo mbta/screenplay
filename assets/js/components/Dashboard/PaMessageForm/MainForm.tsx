@@ -64,6 +64,7 @@ interface Props {
   paused: boolean;
   selectedTemplate: StaticTemplate | null;
   onClearSelectedTemplate: () => void;
+  isReadOnly?: boolean;
 }
 
 const MainForm = ({
@@ -103,6 +104,7 @@ const MainForm = ({
   paused,
   selectedTemplate,
   onClearSelectedTemplate,
+  isReadOnly = false,
 }: Props) => {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
@@ -172,6 +174,7 @@ const MainForm = ({
             setEndWithEffectPeriod={setEndWithEffectPeriod}
             selectedTemplate={selectedTemplate}
             onClearSelectedTemplate={onClearSelectedTemplate}
+            isReadOnly={isReadOnly}
           />
           <Card className={paMessageStyles.card}>
             <div className={paMessageStyles.cardTitle}>When</div>
@@ -198,6 +201,7 @@ const MainForm = ({
                           startDateTime.isSameOrAfter(endDateTime)) ||
                           !moment(startDate, "YYYY-MM-DD").isValid())
                       }
+                      disabled={isReadOnly}
                     />
                     {moment(startDate, "YYYY-MM-DD").isValid() ? (
                       <Form.Control.Feedback type="invalid">
@@ -218,21 +222,24 @@ const MainForm = ({
                       isInvalid={
                         validated && !moment(startTime, "HH:mm").isValid()
                       }
+                      disabled={isReadOnly}
                     />
                     <Form.Control.Feedback type="invalid">
                       Start time needs to be in the correct format
                     </Form.Control.Feedback>
                   </div>
-                  <div className={paMessageStyles.startEndItem}>
-                    <Button
-                      className={paMessageStyles.serviceTimeButton}
-                      variant="link"
-                      onClick={() => setStartTime("03:00")}
-                    >
-                      Start of service day
-                    </Button>
-                    <InfoPopover placement="top" popoverText={popoverText} />
-                  </div>
+                  {!isReadOnly && (
+                    <div className={paMessageStyles.startEndItem}>
+                      <Button
+                        className={paMessageStyles.serviceTimeButton}
+                        variant="link"
+                        onClick={() => setStartTime("03:00")}
+                      >
+                        Start of service day
+                      </Button>
+                      <InfoPopover placement="top" popoverText={popoverText} />
+                    </div>
+                  )}
                 </div>
               </Form.Group>
             </Row>
@@ -261,6 +268,7 @@ const MainForm = ({
 
                       setEndWithEffectPeriod(event.target.checked);
                     }}
+                    disabled={isReadOnly}
                   />
                 )}
                 {!endWithEffectPeriod && (
@@ -279,6 +287,7 @@ const MainForm = ({
                             endDateTime.isSameOrBefore(moment())) ||
                             !moment(endDate, "YYYY-MM-DD").isValid())
                         }
+                        disabled={isReadOnly}
                       />
                       {moment(endDate, "YYYY-MM-DD").isValid() ? (
                         <Form.Control.Feedback type="invalid">
@@ -297,33 +306,39 @@ const MainForm = ({
                         value={endTime}
                         onChange={(event) => setEndTime(event.target.value)}
                         isInvalid={isEndTimeInvalid}
+                        disabled={isReadOnly}
                       />
                       <Form.Control.Feedback type="invalid">
                         End time needs to be in the correct format
                       </Form.Control.Feedback>
                     </div>
-                    <div className={paMessageStyles.startEndItem}>
-                      <Button
-                        className={paMessageStyles.serviceTimeButton}
-                        variant="link"
-                        onClick={() => {
-                          if (isEndTimeInvalid) return;
+                    {!isReadOnly && (
+                      <div className={paMessageStyles.startEndItem}>
+                        <Button
+                          className={paMessageStyles.serviceTimeButton}
+                          variant="link"
+                          onClick={() => {
+                            if (isEndTimeInvalid) return;
 
-                          if (moment(endTime, "HH:mm").hour() >= 3) {
-                            setEndDate(
-                              moment(endDate, "YYYY-MM-DD")
-                                .add(1, "d")
-                                .format("YYYY-MM-DD"),
-                            );
-                          }
+                            if (moment(endTime, "HH:mm").hour() >= 3) {
+                              setEndDate(
+                                moment(endDate, "YYYY-MM-DD")
+                                  .add(1, "d")
+                                  .format("YYYY-MM-DD"),
+                              );
+                            }
 
-                          setEndTime("03:00");
-                        }}
-                      >
-                        End of service day
-                      </Button>
-                      <InfoPopover placement="top" popoverText={popoverText} />
-                    </div>
+                            setEndTime("03:00");
+                          }}
+                        >
+                          End of service day
+                        </Button>
+                        <InfoPopover
+                          placement="top"
+                          popoverText={popoverText}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </Form.Group>
@@ -335,6 +350,7 @@ const MainForm = ({
                 error={
                   validated && !days.length ? "Select at least one day" : null
                 }
+                disabled={isReadOnly}
               />
             </Row>
             <Row md="auto">
@@ -342,6 +358,7 @@ const MainForm = ({
                 <PriorityPicker
                   priority={priority}
                   onSelectPriority={setPriority}
+                  disabled={isReadOnly}
                 />
               </Col>
               <Col>
@@ -349,6 +366,7 @@ const MainForm = ({
                   interval={interval}
                   onChangeInterval={setInterval}
                   validated={validated}
+                  disabled={isReadOnly}
                 />
               </Col>
             </Row>
@@ -363,14 +381,17 @@ const MainForm = ({
                   onChange={setSignIds}
                   busRoutes={busRoutes}
                   onTagClick={() => navigateTo(Page.STATIONS)}
+                  isReadOnly={isReadOnly}
                 />
               )}
-              <Button
-                className={paMessageStyles.addStationsZonesButton}
-                onClick={() => navigateTo(Page.STATIONS)}
-              >
-                <PlusLg width={12} height={12} /> Add Stations & Zones
-              </Button>
+              {!isReadOnly && (
+                <Button
+                  className={paMessageStyles.addStationsZonesButton}
+                  onClick={() => navigateTo(Page.STATIONS)}
+                >
+                  <PlusLg width={12} height={12} /> Add Stations & Zones
+                </Button>
+              )}
             </div>
             {validated && signIds.length === 0 && (
               <div className="validation-error">
@@ -385,7 +406,7 @@ const MainForm = ({
                 <MessageTextBox
                   id="visual-text-box"
                   text={visualText}
-                  disabled={selectedTemplate !== null}
+                  disabled={selectedTemplate !== null || isReadOnly}
                   onChangeText={(text) => {
                     setVisualText(text);
                     if (audioState !== AudioPreview.Unreviewed) {
@@ -402,7 +423,9 @@ const MainForm = ({
               <Col md="auto" className={paMessageStyles.copyButtonCol}>
                 <Button
                   disabled={
-                    visualText.length === 0 || selectedTemplate !== null
+                    visualText.length === 0 ||
+                    selectedTemplate !== null ||
+                    isReadOnly
                   }
                   className={paMessageStyles.copyTextButton}
                   onClick={() => {
@@ -429,7 +452,9 @@ const MainForm = ({
                         }
                       }}
                       disabled={
-                        phoneticText.length === 0 || selectedTemplate !== null
+                        phoneticText.length === 0 ||
+                        selectedTemplate !== null ||
+                        isReadOnly
                       }
                       className="mb-2"
                       label="Phonetic Audio"
@@ -473,22 +498,26 @@ const MainForm = ({
             className={cx("justify-content-end", paMessageStyles.formButtons)}
           >
             <Button
-              className={cx("cancel-button", paMessageStyles.formButton)}
+              className={cx("cancel-button", paMessageStyles.formButton, {
+                "button-primary close-button": isReadOnly,
+              })}
               onClick={() =>
                 window.history.length > 1 ? navigate(-1) : window.close()
               }
             >
-              Cancel
+              {isReadOnly ? "Close" : "Cancel"}
             </Button>
-            <Button
-              type="submit"
-              className={cx(
-                "submit-button button-primary",
-                paMessageStyles.formButton,
-              )}
-            >
-              Submit
-            </Button>
+            {!isReadOnly && (
+              <Button
+                type="submit"
+                className={cx(
+                  "submit-button button-primary",
+                  paMessageStyles.formButton,
+                )}
+              >
+                Submit
+              </Button>
+            )}
           </Row>
         </Container>
       </Form>
@@ -549,6 +578,7 @@ interface NewPaMessageHeaderProps {
   setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
   selectedTemplate: StaticTemplate | null;
   onClearSelectedTemplate: () => void;
+  isReadOnly: boolean;
 }
 
 const NewPaMessageHeader = ({
@@ -558,6 +588,7 @@ const NewPaMessageHeader = ({
   setEndWithEffectPeriod,
   selectedTemplate,
   onClearSelectedTemplate,
+  isReadOnly,
 }: NewPaMessageHeaderProps) => {
   const formatActivePeriod = (activePeriods: ActivePeriod[]) => {
     const [start, end] = getAlertEarliestStartLatestEnd(activePeriods);
@@ -589,15 +620,17 @@ const NewPaMessageHeader = ({
               ? associatedAlert
               : associatedAlert.id}
           </span>
-          <Button
-            variant="link"
-            className={paMessageStyles.clearAlertButton}
-            onClick={() => {
-              onClearAssociatedAlert();
-            }}
-          >
-            Clear
-          </Button>
+          {!isReadOnly && (
+            <Button
+              variant="link"
+              className={paMessageStyles.clearAlertButton}
+              onClick={() => {
+                onClearAssociatedAlert();
+              }}
+            >
+              Clear
+            </Button>
+          )}
         </div>
         {typeof associatedAlert === "string" ? (
           <div className={cx("mt-1", paMessageStyles.alertEndedText)}>
@@ -620,13 +653,15 @@ const NewPaMessageHeader = ({
           Template: {formatMessageType(selectedTemplate.type)} -{" "}
           {selectedTemplate.title}
         </span>
-        <Button
-          variant="link"
-          onClick={onClearSelectedTemplate}
-          className={paMessageStyles.clearAlertButton}
-        >
-          Clear
-        </Button>
+        {!isReadOnly && (
+          <Button
+            variant="link"
+            onClick={onClearSelectedTemplate}
+            className={paMessageStyles.clearAlertButton}
+          >
+            Clear
+          </Button>
+        )}
       </div>
     );
   } else {
@@ -637,27 +672,31 @@ const NewPaMessageHeader = ({
           paMessageStyles.alertHeader,
         )}
       >
-        <Button
-          variant="link"
-          className={cx("ps-0", paMessageStyles.associateButton)}
-          onClick={() => {
-            setEndWithEffectPeriod(true);
-            navigateTo(Page.ALERTS);
-          }}
-        >
-          Associate with alert
-        </Button>
-        <span className={paMessageStyles.larger}>|</span>
-        <Button
-          variant="link"
-          className={paMessageStyles.associateButton}
-          onClick={() => {
-            navigateTo(Page.TEMPLATES);
-          }}
-        >
-          Select PSA or Emergency template
-        </Button>
-        <span className={paMessageStyles.larger}>(Optional)</span>
+        {!isReadOnly && (
+          <>
+            <Button
+              variant="link"
+              className={cx("ps-0", paMessageStyles.associateButton)}
+              onClick={() => {
+                setEndWithEffectPeriod(true);
+                navigateTo(Page.ALERTS);
+              }}
+            >
+              Associate with alert
+            </Button>
+            <span className={paMessageStyles.larger}>|</span>
+            <Button
+              variant="link"
+              className={paMessageStyles.associateButton}
+              onClick={() => {
+                navigateTo(Page.TEMPLATES);
+              }}
+            >
+              Select PSA or Emergency template
+            </Button>
+            <span className={paMessageStyles.larger}>(Optional)</span>
+          </>
+        )}
       </div>
     );
   }

@@ -39,6 +39,7 @@ interface Props {
   defaultTemplate?: StaticTemplate | null;
   defaultAudioState?: AudioPreview;
   paused: boolean;
+  isReadOnly?: boolean;
 }
 
 const PaMessageForm = ({
@@ -53,6 +54,7 @@ const PaMessageForm = ({
   defaultTemplate,
   defaultAudioState,
   paused,
+  isReadOnly = false,
 }: Props) => {
   const [page, setPage] = useState<Page>(Page.MAIN);
   const now = moment();
@@ -250,6 +252,7 @@ const PaMessageForm = ({
           paused,
           selectedTemplate,
           onClearSelectedTemplate,
+          isReadOnly,
         }}
       />
       {[Page.STATIONS, Page.ZONES].includes(page) && (
@@ -262,6 +265,7 @@ const PaMessageForm = ({
             navigateTo={setPage}
             busRoutes={busRoutes}
             onError={onError}
+            isReadOnly={isReadOnly}
           />
         </div>
       )}

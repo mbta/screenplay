@@ -149,6 +149,12 @@
   --bs-body-bg: #{$dark-bg};
   --bs-body-color: #{$text-secondary};
   --bs-border-color: #{$border-primary};
+
+  &:disabled {
+    border-color: $bg-elevation-5;
+    background-color: $bg-elevation-4;
+  }
+
   &[type="number"] {
     -moz-appearance: textfield; /* Firefox */
     appearance: textfield;
@@ -182,6 +188,10 @@
 .startEndItem {
   flex: 0 1 250px;
 }
+
+// .disabledInput {
+//   border-color: $bg-elevation-5;
+// }
 
 .dropdown {
   :global(.dropdown-toggle) {

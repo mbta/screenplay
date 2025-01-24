@@ -7,6 +7,7 @@ import { updateExistingPaMessage } from "Utils/api";
 import { Alert } from "Models/alert";
 import { AudioPreview } from "Components/PaMessageForm/types";
 import { STATIC_TEMPLATES } from "Components/PaMessageForm/StaticTemplatePage";
+import { isPaMessageAdmin } from "Utils/auth";
 
 const useAlert = (id: string | null | undefined) => {
   const { data: alerts, isLoading } = useSWR<Array<Alert>>(
@@ -94,11 +95,12 @@ const EditPaMessage = ({ paMessage, alert }: Props) => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  const isReadOnly = !isPaMessageAdmin();
 
   return (
     <PaMessageForm
       key={paMessage.updated_at}
-      title="Edit PA/ESS message"
+      title={`${isReadOnly ? "View" : "Edit"} PA/ESS message`}
       errors={errors}
       errorMessage={errorMessage}
       onError={setErrorMessage}
@@ -124,6 +126,7 @@ const EditPaMessage = ({ paMessage, alert }: Props) => {
           }
         }
       }}
+      isReadOnly={isReadOnly}
     />
   );
 };
