@@ -13,6 +13,7 @@ interface Props {
   page: Page;
   busRoutes: string[];
   onError: (message: string | null) => void;
+  isReadOnly?: boolean;
 }
 
 const SelectStationsAndZones = ({
@@ -23,6 +24,7 @@ const SelectStationsAndZones = ({
   page,
   busRoutes,
   onError,
+  isReadOnly = false,
 }: Props) => {
   const dispatch = useScreenplayDispatchContext();
   const [signIds, setSignIds] = useState(value);
@@ -41,6 +43,7 @@ const SelectStationsAndZones = ({
       onChange={setSignIds}
       busRoutes={busRoutes}
       onError={onError}
+      isReadOnly={isReadOnly}
     />
   ) : (
     <SelectZonesPage
@@ -49,6 +52,7 @@ const SelectStationsAndZones = ({
       onChange={setSignIds}
       places={places}
       onSubmit={onChange}
+      isReadOnly={isReadOnly}
     />
   );
 };

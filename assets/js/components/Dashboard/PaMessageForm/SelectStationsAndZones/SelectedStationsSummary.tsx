@@ -8,6 +8,7 @@ interface Props {
   onChange: (signIds: string[]) => void;
   places: Place[];
   busRoutes: string[];
+  isReadOnly?: boolean;
 }
 
 const SelectedStationsSummary = ({
@@ -15,6 +16,7 @@ const SelectedStationsSummary = ({
   places,
   busRoutes,
   onChange,
+  isReadOnly = false,
 }: Props) => {
   return (
     <div className="selected-stations-summary">
@@ -29,6 +31,7 @@ const SelectedStationsSummary = ({
             value={value}
             onChange={onChange}
             busRoutes={busRoutes}
+            isReadOnly={isReadOnly}
           />
         </div>
       )}

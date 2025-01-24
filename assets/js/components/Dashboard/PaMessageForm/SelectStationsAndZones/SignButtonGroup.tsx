@@ -7,17 +7,20 @@ import cx from "classnames";
 type SelectSignButtonProps = React.PropsWithChildren<{
   isSelected: boolean;
   onClick: () => void;
+  disabled?: boolean;
 }>;
 
 const SelectSignButton = ({
   isSelected,
   onClick,
   children,
+  disabled = false,
 }: SelectSignButtonProps) => {
   return (
     <Button
       className={cx("button-primary-outline", { "button-active": isSelected })}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </Button>
@@ -30,6 +33,7 @@ interface SignButtonGroupProps {
   leftIcon?: ReactElement;
   rightIcon?: ReactElement;
   allSelectedSigns: string[];
+  disabled?: boolean;
 }
 
 const SignButtonGroup = ({
@@ -38,6 +42,7 @@ const SignButtonGroup = ({
   leftIcon,
   rightIcon,
   allSelectedSigns,
+  disabled = false,
 }: SignButtonGroupProps) => {
   return (
     <div className="sign-button-group">
@@ -49,6 +54,7 @@ const SignButtonGroup = ({
               onSignButtonClick(sign.id);
             }}
             isSelected={allSelectedSigns.includes(sign.id)}
+            disabled={disabled}
           >
             {leftIcon} {sign.label ?? getZoneLabel(sign.zone ?? "")} {rightIcon}
           </SelectSignButton>

@@ -36,6 +36,7 @@ interface Props {
   navigateTo: (page: Page) => void;
   busRoutes: string[];
   onError: (message: string | null) => void;
+  isReadOnly?: boolean;
 }
 
 const SelectStationsPage = ({
@@ -45,6 +46,7 @@ const SelectStationsPage = ({
   navigateTo,
   busRoutes,
   onError,
+  isReadOnly = false,
 }: Props) => {
   const routeNameToRouteIds = useRouteToRouteIDsMap();
 
@@ -85,13 +87,13 @@ const SelectStationsPage = ({
   return (
     <div className="select-stations-page">
       <div className="header">
-        <div>Select Stations</div>
+        <div>{isReadOnly ? "Stations" : "Select Stations"}</div>
         <div className="buttons">
           <Button
             className="cancel-button"
             onClick={() => navigateTo(Page.MAIN)}
           >
-            Cancel
+            {isReadOnly ? "Back" : "Cancel"}
           </Button>
           <Button
             className="submit-button button-primary"
@@ -112,6 +114,7 @@ const SelectStationsPage = ({
         value={value}
         onChange={onChange}
         busRoutes={busRoutes}
+        isReadOnly={isReadOnly}
       />
       <Container fluid>
         <div className="station-groups-col col">
@@ -127,6 +130,7 @@ const SelectStationsPage = ({
                 stations={GL_CENTRAL_SUBWAY}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <StationGroupCheckbox
                 title="GL D Branch"
@@ -136,6 +140,7 @@ const SelectStationsPage = ({
                 stations={GL_D_BRANCH}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <StationGroupCheckbox
                 title="GL E Branch"
@@ -145,6 +150,7 @@ const SelectStationsPage = ({
                 stations={GL_E_BRANCH}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <StationGroupCheckbox
                 title="GLX"
@@ -154,6 +160,7 @@ const SelectStationsPage = ({
                 stations={GLX}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <hr />
             </div>
@@ -167,6 +174,7 @@ const SelectStationsPage = ({
                 stations={RED_BRAINTREE_BRANCH}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <StationGroupCheckbox
                 title="Ashmont Branch"
@@ -176,6 +184,7 @@ const SelectStationsPage = ({
                 stations={RED_ASHMONT_BRANCH}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <StationGroupCheckbox
                 title="Red Line Trunk"
@@ -185,6 +194,7 @@ const SelectStationsPage = ({
                 stations={RED_TRUNK}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <hr />
             </div>
@@ -198,6 +208,7 @@ const SelectStationsPage = ({
                 stations={ORANGE_NORTH}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
               <StationGroupCheckbox
                 title="South"
@@ -207,6 +218,7 @@ const SelectStationsPage = ({
                 stations={ORANGE_SOUTH}
                 value={value}
                 onChange={onChange}
+                disabled={isReadOnly}
               />
             </div>
           </div>
@@ -225,6 +237,7 @@ const SelectStationsPage = ({
               }
             }}
             checked={greenLineSignIds.every((signId) => value.includes(signId))}
+            disabled={isReadOnly}
           />
 
           <div className="branches-col">
@@ -241,6 +254,7 @@ const SelectStationsPage = ({
                   places={placesByRoute[route]}
                   value={value}
                   onChange={onChange}
+                  disabled={isReadOnly}
                 />
               );
             })}
@@ -260,6 +274,7 @@ const SelectStationsPage = ({
               value={value}
               onChange={onChange}
               reverse={route === "Blue"}
+              disabled={isReadOnly}
             />
           </div>
         ))}
@@ -271,6 +286,7 @@ const SelectStationsPage = ({
             places={placesByRoute["Bus"]}
             value={value}
             onChange={onChange}
+            disabled={isReadOnly}
           />
         </div>
       </Container>

@@ -12,6 +12,7 @@ const RouteColumn = ({
   value,
   onChange,
   reverse = false,
+  disabled = false,
 }: {
   label: string;
   routeIds: string[];
@@ -20,6 +21,7 @@ const RouteColumn = ({
   value: string[];
   onChange: (signIds: string[]) => void;
   reverse?: boolean;
+  disabled?: boolean;
 }) => {
   const signsIdsAtRoutes = places.flatMap((place) =>
     place.screens
@@ -46,6 +48,7 @@ const RouteColumn = ({
             }
           }}
           checked={signsIdsAtRoutes.every((signId) => value.includes(signId))}
+          disabled={disabled}
         />
       </div>
       <div className="col-content">
@@ -74,6 +77,7 @@ const RouteColumn = ({
                 checked={value.some((signId) =>
                   signIdsAtPlace.includes(signId),
                 )}
+                disabled={disabled}
               />
             </div>
           );
