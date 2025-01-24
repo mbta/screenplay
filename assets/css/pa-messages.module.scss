@@ -189,10 +189,6 @@
   flex: 0 1 250px;
 }
 
-// .disabledInput {
-//   border-color: $bg-elevation-5;
-// }
-
 .dropdown {
   :global(.dropdown-toggle) {
     @include flat-button;
