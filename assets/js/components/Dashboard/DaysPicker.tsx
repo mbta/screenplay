@@ -41,9 +41,10 @@ interface Props {
   days: number[];
   onChangeDays: (days: number[]) => void;
   error: string | null;
+  disabled?: boolean;
 }
 
-const DaysPicker = ({ days, onChangeDays, error }: Props) => {
+const DaysPicker = ({ days, onChangeDays, error, disabled = false }: Props) => {
   const [dayLabel, setDayLabel] = useState(
     fp.find(
       ({ value }) => fp.isEqual(value, fp.sortBy(fp.identity, days)),
@@ -81,6 +82,7 @@ const DaysPicker = ({ days, onChangeDays, error }: Props) => {
             <Dropdown.Toggle
               id="days-picker"
               className="w-100 d-flex align-items-center justify-content-between"
+              disabled={disabled}
             >
               {dayLabel}
             </Dropdown.Toggle>

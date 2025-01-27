@@ -32,6 +32,7 @@ interface Props {
   onSubmit: (signIds: string[]) => void;
   navigateTo: (page: Page) => void;
   places: Place[];
+  isReadOnly?: boolean;
 }
 
 const SelectZonesPage = ({
@@ -40,6 +41,7 @@ const SelectZonesPage = ({
   onSubmit,
   navigateTo,
   places,
+  isReadOnly = false,
 }: Props) => {
   const routeToRouteIDMap = useRouteToRouteIDsMap();
   const getInitialPlacesWithSelectedSigns = () =>
@@ -190,17 +192,19 @@ const SelectZonesPage = ({
               className="edit-button"
               onClick={() => navigateTo(Page.STATIONS)}
             >
-              Edit Stations
+              {isReadOnly ? "Return to Select" : "Edit"} Stations
             </Button>
           </div>
         </div>
         <div className="buttons">
-          <Button
-            className="cancel-button"
-            onClick={() => navigateTo(Page.MAIN)}
-          >
-            Cancel
-          </Button>
+          {!isReadOnly && (
+            <Button
+              className="cancel-button"
+              onClick={() => navigateTo(Page.MAIN)}
+            >
+              Cancel
+            </Button>
+          )}
           <Button
             className="button-primary"
             onClick={() => {
@@ -276,6 +280,7 @@ const SelectZonesPage = ({
                   onClick={() =>
                     onChange(fp.uniq([...value, ...signIDs(allScreens)]))
                   }
+                  disabled={isReadOnly}
                 >
                   {massSelectButtonLabels.left}
                 </Button>
@@ -284,6 +289,7 @@ const SelectZonesPage = ({
                     "button-active": isLeftSelected,
                   })}
                   onClick={() => selectDirectionGroup(0)}
+                  disabled={isReadOnly}
                 >
                   {massSelectButtonLabels.middle}
                 </Button>
@@ -292,6 +298,7 @@ const SelectZonesPage = ({
                     "button-active": isRightSelected,
                   })}
                   onClick={() => selectDirectionGroup(1)}
+                  disabled={isReadOnly}
                 >
                   {massSelectButtonLabels.right}
                 </Button>
@@ -350,6 +357,7 @@ const SelectZonesPage = ({
                         rightZones={signsGroupedByZone.right}
                         route={selectedRouteFilter}
                         branches={branches}
+                        disabled={isReadOnly}
                       />
                       {selectedRouteFilter !== "Bus" && (
                         <PlaceZonesRow
@@ -361,6 +369,7 @@ const SelectZonesPage = ({
                           middleZones={busSignsGroupedByZone.middle}
                           rightZones={busSignsGroupedByZone.right}
                           route={"Bus"}
+                          disabled={isReadOnly}
                         />
                       )}
                     </Fragment>

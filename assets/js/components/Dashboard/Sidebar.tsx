@@ -58,9 +58,6 @@ const Sidebar = () => {
   const isScreensAdmin = !!document.querySelector(
     "meta[name=is-screens-admin]",
   );
-  const isPaMessageAdmin = !!document.querySelector(
-    "meta[name=is-pa-message-admin]",
-  );
   const environment =
     document
       .querySelector("meta[name=environment-name]")
@@ -88,15 +85,9 @@ const Sidebar = () => {
       >
         Posted Alerts
       </SidebarLink>
-      {isPaMessageAdmin && (
-        <SidebarLink
-          to="/pa-messages"
-          icon={VolumeUp}
-          activeIcon={VolumeUpFill}
-        >
-          PA/ESS
-        </SidebarLink>
-      )}
+      <SidebarLink to="/pa-messages" icon={VolumeUp} activeIcon={VolumeUpFill}>
+        PA/ESS
+      </SidebarLink>
       <SidebarLink
         to="/emergency-takeover"
         icon={Lightning}

@@ -12,6 +12,7 @@ interface Props {
   stations: string[];
   value: string[];
   onChange: (signIds: string[]) => void;
+  disabled?: boolean;
 }
 
 const StationGroupCheckbox = ({
@@ -22,6 +23,7 @@ const StationGroupCheckbox = ({
   stations,
   value,
   onChange,
+  disabled = false,
 }: Props) => {
   const signIds = places
     .filter((place) => stations.includes(place.id))
@@ -50,6 +52,7 @@ const StationGroupCheckbox = ({
           }
         }}
         checked={signIds.every((signId) => value.includes(signId))}
+        disabled={disabled}
       />
     </div>
   );

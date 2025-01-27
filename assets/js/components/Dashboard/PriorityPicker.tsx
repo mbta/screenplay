@@ -5,8 +5,13 @@ import * as paMessageStyles from "Styles/pa-messages.module.scss";
 interface Props {
   priority: number;
   onSelectPriority: (priority: number) => void;
+  disabled?: boolean;
 }
-const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
+const PriorityPicker = ({
+  priority,
+  onSelectPriority,
+  disabled = false,
+}: Props) => {
   return (
     <Form.Group>
       <Form.Label
@@ -20,7 +25,9 @@ const PriorityPicker = ({ priority, onSelectPriority }: Props) => {
           className={paMessageStyles.dropdown}
           onSelect={(eventKey) => onSelectPriority(Number(eventKey))}
         >
-          <Dropdown.Toggle id="priority-picker">{priority}</Dropdown.Toggle>
+          <Dropdown.Toggle id="priority-picker" disabled={disabled}>
+            {priority}
+          </Dropdown.Toggle>
           <Dropdown.Menu role="listbox">
             {[
               "Emergency",

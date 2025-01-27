@@ -17,6 +17,7 @@ interface PlaceZonesRow {
   rightZones: Screen[];
   route: string;
   branches?: string[];
+  disabled?: boolean;
 }
 
 const PlaceZonesRow = ({
@@ -29,6 +30,7 @@ const PlaceZonesRow = ({
   rightZones,
   route,
   branches = [],
+  disabled = false,
 }: PlaceZonesRow) => {
   if (allSignsForRouteAtPlace.length === 0) return null;
 
@@ -76,6 +78,7 @@ const PlaceZonesRow = ({
               );
             }
           }}
+          disabled={disabled}
         >
           All
         </Button>
@@ -86,6 +89,7 @@ const PlaceZonesRow = ({
           onSignButtonClick={onSignButtonClick}
           leftIcon={<ArrowLeftShort />}
           allSelectedSigns={allSelectedSigns}
+          disabled={disabled}
         />
       </td>
       <td className="cell middle-cell">
@@ -93,6 +97,7 @@ const PlaceZonesRow = ({
           signs={middleZones}
           onSignButtonClick={onSignButtonClick}
           allSelectedSigns={allSelectedSigns}
+          disabled={disabled}
         />
       </td>
       <td className="cell right-cell">
@@ -101,6 +106,7 @@ const PlaceZonesRow = ({
           onSignButtonClick={onSignButtonClick}
           rightIcon={<ArrowRightShort />}
           allSelectedSigns={allSelectedSigns}
+          disabled={disabled}
         />
       </td>
     </tr>

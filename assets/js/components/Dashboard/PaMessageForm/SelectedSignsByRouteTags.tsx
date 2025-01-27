@@ -13,11 +13,13 @@ const SelectedGroupTag = ({
   routeId,
   onRemove,
   onTagClick,
+  isReadOnly = false,
 }: {
   numPlaces: number;
   routeId: string;
   onRemove: () => void;
   onTagClick: () => void;
+  isReadOnly?: boolean;
 }) => {
   if (numPlaces === 0) return null;
 
@@ -28,10 +30,12 @@ const SelectedGroupTag = ({
       <span className="label" onClick={onTagClick}>
         {routeId}: {pluralize("Station", numPlaces, true)}
       </span>
-      <X
-        className={cx("x-button", { "text-inverted": routeId === "Bus" })}
-        onClick={onRemove}
-      />
+      {!isReadOnly && (
+        <X
+          className={cx("x-button", { "text-inverted": routeId === "Bus" })}
+          onClick={onRemove}
+        />
+      )}
     </div>
   );
 };
@@ -42,6 +46,7 @@ interface Props {
   places: Place[];
   busRoutes: string[];
   onTagClick?: () => void;
+  isReadOnly?: boolean;
 }
 
 const SelectedSignsByRouteTags = ({
@@ -50,6 +55,7 @@ const SelectedSignsByRouteTags = ({
   onChange,
   busRoutes,
   onTagClick = () => {},
+  isReadOnly = false,
 }: Props) => {
   const placesWithSelectedScreens = usePlacesWithSelectedScreens(places, value);
   const removeFilteredScreens = (filterFn: (routeId: string) => boolean) => {
@@ -81,6 +87,7 @@ const SelectedSignsByRouteTags = ({
             removeFilteredScreens((r) => r.startsWith(routeId));
           }}
           onTagClick={onTagClick}
+          isReadOnly={isReadOnly}
         />
       ))}
       <SelectedGroupTag
@@ -92,6 +99,7 @@ const SelectedSignsByRouteTags = ({
           getPlacesFromFilter(placesWithSelectedScreens, isSilverLine);
         }}
         onTagClick={onTagClick}
+        isReadOnly={isReadOnly}
       />
       <SelectedGroupTag
         numPlaces={getPlacesFromFilter(placesWithSelectedScreens, isBus).length}
@@ -100,6 +108,7 @@ const SelectedSignsByRouteTags = ({
           removeFilteredScreens(isBus);
         }}
         onTagClick={onTagClick}
+        isReadOnly={isReadOnly}
       />
     </>
   );

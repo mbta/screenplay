@@ -127,6 +127,12 @@
           .btn {
             padding: 6px 12px;
             height: fit-content;
+
+            &:disabled:not(.button-active) {
+              background-color: inherit;
+              border-color: inherit;
+              color: $text-secondary;
+            }
           }
         }
       }
@@ -222,6 +228,12 @@
           .btn {
             padding: 6px 12px;
             height: fit-content;
+
+            &:disabled:not(.button-active) {
+              background-color: inherit;
+              border-color: inherit;
+              color: $text-secondary;
+            }
           }
         }
       }
