@@ -161,19 +161,19 @@ const PaMessagesPage: ComponentType = () => {
             </section>
             <FilterGroup
               className="mb-5"
-              header="Filter by message state"
+              header="Message state"
               onFilterSelect={(selected) =>
                 setStateFilter(selected as StateFilter)
               }
               selectedFilter={stateFilter.toLowerCase()}
               filters={[
-                { label: "Now", value: "current" },
+                { label: "Live", value: "current" },
                 { label: "Future", value: "future" },
-                { label: "Done", value: "past" },
+                { label: "Past", value: "past" },
               ]}
             />
             <FilterGroup
-              header="Filter by service type"
+              header="Service type"
               onFilterSelect={(selected) => {
                 const serviceType = selected as ServiceType;
                 if (serviceType === "All") {

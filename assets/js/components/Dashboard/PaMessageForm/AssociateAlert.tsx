@@ -65,7 +65,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
               selectedFilter={selectedMessageState}
               onFilterSelect={setSelectedMessageState}
               filters={[
-                { label: "Active", value: "active" },
+                { label: "Live", value: "active" },
                 { label: "Future", value: "future" },
               ]}
             />
