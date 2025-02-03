@@ -76,7 +76,7 @@ defmodule ScreenplayWeb.Router do
   # PA Message Management
 
   scope "/pa-messages", ScreenplayWeb do
-    pipe_through([:browser, :authenticate, :ensure_pa_message_admin])
+    pipe_through([:browser, :authenticate])
 
     get("/", PaMessagesController, :index)
     get("/new", PaMessagesController, :index)
@@ -90,10 +90,16 @@ defmodule ScreenplayWeb.Router do
   end
 
   scope "/api/pa-messages", ScreenplayWeb do
-    pipe_through([:api, :authenticate, :ensure_pa_message_admin])
+    pipe_through([:api, :authenticate])
 
     get("/preview_audio", PaMessagesApiController, :preview_audio)
-    resources("/", PaMessagesApiController, only: [:index, :show, :create, :update])
+    resources("/", PaMessagesApiController, only: [:index, :show])
+  end
+
+  scope "/api/pa-messages", ScreenplayWeb do
+    pipe_through([:api, :authenticate, :ensure_pa_message_admin])
+
+    resources("/", PaMessagesApiController, only: [:create, :update])
   end
 
   # Permanent Configuration
