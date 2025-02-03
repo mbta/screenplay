@@ -38,18 +38,23 @@
 
 .associate-alert-table {
   margin: 0 40px;
+  background-color: $cool-gray-15;
   max-width: 1096px;
 
   th,
   td {
     padding: 8px 16px;
-    border-bottom: 1px solid $cool-gray-40;
     vertical-align: top;
   }
 
   th {
     padding-top: 24px;
     height: 56px;
+    border-bottom: 1px solid $cool-gray-40;
+  }
+
+  td {
+    border-bottom: 1px solid $bg-elevation-4;
   }
 
   &__row {

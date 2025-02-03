@@ -48,7 +48,8 @@
         .header-row {
           height: 55px;
           vertical-align: bottom;
-          border-bottom: 1px solid $border-primary;
+          border-bottom: 1px solid $cool-gray-40;
+          background-color: $cool-gray-15;
 
           .message-column-header {
             padding-bottom: 8px;
@@ -58,7 +59,7 @@
 
         .template-row {
           background-color: $cool-gray-15;
-          border-bottom: 1px solid $divider-secondary;
+          border-bottom: 1px solid $bg-elevation-4;
 
           .title {
             font-weight: 700;
