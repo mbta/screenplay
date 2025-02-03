@@ -80,7 +80,6 @@ defmodule ScreenplayWeb.Router do
 
     get("/", PaMessagesController, :index)
     get("/new", PaMessagesController, :index)
-    get("/new/associate-alert", PaMessagesController, :index)
     get("/:id/edit", PaMessagesController, :index)
   end
 
