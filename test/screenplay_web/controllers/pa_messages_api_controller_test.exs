@@ -38,7 +38,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   end
 
   describe "GET /api/pa-messages" do
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "responds with a list of all messages", %{conn: conn} do
       assert [] =
                conn
@@ -67,7 +67,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> json_response(200)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "responds with only the active messages when filtered by state=current", %{conn: conn} do
       now = "2024-08-06T15:10:00Z"
 
@@ -98,7 +98,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> json_response(200)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "responds with only the past messages when filtered by state=past", %{conn: conn} do
       now = "2024-08-06T15:10:00Z"
 
@@ -129,7 +129,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> json_response(200)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "responds with only the future messages when filtered by state=future", %{conn: conn} do
       now = "2024-08-06T15:10:00Z"
 
@@ -160,7 +160,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> json_response(200)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "supports filtering by included sign ids", %{conn: conn} do
       insert(:pa_message, %{
         id: 1,
@@ -230,7 +230,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       end)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "supports filtering by included route ids", %{conn: conn} do
       insert(:pa_message, %{
         id: 1,
@@ -281,48 +281,44 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   end
 
   describe "POST /api/pa-messages" do
+    @now ~U[2024-08-07T12:12:12Z]
+
+    @valid_params %{
+      start_datetime: @now,
+      end_datetime: DateTime.add(@now, 60),
+      days_of_week: [1, 2, 3],
+      sign_ids: ["test_sign"],
+      priority: 1,
+      interval_in_minutes: 4,
+      visual_text: "Visual Text",
+      audio_text: "Audio Text"
+    }
+
     @tag :authenticated_pa_message_admin
     test "creates a new PaMessage", %{conn: conn} do
-      now = ~U[2024-08-07T12:12:12Z]
-
       assert %{"success" => true} =
                conn
-               |> post("/api/pa-messages", %{
-                 start_datetime: now,
-                 end_datetime: DateTime.add(now, 60),
-                 days_of_week: [1, 2, 3],
-                 sign_ids: ["test_sign"],
-                 priority: 1,
-                 interval_in_minutes: 4,
-                 visual_text: "Visual Text",
-                 audio_text: "Audio Text"
-               })
+               |> post("/api/pa-messages", @valid_params)
                |> json_response(200)
     end
 
     @tag :authenticated_pa_message_admin
     test "returns an error object when passed invalid params", %{conn: conn} do
-      now = ~U[2024-08-07T12:12:12Z]
-
       assert %{"errors" => _} =
                conn
-               |> post("/api/pa-messages", %{
-                 start_datetime: now,
-                 end_datetime: DateTime.add(now, 60),
-                 days_of_week: [1, 2, 3, 90],
-                 sign_ids: ["test_sign"],
-                 priority: 1,
-                 interval_in_minutes: 4,
-                 visual_text: "Visual Text",
-                 audio_text: "Audio Text"
-               })
+               |> post("/api/pa-messages", %{@valid_params | days_of_week: [1, 2, 3, 90]})
                |> json_response(422)
+    end
+
+    @tag :authenticated
+    test "requires the PA message admin role", %{conn: conn} do
+      conn = post(conn, "/api/pa-messages", @valid_params)
+      assert response(conn, :unauthorized)
     end
   end
 
   describe "PUT /api/pa-messages/:id" do
-    @tag :authenticated_pa_message_admin
-    test "updates a pa message and returns the updated pa message", %{conn: conn} do
+    setup do
       insert(:pa_message, %{
         id: 1,
         start_datetime: ~U[2024-05-01T01:00:00Z],
@@ -333,11 +329,14 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
         audio_text: "Audio Text"
       })
 
+      :ok
+    end
+
+    @tag :authenticated_pa_message_admin
+    test "updates a pa message and returns the updated pa message", %{conn: conn} do
       assert %{"id" => 1, "visual_text" => "Updated Visual Text"} =
                conn
-               |> put("/api/pa-messages/1", %{
-                 visual_text: "Updated Visual Text"
-               })
+               |> put("/api/pa-messages/1", %{visual_text: "Updated Visual Text"})
                |> json_response(200)
     end
 
@@ -348,10 +347,16 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
                |> put("/api/pa-messages/1337", %{visual_text: "Updated Visual Text"})
                |> json_response(404)
     end
+
+    @tag :authenticated
+    test "requires the PA message admin role", %{conn: conn} do
+      conn = put(conn, "/api/pa-messages/1", %{visual_text: "Updated Visual Text"})
+      assert response(conn, :unauthorized)
+    end
   end
 
   describe "GET /api/pa-messages/:id" do
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "returns the PA message with the given ID", %{conn: conn} do
       insert(:pa_message, %{
         id: 1,
@@ -366,7 +371,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       assert %{"id" => 1} = conn |> get("/api/pa-messages/1") |> json_response(200)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "returns the PA message with the given ID and its associated alert", %{conn: conn} do
       insert(:pa_message, %{
         id: 1,
@@ -382,7 +387,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       assert %{"id" => 1} = conn |> get("/api/pa-messages/1") |> json_response(200)
     end
 
-    @tag :authenticated_pa_message_admin
+    @tag :authenticated
     test "returns a 404 if the PA message doesn't exist", %{conn: conn} do
       assert %{"error" => "not_found"} =
                conn
