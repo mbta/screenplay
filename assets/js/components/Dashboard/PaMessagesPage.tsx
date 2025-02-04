@@ -161,7 +161,7 @@ const PaMessagesPage: ComponentType = () => {
             </section>
             <FilterGroup
               className="mb-5"
-              header="Message state"
+              header="Filter by message state"
               onFilterSelect={(selected) =>
                 setStateFilter(selected as StateFilter)
               }
@@ -173,7 +173,7 @@ const PaMessagesPage: ComponentType = () => {
               ]}
             />
             <FilterGroup
-              header="Service type"
+              header="Filter by service type"
               onFilterSelect={(selected) => {
                 const serviceType = selected as ServiceType;
                 if (serviceType === "All") {

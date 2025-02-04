@@ -61,7 +61,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
           <Col className="associate-alert-filter-selection">
             <FilterGroup
               className="mb-5"
-              header="Message state"
+              header="Filter by message state"
               selectedFilter={selectedMessageState}
               onFilterSelect={setSelectedMessageState}
               filters={[
@@ -70,7 +70,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
               ]}
             />
             <FilterGroup
-              header="Service type"
+              header="Filter by service type"
               selectedFilter={selectedServiceType}
               onFilterSelect={setSelectedServiceType}
               filters={serviceTypes.map((serviceType) => {
