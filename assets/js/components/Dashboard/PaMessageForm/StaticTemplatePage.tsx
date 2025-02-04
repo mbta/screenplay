@@ -2,6 +2,7 @@ import React, { ComponentType, useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { StaticTemplate } from "Models/static_template";
 import FilterGroup from "Components/FilterGroup";
+import MessageTable from "./Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
 
 interface Props {
@@ -50,50 +51,25 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
             <div className="static-template-table-header">
               {selectedTemplateType === "psa" ? "PSAs" : "Emergency"}
             </div>
-            <StaticTemplateTable
-              templates={STATIC_TEMPLATES.filter(
+            <MessageTable
+              headers={["Message"]}
+              addSelectColumn={true}
+              rows={STATIC_TEMPLATES.filter(
                 (template) => template.type === selectedTemplateType,
-              )}
-              selectedTemplateType={selectedTemplateType}
-              onSelect={onSelect}
+              ).map((template) => {
+                return (
+                  <StaticTemplateRow
+                    key={template.title}
+                    template={template}
+                    onSelect={onSelect}
+                  />
+                );
+              })}
             />
           </Col>
         </Row>
       </Container>
     </div>
-  );
-};
-
-interface StaticTemplateTableProps {
-  templates: StaticTemplate[];
-  selectedTemplateType: TemplateType;
-  onSelect: (template: StaticTemplate) => void;
-}
-
-const StaticTemplateTable = ({
-  templates,
-  onSelect,
-}: StaticTemplateTableProps) => {
-  return (
-    <table className="static-template-table">
-      <thead>
-        <tr>
-          <th className="static-template-table__message">Message</th>
-          <th className="static-template-table__select"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {templates.map((template) => {
-          return (
-            <StaticTemplateRow
-              key={template.title}
-              template={template}
-              onSelect={onSelect}
-            />
-          );
-        })}
-      </tbody>
-    </table>
   );
 };
 
@@ -107,15 +83,12 @@ const StaticTemplateRow: ComponentType<StaticTemplateRowProps> = ({
   onSelect,
 }: StaticTemplateRowProps) => {
   return (
-    <tr
-      className="static-template-table__row"
-      onClick={() => onSelect(template)}
-    >
+    <tr className="message-table__row" onClick={() => onSelect(template)}>
       <td>
         <div>{template.title}</div>
         <div>{template.visual_text}</div>
       </td>
-      <td className="select-template-table__select">
+      <td className="message-table__select">
         <Button variant="link" onClick={() => onSelect(template)}>
           Select
         </Button>
