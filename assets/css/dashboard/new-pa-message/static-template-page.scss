@@ -35,58 +35,67 @@
       margin-right: 48px;
     }
 
-    .static-template-table-container {
-      max-width: 1096px;
+    .static-template-table-header {
+      font-size: 32px;
+    }
+  }
 
-      .table-header {
-        font-size: 32px;
+  .static-template-table {
+    background-color: $cool-gray-15;
+    max-width: 1096px;
+
+    th,
+    td {
+      padding: 8px 16px;
+      vertical-align: top;
+    }
+
+    th {
+      padding-top: 24px;
+      height: 56px;
+      border-bottom: 1px solid $cool-gray-40;
+    }
+
+    td {
+      border-bottom: 1px solid $bg-elevation-4;
+    }
+
+    &__row {
+      background-color: $cool-gray-15;
+
+      &:hover {
+        background-color: $cool-gray-20;
+        cursor: pointer;
       }
+    }
 
-      .static-template-table {
-        width: 100%;
+    &__message {
+      min-width: 300px;
+    }
 
-        .header-row {
-          height: 55px;
-          vertical-align: bottom;
-          border-bottom: 1px solid $cool-gray-40;
-          background-color: $cool-gray-15;
+    &__id {
+      width: 90px;
+    }
 
-          .message-column-header {
-            padding-bottom: 8px;
-            padding-left: 16px;
-          }
-        }
+    &__start-end {
+      min-width: 200px;
+      padding-right: 0px;
+    }
 
-        .template-row {
-          background-color: $cool-gray-15;
-          border-bottom: 1px solid $bg-elevation-4;
+    &__last-modified {
+      min-width: 220px;
+    }
 
-          .title {
-            font-weight: 700;
-          }
+    &__select {
+      min-width: 102px;
 
-          .message-cell {
-            padding: 8px 16px;
+      button {
+        color: $text-secondary;
+        height: fit-content;
 
-            .message {
-              white-space: pre-line;
-            }
-          }
-
-          .select-button-cell {
-            vertical-align: top;
-            padding: 16px 38px 0 16px;
-
-            .select-button {
-              padding: 0;
-              color: $text-secondary;
-            }
-          }
-
-          &:hover {
-            background-color: $cool-gray-20;
-            cursor: pointer;
-          }
+        &:hover {
+          color: $text-secondary;
+          opacity: 84%;
         }
       }
     }
