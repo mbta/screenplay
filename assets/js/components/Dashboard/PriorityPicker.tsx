@@ -31,8 +31,8 @@ const PriorityPicker = ({
           <Dropdown.Menu role="listbox">
             {[
               "Emergency",
-              "Current Service Disruption",
-              "Planned Service Disruption",
+              "Ongoing service disruption",
+              "Upcoming service disruption",
               "PSA Message",
             ].map((label, index) => {
               const priorityIndex = index + 1;

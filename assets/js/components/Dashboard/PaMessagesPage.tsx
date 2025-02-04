@@ -167,9 +167,9 @@ const PaMessagesPage: ComponentType = () => {
               }
               selectedFilter={stateFilter.toLowerCase()}
               filters={[
-                { label: "Now", value: "current" },
+                { label: "Live", value: "current" },
                 { label: "Future", value: "future" },
-                { label: "Done", value: "past" },
+                { label: "Past", value: "past" },
               ]}
             />
             <FilterGroup

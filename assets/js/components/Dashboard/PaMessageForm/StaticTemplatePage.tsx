@@ -35,7 +35,7 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
         <Row className="static-template-page-body">
           <Col className="filter-group-col">
             <FilterGroup
-              header="Template type"
+              header="Filter by template type"
               selectedFilter={selectedTemplateType}
               onFilterSelect={(templateType) =>
                 setSelectedTemplateType(templateType as TemplateType)
