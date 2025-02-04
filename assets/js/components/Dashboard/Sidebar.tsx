@@ -55,6 +55,9 @@ const SidebarLink = ({
 };
 
 const Sidebar = () => {
+  const isEmergencyAdmin = !!document.querySelector(
+    "meta[name=is-emergency-admin]",
+  );
   const isScreensAdmin = !!document.querySelector(
     "meta[name=is-screens-admin]",
   );
@@ -88,14 +91,16 @@ const Sidebar = () => {
       <SidebarLink to="/pa-messages" icon={VolumeUp} activeIcon={VolumeUpFill}>
         PA/ESS
       </SidebarLink>
-      <SidebarLink
-        to="/emergency-takeover"
-        icon={Lightning}
-        activeIcon={LightningFill}
-        reloadDocument
-      >
-        Emergency Takeover
-      </SidebarLink>
+      {isEmergencyAdmin && (
+        <SidebarLink
+          to="/emergency-takeover"
+          icon={Lightning}
+          activeIcon={LightningFill}
+          reloadDocument
+        >
+          Emergency Takeover
+        </SidebarLink>
+      )}
       {isScreensAdmin && (
         <SidebarLink to="/pending" icon={Signpost} activeIcon={SignpostFill}>
           Configure
