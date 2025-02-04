@@ -209,6 +209,7 @@ const screenTypeOrder = [
   "pre_fare_v2",
   "elevator_v2",
   "pa_ess",
+  "on_bus_v2",
 ];
 
 export const sortScreens = (screenList: Screen[]) => {

@@ -24,6 +24,7 @@ defmodule Screenplay.Places.Builder do
     Footer,
     GlEink,
     Header,
+    OnBus,
     PreFare
   }
 
@@ -234,6 +235,12 @@ defmodule Screenplay.Places.Builder do
     {:ok, facility} = @facilities_mod.fetch(elevator_id)
     %{"relationships" => %{"stop" => %{"data" => %{"id" => stop_id}}}} = facility
     stop_id
+  end
+
+  defp get_stop_id(
+         {_id, %{app_params: %OnBus{evergreen_content: _evergreen_content}}}
+       ) do
+    ""
   end
 
   defp split_multi_place_screens(

@@ -64,7 +64,7 @@ defmodule Screenplay.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:screens_config,
        git: "https://github.com/mbta/screens-config-lib.git",
-       ref: "c0db78ecd43c633a55a1f24b268ae7b8a5214748"},
+       ref: "3e781e39e4dd8bd63a05825534847347e1cbffa9"},
       {:mox, "~> 1.0", only: :test},
       {:tzdata, "~> 1.1"},
       {:ex_machina, "~> 2.7", only: :test},
