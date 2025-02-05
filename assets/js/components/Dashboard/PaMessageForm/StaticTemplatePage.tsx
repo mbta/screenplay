@@ -53,7 +53,10 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
             </div>
             <MessageTable
               headers={["Message"]}
+              isReadOnly={false}
+              isLoading={false}
               addSelectColumn={true}
+              addKebabColumn={false}
               rows={STATIC_TEMPLATES.filter(
                 (template) => template.type === selectedTemplateType,
               ).map((template) => {
@@ -65,6 +68,7 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
                   />
                 );
               })}
+              emptyStateText=""
             />
           </Col>
         </Row>

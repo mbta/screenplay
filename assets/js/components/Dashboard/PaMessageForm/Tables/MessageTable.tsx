@@ -1,19 +1,24 @@
 import React from "react";
+import { Spinner } from "react-bootstrap";
 
 interface MessageTableProps {
+  isLoading: boolean;
   headers: string[];
   addSelectColumn: boolean;
-  addMoreActionsColumn: boolean;
+  addKebabColumn: boolean;
   isReadOnly: boolean;
   rows: JSX.Element[];
+  emptyStateText: string;
 }
 
 const MessageTable = ({
-  headers,
-  addSelectColumn,
-  addMoreActionsColumn,
+  isLoading = false,
+  headers = [],
+  addSelectColumn = false,
+  addKebabColumn = false,
   isReadOnly = true,
-  rows,
+  rows = [],
+  emptyStateText = "",
 }: MessageTableProps): JSX.Element => {
   return (
     <>
@@ -29,16 +34,29 @@ const MessageTable = ({
               );
             })}
             {addSelectColumn && <th className={"message-table__select"}></th>}
-            {addMoreActionsColumn && (
+            {addKebabColumn && (
               <>
-                <th className="pa-message-table__actions">Actions</th>
-                {!isReadOnly && <th className="pa-message-table__kebab"></th>}
+                <th className="message-table__actions"></th>
+                {!isReadOnly && <th className="message-table__kebab"></th>}
               </>
             )}
           </tr>
         </thead>
         <tbody>{rows}</tbody>
       </table>
+      {rows.length == 0 && (
+        <div className="message-table__empty">
+          {isLoading ? (
+            <div className="message-table__loading">
+              <Spinner role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <div className="message-table__empty-text">{emptyStateText}</div>
+          )}
+        </div>
+      )}
     </>
   );
 };

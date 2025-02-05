@@ -105,8 +105,11 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
           </Col>
           <Col>
             <MessageTable
+              isLoading={false}
+              isReadOnly={false}
               headers={["Alert message", "ID", "Start-End", "Last modified"]}
               addSelectColumn={true}
+              addKebabColumn={false}
               rows={filteredAlerts.map((alert: Alert) => {
                 return (
                   <AssociateAlertsTableRow
@@ -116,6 +119,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
                   />
                 );
               })}
+              emptyStateText="There are no alerts of this type"
             />
           </Col>
         </Row>
@@ -197,59 +201,6 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
     </div>
   );
 };
-
-// interface AssociateAlertsTableProps {
-//   alerts: Alert[];
-//   onSelectAlert: (alert: Alert) => void;
-//   messageStateFilter: string;
-//   serviceTypeFilter: string;
-// }
-//
-// const AssociateAlertsTable = ({
-//   alerts,
-//   onSelectAlert,
-//   messageStateFilter,
-//   serviceTypeFilter,
-// }: AssociateAlertsTableProps) => {
-//   return (
-//     <>
-//       <table className="associate-alert-table">
-//         <thead>
-//           <tr>
-//             <th className="associate-alert-table__message">Alert message</th>
-//             <th className="associate-alert-table__id">ID</th>
-//             <th className="associate-alert-table__start-end">Start-End</th>
-//             <th className="associate-alert-table__last-modified">
-//               Last modified
-//             </th>
-//             <th className="associate-alert-table__select"></th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {filteredAlerts.length == 0 ? (
-//             <tr>
-//               <td className="associate-alert-table__empty">
-//                 <div className="associate-alert-table__empty-text">
-//                   There are no alerts of this type
-//                 </div>
-//               </td>
-//             </tr>
-//           ) : (
-//             filteredAlerts.map((alert: Alert) => {
-//               return (
-//                 <AssociateAlertsTableRow
-//                   key={alert.id}
-//                   alert={alert}
-//                   onSelect={() => onSelectAlert(alert)}
-//                 />
-//               );
-//             })
-//           )}
-//         </tbody>
-//       </table>
-//     </>
-//   );
-// };
 
 interface AssociateAlertsTableRowProps {
   alert: Alert;

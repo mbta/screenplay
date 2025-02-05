@@ -9,8 +9,7 @@
   }
 
   th {
-    padding-top: 24px;
-    height: 56px;
+    padding-top: 15px;
     border-bottom: 1px solid $cool-gray-40;
   }
 
@@ -29,6 +28,11 @@
 
   &__message {
     min-width: 300px;
+
+    a {
+      color: $text-primary;
+      text-decoration: none;
+    }
   }
 
   &__id {
@@ -67,5 +71,13 @@
     color: white;
     padding-top: 16px;
     padding-left: 16px;
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
   }
 }
