@@ -216,7 +216,7 @@ const AssociateAlertsTableRow = ({
   const last_modified = moment(alert.updated_at).format("l LT");
 
   return (
-    <tr className="associate-alert-table__row" onClick={() => onSelect()}>
+    <tr className="message-table__row" onClick={() => onSelect()}>
       <td>{alert.header}</td>
       <td>{alert.id}</td>
       <td>
@@ -225,7 +225,7 @@ const AssociateAlertsTableRow = ({
         {end}
       </td>
       <td>{last_modified}</td>
-      <td className="associate-alert-table__select">
+      <td className="message-table__select">
         <Button variant="link" onClick={() => onSelect()}>
           Select
         </Button>

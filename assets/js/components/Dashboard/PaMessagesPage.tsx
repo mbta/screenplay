@@ -316,7 +316,10 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   };
 
   return (
-    <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
+    <tr
+      className="message-table__row"
+      onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}
+    >
       <td className="pa-message-table-row__message">
         <a
           href={`/pa-messages/${paMessage.id}/edit`}
