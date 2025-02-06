@@ -2,9 +2,14 @@ import React, { useState } from "react";
 import PaMessageForm from "../PaMessageForm";
 import { useNavigate } from "react-router-dom";
 import { createNewPaMessage } from "Utils/api";
+import { isPaMessageAdmin } from "Utils/auth";
 
 const NewPaMessage = () => {
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const initialError = isPaMessageAdmin()
+    ? null
+    : "You don't have permission to create PA messages.";
+
+  const [errorMessage, setErrorMessage] = useState(initialError);
   const [errors, setErrors] = useState<string[]>([]);
   const navigate = useNavigate();
 
@@ -13,6 +18,7 @@ const NewPaMessage = () => {
       title="New PA/ESS message"
       errors={errors}
       errorMessage={errorMessage}
+      isReadOnly={!isPaMessageAdmin()}
       onError={setErrorMessage}
       onErrorsChange={setErrors}
       paused={false}
