@@ -1,9 +1,10 @@
-import React, { ComponentType, useState } from "react";
+import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { StaticTemplate } from "Models/static_template";
 import FilterGroup from "Components/FilterGroup";
-import MessageTable from "./Tables/MessageTable";
+import MessageTable from "../../Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
+import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow"
 
 interface Props {
   onCancel: () => void;
@@ -56,7 +57,7 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
               isReadOnly={false}
               isLoading={false}
               addSelectColumn={true}
-              addKebabColumn={false}
+              addMoreActions={false}
               rows={STATIC_TEMPLATES.filter(
                 (template) => template.type === selectedTemplateType,
               ).map((template) => {
@@ -74,30 +75,6 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
         </Row>
       </Container>
     </div>
-  );
-};
-
-interface StaticTemplateRowProps {
-  template: StaticTemplate;
-  onSelect: (template: StaticTemplate) => void;
-}
-
-const StaticTemplateRow: ComponentType<StaticTemplateRowProps> = ({
-  template,
-  onSelect,
-}: StaticTemplateRowProps) => {
-  return (
-    <tr className="message-table__row" onClick={() => onSelect(template)}>
-      <td>
-        <div>{template.title}</div>
-        <div>{template.visual_text}</div>
-      </td>
-      <td className="message-table__select">
-        <Button variant="link" onClick={() => onSelect(template)}>
-          Select
-        </Button>
-      </td>
-    </tr>
   );
 };
 

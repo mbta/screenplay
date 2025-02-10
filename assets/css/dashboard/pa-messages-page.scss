@@ -45,6 +45,7 @@
     text-decoration: none;
     margin-top: 16px;
     color: $text-secondary;
+
     .link-text {
       text-decoration: underline;
       text-underline-offset: 4px;
@@ -63,31 +64,6 @@
   padding-right: 64px;
   padding-left: 0px;
   margin-left: 20px;
-}
-
-.pa-message-table-row {
-  &__message {
-    width: 586px;
-
-    a {
-      color: $text-primary;
-      text-decoration: none;
-    }
-  }
-
-  &__interval {
-    width: 91px;
-  }
-
-  &__actions {
-    width: 110px;
-  }
-
-  &__start-end {
-    width: 200px;
-    padding-right: 0px;
-    text-wrap: nowrap;
-  }
 }
 
 .pause-active-switch-container {

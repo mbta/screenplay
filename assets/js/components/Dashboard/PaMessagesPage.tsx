@@ -1,19 +1,15 @@
 import React, { ComponentType, useState, useMemo, useEffect } from "react";
-import { Container, Row, Col, Dropdown, FormCheck } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import cx from "classnames";
+import { Link, useSearchParams } from "react-router-dom";
 import useSWR, { mutate } from "swr";
-import moment from "moment";
 import { PaMessage } from "Models/pa_message";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
-import KebabMenu from "Components/KebabMenu";
-import { updateExistingPaMessage } from "Utils/api";
-import { UpdatePaMessageBody } from "Models/pa_message";
 import Toast, { type ToastProps } from "Components/Toast";
 import FilterGroup from "./FilterGroup";
 import { isPaMessageAdmin } from "Utils/auth";
-import MessageTable from "./PaMessageForm/Tables/MessageTable";
+import MessageTable from "../Tables/MessageTable";
+import PaMessageRow from "../Tables/Rows/PaMessageRow"
 
 type StateFilter = "current" | "future" | "past";
 
@@ -198,47 +194,43 @@ const PaMessagesPage: ComponentType = () => {
             <Row>
               <MessageTable
                 isLoading={shouldShowLoadingState}
-                headers={
-                  showMoreActions
-                    ? ["Message", "Interval", "Start-End", "Actions"]
-                    : ["Message", "Interval", "Start-End"]
-                }
+                headers={["Message", "Interval", "Start-End"]}
                 addSelectColumn={false}
-                addKebabColumn={stateFilter == "current"}
+                addMoreActions={showMoreActions}
                 isReadOnly={isReadOnly}
                 rows={
                   data
                     ? data.map((paMessage: PaMessage) => {
-                        const onUpdate = () => {
-                          mutate(`/api/pa-messages?${params.toString()}`);
-                        };
-                        return (
-                          <PaMessageRow
-                            key={paMessage.id}
-                            paMessage={paMessage}
-                            onEndNow={() => {
-                              setToastProps({
-                                variant: "info",
-                                message:
-                                  "PA/ESS message has ended, and moved to “Done.”",
-                                autoHide: true,
-                              });
-                              onUpdate();
-                            }}
-                            onError={() =>
-                              setToastProps({
-                                variant: "warning",
-                                message:
-                                  "Something went wrong. Please try again.",
-                              })
-                            }
-                            showMoreActions={showMoreActions}
-                            onUpdate={onUpdate}
-                            setErrorMessage={setErrorMessage}
-                            isReadOnly={isReadOnly}
-                          />
-                        );
-                      })
+                      const onUpdate = () => {
+                        mutate(`/api/pa-messages?${params.toString()}`);
+                      };
+                      return (
+                        <PaMessageRow
+                          key={paMessage.id}
+                          paMessage={paMessage}
+                          onEndNow={() => {
+                            setToastProps({
+                              variant: "info",
+                              message:
+                                "PA/ESS message has ended, and moved to “Done.”",
+                              autoHide: true,
+                            });
+                            onUpdate();
+                          }}
+                          onError={() =>
+                            setToastProps({
+                              variant: "warning",
+                              message:
+                                "Something went wrong. Please try again.",
+                            })
+                          }
+                          showMoreActions={showMoreActions}
+                          onUpdate={onUpdate}
+                          setErrorMessage={setErrorMessage}
+                          isReadOnly={isReadOnly}
+                        />
+                      );
+                    })
                     : []
                 }
                 emptyStateText="There are no PA/ESS Messages matching the current filters."
@@ -263,126 +255,6 @@ const PaMessagesPage: ComponentType = () => {
         }}
       />
     </>
-  );
-};
-
-interface PaMessageRowProps {
-  paMessage: PaMessage;
-  onEndNow: () => void;
-  onError: () => void;
-  showMoreActions: boolean;
-  onUpdate: () => void;
-  setErrorMessage: (message: string | null) => void;
-  isReadOnly: boolean;
-}
-
-const PaMessageRow: ComponentType<PaMessageRowProps> = ({
-  paMessage,
-  onEndNow,
-  onError,
-  showMoreActions,
-  onUpdate,
-  setErrorMessage,
-  isReadOnly,
-}: PaMessageRowProps) => {
-  const navigate = useNavigate();
-  const start = new Date(paMessage.start_datetime);
-  const end =
-    paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
-
-  const endMessage = (paMessage: PaMessage) => {
-    updateExistingPaMessage(paMessage.id, {
-      ...paMessage,
-      end_datetime: moment().utc().add(-1, "second").toISOString(),
-    }).then(({ status }) => {
-      if (status === 200) {
-        onEndNow();
-      } else {
-        onError();
-      }
-    });
-  };
-
-  const togglePaused = async (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    try {
-      await updateExistingPaMessage(paMessage.id, {
-        paused: !paMessage.paused,
-      } as UpdatePaMessageBody);
-      onUpdate();
-    } catch (error) {
-      setErrorMessage((error as Error).message);
-    }
-  };
-
-  return (
-    <tr
-      className="message-table__row"
-      onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}
-    >
-      <td className="pa-message-table-row__message">
-        <a
-          href={`/pa-messages/${paMessage.id}/edit`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {paMessage.visual_text}
-        </a>
-      </td>
-      <td className="pa-message-table-row__interval">
-        {paMessage.interval_in_minutes} min
-      </td>
-      <td className="pa-message-table-row__start-end">
-        {start.toLocaleString().replace(",", "")}
-        <br />
-        {end
-          ? end.toLocaleString().replace(",", "")
-          : `At end of alert ${paMessage.alert_id}`}
-      </td>
-      {showMoreActions && (
-        <>
-          <td className="pa-message-table-row__actions">
-            <div
-              className={`pause-active-switch-container`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (isReadOnly) {
-                  return;
-                }
-                togglePaused(e);
-              }}
-            >
-              <FormCheck
-                className={"pause-active-switch"}
-                type="switch"
-                checked={!paMessage.paused}
-                onChange={() => {}}
-                disabled={isReadOnly}
-              />
-              <div
-                className={cx("switch-text", {
-                  paused: paMessage.paused,
-                  active: !paMessage.paused,
-                })}
-              >
-                {paMessage.paused ? "Paused" : "Active"}
-              </div>
-            </div>
-          </td>
-          {!isReadOnly && (
-            <td className="pa-message-table-row__kebab">
-              <KebabMenu>
-                <Dropdown.Item
-                  className="kebab-menu-dropdown__item"
-                  onClick={() => endMessage(paMessage)}
-                >
-                  End Now
-                </Dropdown.Item>
-              </KebabMenu>
-            </td>
-          )}
-        </>
-      )}
-    </tr>
   );
 };
 

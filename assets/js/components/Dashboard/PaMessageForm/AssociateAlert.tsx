@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Modal, Form } from "react-bootstrap";
-import moment from "moment";
 import FilterGroup from "Components/FilterGroup";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
-import { getAlertEarliestStartLatestEnd } from "../../../util";
-import MessageTable from "./Tables/MessageTable";
+import MessageTable from "../../Tables/MessageTable";
+import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow"
 
 interface AssociateAlertPageProps {
   onApply: (
@@ -109,10 +108,10 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
               isReadOnly={false}
               headers={["Alert message", "ID", "Start-End", "Last modified"]}
               addSelectColumn={true}
-              addKebabColumn={false}
+              addMoreActions={false}
               rows={filteredAlerts.map((alert: Alert) => {
                 return (
-                  <AssociateAlertsTableRow
+                  <AssociateAlertsRow
                     key={alert.id}
                     alert={alert}
                     onSelect={() => setSelectedAlert(alert)}
@@ -199,38 +198,6 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
         </Modal.Footer>
       </Modal>
     </div>
-  );
-};
-
-interface AssociateAlertsTableRowProps {
-  alert: Alert;
-  onSelect: () => void;
-}
-
-const AssociateAlertsTableRow = ({
-  alert,
-  onSelect,
-}: AssociateAlertsTableRowProps) => {
-  const [start, end] = getAlertEarliestStartLatestEnd(alert.active_period);
-
-  const last_modified = moment(alert.updated_at).format("l LT");
-
-  return (
-    <tr className="message-table__row" onClick={() => onSelect()}>
-      <td>{alert.header}</td>
-      <td>{alert.id}</td>
-      <td>
-        {start}
-        <br />
-        {end}
-      </td>
-      <td>{last_modified}</td>
-      <td className="message-table__select">
-        <Button variant="link" onClick={() => onSelect()}>
-          Select
-        </Button>
-      </td>
-    </tr>
   );
 };
 
