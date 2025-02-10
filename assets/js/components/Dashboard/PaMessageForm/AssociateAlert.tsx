@@ -4,7 +4,7 @@ import FilterGroup from "Components/FilterGroup";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
 import MessageTable from "../../Tables/MessageTable";
-import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow"
+import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow";
 
 interface AssociateAlertPageProps {
   onApply: (

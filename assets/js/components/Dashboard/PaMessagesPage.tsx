@@ -9,7 +9,7 @@ import Toast, { type ToastProps } from "Components/Toast";
 import FilterGroup from "./FilterGroup";
 import { isPaMessageAdmin } from "Utils/auth";
 import MessageTable from "../Tables/MessageTable";
-import PaMessageRow from "../Tables/Rows/PaMessageRow"
+import PaMessageRow from "../Tables/Rows/PaMessageRow";
 
 type StateFilter = "current" | "future" | "past";
 
@@ -201,36 +201,36 @@ const PaMessagesPage: ComponentType = () => {
                 rows={
                   data
                     ? data.map((paMessage: PaMessage) => {
-                      const onUpdate = () => {
-                        mutate(`/api/pa-messages?${params.toString()}`);
-                      };
-                      return (
-                        <PaMessageRow
-                          key={paMessage.id}
-                          paMessage={paMessage}
-                          onEndNow={() => {
-                            setToastProps({
-                              variant: "info",
-                              message:
-                                "PA/ESS message has ended, and moved to “Done.”",
-                              autoHide: true,
-                            });
-                            onUpdate();
-                          }}
-                          onError={() =>
-                            setToastProps({
-                              variant: "warning",
-                              message:
-                                "Something went wrong. Please try again.",
-                            })
-                          }
-                          showMoreActions={showMoreActions}
-                          onUpdate={onUpdate}
-                          setErrorMessage={setErrorMessage}
-                          isReadOnly={isReadOnly}
-                        />
-                      );
-                    })
+                        const onUpdate = () => {
+                          mutate(`/api/pa-messages?${params.toString()}`);
+                        };
+                        return (
+                          <PaMessageRow
+                            key={paMessage.id}
+                            paMessage={paMessage}
+                            onEndNow={() => {
+                              setToastProps({
+                                variant: "info",
+                                message:
+                                  "PA/ESS message has ended, and moved to “Done.”",
+                                autoHide: true,
+                              });
+                              onUpdate();
+                            }}
+                            onError={() =>
+                              setToastProps({
+                                variant: "warning",
+                                message:
+                                  "Something went wrong. Please try again.",
+                              })
+                            }
+                            showMoreActions={showMoreActions}
+                            onUpdate={onUpdate}
+                            setErrorMessage={setErrorMessage}
+                            isReadOnly={isReadOnly}
+                          />
+                        );
+                      })
                     : []
                 }
                 emptyStateText="There are no PA/ESS Messages matching the current filters."

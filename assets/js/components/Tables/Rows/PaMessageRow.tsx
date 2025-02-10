@@ -6,7 +6,7 @@ import moment from "moment";
 import cx from "classnames";
 import { useNavigate } from "react-router-dom";
 import { Dropdown, FormCheck } from "react-bootstrap";
-import * as messageTableStyles from "Styles/message-table.module.scss"
+import * as messageTableStyles from "Styles/message-table.module.scss";
 
 interface PaMessageRowProps {
   paMessage: PaMessage;
@@ -97,7 +97,7 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
                 className={"pause-active-switch"}
                 type="switch"
                 checked={!paMessage.paused}
-                onChange={() => { }}
+                onChange={() => {}}
                 disabled={isReadOnly}
               />
               <div

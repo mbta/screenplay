@@ -4,7 +4,7 @@ import { StaticTemplate } from "Models/static_template";
 import FilterGroup from "Components/FilterGroup";
 import MessageTable from "../../Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
-import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow"
+import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
 
 interface Props {
   onCancel: () => void;

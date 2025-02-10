@@ -1,7 +1,7 @@
 import { StaticTemplate } from "Models/static_template";
 import React, { ComponentType } from "react";
 import { Button } from "react-bootstrap";
-import * as messageTableStyles from "Styles/message-table.module.scss"
+import * as messageTableStyles from "Styles/message-table.module.scss";
 
 interface StaticTemplateRowProps {
   template: StaticTemplate;

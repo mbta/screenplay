@@ -3,17 +3,14 @@ import { Button } from "react-bootstrap";
 import moment from "moment";
 import { Alert } from "Models/alert";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
-import * as messageTableStyles from "Styles/message-table.module.scss"
+import * as messageTableStyles from "Styles/message-table.module.scss";
 
 interface AssociateAlertsRowProps {
   alert: Alert;
   onSelect: () => void;
 }
 
-const AssociateAlertsRow = ({
-  alert,
-  onSelect,
-}: AssociateAlertsRowProps) => {
+const AssociateAlertsRow = ({ alert, onSelect }: AssociateAlertsRowProps) => {
   const [start, end] = getAlertEarliestStartLatestEnd(alert.active_period);
 
   const last_modified = moment(alert.updated_at).format("l LT");
@@ -37,4 +34,4 @@ const AssociateAlertsRow = ({
   );
 };
 
-export default AssociateAlertsRow
+export default AssociateAlertsRow;

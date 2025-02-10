@@ -1,7 +1,7 @@
 import { camelCase } from "lodash";
 import React from "react";
 import { Spinner } from "react-bootstrap";
-import * as messageTableStyles from "Styles/message-table.module.scss"
+import * as messageTableStyles from "Styles/message-table.module.scss";
 
 interface MessageTableProps {
   isLoading: boolean;
@@ -45,22 +45,20 @@ const MessageTable = ({
           </tr>
         </thead>
         <tbody>{rows}</tbody>
-      </table >
-      {
-        rows.length == 0 && (
-          <div className={messageTableStyles.emptyContainer}>
-            {isLoading ? (
-              <div className={messageTableStyles.loadingContainer}>
-                <Spinner role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
-              </div>
-            ) : (
-              <div className={messageTableStyles.emptyText}>{emptyStateText}</div>
-            )}
-          </div>
-        )
-      }
+      </table>
+      {rows.length == 0 && (
+        <div className={messageTableStyles.emptyContainer}>
+          {isLoading ? (
+            <div className={messageTableStyles.loadingContainer}>
+              <Spinner role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <div className={messageTableStyles.emptyText}>{emptyStateText}</div>
+          )}
+        </div>
+      )}
     </>
   );
 };
