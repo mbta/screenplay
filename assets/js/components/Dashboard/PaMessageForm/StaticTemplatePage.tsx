@@ -56,7 +56,7 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
               headers={["Message"]}
               isReadOnly={false}
               isLoading={false}
-              addSelectColumn={true}
+              addSelectColumn
               addMoreActions={false}
               rows={STATIC_TEMPLATES.filter(
                 (template) => template.type === selectedTemplateType,

@@ -4,22 +4,22 @@ import { Spinner } from "react-bootstrap";
 import * as messageTableStyles from "Styles/message-table.module.scss";
 
 interface MessageTableProps {
-  isLoading: boolean;
+  isLoading?: boolean;
   headers: string[];
-  addSelectColumn: boolean;
-  addMoreActions: boolean;
-  isReadOnly: boolean;
+  addSelectColumn?: boolean;
+  addMoreActions?: boolean;
+  isReadOnly?: boolean;
   rows: JSX.Element[];
-  emptyStateText: string;
+  emptyStateText?: string;
 }
 
 const MessageTable = ({
   isLoading = false,
-  headers = [],
+  headers,
   addSelectColumn = false,
   addMoreActions = false,
   isReadOnly = true,
-  rows = [],
+  rows,
   emptyStateText = "",
 }: MessageTableProps): JSX.Element => {
   return (
@@ -39,7 +39,7 @@ const MessageTable = ({
             {addMoreActions && (
               <>
                 <th className={messageTableStyles.actions}>Actions</th>
-                {!isReadOnly && <th className="messageTableKebab"></th>}
+                {!isReadOnly && <th></th>}
               </>
             )}
           </tr>
@@ -47,7 +47,7 @@ const MessageTable = ({
         <tbody>{rows}</tbody>
       </table>
       {rows.length == 0 && (
-        <div className={messageTableStyles.emptyContainer}>
+        <div>
           {isLoading ? (
             <div className={messageTableStyles.loadingContainer}>
               <Spinner role="status">

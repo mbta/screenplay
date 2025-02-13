@@ -107,7 +107,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
               isLoading={false}
               isReadOnly={false}
               headers={["Alert message", "ID", "Start-End", "Last modified"]}
-              addSelectColumn={true}
+              addSelectColumn
               addMoreActions={false}
               rows={filteredAlerts.map((alert: Alert) => {
                 return (
