@@ -34,74 +34,7 @@
 .associate-alert-filter-selection {
   max-width: 200px;
   padding: 0;
-}
-
-.associate-alert-table {
-  margin: 0 40px;
-  max-width: 1096px;
-
-  th,
-  td {
-    padding: 8px 16px;
-    border-bottom: 1px solid $cool-gray-40;
-    vertical-align: top;
-  }
-
-  th {
-    padding-top: 24px;
-    height: 56px;
-  }
-
-  &__row {
-    background-color: $cool-gray-15;
-
-    &:hover {
-      background-color: $cool-gray-20;
-      cursor: pointer;
-    }
-  }
-
-  &__message {
-    min-width: 300px;
-  }
-
-  &__id {
-    width: 90px;
-  }
-
-  &__start-end {
-    min-width: 200px;
-    padding-right: 0px;
-  }
-
-  &__last-modified {
-    min-width: 220px;
-  }
-
-  &__select {
-    min-width: 102px;
-
-    button {
-      color: $text-secondary;
-      height: fit-content;
-
-      &:hover {
-        color: $text-secondary;
-        opacity: 84%;
-      }
-    }
-  }
-
-  &__empty {
-    border-bottom: none !important;
-  }
-
-  &__empty-text {
-    font-weight: bold;
-    color: white;
-    padding-top: 16px;
-    padding-left: 16px;
-  }
+  margin-right: 40px;
 }
 
 .alert-description {
@@ -154,6 +87,7 @@
     .apply-button {
       background-color: $form-check-input-checked-bg-color;
       color: black;
+
       &:hover {
         background-color: #72a4cd;
       }

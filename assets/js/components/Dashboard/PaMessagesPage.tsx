@@ -1,25 +1,15 @@
 import React, { ComponentType, useState, useMemo, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Spinner,
-  Dropdown,
-  FormCheck,
-} from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import cx from "classnames";
+import { Link, useSearchParams } from "react-router-dom";
 import useSWR, { mutate } from "swr";
-import moment from "moment";
 import { PaMessage } from "Models/pa_message";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
-import KebabMenu from "Components/KebabMenu";
-import { updateExistingPaMessage } from "Utils/api";
-import { UpdatePaMessageBody } from "Models/pa_message";
 import Toast, { type ToastProps } from "Components/Toast";
 import FilterGroup from "./FilterGroup";
 import { isPaMessageAdmin } from "Utils/auth";
+import MessageTable from "../Tables/MessageTable";
+import PaMessageRow from "../Tables/Rows/PaMessageRow";
 
 type StateFilter = "current" | "future" | "past";
 
@@ -109,6 +99,8 @@ const PaMessagesPage: ComponentType = () => {
   );
   const isReadOnly = !isPaMessageAdmin();
 
+  const showMoreActions = stateFilter == "current";
+
   useEffect(() => {
     setParams(() => {
       const newParams = new URLSearchParams();
@@ -129,6 +121,8 @@ const PaMessagesPage: ComponentType = () => {
   const shouldShowLoadingState = useDelayedLoadingState(isLoading);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [toastProps, setToastProps] = useState<ToastProps | null>();
 
   return (
     <>
@@ -198,14 +192,57 @@ const PaMessagesPage: ComponentType = () => {
           </Col>
           <Col className="pa-message-table-container">
             <Row>
-              <PaMessageTable
-                paMessages={data ?? []}
+              <MessageTable
                 isLoading={shouldShowLoadingState}
-                stateFilter={stateFilter}
-                onUpdate={() => mutate(`/api/pa-messages?${params.toString()}`)}
-                setErrorMessage={setErrorMessage}
+                headers={["Message", "Interval", "Start-End"]}
+                addSelectColumn={false}
+                addMoreActions={showMoreActions}
                 isReadOnly={isReadOnly}
+                rows={
+                  data
+                    ? data.map((paMessage: PaMessage) => {
+                        const onUpdate = () => {
+                          mutate(`/api/pa-messages?${params.toString()}`);
+                        };
+                        return (
+                          <PaMessageRow
+                            key={paMessage.id}
+                            paMessage={paMessage}
+                            onEndNow={() => {
+                              setToastProps({
+                                variant: "info",
+                                message:
+                                  "PA/ESS message has ended, and moved to “Done.”",
+                                autoHide: true,
+                              });
+                              onUpdate();
+                            }}
+                            onError={() =>
+                              setToastProps({
+                                variant: "warning",
+                                message:
+                                  "Something went wrong. Please try again.",
+                              })
+                            }
+                            showMoreActions={showMoreActions}
+                            onUpdate={onUpdate}
+                            setErrorMessage={setErrorMessage}
+                            isReadOnly={isReadOnly}
+                          />
+                        );
+                      })
+                    : []
+                }
+                emptyStateText="There are no PA/ESS Messages matching the current filters."
               />
+              {toastProps != null && (
+                <Toast
+                  {...toastProps}
+                  onClose={() => {
+                    setToastProps(null);
+                  }}
+                />
+              )}
             </Row>
           </Col>
         </Row>
@@ -218,214 +255,6 @@ const PaMessagesPage: ComponentType = () => {
         }}
       />
     </>
-  );
-};
-
-interface PaMessageTableProps {
-  paMessages: PaMessage[];
-  isLoading: boolean;
-  stateFilter: StateFilter;
-  onUpdate: () => void;
-  setErrorMessage: (message: string | null) => void;
-  isReadOnly: boolean;
-}
-
-const PaMessageTable: ComponentType<PaMessageTableProps> = ({
-  paMessages,
-  isLoading,
-  stateFilter,
-  onUpdate,
-  setErrorMessage,
-  isReadOnly,
-}: PaMessageTableProps) => {
-  const [toastProps, setToastProps] = useState<ToastProps | null>();
-  const data = isLoading ? [] : paMessages;
-  const showMoreActions = stateFilter == "current";
-
-  return (
-    <>
-      <table className="pa-message-table">
-        <thead>
-          <tr>
-            <th className="pa-message-table__message">Message</th>
-            <th className="pa-message-table__interval">Interval</th>
-            <th className="pa-message-table__start-end">Start-End</th>
-            {showMoreActions && (
-              <>
-                <th className="pa-message-table__actions">Actions</th>
-                {!isReadOnly && <th className="pa-message-table__kebab"></th>}
-              </>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((paMessage: PaMessage) => {
-            return (
-              <PaMessageRow
-                key={paMessage.id}
-                paMessage={paMessage}
-                onEndNow={() => {
-                  setToastProps({
-                    variant: "info",
-                    message: "PA/ESS message has ended, and moved to “Done.”",
-                    autoHide: true,
-                  });
-                  onUpdate();
-                }}
-                onError={() =>
-                  setToastProps({
-                    variant: "warning",
-                    message: "Something went wrong. Please try again.",
-                  })
-                }
-                showMoreActions={showMoreActions}
-                onUpdate={onUpdate}
-                setErrorMessage={setErrorMessage}
-                isReadOnly={isReadOnly}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-      {toastProps != null && (
-        <Toast
-          {...toastProps}
-          onClose={() => {
-            setToastProps(null);
-          }}
-        />
-      )}
-      {data.length == 0 && (
-        <div className="pa-message-table__empty">
-          {isLoading ? (
-            <div className="pa-message-table__loading">
-              <Spinner role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
-            "There are no PA/ESS Messages matching the current filters."
-          )}
-        </div>
-      )}
-    </>
-  );
-};
-
-interface PaMessageRowProps {
-  paMessage: PaMessage;
-  onEndNow: () => void;
-  onError: () => void;
-  showMoreActions: boolean;
-  onUpdate: () => void;
-  setErrorMessage: (message: string | null) => void;
-  isReadOnly: boolean;
-}
-
-const PaMessageRow: ComponentType<PaMessageRowProps> = ({
-  paMessage,
-  onEndNow,
-  onError,
-  showMoreActions,
-  onUpdate,
-  setErrorMessage,
-  isReadOnly,
-}: PaMessageRowProps) => {
-  const navigate = useNavigate();
-  const start = new Date(paMessage.start_datetime);
-  const end =
-    paMessage.end_datetime === null ? null : new Date(paMessage.end_datetime);
-
-  const endMessage = (paMessage: PaMessage) => {
-    updateExistingPaMessage(paMessage.id, {
-      ...paMessage,
-      end_datetime: moment().utc().add(-1, "second").toISOString(),
-    }).then(({ status }) => {
-      if (status === 200) {
-        onEndNow();
-      } else {
-        onError();
-      }
-    });
-  };
-
-  const togglePaused = async (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    try {
-      await updateExistingPaMessage(paMessage.id, {
-        paused: !paMessage.paused,
-      } as UpdatePaMessageBody);
-      onUpdate();
-    } catch (error) {
-      setErrorMessage((error as Error).message);
-    }
-  };
-
-  return (
-    <tr onClick={() => navigate(`/pa-messages/${paMessage.id}/edit`)}>
-      <td className="pa-message-table__message">
-        <a
-          href={`/pa-messages/${paMessage.id}/edit`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {paMessage.visual_text}
-        </a>
-      </td>
-      <td className="pa-message-table__interval">
-        {paMessage.interval_in_minutes} min
-      </td>
-      <td className="pa-message-table__start-end">
-        {start.toLocaleString().replace(",", "")}
-        <br />
-        {end
-          ? end.toLocaleString().replace(",", "")
-          : `At end of alert ${paMessage.alert_id}`}
-      </td>
-      {showMoreActions && (
-        <>
-          <td className="pa-message-table__actions">
-            <div
-              className={`pause-active-switch-container`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (isReadOnly) {
-                  return;
-                }
-                togglePaused(e);
-              }}
-            >
-              <FormCheck
-                className={"pause-active-switch"}
-                type="switch"
-                checked={!paMessage.paused}
-                onChange={() => {}}
-                disabled={isReadOnly}
-              />
-              <div
-                className={cx("switch-text", {
-                  paused: paMessage.paused,
-                  active: !paMessage.paused,
-                })}
-              >
-                {paMessage.paused ? "Paused" : "Active"}
-              </div>
-            </div>
-          </td>
-          {!isReadOnly && (
-            <td className="pa-message-table__kebab">
-              <KebabMenu>
-                <Dropdown.Item
-                  className="kebab-menu-dropdown__item"
-                  onClick={() => endMessage(paMessage)}
-                >
-                  End Now
-                </Dropdown.Item>
-              </KebabMenu>
-            </td>
-          )}
-        </>
-      )}
-    </tr>
   );
 };
 

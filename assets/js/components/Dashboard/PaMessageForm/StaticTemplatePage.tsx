@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { StaticTemplate } from "Models/static_template";
 import FilterGroup from "Components/FilterGroup";
+import MessageTable from "../../Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
+import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
 
 interface Props {
   onCancel: () => void;
@@ -47,69 +49,31 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
             />
           </Col>
           <Col>
-            <StaticTemplateTable
-              templates={STATIC_TEMPLATES.filter(
+            <div className="static-template-table-header">
+              {selectedTemplateType === "psa" ? "PSAs" : "Emergency"}
+            </div>
+            <MessageTable
+              headers={["Message"]}
+              isReadOnly={false}
+              isLoading={false}
+              addSelectColumn
+              addMoreActions={false}
+              rows={STATIC_TEMPLATES.filter(
                 (template) => template.type === selectedTemplateType,
-              )}
-              selectedTemplateType={selectedTemplateType}
-              onSelect={onSelect}
+              ).map((template) => {
+                return (
+                  <StaticTemplateRow
+                    key={template.title}
+                    template={template}
+                    onSelect={onSelect}
+                  />
+                );
+              })}
+              emptyStateText=""
             />
           </Col>
         </Row>
       </Container>
-    </div>
-  );
-};
-
-interface StaticTemplateTableProps {
-  templates: StaticTemplate[];
-  selectedTemplateType: TemplateType;
-  onSelect: (template: StaticTemplate) => void;
-}
-
-const StaticTemplateTable = ({
-  templates,
-  selectedTemplateType,
-  onSelect,
-}: StaticTemplateTableProps) => {
-  return (
-    <div className="static-template-table-container">
-      <div className="table-header">
-        {selectedTemplateType === "psa" ? "PSAs" : "Emergency"}
-      </div>
-      <table className="static-template-table">
-        <thead>
-          <tr className="header-row">
-            <th className="message-column-header">Message</th>
-            <th className="select-column-header"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {templates.map((template) => {
-            return (
-              <tr
-                className="template-row"
-                key={template.title}
-                onClick={() => onSelect(template)}
-              >
-                <td className="message-cell">
-                  <div className="title">{template.title}</div>
-                  <div className="message">{template.visual_text}</div>
-                </td>
-                <td className="select-button-cell">
-                  <Button
-                    className="select-button"
-                    variant="link"
-                    onClick={() => onSelect(template)}
-                  >
-                    Select
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
     </div>
   );
 };
