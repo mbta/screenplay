@@ -141,7 +141,7 @@ defmodule Screenplay.PaMessagesTest do
         end_datetime: nil,
         days_of_week: [22],
         sign_ids: [],
-        priority: 1,
+        priority: 5,
         visual_text: "",
         audio_text: "Audio Text"
       }

@@ -58,7 +58,7 @@ const PaMessageForm = ({
 }: Props) => {
   const [page, setPage] = useState<Page>(Page.MAIN);
   const now = moment();
-  const defaultPriority = 2;
+  const defaultPriority = 3;
 
   const [associatedAlert, setAssociatedAlert] = useState<Alert | string | null>(
     () => {
@@ -184,9 +184,9 @@ const PaMessageForm = ({
   useEffect(() => {
     const priorityToIntervalMap: { [priority: number]: string } = {
       1: "1",
-      2: "4",
-      3: "10",
-      4: "12",
+      3: "4",
+      4: "10",
+      5: "12",
     };
     setInterval(priorityToIntervalMap[priority]);
   }, [priority]);
@@ -297,7 +297,7 @@ const PaMessageForm = ({
             setSelectedTemplate(template);
             setVisualText(template.visual_text);
             setPhoneticText(template.audio_text);
-            setPriority(template.type === "psa" ? 4 : 1);
+            setPriority(template.type === "psa" ? 5 : 1);
             setAudioState(AudioPreview.Reviewed);
             setPage(Page.MAIN);
           }}

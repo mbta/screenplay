@@ -72,7 +72,7 @@ defmodule Random do
   end
 
   def priority do
-    Enum.random(1..4)
+    Enum.random(1..5)
   end
 
   def text do
