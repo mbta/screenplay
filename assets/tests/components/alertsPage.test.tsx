@@ -43,9 +43,7 @@ describe("Alerts Page", () => {
       expect(await screen.findByTestId("6")).toBeInTheDocument();
 
       fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
-      fireEvent.click(
-        await screen.findByRole("button", { name: "Pre Fare Duo" }),
-      );
+      fireEvent.click(await screen.findByRole("button", { name: "Pre Fare" }));
       expect(await screen.findByTestId("2")).toBeInTheDocument();
 
       fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
