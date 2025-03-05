@@ -12,6 +12,18 @@ const PriorityPicker = ({
   onSelectPriority,
   disabled = false,
 }: Props) => {
+  const MESSAGE_PRIORITY_MAP: Map<string, number> = new Map<string, number>([
+    ["Emergency Test", 1],
+    ["Ongoing service disruption", 3],
+    ["Upcoming service disruption", 4],
+    ["PSA Message", 5],
+  ]);
+
+  // Non-PA messages need a priority in between Emergency (1) and Current service Disruption (2)
+  // But here we want to just show the labels as is, 1 2 3 4 rather than 1 3 4 5 so adjust here
+  const adjustPriorityForLabel = (priority: number): number =>
+    priority == 1 ? priority : priority - 1;
+
   return (
     <Form.Group>
       <Form.Label
@@ -26,25 +38,21 @@ const PriorityPicker = ({
           onSelect={(eventKey) => onSelectPriority(Number(eventKey))}
         >
           <Dropdown.Toggle id="priority-picker" disabled={disabled}>
-            {priority}
+            {adjustPriorityForLabel(priority)}
           </Dropdown.Toggle>
           <Dropdown.Menu role="listbox">
-            {[
-              "Emergency",
-              "Ongoing service disruption",
-              "Upcoming service disruption",
-              "PSA Message",
-            ].map((label, index) => {
-              const priorityIndex = index + 1;
+            {Array.from(MESSAGE_PRIORITY_MAP).map((value: [string, number]) => {
+              const label = value[0];
+              const messagePriority = value[1];
 
               return (
                 <Dropdown.Item
                   role="option"
-                  key={label}
-                  eventKey={priorityIndex}
-                  active={priority === priorityIndex}
+                  key={messagePriority}
+                  eventKey={messagePriority}
+                  active={priority === messagePriority}
                 >
-                  <div>{priorityIndex}</div>
+                  <div>{adjustPriorityForLabel(messagePriority)}</div>
                   <div className={paMessageStyles.smaller}>{label}</div>
                 </Dropdown.Item>
               );

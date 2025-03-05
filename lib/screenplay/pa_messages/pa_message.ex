@@ -75,7 +75,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     |> validate_subset(:days_of_week, 1..7)
     |> validate_length(:days_of_week, min: 1)
     |> validate_number(:interval_in_minutes, greater_than: 0)
-    |> validate_inclusion(:priority, 1..4)
+    |> validate_inclusion(:priority, 1..5)
     |> validate_start_date()
     |> validate_end_date()
     |> maybe_unpause()
