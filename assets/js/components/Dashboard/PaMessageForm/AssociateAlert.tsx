@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Modal, Form } from "react-bootstrap";
-import moment from "moment";
 import FilterGroup from "Components/FilterGroup";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
-import { getAlertEarliestStartLatestEnd } from "../../../util";
+import MessageTable from "../../Tables/MessageTable";
+import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow";
 
 interface AssociateAlertPageProps {
   onApply: (
@@ -32,6 +32,30 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
   const [selectedMessageState, setSelectedMessageState] =
     useState<string>("active");
   const [selectedServiceType, setSelectedServiceType] = useState<string>("All");
+
+  const filterByActiveState = (alert: Alert, messageStateFilter: string) => {
+    const alertStart = new Date(alert.active_period[0].start);
+    const currentTime = new Date();
+    return messageStateFilter === "active"
+      ? alertStart <= currentTime
+      : alertStart > currentTime;
+  };
+
+  const filterByServiceType = (alert: Alert, serviceTypeFilter: string) => {
+    return (
+      serviceTypeFilter === "All" ||
+      alert.affected_list.some((affected) =>
+        affected.includes(serviceTypeFilter.toLowerCase()),
+      )
+    );
+  };
+
+  const filteredAlerts = alerts.filter((alert) => {
+    return (
+      filterByActiveState(alert, selectedMessageState) &&
+      filterByServiceType(alert, selectedServiceType)
+    );
+  });
 
   const serviceTypes = [
     "All",
@@ -61,16 +85,16 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
           <Col className="associate-alert-filter-selection">
             <FilterGroup
               className="mb-5"
-              header="Message state"
+              header="Filter by message state"
               selectedFilter={selectedMessageState}
               onFilterSelect={setSelectedMessageState}
               filters={[
-                { label: "Active", value: "active" },
+                { label: "Live", value: "active" },
                 { label: "Future", value: "future" },
               ]}
             />
             <FilterGroup
-              header="Service type"
+              header="Filter by service type"
               selectedFilter={selectedServiceType}
               onFilterSelect={setSelectedServiceType}
               filters={serviceTypes.map((serviceType) => {
@@ -79,11 +103,22 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
             />
           </Col>
           <Col>
-            <AssociateAlertsTable
-              alerts={alerts}
-              onSelectAlert={setSelectedAlert}
-              messageStateFilter={selectedMessageState}
-              serviceTypeFilter={selectedServiceType}
+            <MessageTable
+              isLoading={false}
+              isReadOnly={false}
+              headers={["Alert message", "ID", "Start-End", "Last modified"]}
+              addSelectColumn
+              addMoreActions={false}
+              rows={filteredAlerts.map((alert: Alert) => {
+                return (
+                  <AssociateAlertsRow
+                    key={alert.id}
+                    alert={alert}
+                    onSelect={() => setSelectedAlert(alert)}
+                  />
+                );
+              })}
+              emptyStateText="There are no alerts of this type"
             />
           </Col>
         </Row>
@@ -163,112 +198,6 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
         </Modal.Footer>
       </Modal>
     </div>
-  );
-};
-
-interface AssociateAlertsTableProps {
-  alerts: Alert[];
-  onSelectAlert: (alert: Alert) => void;
-  messageStateFilter: string;
-  serviceTypeFilter: string;
-}
-
-const AssociateAlertsTable = ({
-  alerts,
-  onSelectAlert,
-  messageStateFilter,
-  serviceTypeFilter,
-}: AssociateAlertsTableProps) => {
-  const filterByActiveState = (alert: Alert) => {
-    const alertStart = new Date(alert.active_period[0].start);
-    const currentTime = new Date();
-    return messageStateFilter === "active"
-      ? alertStart <= currentTime
-      : alertStart > currentTime;
-  };
-
-  const filterByServiceType = (alert: Alert) => {
-    return (
-      serviceTypeFilter === "All" ||
-      alert.affected_list.some((affected) =>
-        affected.includes(serviceTypeFilter.toLowerCase()),
-      )
-    );
-  };
-
-  const filteredAlerts = alerts.filter((alert) => {
-    return filterByActiveState(alert) && filterByServiceType(alert);
-  });
-
-  return (
-    <>
-      <table className="associate-alert-table">
-        <thead>
-          <tr>
-            <th className="associate-alert-table__message">Alert message</th>
-            <th className="associate-alert-table__id">ID</th>
-            <th className="associate-alert-table__start-end">Start-End</th>
-            <th className="associate-alert-table__last-modified">
-              Last modified
-            </th>
-            <th className="associate-alert-table__select"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAlerts.length == 0 ? (
-            <tr>
-              <td className="associate-alert-table__empty">
-                <div className="associate-alert-table__empty-text">
-                  There are no alerts of this type
-                </div>
-              </td>
-            </tr>
-          ) : (
-            filteredAlerts.map((alert: Alert) => {
-              return (
-                <AssociateAlertsTableRow
-                  key={alert.id}
-                  alert={alert}
-                  onSelect={() => onSelectAlert(alert)}
-                />
-              );
-            })
-          )}
-        </tbody>
-      </table>
-    </>
-  );
-};
-
-interface AssociateAlertsTableRowProps {
-  alert: Alert;
-  onSelect: () => void;
-}
-
-const AssociateAlertsTableRow = ({
-  alert,
-  onSelect,
-}: AssociateAlertsTableRowProps) => {
-  const [start, end] = getAlertEarliestStartLatestEnd(alert.active_period);
-
-  const last_modified = moment(alert.updated_at).format("l LT");
-
-  return (
-    <tr className="associate-alert-table__row" onClick={() => onSelect()}>
-      <td>{alert.header}</td>
-      <td>{alert.id}</td>
-      <td>
-        {start}
-        <br />
-        {end}
-      </td>
-      <td>{last_modified}</td>
-      <td className="associate-alert-table__select">
-        <Button variant="link" onClick={() => onSelect()}>
-          Select
-        </Button>
-      </td>
-    </tr>
   );
 };
 

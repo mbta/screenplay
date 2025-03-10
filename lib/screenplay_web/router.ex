@@ -1,21 +1,7 @@
 defmodule ScreenplayWeb.Router do
   use ScreenplayWeb, :router
 
-  pipeline :browser do
-    plug(:accepts, ["html"])
-    plug(:fetch_session)
-    plug(:fetch_flash)
-    plug(:protect_from_forgery)
-    plug(:put_secure_browser_headers)
-  end
-
-  pipeline :metadata do
-    plug(ScreenplayWeb.Plugs.Metadata)
-  end
-
-  pipeline :api do
-    plug(:accepts, ["json"])
-  end
+  alias ScreenplayWeb.AuthManager.EnsureRole
 
   pipeline :redirect_prod_http do
     if Application.compile_env(:screenplay, :redirect_http?) do
@@ -23,134 +9,110 @@ defmodule ScreenplayWeb.Router do
     end
   end
 
-  pipeline :auth do
+  pipeline :browser do
+    plug(:redirect_prod_http)
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
+  end
+
+  pipeline :api do
+    plug(:redirect_prod_http)
+    plug(:accepts, ["json"])
+  end
+
+  pipeline :authenticate do
     plug(ScreenplayWeb.AuthManager.Pipeline)
-  end
-
-  pipeline :ensure_auth do
     plug(Guardian.Plug.EnsureAuthenticated)
-  end
-
-  pipeline :ensure_screenplay_emergency_admin_group do
-    plug(ScreenplayWeb.EnsureScreenplayEmergencyAdminGroup)
-  end
-
-  pipeline :ensure_pa_message_admin do
-    plug(ScreenplayWeb.EnsurePaMessageAdmin)
+    plug(ScreenplayWeb.Plugs.Metadata)
   end
 
   pipeline :ensure_api_auth do
     plug(ScreenplayWeb.Plugs.EnsureApiAuth)
   end
 
-  pipeline :ensure_screens_admin do
-    plug(ScreenplayWeb.EnsureScreensAdminGroup)
+  pipeline :ensure_outfront_admin, do: plug(EnsureRole, :emergency_admin)
+  pipeline :ensure_pa_message_admin, do: plug(EnsureRole, :pa_message_admin)
+  pipeline :ensure_screens_admin, do: plug(EnsureRole, :screens_admin)
+
+  # Load balancer health check, exempt from authentication, SSL redirects, etc.
+  scope "/_health", ScreenplayWeb do
+    get("/", HealthController, :index)
   end
 
-  # Load balancer health check
-  # Exempt from auth checks and SSL redirects
+  scope "/auth", ScreenplayWeb do
+    pipe_through([:browser])
+
+    get("/:provider", AuthController, :request)
+    get("/:provider/callback", AuthController, :callback)
+  end
+
+  scope "/unauthorized", ScreenplayWeb do
+    pipe_through([:browser, :authenticate])
+
+    get("/", UnauthorizedController, :index)
+  end
+
+  # Dashboard (Places/Alerts)
+
   scope "/", ScreenplayWeb do
-    get("/_health", HealthController, :index)
-  end
-
-  scope "/", ScreenplayWeb.OutfrontTakeoverTool do
-    pipe_through([
-      :redirect_prod_http,
-      :browser,
-      :auth,
-      :ensure_auth,
-      :metadata,
-      :ensure_screenplay_emergency_admin_group
-    ])
-
-    get("/emergency-takeover", PageController, :index)
-  end
-
-  scope "/", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth, :metadata])
+    pipe_through([:browser, :authenticate])
 
     get("/", DashboardController, :root_redirect)
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
-    get("/unauthorized", UnauthorizedController, :index)
-  end
-
-  scope "/", ScreenplayWeb do
-    pipe_through([
-      :redirect_prod_http,
-      :browser,
-      :auth,
-      :ensure_auth,
-      :metadata,
-      :ensure_pa_message_admin
-    ])
-
-    get("/pa-messages", PaMessagesController, :index)
-    get("/pa-messages/new", PaMessagesController, :index)
-    get("/pa-messages/new/associate-alert", PaMessagesController, :index)
-    get("/pa-messages/:id/edit", PaMessagesController, :index)
-    get("/api/pa-messages/preview_audio", PaMessagesApiController, :preview_audio)
-  end
-
-  scope "/", ScreenplayWeb do
-    pipe_through([
-      :redirect_prod_http,
-      :browser,
-      :auth,
-      :ensure_auth,
-      :ensure_screens_admin,
-      :metadata
-    ])
-
-    get("/pending", ConfigController, :index)
-    get("/configure-screens/*app_id", ConfigController, :index)
   end
 
   scope "/api", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :browser, :auth, :ensure_auth])
+    pipe_through([:api, :authenticate])
 
     get("/dashboard", DashboardApiController, :index)
     get("/alerts", AlertsApiController, :index)
     get("/alerts/non_access_alerts", AlertsApiController, :non_access_alerts)
   end
 
-  scope "/auth", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :browser])
+  # PA Message Management
 
-    get("/:provider", AuthController, :request)
-    get("/:provider/callback", AuthController, :callback)
+  scope "/pa-messages", ScreenplayWeb do
+    pipe_through([:browser, :authenticate])
+
+    get("/", PaMessagesController, :index)
+    get("/new", PaMessagesController, :index)
+    get("/:id/edit", PaMessagesController, :index)
   end
 
-  scope "/api/takeover_tool", ScreenplayWeb.OutfrontTakeoverTool do
-    pipe_through([
-      :redirect_prod_http,
-      :api,
-      :browser,
-      :auth,
-      :ensure_auth,
-      :metadata,
-      :ensure_screenplay_emergency_admin_group
-    ])
+  scope "/api/pa-messages", ScreenplayWeb do
+    pipe_through([:api, :ensure_api_auth])
 
-    post("/create", AlertController, :create)
-    post("/edit", AlertController, :edit)
-    post("/clear", AlertController, :clear)
-    post("/clear_all", AlertController, :clear_all)
-    get("/active_alerts", AlertController, :active_alerts)
-    get("/past_alerts", AlertController, :past_alerts)
+    get("/active", PaMessagesApiController, :active)
+  end
 
-    get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
+  scope "/api/pa-messages", ScreenplayWeb do
+    pipe_through([:api, :authenticate])
+
+    get("/preview_audio", PaMessagesApiController, :preview_audio)
+    resources("/", PaMessagesApiController, only: [:index, :show])
+  end
+
+  scope "/api/pa-messages", ScreenplayWeb do
+    pipe_through([:api, :authenticate, :ensure_pa_message_admin])
+
+    resources("/", PaMessagesApiController, only: [:create, :update])
+  end
+
+  # Permanent Configuration
+
+  scope "/", ScreenplayWeb do
+    pipe_through([:browser, :authenticate, :ensure_screens_admin])
+
+    get("/pending", ConfigController, :index)
+    get("/configure-screens/*app_id", ConfigController, :index)
   end
 
   scope "/config", ScreenplayWeb do
-    pipe_through([
-      :redirect_prod_http,
-      :api,
-      :browser,
-      :auth,
-      :ensure_auth,
-      :ensure_screens_admin
-    ])
+    pipe_through([:api, :authenticate, :ensure_screens_admin])
 
     post("/put", ConfigController, :put)
     post("/publish/:place_id/:app_id", ConfigController, :publish)
@@ -163,23 +125,25 @@ defmodule ScreenplayWeb.Router do
     )
   end
 
-  scope "/api/pa-messages", ScreenplayWeb do
-    pipe_through([:redirect_prod_http, :api, :ensure_api_auth])
+  # Outfront Emergency Takeover Tool
 
-    get("/active", PaMessagesApiController, :active)
+  scope "/emergency-takeover", ScreenplayWeb.OutfrontTakeoverTool do
+    pipe_through([:browser, :authenticate, :ensure_outfront_admin])
+
+    get("/", PageController, :index)
   end
 
-  scope "/", ScreenplayWeb do
-    pipe_through [
-      :redirect_prod_http,
-      :api,
-      :auth,
-      :ensure_auth,
-      :metadata,
-      :ensure_pa_message_admin
-    ]
+  scope "/api/takeover_tool", ScreenplayWeb.OutfrontTakeoverTool do
+    pipe_through([:api, :browser, :authenticate, :ensure_outfront_admin])
 
-    resources "/api/pa-messages", PaMessagesApiController, only: [:index, :create, :update, :show]
+    post("/create", AlertController, :create)
+    post("/edit", AlertController, :edit)
+    post("/clear", AlertController, :clear)
+    post("/clear_all", AlertController, :clear_all)
+    get("/active_alerts", AlertController, :active_alerts)
+    get("/past_alerts", AlertController, :past_alerts)
+
+    get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
   end
 
   # Enables LiveDashboard only for development

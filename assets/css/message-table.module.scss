@@ -1,0 +1,91 @@
+@import "./variables.scss";
+
+.table {
+  background-color: $cool-gray-15;
+  max-width: 1096px;
+
+  th,
+  td {
+    padding: 8px 16px;
+    vertical-align: top;
+  }
+
+  th {
+    padding-top: 15px;
+    border-bottom: 1px solid $cool-gray-40;
+  }
+
+  td {
+    border-bottom: 1px solid $bg-elevation-4;
+  }
+}
+
+.row {
+  background-color: $cool-gray-15;
+
+  &:hover {
+    background-color: $cool-gray-20;
+    cursor: pointer;
+  }
+}
+
+.alertMessage,
+.message {
+  min-width: 300px;
+
+  a {
+    color: $text-primary;
+    text-decoration: none;
+  }
+}
+
+.id {
+  width: 90px;
+}
+
+.interval {
+  width: 91px;
+}
+
+.actions {
+  width: 110px;
+}
+
+.startEnd {
+  min-width: 200px;
+  padding-right: 0px;
+  text-wrap: nowrap;
+}
+
+.lastModified {
+  min-width: 220px;
+}
+
+.select {
+  min-width: 102px;
+
+  button {
+    color: $text-secondary;
+    height: fit-content;
+
+    &:hover {
+      color: $text-secondary;
+      opacity: 84%;
+    }
+  }
+}
+
+.emptyText {
+  font-weight: bold;
+  color: white;
+  padding-top: 16px;
+  padding-left: 16px;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 48px;
+}

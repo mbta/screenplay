@@ -121,7 +121,7 @@ const SelectStationsPage = ({
           <div className="title">Station Groups</div>
           <div className="col-content">
             <div className="route-groups ">
-              <div className="h5">Green line</div>
+              <div className="h5">Green Line</div>
               <StationGroupCheckbox
                 title="Central Subway"
                 label="North Station-Kenmore"
@@ -165,7 +165,7 @@ const SelectStationsPage = ({
               <hr />
             </div>
             <div className="route-groups">
-              <div className="h5">Red line</div>
+              <div className="h5">Red Line</div>
               <StationGroupCheckbox
                 title="Braintree Branch"
                 label="JFK-Braintree"
@@ -199,7 +199,7 @@ const SelectStationsPage = ({
               <hr />
             </div>
             <div className="route-groups">
-              <div className="h5">Orange line</div>
+              <div className="h5">Orange Line</div>
               <StationGroupCheckbox
                 title="North"
                 label="Oak Grove-North Station"
@@ -226,7 +226,7 @@ const SelectStationsPage = ({
         <div className="route-col route-col--green col">
           <Form.Check
             className="title"
-            label="Green line"
+            label="Green Line"
             type="checkbox"
             id="green-line"
             onChange={(evt) => {
@@ -249,7 +249,7 @@ const SelectStationsPage = ({
               return (
                 <RouteColumn
                   key={branch}
-                  label={`${branch} branch`}
+                  label={`${branch} Branch`}
                   routeIds={[route]}
                   places={placesByRoute[route]}
                   value={value}
@@ -267,7 +267,7 @@ const SelectStationsPage = ({
             className={`route-col ${ROUTE_TO_CLASS_NAMES_MAP[route]} col`}
           >
             <RouteColumn
-              label={`${route} line`}
+              label={`${route} ${route === "Mattapan" ? "Trolley" : "Line"}`}
               orderingRouteId={route}
               routeIds={routeNameToRouteIds[route]}
               places={placesByRoute[route]}

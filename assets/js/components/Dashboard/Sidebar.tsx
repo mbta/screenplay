@@ -18,6 +18,8 @@ import TLogoBlack from "../../../static/images/t-logo-black.svg";
 import cx from "classnames";
 import * as sidebarStyles from "Styles/sidebar.module.scss";
 
+import { isEmergencyAdmin, isScreensAdmin } from "Utils/auth";
+
 const SidebarLink = ({
   to,
   icon,
@@ -55,9 +57,6 @@ const SidebarLink = ({
 };
 
 const Sidebar = () => {
-  const isScreensAdmin = !!document.querySelector(
-    "meta[name=is-screens-admin]",
-  );
   const environment =
     document
       .querySelector("meta[name=environment-name]")
@@ -88,15 +87,17 @@ const Sidebar = () => {
       <SidebarLink to="/pa-messages" icon={VolumeUp} activeIcon={VolumeUpFill}>
         PA/ESS
       </SidebarLink>
-      <SidebarLink
-        to="/emergency-takeover"
-        icon={Lightning}
-        activeIcon={LightningFill}
-        reloadDocument
-      >
-        Emergency Takeover
-      </SidebarLink>
-      {isScreensAdmin && (
+      {isEmergencyAdmin() && (
+        <SidebarLink
+          to="/emergency-takeover"
+          icon={Lightning}
+          activeIcon={LightningFill}
+          reloadDocument
+        >
+          Emergency Takeover
+        </SidebarLink>
+      )}
+      {isScreensAdmin() && (
         <SidebarLink to="/pending" icon={Signpost} activeIcon={SignpostFill}>
           Configure
         </SidebarLink>

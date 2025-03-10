@@ -6,6 +6,7 @@ import { Dropdown } from "react-bootstrap";
 import { Link45deg, FlagFill, BoxArrowUpRight } from "react-bootstrap-icons";
 import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
 import KebabMenu from "Components/KebabMenu";
+import { isEmergencyAdmin } from "Utils/auth";
 
 interface ScreenDetailActionBarProps {
   screenUrl: string;
@@ -28,13 +29,9 @@ const ScreenDetailActionBar = (
     );
   };
 
-  const isEmergencyAdmin = document.querySelector(
-    "meta[name=is-emergency-admin]",
-  );
-
-  const reportAProblemURL = isEmergencyAdmin
-    ? "https://mbta.slack.com/channels/screens-team-pios"
-    : "https://mbta.slack.com/channels/screens";
+  const reportAProblemURL = isEmergencyAdmin()
+    ? "https://mbta.slack.com/channels/oio-mbta-collab"
+    : "https://mbta.slack.com/channels/tid-screens-team";
 
   let actionBar;
 
