@@ -1,10 +1,7 @@
 .kebab-menu-dropdown {
   &__menu {
+    padding: 0px;
     background-color: $cool-gray-30;
-
-    &:hover {
-      background-color: $cool-gray-15;
-    }
   }
 
   &__item {
@@ -17,6 +14,18 @@
     &:focus {
       background-color: $cool-gray-15;
       color: white;
+    }
+
+    &:first-child {
+      padding-top: 8px;
+      border-radius: 4px 4px 0 0;
+    }
+    &:last-child {
+      padding-bottom: 8px;
+      border-radius: 0 0 4px 4px;
+    }
+    &:only-child {
+      border-radius: 4px;
     }
   }
 }

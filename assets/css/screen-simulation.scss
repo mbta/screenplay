@@ -4,6 +4,11 @@
   margin-top: 16px;
   overflow: hidden;
 
+  &--pa_ess {
+    display: flex;
+    justify-content: center;
+  }
+
   .screen-simulation__iframe {
     // DUP, PreFare, Bus Shelter, and Eink v2s all could have scrollbars,
     // so height adjusted to fit
