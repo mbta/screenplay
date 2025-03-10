@@ -1,33 +1,5 @@
-.screen-simulation__iframe-container {
-  .kebab-menu-dropdown {
-    &__menu {
-      background-color: $gray-700;
-    }
-
-    &__item {
-      background-color: $gray-700;
-
-      &:hover {
-        background-color: $gray-800;
-      }
-
-      &:focus {
-        background-color: $gray-700;
-      }
-    }
-  }
-
-  .kebab-menu-button {
-    background-color: $gray-700;
-
-    &:hover {
-      background-color: $gray-800;
-    }
-
-    &:focus {
-      background-color: $gray-700;
-    }
-  }
+.screen-simulation__iframe-container .kebab-menu-button {
+  background-color: $gray-700;
 }
 
 .open-in-tab-button {
