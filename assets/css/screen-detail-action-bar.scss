@@ -1,5 +1,11 @@
-.screen-simulation__iframe-container .kebab-menu-button {
-  background-color: $gray-700;
+.screen-simulation__iframe-container {
+  .kebab-menu-button {
+    background-color: $gray-700;
+  }
+
+  .kebab-menu-dropdown__menu {
+    background-color: $gray-700;
+  }
 }
 
 .open-in-tab-button {
