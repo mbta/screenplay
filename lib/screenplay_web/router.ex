@@ -102,6 +102,20 @@ defmodule ScreenplayWeb.Router do
     resources("/", PaMessagesApiController, only: [:create, :update])
   end
 
+  # Prediction Suppression
+
+  scope "/api/suppressed-predictions", ScreenplayWeb do
+    pipe_through([:api, :authenticate])
+
+    get("/", SuppressedPredictionsApiController, only: [:index])
+  end
+
+  scope "/api/suppressed-predictions", ScreenplayWeb do
+    pipe_through([:api, :authenticate, :ensure_screens_admin])
+
+    resources("/", SuppressedPredictionsApiController, only: [:create, :update, :delete])
+  end
+
   # Permanent Configuration
 
   scope "/", ScreenplayWeb do
