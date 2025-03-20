@@ -54,7 +54,6 @@ defmodule Screenplay.SuppressedPredictions do
   @spec delete_suppressed_prediction(suppressed_prediction :: SuppressedPrediction.t()) ::
           {:ok, SuppressedPrediction.t()} | {:error, Ecto.Changeset.t()}
   def delete_suppressed_prediction(suppressed_prediction) do
-    suppressed_prediction
-    |> Repo.delete()
+    Repo.delete(suppressed_prediction)
   end
 end

@@ -13,7 +13,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
     with {:ok, suppressed_prediction} <-
            SuppressedPredictions.create_suppressed_prediction(params) do
       log_suppressed_prediction("suppressed_prediction_created", suppressed_prediction, conn)
-      json(conn, %{success: true})
+      json(conn, suppressed_prediction)
     end
   end
 
@@ -27,7 +27,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
           conn
         )
 
-        json(conn, %{success: true})
+        json(conn, updated_suppressed_prediction)
       end
     else
       conn
@@ -38,9 +38,9 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
 
   def delete(conn, _ = %{"id" => id}) do
     if suppressed_prediction = SuppressedPredictions.get_suppressed_prediction(id) do
-      with {:ok, _} <-
+      with {:ok, delete_suppressed_prediction} <-
              SuppressedPredictions.delete_suppressed_prediction(suppressed_prediction) do
-        json(conn, %{success: true})
+        json(conn, delete_suppressed_prediction)
       end
     else
       conn

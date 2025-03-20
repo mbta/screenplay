@@ -19,4 +19,12 @@ defmodule Screenplay.Factory do
       message_type: ""
     }
   end
+
+  def suppressed_predictions_factory do
+    %Screenplay.SuppressedPredictions.SuppressedPrediction{
+      location_id: "",
+      direction_id: 0,
+      clear_at_end_of_day: false
+    }
+  end
 end
