@@ -36,6 +36,7 @@ defmodule ScreenplayWeb.Router do
   pipeline :ensure_outfront_admin, do: plug(EnsureRole, :emergency_admin)
   pipeline :ensure_pa_message_admin, do: plug(EnsureRole, :pa_message_admin)
   pipeline :ensure_screens_admin, do: plug(EnsureRole, :screens_admin)
+  pipeline :ensure_suppression_admin, do: plug(EnsureRole, :suppression_admin)
 
   # Load balancer health check, exempt from authentication, SSL redirects, etc.
   scope "/_health", ScreenplayWeb do
@@ -101,6 +102,22 @@ defmodule ScreenplayWeb.Router do
     pipe_through([:api, :authenticate, :ensure_pa_message_admin])
 
     resources("/", PaMessagesApiController, only: [:create, :update])
+  end
+
+  # Prediction Suppression
+  scope "/api/suppressed-predictions", ScreenplayWeb do
+    pipe_through([:api, :authenticate])
+
+    get("/", SuppressedPredictionsApiController, :index)
+  end
+
+  scope "/api/suppressed-predictions", ScreenplayWeb do
+    pipe_through([:api, :authenticate, :ensure_suppression_admin])
+
+    post("/", SuppressedPredictionsApiController, :create)
+    put("/", SuppressedPredictionsApiController, :update)
+    patch("/", SuppressedPredictionsApiController, :update)
+    delete("/", SuppressedPredictionsApiController, :delete)
   end
 
   # Permanent Configuration
