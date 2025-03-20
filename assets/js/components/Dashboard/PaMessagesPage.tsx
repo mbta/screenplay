@@ -6,10 +6,10 @@ import useSWR, { mutate } from "swr";
 import { PaMessage } from "Models/pa_message";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import Toast, { type ToastProps } from "Components/Toast";
-import FilterGroup from "./FilterGroup";
 import { isPaMessageAdmin } from "Utils/auth";
 import MessageTable from "../Tables/MessageTable";
 import PaMessageRow from "../Tables/Rows/PaMessageRow";
+import { RadioItem, RadioList } from "./RadioList";
 
 type StateFilter = "current" | "future" | "past";
 
@@ -22,27 +22,6 @@ type ServiceType =
   | "Mattapan"
   | "Silver"
   | "Bus";
-
-const SERVICE_TYPES: Array<ServiceType> = [
-  "Green",
-  "Red",
-  "Orange",
-  "Blue",
-  "Mattapan",
-  "Silver",
-  "Bus",
-];
-
-const getServiceLabel = (serviceType: ServiceType): string => {
-  switch (serviceType) {
-    case "Silver":
-      return "Silver line";
-    case "Bus":
-      return "Busway";
-    default:
-      return serviceType;
-  }
-};
 
 const fetcher = (...args: Parameters<typeof fetch>) =>
   fetch(...args).then((resp) => resp.json());
@@ -153,42 +132,27 @@ const PaMessagesPage: ComponentType = () => {
                 <BoxArrowUpRight />
               </Link>
             </section>
-            <FilterGroup
+            <div className="mb-2">Filter by message state</div>
+            <RadioList
               className="mb-5"
-              header="Filter by message state"
-              onFilterSelect={(selected) =>
-                setStateFilter(selected as StateFilter)
-              }
-              selectedFilter={stateFilter.toLowerCase()}
-              filters={[
-                { label: "Live", value: "current" },
-                { label: "Future", value: "future" },
-                { label: "Past", value: "past" },
-              ]}
-            />
-            <FilterGroup
-              header="Filter by service type"
-              onFilterSelect={(selected) => {
-                const serviceType = selected as ServiceType;
-                if (serviceType === "All") {
-                  setServiceTypes([]);
-                } else {
-                  setServiceTypes([serviceType]);
-                }
-              }}
-              selectedFilter={
-                serviceTypes.length === 0 ? "All" : serviceTypes[0]
-              }
-              filters={[
-                { label: "All", value: "All" },
-                ...SERVICE_TYPES.map((serviceType) => {
-                  return {
-                    label: getServiceLabel(serviceType),
-                    value: serviceType,
-                  };
-                }),
-              ]}
-            />
+              value={stateFilter.toLowerCase()}
+              onChange={setStateFilter}
+            >
+              <RadioItem value="current">Live</RadioItem>
+              <RadioItem value="future">Future</RadioItem>
+              <RadioItem value="past">Past</RadioItem>
+            </RadioList>
+            <div className="mb-2">Filter by service type</div>
+            <RadioList value={serviceTypes} onChange={setServiceTypes}>
+              <RadioItem value={[]}>All</RadioItem>
+              <RadioItem value={["Green"]}>Green</RadioItem>
+              <RadioItem value={["Red"]}>Red</RadioItem>
+              <RadioItem value={["Orange"]}>Orange</RadioItem>
+              <RadioItem value={["Blue"]}>Blue</RadioItem>
+              <RadioItem value={["Mattapan"]}>Mattapan</RadioItem>
+              <RadioItem value={["Silver"]}>Silver line</RadioItem>
+              <RadioItem value={["Bus"]}>Busway</RadioItem>
+            </RadioList>
           </Col>
           <Col className="pa-message-table-container">
             <Row>

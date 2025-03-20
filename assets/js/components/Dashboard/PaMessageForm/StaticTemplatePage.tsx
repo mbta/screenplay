@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { StaticTemplate } from "Models/static_template";
-import FilterGroup from "Components/FilterGroup";
 import MessageTable from "../../Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
 import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
+import { RadioItem, RadioList } from "Components/RadioList";
 
 interface Props {
   onCancel: () => void;
@@ -36,17 +36,14 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
         </Row>
         <Row className="static-template-page-body">
           <Col className="filter-group-col">
-            <FilterGroup
-              header="Filter by template type"
-              selectedFilter={selectedTemplateType}
-              onFilterSelect={(templateType) =>
-                setSelectedTemplateType(templateType as TemplateType)
-              }
-              filters={[
-                { label: "PSAs", value: "psa" },
-                { label: "Emergency", value: "emergency" },
-              ]}
-            />
+            <div className="mb-2">Filter by template type</div>
+            <RadioList
+              value={selectedTemplateType}
+              onChange={setSelectedTemplateType}
+            >
+              <RadioItem value="psa">PSAs</RadioItem>
+              <RadioItem value="emergency">Emergency</RadioItem>
+            </RadioList>
           </Col>
           <Col>
             <div className="static-template-table-header">
