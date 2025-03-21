@@ -181,3 +181,25 @@ footer {
   background-size: 40px 40px;
   background-position: -19px -19px;
 }
+
+.bg-mbta-green {
+  background-color: $mbta-green !important;
+}
+.bg-mbta-red {
+  background-color: $mbta-red !important;
+}
+.bg-mbta-orange {
+  background-color: $mbta-orange !important;
+}
+.bg-mbta-blue {
+  background-color: $mbta-blue !important;
+}
+.bg-mbta-silver {
+  background-color: $mbta-silver !important;
+}
+.bg-mbta-bus {
+  background-color: $mbta-bus !important;
+}
+.text-invert {
+  color: $text-invert !important;
+}

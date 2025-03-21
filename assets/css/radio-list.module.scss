@@ -1,0 +1,37 @@
+.radioList {
+  display: flex;
+  flex-direction: column;
+  z-index: 0;
+}
+
+.radioItem {
+  cursor: pointer;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  color: #c1c7ce;
+  background-color: #1e2933;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  &:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  &:has(:focus-visible) {
+    box-shadow: 0 0 0 0.25rem rgba(86, 100, 111, 0.5);
+    z-index: 1;
+  }
+  &:has(:checked) {
+    color: #ffffff;
+    background-color: #404345;
+  }
+}
+
+.radioItemInput {
+  width: 0;
+  opacity: 0;
+}

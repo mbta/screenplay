@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Modal, Form } from "react-bootstrap";
-import FilterGroup from "Components/FilterGroup";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
 import MessageTable from "../../Tables/MessageTable";
 import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow";
+import { RadioList } from "Components/RadioList";
 
 interface AssociateAlertPageProps {
   onApply: (
@@ -57,17 +57,6 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
     );
   });
 
-  const serviceTypes = [
-    "All",
-    "Green",
-    "Red",
-    "Orange",
-    "Blue",
-    "Mattapan",
-    "Silver Line",
-    "Bus",
-  ];
-
   return (
     <div className="associate-alert-page">
       <Container fluid>
@@ -83,23 +72,30 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
         </Row>
         <Row className="associate-alert-page-body">
           <Col className="associate-alert-filter-selection">
-            <FilterGroup
+            <div className="mb-2">Filter by message state</div>
+            <RadioList
               className="mb-5"
-              header="Filter by message state"
-              selectedFilter={selectedMessageState}
-              onFilterSelect={setSelectedMessageState}
-              filters={[
-                { label: "Live", value: "active" },
-                { label: "Future", value: "future" },
+              value={selectedMessageState}
+              onChange={setSelectedMessageState}
+              items={[
+                { value: "active", content: "Live" },
+                { value: "future", content: "Future" },
               ]}
             />
-            <FilterGroup
-              header="Filter by service type"
-              selectedFilter={selectedServiceType}
-              onFilterSelect={setSelectedServiceType}
-              filters={serviceTypes.map((serviceType) => {
-                return { label: serviceType, value: serviceType };
-              })}
+            <div className="mb-2">Filter by service type</div>
+            <RadioList
+              value={selectedServiceType}
+              onChange={setSelectedServiceType}
+              items={[
+                { value: "All", content: "All" },
+                { value: "Green", content: "Green" },
+                { value: "Red", content: "Red" },
+                { value: "Orange", content: "Orange" },
+                { value: "Blue", content: "Blue" },
+                { value: "Mattapan", content: "Mattapan" },
+                { value: "Silver Line", content: "Silver Line" },
+                { value: "Bus", content: "Bus" },
+              ]}
             />
           </Col>
           <Col>

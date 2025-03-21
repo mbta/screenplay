@@ -15,15 +15,16 @@ import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import PlaceZonesRow from "./PlaceZonesRow";
+import { RadioList } from "Components/RadioList";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
-  Green: "bg-green",
-  Red: "bg-red",
-  Orange: "bg-orange",
-  Blue: "bg-blue",
-  Mattapan: "bg-mattapan",
-  Silver: "bg-silver",
-  Bus: "bg-bus",
+  Green: "bg-mbta-green",
+  Red: "bg-mbta-red",
+  Orange: "bg-mbta-orange",
+  Blue: "bg-mbta-blue",
+  Mattapan: "bg-mbta-red",
+  Silver: "bg-mbta-silver",
+  Bus: "bg-mbta-bus text-invert",
 };
 
 interface Props {
@@ -218,45 +219,31 @@ const SelectZonesPage = ({
       </div>
       <div className="zone-selection">
         <div className="filters-container">
-          <div>Service type</div>
-          <div className="filters">
-            {routeFilterIds.map((routeID) => {
-              const branchFilters =
-                routeID === "Green"
-                  ? routeFilterGroups["Green"].sort().map((branchID) => {
-                      const branch = branchID.split("-")[1];
-
-                      return (
-                        <Button
-                          key={`branch-filter-${branch}`}
-                          onClick={() => setSelectedRouteFilter(branchID)}
-                          className={cx("filter-button", {
-                            [ROUTE_TO_CLASS_NAMES_MAP["Green"]]:
-                              selectedRouteFilter === branchID,
-                          })}
-                        >
-                          <Dot /> {branch} Branch
-                        </Button>
-                      );
-                    })
-                  : null;
-
-              return (
-                <Fragment key={`route-filter-${routeID}`}>
-                  <Button
-                    onClick={() => setSelectedRouteFilter(routeID)}
-                    className={cx("filter-button", {
-                      [ROUTE_TO_CLASS_NAMES_MAP[routeID]]:
-                        selectedRouteFilter === routeID,
-                    })}
-                  >
-                    {routeID}
-                  </Button>
-                  {branchFilters}
-                </Fragment>
-              );
-            })}
-          </div>
+          <div className="fs-5">Service type</div>
+          <RadioList
+            value={selectedRouteFilter}
+            onChange={setSelectedRouteFilter}
+            items={routeFilterIds.flatMap((routeId) => [
+              {
+                value: routeId,
+                content: routeId,
+                checkedClass: ROUTE_TO_CLASS_NAMES_MAP[routeId],
+              },
+              ...(routeId === "Green"
+                ? routeFilterGroups["Green"].sort().map((branchId) => ({
+                    value: branchId,
+                    content: (
+                      <>
+                        <Dot /> {branchId.split("-")[1]} Branch
+                      </>
+                    ),
+                    checkedClass: ROUTE_TO_CLASS_NAMES_MAP[routeId],
+                  }))
+                : []),
+            ])}
+          >
+            {}
+          </RadioList>
         </div>
         <div className="zones-table-container">
           <div className="container-header">
@@ -264,7 +251,7 @@ const SelectZonesPage = ({
               <div className="title h3">Zones</div>
               <div
                 className={cx(
-                  "route",
+                  "route fs-5",
                   ROUTE_TO_CLASS_NAMES_MAP[selectedRouteFilter.split("-")[0]],
                 )}
               >
