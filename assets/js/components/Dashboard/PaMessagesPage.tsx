@@ -9,7 +9,7 @@ import Toast, { type ToastProps } from "Components/Toast";
 import { isPaMessageAdmin } from "Utils/auth";
 import MessageTable from "../Tables/MessageTable";
 import PaMessageRow from "../Tables/Rows/PaMessageRow";
-import { RadioItem, RadioList } from "./RadioList";
+import { RadioList } from "./RadioList";
 
 type StateFilter = "current" | "future" | "past";
 
@@ -133,26 +133,31 @@ const PaMessagesPage: ComponentType = () => {
               </Link>
             </section>
             <div className="mb-2">Filter by message state</div>
-            <RadioList
+            <RadioList<StateFilter>
               className="mb-5"
-              value={stateFilter.toLowerCase()}
+              value={stateFilter.toLowerCase() as StateFilter}
               onChange={setStateFilter}
-            >
-              <RadioItem value="current">Live</RadioItem>
-              <RadioItem value="future">Future</RadioItem>
-              <RadioItem value="past">Past</RadioItem>
-            </RadioList>
+              items={[
+                { value: "current", content: "Live" },
+                { value: "future", content: "Future" },
+                { value: "past", content: "Past" },
+              ]}
+            />
             <div className="mb-2">Filter by service type</div>
-            <RadioList value={serviceTypes} onChange={setServiceTypes}>
-              <RadioItem value={[]}>All</RadioItem>
-              <RadioItem value={["Green"]}>Green</RadioItem>
-              <RadioItem value={["Red"]}>Red</RadioItem>
-              <RadioItem value={["Orange"]}>Orange</RadioItem>
-              <RadioItem value={["Blue"]}>Blue</RadioItem>
-              <RadioItem value={["Mattapan"]}>Mattapan</RadioItem>
-              <RadioItem value={["Silver"]}>Silver line</RadioItem>
-              <RadioItem value={["Bus"]}>Busway</RadioItem>
-            </RadioList>
+            <RadioList<ServiceType[]>
+              value={serviceTypes}
+              onChange={setServiceTypes}
+              items={[
+                { value: [], content: "All" },
+                { value: ["Green"], content: "Green" },
+                { value: ["Red"], content: "Red" },
+                { value: ["Orange"], content: "Orange" },
+                { value: ["Blue"], content: "Blue" },
+                { value: ["Mattapan"], content: "Mattapan" },
+                { value: ["Silver"], content: "Silver line" },
+                { value: ["Bus"], content: "Busway" },
+              ]}
+            />
           </Col>
           <Col className="pa-message-table-container">
             <Row>

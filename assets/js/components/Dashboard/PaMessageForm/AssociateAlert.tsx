@@ -4,7 +4,7 @@ import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
 import MessageTable from "../../Tables/MessageTable";
 import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow";
-import { RadioList, RadioItem } from "Components/RadioList";
+import { RadioList } from "Components/RadioList";
 
 interface AssociateAlertPageProps {
   onApply: (
@@ -77,24 +77,26 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
               className="mb-5"
               value={selectedMessageState}
               onChange={setSelectedMessageState}
-            >
-              <RadioItem value="active">Live</RadioItem>
-              <RadioItem value="future">Future</RadioItem>
-            </RadioList>
+              items={[
+                { value: "active", content: "Live" },
+                { value: "future", content: "Future" },
+              ]}
+            />
             <div className="mb-2">Filter by service type</div>
             <RadioList
               value={selectedServiceType}
               onChange={setSelectedServiceType}
-            >
-              <RadioItem value="All">All</RadioItem>
-              <RadioItem value="Green">Green</RadioItem>
-              <RadioItem value="Red">Red</RadioItem>
-              <RadioItem value="Orange">Orange</RadioItem>
-              <RadioItem value="Blue">Blue</RadioItem>
-              <RadioItem value="Mattapan">Mattapan</RadioItem>
-              <RadioItem value="Silver Line">Silver Line</RadioItem>
-              <RadioItem value="Bus">Bus</RadioItem>
-            </RadioList>
+              items={[
+                { value: "All", content: "All" },
+                { value: "Green", content: "Green" },
+                { value: "Red", content: "Red" },
+                { value: "Orange", content: "Orange" },
+                { value: "Blue", content: "Blue" },
+                { value: "Mattapan", content: "Mattapan" },
+                { value: "Silver Line", content: "Silver Line" },
+                { value: "Bus", content: "Bus" },
+              ]}
+            />
           </Col>
           <Col>
             <MessageTable

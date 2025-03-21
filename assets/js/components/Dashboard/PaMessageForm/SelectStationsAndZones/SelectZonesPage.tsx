@@ -15,7 +15,7 @@ import cx from "classnames";
 import { Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import PlaceZonesRow from "./PlaceZonesRow";
-import { RadioItem, RadioList } from "Components/RadioList";
+import { RadioList } from "Components/RadioList";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-mbta-green",
@@ -223,27 +223,26 @@ const SelectZonesPage = ({
           <RadioList
             value={selectedRouteFilter}
             onChange={setSelectedRouteFilter}
+            items={routeFilterIds.flatMap((routeId) => [
+              {
+                value: routeId,
+                content: routeId,
+                checkedClass: ROUTE_TO_CLASS_NAMES_MAP[routeId],
+              },
+              ...(routeId === "Green"
+                ? routeFilterGroups["Green"].sort().map((branchId) => ({
+                    value: branchId,
+                    content: (
+                      <>
+                        <Dot /> {branchId.split("-")[1]} Branch
+                      </>
+                    ),
+                    checkedClass: ROUTE_TO_CLASS_NAMES_MAP[routeId],
+                  }))
+                : []),
+            ])}
           >
-            {routeFilterIds.map((routeId) => (
-              <Fragment key={routeId}>
-                <RadioItem
-                  value={routeId}
-                  checkedClass={ROUTE_TO_CLASS_NAMES_MAP[routeId]}
-                >
-                  {routeId}
-                </RadioItem>
-                {routeId == "Green" &&
-                  routeFilterGroups["Green"].sort().map((branchId) => (
-                    <RadioItem
-                      key={branchId}
-                      value={branchId}
-                      checkedClass={ROUTE_TO_CLASS_NAMES_MAP[routeId]}
-                    >
-                      <Dot /> {branchId.split("-")[1]} Branch
-                    </RadioItem>
-                  ))}
-              </Fragment>
-            ))}
+            {}
           </RadioList>
         </div>
         <div className="zones-table-container">

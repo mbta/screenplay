@@ -4,7 +4,7 @@ import { StaticTemplate } from "Models/static_template";
 import MessageTable from "../../Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
 import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
-import { RadioItem, RadioList } from "Components/RadioList";
+import { RadioList } from "Components/RadioList";
 
 interface Props {
   onCancel: () => void;
@@ -40,10 +40,11 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
             <RadioList
               value={selectedTemplateType}
               onChange={setSelectedTemplateType}
-            >
-              <RadioItem value="psa">PSAs</RadioItem>
-              <RadioItem value="emergency">Emergency</RadioItem>
-            </RadioList>
+              items={[
+                { value: "psa", content: "PSAs" },
+                { value: "emergency", content: "Emergency" },
+              ]}
+            />
           </Col>
           <Col>
             <div className="static-template-table-header">
