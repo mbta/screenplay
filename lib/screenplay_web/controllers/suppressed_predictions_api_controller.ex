@@ -36,7 +36,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
     end
   end
 
-  def delete(conn, _ = %{"id" => id}) do
+  def delete(conn, _deleted_suppressed_prediction = %{"id" => id}) do
     if suppressed_prediction = SuppressedPredictions.get_suppressed_prediction(id) do
       with {:ok, delete_suppressed_prediction} <-
              SuppressedPredictions.delete_suppressed_prediction(suppressed_prediction) do
