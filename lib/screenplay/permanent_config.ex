@@ -11,10 +11,10 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
-  alias ScreensConfig.{Config, PendingConfig, Screen}
-  alias ScreensConfig.V2.{Alerts, Departures, Footer, GlEink, LineMap}
-  alias ScreensConfig.V2.Departures.{Query, Section}
-  alias ScreensConfig.V2.Header.Destination
+  alias ScreensConfig.{Alerts, Config, Departures, Footer, LineMap, PendingConfig, Screen}
+  alias ScreensConfig.Departures.{Query, Section}
+  alias ScreensConfig.Header.Destination
+  alias ScreensConfig.Screen.GlEink
 
   @type screen_type :: :gl_eink_v2
 

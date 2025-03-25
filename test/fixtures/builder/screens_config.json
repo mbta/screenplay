@@ -551,8 +551,10 @@
       "tags": [],
       "app_id": "elevator_v2",
       "app_params": {
-        "evergreen_content": [],
-        "elevator_id": "842"
+        "accessible_path_direction_arrow": "n",
+        "alternate_direction_text": "",
+        "elevator_id": "842",
+        "evergreen_content": []
       },
       "refresh_if_loaded_before": null,
       "hidden_from_screenplay": false,
