@@ -38,18 +38,16 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
       assert [] = conn |> get("/api/suppressed-predictions") |> json_response(200)
 
       insert(:suppressed_predictions, %{
-        id: 1,
         location_id: "pa-ess",
-        direction_id: 2,
+        direction_id: 0,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
         updated_at: ~U[2024-05-01T01:00:00Z]
       })
 
       insert(:suppressed_predictions, %{
-        id: 2,
         location_id: "pa-ess",
-        direction_id: 2,
+        direction_id: 1,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
         updated_at: ~U[2024-05-01T01:00:00Z]
@@ -68,25 +66,25 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
 
     @valid_params %{
       location_id: "place-three",
-      direction_id: 2,
+      direction_id: 1,
       clear_at_end_of_day: true
     }
 
     @tag :authenticated
-    test "returns error when user is not a screen admin", %{conn: conn} do
+    test "returns error when user is not a suppression admin admin", %{conn: conn} do
       conn = post(conn, "/api/suppressed-predictions", @valid_params)
       assert response(conn, 401)
     end
 
-    @tag :authenticated_screens_admin
+    @tag :authenticated_suppression_admin
     test "creates a new SuppressedPrediction", %{conn: conn} do
-      assert %{"location_id" => "place-three", "direction_id" => 2, "clear_at_end_of_day" => true} =
+      assert %{"location_id" => "place-three", "direction_id" => 1, "clear_at_end_of_day" => true} =
                conn
                |> post("/api/suppressed-predictions", @valid_params)
                |> json_response(200)
     end
 
-    @tag :authenticated_screens_admin
+    @tag :authenticated_suppression_admin
     test "returns an error when passed invalid location id", %{conn: conn} do
       assert %{"errors" => _} =
                conn
@@ -97,7 +95,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
                |> json_response(422)
     end
 
-    @tag :authenticated_screens_admin
+    @tag :authenticated_suppression_admin
     test "returns an error when passed invalid direction id", %{conn: conn} do
       assert %{"errors" => _} =
                conn
@@ -107,16 +105,34 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
                })
                |> json_response(422)
     end
+
+    @tag :authenticated_suppression_admin
+    test "returns an error when passing in place-jfk with no braintree/ashmont specified", %{
+      conn: conn
+    } do
+      assert %{"errors" => errors} =
+               conn
+               |> post("/api/suppressed-predictions", %{
+                 @valid_params
+                 | location_id: "place-jfk"
+               })
+               |> json_response(422)
+
+      assert %{
+               "location_id" => [
+                 "Please provide either the Ashmont or Braintree location_id (place-jfk-ashmont or place-jfk-braintree)"
+               ]
+             } = errors
+    end
   end
 
-  describe("PUT /api/suppressed-predictions/:id with update/2") do
+  describe("PUT /api/suppressed-predictions/ with update/2") do
     setup do
       seed_place_cache()
 
       insert(:suppressed_predictions, %{
-        id: 1,
         location_id: "place-three",
-        direction_id: 2,
+        direction_id: 1,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
         updated_at: ~U[2024-05-01T01:00:00Z]
@@ -125,29 +141,50 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
       :ok
     end
 
-    @tag :authenticated_screens_admin
+    @valid_params %{
+      location_id: "place-three",
+      direction_id: 1,
+      clear_at_end_of_day: false
+    }
+
+    @invalid_params %{
+      location_id: "invalid_location_id",
+      direction_id: 1,
+      clear_at_end_of_day: false
+    }
+
+    @tag :authenticated_suppression_admin
     test "updates an existing SuppressedPrediction", %{conn: conn} do
       assert %{"clear_at_end_of_day" => false} =
                conn
-               |> put("/api/suppressed-predictions/1", %{clear_at_end_of_day: false})
+               |> put("/api/suppressed-predictions/", @valid_params)
                |> json_response(200)
     end
 
-    @tag :authenticated_screens_admin
+    @tag :authenticated_suppression_admin
     test "returns 404 when SuppressedPrediction with id is not found", %{conn: conn} do
       assert %{"error" => "not_found"} =
                conn
-               |> put("/api/suppressed-predictions/143", %{clear_at_end_of_day: false})
+               |> put("/api/suppressed-predictions", @invalid_params)
                |> json_response(404)
     end
   end
 
-  describe("DELETE /api/suppressed-predictions/:id with delete/2") do
+  describe("DELETE /api/suppressed-predictions with delete/2") do
+    @valid_params %{
+      location_id: "place-three",
+      direction_id: 1
+    }
+
+    @invalid_params %{
+      location_id: "invalid_location_id",
+      direction_id: 1
+    }
+
     setup do
       insert(:suppressed_predictions, %{
-        id: 1,
         location_id: "place-three",
-        direction_id: 2,
+        direction_id: 1,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
         updated_at: ~U[2024-05-01T01:00:00Z]
@@ -156,25 +193,25 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
       :ok
     end
 
-    @tag :authenticated_screens_admin
+    @tag :authenticated_suppression_admin
     test "deletes an existing SuppressedPrediction", %{conn: conn} do
       assert(
         %{
           "location_id" => "place-three",
-          "direction_id" => 2,
+          "direction_id" => 1,
           "clear_at_end_of_day" => true
         } =
           conn
-          |> delete("/api/suppressed-predictions/1")
+          |> delete("/api/suppressed-predictions", @valid_params)
           |> json_response(200)
       )
     end
 
-    @tag :authenticated_screens_admin
+    @tag :authenticated_suppression_admin
     test "returns 404 when SuppressedPrediction with id is not found", %{conn: conn} do
       assert %{"error" => "not_found"} =
                conn
-               |> delete("/api/suppressed-predictions/143")
+               |> delete("/api/suppressed-predictions", @invalid_params)
                |> json_response(404)
     end
   end
