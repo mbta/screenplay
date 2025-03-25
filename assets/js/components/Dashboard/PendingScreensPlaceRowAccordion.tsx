@@ -46,11 +46,9 @@ const formatAppID = (appID: string) => {
   switch (appID) {
     // A few labels are presented differently on this page,
     // to avoid a weird double-":" situation.
-    case "gl_eink":
     case "gl_eink_v2":
       return "Green Line E-Ink";
 
-    case "bus_eink":
     case "bus_eink_v2":
       return "Bus E-Ink";
 

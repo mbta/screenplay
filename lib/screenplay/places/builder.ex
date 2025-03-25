@@ -11,21 +11,9 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.Places.Place
   alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias ScreensConfig.Screen
-  alias ScreensConfig.V2.Departures.{Query, Section}
-
-  alias ScreensConfig.V2.{
-    BusEink,
-    BusShelter,
-    Busway,
-    Departures,
-    Dup,
-    Elevator,
-    Footer,
-    GlEink,
-    Header,
-    PreFare
-  }
+  alias ScreensConfig.{Departures, Footer, Header, Screen}
+  alias ScreensConfig.Departures.{Query, Section}
+  alias ScreensConfig.Screen.{BusEink, BusShelter, Busway, Dup, Elevator, GlEink, PreFare}
 
   use GenServer
 

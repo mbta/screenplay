@@ -7,8 +7,8 @@ defmodule Screenplay.PermanentConfigTest do
   alias Screenplay.PermanentConfig
   alias Screenplay.Places.{Cache, Place}
   alias Screenplay.Places.Place.ShowtimeScreen
-  alias ScreensConfig.{PendingConfig, Screen}
-  alias ScreensConfig.V2.{Alerts, Departures, Footer, GlEink, Header, LineMap}
+  alias ScreensConfig.{Alerts, Departures, Footer, Header, LineMap, PendingConfig, Screen}
+  alias ScreensConfig.Screen.GlEink
 
   def fetch_current_config_version do
     {:ok, _config, metadata} = Local.fetch_config()

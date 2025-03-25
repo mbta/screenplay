@@ -8,7 +8,7 @@ defmodule ScreenplayWeb.ConfigController do
   alias Screenplay.PermanentConfig
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.Screen
-  alias ScreensConfig.V2.GlEink
+  alias ScreensConfig.Screen.GlEink
 
   plug :check_pending_screens_version when action == :publish
 
