@@ -39,6 +39,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
 
       insert(:suppressed_predictions, %{
         location_id: "pa-ess",
+        route_id: "place-route",
         direction_id: 0,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
@@ -47,6 +48,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
 
       insert(:suppressed_predictions, %{
         location_id: "pa-ess",
+        route_id: "place-route",
         direction_id: 1,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
@@ -66,6 +68,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
 
     @valid_params %{
       location_id: "place-three",
+      route_id: "place-three-route",
       direction_id: 1,
       clear_at_end_of_day: true
     }
@@ -78,7 +81,12 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
 
     @tag :authenticated_suppression_admin
     test "creates a new SuppressedPrediction", %{conn: conn} do
-      assert %{"location_id" => "place-three", "direction_id" => 1, "clear_at_end_of_day" => true} =
+      assert %{
+               "location_id" => "place-three",
+               "route_id" => "place-three-route",
+               "direction_id" => 1,
+               "clear_at_end_of_day" => true
+             } =
                conn
                |> post("/api/suppressed-predictions", @valid_params)
                |> json_response(200)
@@ -96,6 +104,17 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    test "returns an error when passed invalid route id", %{conn: conn} do
+      assert %{"errors" => _} =
+               conn
+               |> post("/api/suppressed-predictions", %{
+                 @valid_params
+                 | route_id: "invalid_route_id"
+               })
+               |> json_response(422)
+    end
+
+    @tag :authenticated_suppression_admin
     test "returns an error when passed invalid direction id", %{conn: conn} do
       assert %{"errors" => _} =
                conn
@@ -105,33 +124,15 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
                })
                |> json_response(422)
     end
-
-    @tag :authenticated_suppression_admin
-    test "returns an error when passing in place-jfk with no braintree/ashmont specified", %{
-      conn: conn
-    } do
-      assert %{"errors" => errors} =
-               conn
-               |> post("/api/suppressed-predictions", %{
-                 @valid_params
-                 | location_id: "place-jfk"
-               })
-               |> json_response(422)
-
-      assert %{
-               "location_id" => [
-                 "Please provide either the Ashmont or Braintree location_id (place-jfk-ashmont or place-jfk-braintree)"
-               ]
-             } = errors
-    end
   end
 
-  describe("PUT /api/suppressed-predictions/ with update/2") do
+  describe("PUT /api/suppressed-predictions with update/2") do
     setup do
       seed_place_cache()
 
       insert(:suppressed_predictions, %{
         location_id: "place-three",
+        route_id: "place-three-route",
         direction_id: 1,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],
@@ -143,12 +144,14 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
 
     @valid_params %{
       location_id: "place-three",
+      route_id: "place-three-route",
       direction_id: 1,
       clear_at_end_of_day: false
     }
 
     @invalid_params %{
       location_id: "invalid_location_id",
+      route_id: "place-three-route",
       direction_id: 1,
       clear_at_end_of_day: false
     }
@@ -157,7 +160,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     test "updates an existing SuppressedPrediction", %{conn: conn} do
       assert %{"clear_at_end_of_day" => false} =
                conn
-               |> put("/api/suppressed-predictions/", @valid_params)
+               |> put("/api/suppressed-predictions", @valid_params)
                |> json_response(200)
     end
 
@@ -173,17 +176,20 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
   describe("DELETE /api/suppressed-predictions with delete/2") do
     @valid_params %{
       location_id: "place-three",
+      route_id: "place-three-route",
       direction_id: 1
     }
 
     @invalid_params %{
       location_id: "invalid_location_id",
+      route_id: "place-three-route",
       direction_id: 1
     }
 
     setup do
       insert(:suppressed_predictions, %{
         location_id: "place-three",
+        route_id: "place-three-route",
         direction_id: 1,
         clear_at_end_of_day: true,
         inserted_at: ~U[2024-05-01T01:00:00Z],

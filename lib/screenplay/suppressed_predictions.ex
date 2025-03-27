@@ -9,10 +9,18 @@ defmodule Screenplay.SuppressedPredictions do
   @doc """
   Gets a single suppressed prediction with the given ID.
   """
-  @spec get_suppressed_prediction(location_id :: String.t(), direction_id :: integer()) ::
+  @spec get_suppressed_prediction(
+          location_id :: String.t(),
+          route_id :: String.t(),
+          direction_id :: integer()
+        ) ::
           SuppressedPrediction.t() | nil
-  def get_suppressed_prediction(location_id, direction_id) do
-    Repo.get_by(SuppressedPrediction, location_id: location_id, direction_id: direction_id)
+  def get_suppressed_prediction(location_id, route_id, direction_id) do
+    Repo.get_by(SuppressedPrediction,
+      location_id: location_id,
+      route_id: route_id,
+      direction_id: direction_id
+    )
   end
 
   @doc """

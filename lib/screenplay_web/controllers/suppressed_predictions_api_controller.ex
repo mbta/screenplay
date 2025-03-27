@@ -17,9 +17,16 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
     end
   end
 
-  def update(conn, params = %{"location_id" => location_id, "direction_id" => direction_id}) do
+  def update(
+        conn,
+        params = %{
+          "location_id" => location_id,
+          "route_id" => route_id,
+          "direction_id" => direction_id
+        }
+      ) do
     if suppressed_prediction =
-         SuppressedPredictions.get_suppressed_prediction(location_id, direction_id) do
+         SuppressedPredictions.get_suppressed_prediction(location_id, route_id, direction_id) do
       with {:ok, updated_suppressed_prediction} <-
              SuppressedPredictions.update_suppressed_prediction(suppressed_prediction, params) do
         log_suppressed_prediction(
@@ -41,11 +48,12 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
         conn,
         _delete_suppressed_params = %{
           "location_id" => location_id,
+          "route_id" => route_id,
           "direction_id" => direction_id
         }
       ) do
     if suppressed_prediction =
-         SuppressedPredictions.get_suppressed_prediction(location_id, direction_id) do
+         SuppressedPredictions.get_suppressed_prediction(location_id, route_id, direction_id) do
       with {:ok, delete_suppressed_prediction} <-
              SuppressedPredictions.delete_suppressed_prediction(suppressed_prediction) do
         json(conn, delete_suppressed_prediction)
