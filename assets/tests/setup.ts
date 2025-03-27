@@ -46,6 +46,9 @@ beforeEach(() => {
       Promise.resolve({
         json: () => Promise.resolve(places),
       }),
+    )
+    .mockReturnValueOnce(
+      Promise.resolve({ json: () => Promise.resolve({ data: [] }) }),
     );
 });
 

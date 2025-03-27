@@ -4,6 +4,7 @@ import { Place } from "../models/place";
 import { Alert } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
+import { ServiceRecord } from "../models/service_record";
 import { ConfigValidationErrors } from "../models/configValidationErrors";
 import { useReducer } from "react";
 import {
@@ -23,6 +24,10 @@ type ReducerAction =
   | {
       type: "SET_PLACES";
       places: Place[];
+    }
+  | {
+      type: "SET_SERVICE_RECORDS";
+      serviceRecords: ServiceRecord[];
     }
   | {
       type: "SET_ALERTS";
@@ -105,6 +110,7 @@ interface AlertsListState {
 
 interface ScreenplayState {
   places: Place[];
+  serviceRecords: ServiceRecord[];
   alerts: Alert[];
   allAPIAlertIds: string[];
   screensByAlertMap: ScreensByAlert;
@@ -126,6 +132,8 @@ const reducer = (
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
+    case "SET_SERVICE_RECORDS":
+      return { ...state, serviceRecords: action.serviceRecords };
     case "SET_ALERTS":
       return {
         ...state,
@@ -250,6 +258,7 @@ const configValidationReducer = (
 
 const initialState: ScreenplayState = {
   places: [] as Place[],
+  serviceRecords: [],
   alerts: [] as Alert[],
   allAPIAlertIds: [] as string[],
   screensByAlertMap: {} as ScreensByAlert,
