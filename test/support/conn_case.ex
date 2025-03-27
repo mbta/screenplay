@@ -97,6 +97,20 @@ defmodule ScreenplayWeb.ConnCase do
 
           {conn, user}
 
+        tags[:authenticated_suppression_admin] ->
+          user = "test_user"
+
+          conn =
+            Phoenix.ConnTest.build_conn()
+            |> Plug.Test.init_test_session(%{})
+            |> Guardian.Plug.sign_in(ScreenplayWeb.AuthManager, user, %{
+              "roles" => ["suppression-admin"]
+            })
+            |> Plug.Conn.put_session(:username, user)
+            |> Plug.run([{ScreenplayWeb.Plugs.Metadata, []}])
+
+          {conn, user}
+
         tags[:api_authenticated] ->
           conn =
             Phoenix.ConnTest.build_conn()

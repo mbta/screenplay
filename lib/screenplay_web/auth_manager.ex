@@ -4,12 +4,17 @@ defmodule ScreenplayWeb.AuthManager do
   use Guardian, otp_app: :screenplay
 
   @type access_level ::
-          :emergency_admin | :screens_config_admin | :screens_admin | :pa_message_admin
+          :emergency_admin
+          | :screens_config_admin
+          | :screens_admin
+          | :pa_message_admin
+          | :suppression_admin
 
   @roles %{
     "screenplay-emergency-admin" => :emergency_admin,
     "screens-admin" => :screens_admin,
-    "pa-message-admin" => :pa_message_admin
+    "pa-message-admin" => :pa_message_admin,
+    "suppression-admin" => :suppression_admin
   }
 
   @max_session_time Application.compile_env!(:screenplay, [__MODULE__, :max_session_time])

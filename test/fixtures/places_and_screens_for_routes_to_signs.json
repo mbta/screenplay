@@ -43,5 +43,35 @@
         "station_code": "place-three-station-code"
       }
     ]
+  },
+  {
+    "id": "place-four",
+    "name": "Green Line Test",
+    "routes": ["Green-B"],
+    "screens": [
+      {
+        "id": "place-four-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [{ "id": "Green-B", "direction_id": 0 }],
+        "station_code": "place-four-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-five",
+    "name": "Silver Line Test",
+    "routes": ["Silver"],
+    "screens": [
+      {
+        "id": "place-five-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [{ "id": "747", "direction_id": 0 }],
+        "station_code": "place-five-station-code"
+      }
+    ]
   }
 ]
