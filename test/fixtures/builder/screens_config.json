@@ -560,6 +560,19 @@
       "hidden_from_screenplay": false,
       "vendor": "mimo",
       "device_id": ""
+    },
+    "BUS-101": {
+      "disabled": false,
+      "name": "",
+      "tags": [],
+      "app_id": "on_bus_v2",
+      "app_params": {
+        "evergreen_content": []
+      },
+      "refresh_if_loaded_before": null,
+      "hidden_from_screenplay": false,
+      "vendor": "hanover",
+      "device_id": ""
     }
   }
 }

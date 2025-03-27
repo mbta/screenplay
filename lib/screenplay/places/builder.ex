@@ -96,7 +96,7 @@ defmodule Screenplay.Places.Builder do
 
   defp get_showtime_screens do
     ScreensConfigStore.screens()
-    |> Enum.filter(fn {_, config} -> not config.hidden_from_screenplay end)
+    |> Enum.reject(&hidden_screen?/1)
     |> Enum.flat_map(&split_multi_place_screens/1)
     |> Enum.group_by(&get_stop_id/1, fn
       {id,
@@ -116,6 +116,10 @@ defmodule Screenplay.Places.Builder do
         %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
     end)
   end
+
+  defp hidden_screen?({_id, %Screen{app_id: :on_bus_v2}}), do: true
+  defp hidden_screen?({_id, %Screen{hidden_from_screenplay: true}}), do: true
+  defp hidden_screen?(_), do: false
 
   defp append_routes_to_places(places) do
     places
