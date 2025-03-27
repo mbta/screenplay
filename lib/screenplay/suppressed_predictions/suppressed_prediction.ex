@@ -142,7 +142,4 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
         end
     end
   end
-
-  # defp validate_location_and_route(changeset, places) do
-  # end
 end
