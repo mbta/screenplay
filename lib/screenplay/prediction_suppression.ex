@@ -12,7 +12,7 @@ defmodule Screenplay.PredictionSuppression do
             type: :start | :end | :mid
           }
         ]
-  def service_records() do
+  def service_records do
     case :ets.lookup(:service_records, :value) do
       [{:value, data}] -> data
       _ -> []
