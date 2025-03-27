@@ -24,7 +24,7 @@ defmodule Screenplay.ScreensConfig do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  @spec screens() :: list(Screen.t())
+  @spec screens() :: list({String.t(), Screen.t()})
   def screens do
     Cache.all(nil, return: {:key, :value})
   end
