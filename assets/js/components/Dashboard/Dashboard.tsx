@@ -8,7 +8,7 @@ import {
   useScreenplayDispatchContext,
 } from "Hooks/useScreenplayContext";
 import { useInterval } from "Hooks/useInterval";
-import { fetchAlerts, fetchPlaces } from "Utils/api";
+import { fetchAlerts, fetchPlaces, fetchServiceRecords } from "Utils/api";
 import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
@@ -48,6 +48,10 @@ const Dashboard: ComponentType = () => {
     fetchPlaces().then((placesList) =>
       dispatch({ type: "SET_PLACES", places: placesList }),
     );
+
+    fetchServiceRecords().then((serviceRecords) => {
+      dispatch({ type: "SET_SERVICE_RECORDS", serviceRecords });
+    });
 
     // Tests rely on this effect **not** having any dependencies listed.
     // This code pre-dates the addition of the react-hooks eslint rules.

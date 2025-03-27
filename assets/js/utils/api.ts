@@ -11,6 +11,12 @@ export const fetchPlaces = async (): Promise<Place[]> => {
   return await response.json();
 };
 
+export const fetchServiceRecords = async () => {
+  const response = await fetch("/api/service_records");
+  const { data } = await response.json();
+  return data;
+};
+
 interface AlertsResponse {
   all_alert_ids: string[];
   alerts: Alert[];

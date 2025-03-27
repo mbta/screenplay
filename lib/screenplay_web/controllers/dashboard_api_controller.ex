@@ -19,6 +19,10 @@ defmodule ScreenplayWeb.DashboardApiController do
     json(conn, updated_config)
   end
 
+  def service_records(conn, _params) do
+    json(conn, %{data: Screenplay.PredictionSuppression.service_records()})
+  end
+
   defp update_config_with_locations(config, locations) do
     Enum.map(config, fn %Place{screens: screens} = place ->
       new_screens =
