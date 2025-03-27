@@ -1,4 +1,7 @@
 defmodule Screenplay.PredictionSuppression do
+  @moduledoc """
+  Generates data structures for driving the prediction suppression UI
+  """
   use GenServer
 
   @spec service_records() :: [
