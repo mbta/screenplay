@@ -79,13 +79,6 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
           "Please provide just `Green` as the route_id for handling all Green Line routes"
         )
 
-      route_id in @valid_silver_line_routes ->
-        add_error(
-          changeset,
-          :route_id,
-          "Please provide just `Silver` as the route_id for handling all Silver Line routes"
-        )
-
       true ->
         changeset
     end

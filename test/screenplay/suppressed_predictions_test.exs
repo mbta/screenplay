@@ -65,11 +65,11 @@ defmodule Screenplay.SuppressedPredictionsTest do
       assert {:error, %Ecto.Changeset{} = changeset} =
                SuppressedPredictions.create_suppressed_prediction(suppressed_prediction)
 
-      assert {"Please just provide `Green` as the route_id for handling all Green Line routes", _} =
+      assert {"Please provide just `Green` as the route_id for handling all Green Line routes", _} =
                changeset.errors[:route_id]
     end
 
-    test "create_suppressed_prediction/1 errors with Silver Line not using correct route ids" do
+    test "create_suppressed_prediction/1 errors with Silver Line having no valid route ids" do
       suppressed_prediction = %{
         location_id: "place-five",
         route_id: "Silver",
