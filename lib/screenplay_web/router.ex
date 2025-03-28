@@ -106,6 +106,12 @@ defmodule ScreenplayWeb.Router do
 
   # Prediction Suppression
   scope "/api/suppressed-predictions", ScreenplayWeb do
+    pipe_through([:api, :ensure_api_auth])
+
+    get("/all", SuppressedPredictionsApiController, :all)
+  end
+
+  scope "/api/suppressed-predictions", ScreenplayWeb do
     pipe_through([:api, :authenticate])
 
     get("/", SuppressedPredictionsApiController, :index)
