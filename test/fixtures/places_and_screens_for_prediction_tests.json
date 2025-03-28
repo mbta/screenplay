@@ -1,15 +1,15 @@
 [
   {
-    "id": "place-one",
-    "name": "Place One",
-    "routes": ["place-two-route"],
+    "id": "place-jfk",
+    "name": "Place JFK",
+    "routes": ["Red"],
     "screens": [
       {
-        "id": "place-one-sign",
+        "id": "place-jfk",
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "routes": [{ "id": "place-one-route", "direction_id": 0 }],
+        "routes": [{ "id": "Red", "direction_id": 1 }],
         "station_code": "place-one-station-code"
       }
     ]
@@ -17,14 +17,14 @@
   {
     "id": "place-two",
     "name": "Place Two",
-    "routes": ["place-two-route"],
+    "routes": ["Blue"],
     "screens": [
       {
         "id": "place-two-sign",
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "routes": [{ "id": "place-two-route", "direction_id": 0 }],
+        "routes": [{ "id": "Blue", "direction_id": 0 }],
         "station_code": "place-two-station-code"
       }
     ]
@@ -32,14 +32,14 @@
   {
     "id": "place-three",
     "name": "Place Three",
-    "routes": ["place-three-route"],
+    "routes": ["Orange"],
     "screens": [
       {
         "id": "place-three-sign",
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "routes": [{ "id": "place-three-route", "direction_id": 0 }],
+        "routes": [{ "id": "Orange", "direction_id": 0 }],
         "station_code": "place-three-station-code"
       }
     ]

@@ -7,9 +7,9 @@ defmodule Screenplay.PlaceCacheHelpers do
   alias Screenplay.Places.{Cache, Place}
   alias Screenplay.Places.Place.PaEssScreen
 
-  def seed_place_cache do
+  def seed_place_cache(file_to_seed \\ "places_and_screens_for_routes_to_signs.json") do
     fixture_path =
-      Path.join(~w[#{File.cwd!()} test fixtures places_and_screens_for_routes_to_signs.json])
+      Path.join(~w[#{File.cwd!()} test fixtures #{file_to_seed}])
 
     contents =
       fixture_path
