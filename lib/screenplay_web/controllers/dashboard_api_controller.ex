@@ -19,8 +19,8 @@ defmodule ScreenplayWeb.DashboardApiController do
     json(conn, updated_config)
   end
 
-  def service_records(conn, _params) do
-    json(conn, %{data: Screenplay.PredictionSuppression.service_records()})
+  def line_stops(conn, _params) do
+    json(conn, %{data: Screenplay.PredictionSuppression.line_stops()})
   end
 
   defp update_config_with_locations(config, locations) do

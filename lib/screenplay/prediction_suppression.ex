@@ -4,16 +4,18 @@ defmodule Screenplay.PredictionSuppression do
   """
   use GenServer
 
-  @spec service_records() :: [
+  defguardp is_silver(route_id) when route_id in ["741", "742", "743", "746"]
+
+  @spec line_stops() :: [
           %{
-            place_id: String.t(),
-            route: String.t(),
+            stop_id: String.t(),
+            line: String.t(),
             direction_id: 0 | 1,
             type: :start | :end | :mid
           }
         ]
-  def service_records do
-    case :ets.lookup(:service_records, :value) do
+  def line_stops do
+    case :ets.lookup(:line_stops, :value) do
       [{:value, data}] -> data
       _ -> []
     end
@@ -25,7 +27,7 @@ defmodule Screenplay.PredictionSuppression do
 
   @impl GenServer
   def init(_) do
-    :ets.new(:service_records, [:protected, :named_table, read_concurrency: true])
+    :ets.new(:line_stops, [:protected, :named_table, read_concurrency: true])
     send(self(), :update)
     {:ok, %{}}
   end
@@ -49,29 +51,37 @@ defmodule Screenplay.PredictionSuppression do
             {stop["id"], stop}
           end
 
-        new_service_records =
-          for %{"attributes" => %{"typicality" => 1}} = route_pattern <- data,
-              trip_id = route_pattern["relationships"]["representative_trip"]["data"]["id"],
+        new_line_stops =
+          for %{
+                "attributes" => %{"typicality" => typicality, "canonical" => canonical},
+                "relationships" => %{
+                  "route" => %{"data" => %{"id" => route_id}},
+                  "representative_trip" => %{"data" => %{"id" => trip_id}}
+                }
+              }
+              when canonical or (is_silver(route_id) and typicality == 1) <- data,
               trip = trip_lookup[trip_id],
               stop_references = trip["relationships"]["stops"]["data"],
+              first_stop_id = List.first(stop_references)["id"],
+              last_stop_id = List.last(stop_references)["id"],
               %{"id" => stop_id} <- stop_references,
               uniq: true do
             stop = stop_lookup[stop_id]
 
             %{
-              place_id: stop["relationships"]["parent_station"]["data"]["id"],
-              route: trip["relationships"]["route"]["data"]["id"] |> route(),
+              stop_id: stop["relationships"]["parent_station"]["data"]["id"] || stop["id"],
+              line: trip["relationships"]["route"]["data"]["id"] |> line(),
               direction_id: trip["attributes"]["direction_id"],
               type:
-                cond do
-                  List.first(stop_references)["id"] == stop_id -> :start
-                  List.last(stop_references)["id"] == stop_id -> :end
-                  true -> :mid
+                case stop_id do
+                  ^first_stop_id -> :start
+                  ^last_stop_id -> :end
+                  _ -> :mid
                 end
             }
           end
 
-        :ets.insert(:service_records, {:value, new_service_records})
+        :ets.insert(:line_stops, {:value, new_line_stops})
 
       _ ->
         nil
@@ -80,7 +90,7 @@ defmodule Screenplay.PredictionSuppression do
     {:noreply, state}
   end
 
-  defp route("Green-" <> _), do: "Green"
-  defp route(route_id) when route_id in ["741", "742", "743", "746"], do: "Silver"
-  defp route(route_id), do: route_id
+  defp line("Green-" <> _), do: "Green"
+  defp line(route_id) when is_silver(route_id), do: "Silver"
+  defp line(route_id), do: route_id
 end

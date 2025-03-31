@@ -8,7 +8,7 @@ import {
   useScreenplayDispatchContext,
 } from "Hooks/useScreenplayContext";
 import { useInterval } from "Hooks/useInterval";
-import { fetchAlerts, fetchPlaces, fetchServiceRecords } from "Utils/api";
+import { fetchAlerts, fetchPlaces, fetchLineStops } from "Utils/api";
 import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
@@ -49,8 +49,8 @@ const Dashboard: ComponentType = () => {
       dispatch({ type: "SET_PLACES", places: placesList }),
     );
 
-    fetchServiceRecords().then((serviceRecords) => {
-      dispatch({ type: "SET_SERVICE_RECORDS", serviceRecords });
+    fetchLineStops().then((lineStops) => {
+      dispatch({ type: "SET_LINE_STOPS", lineStops });
     });
 
     // Tests rely on this effect **not** having any dependencies listed.

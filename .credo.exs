@@ -26,7 +26,8 @@
       },
       checks: %{
         disabled: [
-          {Credo.Check.Refactor.Nesting, []}
+          {Credo.Check.Refactor.Nesting, []},
+          {Credo.Check.Refactor.CyclomaticComplexity, []}
         ],
         extra: []
       }

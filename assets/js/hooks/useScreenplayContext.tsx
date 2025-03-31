@@ -4,7 +4,7 @@ import { Place } from "../models/place";
 import { Alert } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { ServiceRecord } from "../models/service_record";
+import { LineStop } from "../models/line_stop";
 import { ConfigValidationErrors } from "../models/configValidationErrors";
 import { useReducer } from "react";
 import {
@@ -26,8 +26,8 @@ type ReducerAction =
       places: Place[];
     }
   | {
-      type: "SET_SERVICE_RECORDS";
-      serviceRecords: ServiceRecord[];
+      type: "SET_LINE_STOPS";
+      lineStops: LineStop[];
     }
   | {
       type: "SET_ALERTS";
@@ -110,7 +110,7 @@ interface AlertsListState {
 
 interface ScreenplayState {
   places: Place[];
-  serviceRecords: ServiceRecord[];
+  lineStops: LineStop[];
   alerts: Alert[];
   allAPIAlertIds: string[];
   screensByAlertMap: ScreensByAlert;
@@ -132,8 +132,8 @@ const reducer = (
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
-    case "SET_SERVICE_RECORDS":
-      return { ...state, serviceRecords: action.serviceRecords };
+    case "SET_LINE_STOPS":
+      return { ...state, lineStops: action.lineStops };
     case "SET_ALERTS":
       return {
         ...state,
@@ -258,7 +258,7 @@ const configValidationReducer = (
 
 const initialState: ScreenplayState = {
   places: [] as Place[],
-  serviceRecords: [],
+  lineStops: [],
   alerts: [] as Alert[],
   allAPIAlertIds: [] as string[],
   screensByAlertMap: {} as ScreensByAlert,

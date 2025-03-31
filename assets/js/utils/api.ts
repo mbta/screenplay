@@ -11,8 +11,8 @@ export const fetchPlaces = async (): Promise<Place[]> => {
   return await response.json();
 };
 
-export const fetchServiceRecords = async () => {
-  const response = await fetch("/api/service_records");
+export const fetchLineStops = async () => {
+  const response = await fetch("/api/line_stops");
   const { data } = await response.json();
   return data;
 };
