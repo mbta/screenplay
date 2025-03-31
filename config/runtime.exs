@@ -67,7 +67,8 @@ if config_env() != :test do
         {Oban.Plugins.Cron,
          crontab: [
            {"0 7 * * *", Screenplay.Jobs.TakeoverToolTestingJob},
-           {"* * * * *", Screenplay.Jobs.Reminders}
+           {"* * * * *", Screenplay.Jobs.Reminders},
+           {"0 8 * * * ", Screenplay.Jobs.ClearSuppressedPredictions}
          ]},
         Oban.Plugins.Pruner,
         Oban.Plugins.Lifeline,
