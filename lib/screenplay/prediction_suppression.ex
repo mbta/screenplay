@@ -4,7 +4,7 @@ defmodule Screenplay.PredictionSuppression do
   """
   use GenServer
 
-  defguardp is_silver(route_id) when route_id in ["741", "742", "743", "746"]
+  defguardp is_sl_waterfront(route_id) when route_id in ["741", "742", "743", "746"]
 
   @spec line_stops() :: [
           %{
@@ -59,7 +59,7 @@ defmodule Screenplay.PredictionSuppression do
                   "representative_trip" => %{"data" => %{"id" => trip_id}}
                 }
               }
-              when canonical or (is_silver(route_id) and typicality == 1) <- data,
+              when canonical or (is_sl_waterfront(route_id) and typicality == 1) <- data,
               trip = trip_lookup[trip_id],
               stop_references = trip["relationships"]["stops"]["data"],
               first_stop_id = List.first(stop_references)["id"],
@@ -91,6 +91,6 @@ defmodule Screenplay.PredictionSuppression do
   end
 
   defp line("Green-" <> _), do: "Green"
-  defp line(route_id) when is_silver(route_id), do: "Silver"
+  defp line(route_id) when is_sl_waterfront(route_id), do: "Silver"
   defp line(route_id), do: route_id
 end
