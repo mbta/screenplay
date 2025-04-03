@@ -59,7 +59,9 @@ defmodule Screenplay.Jobs.Reminders do
   defp send_slack_message(message, url) do
     {:ok, json} = Jason.encode(message)
 
-    case HTTPoison.post(url, json) do
+    http_client = Application.get_env(:screenplay, :http_client)
+
+    case http_client.post(url, json) do
       {:ok, response} ->
         Logger.debug(fn ->
           "HTTP RESP:\n#{inspect(response)}"

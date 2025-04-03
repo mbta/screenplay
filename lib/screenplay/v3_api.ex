@@ -19,9 +19,11 @@ defmodule Screenplay.V3Api do
 
     url = build_url(route, params)
 
+    http_client = Application.get_env(:screenplay, :http_client)
+
     with {:http_request, {:ok, response}} <-
            {:http_request,
-            HTTPoison.get(
+            http_client.get(
               url,
               headers,
               Keyword.merge(@default_opts, opts)

@@ -7,8 +7,10 @@ defmodule Screenplay.Alerts.ScreensByAlert do
   def get_screens_by_alert(alert_ids) do
     url = build_url(alert_ids)
 
+    http_client = Application.get_env(:screenplay, :http_client)
+
     with {:http_request, {:ok, response}} <-
-           {:http_request, HTTPoison.get(url)},
+           {:http_request, http_client.get(url)},
          {:response_success, %{status_code: 200, body: body}} <-
            {:response_success, response},
          {:parse, {:ok, parsed}} <- {:parse, Jason.decode(body)} do

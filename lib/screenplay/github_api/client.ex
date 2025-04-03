@@ -17,7 +17,9 @@ defmodule Screenplay.GithubApi.Client do
   def get_file_contents_from_repo(name, file_path) do
     url = "https://api.github.com/repos/mbta/#{name}/contents/#{file_path}"
 
-    case HTTPoison.get(url) do
+    http_client = Application.get_env(:screenplay, :http_client)
+
+    case http_client.get(url) do
       {:ok, %{status_code: 200, body: body}} ->
         %{"content" => response_json} = Jason.decode!(body)
 
