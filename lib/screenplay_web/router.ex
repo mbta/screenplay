@@ -69,6 +69,7 @@ defmodule ScreenplayWeb.Router do
     pipe_through([:api, :authenticate])
 
     get("/dashboard", DashboardApiController, :index)
+    get("/line_stops", DashboardApiController, :line_stops)
     get("/alerts", AlertsApiController, :index)
     get("/alerts/non_access_alerts", AlertsApiController, :non_access_alerts)
   end

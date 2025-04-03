@@ -11,6 +11,12 @@ export const fetchPlaces = async (): Promise<Place[]> => {
   return await response.json();
 };
 
+export const fetchLineStops = async () => {
+  const response = await fetch("/api/line_stops");
+  const { data } = await response.json();
+  return data;
+};
+
 interface AlertsResponse {
   all_alert_ids: string[];
   alerts: Alert[];

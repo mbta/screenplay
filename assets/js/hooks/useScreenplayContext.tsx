@@ -4,6 +4,7 @@ import { Place } from "../models/place";
 import { Alert } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
+import { LineStop } from "../models/line_stop";
 import { ConfigValidationErrors } from "../models/configValidationErrors";
 import { useReducer } from "react";
 import {
@@ -23,6 +24,10 @@ type ReducerAction =
   | {
       type: "SET_PLACES";
       places: Place[];
+    }
+  | {
+      type: "SET_LINE_STOPS";
+      lineStops: LineStop[];
     }
   | {
       type: "SET_ALERTS";
@@ -105,6 +110,7 @@ interface AlertsListState {
 
 interface ScreenplayState {
   places: Place[];
+  lineStops: LineStop[];
   alerts: Alert[];
   allAPIAlertIds: string[];
   screensByAlertMap: ScreensByAlert;
@@ -126,6 +132,8 @@ const reducer = (
   switch (action.type) {
     case "SET_PLACES":
       return { ...state, places: action.places };
+    case "SET_LINE_STOPS":
+      return { ...state, lineStops: action.lineStops };
     case "SET_ALERTS":
       return {
         ...state,
@@ -250,6 +258,7 @@ const configValidationReducer = (
 
 const initialState: ScreenplayState = {
   places: [] as Place[],
+  lineStops: [],
   alerts: [] as Alert[],
   allAPIAlertIds: [] as string[],
   screensByAlertMap: {} as ScreensByAlert,
