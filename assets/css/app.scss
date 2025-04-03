@@ -200,6 +200,12 @@ footer {
 .bg-mbta-bus {
   background-color: $mbta-bus !important;
 }
+.bg-dark {
+  background-color: $dark-bg !important;
+}
 .text-invert {
   color: $text-invert !important;
+}
+.text-secondary {
+  color: $text-secondary !important;
 }
