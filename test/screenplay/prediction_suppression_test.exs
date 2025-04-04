@@ -2,6 +2,7 @@ defmodule Screenplay.PredictionSuppressionTest do
   use ExUnit.Case
 
   import Mox
+  alias Screenplay.PredictionSuppression
 
   @api_response %{
     data: [
@@ -101,14 +102,15 @@ defmodule Screenplay.PredictionSuppressionTest do
   }
 
   test "update" do
-    expect(HTTPoison.Mock, :get, fn _, _, _ ->
+    expect(HTTPoison.Mock, :get, fn url, _, _ ->
+      assert url =~ "/route_patterns"
       {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(@api_response)}}
     end)
 
-    Screenplay.PredictionSuppression.init([])
-    Screenplay.PredictionSuppression.handle_info(:update, %{})
+    PredictionSuppression.init([])
+    PredictionSuppression.handle_info(:update, %{})
 
-    assert Screenplay.PredictionSuppression.line_stops() ==
+    assert PredictionSuppression.line_stops() ==
              [
                %{line: "Blue", type: :start, direction_id: 0, stop_id: "place-wondl"},
                %{line: "Blue", type: :mid, direction_id: 0, stop_id: "place-rbmnl"},

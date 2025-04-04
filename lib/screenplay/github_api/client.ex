@@ -12,14 +12,13 @@ defmodule Screenplay.GithubApi.Client do
   require Logger
 
   @behaviour Screenplay.GithubApi.ClientBehaviour
+  @http_client Application.compile_env!(:screenplay, :http_client)
 
   @impl true
   def get_file_contents_from_repo(name, file_path) do
     url = "https://api.github.com/repos/mbta/#{name}/contents/#{file_path}"
 
-    http_client = Application.get_env(:screenplay, :http_client)
-
-    case http_client.get(url) do
+    case @http_client.get(url) do
       {:ok, %{status_code: 200, body: body}} ->
         %{"content" => response_json} = Jason.decode!(body)
 

@@ -8,6 +8,8 @@ defmodule Screenplay.Jobs.Reminders do
 
   alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
 
+  @http_client Application.compile_env!(:screenplay, :http_client)
+
   @impl Oban.Worker
   def perform(_) do
     case Application.get_env(:screenplay, :slack_webhook_url) do
@@ -59,9 +61,7 @@ defmodule Screenplay.Jobs.Reminders do
   defp send_slack_message(message, url) do
     {:ok, json} = Jason.encode(message)
 
-    http_client = Application.get_env(:screenplay, :http_client)
-
-    case http_client.post(url, json) do
+    case @http_client.post(url, json) do
       {:ok, response} ->
         Logger.debug(fn ->
           "HTTP RESP:\n#{inspect(response)}"

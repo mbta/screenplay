@@ -15,6 +15,7 @@ defmodule Screenplay.Watts.Client do
   require Logger
 
   @behaviour Screenplay.Watts.ClientBehaviour
+  @http_client Application.compile_env!(:screenplay, :http_client)
 
   @impl true
   def fetch_tts(text) do
@@ -22,9 +23,7 @@ defmodule Screenplay.Watts.Client do
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
     request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
 
-    http_client = Application.get_env(:screenplay, :http_client)
-
-    case http_client.post(
+    case @http_client.post(
            "#{watts_url}/tts",
            request_data,
            [
