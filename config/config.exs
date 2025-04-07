@@ -30,6 +30,7 @@ config :screenplay,
   config_fetcher: Screenplay.Places.S3Fetch,
   screens_config_fetcher: Screenplay.ScreensConfig.Fetch.S3,
   pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.S3,
+  http_client: HTTPoison,
   config_s3_bucket: "mbta-ctd-config",
   record_sentry: false,
   start_cache_processes: config_env() != :test
