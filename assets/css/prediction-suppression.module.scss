@@ -1,15 +1,13 @@
 @import "./variables.scss";
 
 .tableRow {
-  tbody > & {
-    border-bottom: 1px solid #6c757d;
-    border-top: 1px solid #6c757d;
-    &:nth-child(odd) {
-      background-color: $bg-elevation-3;
-    }
-    &:nth-child(even) {
-      background-color: #171f26;
-    }
+  border-bottom: 1px solid $light-gray;
+  border-top: 1px solid $light-gray;
+  &:nth-child(odd) {
+    background-color: $bg-elevation-3;
+  }
+  &:nth-child(even) {
+    background-color: $cool-gray-15;
   }
 }
 
