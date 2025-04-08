@@ -2,7 +2,7 @@
   {
     "id": "place-one",
     "name": "Place One",
-    "routes": ["place-one-route"],
+    "routes": ["place-two-route"],
     "screens": [
       {
         "id": "place-one-sign",

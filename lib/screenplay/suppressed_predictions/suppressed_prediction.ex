@@ -3,7 +3,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
   Represents a Suppressed Prediction for a given location
   """
   alias Screenplay.Places
-  alias Screenplay.SuppressedPredictionUtils
+  alias Screenplay.PredictionSuppressionUtils
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -68,7 +68,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
       # We don't handle separate Green Line and Silver Line branching route_ids
       # That is populated when we pass data to Transit Data
       # For internal use we just use "Green" or "Silver" to show all green/silver line routes
-      route_id in SuppressedPredictionUtils.green_line_routes() ->
+      route_id in PredictionSuppressionUtils.green_line_routes() ->
         add_error(
           changeset,
           :route_id,
@@ -84,7 +84,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
     location_id = get_field(changeset, :location_id)
 
     if places |> Enum.any?(&(&1.id == location_id)) ||
-         location_id in SuppressedPredictionUtils.jfk_umass_platforms() do
+         location_id in PredictionSuppressionUtils.jfk_umass_platforms() do
       changeset
     else
       add_error(changeset, :location_id, "Location `#{location_id}` does not exist")
@@ -96,7 +96,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
     route_id = get_field(changeset, :route_id)
 
     location_id =
-      if unchecked_location_id in SuppressedPredictionUtils.jfk_umass_platforms() do
+      if unchecked_location_id in PredictionSuppressionUtils.jfk_umass_platforms() do
         "place-jfk"
       else
         unchecked_location_id
@@ -124,7 +124,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
                   %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
                     Enum.any?(
                       routes,
-                      fn route -> SuppressedPredictionUtils.sl_waterfront?(route.id) end
+                      fn route -> PredictionSuppressionUtils.sl_waterfront?(route.id) end
                     )
 
                   _ ->

@@ -4,9 +4,9 @@ defmodule Screenplay.SuppressedPredictions do
   """
 
   alias Screenplay.Places
+  alias Screenplay.PredictionSuppressionUtils
   alias Screenplay.Repo
   alias Screenplay.SuppressedPredictions.SuppressedPrediction
-  alias Screenplay.SuppressedPredictionUtils
 
   @doc """
   Gets a single suppressed prediction with the given ID.
@@ -70,14 +70,14 @@ defmodule Screenplay.SuppressedPredictions do
         %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
           routes
           |> Enum.uniq_by(fn route -> {route.id, route.direction_id} end)
-          |> Enum.filter(&SuppressedPredictionUtils.valid_route?(&1.id))
+          |> Enum.filter(&PredictionSuppressionUtils.valid_route?(&1.id))
           |> Enum.map(fn route ->
             %{
               route_id: route.id,
               location_id: place.id,
               direction_id: route.direction_id,
               suppressed_type:
-                SuppressedPredictionUtils.get_suppression_type(
+                PredictionSuppressionUtils.get_suppression_type(
                   suppressed_predictions,
                   route.id,
                   place.id,

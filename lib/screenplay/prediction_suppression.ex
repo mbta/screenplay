@@ -3,7 +3,7 @@ defmodule Screenplay.PredictionSuppression do
   Generates data structures for driving the prediction suppression UI
   """
   use GenServer
-  import Screenplay.SuppressedPredictionUtils, only: [is_sl_waterfront: 1]
+  import Screenplay.PredictionSuppressionUtils, only: [is_sl_waterfront: 1]
 
   @spec line_stops() :: [
           %{
