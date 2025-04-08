@@ -190,18 +190,16 @@ const PredictionSuppressionPage = () => {
           />
         </div>
         <table style={{ flex: "1" }}>
-          <colgroup>
-            <col style={{ width: 250 }} />
-            <col style={{ width: 300 }} />
-            <col style={{ width: 300 }} />
-          </colgroup>
           <thead className="sticky-top bg-dark">
             <tr>
-              <th className="px-3 pb-3 fs-3">{line} Line</th>
+              <th className="px-3 pb-3 fs-3" style={{ width: "30%" }}>
+                {line} Line
+              </th>
               {directionNames(line).map((name) => (
                 <th
                   key={name}
                   className="px-3 pb-3 align-bottom text-secondary"
+                  style={{ width: "35%" }}
                 >
                   {name}
                 </th>
