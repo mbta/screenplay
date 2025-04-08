@@ -69,7 +69,8 @@ if config_env() != :test do
            {"0 7 * * *", Screenplay.Jobs.TakeoverToolTestingJob},
            {"* * * * *", Screenplay.Jobs.Reminders},
            {"0 8 * * * ", Screenplay.Jobs.ClearSuppressedPredictions}
-         ]},
+         ],
+         timezone: "America/New_York"},
         Oban.Plugins.Pruner,
         Oban.Plugins.Lifeline,
         Oban.Plugins.Reindexer
