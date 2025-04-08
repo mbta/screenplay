@@ -3,8 +3,7 @@ defmodule Screenplay.PredictionSuppression do
   Generates data structures for driving the prediction suppression UI
   """
   use GenServer
-
-  defguardp is_sl_waterfront(route_id) when route_id in ["741", "742", "743", "746"]
+  import Screenplay.SuppressedPredictionUtils, only: [is_sl_waterfront: 1]
 
   @spec line_stops() :: [
           %{
@@ -59,7 +58,9 @@ defmodule Screenplay.PredictionSuppression do
                   "representative_trip" => %{"data" => %{"id" => trip_id}}
                 }
               }
-              when canonical or (is_sl_waterfront(route_id) and typicality == 1) <- data,
+              when canonical or
+                     (is_sl_waterfront(route_id) and typicality == 1) <-
+                data,
               trip = trip_lookup[trip_id],
               stop_references = trip["relationships"]["stops"]["data"],
               first_stop_id = List.first(stop_references)["id"],

@@ -1,5 +1,6 @@
 defmodule Screenplay.SuppressedPredictionsTest do
   alias Screenplay.PlaceCacheHelpers
+  alias Screenplay.PredictionSuppression
   alias Screenplay.SuppressedPredictions
   use ScreenplayWeb.DataCase
 
@@ -39,7 +40,7 @@ defmodule Screenplay.SuppressedPredictionsTest do
                SuppressedPredictions.get_suppressed_prediction("place_typo", "place-one-route", 1)
     end
 
-    test "get_all_suppressed_predictions_transit_data/0" do
+    test "get_all_suppressed_predictions_for_data/0" do
       insert(:suppressed_predictions, %{
         location_id: "place-one",
         route_id: "place-one-route",
@@ -76,15 +77,70 @@ defmodule Screenplay.SuppressedPredictionsTest do
         updated_at: ~U[2024-05-01T01:00:00Z]
       })
 
+      PredictionSuppression.init([])
+
       assert [
-               %{route_id: "place-one-route", direction_id: 1, stop_id: "place-one"},
-               %{route_id: "place-two-route", direction_id: 0, stop_id: "place-two"},
-               %{route_id: "Green-B", direction_id: 0, stop_id: "place-four"},
-               %{route_id: "Green-C", direction_id: 0, stop_id: "place-four"},
-               %{route_id: "741", direction_id: 0, stop_id: "place-six"},
-               %{route_id: "742", direction_id: 0, stop_id: "place-six"},
-               %{route_id: "743", direction_id: 0, stop_id: "place-six"}
-             ] == SuppressedPredictions.get_all_suppressed_predictions_transit_data()
+               %{
+                 direction_id: 0,
+                 route_id: "741",
+                 location_id: "place-six",
+                 suppressed_type: nil
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "742",
+                 location_id: "place-six",
+                 suppressed_type: nil
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "743",
+                 location_id: "place-six",
+                 suppressed_type: nil
+               },
+               %{
+                 direction_id: 1,
+                 route_id: "741",
+                 location_id: "place-six",
+                 suppressed_type: nil
+               },
+               %{
+                 direction_id: 1,
+                 route_id: "742",
+                 location_id: "place-six",
+                 suppressed_type: nil
+               },
+               %{
+                 direction_id: 1,
+                 route_id: "743",
+                 location_id: "place-six",
+                 suppressed_type: nil
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "Green-B",
+                 location_id: "place-four",
+                 suppressed_type: nil
+               },
+               %{
+                 location_id: "place-four",
+                 route_id: "Green-C",
+                 direction_id: 0,
+                 suppressed_type: nil
+               },
+               %{
+                 location_id: "place-four",
+                 route_id: "Green-B",
+                 direction_id: 1,
+                 suppressed_type: nil
+               },
+               %{
+                 location_id: "place-four",
+                 route_id: "Green-C",
+                 direction_id: 1,
+                 suppressed_type: nil
+               }
+             ] == SuppressedPredictions.get_all_suppressed_predictions_for_data()
     end
   end
 end

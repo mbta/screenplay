@@ -6,8 +6,7 @@ defmodule Screenplay.SuppressedPredictions do
   alias Screenplay.Places
   alias Screenplay.Repo
   alias Screenplay.SuppressedPredictions.SuppressedPrediction
-
-  @valid_silver_line_routes ["741", "742", "743", "746"]
+  alias Screenplay.SuppressedPredictionUtils
 
   @doc """
   Gets a single suppressed prediction with the given ID.
@@ -44,71 +43,49 @@ defmodule Screenplay.SuppressedPredictions do
   @doc """
   Get all suppressed predictions modified for transit data
   """
-  @spec get_all_suppressed_predictions_transit_data() :: [SuppressedPrediction.t()]
-  def get_all_suppressed_predictions_transit_data do
-    places = Places.get()
+  @spec get_all_suppressed_predictions_for_data() :: [SuppressedPrediction.t()]
+  def get_all_suppressed_predictions_for_data do
+    suppressed_predictions = get_all_suppressed_predictions()
 
-    SuppressedPrediction
-    |> Repo.all()
-    |> Enum.map(fn
-      %SuppressedPrediction{
-        route_id: "Green",
-        location_id: location_id,
-        direction_id: direction_id
-      } ->
-        # Go through Green Line route and repopulate the appropriate branches with the unique direction id
-        Enum.find(places, fn place -> place.id == location_id end).routes
-        |> Enum.filter(fn route -> String.contains?(route, "Green") end)
-        |> Enum.map(fn route ->
-          if String.contains?(route, "Green") do
-            %{
-              stop_id: location_id,
-              route_id: route,
-              direction_id: direction_id
-            }
-          end
-        end)
-
-      %SuppressedPrediction{
-        route_id: "Silver",
-        location_id: location_id,
-        direction_id: direction_id
-      } ->
-        # Go through Silver Line route and repopulate the appropriate
-        # route numbers that exist in the @valid_silver_line_routes
-        Enum.find(places, fn place -> place.id == location_id end).screens
-        |> Enum.flat_map(fn
-          %Screenplay.Places.Place.PaEssScreen{routes: routes} -> routes
-          _ -> []
-        end)
-        |> Enum.filter(fn route ->
-          route.id in @valid_silver_line_routes and
-            route.direction_id == direction_id
-        end)
-        |> Enum.uniq_by(fn route -> {route.id, route.direction_id} end)
-        |> Enum.map(fn route ->
-          %{
-            stop_id: location_id,
-            route_id: route.id,
-            direction_id: direction_id
-          }
-        end)
-
-      # If not Green or Silver, just pass along the route
-      %SuppressedPrediction{
-        route_id: route_id,
-        location_id: location_id,
-        direction_id: direction_id
-      } ->
+    Places.get()
+    |> Enum.flat_map(fn place ->
+      if place.id == "place-jfk" do
         [
-          %{
-            stop_id: location_id,
-            route_id: route_id,
-            direction_id: direction_id
-          }
+          %{place | id: "jfk_umass_ashmont_platform"},
+          %{place | id: "jfk_umass_braintree_platform"}
         ]
+      else
+        [place]
+      end
     end)
-    |> Enum.flat_map(& &1)
+    |> Enum.flat_map(fn place ->
+      Enum.flat_map(place.screens, fn
+        %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
+          routes
+          |> Enum.uniq_by(fn route -> {route.id, route.direction_id} end)
+          |> Enum.filter(&SuppressedPredictionUtils.valid_route?(&1.id))
+          |> Enum.map(fn route ->
+            %{
+              route_id: route.id,
+              location_id: place.id,
+              direction_id: route.direction_id,
+              suppressed_type:
+                SuppressedPredictionUtils.get_suppression_type(
+                  suppressed_predictions,
+                  route.id,
+                  place.id,
+                  route.direction_id
+                )
+            }
+          end)
+
+        _ ->
+          []
+      end)
+      |> Enum.uniq_by(fn data ->
+        {data.route_id, data.location_id, data.direction_id}
+      end)
+    end)
   end
 
   @doc """

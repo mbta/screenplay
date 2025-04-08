@@ -54,7 +54,12 @@
         "label": null,
         "type": "pa_ess",
         "zone": "e",
-        "routes": [{ "id": "Green-B", "direction_id": 0 }],
+        "routes": [
+          { "id": "Green-B", "direction_id": 0 },
+          { "id": "Green-C", "direction_id": 0 },
+          { "id": "Green-B", "direction_id": 1 },
+          { "id": "Green-C", "direction_id": 1 }
+        ],
         "station_code": "place-four-station-code"
       }
     ]

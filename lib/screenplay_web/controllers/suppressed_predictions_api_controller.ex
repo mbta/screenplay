@@ -5,8 +5,8 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
 
   alias Screenplay.SuppressedPredictions
 
-  def all(conn, _params) do
-    json(conn, SuppressedPredictions.get_all_suppressed_predictions_transit_data())
+  def data(conn, _params) do
+    json(conn, SuppressedPredictions.get_all_suppressed_predictions_for_data())
   end
 
   def index(conn, _params) do

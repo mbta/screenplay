@@ -1,10 +1,10 @@
 # List Suppressed Predictions Messages
 
-Lists all Suppressed Predictions defined by the stop_id, route_id and direction_id
-Note: stop_id and location_id and place_id are _almost_ the same, minus JFK/UMass
+Lists all Suppressed Predictions defined by the stop*id, route_id and direction_id
+Note: stop_id and location_id and place_id are \_almost* the same, minus JFK/UMass
 JFK/UMass will use the child stop_ids being "jfk_umass_ashmont_platform" and "jfk_umass_braintree_platform"
 
-**URL** : `/api/suppressed_predictions/all`
+**URL** : `/api/suppressed_predictions/suppression_data`
 
 **Method** : `GET`
 
@@ -21,54 +21,64 @@ JFK/UMass will use the child stop_ids being "jfk_umass_ashmont_platform" and "jf
 ```json
 [
   {
-    "stop_id": "place-one",
-    "route_id": "route-one",
-    "direction_id": 1
+    "direction_id": 1,
+    "route_id": "Green-D",
+    "location_id": "place-chhil",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-one",
-    "route_id": "route-one",
-    "direction_id": 0
+    "direction_id": 0,
+    "route_id": "Green-D",
+    "location_id": "place-chhil",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-two",
-    "route_id": "Green-B",
-    "direction_id": 0
+    "direction_id": 1,
+    "route_id": "Orange",
+    "location_id": "place-tumnl",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-two",
+    "direction_id": 0,
+    "route_id": "Orange",
+    "location_id": "place-tumnl",
+    "suppression_type": null
+  },
+  {
+    "direction_id": 1,
     "route_id": "Green-C",
-    "direction_id": 0
+    "location_id": "place-gover",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-three",
-    "route_id": "741",
-    "direction_id": 0
+    "direction_id": 1,
+    "route_id": "Green-D",
+    "location_id": "place-gover",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-three",
-    "route_id": "742",
-    "direction_id": 0
+    "direction_id": 0,
+    "route_id": "Green-B",
+    "location_id": "place-gover",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-three",
-    "route_id": "743",
-    "direction_id": 0
+    "direction_id": 0,
+    "route_id": "Green-C",
+    "location_id": "place-gover",
+    "suppression_type": null
   },
   {
-    "stop_id": "place-three",
-    "route_id": "746",
-    "direction_id": 0
-  },
-  {
-    "stop_id": "jfk_umass_ashmont_platform",
+    "direction_id": 1,
     "route_id": "Red",
-    "direction_id": 0
+    "location_id": "place-cntsq",
+    "suppression_type": "stop"
   },
   {
-    "stop_id": "jfk_umass_braintree_platform",
+    "direction_id": 0,
     "route_id": "Red",
-    "direction_id": 0
+    "location_id": "place-cntsq",
+    "suppression_type": "stop"
   }
 ]
 ```
