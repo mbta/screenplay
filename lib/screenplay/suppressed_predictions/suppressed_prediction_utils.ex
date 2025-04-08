@@ -1,6 +1,6 @@
 defmodule Screenplay.SuppressedPredictionUtils do
   @moduledoc """
-  Utility functions for validating and checking prediction suppression
+  Utility functions for validating, checking prediction suppression and getting suppression type
   """
   alias Screenplay.PredictionSuppression
   alias Screenplay.SuppressedPredictions.SuppressedPrediction
@@ -34,16 +34,20 @@ defmodule Screenplay.SuppressedPredictionUtils do
           route_id :: String.t(),
           location_id :: String.t(),
           direction_id :: integer()
-        ) :: String.t()
-
+        ) :: :terminal | :stop | nil
   def get_suppression_type(suppressed_predictions, route_id, location_id, direction_id)
       when is_green_line(route_id) do
-    get_suppression_type_from_route_id(suppressed_predictions, "Green", location_id, direction_id)
+    get_suppression_type_from_line_data(
+      suppressed_predictions,
+      "Green",
+      location_id,
+      direction_id
+    )
   end
 
   def get_suppression_type(suppressed_predictions, route_id, location_id, direction_id)
       when is_sl_waterfront(route_id) do
-    get_suppression_type_from_route_id(
+    get_suppression_type_from_line_data(
       suppressed_predictions,
       "Silver",
       location_id,
@@ -52,7 +56,7 @@ defmodule Screenplay.SuppressedPredictionUtils do
   end
 
   def get_suppression_type(suppressed_predictions, route_id, location_id, direction_id) do
-    get_suppression_type_from_route_id(
+    get_suppression_type_from_line_data(
       suppressed_predictions,
       route_id,
       location_id,
@@ -60,7 +64,7 @@ defmodule Screenplay.SuppressedPredictionUtils do
     )
   end
 
-  defp get_suppression_type_from_route_id(
+  defp get_suppression_type_from_line_data(
          suppressed_predictions,
          route_id,
          location_id,
@@ -83,9 +87,9 @@ defmodule Screenplay.SuppressedPredictionUtils do
             line_stop.direction_id == direction_id
         end)
         |> case do
-          %{type: :start} -> "terminal"
-          %{type: :end} -> "terminal"
-          %{type: :mid} -> "stop"
+          %{type: :start} -> :terminal
+          %{type: :end} -> :terminal
+          %{type: :mid} -> :stop
           _ -> nil
         end
     end

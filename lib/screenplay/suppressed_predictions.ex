@@ -43,7 +43,14 @@ defmodule Screenplay.SuppressedPredictions do
   @doc """
   Get all suppressed predictions modified for transit data
   """
-  @spec get_all_suppressed_predictions_for_data() :: [SuppressedPrediction.t()]
+  @spec get_all_suppressed_predictions_for_data() :: [
+          %{
+            route_id: String.t(),
+            location_id: String.t(),
+            direction_id: integer(),
+            suppressed_type: :terminal | :stop | nil
+          }
+        ]
   def get_all_suppressed_predictions_for_data do
     suppressed_predictions = get_all_suppressed_predictions()
 
