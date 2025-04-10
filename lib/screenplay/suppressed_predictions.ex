@@ -58,20 +58,20 @@ defmodule Screenplay.SuppressedPredictions do
     |> Enum.flat_map(fn
       %Screenplay.Places.Place{id: "place-jfk"} ->
         Enum.map(
-          PredictionSuppressionUtils.jfk_umass_stop_data(),
+          PredictionSuppressionUtils.jfk_umass_child_stop_data(),
           fn %{
                route_id: route_id,
-               stop_id: stop_id,
+               stop_id: child_stop_id,
                direction_id: direction_id
              } ->
             %{
-              stop_id: stop_id,
+              stop_id: child_stop_id,
               route_id: route_id,
               direction_id: direction_id,
               suppression_type:
                 PredictionSuppressionUtils.suppression_type(
                   suppressed_predictions,
-                  stop_id
+                  child_stop_id
                 )
             }
           end

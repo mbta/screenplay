@@ -30,7 +30,7 @@ defmodule Screenplay.PredictionSuppressionUtils do
   def jfk_umass_child_location_ids,
     do: [@jfk_umass_ashmont_location_id, @jfk_umass_braintree_location_id]
 
-  def jfk_umass_stop_data,
+  def jfk_umass_child_stop_data,
     do: [
       %{
         route_id: "Red",
@@ -98,7 +98,7 @@ defmodule Screenplay.PredictionSuppressionUtils do
 
   def suppression_type(suppressed_predictions, stop_id)
       when stop_id in @jfk_umass_child_stop_ids do
-    case Enum.find(jfk_umass_stop_data(), fn %{stop_id: id} -> id == stop_id end) do
+    case Enum.find(jfk_umass_child_stop_data(), fn %{stop_id: id} -> id == stop_id end) do
       %{
         location_id: @jfk_umass_ashmont_location_id,
         route_id: route_id,
