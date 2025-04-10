@@ -25,65 +25,113 @@ defmodule Screenplay.PredictionSuppressionUtils do
   ]
   def valid_route?(route_id), do: route_id in (@valid_subway_routes ++ @sl_waterfront_routes)
 
-  # Direction ID = 0
-  @jfk_umass_child_stops_northbound ["70085", "70095"]
-  # Direction ID = 1
-  @jfk_umass_child_stops_southbound ["70086", "70096"]
+  @jfk_umass_ashmont_location_id "jfk_umass_ashmont_platform"
+  @jfk_umass_braintree_location_id "jfk_umass_braintree_platform"
+  def jfk_umass_child_location_ids,
+    do: [@jfk_umass_ashmont_location_id, @jfk_umass_braintree_location_id]
 
-  def get_jfk_umass_child_stop_id_direction(stop_id)
-      when stop_id in @jfk_umass_child_stops_northbound,
-      do: 0
+  def jfk_umass_stop_data,
+    do: [
+      %{
+        route_id: "Red",
+        stop_id: "70085",
+        direction_id: 0,
+        location_id: @jfk_umass_ashmont_location_id
+      },
+      %{
+        route_id: "Red",
+        stop_id: "70086",
+        direction_id: 1,
+        location_id: @jfk_umass_ashmont_location_id
+      },
+      %{
+        route_id: "Red",
+        stop_id: "70095",
+        direction_id: 0,
+        location_id: @jfk_umass_braintree_location_id
+      },
+      %{
+        route_id: "Red",
+        stop_id: "70096",
+        direction_id: 1,
+        location_id: @jfk_umass_braintree_location_id
+      }
+    ]
 
-  def get_jfk_umass_child_stop_id_direction(stop_id)
-      when stop_id in @jfk_umass_child_stops_southbound,
-      do: 1
+  @jfk_umass_child_stop_ids ["70085", "70086", "70095", "70096"]
 
-  def jfk_umass_child_stop_ids,
-    do: @jfk_umass_child_stops_northbound ++ @jfk_umass_child_stops_southbound
-
-  @jfk_umass_ashmont_place "jfk_umass_ashmont_platform"
-  @jfk_umass_braintree_place "jfk_umass_braintree_platform"
-  def jfk_umass_child_location_ids, do: [@jfk_umass_ashmont_place, @jfk_umass_braintree_place]
-
-  @spec get_suppression_type(
+  @spec suppression_type(
           suppressed_predictions :: [SuppressedPrediction.t()],
-          route_id :: String.t(),
           location_id :: String.t(),
+          route_id :: String.t(),
           direction_id :: integer()
-        ) :: :terminal | :stop | nil
-  def get_suppression_type(suppressed_predictions, route_id, location_id, direction_id)
+        ) :: :terminal | :stop | :none
+
+  def suppression_type(suppressed_predictions, location_id, route_id, direction_id)
       when is_green_line(route_id) do
-    get_suppression_type_from_line_data(
+    suppression_type_from_line_data(
       suppressed_predictions,
+      location_id,
       "Green",
-      location_id,
       direction_id
     )
   end
 
-  def get_suppression_type(suppressed_predictions, route_id, location_id, direction_id)
+  def suppression_type(suppressed_predictions, location_id, route_id, direction_id)
       when is_sl_waterfront(route_id) do
-    get_suppression_type_from_line_data(
+    suppression_type_from_line_data(
       suppressed_predictions,
+      location_id,
       "Silver",
-      location_id,
       direction_id
     )
   end
 
-  def get_suppression_type(suppressed_predictions, route_id, location_id, direction_id) do
-    get_suppression_type_from_line_data(
+  def suppression_type(suppressed_predictions, location_id, route_id, direction_id) do
+    suppression_type_from_line_data(
       suppressed_predictions,
-      route_id,
       location_id,
+      route_id,
       direction_id
     )
   end
 
-  defp get_suppression_type_from_line_data(
+  def suppression_type(suppressed_predictions, stop_id)
+      when stop_id in @jfk_umass_child_stop_ids do
+    case Enum.find(jfk_umass_stop_data(), fn %{stop_id: id} -> id == stop_id end) do
+      %{
+        location_id: @jfk_umass_ashmont_location_id,
+        route_id: route_id,
+        direction_id: direction_id
+      } ->
+        suppression_type_from_line_data(
+          suppressed_predictions,
+          @jfk_umass_ashmont_location_id,
+          route_id,
+          direction_id
+        )
+
+      %{
+        location_id: @jfk_umass_braintree_location_id,
+        route_id: route_id,
+        direction_id: direction_id
+      } ->
+        suppression_type_from_line_data(
+          suppressed_predictions,
+          @jfk_umass_braintree_location_id,
+          route_id,
+          direction_id
+        )
+
+      nil ->
+        :none
+    end
+  end
+
+  defp suppression_type_from_line_data(
          suppressed_predictions,
-         route_id,
          location_id,
+         route_id,
          direction_id
        ) do
     Enum.find(suppressed_predictions, fn prediction ->
@@ -94,12 +142,12 @@ defmodule Screenplay.PredictionSuppressionUtils do
       nil ->
         :none
 
-      found_prediction ->
+      _found_prediction ->
         Enum.find(PredictionSuppression.line_stops(), fn line_stop ->
           line_stop.line == route_id &&
             (line_stop.stop_id == location_id ||
                (line_stop.stop_id == "place-jfk" &&
-                  found_prediction.location_id in jfk_umass_child_stop_ids())) &&
+                  location_id in jfk_umass_child_location_ids())) &&
             line_stop.direction_id == direction_id
         end)
         |> case do

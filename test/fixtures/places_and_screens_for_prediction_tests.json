@@ -1,0 +1,125 @@
+[
+  {
+    "id": "place-jfk",
+    "name": "Place JFK",
+    "routes": ["Red"],
+    "screens": [
+      {
+        "id": "place-jfk",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [{ "id": "Red", "direction_id": 1 }],
+        "station_code": "place-one-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-two",
+    "name": "Place Two",
+    "routes": ["Blue"],
+    "screens": [
+      {
+        "id": "place-two-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [{ "id": "Blue", "direction_id": 0 }],
+        "station_code": "place-two-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-three",
+    "name": "Place Three",
+    "routes": ["Orange"],
+    "screens": [
+      {
+        "id": "place-three-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [{ "id": "Orange", "direction_id": 0 }],
+        "station_code": "place-three-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-four",
+    "name": "Green Line Test",
+    "routes": ["Green-B", "Green-C"],
+    "screens": [
+      {
+        "id": "place-four-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [
+          { "id": "Green-B", "direction_id": 0 },
+          { "id": "Green-C", "direction_id": 0 },
+          { "id": "Green-B", "direction_id": 1 },
+          { "id": "Green-C", "direction_id": 1 }
+        ],
+        "station_code": "place-four-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-five",
+    "name": "Silver Line Test",
+    "routes": ["Silver"],
+    "screens": [
+      {
+        "id": "place-five-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [{ "id": "747", "direction_id": 0 }],
+        "station_code": "place-five-station-code"
+      }
+    ]
+  },
+  {
+    "id": "place-six",
+    "name": "Silver Line Test Two",
+    "routes": ["Silver"],
+    "screens": [
+      {
+        "id": "place-six-sign",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "e",
+        "routes": [
+          { "id": "741", "direction_id": 0 },
+          { "id": "742", "direction_id": 0 },
+          { "id": "743", "direction_id": 0 }
+        ],
+        "station_code": "place-six-station-code"
+      },
+      {
+        "id": "place-six-sign-two",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "m",
+        "routes": [
+          { "id": "741", "direction_id": 0 },
+          { "id": "742", "direction_id": 0 },
+          { "id": "743", "direction_id": 0 }
+        ],
+        "station_code": "place-six-station-code"
+      },
+      {
+        "id": "place-six-sign-three",
+        "label": null,
+        "type": "pa_ess",
+        "zone": "m",
+        "routes": [
+          { "id": "741", "direction_id": 1 },
+          { "id": "742", "direction_id": 1 },
+          { "id": "743", "direction_id": 1 }
+        ],
+        "station_code": "place-six-station-code"
+      }
+    ]
+  }
+]
