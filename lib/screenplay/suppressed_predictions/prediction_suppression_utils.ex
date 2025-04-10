@@ -25,9 +25,25 @@ defmodule Screenplay.PredictionSuppressionUtils do
   ]
   def valid_route?(route_id), do: route_id in (@valid_subway_routes ++ @sl_waterfront_routes)
 
+  # Direction ID = 0
+  @jfk_umass_child_stops_northbound ["70085", "70095"]
+  # Direction ID = 1
+  @jfk_umass_child_stops_southbound ["70086", "70096"]
+
+  def get_jfk_umass_child_stop_id_direction(stop_id)
+      when stop_id in @jfk_umass_child_stops_northbound,
+      do: 0
+
+  def get_jfk_umass_child_stop_id_direction(stop_id)
+      when stop_id in @jfk_umass_child_stops_southbound,
+      do: 1
+
+  def jfk_umass_child_stop_ids,
+    do: @jfk_umass_child_stops_northbound ++ @jfk_umass_child_stops_southbound
+
   @jfk_umass_ashmont_place "jfk_umass_ashmont_platform"
   @jfk_umass_braintree_place "jfk_umass_braintree_platform"
-  def jfk_umass_platforms, do: [@jfk_umass_ashmont_place, @jfk_umass_braintree_place]
+  def jfk_umass_child_location_ids, do: [@jfk_umass_ashmont_place, @jfk_umass_braintree_place]
 
   @spec get_suppression_type(
           suppressed_predictions :: [SuppressedPrediction.t()],
@@ -76,21 +92,21 @@ defmodule Screenplay.PredictionSuppressionUtils do
     end)
     |> case do
       nil ->
-        nil
+        :none
 
       found_prediction ->
         Enum.find(PredictionSuppression.line_stops(), fn line_stop ->
           line_stop.line == route_id &&
             (line_stop.stop_id == location_id ||
                (line_stop.stop_id == "place-jfk" &&
-                  found_prediction.location_id in jfk_umass_platforms())) &&
+                  found_prediction.location_id in jfk_umass_child_stop_ids())) &&
             line_stop.direction_id == direction_id
         end)
         |> case do
           %{type: :start} -> :terminal
           %{type: :end} -> :terminal
           %{type: :mid} -> :stop
-          _ -> nil
+          _ -> :none
         end
     end
   end

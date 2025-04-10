@@ -83,62 +83,62 @@ defmodule Screenplay.SuppressedPredictionsTest do
                %{
                  direction_id: 0,
                  route_id: "741",
-                 location_id: "place-six",
-                 suppressed_type: nil
+                 stop_id: "place-six",
+                 suppressed_type: "none"
                },
                %{
                  direction_id: 0,
                  route_id: "742",
-                 location_id: "place-six",
-                 suppressed_type: nil
+                 stop_id: "place-six",
+                 suppressed_type: "none"
                },
                %{
                  direction_id: 0,
                  route_id: "743",
-                 location_id: "place-six",
-                 suppressed_type: nil
+                 stop_id: "place-six",
+                 suppressed_type: "none"
                },
                %{
                  direction_id: 1,
                  route_id: "741",
-                 location_id: "place-six",
-                 suppressed_type: nil
+                 stop_id: "place-six",
+                 suppressed_type: "none"
                },
                %{
                  direction_id: 1,
                  route_id: "742",
-                 location_id: "place-six",
-                 suppressed_type: nil
+                 stop_id: "place-six",
+                 suppressed_type: "none"
                },
                %{
                  direction_id: 1,
                  route_id: "743",
-                 location_id: "place-six",
-                 suppressed_type: nil
+                 stop_id: "place-six",
+                 suppressed_type: "none"
                },
                %{
                  direction_id: 0,
                  route_id: "Green-B",
-                 location_id: "place-four",
-                 suppressed_type: nil
+                 stop_id: "place-four",
+                 suppressed_type: "none"
                },
                %{
-                 location_id: "place-four",
+                 stop_id: "place-four",
                  route_id: "Green-C",
                  direction_id: 0,
-                 suppressed_type: nil
+                 suppressed_type: "none"
                },
                %{
-                 location_id: "place-four",
+                 stop_id: "place-four",
                  route_id: "Green-B",
                  direction_id: 1,
-                 suppressed_type: nil
+                 suppressed_type: "none"
                },
                %{
-                 location_id: "place-four",
+                 stop_id: "place-four",
                  route_id: "Green-C",
                  direction_id: 1,
-                 suppressed_type: nil
+                 suppressed_type: "none"
                }
              ] == SuppressedPredictions.get_all_suppressed_predictions_for_data()
     end

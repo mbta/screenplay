@@ -84,7 +84,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
     location_id = get_field(changeset, :location_id)
 
     if places |> Enum.any?(&(&1.id == location_id)) ||
-         location_id in PredictionSuppressionUtils.jfk_umass_platforms() do
+         location_id in PredictionSuppressionUtils.jfk_umass_child_location_ids() do
       changeset
     else
       add_error(changeset, :location_id, "Location `#{location_id}` does not exist")
@@ -96,7 +96,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
     route_id = get_field(changeset, :route_id)
 
     location_id =
-      if unchecked_location_id in PredictionSuppressionUtils.jfk_umass_platforms() do
+      if unchecked_location_id in PredictionSuppressionUtils.jfk_umass_child_location_ids() do
         "place-jfk"
       else
         unchecked_location_id
