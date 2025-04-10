@@ -1,8 +1,7 @@
-# List Suppressed Predictions Messages
+# List Suppressed Predictions
 
 Lists all Suppressed Predictions defined by the stop_id, route_id and direction_id
-
-Note: JFK/UMass will use the child stop_ids defined for the different routes.
+_Note_: JFK/UMass (place-jfk) will use the child stop_ids.
 
 **URL** : `/api/suppressed_predictions/suppression_data`
 
