@@ -9,6 +9,8 @@ defmodule Screenplay.V3Api do
     hackney: [pool: :api_v3_pool, checkout_timeout: 4000]
   ]
 
+  @http_client Application.compile_env!(:screenplay, :http_client)
+
   def get_json(
         route,
         params \\ %{},
@@ -21,7 +23,7 @@ defmodule Screenplay.V3Api do
 
     with {:http_request, {:ok, response}} <-
            {:http_request,
-            HTTPoison.get(
+            @http_client.get(
               url,
               headers,
               Keyword.merge(@default_opts, opts)
