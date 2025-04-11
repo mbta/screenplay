@@ -11,6 +11,7 @@ import {
   LightningFill,
   Signpost,
   SignpostFill,
+  ArrowDownShort,
   Icon,
 } from "react-bootstrap-icons";
 import TLogo from "../../../static/images/t-logo.svg";
@@ -84,6 +85,15 @@ const Sidebar = () => {
       >
         Posted Alerts
       </SidebarLink>
+      {document.querySelector("meta[name=show-prediction-suppression]") && (
+        <SidebarLink
+          to="/prediction-suppression"
+          icon={ArrowDownShort}
+          activeIcon={ArrowDownShort}
+        >
+          Suppress Predictions
+        </SidebarLink>
+      )}
       <SidebarLink to="/pa-messages" icon={VolumeUp} activeIcon={VolumeUpFill}>
         PA/ESS
       </SidebarLink>

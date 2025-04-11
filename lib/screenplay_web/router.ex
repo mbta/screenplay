@@ -64,6 +64,7 @@ defmodule ScreenplayWeb.Router do
     get("/", DashboardController, :root_redirect)
     get("/dashboard", DashboardController, :index)
     get("/alerts/*id", AlertsController, :index)
+    get("/prediction-suppression", DashboardController, :index)
   end
 
   scope "/api", ScreenplayWeb do

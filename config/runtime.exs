@@ -53,7 +53,8 @@ if config_env() != :test do
     fullstory_org_id: System.get_env("FULLSTORY_ORG_ID"),
     api_key: System.fetch_env!("SCREENPLAY_API_KEY"),
     watts_url: System.get_env("WATTS_URL"),
-    watts_api_key: System.get_env("WATTS_API_KEY")
+    watts_api_key: System.get_env("WATTS_API_KEY"),
+    show_prediction_suppression: System.get_env("SHOW_PREDICTION_SUPPRESSION")
 
   if sentry_dsn not in [nil, ""] do
     config :sentry,
