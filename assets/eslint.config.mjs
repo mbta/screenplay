@@ -90,6 +90,7 @@ export default [
       ],
 
       "react/no-danger": "error",
+      "react/no-unescaped-entities": 0,
       "jsx-a11y/no-static-element-interactions": "off",
       "jsx-a11y/click-events-have-key-events": "off",
     },

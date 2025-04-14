@@ -42,6 +42,48 @@ defmodule Screenplay.SuppressedPredictionsTest do
                SuppressedPredictions.get_suppressed_prediction("place_typo", "place-one-route", 1)
     end
 
+    test "clear_suppressed_predictions_for_end_of_day/0" do
+      insert(:suppressed_predictions, %{
+        location_id: "place-one",
+        route_id: "place-one-route",
+        direction_id: 1,
+        clear_at_end_of_day: true,
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        updated_at: ~U[2024-05-01T01:00:00Z]
+      })
+
+      insert(:suppressed_predictions, %{
+        location_id: "place-two",
+        route_id: "place-two-route",
+        direction_id: 0,
+        clear_at_end_of_day: true,
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        updated_at: ~U[2024-05-01T01:00:00Z]
+      })
+
+      insert(:suppressed_predictions, %{
+        location_id: "place-four",
+        route_id: "Green",
+        direction_id: 0,
+        clear_at_end_of_day: false,
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        updated_at: ~U[2024-05-01T01:00:00Z]
+      })
+
+      insert(:suppressed_predictions, %{
+        location_id: "place-six",
+        route_id: "Silver",
+        direction_id: 0,
+        clear_at_end_of_day: true,
+        inserted_at: ~U[2024-05-01T01:00:00Z],
+        updated_at: ~U[2024-05-01T01:00:00Z]
+      })
+
+      assert(4 == length(SuppressedPredictions.get_all_suppressed_predictions()))
+      assert({3, nil} = SuppressedPredictions.clear_suppressed_predictions_for_end_of_day())
+      assert(1 == length(SuppressedPredictions.get_all_suppressed_predictions()))
+    end
+
     test "get_all_suppressed_predictions_for_data/0" do
       insert(:suppressed_predictions, %{
         location_id: "jfk_umass_ashmont_platform",

@@ -140,4 +140,15 @@ defmodule Screenplay.SuppressedPredictions do
   def delete_suppressed_prediction(suppressed_prediction) do
     Repo.delete(suppressed_prediction)
   end
+
+  @doc """
+  Clears all suppressed predicitons with the "clear_at_end_of_day" flag set to true
+  """
+  @spec clear_suppressed_predictions_for_end_of_day() :: {non_neg_integer(), nil}
+  def clear_suppressed_predictions_for_end_of_day do
+    import Ecto.Query, only: [from: 2]
+
+    from(sp in SuppressedPrediction, where: sp.clear_at_end_of_day == true)
+    |> Repo.delete_all()
+  end
 end
