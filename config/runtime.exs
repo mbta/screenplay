@@ -67,9 +67,11 @@ if config_env() != :test do
       plugins: [
         {Oban.Plugins.Cron,
          crontab: [
-           {"0 7 * * *", Screenplay.Jobs.TakeoverToolTestingJob},
-           {"* * * * *", Screenplay.Jobs.Reminders}
-         ]},
+           {"0 2 * * *", Screenplay.Jobs.TakeoverToolTestingJob},
+           {"* * * * *", Screenplay.Jobs.Reminders},
+           {"0 3 * * * ", Screenplay.Jobs.ClearSuppressedPredictions}
+         ],
+         timezone: "America/New_York"},
         Oban.Plugins.Pruner,
         Oban.Plugins.Lifeline,
         Oban.Plugins.Reindexer
