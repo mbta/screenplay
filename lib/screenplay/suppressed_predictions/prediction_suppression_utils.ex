@@ -2,8 +2,6 @@ defmodule Screenplay.PredictionSuppressionUtils do
   @moduledoc """
   Utility functions for validating, checking prediction suppression and getting suppression type
   """
-  alias Screenplay.PredictionSuppression
-  alias Screenplay.SuppressedPredictions.SuppressedPrediction
   require Logger
 
   @green_line_routes ["Green-B", "Green-C", "Green-D", "Green-E"]
@@ -11,19 +9,9 @@ defmodule Screenplay.PredictionSuppressionUtils do
   defguard is_green_line(route_id) when route_id in @green_line_routes
 
   @sl_waterfront_routes ["741", "742", "743", "746"]
+  def sl_waterfront_routes, do: @sl_waterfront_routes
   def sl_waterfront?(route_id), do: route_id in @sl_waterfront_routes
   defguard is_sl_waterfront(route_id) when route_id in @sl_waterfront_routes
-
-  @valid_subway_routes [
-    "Red",
-    "Orange",
-    "Blue",
-    "Green-B",
-    "Green-C",
-    "Green-D",
-    "Green-E"
-  ]
-  def valid_route?(route_id), do: route_id in (@valid_subway_routes ++ @sl_waterfront_routes)
 
   @jfk_umass_ashmont_location_id "jfk_umass_ashmont_platform"
   @jfk_umass_braintree_location_id "jfk_umass_braintree_platform"
@@ -58,104 +46,77 @@ defmodule Screenplay.PredictionSuppressionUtils do
       }
     ]
 
-  @jfk_umass_child_stop_ids ["70085", "70086", "70095", "70096"]
+  def valid_route_for_place?(place, route_id) when route_id == "Silver" do
+    # For Silver Line, we make sure that the routes are all valid routes in Screenplay
+    # In this case, 741, 742, 743 and 746 within @valid_silver_line_routes
+    Enum.any?(
+      place.screens,
+      fn
+        %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
+          Enum.any?(
+            routes,
+            fn route -> sl_waterfront?(route.id) end
+          )
 
-  @spec suppression_type(
-          suppressed_predictions :: [SuppressedPrediction.t()],
-          location_id :: String.t(),
-          route_id :: String.t(),
-          direction_id :: integer()
-        ) :: :terminal | :stop | :none
-
-  def suppression_type(suppressed_predictions, location_id, route_id, direction_id)
-      when is_green_line(route_id) do
-    suppression_type_from_line_data(
-      suppressed_predictions,
-      location_id,
-      "Green",
-      direction_id
+        _ ->
+          false
+      end
     )
   end
 
-  def suppression_type(suppressed_predictions, location_id, route_id, direction_id)
-      when is_sl_waterfront(route_id) do
-    suppression_type_from_line_data(
-      suppressed_predictions,
-      location_id,
-      "Silver",
-      direction_id
+  def valid_route_for_place?(place, route_id) when route_id == "Green" do
+    # For Green Line, double check that a branch exists within the routes
+    Enum.any?(
+      place.routes,
+      &String.starts_with?(&1, "Green")
     )
   end
 
-  def suppression_type(suppressed_predictions, location_id, route_id, direction_id) do
-    suppression_type_from_line_data(
-      suppressed_predictions,
-      location_id,
-      route_id,
-      direction_id
-    )
+  def valid_route_for_place?(place, route_id) do
+    route_id in place.routes
   end
 
-  def suppression_type(suppressed_predictions, stop_id)
-      when stop_id in @jfk_umass_child_stop_ids do
-    case Enum.find(jfk_umass_child_stop_data(), fn %{stop_id: id} -> id == stop_id end) do
-      %{
-        location_id: @jfk_umass_ashmont_location_id,
-        route_id: route_id,
-        direction_id: direction_id
-      } ->
-        suppression_type_from_line_data(
-          suppressed_predictions,
-          @jfk_umass_ashmont_location_id,
-          route_id,
-          direction_id
+  def suppressed_prediction_for_data(
+        stop_id,
+        route_id,
+        direction_id,
+        suppressed_predictions_map,
+        suppression_type,
+        suppression_route_id
+      ) do
+    %{
+      stop_id: stop_id,
+      route_id: route_id,
+      direction_id: direction_id,
+      suppression_type:
+        suppression_type(
+          stop_id,
+          suppression_route_id,
+          direction_id,
+          suppressed_predictions_map,
+          suppression_type
         )
-
-      %{
-        location_id: @jfk_umass_braintree_location_id,
-        route_id: route_id,
-        direction_id: direction_id
-      } ->
-        suppression_type_from_line_data(
-          suppressed_predictions,
-          @jfk_umass_braintree_location_id,
-          route_id,
-          direction_id
-        )
-
-      nil ->
-        :none
-    end
+    }
   end
 
-  defp suppression_type_from_line_data(
-         suppressed_predictions,
-         location_id,
-         route_id,
-         direction_id
-       ) do
-    Enum.find(suppressed_predictions, fn prediction ->
-      prediction.route_id == route_id && prediction.location_id == location_id &&
-        prediction.direction_id == direction_id
-    end)
-    |> case do
-      nil ->
-        :none
-
-      _found_prediction ->
-        Enum.find(PredictionSuppression.line_stops(), fn line_stop ->
-          line_stop.line == route_id &&
-            (line_stop.stop_id == location_id ||
-               (line_stop.stop_id == "place-jfk" &&
-                  location_id in jfk_umass_child_location_ids())) &&
-            line_stop.direction_id == direction_id
-        end)
-        |> case do
-          %{type: :start} -> :terminal
-          %{type: :end} -> :terminal
-          %{type: :mid} -> :stop
-          _ -> :none
-        end
+  def suppression_type(
+        stop_id,
+        suppression_route_id,
+        direction_id,
+        suppressed_predictions_map,
+        suppression_type
+      ) do
+    if %{
+         location_id: stop_id,
+         route_id: suppression_route_id,
+         direction_id: direction_id
+       } in suppressed_predictions_map do
+      case suppression_type do
+        :mid -> :stop
+        :start -> :terminal
+      end
+    else
+      :none
     end
   end
 end

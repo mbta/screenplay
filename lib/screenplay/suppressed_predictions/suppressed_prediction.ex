@@ -113,37 +113,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
         )
 
       place ->
-        valid_route? =
-          case route_id do
-            "Silver" ->
-              # For Silver Line, we make sure that the routes are all valid routes in Screenplay
-              # In this case, 741, 742, 743 and 746 within @valid_silver_line_routes
-              Enum.any?(
-                place.screens,
-                fn
-                  %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
-                    Enum.any?(
-                      routes,
-                      fn route -> PredictionSuppressionUtils.sl_waterfront?(route.id) end
-                    )
-
-                  _ ->
-                    false
-                end
-              )
-
-            "Green" ->
-              # For Green Line, double check that a branch exists within the routes
-              Enum.any?(
-                place.routes,
-                &String.starts_with?(&1, "Green")
-              )
-
-            _ ->
-              route_id in place.routes
-          end
-
-        if valid_route? do
+        if PredictionSuppressionUtils.valid_route_for_place?(place, route_id) do
           changeset
         else
           add_error(

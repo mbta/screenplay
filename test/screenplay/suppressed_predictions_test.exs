@@ -144,7 +144,7 @@ defmodule Screenplay.SuppressedPredictionsTest do
           %{line: "Green", type: :start, stop_id: "place-four", direction_id: 0},
           %{line: "Green", type: :start, stop_id: "place-four", direction_id: 1},
           %{line: "Silver", type: :start, stop_id: "place-five", direction_id: 0},
-          %{line: "Silver", type: :start, stop_id: "place-five", direction_id: 0}
+          %{line: "Silver", type: :start, stop_id: "place-five", direction_id: 1}
         ]
 
       :ets.insert(:line_stops, {:value, new_line_stops})
@@ -184,12 +184,6 @@ defmodule Screenplay.SuppressedPredictionsTest do
                  direction_id: 1,
                  route_id: "743",
                  stop_id: "place-six",
-                 suppression_type: :none
-               },
-               %{
-                 stop_id: "place-three",
-                 route_id: "Orange",
-                 direction_id: 0,
                  suppression_type: :none
                },
                %{

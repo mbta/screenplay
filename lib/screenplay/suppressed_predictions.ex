@@ -4,6 +4,7 @@ defmodule Screenplay.SuppressedPredictions do
   """
 
   alias Screenplay.Places
+  alias Screenplay.PredictionSuppression
   alias Screenplay.PredictionSuppressionUtils
   alias Screenplay.Repo
   alias Screenplay.SuppressedPredictions.SuppressedPrediction
@@ -52,14 +53,27 @@ defmodule Screenplay.SuppressedPredictions do
           }
         ]
   def get_all_suppressed_predictions_for_data do
-    suppressed_predictions = get_all_suppressed_predictions()
+    suppressed_predictions_map =
+      MapSet.new(
+        get_all_suppressed_predictions(),
+        &%{location_id: &1.location_id, route_id: &1.route_id, direction_id: &1.direction_id}
+      )
+
+    line_stops_map =
+      PredictionSuppression.line_stops()
+      # End stations don't suppress predictions, filter them out
+      |> Enum.filter(&(&1.type != :end))
+      |> Enum.group_by(& &1.stop_id)
 
     Places.get()
     |> Enum.flat_map(fn
+      # JFK has special two child stops ids to take into account, if we find it here
+      # we split it up into the two platforms and handle the special case
       %Screenplay.Places.Place{id: "place-jfk"} ->
         Enum.map(
           PredictionSuppressionUtils.jfk_umass_child_stop_data(),
           fn %{
+               location_id: location_id,
                route_id: route_id,
                stop_id: child_stop_id,
                direction_id: direction_id
@@ -70,40 +84,94 @@ defmodule Screenplay.SuppressedPredictions do
               direction_id: direction_id,
               suppression_type:
                 PredictionSuppressionUtils.suppression_type(
-                  suppressed_predictions,
-                  child_stop_id
+                  location_id,
+                  route_id,
+                  direction_id,
+                  suppressed_predictions_map,
+                  :mid
                 )
             }
           end
         )
 
-      %Screenplay.Places.Place{id: place_stop_id, screens: screens} ->
-        Enum.flat_map(screens, fn
-          %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
-            routes
-            |> Enum.uniq_by(fn route -> {route.id, route.direction_id} end)
-            |> Enum.filter(&PredictionSuppressionUtils.valid_route?(&1.id))
-            |> Enum.map(fn route ->
-              %{
-                stop_id: place_stop_id,
-                route_id: route.id,
-                direction_id: route.direction_id,
-                suppression_type:
-                  PredictionSuppressionUtils.suppression_type(
-                    suppressed_predictions,
-                    place_stop_id,
-                    route.id,
-                    route.direction_id
-                  )
-              }
-            end)
-
-          _ ->
+      place ->
+        case Map.get(line_stops_map, place.id) do
+          nil ->
             []
-        end)
-        |> Enum.uniq_by(fn data ->
-          {data.route_id, data.stop_id, data.direction_id}
-        end)
+
+          line_stops ->
+            line_stops
+            |> Enum.filter(&PredictionSuppressionUtils.valid_route_for_place?(place, &1.line))
+            |> Enum.flat_map(fn
+              %{
+                line: "Silver",
+                direction_id: direction_id,
+                type: suppression_type
+              } ->
+                Enum.flat_map(place.screens, fn
+                  %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
+                    Enum.filter(
+                      routes,
+                      fn route ->
+                        PredictionSuppressionUtils.sl_waterfront?(route.id) and
+                          route.direction_id == direction_id
+                      end
+                    )
+
+                  _ ->
+                    []
+                end)
+                |> Enum.uniq_by(fn %{id: route_id, direction_id: direction_id} ->
+                  {route_id, direction_id}
+                end)
+                |> Enum.map(fn %{id: route_id, direction_id: direction_id} ->
+                  PredictionSuppressionUtils.suppressed_prediction_for_data(
+                    place.id,
+                    route_id,
+                    direction_id,
+                    suppressed_predictions_map,
+                    suppression_type,
+                    "Silver"
+                  )
+                end)
+
+              %{
+                line: "Green",
+                stop_id: stop_id,
+                direction_id: direction_id,
+                type: suppression_type
+              } ->
+                place.routes
+                |> Enum.filter(&String.starts_with?(&1, "Green"))
+                |> Enum.map(
+                  &PredictionSuppressionUtils.suppressed_prediction_for_data(
+                    stop_id,
+                    &1,
+                    direction_id,
+                    suppressed_predictions_map,
+                    suppression_type,
+                    "Green"
+                  )
+                )
+
+              %{
+                line: route_id,
+                stop_id: stop_id,
+                direction_id: direction_id,
+                type: suppression_type
+              } ->
+                [
+                  PredictionSuppressionUtils.suppressed_prediction_for_data(
+                    stop_id,
+                    route_id,
+                    direction_id,
+                    suppressed_predictions_map,
+                    suppression_type,
+                    route_id
+                  )
+                ]
+            end)
+        end
     end)
   end
 
