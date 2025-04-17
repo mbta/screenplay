@@ -3,13 +3,9 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
   Represents a Suppressed Prediction for a given location
   """
   alias Screenplay.Places
+  alias Screenplay.PredictionSuppressionUtils
   use Ecto.Schema
   import Ecto.Changeset
-
-  @jfk_umass_ashmont_place "jfk_umass_ashmont_platform"
-  @jfk_umass_braintree_place "jfk_umass_braintree_platform"
-  @green_line_routes ["Green-B", "Green-C", "Green-D", "Green-E"]
-  @valid_silver_line_routes ["741", "742", "743", "746"]
 
   @derive {Jason.Encoder, except: [:__meta__]}
 
@@ -66,13 +62,13 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
         add_error(
           changeset,
           :location_id,
-          "Please provide either the Ashmont or Braintree platform location_id: (#{@jfk_umass_ashmont_place} or #{@jfk_umass_braintree_place})"
+          "Please provide either the Ashmont or Braintree platform location_id"
         )
 
       # We don't handle separate Green Line and Silver Line branching route_ids
       # That is populated when we pass data to Transit Data
       # For internal use we just use "Green" or "Silver" to show all green/silver line routes
-      route_id in @green_line_routes ->
+      route_id in PredictionSuppressionUtils.green_line_routes() ->
         add_error(
           changeset,
           :route_id,
@@ -87,7 +83,8 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
   defp validate_location(changeset, places) do
     location_id = get_field(changeset, :location_id)
 
-    if places |> Enum.any?(&(&1.id == location_id)) do
+    if places |> Enum.any?(&(&1.id == location_id)) ||
+         location_id in PredictionSuppressionUtils.jfk_umass_child_location_ids() do
       changeset
     else
       add_error(changeset, :location_id, "Location `#{location_id}` does not exist")
@@ -99,7 +96,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
     route_id = get_field(changeset, :route_id)
 
     location_id =
-      if unchecked_location_id in [@jfk_umass_ashmont_place, @jfk_umass_braintree_place] do
+      if unchecked_location_id in PredictionSuppressionUtils.jfk_umass_child_location_ids() do
         "place-jfk"
       else
         unchecked_location_id
@@ -111,42 +108,12 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
       nil ->
         add_error(
           changeset,
-          :route_id,
+          :location_id,
           "Location `#{location_id}` does not exist"
         )
 
       place ->
-        valid_route? =
-          case route_id do
-            "Silver" ->
-              # For Silver Line, we make sure that the routes are all valid routes in Screenplay
-              # In this case, 741, 742, 743 and 746 within @valid_silver_line_routes
-              Enum.any?(
-                place.screens,
-                fn
-                  %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
-                    Enum.any?(
-                      routes,
-                      fn route -> route.id in @valid_silver_line_routes end
-                    )
-
-                  _ ->
-                    false
-                end
-              )
-
-            "Green" ->
-              # For Green Line, double check that a branch exists within the routes
-              Enum.any?(
-                place.routes,
-                &String.starts_with?(&1, "Green")
-              )
-
-            _ ->
-              route_id in place.routes
-          end
-
-        if valid_route? do
+        if PredictionSuppressionUtils.valid_route_for_place?(place, route_id) do
           changeset
         else
           add_error(
