@@ -3,8 +3,7 @@ defmodule Screenplay.PredictionSuppression do
   Generates data structures for driving the prediction suppression UI
   """
   use GenServer
-
-  defguardp is_sl_waterfront(route_id) when route_id in ["741", "742", "743", "746"]
+  import Screenplay.PredictionSuppressionUtils, only: [is_sl_waterfront: 1]
 
   @spec line_stops() :: [
           %{

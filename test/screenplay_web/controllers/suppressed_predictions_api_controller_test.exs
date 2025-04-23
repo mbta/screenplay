@@ -60,7 +60,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     }
 
     @tag :authenticated
-    test "returns error when user is not a suppression admin admin", %{conn: conn} do
+    test "returns error when user is not a suppression admin", %{conn: conn} do
       conn = post(conn, "/api/suppressed-predictions", @valid_params)
       assert response(conn, 401)
     end
