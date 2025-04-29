@@ -1,15 +1,25 @@
-import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import {
+  usePredictionSuppressionState,
+  useScreenplayContext,
+} from "Hooks/useScreenplayContext";
 import { RadioList } from "Components/RadioList";
-import React, { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import fp from "lodash/fp";
 import * as styles from "Styles/prediction-suppression.module.scss";
 import { Dot, XCircleFill } from "react-bootstrap-icons";
 import { Form } from "react-bootstrap";
 import { sortByStationOrder } from "../../util";
 import { Place } from "Models/place";
+import {
+  createSuppressedPrediction,
+  deleteSuppressedPrediction,
+  updateSuppressedPrediction,
+} from "Utils/api";
+import { SuppressedPrediction } from "Models/suppressed_prediction";
+import { useUniqueId } from "Hooks/useUniqueId";
+import { useSearchParams } from "react-router-dom";
 
-const lookupKey = (placeId: string, directionId: number) =>
-  `${placeId}:${directionId}`;
+const lookupKey = fp.join(":");
 
 const directionNames = (line: string) => {
   switch (line.split("-")[0]) {
@@ -24,8 +34,18 @@ const directionNames = (line: string) => {
 };
 
 const PredictionSuppressionPage = () => {
-  const [line, setLine] = useState<string>("Green");
+  const [params, setParams] = useSearchParams();
+  const [line, setLine] = useState<string>(params.get("line") || "Green");
   const { places, lineStops } = useScreenplayContext();
+  const { suppressedPredictions, mutateSuppressedPredictions } =
+    usePredictionSuppressionState();
+
+  useEffect(() => {
+    const newParams = new URLSearchParams();
+    newParams.set("line", line);
+    setParams(newParams);
+  }, [setParams, line]);
+
   const filteredPlaces = sortByStationOrder(
     fp.filter(({ routes, screens }) => {
       switch (line) {
@@ -50,26 +70,93 @@ const PredictionSuppressionPage = () => {
     }, places),
     line,
   );
+
+  const mainLine = fp.startsWith("Green", line) ? "Green" : line;
+
   const lineStopLookup = fp.flow([
     fp.filter({ line: line.split("-")[0] }),
     fp.map(({ stop_id, direction_id, type }) => [
-      lookupKey(stop_id, direction_id),
+      lookupKey([stop_id, direction_id]),
       type,
     ]),
     fp.fromPairs,
   ])(lineStops);
 
+  const suppressedPredictionsLookup = fp.flow([
+    fp.map((p: SuppressedPrediction) => [
+      lookupKey([p.location_id, p.route_id, p.direction_id]),
+      p,
+    ]),
+    fp.fromPairs,
+  ])(suppressedPredictions);
+
   const noPredictions = (place: Place) => {
-    const serviceType = lineStopLookup[lookupKey(place.id, 0)];
+    const serviceType = lineStopLookup[lookupKey([place.id, 0])];
     return (
       line.startsWith("Green") && fp.includes(serviceType, ["start", "end"])
     );
   };
 
-  const renderInput = (place: Place, directionId: number) => {
-    const serviceType = lineStopLookup[lookupKey(place.id, directionId)];
-    const suppressed = false;
-    const expire = false;
+  const renderInput = (
+    locationId: string,
+    stopId: string,
+    directionId: number,
+  ) => {
+    const serviceType = lineStopLookup[lookupKey([stopId, directionId])];
+    const record =
+      suppressedPredictionsLookup[
+        lookupKey([locationId, mainLine, directionId])
+      ];
+
+    const toggleSuppression = () => {
+      if (!suppressedPredictions) {
+        return;
+      }
+      if (record) {
+        const newData = fp.without([record], suppressedPredictions);
+        mutateSuppressedPredictions(
+          async () => {
+            await deleteSuppressedPrediction(record);
+            return newData;
+          },
+          { optimisticData: newData },
+        );
+      } else {
+        const newRecord = {
+          location_id: locationId,
+          route_id: mainLine,
+          direction_id: directionId,
+          clear_at_end_of_day: false,
+        };
+        const newData = fp.concat(suppressedPredictions, [newRecord]);
+        mutateSuppressedPredictions(
+          async () => {
+            await createSuppressedPrediction(newRecord);
+            return newData;
+          },
+          { optimisticData: newData },
+        );
+      }
+    };
+
+    const toggleExpiration = () => {
+      if (!suppressedPredictions) {
+        return;
+      }
+      const newRecord = fp.update(["clear_at_end_of_day"], (v) => !v, record);
+      const newData = fp.map(
+        (p) => (p === record ? newRecord : p),
+        suppressedPredictions,
+      );
+      mutateSuppressedPredictions(
+        async () => {
+          await updateSuppressedPrediction(newRecord);
+          return newData;
+        },
+        { optimisticData: newData },
+      );
+    };
+
     if (serviceType === "start" || serviceType === "mid") {
       const predictionsText =
         serviceType == "start" ? "terminal predictions" : "predictions";
@@ -78,23 +165,29 @@ const PredictionSuppressionPage = () => {
           <label className={styles.suppressionLabel}>
             <input
               type="checkbox"
-              checked={suppressed}
-              onChange={() => {}}
+              checked={!!record}
+              onChange={toggleSuppression}
               className={styles.suppressionCheckbox}
             />
-            {suppressed && <XCircleFill className="me-2" />}
+            {!!record && <XCircleFill className="me-2" />}
             {fp.capitalize(
-              suppressed
+              record
                 ? `${predictionsText} suppressed`
                 : `suppress ${predictionsText}`,
             )}
           </label>
-          {suppressed && (
-            <Form.Check
-              className="mt-2 mb-0"
-              label="Clear at end of service day"
-              checked={expire}
-            />
+          {!!record && (
+            <IdContainer>
+              {(id) => (
+                <Form.Check
+                  id={id}
+                  className="mt-2 mb-0"
+                  label="Clear at end of service day"
+                  checked={record.clear_at_end_of_day}
+                  onChange={toggleExpiration}
+                />
+              )}
+            </IdContainer>
           )}
         </>
       );
@@ -106,13 +199,13 @@ const PredictionSuppressionPage = () => {
       return (
         <>
           <div>Ashmont platform</div>
-          {renderInput(place, directionId)}
-          <div>Braintree platform</div>
-          {renderInput(place, directionId)}
+          {renderInput("jfk_umass_ashmont_platform", place.id, directionId)}
+          <div className="mt-3">Braintree platform</div>
+          {renderInput("jfk_umass_braintree_platform", place.id, directionId)}
         </>
       );
     }
-    return renderInput(place, directionId);
+    return renderInput(place.id, place.id, directionId);
   };
 
   return (
@@ -231,6 +324,11 @@ const PredictionSuppressionPage = () => {
       </div>
     </div>
   );
+};
+
+const IdContainer = ({ children }: { children: (id: string) => ReactNode }) => {
+  const id = useUniqueId();
+  return children(id);
 };
 
 export default PredictionSuppressionPage;

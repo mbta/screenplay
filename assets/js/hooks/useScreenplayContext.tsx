@@ -5,6 +5,7 @@ import { Alert } from "../models/alert";
 import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { LineStop } from "../models/line_stop";
+import { SuppressedPrediction } from "../models/suppressed_prediction";
 import { ConfigValidationErrors } from "../models/configValidationErrors";
 import { useReducer } from "react";
 import {
@@ -15,6 +16,8 @@ import {
 } from "Constants/constants";
 import { BannerAlert } from "../components/Dashboard/AlertBanner";
 import { ActionOutcomeToastProps } from "../components/Dashboard/ActionOutcomeToast";
+import useSWR, { KeyedMutator } from "swr";
+import { getSuppressedPredictions } from "Utils/api";
 
 interface Props {
   children: React.ReactNode;
@@ -123,6 +126,11 @@ interface ScreenplayState {
 interface ConfigValidationState {
   newScreenValidationErrors: ConfigValidationErrors;
   pendingScreenValidationErrors: ConfigValidationErrors;
+}
+
+interface PredictionSuppressionState {
+  suppressedPredictions?: SuppressedPrediction[];
+  mutateSuppressedPredictions: KeyedMutator<SuppressedPrediction[]>;
 }
 
 const reducer = (
@@ -316,6 +324,27 @@ const [
   ConfigValidationDispatchContextProvider,
 ] = createGenericContext<React.Dispatch<ConfigValidationReducerAction>>();
 
+const [usePredictionSuppressionState, PredictionSuppressionStateProvider] =
+  createGenericContext<PredictionSuppressionState>();
+
+const PredictionSuppressionStateContainer = ({ children }: Props) => {
+  const { data, mutate } = useSWR<SuppressedPrediction[]>(
+    "/api/suppressed-predictions",
+    getSuppressedPredictions,
+    { refreshInterval: 4000 },
+  );
+  return (
+    <PredictionSuppressionStateProvider
+      value={{
+        suppressedPredictions: data,
+        mutateSuppressedPredictions: mutate,
+      }}
+    >
+      {children}
+    </PredictionSuppressionStateProvider>
+  );
+};
+
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
   const [screenplayState, screenplayDispatch] = useReducer(
@@ -346,7 +375,9 @@ const ScreenplayProvider = ({ children }: Props) => {
                   <ConfigValidationDispatchContextProvider
                     value={configValidationDispatch}
                   >
-                    {children}
+                    <PredictionSuppressionStateContainer>
+                      {children}
+                    </PredictionSuppressionStateContainer>
                   </ConfigValidationDispatchContextProvider>
                 </ConfigValidationContextProvider>
               </AlertsListDispatchContextProvider>
@@ -377,6 +408,7 @@ export {
   useAlertsListDispatchContext,
   useConfigValidationContext,
   useConfigValidationDispatchContext,
+  usePredictionSuppressionState,
   ScreenplayProvider,
   placesListReducer,
   initialPlacesListState,

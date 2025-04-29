@@ -29,10 +29,9 @@ let originalFetch: any;
 
 beforeEach(() => {
   originalFetch = global.fetch;
-  global.fetch = jest
-    .fn()
-    .mockReturnValueOnce(
-      Promise.resolve({
+  global.fetch = jest.fn(async (url) => {
+    if (url === "/api/alerts") {
+      return Promise.resolve({
         status: 200,
         json: () =>
           Promise.resolve({
@@ -40,16 +39,17 @@ beforeEach(() => {
             alerts,
             screens_by_alert: alertsOnScreens,
           }),
-      }),
-    )
-    .mockReturnValueOnce(
-      Promise.resolve({
-        json: () => Promise.resolve(places),
-      }),
-    )
-    .mockReturnValueOnce(
-      Promise.resolve({ json: () => Promise.resolve({ data: [] }) }),
-    );
+      });
+    } else if (url === "/api/dashboard") {
+      return Promise.resolve({ json: () => Promise.resolve(places) });
+    } else if (url === "/api/line_stops") {
+      return Promise.resolve({ json: () => Promise.resolve({ data: [] }) });
+    } else if (url === "/api/suppressed-predictions") {
+      return Promise.resolve({ json: () => Promise.resolve([]) });
+    } else {
+      throw "Missing mock";
+    }
+  }) as jest.Mock;
 });
 
 afterEach(() => {
