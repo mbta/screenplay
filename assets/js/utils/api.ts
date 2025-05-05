@@ -1,3 +1,4 @@
+import fp from "lodash/fp";
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
 import { ScreenConfiguration } from "../models/screen_configuration";
@@ -5,6 +6,7 @@ import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
+import { SuppressedPrediction } from "Models/suppressed_prediction";
 
 export const fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
@@ -174,6 +176,50 @@ export const updateExistingPaMessage = async (
     status: response.status,
     body: await response.json(),
   };
+};
+
+const fetchOk = async (
+  url: string,
+  options: Omit<RequestInit, "body"> & { body: any },
+) => {
+  const res = await fetch(
+    url,
+    fp.merge(options, {
+      body: JSON.stringify(options.body),
+      credentials: "include" as RequestCredentials,
+      headers: {
+        "content-type": "application/json",
+        "x-csrf-token": getCsrfToken(),
+      },
+    }),
+  );
+  if (!res.ok) {
+    throw res;
+  }
+  return res.json();
+};
+
+export const getSuppressedPredictions = async () => {
+  const res = await fetch("/api/suppressed-predictions");
+  if (!res.ok) {
+    throw res;
+  }
+  return res.json();
+};
+
+export const createSuppressedPrediction = (data: SuppressedPrediction) => {
+  return fetchOk("/api/suppressed-predictions", { body: data, method: "POST" });
+};
+
+export const deleteSuppressedPrediction = (data: SuppressedPrediction) => {
+  return fetchOk("/api/suppressed-predictions", {
+    body: data,
+    method: "DELETE",
+  });
+};
+
+export const updateSuppressedPrediction = (data: SuppressedPrediction) => {
+  return fetchOk("/api/suppressed-predictions", { body: data, method: "PUT" });
 };
 
 const getPostBodyAndHeaders = (
