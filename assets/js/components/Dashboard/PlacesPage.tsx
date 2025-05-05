@@ -12,11 +12,8 @@ import {
   STATUSES,
 } from "Constants/constants";
 import {
-  PlacesListReducerAction,
-  PlacesListState,
-  usePlacesListContext,
-  usePlacesListDispatchContext,
-  useScreenplayContext,
+  usePlacesListState,
+  useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { DirectionID } from "Models/direction_id";
 import { usePrevious } from "Hooks/usePrevious";
@@ -37,19 +34,13 @@ const getSortLabel = (
 };
 
 const PlacesPage: ComponentType = () => {
-  const { places } = useScreenplayContext();
-  const stateValues = usePlacesListContext();
-  const dispatch = usePlacesListDispatchContext();
+  const { places } = useScreenplayState();
 
   return (
     <div className="places-page">
       <div className="page-content__header">Places</div>
       <div className="page-content__body">
-        <PlacesList
-          places={places}
-          dispatch={dispatch}
-          stateValues={stateValues}
-        />
+        <PlacesList places={places} />
       </div>
     </div>
   );
@@ -60,8 +51,6 @@ interface PlacesListProps {
   noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
   showAnimationForNewPlaces?: boolean;
-  dispatch: React.Dispatch<PlacesListReducerAction>;
-  stateValues: PlacesListState;
 }
 
 const PlacesList: ComponentType<PlacesListProps> = ({
@@ -69,8 +58,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   noModeFilter,
   isAlertPlacesList,
   showAnimationForNewPlaces,
-  dispatch,
-  stateValues,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
@@ -80,52 +67,38 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     statusFilterValue,
     showScreenlessPlaces,
     activeEventKeys,
-  } = stateValues;
+    resetState,
+    setModeLineFilterValue,
+    setScreenTypeFilterValue,
+    setStatusFilterValue,
+    setSortDirection,
+    setShowScreenlessPlaces,
+  } = usePlacesListState();
   const prevPlaceIds = usePrevious(places)?.map((place) => place.id);
-
-  const handleClickResetFilters = () => {
-    dispatch({ type: "RESET_STATE" });
-  };
 
   const handleSelectModeOrLine = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter && selectedFilter.label !== modeLineFilterValue.label) {
-      dispatch({
-        type: "SET_MODE_LINE_FILTER",
-        filterValue: selectedFilter,
-      });
-      dispatch({
-        type: "SET_SORT_DIRECTION",
-        sortDirection: 0,
-      });
+      setModeLineFilterValue(selectedFilter);
     }
   };
 
   const handleSelectScreenType = (value: string) => {
     const selectedFilter = SCREEN_TYPES.find(({ label }) => label === value);
     if (selectedFilter) {
-      dispatch({
-        type: "SET_SCREEN_TYPE_FILTER",
-        filterValue: selectedFilter,
-      });
+      setScreenTypeFilterValue(selectedFilter);
     }
   };
 
   const handleSelectStatus = (value: string) => {
     const selectedFilter = STATUSES.find(({ label }) => label === value);
     if (selectedFilter) {
-      dispatch({
-        type: "SET_STATUS_FILTER",
-        filterValue: selectedFilter,
-      });
+      setStatusFilterValue(selectedFilter);
     }
   };
 
   const handleClickSortLabel = () => {
-    dispatch({
-      type: "SET_SORT_DIRECTION",
-      sortDirection: (1 - sortDirection) as DirectionID,
-    });
+    setSortDirection(sortDirection === 0 ? 1 : 0);
   };
 
   const sortLabel = getSortLabel(modeLineFilterValue, sortDirection);
@@ -191,10 +164,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
   };
 
   const handleClickToggleScreenlessPlaces = () => {
-    dispatch({
-      type: "SET_SHOW_SCREENLESS_PLACES",
-      show: !showScreenlessPlaces,
-    });
+    setShowScreenlessPlaces(!showScreenlessPlaces);
   };
 
   const { filteredPlaces, filteredPlacesHaveScreenlessPlaces } = filterPlaces();
@@ -250,7 +220,7 @@ const PlacesList: ComponentType<PlacesListProps> = ({
           places={sortedFilteredPlaces}
           hasScreenlessPlaces={filteredPlacesHaveScreenlessPlaces}
           showScreenlessPlaces={showScreenlessPlaces ?? false}
-          onClickResetFilters={handleClickResetFilters}
+          onClickResetFilters={resetState}
           onClickToggleScreenlessPlaces={handleClickToggleScreenlessPlaces}
           // Only show reset filters if NOT isAlertPlacesList, OR if isAlertPlacesList and isFiltered
           hideResetFiltersButton={isAlertPlacesList && !isFiltered}
@@ -273,7 +243,6 @@ const PlacesList: ComponentType<PlacesListProps> = ({
                 prevPlaceIds !== undefined &&
                 !prevPlaceIds.includes(place.id)
               }
-              dispatch={dispatch}
               activeEventKeys={activeEventKeys}
               sortDirection={sortDirection}
               filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}

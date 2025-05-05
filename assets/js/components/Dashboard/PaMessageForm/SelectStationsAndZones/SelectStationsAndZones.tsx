@@ -3,7 +3,7 @@ import SelectStationsPage from "./SelectStationsPage";
 import SelectZonesPage from "./SelectZonesPage";
 import type { Place } from "Models/place";
 import { Page } from "../types";
-import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 
 interface Props {
   places: Place[];
@@ -26,14 +26,14 @@ const SelectStationsAndZones = ({
   onError,
   isReadOnly = false,
 }: Props) => {
-  const dispatch = useScreenplayDispatchContext();
+  const { setShowSidebar } = useScreenplayState();
   const [signIds, setSignIds] = useState(value);
 
   useEffect(() => {
-    dispatch({ type: "SHOW_SIDEBAR", showSidebar: false });
+    setShowSidebar(false);
 
-    return () => dispatch({ type: "SHOW_SIDEBAR", showSidebar: true });
-  }, [dispatch]);
+    return () => setShowSidebar(true);
+  }, [setShowSidebar]);
 
   return page === Page.STATIONS ? (
     <SelectStationsPage

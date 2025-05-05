@@ -25,14 +25,11 @@ describe("PlaceRowAccordion", () => {
       ],
     };
 
-    const dispatch = jest.fn();
-
     const { getByTestId } = render(
       <ScreenplayProvider>
         <Accordion>
           <PlaceRowAccordion
             place={place}
-            dispatch={dispatch}
             activeEventKeys={[]}
             sortDirection={0}
           />

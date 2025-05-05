@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { createGenericContext } from "../utils/createGenericContext";
 import { Place } from "../models/place";
 import { Alert } from "../models/alert";
@@ -7,7 +7,6 @@ import { ScreensByAlert } from "../models/screensByAlert";
 import { LineStop } from "../models/line_stop";
 import { SuppressedPrediction } from "../models/suppressed_prediction";
 import { ConfigValidationErrors } from "../models/configValidationErrors";
-import { useReducer } from "react";
 import {
   PLACES_PAGE_MODES_AND_LINES,
   ALERTS_PAGE_MODES_AND_LINES,
@@ -23,92 +22,10 @@ interface Props {
   children: React.ReactNode;
 }
 
-type ReducerAction =
-  | {
-      type: "SET_PLACES";
-      places: Place[];
-    }
-  | {
-      type: "SET_LINE_STOPS";
-      lineStops: LineStop[];
-    }
-  | {
-      type: "SET_ALERTS";
-      alerts: Alert[];
-      allAPIAlertIds: string[];
-      screensByAlertMap: ScreensByAlert;
-    }
-  | {
-      type: "SET_SCREENS_BY_ALERT";
-      screensByAlertMap: ScreensByAlert;
-    }
-  | {
-      type: "SET_BANNER_ALERT";
-      bannerAlert: BannerAlert | undefined;
-    }
-  | {
-      type: "SHOW_LINK_COPIED";
-      showLinkCopied: boolean;
-    }
-  | ({ type: "SHOW_ACTION_OUTCOME" } & Omit<
-      Required<ActionOutcomeToastProps>,
-      "show"
-    >)
-  | {
-      type: "HIDE_ACTION_OUTCOME";
-    }
-  | {
-      type: "SHOW_SIDEBAR";
-      showSidebar: boolean;
-    };
-
-type AlertsListReducerAction = {
-  type: "SET_MODE_LINE_FILTER" | "SET_SCREEN_TYPE_FILTER" | "SET_STATUS_FILTER";
-  filterValue: FilterValue;
-};
-
-type PlacesListReducerAction =
-  | { type: "SET_SORT_DIRECTION"; sortDirection: DirectionID }
-  | {
-      type:
-        | "SET_MODE_LINE_FILTER"
-        | "SET_SCREEN_TYPE_FILTER"
-        | "SET_STATUS_FILTER";
-      filterValue: FilterValue;
-    }
-  | {
-      type: "SET_SHOW_SCREENLESS_PLACES";
-      show: boolean;
-    }
-  | { type: "SET_ACTIVE_EVENT_KEYS"; eventKeys: string[] }
-  | { type: "RESET_STATE" };
-
-type ConfigValidationReducerAction = {
-  type: "SET_VALIDATION_ERRORS";
-  newScreenValidationErrors: ConfigValidationErrors;
-  pendingScreenValidationErrors: ConfigValidationErrors;
-};
-
 interface FilterValue {
   label: string;
   ids: string[];
   color?: string;
-}
-
-interface PlacesListState {
-  sortDirection: DirectionID;
-  modeLineFilterValue: FilterValue;
-  screenTypeFilterValue: FilterValue;
-  statusFilterValue: FilterValue;
-  showScreenlessPlaces: boolean;
-  activeEventKeys: string[];
-}
-
-interface AlertsListState {
-  sortDirection: DirectionID;
-  modeLineFilterValue: FilterValue;
-  screenTypeFilterValue: FilterValue;
-  statusFilterValue: FilterValue;
 }
 
 interface ScreenplayState {
@@ -121,208 +38,220 @@ interface ScreenplayState {
   showLinkCopied: boolean;
   actionOutcomeToast: ActionOutcomeToastProps;
   showSidebar: boolean;
+  setPlaces: (value: Place[]) => void;
+  setLineStops: (value: LineStop[]) => void;
+  setAlerts: (
+    alerts: Alert[],
+    allAPIAlertIds: string[],
+    screensByAlertMap: ScreensByAlert,
+  ) => void;
+  setBannerAlert: (value?: BannerAlert) => void;
+  setShowLinkCopied: (value: boolean) => void;
+  showActionOutcome: (isSuccessful: boolean, message: string) => void;
+  hideActionOutcome: () => void;
+  setShowSidebar: (value: boolean) => void;
 }
+
+const [useScreenplayState, ScreenplayStateProvider] =
+  createGenericContext<ScreenplayState>();
+
+const ScreenplayStateContainer = ({ children }: Props) => {
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [lineStops, setLineStops] = useState<LineStop[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [allAPIAlertIds, setAllAPIAlertIds] = useState<string[]>([]);
+  const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
+    {},
+  );
+  const [bannerAlert, setBannerAlert] = useState<BannerAlert>();
+  const [showLinkCopied, setShowLinkCopied] = useState<boolean>(false);
+  const [actionOutcomeToast, setActionOutcomeToast] =
+    useState<ActionOutcomeToastProps>({ show: false });
+  const [showSidebar, setShowSidebar] = useState<boolean>(true);
+  return (
+    <ScreenplayStateProvider
+      value={{
+        places,
+        lineStops,
+        alerts,
+        allAPIAlertIds,
+        screensByAlertMap,
+        bannerAlert,
+        showLinkCopied,
+        actionOutcomeToast,
+        showSidebar,
+        setPlaces,
+        setLineStops,
+        setAlerts: (alerts, allAPIAlertIds, screensByAlertMap) => {
+          setAlerts(alerts);
+          setAllAPIAlertIds(allAPIAlertIds);
+          setScreensByAlertMap(screensByAlertMap);
+        },
+        setBannerAlert,
+        setShowLinkCopied,
+        showActionOutcome: (isSuccessful, message) => {
+          setActionOutcomeToast({ show: true, isSuccessful, message });
+        },
+        hideActionOutcome: () => setActionOutcomeToast({ show: false }),
+        setShowSidebar,
+      }}
+    >
+      {children}
+    </ScreenplayStateProvider>
+  );
+};
+
+interface AlertsListState {
+  modeLineFilterValue: FilterValue;
+  screenTypeFilterValue: FilterValue;
+  statusFilterValue: FilterValue;
+  setModeLineFilterValue: (arg0: FilterValue) => void;
+  setScreenTypeFilterValue: (arg0: FilterValue) => void;
+  setStatusFilterValue: (arg0: FilterValue) => void;
+}
+
+const [useAlertsListState, AlertsListStateProvider] =
+  createGenericContext<AlertsListState>();
+
+const AlertsListStateContainer = ({ children }: Props) => {
+  const [modeLineFilterValue, setModeLineFilterValue] = useState<FilterValue>(
+    ALERTS_PAGE_MODES_AND_LINES[0],
+  );
+  const [screenTypeFilterValue, setScreenTypeFilterValue] =
+    useState<FilterValue>(SCREEN_TYPES[0]);
+  const [statusFilterValue, setStatusFilterValue] = useState<FilterValue>(
+    STATUSES[0],
+  );
+  return (
+    <AlertsListStateProvider
+      value={{
+        modeLineFilterValue,
+        screenTypeFilterValue,
+        statusFilterValue,
+        setModeLineFilterValue,
+        setScreenTypeFilterValue,
+        setStatusFilterValue,
+      }}
+    >
+      {children}
+    </AlertsListStateProvider>
+  );
+};
 
 interface ConfigValidationState {
   newScreenValidationErrors: ConfigValidationErrors;
   pendingScreenValidationErrors: ConfigValidationErrors;
+  setValidationErrors: (
+    arg0: ConfigValidationErrors,
+    arg1: ConfigValidationErrors,
+  ) => void;
 }
+
+const [useConfigValidationState, ConfigValidationStateProvider] =
+  createGenericContext<ConfigValidationState>();
+
+const ConfigValidationStateContainer = ({ children }: Props) => {
+  const [newScreenValidationErrors, setNewScreenValidationErrors] =
+    useState<ConfigValidationErrors>({});
+  const [pendingScreenValidationErrors, setPendingScreenValidationErrors] =
+    useState<ConfigValidationErrors>({});
+
+  return (
+    <ConfigValidationStateProvider
+      value={{
+        newScreenValidationErrors,
+        pendingScreenValidationErrors,
+        setValidationErrors: (newErrors, pendingErrors) => {
+          setNewScreenValidationErrors(newErrors);
+          setPendingScreenValidationErrors(pendingErrors);
+        },
+      }}
+    >
+      {children}
+    </ConfigValidationStateProvider>
+  );
+};
+
+interface PlacesListState {
+  sortDirection: DirectionID;
+  modeLineFilterValue: FilterValue;
+  screenTypeFilterValue: FilterValue;
+  statusFilterValue: FilterValue;
+  showScreenlessPlaces: boolean;
+  activeEventKeys: string[];
+  setSortDirection: (value: DirectionID) => void;
+  setModeLineFilterValue: (value: FilterValue) => void;
+  setScreenTypeFilterValue: (value: FilterValue) => void;
+  setStatusFilterValue: (value: FilterValue) => void;
+  setShowScreenlessPlaces: (value: boolean) => void;
+  setActiveEventKeys: (value: string[]) => void;
+  resetState: () => void;
+}
+
+const [usePlacesListState, PlacesListStateProvider] =
+  createGenericContext<PlacesListState>();
+
+const PlacesListStateContainer = ({ children }: Props) => {
+  const [sortDirection, setSortDirection] = useState<DirectionID>(0);
+  const [modeLineFilterValue, setModeLineFilterValue] = useState<FilterValue>(
+    PLACES_PAGE_MODES_AND_LINES[0],
+  );
+  const [screenTypeFilterValue, setScreenTypeFilterValue] =
+    useState<FilterValue>(SCREEN_TYPES[0]);
+  const [statusFilterValue, setStatusFilterValue] = useState<FilterValue>(
+    STATUSES[0],
+  );
+  const [showScreenlessPlaces, setShowScreenlessPlaces] =
+    useState<boolean>(true);
+  const [activeEventKeys, setActiveEventKeys] = useState<string[]>([]);
+
+  return (
+    <PlacesListStateProvider
+      value={{
+        sortDirection,
+        modeLineFilterValue,
+        screenTypeFilterValue,
+        statusFilterValue,
+        showScreenlessPlaces,
+        activeEventKeys,
+        setSortDirection,
+        setModeLineFilterValue: (value) => {
+          setModeLineFilterValue(value);
+          setSortDirection(0);
+          setActiveEventKeys([]);
+        },
+        setScreenTypeFilterValue: (value) => {
+          setScreenTypeFilterValue(value);
+          setActiveEventKeys([]);
+        },
+        setStatusFilterValue: (value) => {
+          setStatusFilterValue(value);
+          setActiveEventKeys([]);
+        },
+        setShowScreenlessPlaces: (value) => {
+          setShowScreenlessPlaces(value);
+          setActiveEventKeys([]);
+        },
+        setActiveEventKeys,
+        resetState: () => {
+          setSortDirection(0);
+          setModeLineFilterValue(PLACES_PAGE_MODES_AND_LINES[0]);
+          setScreenTypeFilterValue(SCREEN_TYPES[0]);
+          setStatusFilterValue(STATUSES[0]);
+          setShowScreenlessPlaces(true);
+          setActiveEventKeys([]);
+        },
+      }}
+    >
+      {children}
+    </PlacesListStateProvider>
+  );
+};
 
 interface PredictionSuppressionState {
   suppressedPredictions?: SuppressedPrediction[];
   mutateSuppressedPredictions: KeyedMutator<SuppressedPrediction[]>;
 }
-
-const reducer = (
-  state: ScreenplayState,
-  action: ReducerAction,
-): ScreenplayState => {
-  switch (action.type) {
-    case "SET_PLACES":
-      return { ...state, places: action.places };
-    case "SET_LINE_STOPS":
-      return { ...state, lineStops: action.lineStops };
-    case "SET_ALERTS":
-      return {
-        ...state,
-        alerts: action.alerts,
-        allAPIAlertIds: action.allAPIAlertIds,
-        screensByAlertMap: action.screensByAlertMap,
-      };
-    case "SET_BANNER_ALERT":
-      return {
-        ...state,
-        bannerAlert: action.bannerAlert,
-      };
-    case "SHOW_LINK_COPIED":
-      return {
-        ...state,
-        showLinkCopied: action.showLinkCopied,
-      };
-    case "SHOW_ACTION_OUTCOME":
-      return {
-        ...state,
-        actionOutcomeToast: {
-          show: true,
-          isSuccessful: action.isSuccessful,
-          message: action.message,
-        },
-      };
-    case "HIDE_ACTION_OUTCOME":
-      return {
-        ...state,
-        actionOutcomeToast: { ...state.actionOutcomeToast, show: false },
-      };
-    case "SHOW_SIDEBAR":
-      return {
-        ...state,
-        showSidebar: action.showSidebar,
-      };
-    default:
-      throw new Error(`Unknown reducer action: ${JSON.stringify(action)}`);
-  }
-};
-
-const placesListReducer = (
-  state: PlacesListState,
-  action: PlacesListReducerAction,
-) => {
-  switch (action.type) {
-    case "SET_SORT_DIRECTION":
-      return {
-        ...state,
-        sortDirection: action.sortDirection as DirectionID,
-      };
-    case "SET_MODE_LINE_FILTER":
-      return {
-        ...state,
-        modeLineFilterValue: action.filterValue,
-        activeEventKeys: [],
-      };
-    case "SET_SCREEN_TYPE_FILTER":
-      return {
-        ...state,
-        screenTypeFilterValue: action.filterValue,
-        activeEventKeys: [],
-      };
-    case "SET_STATUS_FILTER":
-      return {
-        ...state,
-        statusFilterValue: action.filterValue,
-        activeEventKeys: [],
-      };
-    case "SET_SHOW_SCREENLESS_PLACES":
-      return {
-        ...state,
-        showScreenlessPlaces: action.show,
-        activeEventKeys: [],
-      };
-    case "SET_ACTIVE_EVENT_KEYS":
-      return {
-        ...state,
-        activeEventKeys: action.eventKeys,
-      };
-    case "RESET_STATE":
-      return initialPlacesListState;
-  }
-};
-
-const alertsReducer = (
-  state: AlertsListState,
-  action: AlertsListReducerAction,
-) => {
-  switch (action.type) {
-    case "SET_MODE_LINE_FILTER":
-      return {
-        ...state,
-        modeLineFilterValue: action.filterValue,
-      };
-    case "SET_SCREEN_TYPE_FILTER":
-      return {
-        ...state,
-        screenTypeFilterValue: action.filterValue,
-      };
-    case "SET_STATUS_FILTER":
-      return {
-        ...state,
-        statusFilterValue: action.filterValue,
-      };
-  }
-};
-
-const configValidationReducer = (
-  state: ConfigValidationState,
-  action: ConfigValidationReducerAction,
-) => {
-  switch (action.type) {
-    case "SET_VALIDATION_ERRORS":
-      return {
-        ...state,
-        newScreenValidationErrors: action.newScreenValidationErrors,
-        pendingScreenValidationErrors: action.pendingScreenValidationErrors,
-      };
-  }
-};
-
-const initialState: ScreenplayState = {
-  places: [] as Place[],
-  lineStops: [],
-  alerts: [] as Alert[],
-  allAPIAlertIds: [] as string[],
-  screensByAlertMap: {} as ScreensByAlert,
-  bannerAlert: undefined,
-  showLinkCopied: false,
-  actionOutcomeToast: { show: false },
-  showSidebar: true,
-};
-
-const initialPlacesListState: PlacesListState = {
-  sortDirection: 0 as DirectionID,
-  modeLineFilterValue: PLACES_PAGE_MODES_AND_LINES[0],
-  screenTypeFilterValue: SCREEN_TYPES[0],
-  statusFilterValue: STATUSES[0],
-  showScreenlessPlaces: true,
-  activeEventKeys: [],
-};
-
-const initialAlertsListState: AlertsListState = {
-  sortDirection: 0 as DirectionID,
-  modeLineFilterValue: ALERTS_PAGE_MODES_AND_LINES[0],
-  screenTypeFilterValue: SCREEN_TYPES[0],
-  statusFilterValue: STATUSES[0],
-};
-
-const initialConfigValidationState: ConfigValidationState = {
-  newScreenValidationErrors: {} as ConfigValidationErrors,
-  pendingScreenValidationErrors: {} as ConfigValidationErrors,
-};
-
-// Generate context
-const [useScreenplayContext, ScreenplayContextProvider] =
-  createGenericContext<ScreenplayState>();
-
-const [useScreenplayDispatchContext, ScreenplayDispatchContextProvider] =
-  createGenericContext<React.Dispatch<ReducerAction>>();
-
-const [usePlacesListContext, PlacesListContextProvider] =
-  createGenericContext<PlacesListState>();
-
-const [usePlacesListDispatchContext, PlacesListDispatchContextProvider] =
-  createGenericContext<React.Dispatch<PlacesListReducerAction>>();
-
-const [useAlertsListContext, AlertsListContextProvider] =
-  createGenericContext<AlertsListState>();
-
-const [useAlertsListDispatchContext, AlertsListDispatchContextProvider] =
-  createGenericContext<React.Dispatch<AlertsListReducerAction>>();
-
-const [useConfigValidationContext, ConfigValidationContextProvider] =
-  createGenericContext<ConfigValidationState>();
-
-const [
-  useConfigValidationDispatchContext,
-  ConfigValidationDispatchContextProvider,
-] = createGenericContext<React.Dispatch<ConfigValidationReducerAction>>();
 
 const [usePredictionSuppressionState, PredictionSuppressionStateProvider] =
   createGenericContext<PredictionSuppressionState>();
@@ -347,69 +276,31 @@ const PredictionSuppressionStateContainer = ({ children }: Props) => {
 
 // Generate provider
 const ScreenplayProvider = ({ children }: Props) => {
-  const [screenplayState, screenplayDispatch] = useReducer(
-    reducer,
-    initialState,
-  );
-  const [placesListState, placesListDispatch] = useReducer(
-    placesListReducer,
-    initialPlacesListState,
-  );
-  const [alertsListState, alertsListDispatch] = useReducer(
-    alertsReducer,
-    initialAlertsListState,
-  );
-  const [configValidationState, configValidationDispatch] = useReducer(
-    configValidationReducer,
-    initialConfigValidationState,
-  );
-
   return (
-    <ScreenplayContextProvider value={screenplayState}>
-      <ScreenplayDispatchContextProvider value={screenplayDispatch}>
-        <PlacesListContextProvider value={placesListState}>
-          <PlacesListDispatchContextProvider value={placesListDispatch}>
-            <AlertsListContextProvider value={alertsListState}>
-              <AlertsListDispatchContextProvider value={alertsListDispatch}>
-                <ConfigValidationContextProvider value={configValidationState}>
-                  <ConfigValidationDispatchContextProvider
-                    value={configValidationDispatch}
-                  >
-                    <PredictionSuppressionStateContainer>
-                      {children}
-                    </PredictionSuppressionStateContainer>
-                  </ConfigValidationDispatchContextProvider>
-                </ConfigValidationContextProvider>
-              </AlertsListDispatchContextProvider>
-            </AlertsListContextProvider>
-          </PlacesListDispatchContextProvider>
-        </PlacesListContextProvider>
-      </ScreenplayDispatchContextProvider>
-    </ScreenplayContextProvider>
+    <ScreenplayStateContainer>
+      <PlacesListStateContainer>
+        <AlertsListStateContainer>
+          <ConfigValidationStateContainer>
+            <PredictionSuppressionStateContainer>
+              {children}
+            </PredictionSuppressionStateContainer>
+          </ConfigValidationStateContainer>
+        </AlertsListStateContainer>
+      </PlacesListStateContainer>
+    </ScreenplayStateContainer>
   );
 };
 
 // Types & Interfaces
-export {
-  FilterValue,
-  DirectionID,
-  PlacesListReducerAction,
-  PlacesListState,
-  ConfigValidationState,
-};
+export { FilterValue, DirectionID };
 
 // Values
 export {
-  useScreenplayContext,
-  useScreenplayDispatchContext,
-  usePlacesListContext,
-  usePlacesListDispatchContext,
-  useAlertsListContext,
-  useAlertsListDispatchContext,
-  useConfigValidationContext,
-  useConfigValidationDispatchContext,
+  useScreenplayState,
+  usePlacesListState,
+  useConfigValidationState,
+  useAlertsListState,
   usePredictionSuppressionState,
   ScreenplayProvider,
-  placesListReducer,
-  initialPlacesListState,
+  PlacesListStateContainer,
 };

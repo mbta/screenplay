@@ -3,10 +3,7 @@ import { Outlet } from "react-router";
 import "../../../css/screenplay.scss";
 import { Alert } from "Models/alert";
 import Sidebar from "Components/Sidebar";
-import {
-  useScreenplayContext,
-  useScreenplayDispatchContext,
-} from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { useInterval } from "Hooks/useInterval";
 import { fetchAlerts, fetchPlaces, fetchLineStops } from "Utils/api";
 import AlertBanner from "Components/AlertBanner";
@@ -22,8 +19,12 @@ const Dashboard: ComponentType = () => {
     showLinkCopied,
     actionOutcomeToast,
     showSidebar,
-  } = useScreenplayContext();
-  const dispatch = useScreenplayDispatchContext();
+    setAlerts,
+    setPlaces,
+    setLineStops,
+    setBannerAlert,
+    setShowSidebar,
+  } = useScreenplayState();
   const [bannerDone, setBannerDone] = useState(false);
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -36,22 +37,13 @@ const Dashboard: ComponentType = () => {
         screens_by_alert: screensByAlertMap,
       }) => {
         findAndSetBannerAlert(alerts, newAlerts);
-        dispatch({
-          type: "SET_ALERTS",
-          alerts: newAlerts,
-          allAPIAlertIds: allAPIalertIds,
-          screensByAlertMap: screensByAlertMap,
-        });
+        setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
       },
     );
 
-    fetchPlaces().then((placesList) =>
-      dispatch({ type: "SET_PLACES", places: placesList }),
-    );
+    fetchPlaces().then(setPlaces);
 
-    fetchLineStops().then((lineStops) => {
-      dispatch({ type: "SET_LINE_STOPS", lineStops });
-    });
+    fetchLineStops().then(setLineStops);
 
     // Tests rely on this effect **not** having any dependencies listed.
     // This code pre-dates the addition of the react-hooks eslint rules.
@@ -69,12 +61,7 @@ const Dashboard: ComponentType = () => {
             screens_by_alert: screensByAlertMap,
           }) => {
             findAndSetBannerAlert(alerts, newAlerts);
-            dispatch({
-              type: "SET_ALERTS",
-              alerts: newAlerts,
-              allAPIAlertIds: allAPIalertIds,
-              screensByAlertMap: screensByAlertMap,
-            });
+            setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
           },
         )
         .catch((response: Response) => {
@@ -100,10 +87,7 @@ const Dashboard: ComponentType = () => {
     // If there is a closed alert, just show it and save when it was closed.
     if (closedAlert) {
       setBannerDone(false);
-      dispatch({
-        type: "SET_BANNER_ALERT",
-        bannerAlert: { alert: closedAlert, type: "closed", startedAt: now },
-      });
+      setBannerAlert({ alert: closedAlert, type: "closed", startedAt: now });
     }
     // If there's a recent postedOrEditedAlert AND:
     // there is not a current bannerAlert OR
@@ -115,13 +99,10 @@ const Dashboard: ComponentType = () => {
           new Date(bannerAlert.startedAt).getTime())
     ) {
       setBannerDone(false);
-      dispatch({
-        type: "SET_BANNER_ALERT",
-        bannerAlert: {
-          alert: postedOrEditedAlert,
-          type: "postedOrEdited",
-          startedAt: new Date(postedOrEditedAlert.updated_at),
-        },
+      setBannerAlert({
+        alert: postedOrEditedAlert,
+        type: "postedOrEdited",
+        startedAt: new Date(postedOrEditedAlert.updated_at),
       });
     }
     // If no other alert is eligible to be the bannerAlert and it has been 40 seconds since it started displaying,
@@ -165,14 +146,7 @@ const Dashboard: ComponentType = () => {
   };
 
   const queueBannerAlertExpiration = () => {
-    setTimeout(
-      () =>
-        dispatch({
-          type: "SET_BANNER_ALERT",
-          bannerAlert: undefined,
-        }),
-      5000,
-    );
+    setTimeout(() => setBannerAlert(undefined), 5000);
   };
 
   const pathname = useLocation().pathname;
@@ -186,11 +160,11 @@ const Dashboard: ComponentType = () => {
       pathname.startsWith("/configure-screens") ||
       pathname.startsWith("/emergency-takeover")
     ) {
-      dispatch({ type: "SHOW_SIDEBAR", showSidebar: false });
+      setShowSidebar(false);
     } else {
-      dispatch({ type: "SHOW_SIDEBAR", showSidebar: true });
+      setShowSidebar(true);
     }
-  }, [pathname, dispatch]);
+  }, [pathname, setShowSidebar]);
 
   return (
     <div className="screenplay-container">

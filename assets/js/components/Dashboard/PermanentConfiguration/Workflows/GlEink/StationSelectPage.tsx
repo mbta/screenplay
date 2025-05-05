@@ -8,10 +8,7 @@ import { DirectionID } from "Models/direction_id";
 import { Place } from "Models/place";
 import BottomActionBar from "Components/PermanentConfiguration/BottomActionBar";
 import { useNavigate } from "react-router-dom";
-import {
-  useConfigValidationContext,
-  useConfigValidationDispatchContext,
-} from "Hooks/useScreenplayContext";
+import { useConfigValidationState } from "Hooks/useScreenplayContext";
 import { PlaceIdsAndNewScreens } from "./ConfigureScreensPage";
 interface StationSelectPageProps {
   places: Place[];
@@ -35,20 +32,21 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
       setSelectedPlaces((prev) => new Set([placeToAdd.id, ...prev]));
       newScreenValidationErrors[placeToAdd.id] = [];
       pendingScreenValidationErrors[placeToAdd.id] = [];
-      dispatch({
-        type: "SET_VALIDATION_ERRORS",
+      setValidationErrors(
         newScreenValidationErrors,
         pendingScreenValidationErrors,
-      });
+      );
     }
   };
 
   const navigate = useNavigate();
   const [configStep, setConfigStep] = useState<number>(0);
 
-  const { newScreenValidationErrors, pendingScreenValidationErrors } =
-    useConfigValidationContext();
-  const dispatch = useConfigValidationDispatchContext();
+  const {
+    newScreenValidationErrors,
+    pendingScreenValidationErrors,
+    setValidationErrors,
+  } = useConfigValidationState();
 
   let backButtonLabel;
   let forwardButtonLabel;
@@ -98,20 +96,18 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
                 newSet.add(place.id);
                 newScreenValidationErrors[place.id] = [];
                 pendingScreenValidationErrors[place.id] = [];
-                dispatch({
-                  type: "SET_VALIDATION_ERRORS",
+                setValidationErrors(
                   newScreenValidationErrors,
                   pendingScreenValidationErrors,
-                });
+                );
               } else {
                 newSet.delete(place.id);
                 delete newScreenValidationErrors[place.id];
                 delete pendingScreenValidationErrors[place.id];
-                dispatch({
-                  type: "SET_VALIDATION_ERRORS",
+                setValidationErrors(
                   newScreenValidationErrors,
                   pendingScreenValidationErrors,
-                });
+                );
               }
               setPlacesAndScreensToUpdate((placesAndScreens) => {
                 const { [place.id]: _discarded, ...newPlacesAndScreens } =

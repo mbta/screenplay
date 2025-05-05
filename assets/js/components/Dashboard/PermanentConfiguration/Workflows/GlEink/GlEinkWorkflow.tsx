@@ -13,11 +13,10 @@ import StationSelectPage from "Components/PermanentConfiguration/Workflows/GlEin
 import { Alert } from "react-bootstrap";
 import { ExclamationCircleFill } from "react-bootstrap-icons";
 import {
-  useConfigValidationContext,
-  useConfigValidationDispatchContext,
+  useConfigValidationState,
+  useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { putPendingScreens } from "Utils/api";
-import { useScreenplayContext } from "Hooks/useScreenplayContext";
 import ErrorModal from "Components/ErrorModal";
 
 interface EditNavigationState {
@@ -25,7 +24,7 @@ interface EditNavigationState {
 }
 
 const GlEinkWorkflow: ComponentType = () => {
-  const { places } = useScreenplayContext();
+  const { places } = useScreenplayState();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -44,9 +43,11 @@ const GlEinkWorkflow: ComponentType = () => {
   };
 
   const [showValidationAlert, setShowValidationAlert] = useState(true);
-  const { newScreenValidationErrors, pendingScreenValidationErrors } =
-    useConfigValidationContext();
-  const dispatch = useConfigValidationDispatchContext();
+  const {
+    newScreenValidationErrors,
+    pendingScreenValidationErrors,
+    setValidationErrors,
+  } = useConfigValidationState();
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
@@ -60,15 +61,14 @@ const GlEinkWorkflow: ComponentType = () => {
       setIsEditing(true);
       newScreenValidationErrors[place_id] = [];
       pendingScreenValidationErrors[place_id] = [];
-      dispatch({
-        type: "SET_VALIDATION_ERRORS",
+      setValidationErrors(
         newScreenValidationErrors,
         pendingScreenValidationErrors,
-      });
+      );
     }
   }, [
     location,
-    dispatch,
+    setValidationErrors,
     newScreenValidationErrors,
     pendingScreenValidationErrors,
   ]);
@@ -187,11 +187,10 @@ const GlEinkWorkflow: ComponentType = () => {
     fieldsWithErrors.add("screen_id");
     setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
     setShowValidationAlert(true);
-    dispatch({
-      type: "SET_VALIDATION_ERRORS",
+    setValidationErrors(
       newScreenValidationErrors,
       pendingScreenValidationErrors,
-    });
+    );
   };
 
   const filteredPlaces = useMemo(
@@ -242,11 +241,10 @@ const GlEinkWorkflow: ComponentType = () => {
           pendingScreenValidationErrors[placeId] = [];
         });
 
-        dispatch({
-          type: "SET_VALIDATION_ERRORS",
+        setValidationErrors(
           newScreenValidationErrors,
           pendingScreenValidationErrors,
-        });
+        );
         setShowValidationAlert(false);
         setConfigStep(configStep - 1);
       };
@@ -267,11 +265,10 @@ const GlEinkWorkflow: ComponentType = () => {
           validateDuplicateScreenIds(placesAndScreensToUpdate);
           setValidationErrorMessage(generateErrorMessage(fieldsWithErrors));
           setShowValidationAlert(true);
-          dispatch({
-            type: "SET_VALIDATION_ERRORS",
+          setValidationErrors(
             newScreenValidationErrors,
             pendingScreenValidationErrors,
-          });
+          );
         }
       };
       layout = (
