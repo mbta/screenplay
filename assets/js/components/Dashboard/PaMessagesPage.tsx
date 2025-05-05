@@ -81,15 +81,12 @@ const PaMessagesPage: ComponentType = () => {
   const showMoreActions = stateFilter == "current";
 
   useEffect(() => {
-    setParams(() => {
-      const newParams = new URLSearchParams();
-      if (stateFilter) newParams.set("state", stateFilter);
-      for (const serviceType of serviceTypes) {
-        newParams.append("serviceTypes[]", serviceType);
-      }
-
-      return newParams;
-    });
+    const newParams = new URLSearchParams();
+    if (stateFilter) newParams.set("state", stateFilter);
+    for (const serviceType of serviceTypes) {
+      newParams.append("serviceTypes[]", serviceType);
+    }
+    setParams(newParams, { replace: true });
   }, [setParams, stateFilter, serviceTypes]);
 
   const { data, isLoading } = usePaMessages({

@@ -43,7 +43,7 @@ const PredictionSuppressionPage = () => {
   useEffect(() => {
     const newParams = new URLSearchParams();
     newParams.set("line", line);
-    setParams(newParams);
+    setParams(newParams, { replace: true });
   }, [setParams, line]);
 
   const filteredPlaces = sortByStationOrder(
