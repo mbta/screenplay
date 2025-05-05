@@ -173,7 +173,7 @@ const AlertsList: ComponentType<AlertsListProps> = ({
         case "Ferry":
           return (ie) => ie.route_type === RouteType.Ferry;
         case "Access":
-          return (ie) => ie.facility != null;
+          return (ie) => ie.facility !== null;
         default:
           return (ie) => ids.includes(ie.route as string);
       }

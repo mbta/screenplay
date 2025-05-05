@@ -251,7 +251,7 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
     screen: ScreenConfiguration,
     index: number,
   ) => {
-    if (screen.new_id == screenID) {
+    if (screen.new_id === screenID) {
       setUpdatedPendingScreens((prevState) => {
         return [
           ...prevState.slice(0, index),
