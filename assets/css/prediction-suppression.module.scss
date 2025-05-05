@@ -31,3 +31,13 @@
   width: 0;
   opacity: 0;
 }
+
+.badge {
+  color: $text-invert;
+  background-color: $button-primary;
+  border-radius: var(--bs-border-radius);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  line-height: 20px;
+  padding: 0 0.5rem;
+}

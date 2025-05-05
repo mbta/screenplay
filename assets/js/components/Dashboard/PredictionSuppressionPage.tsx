@@ -18,6 +18,7 @@ import {
 import { SuppressedPrediction } from "Models/suppressed_prediction";
 import { useUniqueId } from "Hooks/useUniqueId";
 import { useSearchParams } from "react-router-dom";
+import cx from "classnames";
 
 const lookupKey = fp.join(":");
 
@@ -89,6 +90,11 @@ const PredictionSuppressionPage = () => {
     ]),
     fp.fromPairs,
   ])(suppressedPredictions);
+
+  const suppressedPredictionCounts = fp.countBy(
+    "route_id",
+    suppressedPredictions,
+  );
 
   const noPredictions = (place: Place) => {
     const serviceType = lineStopLookup[lookupKey([place.id, 0])];
@@ -208,6 +214,17 @@ const PredictionSuppressionPage = () => {
     return renderInput(place.id, place.id, directionId);
   };
 
+  const filterContent = (line: string) => {
+    return (
+      <>
+        <span>{line} Line</span>
+        <span className={cx(styles.badge, "ms-auto")}>
+          {suppressedPredictionCounts[line]}
+        </span>
+      </>
+    );
+  };
+
   return (
     <div className="ms-5 mt-4">
       <h1 className="mb-5">Suppress Predictions</h1>
@@ -221,7 +238,7 @@ const PredictionSuppressionPage = () => {
               {
                 value: "Green",
                 checkedClass: "bg-mbta-green",
-                content: "Green Line",
+                content: filterContent("Green"),
               },
               {
                 value: "Green-B",
@@ -262,22 +279,22 @@ const PredictionSuppressionPage = () => {
               {
                 value: "Red",
                 checkedClass: "bg-mbta-red",
-                content: "Red Line",
+                content: filterContent("Red"),
               },
               {
                 value: "Blue",
                 checkedClass: "bg-mbta-blue",
-                content: "Blue Line",
+                content: filterContent("Blue"),
               },
               {
                 value: "Orange",
                 checkedClass: "bg-mbta-orange",
-                content: "Orange Line",
+                content: filterContent("Orange"),
               },
               {
                 value: "Silver",
                 checkedClass: "bg-mbta-silver",
-                content: "Silver Line",
+                content: filterContent("Silver"),
               },
             ]}
           />
