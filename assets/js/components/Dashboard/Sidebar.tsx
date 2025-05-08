@@ -18,8 +18,10 @@ import TLogo from "../../../static/images/t-logo.svg";
 import TLogoBlack from "../../../static/images/t-logo-black.svg";
 import cx from "classnames";
 import * as sidebarStyles from "Styles/sidebar.module.scss";
+import * as predictionSuppressionStyles from "Styles/prediction-suppression.module.scss";
 
 import { isEmergencyAdmin, isScreensAdmin } from "Utils/auth";
+import { usePredictionSuppressionState } from "Hooks/useScreenplayContext";
 
 const SidebarLink = ({
   to,
@@ -27,12 +29,14 @@ const SidebarLink = ({
   activeIcon,
   reloadDocument,
   children,
+  extraContent,
 }: {
   to: string;
   icon: Icon;
   activeIcon: Icon;
   reloadDocument?: boolean;
   children: ReactNode;
+  extraContent?: ReactNode;
 }) => {
   return (
     <NavLink
@@ -48,6 +52,7 @@ const SidebarLink = ({
           <>
             <span className={sidebarStyles.linkHighlight}>
               <IconComponent size={36} />
+              {extraContent}
             </span>
             <span>{children}</span>
           </>
@@ -58,6 +63,8 @@ const SidebarLink = ({
 };
 
 const Sidebar = () => {
+  const { suppressedPredictions } = usePredictionSuppressionState();
+
   const environment =
     document
       .querySelector("meta[name=environment-name]")
@@ -90,6 +97,16 @@ const Sidebar = () => {
           to="/prediction-suppression"
           icon={ArrowDownShort}
           activeIcon={ArrowDownShort}
+          extraContent={
+            !!suppressedPredictions?.length && (
+              <span
+                style={{ position: "absolute", bottom: -4, right: -14 }}
+                className={predictionSuppressionStyles.badge}
+              >
+                {suppressedPredictions?.length}
+              </span>
+            )
+          }
         >
           Suppress Predictions
         </SidebarLink>
