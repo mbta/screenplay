@@ -1,6 +1,6 @@
 import {
   usePredictionSuppressionState,
-  useScreenplayContext,
+  useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { RadioList } from "Components/RadioList";
 import React, { ReactNode, useEffect, useState } from "react";
@@ -36,7 +36,7 @@ const directionNames = (line: string) => {
 const PredictionSuppressionPage = () => {
   const [params, setParams] = useSearchParams();
   const [line, setLine] = useState<string>(params.get("line") || "Green");
-  const { places, lineStops } = useScreenplayContext();
+  const { places, lineStops } = useScreenplayState();
   const { suppressedPredictions, mutateSuppressedPredictions } =
     usePredictionSuppressionState();
 

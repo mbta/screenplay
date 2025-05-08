@@ -2,10 +2,7 @@ import React, { ComponentType, useContext } from "react";
 import PlaceRow from "Components/PlaceRow";
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
-import {
-  DirectionID,
-  PlacesListReducerAction,
-} from "Hooks/useScreenplayContext";
+import { DirectionID, usePlacesListState } from "Hooks/useScreenplayContext";
 import {
   Accordion,
   AccordionContext,
@@ -77,7 +74,6 @@ const groupPaEssScreensbyRoute = (screens: Screen[]): Map<string, Screen[]> => {
 interface PlaceRowAccordionProps {
   place: Place;
   canShowAnimation?: boolean;
-  dispatch: React.Dispatch<PlacesListReducerAction>;
   activeEventKeys: string[];
   sortDirection: DirectionID;
   filteredLine?: string | null;
@@ -87,23 +83,17 @@ interface PlaceRowAccordionProps {
 const PlaceRowAccordion: ComponentType<PlaceRowAccordionProps> = ({
   place,
   canShowAnimation,
-  dispatch,
   filteredLine,
   sortDirection,
   activeEventKeys,
   className = "",
 }: PlaceRowAccordionProps) => {
+  const { setActiveEventKeys } = usePlacesListState();
   const handleClickAccordion = (eventKey: string) => {
     if (activeEventKeys?.includes(eventKey)) {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        eventKeys: activeEventKeys.filter((e: string) => e !== eventKey),
-      });
+      setActiveEventKeys(activeEventKeys.filter((e: string) => e !== eventKey));
     } else {
-      dispatch({
-        type: "SET_ACTIVE_EVENT_KEYS",
-        eventKeys: [...activeEventKeys, eventKey],
-      });
+      setActiveEventKeys([...activeEventKeys, eventKey]);
     }
   };
 

@@ -17,15 +17,14 @@ import AlertCard from "Components/AlertCard";
 import { useNavigate } from "react-router-dom";
 import { placesWithSelectedAlert } from "../../util";
 import {
-  useAlertsListContext,
-  useAlertsListDispatchContext,
-  useScreenplayContext,
+  useAlertsListState,
+  useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { usePrevious } from "Hooks/usePrevious";
 import moment from "moment";
 
 const AlertsPage: ComponentType = () => {
-  const { places, alerts, screensByAlertMap } = useScreenplayContext();
+  const { places, alerts, screensByAlertMap } = useScreenplayState();
 
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id],
@@ -56,39 +55,35 @@ const AlertsList: ComponentType<AlertsListProps> = ({
   places,
   screensByAlertMap,
 }: AlertsListProps) => {
-  const { modeLineFilterValue, screenTypeFilterValue, statusFilterValue } =
-    useAlertsListContext();
-  const dispatch = useAlertsListDispatchContext();
+  const {
+    modeLineFilterValue,
+    screenTypeFilterValue,
+    statusFilterValue,
+    setModeLineFilterValue,
+    setScreenTypeFilterValue,
+    setStatusFilterValue,
+  } = useAlertsListState();
   const navigate = useNavigate();
   const prevAlertIds = usePrevious(alerts)?.map((alert) => alert.id);
 
   const handleAlertModeOrLineSelect = (value: string) => {
     const selectedFilter = MODES_AND_LINES.find(({ label }) => label === value);
     if (selectedFilter) {
-      dispatch({
-        type: "SET_MODE_LINE_FILTER",
-        filterValue: selectedFilter,
-      });
+      setModeLineFilterValue(selectedFilter);
     }
   };
 
   const handleAlertScreenTypeSelect = (value: string) => {
     const selectedFilter = SCREEN_TYPES.find(({ label }) => label === value);
     if (selectedFilter) {
-      dispatch({
-        type: "SET_SCREEN_TYPE_FILTER",
-        filterValue: selectedFilter,
-      });
+      setScreenTypeFilterValue(selectedFilter);
     }
   };
 
   const handleAlertStatusSelect = (value: string) => {
     const selectedFilter = STATUSES.find(({ label }) => label === value);
     if (selectedFilter) {
-      dispatch({
-        type: "SET_STATUS_FILTER",
-        filterValue: selectedFilter,
-      });
+      setStatusFilterValue(selectedFilter);
     }
   };
 

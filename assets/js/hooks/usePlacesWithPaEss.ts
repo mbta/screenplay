@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { Place } from "Models/place";
-import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 
 export const usePlacesWithPaEss = () => {
-  const { places } = useScreenplayContext();
+  const { places } = useScreenplayState();
   return useMemo(
     () =>
       places

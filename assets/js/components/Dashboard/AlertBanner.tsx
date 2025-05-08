@@ -2,7 +2,7 @@ import React, { ComponentType } from "react";
 import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
 import { useParams } from "react-router-dom";
-import { useScreenplayContext } from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { Alert } from "Models/alert";
 
 interface BannerAlert {
@@ -20,7 +20,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
   isDone,
   queueExpiration,
 }: AlertBannerProps) => {
-  const { bannerAlert } = useScreenplayContext();
+  const { bannerAlert } = useScreenplayState();
   const { alert, type } = bannerAlert as BannerAlert;
   const wasPosted = alert.created_at === alert.updated_at;
   const params = useParams();

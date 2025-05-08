@@ -13,16 +13,14 @@ import {
 import { Accordion, Button, Col, Container, Row } from "react-bootstrap";
 import PendingScreensPlaceRowAccordion from "Components/PendingScreensPlaceRowAccordion";
 import { ScreenConfiguration } from "Models/screen_configuration";
-import {
-  useScreenplayContext,
-  useScreenplayDispatchContext,
-} from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { format } from "date-fns/format";
 import { Place } from "Models/place";
 import { useNavigate } from "react-router-dom";
 
 const PendingScreensPage: ComponentType = () => {
-  const { places } = useScreenplayContext();
+  const { places, setPlaces, showActionOutcome, hideActionOutcome } =
+    useScreenplayState();
   const [existingScreens, setExistingScreens] = useState<PendingAndLiveScreens>(
     {},
   );
@@ -48,8 +46,6 @@ const PendingScreensPage: ComponentType = () => {
       },
     );
   }, [setExistingScreens, setEtag, setLastModified]);
-
-  const dispatch = useScreenplayDispatchContext();
 
   const publish = useCallback(
     async (
@@ -78,55 +74,43 @@ const PendingScreensPage: ComponentType = () => {
         switch (status) {
           case 200:
             if (newConfig) {
-              dispatch({ type: "SET_PLACES", places: newConfig });
+              setPlaces(newConfig);
             }
 
-            dispatch({
-              type: "SHOW_ACTION_OUTCOME",
-              isSuccessful: true,
-              message: "Screens published to places",
-            });
+            showActionOutcome(true, "Screens published to places");
             // Since the publish succeeded, let's update the page data immediately
             // so the new state is reflected.
             fetchData();
             break;
           case 412:
-            dispatch({
-              type: "SHOW_ACTION_OUTCOME",
-              isSuccessful: false,
-              message: "Page is out of date. Please reload and try again.",
-            });
+            showActionOutcome(
+              false,
+              "Page is out of date. Please reload and try again.",
+            );
             break;
           case 500:
-            dispatch({
-              type: "SHOW_ACTION_OUTCOME",
-              isSuccessful: false,
-              message: message || defaultErrorMessage,
-            });
+            showActionOutcome(false, message || defaultErrorMessage);
             break;
           default:
-            dispatch({
-              type: "SHOW_ACTION_OUTCOME",
-              isSuccessful: false,
-              message: defaultErrorMessage,
-            });
+            showActionOutcome(false, defaultErrorMessage);
             console.error(`Bad publish response status: ${status}`);
         }
       } catch (e) {
-        dispatch({
-          type: "SHOW_ACTION_OUTCOME",
-          isSuccessful: false,
-          message: "Unknown error. Please contact an engineer.",
-        });
+        showActionOutcome(false, "Unknown error. Please contact an engineer.");
         console.error(e);
       }
 
       setIsPublishing(false);
-      setTimeout(() => {
-        dispatch({ type: "HIDE_ACTION_OUTCOME" });
-      }, 5000);
+      setTimeout(() => hideActionOutcome(), 5000);
     },
-    [etag, dispatch, fetchData, isPublishing],
+    [
+      etag,
+      setPlaces,
+      showActionOutcome,
+      hideActionOutcome,
+      fetchData,
+      isPublishing,
+    ],
   );
 
   useEffect(fetchData, [fetchData]);

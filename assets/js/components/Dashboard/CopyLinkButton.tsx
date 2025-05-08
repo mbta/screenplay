@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link45deg } from "react-bootstrap-icons";
-import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 
 interface CopyLinkButtonProps {
   url: string;
@@ -9,7 +9,7 @@ interface CopyLinkButtonProps {
 }
 
 const CopyLinkButton = (props: CopyLinkButtonProps): JSX.Element => {
-  const dispatch = useScreenplayDispatchContext();
+  const { setShowLinkCopied } = useScreenplayState();
 
   return (
     <OverlayTrigger
@@ -22,7 +22,7 @@ const CopyLinkButton = (props: CopyLinkButtonProps): JSX.Element => {
         className="screen-detail-action-bar-button copy-link-button"
         onClick={() => {
           navigator.clipboard.writeText(props.url);
-          dispatch({ type: "SHOW_LINK_COPIED", showLinkCopied: true });
+          setShowLinkCopied(true);
           props.queueToastExpiration();
         }}
       >

@@ -4,7 +4,7 @@ import CopyLinkButton from "Components/CopyLinkButton";
 import OpenInWindowButton from "Components/OpenInTabButton";
 import { Dropdown } from "react-bootstrap";
 import { Link45deg, FlagFill, BoxArrowUpRight } from "react-bootstrap-icons";
-import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 import KebabMenu from "Components/KebabMenu";
 import { isEmergencyAdmin } from "Utils/auth";
 
@@ -16,17 +16,10 @@ interface ScreenDetailActionBarProps {
 const ScreenDetailActionBar = (
   props: ScreenDetailActionBarProps,
 ): JSX.Element => {
-  const dispatch = useScreenplayDispatchContext();
+  const { setShowLinkCopied } = useScreenplayState();
 
   const queueToastExpiration = () => {
-    setTimeout(
-      () =>
-        dispatch({
-          type: "SHOW_LINK_COPIED",
-          showLinkCopied: false,
-        }),
-      5000,
-    );
+    setTimeout(() => setShowLinkCopied(false), 5000);
   };
 
   const reportAProblemURL = isEmergencyAdmin()
@@ -51,7 +44,7 @@ const ScreenDetailActionBar = (
           className="kebab-menu-dropdown__item"
           onClick={() => {
             navigator.clipboard.writeText(props.screenUrl);
-            dispatch({ type: "SHOW_LINK_COPIED", showLinkCopied: true });
+            setShowLinkCopied(true);
             queueToastExpiration();
           }}
         >

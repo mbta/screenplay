@@ -37,10 +37,7 @@ import {
   ExistingScreensAtPlace,
   fetchExistingScreens,
 } from "Utils/api";
-import {
-  useConfigValidationContext,
-  useConfigValidationDispatchContext,
-} from "Hooks/useScreenplayContext";
+import { useConfigValidationState } from "Hooks/useScreenplayContext";
 
 interface PlaceIdsAndExistingScreens {
   [place_id: string]: ExistingScreensAtPlace;
@@ -73,9 +70,11 @@ const ConfigureScreensWorkflowPage: ComponentType<
 }: ConfigureScreensWorkflowPageProps) => {
   const [existingScreens, setExistingScreens] = useState<ExistingScreens>({});
 
-  const { newScreenValidationErrors, pendingScreenValidationErrors } =
-    useConfigValidationContext();
-  const dispatch = useConfigValidationDispatchContext();
+  const {
+    newScreenValidationErrors,
+    pendingScreenValidationErrors,
+    setValidationErrors,
+  } = useConfigValidationState();
   const initializeExistingScreenValidationErrors = useCallback(
     (placesAndScreens: PlaceIdsAndExistingScreens) => {
       for (const place_id in placesAndScreens) {
@@ -89,13 +88,16 @@ const ConfigureScreensWorkflowPage: ComponentType<
         });
       }
 
-      dispatch({
-        type: "SET_VALIDATION_ERRORS",
+      setValidationErrors(
         newScreenValidationErrors,
         pendingScreenValidationErrors,
-      });
+      );
     },
-    [dispatch, newScreenValidationErrors, pendingScreenValidationErrors],
+    [
+      setValidationErrors,
+      newScreenValidationErrors,
+      pendingScreenValidationErrors,
+    ],
   );
 
   // This hook will run in two different scenarios:
@@ -165,9 +167,11 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
   const existingLiveScreens: {
     [screen_id: string]: ScreenConfiguration;
   } = existingScreens?.live_screens ?? {};
-  const { newScreenValidationErrors, pendingScreenValidationErrors } =
-    useConfigValidationContext();
-  const dispatch = useConfigValidationDispatchContext();
+  const {
+    newScreenValidationErrors,
+    pendingScreenValidationErrors,
+    setValidationErrors,
+  } = useConfigValidationState();
 
   useEffect(() => {
     if (!existingScreens) return;
@@ -278,11 +282,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
 
   const deleteNewRow = (index: number) => {
     newScreenValidationErrors[place.id].splice(index, 1);
-    dispatch({
-      type: "SET_VALIDATION_ERRORS",
+    setValidationErrors(
       newScreenValidationErrors,
       pendingScreenValidationErrors,
-    });
+    );
     setNewScreens((prevState) => {
       return [...prevState.slice(0, index), ...prevState.slice(index + 1)];
     });
@@ -312,11 +315,10 @@ const ConfigurePlaceCard: ComponentType<ConfigurePlaceCardProps> = ({
       missingFields: [],
       isDuplicateScreenId: false,
     });
-    dispatch({
-      type: "SET_VALIDATION_ERRORS",
+    setValidationErrors(
       newScreenValidationErrors,
       pendingScreenValidationErrors,
-    });
+    );
   };
 
   return (

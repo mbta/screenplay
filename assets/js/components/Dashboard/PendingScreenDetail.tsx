@@ -8,7 +8,7 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import { capitalize } from "../../util";
 import OpenInTabButton from "Components/OpenInTabButton";
 import CopyLinkButton from "Components/CopyLinkButton";
-import { useScreenplayDispatchContext } from "Hooks/useScreenplayContext";
+import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { LightningChargeFill, ClockFill } from "react-bootstrap-icons";
 
 interface Props {
@@ -57,20 +57,13 @@ const PendingScreenDetail: ComponentType<Props> = ({
   isHiddenOnPlacesPage,
   onClickHideOnPlacesPage,
 }: Props): JSX.Element => {
-  const dispatch = useScreenplayDispatchContext();
+  const { setShowLinkCopied } = useScreenplayState();
   const screensUrl = document
     .querySelector("meta[name=screens-url]")
     ?.getAttribute("content");
 
   const queueToastExpiration = () => {
-    setTimeout(
-      () =>
-        dispatch({
-          type: "SHOW_LINK_COPIED",
-          showLinkCopied: false,
-        }),
-      5000,
-    );
+    setTimeout(() => setShowLinkCopied(false), 5000);
   };
 
   const locationDescription = getScreenLocationDescription(config);

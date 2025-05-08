@@ -1,4 +1,4 @@
-import React, { ComponentType, useEffect, useReducer, useState } from "react";
+import React, { ComponentType, useEffect, useState } from "react";
 import AlertCard from "Components/AlertCard";
 import AlertNotFoundPage from "Components/AlertNotFoundPage";
 import { PlacesList } from "Components/PlacesPage";
@@ -12,15 +12,13 @@ import {
 } from "react-bootstrap-icons";
 import { formatEffect, placesWithSelectedAlert } from "../../util";
 import {
-  placesListReducer,
-  useScreenplayContext,
-  initialPlacesListState,
+  PlacesListStateContainer,
+  useScreenplayState,
 } from "Hooks/useScreenplayContext";
 
 const AlertDetails: ComponentType = () => {
-  const screenplayContext = useScreenplayContext();
-  const [contextState, setContextState] = useState(screenplayContext);
-  const { places, screensByAlertMap } = contextState;
+  const { places, alerts, allAPIAlertIds, screensByAlertMap } =
+    useScreenplayState();
   const { id } = useParams();
   const [selectedAlert, setSelectedAlert] = useState<Alert>();
 
@@ -30,40 +28,18 @@ const AlertDetails: ComponentType = () => {
 
   const navigate = useNavigate();
 
-  const [showModal, setShowModal] = useState(false);
-
+  const foundAlert = alerts.find((alert) => alert.id === id);
   useEffect(() => {
-    const newSelectedAlert = screenplayContext.alerts.length
-      ? screenplayContext.alerts.find((alert) => alert.id === id)
-      : null;
-
-    if (newSelectedAlert) {
-      // We are on an active alert details page
-      setContextState(screenplayContext);
-      setSelectedAlert(newSelectedAlert);
-      setShowModal(false);
-    } else if (selectedAlert) {
-      // We're on an alert details page, and the alert has been closed while
-      // we've been on the page
-      setShowModal(true);
-    } else {
-      // We loaded an alert details page that doesn't match any alert
-      setContextState(screenplayContext);
+    if (foundAlert) {
+      setSelectedAlert(foundAlert);
     }
-  }, [screenplayContext, id, selectedAlert]);
+  }, [foundAlert]);
 
-  const [placesListState, placesListDispatch] = useReducer(
-    placesListReducer,
-    initialPlacesListState,
-  );
-
-  const validAlertId = contextState.allAPIAlertIds.find(
-    (alert) => alert === id,
-  );
+  const validAlertId = id && allAPIAlertIds.includes(id) ? id : undefined;
 
   return selectedAlert ? (
     // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
-    <>
+    <PlacesListStateContainer>
       <div className="alert-details">
         <div className="page-content__header">
           <div>
@@ -98,8 +74,6 @@ const AlertDetails: ComponentType = () => {
               noModeFilter
               isAlertPlacesList
               showAnimationForNewPlaces
-              dispatch={placesListDispatch}
-              stateValues={placesListState}
             />
           </div>
         )}
@@ -107,7 +81,7 @@ const AlertDetails: ComponentType = () => {
       <Modal
         className="alert-not-found"
         backdropClassName="alert-not-found"
-        show={showModal}
+        show={selectedAlert && !foundAlert}
       >
         <Modal.Body>
           <SlashCircleFill size={24} className="alert-not-found_icon" />
@@ -127,7 +101,7 @@ const AlertDetails: ComponentType = () => {
           </div>
         </Modal.Body>
       </Modal>
-    </>
+    </PlacesListStateContainer>
   ) : (
     <AlertNotFoundPage validAlertId={validAlertId} />
   );
