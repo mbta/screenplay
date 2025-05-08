@@ -22,7 +22,7 @@ const PriorityPicker = ({
   // Non-PA messages need a priority in between Emergency (1) and Current service Disruption (2)
   // But here we want to just show the labels as is, 1 2 3 4 rather than 1 3 4 5 so adjust here
   const adjustPriorityForLabel = (priority: number): number =>
-    priority == 1 ? priority : priority - 1;
+    priority === 1 ? priority : priority - 1;
 
   return (
     <Form.Group>

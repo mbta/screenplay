@@ -67,6 +67,7 @@ export default [
     rules: {
       "no-console": 0,
       "prefer-rest-params": "off",
+      "eqeqeq": "error",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-explicit-any": "off",
 

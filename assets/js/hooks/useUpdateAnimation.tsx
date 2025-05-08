@@ -11,7 +11,7 @@ export const useUpdateAnimation = (
     // Prevents animation when already showing and on page load.
     if (
       timer.current !== undefined ||
-      (!showAnimationOnMount && prevValue == null)
+      (!showAnimationOnMount && (prevValue === null || prevValue === undefined))
     ) {
       return;
     }

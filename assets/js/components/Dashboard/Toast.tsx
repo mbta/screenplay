@@ -44,7 +44,7 @@ const Toast = ({
   return (
     <ToastContainer position="bottom-center" className="toast-container">
       <BSToast
-        show={message != null}
+        show={message !== null}
         onClose={onClose}
         delay={5000}
         autohide={autoHide}

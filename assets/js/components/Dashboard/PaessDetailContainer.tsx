@@ -18,15 +18,16 @@ const PaessDetailContainer = (
 
   const stationCode = props.screens[0].station_code;
   const leftScreens = props.screens.filter(
-    (screen) => screen.zone != null && zonePositions.left.includes(screen.zone),
+    (screen) =>
+      screen.zone !== undefined && zonePositions.left.includes(screen.zone),
   );
   const centerScreens = props.screens.filter(
     (screen) =>
-      screen.zone != null && zonePositions.center.includes(screen.zone),
+      screen.zone !== undefined && zonePositions.center.includes(screen.zone),
   );
   const rightScreens = props.screens.filter(
     (screen) =>
-      screen.zone != null && zonePositions.right.includes(screen.zone),
+      screen.zone !== undefined && zonePositions.right.includes(screen.zone),
   );
 
   return (
@@ -40,8 +41,8 @@ const PaessDetailContainer = (
           <div>
             {leftScreens.map(
               (screen) =>
-                screen.station_code != null &&
-                screen.zone != null && (
+                screen.station_code !== undefined &&
+                screen.zone !== undefined && (
                   <PaessScreenDetail
                     key={`${screen.station_code}-${screen.zone}`}
                     stationCode={screen.station_code}
@@ -62,8 +63,8 @@ const PaessDetailContainer = (
           <div>
             {centerScreens.map(
               (screen) =>
-                screen.station_code != null &&
-                screen.zone != null && (
+                screen.station_code !== undefined &&
+                screen.zone !== undefined && (
                   <PaessScreenDetail
                     key={`${screen.station_code}-${screen.zone}`}
                     stationCode={screen.station_code}
@@ -84,8 +85,8 @@ const PaessDetailContainer = (
           <div>
             {rightScreens.map(
               (screen) =>
-                screen.station_code != null &&
-                screen.zone != null && (
+                screen.station_code !== undefined &&
+                screen.zone !== undefined && (
                   <PaessScreenDetail
                     key={`${screen.station_code}-${screen.zone}`}
                     stationCode={screen.station_code}

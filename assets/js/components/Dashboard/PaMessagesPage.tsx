@@ -78,7 +78,7 @@ const PaMessagesPage: ComponentType = () => {
   );
   const isReadOnly = !isPaMessageAdmin();
 
-  const showMoreActions = stateFilter == "current";
+  const showMoreActions = stateFilter === "current";
 
   useEffect(() => {
     const newParams = new URLSearchParams();
@@ -98,7 +98,7 @@ const PaMessagesPage: ComponentType = () => {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const [toastProps, setToastProps] = useState<ToastProps | null>();
+  const [toastProps, setToastProps] = useState<ToastProps | null>(null);
 
   return (
     <>
@@ -201,7 +201,7 @@ const PaMessagesPage: ComponentType = () => {
                 }
                 emptyStateText="There are no PA/ESS Messages matching the current filters."
               />
-              {toastProps != null && (
+              {toastProps !== null && (
                 <Toast
                   {...toastProps}
                   onClose={() => {

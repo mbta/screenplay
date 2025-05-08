@@ -163,7 +163,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
             goToStep={this.goToStep}
             selectedStations={this.state.selectedStations}
             message={
-              this.state.messageOption == "1"
+              this.state.messageOption === "1"
                 ? CANNED_MESSAGES[parseInt(this.state.cannedMessage)]
                 : this.state.customMessage
             }
@@ -462,7 +462,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
             selectedStations={this.state.selectedStations}
             step={this.state.step}
             customMessage={
-              this.state.messageOption == "1" ? "" : this.state.customMessage
+              this.state.messageOption === "1" ? "" : this.state.customMessage
             }
             cannedMessageId={this.state.cannedMessage}
           />

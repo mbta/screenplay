@@ -92,7 +92,7 @@ const ScreenCard = (props: ScreenDetailProps) => {
                   "screen-detail__screen-type-location screen-detail__screen-type-location--paess",
                   {
                     "screen-detail__screen-type-location--paess-s":
-                      paessRouteLetter == "s",
+                      paessRouteLetter === "s",
                   },
                 )}
               >

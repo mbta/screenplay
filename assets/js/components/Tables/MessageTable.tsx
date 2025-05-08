@@ -46,7 +46,7 @@ const MessageTable = ({
         </thead>
         <tbody>{rows}</tbody>
       </table>
-      {rows.length == 0 && (
+      {rows.length === 0 && (
         <div>
           {isLoading ? (
             <div className={messageTableStyles.loadingContainer}>
