@@ -34,6 +34,7 @@
 .linkHighlight {
   padding: 8px;
   border-radius: 8px;
+  position: relative;
   .link.active &,
   .link:hover & {
     background-color: #384e5c;
