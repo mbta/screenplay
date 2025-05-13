@@ -1,0 +1,48 @@
+@import "./variables.scss";
+
+.segment {
+  width: 44px;
+  height: 1000px;
+  &:global(.green) {
+    --line-color: #{$mbta-green};
+  }
+  &:global(.blue) {
+    --line-color: #{$mbta-blue};
+  }
+  &:global(.red) {
+    --line-color: #{$mbta-red};
+  }
+  &:global(.orange) {
+    --line-color: #{$mbta-orange};
+  }
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  stroke: var(--line-color);
+  stroke-width: 4px;
+  fill: none;
+}
+
+.circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  min-width: 20px;
+  padding: 0 2px;
+  border-radius: 20px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 10px;
+  border: 2px solid var(--line-color);
+  &.filled {
+    background-color: var(--line-color);
+  }
+  &.right {
+    left: 24px;
+  }
+}
