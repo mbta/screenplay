@@ -4,7 +4,7 @@ Lists all Suppressed suppression_type defined by the stop_id, route_id and direc
 
 _Note_: JFK/UMass (place-jfk) will use the child stop_ids.
 
-**URL** : `/api/suppressed_suppression_type/suppression_data`
+**URL** : `/api/suppressed-predictions/suppression_data`
 
 **Method** : `GET`
 
