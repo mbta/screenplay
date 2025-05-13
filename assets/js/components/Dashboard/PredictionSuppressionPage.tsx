@@ -19,6 +19,7 @@ import { SuppressedPrediction } from "Models/suppressed_prediction";
 import { useUniqueId } from "Hooks/useUniqueId";
 import { useSearchParams } from "react-router-dom";
 import cx from "classnames";
+import { isSuppressionAdmin } from "Utils/auth";
 
 const lookupKey = fp.join(":");
 
@@ -40,6 +41,7 @@ const PredictionSuppressionPage = () => {
   const { places, lineStops } = useScreenplayState();
   const { suppressedPredictions, mutateSuppressedPredictions } =
     usePredictionSuppressionState();
+  const isAdmin = isSuppressionAdmin();
 
   useEffect(() => {
     const newParams = new URLSearchParams();
@@ -167,35 +169,39 @@ const PredictionSuppressionPage = () => {
       const predictionsText =
         serviceType === "start" ? "terminal predictions" : "predictions";
       return (
-        <>
-          <label className={styles.suppressionLabel}>
-            <input
-              type="checkbox"
-              checked={!!record}
-              onChange={toggleSuppression}
-              className={styles.suppressionCheckbox}
-            />
-            {!!record && <XCircleFill className="me-2" />}
-            {fp.capitalize(
-              record
-                ? `${predictionsText} suppressed`
-                : `suppress ${predictionsText}`,
-            )}
-          </label>
-          {!!record && (
-            <IdContainer>
-              {(id) => (
-                <Form.Check
-                  id={id}
-                  className="mt-2 mb-0"
-                  label="Clear at end of service day"
-                  checked={record.clear_at_end_of_day}
-                  onChange={toggleExpiration}
-                />
+        (!!record || isAdmin) && (
+          <>
+            <label className={styles.suppressionLabel}>
+              <input
+                type="checkbox"
+                checked={!!record}
+                onChange={toggleSuppression}
+                className={styles.suppressionCheckbox}
+                disabled={!isAdmin}
+              />
+              {!!record && isAdmin && <XCircleFill className="me-2" />}
+              {fp.capitalize(
+                record
+                  ? `${predictionsText} suppressed`
+                  : `suppress ${predictionsText}`,
               )}
-            </IdContainer>
-          )}
-        </>
+            </label>
+            {!!record && (
+              <IdContainer>
+                {(id) => (
+                  <Form.Check
+                    id={id}
+                    className="mt-2 mb-0"
+                    label="Clear at end of service day"
+                    checked={record.clear_at_end_of_day}
+                    onChange={toggleExpiration}
+                    disabled={!isAdmin}
+                  />
+                )}
+              </IdContainer>
+            )}
+          </>
+        )
       );
     }
   };
