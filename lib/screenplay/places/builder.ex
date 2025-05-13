@@ -11,9 +11,9 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.Places.Place
   alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias ScreensConfig.{Departures, Footer, Header, Screen}
+  alias ScreensConfig.{Alerts, Departures, Footer, Header, Screen}
   alias ScreensConfig.Departures.{Query, Section}
-  alias ScreensConfig.Screen.{BusEink, BusShelter, Busway, Dup, Elevator, GlEink, PreFare}
+  alias ScreensConfig.Screen.{Dup, Elevator}
 
   use GenServer
 
@@ -97,23 +97,16 @@ defmodule Screenplay.Places.Builder do
   defp get_showtime_screens do
     ScreensConfigStore.screens()
     |> Enum.reject(&hidden_screen?/1)
-    |> Enum.flat_map(&split_multi_place_screens/1)
-    |> Enum.group_by(&get_stop_id/1, fn
-      {id,
-       %Screen{
-         app_id: app_id,
-         disabled: disabled,
-         app_params: %_app{direction_id: direction_id}
-       }} ->
-        %ShowtimeScreen{
-          id: id,
-          type: app_id,
-          disabled: disabled,
-          direction_id: direction_id
-        }
+    |> Enum.flat_map(fn {id, screen} -> screen |> stop_ids() |> Enum.map(&{&1, {id, screen}}) end)
+    |> Enum.group_by(&elem(&1, 0), fn
+      {_stop_id, {id, %Screen{app_id: app_id, disabled: disabled, app_params: app_params}}} ->
+        direction_id =
+          case app_params do
+            %_app{direction_id: direction_id} -> direction_id
+            _ -> nil
+          end
 
-      {id, %Screen{app_id: app_id, disabled: disabled}} ->
-        %ShowtimeScreen{id: id, type: app_id, disabled: disabled}
+        %ShowtimeScreen{id: id, type: app_id, disabled: disabled, direction_id: direction_id}
     end)
   end
 
@@ -206,102 +199,41 @@ defmodule Screenplay.Places.Builder do
     end)
   end
 
-  defp get_stop_id({_id, %{app_params: %app{footer: %Footer{stop_id: stop_id}}}})
-       when app in [BusEink, BusShelter, GlEink] do
-    stop_id
-  end
-
-  defp get_stop_id(
-         {_id, %{app_params: %PreFare{header: %Header.CurrentStopId{stop_id: stop_id}}}}
-       ) do
-    stop_id
-  end
-
-  defp get_stop_id({_id, %{app_id: app_id, stop: stop_id}})
-       when app_id in [:busway_v2, :dup_v2] do
-    stop_id
-  end
-
-  defp get_stop_id({_id, %{app_params: %Elevator{elevator_id: elevator_id}}}) do
+  defp stop_ids(%Screen{app_params: %Elevator{elevator_id: elevator_id}}) do
     {:ok, facility} = @facilities_mod.fetch(elevator_id)
     %{"relationships" => %{"stop" => %{"data" => %{"id" => stop_id}}}} = facility
-    stop_id
+    [stop_id]
   end
 
-  defp split_multi_place_screens(
-         {id,
-          %Screen{
-            app_params: %Dup{
-              primary_departures: %Departures{
-                sections: [
-                  %Section{
-                    query: %Query{params: %Query.Params{stop_ids: primary_stop_ids}}
-                  }
-                  | _
-                ]
-              },
-              secondary_departures: %Departures{sections: []}
-            }
-          } = stuff}
-       ) do
-    primary =
-      Enum.map(primary_stop_ids, fn stop_id ->
-        {id, Map.put(stuff, :stop, stop_id)}
-      end)
+  defp stop_ids(%Screen{app_params: %_app{header: %Header.CurrentStopId{stop_id: stop_id}}})
+       when not is_nil(stop_id),
+       do: [stop_id]
 
-    primary
-  end
+  defp stop_ids(%Screen{app_params: %_app{footer: %Footer{stop_id: stop_id}}})
+       when not is_nil(stop_id),
+       do: [stop_id]
 
-  defp split_multi_place_screens(
-         {id,
-          %Screen{
-            app_id: :dup_v2,
-            app_params: %Dup{
-              primary_departures: %Departures{
-                sections: [
-                  %Section{query: %Query{params: %Query.Params{stop_ids: primary_stop_ids}}}
-                  | _
-                ]
-              },
-              secondary_departures: %Departures{
-                sections: [
-                  %Section{query: %Query{params: %Query.Params{stop_ids: secondary_stop_ids}}} | _
-                ]
-              }
-            }
-          } = stuff}
-       ) do
-    primary =
-      Enum.map(primary_stop_ids, fn stop_id ->
-        {id, Map.put(stuff, :stop, stop_id)}
-      end)
+  defp stop_ids(%Screen{app_params: %_app{alerts: %Alerts{stop_id: stop_id}}})
+       when not is_nil(stop_id),
+       do: [stop_id]
 
-    secondary =
-      Enum.map(secondary_stop_ids, fn stop_id ->
-        {id, Map.put(stuff, :stop, stop_id)}
-      end)
+  defp stop_ids(%Screen{app_params: %_app{departures: %Departures{sections: sections}}}),
+    do: stop_ids_from_sections(sections)
 
-    primary ++ secondary
-  end
+  defp stop_ids(%Screen{
+         app_params: %Dup{
+           primary_departures: %Departures{sections: primary_sections},
+           secondary_departures: %Departures{sections: secondary_sections}
+         }
+       }),
+       do: stop_ids_from_sections(primary_sections ++ secondary_sections)
 
-  defp split_multi_place_screens(
-         {id, %Screen{app_params: %Busway{departures: %Departures{sections: sections}}} = screen}
-       ) do
-    stops =
-      Enum.flat_map(sections, fn %Section{
-                                   query: %Query{params: %Query.Params{stop_ids: stop_ids}}
-                                 } ->
-        stop_ids
-      end)
-      |> Enum.map(fn stop_id ->
-        {id, Map.put(screen, :stop, stop_id)}
-      end)
-
-    stops
-  end
-
-  defp split_multi_place_screens(screen) do
-    [screen]
+  defp stop_ids_from_sections(sections) do
+    sections
+    |> Enum.flat_map(fn %Section{query: %Query{params: %Query.Params{stop_ids: stop_ids}}} ->
+      stop_ids
+    end)
+    |> Enum.uniq()
   end
 
   defp string_is_number?(string) do
