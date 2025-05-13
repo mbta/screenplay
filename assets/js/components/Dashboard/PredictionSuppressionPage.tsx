@@ -165,7 +165,7 @@ const PredictionSuppressionPage = () => {
 
     if (serviceType === "start" || serviceType === "mid") {
       const predictionsText =
-        serviceType == "start" ? "terminal predictions" : "predictions";
+        serviceType === "start" ? "terminal predictions" : "predictions";
       return (
         <>
           <label className={styles.suppressionLabel}>
@@ -201,7 +201,7 @@ const PredictionSuppressionPage = () => {
   };
 
   const renderCell = (place: Place, directionId: number) => {
-    if (place.id == "place-jfk") {
+    if (place.id === "place-jfk") {
       return (
         <>
           <div>Ashmont platform</div>

@@ -9,11 +9,11 @@ import { AudioPreview } from "Components/PaMessageForm/types";
 import { STATIC_TEMPLATES } from "Components/PaMessageForm/StaticTemplatePage";
 import { isPaMessageAdmin } from "Utils/auth";
 
-const useAlert = (id: string | null | undefined) => {
+const useAlert = (id: string | null) => {
   const { data: alerts, isLoading } = useSWR<Array<Alert>>(
     id ? "/api/alerts/non_access_alerts" : null,
     async (url: string | null) => {
-      if (url == null) return [];
+      if (url === null) return [];
 
       const response = await fetch(url);
       const { alerts } = await response.json();
@@ -22,7 +22,7 @@ const useAlert = (id: string | null | undefined) => {
   );
 
   const alert = useMemo(() => {
-    if (id == null) return null;
+    if (id === null) return null;
     return alerts?.find((a) => a.id === id);
   }, [id, alerts]);
 
@@ -60,7 +60,7 @@ const FetchPaMessage = ({ id }: { id: string | number }) => {
     if (error?.status === 404) navigate("/pa-messages");
   }, [error, navigate]);
 
-  if (isLoading || error || paMessage == null) return null;
+  if (isLoading || error || !paMessage) return null;
 
   return <FetchAlert paMessage={paMessage} />;
 };
