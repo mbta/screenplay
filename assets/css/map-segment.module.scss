@@ -9,7 +9,8 @@
   &:global(.blue) {
     --line-color: #{$mbta-blue};
   }
-  &:global(.red) {
+  &:global(.red),
+  &:global(.mattapan) {
     --line-color: #{$mbta-red};
   }
   &:global(.orange) {
