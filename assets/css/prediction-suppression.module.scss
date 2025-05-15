@@ -46,3 +46,15 @@
   line-height: 20px;
   padding: 0 0.5rem;
 }
+
+.mapSegment {
+  width: 44px;
+  position: absolute;
+  left: 8px;
+  top: 0;
+  transform: translateY(calc(36px - 50%));
+}
+
+.stationCell {
+  padding-left: 60px;
+}

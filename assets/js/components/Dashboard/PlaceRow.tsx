@@ -36,7 +36,7 @@ const inlineMap = (place: Place, line: string) => {
 
   if (!station) return;
 
-  return <MapSegment station={station} line={line} />;
+  return <MapSegment station={station} line={line} className="map-segment" />;
 };
 
 interface AccordionToggleProps {

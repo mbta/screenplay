@@ -301,39 +301,48 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Lechmere",
       inlineMap: "Fork-Up",
+      branch: "DE",
     },
     {
       name: "Science Park/West End",
       inlineMap: "Trunk-Middle",
+      branch: "DE",
     },
     {
       name: "North Station",
       inlineMap: "Trunk-Middle",
+      branch: "DE",
     },
     {
       name: "Haymarket",
       inlineMap: "Trunk-Middle",
+      branch: "DE",
     },
     {
       name: "Government Center",
       inlineMap: "Trunk-Middle",
       isTerminalStop: true,
+      branch: "BCDE",
     },
     {
       name: "Park Street",
       inlineMap: "Trunk-Middle",
+      branch: "BCDE",
     },
     {
       name: "Boylston",
       inlineMap: "Trunk-Middle",
+      branch: "BCDE",
     },
     {
       name: "Arlington",
       inlineMap: "Trunk-Middle",
+      branch: "BCDE",
     },
     {
       name: "Copley",
       inlineMap: "Fork-Down",
+      branch: "BCDE",
     },
     {
       name: "Prudential",
@@ -394,10 +403,12 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Hynes Convention Center",
       inlineMap: "Trunk-Middle",
+      branch: "BCD",
     },
     {
       name: "Kenmore",
       inlineMap: "Fork-Down",
+      branch: "BCD",
     },
     {
       name: "Blandford Street",

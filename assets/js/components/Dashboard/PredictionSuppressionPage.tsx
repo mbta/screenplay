@@ -3,6 +3,7 @@ import {
   useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { RadioList } from "Components/RadioList";
+import MapSegment from "Components/MapSegment";
 import React, { ReactNode, useEffect, useState } from "react";
 import fp from "lodash/fp";
 import * as styles from "Styles/prediction-suppression.module.scss";
@@ -16,6 +17,7 @@ import {
   updateSuppressedPrediction,
 } from "Utils/api";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
+import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import { useUniqueId } from "Hooks/useUniqueId";
 import { useSearchParams } from "react-router-dom";
 import cx from "classnames";
@@ -103,6 +105,22 @@ const PredictionSuppressionPage = () => {
     return (
       line.startsWith("Green") && fp.includes(serviceType, ["start", "end"])
     );
+  };
+
+  const renderMapSegment = (place: Place) => {
+    const station = STATION_ORDER_BY_LINE[line.toLowerCase()].find(
+      (station) => station.name.toLowerCase() === place.name.toLowerCase(),
+    );
+
+    if (station) {
+      return (
+        <MapSegment
+          station={station}
+          line={line.toLowerCase()}
+          className={styles.mapSegment}
+        />
+      );
+    }
   };
 
   const renderInput = (
@@ -308,7 +326,10 @@ const PredictionSuppressionPage = () => {
         <table style={{ flex: "1" }}>
           <thead className="sticky-top bg-dark">
             <tr>
-              <th className="px-3 pb-3 fs-3" style={{ width: "30%" }}>
+              <th
+                className={cx(styles.stationCell, "pe-3 pb-3 fs-3")}
+                style={{ width: "30%" }}
+              >
                 {line} Line
               </th>
               {directionNames(line).map((name) => (
@@ -325,7 +346,15 @@ const PredictionSuppressionPage = () => {
           <tbody>
             {filteredPlaces.map((place) => (
               <tr key={place.id} className={styles.tableRow}>
-                <td className="p-3">{place.name}</td>
+                <td
+                  className={cx(
+                    styles.stationCell,
+                    "pe-3 py-4 position-relative overflow-hidden align-top",
+                  )}
+                >
+                  {place.name}
+                  {renderMapSegment(place)}
+                </td>
                 {noPredictions(place) ? (
                   <td colSpan={2} className="p-3">
                     <em className="text-secondary">
@@ -334,7 +363,7 @@ const PredictionSuppressionPage = () => {
                   </td>
                 ) : (
                   [0, 1].map((directionId) => (
-                    <td key={directionId} className="p-3">
+                    <td key={directionId} className="p-3 align-top">
                       {renderCell(place, directionId)}
                     </td>
                   ))
