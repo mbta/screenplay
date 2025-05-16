@@ -137,7 +137,7 @@
           "stop_id": "7412"
         },
         "alerts": {
-          "stop_id": "7412"
+          "stop_ids": ["7412"]
         },
         "departures": {
           "sections": [
