@@ -32,6 +32,8 @@ const directionNames = (line: string) => {
       return ["Westbound", "Eastbound"];
     case "Silver":
       return ["Eastbound", "To South Station/Downtown"];
+    case "Mattapan":
+      return ["Outbound", "Inbound"];
     default:
       return ["Southbound", "Northbound"];
   }
@@ -319,6 +321,11 @@ const PredictionSuppressionPage = () => {
                 value: "Silver",
                 checkedClass: "bg-mbta-silver",
                 content: filterContent("Silver"),
+              },
+              {
+                value: "Mattapan",
+                checkedClass: "bg-mbta-red",
+                content: filterContent("Mattapan"),
               },
             ]}
           />

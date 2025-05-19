@@ -36,7 +36,8 @@ defmodule Screenplay.PredictionSuppression do
     Process.send_after(self(), :update, 60_000)
 
     case Screenplay.V3Api.get_json("/route_patterns", %{
-           "filter[route]" => "Red,Orange,Blue,Green-B,Green-C,Green-D,Green-E,741,742,743,746",
+           "filter[route]" =>
+             "Red,Orange,Blue,Green-B,Green-C,Green-D,Green-E,Mattapan,741,742,743,746",
            "include" => "representative_trip.stops"
          }) do
       {:ok, %{"data" => data, "included" => included}} ->
