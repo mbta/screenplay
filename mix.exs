@@ -62,7 +62,7 @@ defmodule Screenplay.MixProject do
       {:stream_data, "~> 1.1", only: :test},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
-      {:screens_config, github: "mbta/screens-config-lib"},
+      {:screens_config, github: "mbta/screens-config-lib", ref: "5b56f8d"},
       {:mox, "~> 1.0", only: :test},
       {:tzdata, "~> 1.1"},
       {:ex_machina, "~> 2.7", only: :test},
