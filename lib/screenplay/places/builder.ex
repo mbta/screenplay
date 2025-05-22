@@ -205,7 +205,7 @@ defmodule Screenplay.Places.Builder do
     [stop_id]
   end
 
-  defp stop_ids(%Screen{app_params: %_app{header: %Header.CurrentStopId{stop_id: stop_id}}})
+  defp stop_ids(%Screen{app_params: %_app{header: %Header.StopId{stop_id: stop_id}}})
        when not is_nil(stop_id),
        do: [stop_id]
 
