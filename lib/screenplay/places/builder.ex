@@ -313,13 +313,7 @@ defmodule Screenplay.Places.Builder do
     stops_to_parent_station_ids =
       parent_stops
       |> Enum.map(fn %{"id" => id} = stop ->
-        {id,
-         get_in(stop, [
-           "relationships",
-           "parent_station",
-           "data",
-           "id"
-         ])}
+        {id, stop["relationships"]["parent_station"]["data"]["id"] || id}
       end)
       |> Enum.into(%{})
 
