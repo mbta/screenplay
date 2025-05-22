@@ -69,7 +69,7 @@ if config_env() != :test do
          crontab: [
            {"0 2 * * *", Screenplay.Jobs.TakeoverToolTestingJob},
            {"* * * * *", Screenplay.Jobs.Reminders},
-           {"0 3 * * * ", Screenplay.Jobs.ClearSuppressedPredictions}
+           {"0 3 * * *", Screenplay.Jobs.ClearSuppressedPredictions}
          ],
          timezone: "America/New_York"},
         Oban.Plugins.Pruner,
