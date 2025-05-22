@@ -6,16 +6,6 @@ defmodule Screenplay.Places.S3Fetch do
   @behaviour Screenplay.Places.Fetch
 
   @impl true
-  def get_locations do
-    with {:ok, location_contents, version_id} <- do_get(:screen_locations),
-         {:ok, location_json} <- Jason.decode(location_contents) do
-      {:ok, location_json, version_id}
-    else
-      _ -> :error
-    end
-  end
-
-  @impl true
   def get_place_descriptions do
     with {:ok, place_description_contents, version_id} <- do_get(:place_descriptions),
          {:ok, place_description_json} <- Jason.decode(place_description_contents) do
@@ -60,9 +50,6 @@ defmodule Screenplay.Places.S3Fetch do
     base_path = "screenplay/#{Application.get_env(:screenplay, :environment_name)}"
 
     case file_spec do
-      :screen_locations ->
-        "#{base_path}/screen_locations.json"
-
       :place_descriptions ->
         "#{base_path}/place_descriptions.json"
 
