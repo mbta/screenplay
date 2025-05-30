@@ -10,9 +10,6 @@
   overflow-y: auto;
   background-color: #1e2933;
   border-right: 1px solid #384e5c;
-  &:has(:global(+ .page-content > .new-pa-message > .associate-alert-page)) {
-    display: none !important;
-  }
 }
 
 .link {

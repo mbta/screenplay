@@ -10,7 +10,7 @@
 }
 
 .editPage {
-  padding: 24px 40px;
+  padding: 24px 48px;
   max-width: 900px;
 }
 
@@ -87,6 +87,7 @@
 }
 
 .copyButtonCol {
+  flex: none;
   margin-top: 141px;
 }
 
@@ -176,6 +177,10 @@
       color: $text-secondary;
     }
   }
+  &:global(.is-invalid) {
+    background-image: none;
+    padding-right: 13px;
+  }
 }
 
 .messageTextBox {
@@ -212,4 +217,42 @@
 
 .switch :global(.form-check-input) {
   --bs-form-switch-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,.25)'/></svg>");
+}
+
+.dashboardLink {
+  text-decoration: none;
+  color: $text-secondary;
+  .text {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    margin-right: 8px;
+  }
+}
+
+.transparentButton {
+  text-decoration: none;
+  --bs-btn-color: #{$text-link-primary};
+  --bs-btn-active-color: var(--bs-btn-color);
+  --bs-btn-hover-color: var(--bs-btn-color);
+  --bs-btn-hover-bg: #{$cool-gray-15};
+}
+
+.pausedPill {
+  padding: 6px 16px;
+  background-color: $theme-secondary;
+  border-radius: 200px;
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+.editStationsButton {
+  --bs-btn-color: #{$text-secondary};
+  --bs-btn-active-color: var(--bs-btn-color);
+  --bs-btn-hover-color: var(--bs-btn-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-active-bg: #{$button-secondary-outline-hover-bg};
+  --bs-btn-hover-bg: #{$button-secondary-outline-hover-bg};
+  --bs-btn-border-color: #{$button-secondary-outline-bg};
+  --bs-btn-active-border-color: var(--bs-btn-border-color);
+  --bs-btn-hover-border-color: var(--bs-btn-border-color);
 }

@@ -23,7 +23,6 @@ const Dashboard: ComponentType = () => {
     setPlaces,
     setLineStops,
     setBannerAlert,
-    setShowSidebar,
   } = useScreenplayState();
   const [bannerDone, setBannerDone] = useState(false);
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
@@ -154,17 +153,6 @@ const Dashboard: ComponentType = () => {
     !pathname.includes("configure-screens") &&
     !pathname.includes("pa-messages") &&
     bannerAlert?.alert;
-
-  useEffect(() => {
-    if (
-      pathname.startsWith("/configure-screens") ||
-      pathname.startsWith("/emergency-takeover")
-    ) {
-      setShowSidebar(false);
-    } else {
-      setShowSidebar(true);
-    }
-  }, [pathname, setShowSidebar]);
 
   return (
     <div className="screenplay-container">

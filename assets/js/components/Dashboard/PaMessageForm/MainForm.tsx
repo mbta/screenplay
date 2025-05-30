@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Card, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import {
@@ -161,365 +161,346 @@ const MainForm = ({
   return (
     <div className={paMessageStyles.editPage}>
       <Form onSubmit={handleSubmit} noValidate className="m-0">
-        <div className="header">
+        <h1>
           {title}
-          {paused && <div className="paused-pill">Paused</div>}
-        </div>
+          {paused && (
+            <span className={cx(paMessageStyles.pausedPill, "ms-3")}>
+              Paused
+            </span>
+          )}
+        </h1>
 
-        <Container fluid>
-          <NewPaMessageHeader
-            associatedAlert={associatedAlert}
-            onClearAssociatedAlert={onClearAssociatedAlert}
-            navigateTo={navigateTo}
-            setEndWithEffectPeriod={setEndWithEffectPeriod}
-            selectedTemplate={selectedTemplate}
-            onClearSelectedTemplate={onClearSelectedTemplate}
-            isReadOnly={isReadOnly}
-          />
-          <Card className={paMessageStyles.card}>
-            <div className={paMessageStyles.cardTitle}>When</div>
-            <Row>
-              <Form.Group>
-                <Form.Label
-                  className={paMessageStyles.formLabel}
-                  htmlFor="start-date-picker"
-                >
-                  Start
-                </Form.Label>
-                <div className="d-flex gap-3 align-items-center">
-                  <div className={paMessageStyles.startEndItem}>
-                    <Form.Control
-                      className={cx(paMessageStyles.inputField, "picker")}
-                      type="date"
-                      id="start-date-picker"
-                      name="start-date-picker-input"
-                      value={startDate}
-                      onChange={(event) => setStartDate(event.target.value)}
-                      isInvalid={
-                        validated &&
-                        ((moment(startTime, "HH:mm").isValid() &&
-                          startDateTime.isSameOrAfter(endDateTime)) ||
-                          !moment(startDate, "YYYY-MM-DD").isValid())
-                      }
-                      disabled={isReadOnly}
-                    />
-                    {moment(startDate, "YYYY-MM-DD").isValid() ? (
-                      <Form.Control.Feedback type="invalid">
-                        Start date/time needs to be before the end date/time
-                      </Form.Control.Feedback>
-                    ) : (
-                      <Form.Control.Feedback type="invalid">
-                        Date needs to be in the correct format
-                      </Form.Control.Feedback>
-                    )}
-                  </div>
-                  <div className={paMessageStyles.startEndItem}>
-                    <Form.Control
-                      type="time"
-                      className={cx(paMessageStyles.inputField, "picker")}
-                      value={startTime}
-                      onChange={(event) => setStartTime(event.target.value)}
-                      isInvalid={
-                        validated && !moment(startTime, "HH:mm").isValid()
-                      }
-                      disabled={isReadOnly}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      Start time needs to be in the correct format
-                    </Form.Control.Feedback>
-                  </div>
-                  {!isReadOnly && (
-                    <div className={paMessageStyles.startEndItem}>
-                      <Button
-                        className={paMessageStyles.serviceTimeButton}
-                        variant="link"
-                        onClick={() => setStartTime("03:00")}
-                      >
-                        Start of service day
-                      </Button>
-                      <InfoPopover placement="top" popoverText={popoverText} />
-                    </div>
-                  )}
-                </div>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Form.Group>
-                <Form.Label
-                  className={paMessageStyles.formLabel}
-                  htmlFor="end-date-picker"
-                >
-                  End
-                </Form.Label>
-                {associatedAlert && (
-                  <Form.Switch
-                    id="effect-period-switch"
-                    className={cx("mb-2", paMessageStyles.switch)}
-                    checked={endWithEffectPeriod}
-                    label="At end of alert"
-                    onChange={(event) => {
-                      if (!event.target.checked) {
-                        setEndTime(
-                          moment(startTime, "HH:mm")
-                            .add(1, "hour")
-                            .format("HH:mm"),
-                        );
-                      }
-
-                      setEndWithEffectPeriod(event.target.checked);
-                    }}
-                    disabled={isReadOnly}
-                  />
-                )}
-                {!endWithEffectPeriod && (
-                  <div className="d-flex gap-3 align-items-center">
-                    <div className={paMessageStyles.startEndItem}>
-                      <Form.Control
-                        className={cx(paMessageStyles.inputField, "picker")}
-                        type="date"
-                        id="end-date-picker"
-                        name="end-date-picker-input"
-                        value={endDate}
-                        onChange={(event) => setEndDate(event.target.value)}
-                        isInvalid={
-                          validated &&
-                          ((moment(endTime, "HH:mm").isValid() &&
-                            endDateTime.isSameOrBefore(moment())) ||
-                            !moment(endDate, "YYYY-MM-DD").isValid())
-                        }
-                        disabled={isReadOnly}
-                      />
-                      {moment(endDate, "YYYY-MM-DD").isValid() ? (
-                        <Form.Control.Feedback type="invalid">
-                          Date is in the past
-                        </Form.Control.Feedback>
-                      ) : (
-                        <Form.Control.Feedback type="invalid">
-                          Date needs to be in the correct format
-                        </Form.Control.Feedback>
-                      )}
-                    </div>
-                    <div className={paMessageStyles.startEndItem}>
-                      <Form.Control
-                        type="time"
-                        className={cx(paMessageStyles.inputField, "picker")}
-                        value={endTime}
-                        onChange={(event) => setEndTime(event.target.value)}
-                        isInvalid={isEndTimeInvalid}
-                        disabled={isReadOnly}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        End time needs to be in the correct format
-                      </Form.Control.Feedback>
-                    </div>
-                    {!isReadOnly && (
-                      <div className={paMessageStyles.startEndItem}>
-                        <Button
-                          className={paMessageStyles.serviceTimeButton}
-                          variant="link"
-                          onClick={() => {
-                            if (isEndTimeInvalid) return;
-
-                            if (moment(endTime, "HH:mm").hour() >= 3) {
-                              setEndDate(
-                                moment(endDate, "YYYY-MM-DD")
-                                  .add(1, "d")
-                                  .format("YYYY-MM-DD"),
-                              );
-                            }
-
-                            setEndTime("03:00");
-                          }}
-                        >
-                          End of service day
-                        </Button>
-                        <InfoPopover
-                          placement="top"
-                          popoverText={popoverText}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </Form.Group>
-            </Row>
-            <Row>
-              <DaysPicker
-                days={days}
-                onChangeDays={setDays}
-                error={
-                  validated && !days.length ? "Select at least one day" : null
-                }
-                disabled={isReadOnly}
-              />
-            </Row>
-            <Row md="auto">
-              <Col>
-                <PriorityPicker
-                  priority={priority}
-                  onSelectPriority={setPriority}
+        <NewPaMessageHeader
+          associatedAlert={associatedAlert}
+          onClearAssociatedAlert={onClearAssociatedAlert}
+          navigateTo={navigateTo}
+          setEndWithEffectPeriod={setEndWithEffectPeriod}
+          selectedTemplate={selectedTemplate}
+          onClearSelectedTemplate={onClearSelectedTemplate}
+          isReadOnly={isReadOnly}
+        />
+        <Card className={paMessageStyles.card}>
+          <div className={paMessageStyles.cardTitle}>When</div>
+          <Form.Group>
+            <Form.Label
+              className={paMessageStyles.formLabel}
+              htmlFor="start-date-picker"
+            >
+              Start
+            </Form.Label>
+            <div className="d-flex gap-3 align-items-center">
+              <div className={paMessageStyles.startEndItem}>
+                <Form.Control
+                  className={cx(paMessageStyles.inputField, "picker")}
+                  type="date"
+                  id="start-date-picker"
+                  name="start-date-picker-input"
+                  value={startDate}
+                  onChange={(event) => setStartDate(event.target.value)}
+                  isInvalid={
+                    validated &&
+                    ((moment(startTime, "HH:mm").isValid() &&
+                      startDateTime.isSameOrAfter(endDateTime)) ||
+                      !moment(startDate, "YYYY-MM-DD").isValid())
+                  }
                   disabled={isReadOnly}
                 />
-              </Col>
-              <Col>
-                <IntervalPicker
-                  interval={interval}
-                  onChangeInterval={setInterval}
-                  validated={validated}
+                {moment(startDate, "YYYY-MM-DD").isValid() ? (
+                  <Form.Control.Feedback type="invalid">
+                    Start date/time needs to be before the end date/time
+                  </Form.Control.Feedback>
+                ) : (
+                  <Form.Control.Feedback type="invalid">
+                    Date needs to be in the correct format
+                  </Form.Control.Feedback>
+                )}
+              </div>
+              <div className={paMessageStyles.startEndItem}>
+                <Form.Control
+                  type="time"
+                  className={cx(paMessageStyles.inputField, "picker")}
+                  value={startTime}
+                  onChange={(event) => setStartTime(event.target.value)}
+                  isInvalid={validated && !moment(startTime, "HH:mm").isValid()}
                   disabled={isReadOnly}
                 />
-              </Col>
-            </Row>
-          </Card>
-          <Card className={paMessageStyles.card}>
-            <div className={paMessageStyles.cardTitle}>Where</div>
-            <div className="d-flex flex-wrap gap-2">
-              {signIds.length > 0 && (
-                <SelectedSignsByRouteTags
-                  places={places}
-                  value={signIds}
-                  onChange={setSignIds}
-                  busRoutes={busRoutes}
-                  onTagClick={() => navigateTo(Page.STATIONS)}
-                  isReadOnly={isReadOnly}
-                />
-              )}
+                <Form.Control.Feedback type="invalid">
+                  Start time needs to be in the correct format
+                </Form.Control.Feedback>
+              </div>
               {!isReadOnly && (
-                <Button
-                  className={paMessageStyles.addStationsZonesButton}
-                  onClick={() => navigateTo(Page.STATIONS)}
-                >
-                  <PlusLg width={12} height={12} /> Add Stations & Zones
-                </Button>
+                <div className={paMessageStyles.startEndItem}>
+                  <Button
+                    className={paMessageStyles.serviceTimeButton}
+                    variant="link"
+                    onClick={() => setStartTime("03:00")}
+                  >
+                    Start of service day
+                  </Button>
+                  <InfoPopover placement="top" popoverText={popoverText} />
+                </div>
               )}
             </div>
-            {validated && signIds.length === 0 && (
-              <div className="validation-error">
-                Selecting location is required
+          </Form.Group>
+          <Form.Group>
+            <Form.Label
+              className={paMessageStyles.formLabel}
+              htmlFor="end-date-picker"
+            >
+              End
+            </Form.Label>
+            {associatedAlert && (
+              <Form.Switch
+                id="effect-period-switch"
+                className={cx("mb-2", paMessageStyles.switch)}
+                checked={endWithEffectPeriod}
+                label="At end of alert"
+                onChange={(event) => {
+                  if (!event.target.checked) {
+                    setEndTime(
+                      moment(startTime, "HH:mm").add(1, "hour").format("HH:mm"),
+                    );
+                  }
+
+                  setEndWithEffectPeriod(event.target.checked);
+                }}
+                disabled={isReadOnly}
+              />
+            )}
+            {!endWithEffectPeriod && (
+              <div className="d-flex gap-3 align-items-center">
+                <div className={paMessageStyles.startEndItem}>
+                  <Form.Control
+                    className={cx(paMessageStyles.inputField, "picker")}
+                    type="date"
+                    id="end-date-picker"
+                    name="end-date-picker-input"
+                    value={endDate}
+                    onChange={(event) => setEndDate(event.target.value)}
+                    isInvalid={
+                      validated &&
+                      ((moment(endTime, "HH:mm").isValid() &&
+                        endDateTime.isSameOrBefore(moment())) ||
+                        !moment(endDate, "YYYY-MM-DD").isValid())
+                    }
+                    disabled={isReadOnly}
+                  />
+                  {moment(endDate, "YYYY-MM-DD").isValid() ? (
+                    <Form.Control.Feedback type="invalid">
+                      Date is in the past
+                    </Form.Control.Feedback>
+                  ) : (
+                    <Form.Control.Feedback type="invalid">
+                      Date needs to be in the correct format
+                    </Form.Control.Feedback>
+                  )}
+                </div>
+                <div className={paMessageStyles.startEndItem}>
+                  <Form.Control
+                    type="time"
+                    className={cx(paMessageStyles.inputField, "picker")}
+                    value={endTime}
+                    onChange={(event) => setEndTime(event.target.value)}
+                    isInvalid={isEndTimeInvalid}
+                    disabled={isReadOnly}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    End time needs to be in the correct format
+                  </Form.Control.Feedback>
+                </div>
+                {!isReadOnly && (
+                  <div className={paMessageStyles.startEndItem}>
+                    <Button
+                      className={paMessageStyles.serviceTimeButton}
+                      variant="link"
+                      onClick={() => {
+                        if (isEndTimeInvalid) return;
+
+                        if (moment(endTime, "HH:mm").hour() >= 3) {
+                          setEndDate(
+                            moment(endDate, "YYYY-MM-DD")
+                              .add(1, "d")
+                              .format("YYYY-MM-DD"),
+                          );
+                        }
+
+                        setEndTime("03:00");
+                      }}
+                    >
+                      End of service day
+                    </Button>
+                    <InfoPopover placement="top" popoverText={popoverText} />
+                  </div>
+                )}
               </div>
             )}
-          </Card>
-          <Card className={paMessageStyles.card}>
-            <div className={paMessageStyles.cardTitle}>Message</div>
-            <Row>
-              <Col>
-                <MessageTextBox
-                  id="visual-text-box"
-                  text={visualText}
-                  disabled={selectedTemplate !== null || isReadOnly}
-                  onChangeText={(text) => {
-                    setVisualText(text);
-                    if (audioState !== AudioPreview.Unreviewed) {
-                      setAudioState(AudioPreview.Outdated);
-                    }
-                  }}
-                  label="Text"
-                  maxLength={MAX_TEXT_LENGTH}
-                  required
-                  validationText={"Text cannot be blank"}
-                  validated={validated}
-                />
-              </Col>
-              <Col md="auto" className={paMessageStyles.copyButtonCol}>
-                <Button
-                  disabled={
-                    visualText.length === 0 ||
-                    selectedTemplate !== null ||
-                    isReadOnly
-                  }
-                  className={paMessageStyles.copyTextButton}
-                  onClick={() => {
-                    setPhoneticText(visualText);
-                    if (audioState !== AudioPreview.Unreviewed) {
-                      setAudioState(AudioPreview.Outdated);
-                    }
-                  }}
-                  aria-label="copy-visual-to-phonetic"
-                >
-                  <ArrowRightShort />
-                </Button>
-              </Col>
-              <Col>
-                {phoneticText.length > 0 ? (
-                  <>
-                    <MessageTextBox
-                      id="phonetic-audio-text-box"
-                      text={phoneticText}
-                      onChangeText={(text) => {
-                        setPhoneticText(text);
-                        if (audioState !== AudioPreview.Unreviewed) {
-                          setAudioState(AudioPreview.Outdated);
-                        }
-                      }}
-                      disabled={
-                        phoneticText.length === 0 ||
-                        selectedTemplate !== null ||
-                        isReadOnly
-                      }
-                      className="mb-2"
-                      label="Phonetic Audio"
-                      maxLength={MAX_TEXT_LENGTH}
-                      validated={validated}
-                    />
-                    {!selectedTemplate && (
-                      <ReviewAudioButton
-                        audioState={audioState}
-                        onClick={previewAudio}
-                        validated={validated}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <div className="form-label">Phonetic Audio</div>
-                    <Card className={paMessageStyles.reviewAudioCard}>
-                      <ReviewAudioButton
-                        audioState={audioState}
-                        disabled={visualText.length === 0}
-                        onClick={previewAudio}
-                        validated={validated}
-                      />
-                    </Card>
-                  </>
-                )}
-                {audioState === AudioPreview.Playing && (
-                  <audio
-                    src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
-                    autoPlay
-                    onEnded={onAudioEnded}
-                    onError={onAudioError}
-                  />
-                )}
-              </Col>
-            </Row>
-          </Card>
-          <Row
-            md="auto"
-            className={cx("justify-content-end", paMessageStyles.formButtons)}
-          >
-            <Button
-              className={cx("cancel-button", paMessageStyles.formButton, {
-                "button-primary close-button": isReadOnly,
-              })}
-              onClick={() =>
-                window.history.length > 1 ? navigate(-1) : window.close()
-              }
-            >
-              {isReadOnly ? "Close" : "Cancel"}
-            </Button>
+          </Form.Group>
+          <DaysPicker
+            days={days}
+            onChangeDays={setDays}
+            error={validated && !days.length ? "Select at least one day" : null}
+            disabled={isReadOnly}
+          />
+          <div className="d-flex gap-4">
+            <PriorityPicker
+              priority={priority}
+              onSelectPriority={setPriority}
+              disabled={isReadOnly}
+            />
+            <IntervalPicker
+              interval={interval}
+              onChangeInterval={setInterval}
+              validated={validated}
+              disabled={isReadOnly}
+            />
+          </div>
+        </Card>
+        <Card className={paMessageStyles.card}>
+          <div className={paMessageStyles.cardTitle}>Where</div>
+          <div className="d-flex flex-wrap gap-2">
+            {signIds.length > 0 && (
+              <SelectedSignsByRouteTags
+                places={places}
+                value={signIds}
+                onChange={setSignIds}
+                busRoutes={busRoutes}
+                onTagClick={() => navigateTo(Page.STATIONS)}
+                isReadOnly={isReadOnly}
+              />
+            )}
             {!isReadOnly && (
               <Button
-                type="submit"
-                className={cx(
-                  "submit-button button-primary",
-                  paMessageStyles.formButton,
-                )}
+                className={paMessageStyles.addStationsZonesButton}
+                onClick={() => navigateTo(Page.STATIONS)}
               >
-                Submit
+                <PlusLg width={12} height={12} /> Add Stations & Zones
               </Button>
             )}
-          </Row>
-        </Container>
+          </div>
+          {validated && signIds.length === 0 && (
+            <div className="validation-error">
+              Selecting location is required
+            </div>
+          )}
+        </Card>
+        <Card className={paMessageStyles.card}>
+          <div className={paMessageStyles.cardTitle}>Message</div>
+          <div className="d-flex gap-4">
+            <div style={{ flex: 1 }}>
+              <MessageTextBox
+                id="visual-text-box"
+                text={visualText}
+                disabled={selectedTemplate !== null || isReadOnly}
+                onChangeText={(text) => {
+                  setVisualText(text);
+                  if (audioState !== AudioPreview.Unreviewed) {
+                    setAudioState(AudioPreview.Outdated);
+                  }
+                }}
+                label="Text"
+                maxLength={MAX_TEXT_LENGTH}
+                required
+                validationText={"Text cannot be blank"}
+                validated={validated}
+              />
+            </div>
+            <div className={paMessageStyles.copyButtonCol}>
+              <Button
+                disabled={
+                  visualText.length === 0 ||
+                  selectedTemplate !== null ||
+                  isReadOnly
+                }
+                className={paMessageStyles.copyTextButton}
+                onClick={() => {
+                  setPhoneticText(visualText);
+                  if (audioState !== AudioPreview.Unreviewed) {
+                    setAudioState(AudioPreview.Outdated);
+                  }
+                }}
+                aria-label="copy-visual-to-phonetic"
+              >
+                <ArrowRightShort />
+              </Button>
+            </div>
+            <div style={{ flex: 1 }}>
+              {phoneticText.length > 0 ? (
+                <>
+                  <MessageTextBox
+                    id="phonetic-audio-text-box"
+                    text={phoneticText}
+                    onChangeText={(text) => {
+                      setPhoneticText(text);
+                      if (audioState !== AudioPreview.Unreviewed) {
+                        setAudioState(AudioPreview.Outdated);
+                      }
+                    }}
+                    disabled={
+                      phoneticText.length === 0 ||
+                      selectedTemplate !== null ||
+                      isReadOnly
+                    }
+                    className="mb-2"
+                    label="Phonetic Audio"
+                    maxLength={MAX_TEXT_LENGTH}
+                    validated={validated}
+                  />
+                  {!selectedTemplate && (
+                    <ReviewAudioButton
+                      audioState={audioState}
+                      onClick={previewAudio}
+                      validated={validated}
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="form-label">Phonetic Audio</div>
+                  <Card className={paMessageStyles.reviewAudioCard}>
+                    <ReviewAudioButton
+                      audioState={audioState}
+                      disabled={visualText.length === 0}
+                      onClick={previewAudio}
+                      validated={validated}
+                    />
+                  </Card>
+                </>
+              )}
+              {audioState === AudioPreview.Playing && (
+                <audio
+                  src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
+                  autoPlay
+                  onEnded={onAudioEnded}
+                  onError={onAudioError}
+                />
+              )}
+            </div>
+          </div>
+        </Card>
+        <div className="d-flex justify-content-end gap-3 mt-3">
+          <Button
+            variant={isReadOnly ? "primary" : "link"}
+            className={cx(paMessageStyles.formButton, {
+              [paMessageStyles.transparentButton]: !isReadOnly,
+            })}
+            onClick={() =>
+              window.history.length > 1 ? navigate(-1) : window.close()
+            }
+          >
+            {isReadOnly ? "Close" : "Cancel"}
+          </Button>
+          {!isReadOnly && (
+            <Button
+              type="submit"
+              className={cx(
+                "submit-button button-primary",
+                paMessageStyles.formButton,
+              )}
+            >
+              Submit
+            </Button>
+          )}
+        </div>
       </Form>
     </div>
   );
@@ -612,7 +593,7 @@ const NewPaMessageHeader = ({
 
   if (associatedAlert) {
     return (
-      <div className={cx("ms-3", paMessageStyles.alertHeader)}>
+      <div className={paMessageStyles.alertHeader}>
         <div className="d-flex align-items-center">
           <span className={paMessageStyles.larger}>
             Associated Alert: Alert ID{" "}
@@ -644,10 +625,7 @@ const NewPaMessageHeader = ({
   } else if (selectedTemplate) {
     return (
       <div
-        className={cx(
-          "d-flex align-items-center ms-3",
-          paMessageStyles.alertHeader,
-        )}
+        className={cx("d-flex align-items-center", paMessageStyles.alertHeader)}
       >
         <span className={paMessageStyles.larger}>
           Template: {formatMessageType(selectedTemplate.type)} -{" "}
@@ -667,10 +645,7 @@ const NewPaMessageHeader = ({
   } else {
     return (
       <div
-        className={cx(
-          "d-flex align-items-center ms-3",
-          paMessageStyles.alertHeader,
-        )}
+        className={cx("d-flex align-items-center", paMessageStyles.alertHeader)}
       >
         {!isReadOnly && (
           <>

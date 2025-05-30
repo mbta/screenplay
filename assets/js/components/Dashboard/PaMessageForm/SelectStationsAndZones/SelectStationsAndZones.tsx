@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SelectStationsPage from "./SelectStationsPage";
 import SelectZonesPage from "./SelectZonesPage";
 import type { Place } from "Models/place";
 import { Page } from "../types";
-import { useScreenplayState } from "Hooks/useScreenplayContext";
+import { useHideSidebar } from "Hooks/useHideSidebar";
 
 interface Props {
   places: Place[];
@@ -26,14 +26,8 @@ const SelectStationsAndZones = ({
   onError,
   isReadOnly = false,
 }: Props) => {
-  const { setShowSidebar } = useScreenplayState();
   const [signIds, setSignIds] = useState(value);
-
-  useEffect(() => {
-    setShowSidebar(false);
-
-    return () => setShowSidebar(true);
-  }, [setShowSidebar]);
+  useHideSidebar();
 
   return page === Page.STATIONS ? (
     <SelectStationsPage

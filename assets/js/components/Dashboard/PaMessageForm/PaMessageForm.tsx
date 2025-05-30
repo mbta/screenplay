@@ -192,7 +192,7 @@ const PaMessageForm = ({
   }, [priority]);
 
   return (
-    <div className="new-pa-message">
+    <>
       <MainForm
         hide={page !== Page.MAIN}
         onSubmit={() => {
@@ -256,7 +256,7 @@ const PaMessageForm = ({
         }}
       />
       {[Page.STATIONS, Page.ZONES].includes(page) && (
-        <div className="select-station-and-zones-container">
+        <div className="h-100">
           <SelectStationsAndZones
             places={places}
             value={signIds}
@@ -312,7 +312,7 @@ const PaMessageForm = ({
           onError(null);
         }}
       />
-    </div>
+    </>
   );
 };
 

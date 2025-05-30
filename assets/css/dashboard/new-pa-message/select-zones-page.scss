@@ -5,39 +5,6 @@
   max-width: 1380px;
   margin: 24px 40px 0 40px;
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-
-    .title {
-      margin-right: 16px;
-    }
-
-    .edit-button {
-      background-color: transparent;
-      color: $text-secondary;
-      border: 1px solid $button-secondary-outline-bg;
-
-      &:hover {
-        background-color: $button-secondary-outline-hover-bg;
-      }
-
-      &:active {
-        background-color: $button-secondary-outline-active-bg;
-      }
-    }
-
-    .buttons,
-    .title-and-edit {
-      display: flex;
-      align-items: center;
-
-      .btn {
-        height: 38px;
-      }
-    }
-  }
-
   .bg-green {
     background-color: $mbta-green;
   }
