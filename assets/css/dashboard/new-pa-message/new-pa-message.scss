@@ -3,63 +3,6 @@
 @import "./select-zones-page.scss";
 @import "./associate-alert-page.scss";
 
-.new-pa-message,
-.select-station-and-zones-container {
-  height: 100%;
-
-  .header {
-    font-size: 40px;
-    font-weight: 500;
-    line-height: 48px;
-    text-align: left;
-    display: flex;
-  }
-
-  .paused-pill {
-    padding: 8px 16px;
-    margin-left: 16px;
-    background-color: $theme-secondary;
-    border-radius: 200px;
-    height: 40px;
-    align-self: center;
-    font-size: 24px;
-    line-height: 24px;
-    text-align: center;
-
-    text {
-      position: relative;
-    }
-  }
-
-  .cancel-button {
-    color: $button-primary;
-    background-color: transparent;
-    margin-right: 16px;
-    border: none;
-
-    &:hover {
-      background-color: $text-button-blue-hover-color;
-    }
-  }
-
-  .close-button {
-    margin-right: 0;
-  }
-
-  // Hide the default Bootstrap validation icons.
-  .form-control.is-invalid {
-    background-image: none;
-    padding-right: 13px;
-  }
-}
-
-.select-station-and-zones-container {
-  .modal-content {
-    color: $text-primary;
-    background-color: $dark-bg;
-  }
-}
-
 .selected-group-tag {
   height: 36px;
   padding: 6px 12px;

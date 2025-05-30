@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Row, Col, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
 import { fetchActiveAndFutureAlerts } from "Utils/api";
 import { Alert } from "Models/alert";
 import MessageTable from "../../Tables/MessageTable";
 import AssociateAlertsRow from "../../Tables/Rows/AssociateAlertRow";
 import { RadioList } from "Components/RadioList";
+import * as styles from "Styles/pa-messages.module.scss";
+import { useHideSidebar } from "Hooks/useHideSidebar";
 
 interface AssociateAlertPageProps {
   onApply: (
@@ -22,6 +24,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
   const [endWithEffectPeriod, setEndWithEffectPeriod] = useState<boolean>(true);
   const [importLocations, setImportLocations] = useState<boolean>(true);
   const [importMessage, setImportMessage] = useState<boolean>(true);
+  useHideSidebar();
 
   useEffect(() => {
     fetchActiveAndFutureAlerts().then(({ alerts: alerts }) => {
@@ -58,67 +61,65 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
   });
 
   return (
-    <div className="associate-alert-page">
-      <Container fluid>
-        <Row className="associate-alert-page-header">
-          <Col>
-            <h1>Select alert to associate with PA/ESS Message</h1>
-          </Col>
-          <Col className="associate-alert-page-header__cancel">
-            <Button variant="link" onClick={() => onCancel()}>
-              Cancel
-            </Button>
-          </Col>
-        </Row>
-        <Row className="associate-alert-page-body">
-          <Col className="associate-alert-filter-selection">
-            <div className="mb-2">Filter by message state</div>
-            <RadioList
-              className="mb-5"
-              value={selectedMessageState}
-              onChange={setSelectedMessageState}
-              items={[
-                { value: "active", content: "Live" },
-                { value: "future", content: "Future" },
-              ]}
-            />
-            <div className="mb-2">Filter by service type</div>
-            <RadioList
-              value={selectedServiceType}
-              onChange={setSelectedServiceType}
-              items={[
-                { value: "All", content: "All" },
-                { value: "Green", content: "Green" },
-                { value: "Red", content: "Red" },
-                { value: "Orange", content: "Orange" },
-                { value: "Blue", content: "Blue" },
-                { value: "Mattapan", content: "Mattapan" },
-                { value: "Silver Line", content: "Silver Line" },
-                { value: "Bus", content: "Bus" },
-              ]}
-            />
-          </Col>
-          <Col>
-            <MessageTable
-              isLoading={false}
-              isReadOnly={false}
-              headers={["Alert message", "ID", "Start-End", "Last modified"]}
-              addSelectColumn
-              addMoreActions={false}
-              rows={filteredAlerts.map((alert: Alert) => {
-                return (
-                  <AssociateAlertsRow
-                    key={alert.id}
-                    alert={alert}
-                    onSelect={() => setSelectedAlert(alert)}
-                  />
-                );
-              })}
-              emptyStateText="There are no alerts of this type"
-            />
-          </Col>
-        </Row>
-      </Container>
+    <div className="mx-5 my-4">
+      <div className="d-flex justify-content-between align-items-start">
+        <h1 className="mb-5">Select alert to associate with PA/ESS Message</h1>
+        <Button
+          variant="link"
+          className={styles.transparentButton}
+          onClick={() => onCancel()}
+        >
+          Cancel
+        </Button>
+      </div>
+      <div className="d-flex gap-5">
+        <div style={{ flex: "0 0 200px" }}>
+          <div className="mb-2">Filter by message state</div>
+          <RadioList
+            className="mb-5"
+            value={selectedMessageState}
+            onChange={setSelectedMessageState}
+            items={[
+              { value: "active", content: "Live" },
+              { value: "future", content: "Future" },
+            ]}
+          />
+          <div className="mb-2">Filter by service type</div>
+          <RadioList
+            value={selectedServiceType}
+            onChange={setSelectedServiceType}
+            items={[
+              { value: "All", content: "All" },
+              { value: "Green", content: "Green" },
+              { value: "Red", content: "Red" },
+              { value: "Orange", content: "Orange" },
+              { value: "Blue", content: "Blue" },
+              { value: "Mattapan", content: "Mattapan" },
+              { value: "Silver Line", content: "Silver Line" },
+              { value: "Bus", content: "Bus" },
+            ]}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <MessageTable
+            isLoading={false}
+            isReadOnly={false}
+            headers={["Alert message", "ID", "Start-End", "Last modified"]}
+            addSelectColumn
+            addMoreActions={false}
+            rows={filteredAlerts.map((alert: Alert) => {
+              return (
+                <AssociateAlertsRow
+                  key={alert.id}
+                  alert={alert}
+                  onSelect={() => setSelectedAlert(alert)}
+                />
+              );
+            })}
+            emptyStateText="There are no alerts of this type"
+          />
+        </div>
+      </div>
       <Modal className="alert-items-modal" show={!!selectedAlert} centered>
         <Modal.Header
           closeButton
