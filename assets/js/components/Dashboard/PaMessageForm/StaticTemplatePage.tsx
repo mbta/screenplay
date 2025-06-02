@@ -6,6 +6,7 @@ import _staticTemplates from "../../../../static/static_templates.json";
 import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
 import { RadioList } from "Components/RadioList";
 import * as styles from "Styles/pa-messages.module.scss";
+import { useHideSidebar } from "Hooks/useHideSidebar";
 
 interface Props {
   onCancel: () => void;
@@ -19,6 +20,7 @@ export const STATIC_TEMPLATES = _staticTemplates as StaticTemplate[];
 const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
   const [selectedTemplateType, setSelectedTemplateType] =
     useState<TemplateType>("psa");
+  useHideSidebar();
 
   return (
     <div className="mx-5 my-4">

@@ -1,9 +1,9 @@
 import { useScreenplayState } from "Hooks/useScreenplayContext";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export const useHideSidebar = () => {
   const { setShowSidebar } = useScreenplayState();
-  useEffect(() => {
+  useLayoutEffect(() => {
     setShowSidebar(false);
     return () => setShowSidebar(true);
   }, [setShowSidebar]);
