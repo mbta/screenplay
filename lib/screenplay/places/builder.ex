@@ -99,14 +99,22 @@ defmodule Screenplay.Places.Builder do
     |> Enum.reject(&hidden_screen?/1)
     |> Enum.flat_map(fn {id, screen} -> screen |> stop_ids() |> Enum.map(&{&1, {id, screen}}) end)
     |> Enum.group_by(&elem(&1, 0), fn
-      {_stop_id, {id, %Screen{app_id: app_id, disabled: disabled, app_params: app_params, location: location}}} ->
+      {_stop_id,
+       {id,
+        %Screen{app_id: app_id, disabled: disabled, app_params: app_params, location: location}}} ->
         direction_id =
           case app_params do
             %_app{direction_id: direction_id} -> direction_id
             _ -> nil
           end
 
-        %ShowtimeScreen{id: id, type: app_id, disabled: disabled, direction_id: direction_id, location: location}
+        %ShowtimeScreen{
+          id: id,
+          type: app_id,
+          disabled: disabled,
+          direction_id: direction_id,
+          location: location
+        }
     end)
   end
 
