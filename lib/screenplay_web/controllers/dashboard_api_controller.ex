@@ -27,7 +27,7 @@ defmodule ScreenplayWeb.DashboardApiController do
     Enum.map(config, fn %Place{screens: screens} = place ->
       new_screens =
         Enum.map(screens, fn %{id: id, location: location} = screen ->
-          if is_nil(location) do
+          if location == "" do
             location =
               Enum.find_value(locations, "", fn
                 %{"id" => ^id, "location" => location} -> location

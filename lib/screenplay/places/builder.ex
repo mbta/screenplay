@@ -113,7 +113,7 @@ defmodule Screenplay.Places.Builder do
           type: app_id,
           disabled: disabled,
           direction_id: direction_id,
-          location: location
+          location: location || ""
         }
     end)
   end
