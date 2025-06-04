@@ -11,7 +11,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.Places.Place
   alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias ScreensConfig.{Alerts, Departures, Footer, Header, Screen}
+  alias ScreensConfig.{Alerts, Departures, Footer, Header, MultiStopAlerts, Screen}
   alias ScreensConfig.Departures.{Query, Section}
   alias ScreensConfig.Screen.{Dup, Elevator}
 
@@ -205,7 +205,7 @@ defmodule Screenplay.Places.Builder do
     [stop_id]
   end
 
-  defp stop_ids(%Screen{app_params: %_app{header: %Header.CurrentStopId{stop_id: stop_id}}})
+  defp stop_ids(%Screen{app_params: %_app{header: %Header.StopId{stop_id: stop_id}}})
        when not is_nil(stop_id),
        do: [stop_id]
 
@@ -216,6 +216,9 @@ defmodule Screenplay.Places.Builder do
   defp stop_ids(%Screen{app_params: %_app{alerts: %Alerts{stop_id: stop_id}}})
        when not is_nil(stop_id),
        do: [stop_id]
+
+  defp stop_ids(%Screen{app_params: %_app{alerts: %MultiStopAlerts{stop_ids: stop_ids}}}),
+    do: stop_ids
 
   defp stop_ids(%Screen{app_params: %_app{departures: %Departures{sections: sections}}}),
     do: stop_ids_from_sections(sections)
@@ -313,13 +316,7 @@ defmodule Screenplay.Places.Builder do
     stops_to_parent_station_ids =
       parent_stops
       |> Enum.map(fn %{"id" => id} = stop ->
-        {id,
-         get_in(stop, [
-           "relationships",
-           "parent_station",
-           "data",
-           "id"
-         ])}
+        {id, stop["relationships"]["parent_station"]["data"]["id"] || id}
       end)
       |> Enum.into(%{})
 

@@ -20,6 +20,8 @@ import {
 import { Page } from "../types";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import { getRouteIdsForSign, sortRoutes } from "../../../../util";
+import * as styles from "Styles/pa-messages.module.scss";
+import cx from "classnames";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Red: "route-col--red",
@@ -87,27 +89,26 @@ const SelectStationsPage = ({
   return (
     <div className="select-stations-page">
       <div className="header">
-        <div>{isReadOnly ? "Stations" : "Select Stations"}</div>
-        <div className="buttons">
-          <Button
-            className="cancel-button"
-            onClick={() => navigateTo(Page.MAIN)}
-          >
-            {isReadOnly ? "Back" : "Cancel"}
-          </Button>
-          <Button
-            className="submit-button button-primary"
-            onClick={() => {
-              if (!value.length) {
-                onError("Select a station to review zones.");
-              } else {
-                navigateTo(Page.ZONES);
-              }
-            }}
-          >
-            Review Zones
-          </Button>
-        </div>
+        <h1 className="mb-0">{isReadOnly ? "Stations" : "Select Stations"}</h1>
+        <Button
+          variant="link"
+          className={cx(styles.transparentButton, "me-3 ms-auto")}
+          onClick={() => navigateTo(Page.MAIN)}
+        >
+          {isReadOnly ? "Back" : "Cancel"}
+        </Button>
+        <Button
+          className="button-primary"
+          onClick={() => {
+            if (!value.length) {
+              onError("Select a station to review zones.");
+            } else {
+              navigateTo(Page.ZONES);
+            }
+          }}
+        >
+          Review Zones
+        </Button>
       </div>
       <SelectedStationsSummary
         places={places}

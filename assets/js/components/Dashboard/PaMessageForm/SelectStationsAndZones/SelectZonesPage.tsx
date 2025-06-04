@@ -16,6 +16,7 @@ import { Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
 import PlaceZonesRow from "./PlaceZonesRow";
 import { RadioList } from "Components/RadioList";
+import * as styles from "Styles/pa-messages.module.scss";
 
 const ROUTE_TO_CLASS_NAMES_MAP: { [key: string]: string } = {
   Green: "bg-mbta-green",
@@ -185,37 +186,32 @@ const SelectZonesPage = ({
 
   return (
     <div className="select-zones-page">
-      <div className="header">
-        <div className="title-and-edit">
-          <div className="title">Review Zones</div>
-          <div>
-            <Button
-              className="edit-button"
-              onClick={() => navigateTo(Page.STATIONS)}
-            >
-              {isReadOnly ? "Return to Select" : "Edit"} Stations
-            </Button>
-          </div>
-        </div>
-        <div className="buttons">
-          {!isReadOnly && (
-            <Button
-              className="cancel-button"
-              onClick={() => navigateTo(Page.MAIN)}
-            >
-              Cancel
-            </Button>
-          )}
+      <div className="d-flex align-items-center">
+        <h1 className="mb-0">Review Zones</h1>
+        <Button
+          className={cx(styles.editStationsButton, "ms-3 me-auto")}
+          onClick={() => navigateTo(Page.STATIONS)}
+        >
+          {isReadOnly ? "Return to Select" : "Edit"} Stations
+        </Button>
+        {!isReadOnly && (
           <Button
-            className="button-primary"
-            onClick={() => {
-              onSubmit(value);
-              navigateTo(Page.MAIN);
-            }}
+            variant="link"
+            className={cx(styles.transparentButton, "me-3")}
+            onClick={() => navigateTo(Page.MAIN)}
           >
-            Done
+            Cancel
           </Button>
-        </div>
+        )}
+        <Button
+          className="button-primary"
+          onClick={() => {
+            onSubmit(value);
+            navigateTo(Page.MAIN);
+          }}
+        >
+          Done
+        </Button>
       </div>
       <div className="zone-selection">
         <div className="filters-container">
