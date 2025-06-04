@@ -26,14 +26,18 @@ defmodule ScreenplayWeb.DashboardApiController do
   defp update_config_with_locations(config, locations) do
     Enum.map(config, fn %Place{screens: screens} = place ->
       new_screens =
-        Enum.map(screens, fn %{id: id} = screen ->
-          location =
-            Enum.find_value(locations, "", fn
-              %{"id" => ^id, "location" => location} -> location
-              _ -> nil
-            end)
+        Enum.map(screens, fn %{id: id, location: location} = screen ->
+          if is_nil(location) do
+            location =
+              Enum.find_value(locations, "", fn
+                %{"id" => ^id, "location" => location} -> location
+                _ -> nil
+              end)
 
-          %{screen | location: location}
+            %{screen | location: location}
+          else
+            screen
+          end
         end)
 
       %{place | screens: new_screens}
