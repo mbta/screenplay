@@ -8,12 +8,10 @@ defmodule ScreenplayWeb.DashboardApiController do
 
   def index(conn, _params) do
     config = Places.get()
-    {:ok, locations, _} = @config_fetcher.get_locations()
     {:ok, descriptions, _} = @config_fetcher.get_place_descriptions()
 
     updated_config =
       config
-      |> update_config_with_locations(locations)
       |> update_config_with_place_descriptions(descriptions)
 
     json(conn, updated_config)
@@ -21,23 +19,6 @@ defmodule ScreenplayWeb.DashboardApiController do
 
   def line_stops(conn, _params) do
     json(conn, %{data: Screenplay.PredictionSuppression.line_stops()})
-  end
-
-  defp update_config_with_locations(config, locations) do
-    Enum.map(config, fn %Place{screens: screens} = place ->
-      new_screens =
-        Enum.map(screens, fn %{id: id} = screen ->
-          location =
-            Enum.find_value(locations, "", fn
-              %{"id" => ^id, "location" => location} -> location
-              _ -> nil
-            end)
-
-          %{screen | location: location}
-        end)
-
-      %{place | screens: new_screens}
-    end)
   end
 
   defp update_config_with_place_descriptions(config, descriptions) do
