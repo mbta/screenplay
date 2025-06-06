@@ -5,7 +5,6 @@ defmodule Screenplay.Places.Fetch do
 
   @type version_id :: String.t()
 
-  @callback get_locations() :: {:ok, list(map()), version_id()} | :error
   @callback get_place_descriptions() :: {:ok, list(map()), version_id()} | :error
   @callback put_config(list(Place.t())) :: :ok | :error
   @callback get_paess_labels() :: {:ok, list(map())} | :error
