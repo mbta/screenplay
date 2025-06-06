@@ -45,32 +45,32 @@ defmodule Screenplay.Places.BuilderTest do
 
       assert [
                %Place{
+                 id: "place-test",
+                 name: "Test Place",
+                 routes: ["Red"],
+                 screens: [],
+                 description: nil
+               },
+               %Place{
                  id: "place-tapst",
                  name: "Tappan Street",
                  routes: ["Red"],
                  screens: [
-                   %Place.ShowtimeScreen{
-                     direction_id: nil,
-                     disabled: false,
-                     id: "ELE-101",
-                     location: "",
-                     type: :elevator_v2
-                   },
                    %Place.ShowtimeScreen{
                      id: "EIG-546",
                      type: :gl_eink_v2,
                      disabled: false,
                      direction_id: nil,
                      location: ""
+                   },
+                   %Place.ShowtimeScreen{
+                     direction_id: nil,
+                     disabled: false,
+                     id: "ELE-101",
+                     location: "",
+                     type: :elevator_v2
                    }
                  ],
-                 description: nil
-               },
-               %Place{
-                 id: "place-test",
-                 name: "Test Place",
-                 routes: ["Red"],
-                 screens: [],
                  description: nil
                }
              ] = PlacesCache.all(nil, return: :value)
@@ -271,23 +271,6 @@ defmodule Screenplay.Places.BuilderTest do
       assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
-               %Place{
-                 description: nil,
-                 id: "place-ogmnl",
-                 name: "Oak Grove",
-                 routes: ["Orange"],
-                 screens: [
-                   %Place.PaEssScreen{
-                     id: "oak_grove_mezzanine_southbound",
-                     label: nil,
-                     station_code: "OOAK",
-                     type: "pa_ess",
-                     zone: "m",
-                     routes: [%{id: "Orange", direction_id: 0}],
-                     location: nil
-                   }
-                 ]
-               },
                %Screenplay.Places.Place{
                  id: "place-wtcst",
                  name: "World Trade Center - Silver Line - South Station",
@@ -313,6 +296,23 @@ defmodule Screenplay.Places.BuilderTest do
                    }
                  ],
                  description: nil
+               },
+               %Place{
+                 description: nil,
+                 id: "place-ogmnl",
+                 name: "Oak Grove",
+                 routes: ["Orange"],
+                 screens: [
+                   %Place.PaEssScreen{
+                     id: "oak_grove_mezzanine_southbound",
+                     label: nil,
+                     station_code: "OOAK",
+                     type: "pa_ess",
+                     zone: "m",
+                     routes: [%{id: "Orange", direction_id: 0}],
+                     location: nil
+                   }
+                 ]
                }
              ] = PlacesCache.all(nil, return: :value)
     end
