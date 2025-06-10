@@ -55,6 +55,9 @@
   transform: translateY(calc(36px - 50%));
 }
 
-.stationCell {
-  padding-left: 60px;
+.pill {
+  border-radius: 100px;
+  background-color: $mbta-silver;
+  padding: 0 0.5rem;
+  font-size: 14px;
 }

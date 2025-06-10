@@ -109,10 +109,13 @@ const PredictionSuppressionPage = () => {
     );
   };
 
-  const renderMapSegment = (place: Place) => {
-    const station = STATION_ORDER_BY_LINE[line.toLowerCase()].find(
+  const placeStation = (place: Place) =>
+    STATION_ORDER_BY_LINE[line.toLowerCase()].find(
       (station) => station.name.toLowerCase() === place.name.toLowerCase(),
     );
+
+  const renderMapSegment = (place: Place) => {
+    const station = placeStation(place);
 
     if (station) {
       return (
@@ -121,6 +124,21 @@ const PredictionSuppressionPage = () => {
           line={line.toLowerCase()}
           className={styles.mapSegment}
         />
+      );
+    }
+  };
+
+  const renderPills = (place: Place) => {
+    const station = placeStation(place);
+    if (station?.pills) {
+      return (
+        <div className="d-flex gap-2 mt-2">
+          {station.pills.map((name) => (
+            <div key={name} className={styles.pill}>
+              {name}
+            </div>
+          ))}
+        </div>
       );
     }
   };
@@ -187,7 +205,9 @@ const PredictionSuppressionPage = () => {
 
     if (serviceType === "start" || serviceType === "mid") {
       const predictionsText =
-        serviceType === "start" ? "terminal predictions" : "predictions";
+        serviceType === "start" && line !== "Silver"
+          ? "terminal predictions"
+          : "predictions";
       return (
         (!!record || isAdmin) && (
           <>
@@ -333,10 +353,7 @@ const PredictionSuppressionPage = () => {
         <table style={{ flex: "1" }}>
           <thead className="sticky-top bg-dark">
             <tr>
-              <th
-                className={cx(styles.stationCell, "pe-3 pb-3 fs-3")}
-                style={{ width: "30%" }}
-              >
+              <th className="px-3 pb-3 fs-3" style={{ width: "30%" }}>
                 {line} Line
               </th>
               {directionNames(line).map((name) => (
@@ -354,13 +371,12 @@ const PredictionSuppressionPage = () => {
             {filteredPlaces.map((place) => (
               <tr key={place.id} className={styles.tableRow}>
                 <td
-                  className={cx(
-                    styles.stationCell,
-                    "pe-3 py-4 position-relative overflow-hidden align-top",
-                  )}
+                  style={{ paddingLeft: line === "Silver" ? "1rem" : 60 }}
+                  className="pe-3 py-4 position-relative overflow-hidden align-top"
                 >
                   {place.name}
                   {renderMapSegment(place)}
+                  {renderPills(place)}
                 </td>
                 {noPredictions(place) ? (
                   <td colSpan={2} className="p-3">
