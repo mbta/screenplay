@@ -371,7 +371,7 @@ const PredictionSuppressionPage = () => {
             {filteredPlaces.map((place) => (
               <tr key={place.id} className={styles.tableRow}>
                 <td
-                  style={{ paddingLeft: line === "Silver" ? "1rem" : 60 }}
+                  style={{ paddingLeft: line === "Silver" ? "1rem" : 68 }}
                   className="pe-3 py-4 position-relative overflow-hidden align-top"
                 >
                   {place.name}
