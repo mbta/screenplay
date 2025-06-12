@@ -92,25 +92,23 @@ const Sidebar = () => {
       >
         Posted Alerts
       </SidebarLink>
-      {document.querySelector("meta[name=show-prediction-suppression]") && (
-        <SidebarLink
-          to="/prediction-suppression"
-          icon={ArrowDownShort}
-          activeIcon={ArrowDownShort}
-          extraContent={
-            !!suppressedPredictions?.length && (
-              <span
-                style={{ position: "absolute", bottom: -4, right: -14 }}
-                className={predictionSuppressionStyles.badge}
-              >
-                {suppressedPredictions?.length}
-              </span>
-            )
-          }
-        >
-          Suppress Predictions
-        </SidebarLink>
-      )}
+      <SidebarLink
+        to="/prediction-suppression"
+        icon={ArrowDownShort}
+        activeIcon={ArrowDownShort}
+        extraContent={
+          !!suppressedPredictions?.length && (
+            <span
+              style={{ position: "absolute", bottom: -4, right: -14 }}
+              className={predictionSuppressionStyles.badge}
+            >
+              {suppressedPredictions?.length}
+            </span>
+          )
+        }
+      >
+        Suppress Predictions
+      </SidebarLink>
       <SidebarLink to="/pa-messages" icon={VolumeUp} activeIcon={VolumeUpFill}>
         PA/ESS
       </SidebarLink>

@@ -35,9 +35,6 @@
     <%= if @fullstory_org_id do %>
         <meta name="fullstory-org-id" content={@fullstory_org_id}>
     <% end %>
-    <%= if Application.get_env(:screenplay, :show_prediction_suppression) do %>
-        <meta name="show-prediction-suppression" content={true}>
-    <% end %>
     <%= csrf_meta_tag() %>
     <title>Screenplay</title>
     <link rel="icon" href={Routes.static_path(@conn, "/favicon.ico")} sizes="32x32">
