@@ -82,9 +82,9 @@ const PredictionSuppressionPage = () => {
 
   const lineStopLookup = fp.flow([
     fp.filter({ line: line.split("-")[0] }),
-    fp.map(({ stop_id, direction_id, type }) => [
+    fp.map(({ stop_id, direction_id, suppression_type }) => [
       lookupKey([stop_id, direction_id]),
-      type,
+      suppression_type,
     ]),
     fp.fromPairs,
   ])(lineStops);
@@ -127,7 +127,7 @@ const PredictionSuppressionPage = () => {
     stopId: string,
     directionId: number,
   ) => {
-    const serviceType = lineStopLookup[lookupKey([stopId, directionId])];
+    const suppressionType = lineStopLookup[lookupKey([stopId, directionId])];
     const record =
       suppressedPredictionsLookup[
         lookupKey([locationId, mainLine, directionId])
@@ -182,9 +182,9 @@ const PredictionSuppressionPage = () => {
       );
     };
 
-    if (serviceType) {
+    if (suppressionType) {
       const predictionsText =
-        serviceType === "terminal" ? "terminal predictions" : "predictions";
+        suppressionType === "terminal" ? "terminal predictions" : "predictions";
       return (
         (!!record || isAdmin) && (
           <>

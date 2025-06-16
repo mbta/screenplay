@@ -10,7 +10,7 @@ defmodule Screenplay.PredictionSuppression do
             stop_id: String.t(),
             line: String.t(),
             direction_id: 0 | 1,
-            type: :stop | :terminal | nil
+            suppression_type: :stop | :terminal | nil
           }
         ]
   def line_stops do
@@ -61,7 +61,10 @@ defmodule Screenplay.PredictionSuppression do
               }
               when canonical or (is_sl_waterfront(route_id) and typicality == 1) <- data,
               trip = trip_lookup[trip_id],
-              %{"id" => stop_id} <- trip["relationships"]["stops"]["data"],
+              stop_references = trip["relationships"]["stops"]["data"],
+              first_stop_id = List.first(stop_references)["id"],
+              last_stop_id = List.last(stop_references)["id"],
+              %{"id" => stop_id} <- stop_references,
               uniq: true do
             stop = stop_lookup[stop_id]
             parent_stop_id = stop["relationships"]["parent_station"]["data"]["id"] || stop["id"]
@@ -72,35 +75,27 @@ defmodule Screenplay.PredictionSuppression do
               stop_id: parent_stop_id,
               line: line,
               direction_id: direction_id,
-              type:
-                case {parent_stop_id, direction_id, line} do
-                  {"place-mdftf", _, _} -> nil
-                  {"place-unsqu", _, _} -> nil
-                  {"place-hsmnl", 0, _} -> nil
-                  {"place-hsmnl", 1, _} -> :terminal
-                  {"place-lake", _, _} -> nil
-                  {"place-clmnl", _, _} -> nil
-                  {"place-river", _, _} -> nil
-                  {"place-alfcl", 0, _} -> :terminal
-                  {"place-alfcl", 1, _} -> nil
-                  {"place-brntn", 0, _} -> nil
-                  {"place-brntn", 1, _} -> :terminal
-                  {"place-asmnl", 0, "Red"} -> nil
-                  {"place-asmnl", 1, "Red"} -> :terminal
-                  {"place-wondl", 0, _} -> :terminal
-                  {"place-wondl", 1, _} -> nil
-                  {"place-bomnl", 0, _} -> nil
-                  {"place-bomnl", 1, _} -> :terminal
-                  {"place-ogmnl", 0, _} -> :terminal
-                  {"place-ogmnl", 1, _} -> nil
-                  {"place-forhl", 0, _} -> nil
-                  {"place-forhl", 1, _} -> :terminal
-                  {"place-sstat", 1, _} -> nil
-                  {"place-chels", 0, _} -> nil
-                  {"place-asmnl", 0, "Mattapan"} -> :terminal
-                  {"place-asmnl", 1, "Mattapan"} -> nil
-                  {"place-matt", _, _} -> nil
-                  _ -> :stop
+              suppression_type:
+                case stop_id do
+                  ^first_stop_id ->
+                    case {parent_stop_id, line} do
+                      # Heath Street and Ashmont are turnaround stations, so we use the terminal
+                      # suppression type in order to suppress reverse predictions
+                      {"place-hsmnl", "Green"} -> :terminal
+                      {"place-asmnl", "Mattapan"} -> :terminal
+                      # Light rail doesn't currently have terminal predictions
+                      {_, "Green"} -> nil
+                      {_, "Mattapan"} -> nil
+                      # Bus predictions don't have a concept of terminal or reverse predictions
+                      {_, "Silver"} -> :stop
+                      _ -> :terminal
+                    end
+
+                  ^last_stop_id ->
+                    nil
+
+                  _ ->
+                    :stop
                 end
             }
           end

@@ -134,17 +134,17 @@ defmodule Screenplay.SuppressedPredictionsTest do
 
       new_line_stops =
         [
-          %{line: "Silver", type: :terminal, stop_id: "place-six", direction_id: 0},
-          %{line: "Silver", type: :terminal, stop_id: "place-six", direction_id: 1},
-          %{line: "Red", type: :stop, stop_id: "place-jfk", direction_id: 0},
-          %{line: "Red", type: :stop, stop_id: "place-jfk", direction_id: 1},
-          %{line: "Blue", type: :stop, stop_id: "place-two", direction_id: 0},
-          %{line: "Orange", type: nil, stop_id: "place-three", direction_id: 0},
-          %{line: "Orange", type: nil, stop_id: "place-three", direction_id: 1},
-          %{line: "Green", type: :terminal, stop_id: "place-four", direction_id: 0},
-          %{line: "Green", type: :terminal, stop_id: "place-four", direction_id: 1},
-          %{line: "Silver", type: :terminal, stop_id: "place-five", direction_id: 0},
-          %{line: "Silver", type: :terminal, stop_id: "place-five", direction_id: 1}
+          %{line: "Silver", suppression_type: :terminal, stop_id: "place-six", direction_id: 0},
+          %{line: "Silver", suppression_type: :terminal, stop_id: "place-six", direction_id: 1},
+          %{line: "Red", suppression_type: :stop, stop_id: "place-jfk", direction_id: 0},
+          %{line: "Red", suppression_type: :stop, stop_id: "place-jfk", direction_id: 1},
+          %{line: "Blue", suppression_type: :stop, stop_id: "place-two", direction_id: 0},
+          %{line: "Orange", suppression_type: nil, stop_id: "place-three", direction_id: 0},
+          %{line: "Orange", suppression_type: nil, stop_id: "place-three", direction_id: 1},
+          %{line: "Green", suppression_type: :terminal, stop_id: "place-four", direction_id: 0},
+          %{line: "Green", suppression_type: :terminal, stop_id: "place-four", direction_id: 1},
+          %{line: "Silver", suppression_type: :terminal, stop_id: "place-five", direction_id: 0},
+          %{line: "Silver", suppression_type: :terminal, stop_id: "place-five", direction_id: 1}
         ]
 
       :ets.insert(:line_stops, {:value, new_line_stops})
