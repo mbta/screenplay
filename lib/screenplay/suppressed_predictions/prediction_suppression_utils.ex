@@ -111,10 +111,7 @@ defmodule Screenplay.PredictionSuppressionUtils do
          route_id: suppression_route_id,
          direction_id: direction_id
        } in suppressed_predictions_map do
-      case suppression_type do
-        :mid -> :stop
-        :start -> :terminal
-      end
+      suppression_type
     else
       :none
     end

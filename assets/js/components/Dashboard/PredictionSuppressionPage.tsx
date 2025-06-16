@@ -103,10 +103,7 @@ const PredictionSuppressionPage = () => {
   );
 
   const noPredictions = (place: Place) => {
-    const serviceType = lineStopLookup[lookupKey([place.id, 0])];
-    return (
-      line.startsWith("Green") && fp.includes(serviceType, ["start", "end"])
-    );
+    return [0, 1].every((d) => !lineStopLookup[lookupKey([place.id, d])]);
   };
 
   const renderMapSegment = (place: Place) => {
@@ -185,9 +182,9 @@ const PredictionSuppressionPage = () => {
       );
     };
 
-    if (serviceType === "start" || serviceType === "mid") {
+    if (serviceType) {
       const predictionsText =
-        serviceType === "start" ? "terminal predictions" : "predictions";
+        serviceType === "terminal" ? "terminal predictions" : "predictions";
       return (
         (!!record || isAdmin) && (
           <>
