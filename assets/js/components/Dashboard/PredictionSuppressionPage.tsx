@@ -82,9 +82,9 @@ const PredictionSuppressionPage = () => {
 
   const lineStopLookup = fp.flow([
     fp.filter({ line: line.split("-")[0] }),
-    fp.map(({ stop_id, direction_id, type }) => [
+    fp.map(({ stop_id, direction_id, suppression_type }) => [
       lookupKey([stop_id, direction_id]),
-      type,
+      suppression_type,
     ]),
     fp.fromPairs,
   ])(lineStops);
@@ -103,10 +103,7 @@ const PredictionSuppressionPage = () => {
   );
 
   const noPredictions = (place: Place) => {
-    const serviceType = lineStopLookup[lookupKey([place.id, 0])];
-    return (
-      line.startsWith("Green") && fp.includes(serviceType, ["start", "end"])
-    );
+    return [0, 1].every((d) => !lineStopLookup[lookupKey([place.id, d])]);
   };
 
   const renderMapSegment = (place: Place) => {
@@ -130,7 +127,7 @@ const PredictionSuppressionPage = () => {
     stopId: string,
     directionId: number,
   ) => {
-    const serviceType = lineStopLookup[lookupKey([stopId, directionId])];
+    const suppressionType = lineStopLookup[lookupKey([stopId, directionId])];
     const record =
       suppressedPredictionsLookup[
         lookupKey([locationId, mainLine, directionId])
@@ -185,9 +182,9 @@ const PredictionSuppressionPage = () => {
       );
     };
 
-    if (serviceType === "start" || serviceType === "mid") {
+    if (suppressionType) {
       const predictionsText =
-        serviceType === "start" ? "terminal predictions" : "predictions";
+        suppressionType === "terminal" ? "terminal predictions" : "predictions";
       return (
         (!!record || isAdmin) && (
           <>

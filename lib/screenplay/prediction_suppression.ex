@@ -10,7 +10,7 @@ defmodule Screenplay.PredictionSuppression do
             stop_id: String.t(),
             line: String.t(),
             direction_id: 0 | 1,
-            type: :start | :end | :mid
+            suppression_type: :stop | :terminal | nil
           }
         ]
   def line_stops do
@@ -67,16 +67,35 @@ defmodule Screenplay.PredictionSuppression do
               %{"id" => stop_id} <- stop_references,
               uniq: true do
             stop = stop_lookup[stop_id]
+            parent_stop_id = stop["relationships"]["parent_station"]["data"]["id"] || stop["id"]
+            direction_id = trip["attributes"]["direction_id"]
+            line = trip["relationships"]["route"]["data"]["id"] |> line()
 
             %{
-              stop_id: stop["relationships"]["parent_station"]["data"]["id"] || stop["id"],
-              line: trip["relationships"]["route"]["data"]["id"] |> line(),
-              direction_id: trip["attributes"]["direction_id"],
-              type:
+              stop_id: parent_stop_id,
+              line: line,
+              direction_id: direction_id,
+              suppression_type:
                 case stop_id do
-                  ^first_stop_id -> :start
-                  ^last_stop_id -> :end
-                  _ -> :mid
+                  ^first_stop_id ->
+                    case {parent_stop_id, line} do
+                      # Heath Street and Ashmont are turnaround stations, so we use the terminal
+                      # suppression type in order to suppress reverse predictions
+                      {"place-hsmnl", "Green"} -> :terminal
+                      {"place-asmnl", "Mattapan"} -> :terminal
+                      # Light rail doesn't currently have terminal predictions
+                      {_, "Green"} -> nil
+                      {_, "Mattapan"} -> nil
+                      # Bus predictions don't have a concept of terminal or reverse predictions
+                      {_, "Silver"} -> :stop
+                      _ -> :terminal
+                    end
+
+                  ^last_stop_id ->
+                    nil
+
+                  _ ->
+                    :stop
                 end
             }
           end
