@@ -1117,6 +1117,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Ashmont",
       inlineMap: "Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Cedar Grove",
@@ -1145,6 +1146,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Mattapan",
       inlineMap: "Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
 };
