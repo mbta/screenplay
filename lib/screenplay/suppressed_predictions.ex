@@ -61,7 +61,6 @@ defmodule Screenplay.SuppressedPredictions do
 
     line_stops_map =
       PredictionSuppression.line_stops()
-      # End stations don't suppress predictions, filter them out
       |> Enum.filter(&(&1.suppression_type != nil))
       |> Enum.group_by(& &1.stop_id)
 
