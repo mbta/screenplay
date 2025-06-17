@@ -305,6 +305,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Union Square",
       inlineMap: "Branch-Top",
       branch: "D",
+      isTerminalStop: true,
     },
     {
       name: "Lechmere",
