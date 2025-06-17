@@ -1,6 +1,6 @@
 defmodule Screenplay.SuppressedPredictions do
   @moduledoc """
-  Module for functions dealing with `SuppressedPredictions` and the `suppressed_predictions` database 
+  Module for functions dealing with `SuppressedPredictions` and the `suppressed_predictions` database
   """
 
   alias Screenplay.Places
@@ -61,8 +61,7 @@ defmodule Screenplay.SuppressedPredictions do
 
     line_stops_map =
       PredictionSuppression.line_stops()
-      # End stations don't suppress predictions, filter them out
-      |> Enum.filter(&(&1.type != :end))
+      |> Enum.filter(&(&1.suppression_type != nil))
       |> Enum.group_by(& &1.stop_id)
 
     Places.get()
@@ -88,7 +87,7 @@ defmodule Screenplay.SuppressedPredictions do
                   route_id,
                   direction_id,
                   suppressed_predictions_map,
-                  :mid
+                  :stop
                 )
             }
           end
@@ -106,7 +105,7 @@ defmodule Screenplay.SuppressedPredictions do
               %{
                 line: "Silver",
                 direction_id: direction_id,
-                type: suppression_type
+                suppression_type: suppression_type
               } ->
                 Enum.flat_map(place.screens, fn
                   %Screenplay.Places.Place.PaEssScreen{routes: routes} ->
@@ -139,7 +138,7 @@ defmodule Screenplay.SuppressedPredictions do
                 line: "Green",
                 stop_id: stop_id,
                 direction_id: direction_id,
-                type: suppression_type
+                suppression_type: suppression_type
               } ->
                 place.routes
                 |> Enum.filter(&String.starts_with?(&1, "Green"))
@@ -158,7 +157,7 @@ defmodule Screenplay.SuppressedPredictions do
                 line: route_id,
                 stop_id: stop_id,
                 direction_id: direction_id,
-                type: suppression_type
+                suppression_type: suppression_type
               } ->
                 [
                   PredictionSuppressionUtils.suppressed_prediction_for_data(

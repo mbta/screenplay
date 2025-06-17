@@ -112,12 +112,27 @@ defmodule Screenplay.PredictionSuppressionTest do
 
     assert PredictionSuppression.line_stops() ==
              [
-               %{line: "Blue", type: :start, direction_id: 0, stop_id: "place-wondl"},
-               %{line: "Blue", type: :mid, direction_id: 0, stop_id: "place-rbmnl"},
-               %{line: "Blue", type: :end, direction_id: 0, stop_id: "place-bmmnl"},
-               %{line: "Silver", type: :start, direction_id: 0, stop_id: "place-sstat"},
-               %{line: "Silver", type: :mid, direction_id: 0, stop_id: "place-crtst"},
-               %{line: "Silver", type: :end, direction_id: 0, stop_id: "place-wtcst"}
+               %{
+                 line: "Blue",
+                 suppression_type: :terminal,
+                 direction_id: 0,
+                 stop_id: "place-wondl"
+               },
+               %{line: "Blue", suppression_type: :stop, direction_id: 0, stop_id: "place-rbmnl"},
+               %{line: "Blue", suppression_type: nil, direction_id: 0, stop_id: "place-bmmnl"},
+               %{
+                 line: "Silver",
+                 suppression_type: :stop,
+                 direction_id: 0,
+                 stop_id: "place-sstat"
+               },
+               %{
+                 line: "Silver",
+                 suppression_type: :stop,
+                 direction_id: 0,
+                 stop_id: "place-crtst"
+               },
+               %{line: "Silver", suppression_type: nil, direction_id: 0, stop_id: "place-wtcst"}
              ]
   end
 end
