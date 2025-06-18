@@ -3,6 +3,7 @@ export interface Station {
   inlineMap?: string;
   branch?: string;
   isTerminalStop?: boolean;
+  pills?: string[];
 }
 
 interface StationsByLine {
@@ -246,24 +247,31 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     },
     {
       name: "South Station",
+      pills: ["SL1", "SL2", "SL3"],
     },
     {
       name: "Courthouse",
+      pills: ["SL1", "SL2", "SL3"],
     },
     {
       name: "World Trade Center",
+      pills: ["SL1", "SL2", "SL3"],
     },
     {
       name: "Eastern Avenue",
+      pills: ["SL3"],
     },
     {
       name: "Box District",
+      pills: ["SL3"],
     },
     {
       name: "Bellingham Square",
+      pills: ["SL3"],
     },
     {
       name: "Chelsea",
+      pills: ["SL3"],
     },
   ],
   green: [
@@ -297,6 +305,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
       name: "Union Square",
       inlineMap: "Branch-Top",
       branch: "D",
+      isTerminalStop: true,
     },
     {
       name: "Lechmere",
@@ -1109,6 +1118,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Ashmont",
       inlineMap: "Trunk-Top",
+      isTerminalStop: true,
     },
     {
       name: "Cedar Grove",
@@ -1137,6 +1147,7 @@ const STATION_ORDER_BY_LINE: StationsByLine = {
     {
       name: "Mattapan",
       inlineMap: "Trunk-Bottom",
+      isTerminalStop: true,
     },
   ],
 };

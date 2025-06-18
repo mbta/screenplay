@@ -106,20 +106,33 @@ const PredictionSuppressionPage = () => {
     return [0, 1].every((d) => !lineStopLookup[lookupKey([place.id, d])]);
   };
 
-  const renderMapSegment = (place: Place) => {
+  const stationContent = (place: Place) => {
     const station = STATION_ORDER_BY_LINE[line.toLowerCase()].find(
       (station) => station.name.toLowerCase() === place.name.toLowerCase(),
     );
-
-    if (station) {
-      return (
-        <MapSegment
-          station={station}
-          line={line.toLowerCase()}
-          className={styles.mapSegment}
-        />
-      );
-    }
+    return (
+      <>
+        <span className={cx({ "text-uppercase": station?.isTerminalStop })}>
+          {place.name}
+        </span>
+        {station && (
+          <MapSegment
+            station={station}
+            line={line.toLowerCase()}
+            className={styles.mapSegment}
+          />
+        )}
+        {station?.pills && (
+          <div className="d-flex gap-2 mt-2">
+            {station.pills.map((name) => (
+              <div key={name} className={styles.pill}>
+                {name}
+              </div>
+            ))}
+          </div>
+        )}
+      </>
+    );
   };
 
   const renderInput = (
@@ -240,7 +253,9 @@ const PredictionSuppressionPage = () => {
   const filterContent = (line: string) => {
     return (
       <>
-        <span>{line} Line</span>
+        <span>
+          {line} {line === "Mattapan" ? "Trolley" : "Line"}
+        </span>
         <span className={cx(styles.badge, "ms-auto")}>
           {suppressedPredictionCounts[line]}
         </span>
@@ -305,9 +320,9 @@ const PredictionSuppressionPage = () => {
                 content: filterContent("Red"),
               },
               {
-                value: "Blue",
-                checkedClass: "bg-mbta-blue",
-                content: filterContent("Blue"),
+                value: "Mattapan",
+                checkedClass: "bg-mbta-red",
+                content: filterContent("Mattapan"),
               },
               {
                 value: "Orange",
@@ -315,26 +330,23 @@ const PredictionSuppressionPage = () => {
                 content: filterContent("Orange"),
               },
               {
+                value: "Blue",
+                checkedClass: "bg-mbta-blue",
+                content: filterContent("Blue"),
+              },
+              {
                 value: "Silver",
                 checkedClass: "bg-mbta-silver",
                 content: filterContent("Silver"),
               },
-              {
-                value: "Mattapan",
-                checkedClass: "bg-mbta-red",
-                content: filterContent("Mattapan"),
-              },
             ]}
           />
         </div>
-        <table style={{ flex: "1" }}>
+        <table style={{ flex: "1", maxWidth: 1088 }}>
           <thead className="sticky-top bg-dark">
             <tr>
-              <th
-                className={cx(styles.stationCell, "pe-3 pb-3 fs-3")}
-                style={{ width: "30%" }}
-              >
-                {line} Line
+              <th className="px-3 pb-3 fs-3" style={{ width: "30%" }}>
+                {line} {line === "Mattapan" ? "Trolley" : "Line"}
               </th>
               {directionNames(line).map((name) => (
                 <th
@@ -351,13 +363,10 @@ const PredictionSuppressionPage = () => {
             {filteredPlaces.map((place) => (
               <tr key={place.id} className={styles.tableRow}>
                 <td
-                  className={cx(
-                    styles.stationCell,
-                    "pe-3 py-4 position-relative overflow-hidden align-top",
-                  )}
+                  style={{ paddingLeft: line === "Silver" ? "1rem" : 68 }}
+                  className="pe-3 py-4 position-relative overflow-hidden align-top"
                 >
-                  {place.name}
-                  {renderMapSegment(place)}
+                  {stationContent(place)}
                 </td>
                 {noPredictions(place) ? (
                   <td colSpan={2} className="p-3">
