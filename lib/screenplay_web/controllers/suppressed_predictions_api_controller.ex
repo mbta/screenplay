@@ -55,9 +55,15 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiController do
       ) do
     with {:ok, suppressed_prediction} <-
            SuppressedPredictions.get_suppressed_prediction(location_id, route_id, direction_id),
-         {:ok, delete_suppressed_prediction} <-
+         {:ok, deleted_suppressed_prediction} <-
            SuppressedPredictions.delete_suppressed_prediction(suppressed_prediction) do
-      json(conn, delete_suppressed_prediction)
+      log_suppressed_prediction(
+        "suppressed_prediction_deleted",
+        deleted_suppressed_prediction,
+        conn
+      )
+
+      json(conn, deleted_suppressed_prediction)
     end
   end
 
