@@ -24,6 +24,13 @@ config :screenplay,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :ehmon, :report_mf, {:ehmon, :info_report}
+
+# diskusage_logger calls disksup,
+# which by default uses df flags that aren't available on alpine's busybox.
+# this tells disksup to use different df flags
+config :os_mon, disksup_posix_only: true
+
 config :screenplay, Screenplay.Repo,
   database: "screenplay",
   ssl: true,
