@@ -38,7 +38,7 @@ config :screenplay,
       %{
         name: "Kendall/MIT",
         portrait: true,
-        landscape: false,
+        landscape: true,
         sftp_dir_name: "013_RED_KENDALL"
       },
       %{
@@ -50,7 +50,7 @@ config :screenplay,
       %{
         name: "Park Street",
         portrait: true,
-        landscape: false,
+        landscape: true,
         sftp_dir_name: "001_XFER_RED_GREEN_PARK"
       },
       %{
@@ -364,7 +364,7 @@ config :screenplay,
       %{
         name: "Park Street",
         portrait: true,
-        landscape: false,
+        landscape: true,
         sftp_dir_name: "001_XFER_RED_GREEN_PARK"
       },
       %{
@@ -376,7 +376,7 @@ config :screenplay,
       %{
         name: "Arlington",
         portrait: true,
-        landscape: false,
+        landscape: true,
         sftp_dir_name: "063_GREEN_ARLINGTON"
       },
       %{
