@@ -18,9 +18,18 @@ defmodule Screenplay.MixProject do
   #
   # Type `mix help compile.app` for more information.
   def application do
+    default_applications = [:logger, :runtime_tools]
+
+    extra_applications =
+      if Mix.env() == :prod do
+        default_applications ++ [:diskusage_logger, :ehmon]
+      else
+        default_applications
+      end
+
     [
       mod: {Screenplay.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: extra_applications
     ]
   end
 
@@ -47,10 +56,12 @@ defmodule Screenplay.MixProject do
       {:cowboy, "== 2.10.0"},
       {:credo, "~> 1.6"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:diskusage_logger, "0.2.0", only: :prod},
       {:guardian, "~> 2.3"},
       {:ueberauth, "~> 0.10.0"},
       {:ueberauth_oidcc, "~> 0.4"},
       {:sftp_client, "~> 2.0"},
+      {:ehmon, github: "mbta/ehmon", only: :prod},
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},
       {:ex_aws_rds, "~> 2.0.2"},
