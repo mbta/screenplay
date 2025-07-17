@@ -41,7 +41,7 @@ defmodule ScreenplayWeb.Endpoint do
 
   plug RemoteIp
   plug Plug.RequestId
-  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
+  plug Plug.Telemetry, event_prefix: [:phoenix]
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -49,6 +49,7 @@ defmodule ScreenplayWeb.Endpoint do
     json_decoder: Phoenix.json_library()
 
   plug Sentry.PlugContext
+  plug Logster.Plugs.Logger
 
   plug Plug.MethodOverride
   plug Plug.Head
