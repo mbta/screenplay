@@ -68,6 +68,7 @@ defmodule Screenplay.MixProject do
       {:httpoison, "~> 2.2.1"},
       {:timex, "~> 3.0"},
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
+      {:logster, "~> 1.1"},
       {:sobelow, "~> 0.8", only: :dev},
       {:sentry, "~> 10.3"},
       {:stream_data, "~> 1.1", only: :test},
