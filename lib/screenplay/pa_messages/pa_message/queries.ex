@@ -29,10 +29,10 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
         ) ::
           Ecto.Query.t()
   def active(q \\ PaMessage, alert_ids, now) do
-    current_service_day = Util.get_current_service_day(now)
+    service_day_of_week = now |> Util.service_date() |> Date.day_of_week()
 
     current(q, alert_ids, now)
-    |> where([m], (is_nil(m.paused) or not m.paused) and ^current_service_day in m.days_of_week)
+    |> where([m], (is_nil(m.paused) or not m.paused) and ^service_day_of_week in m.days_of_week)
   end
 
   @doc """

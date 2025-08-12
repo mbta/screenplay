@@ -12,14 +12,18 @@ defmodule Screenplay.Util do
     |> String.replace("ActiveDirectory_MBTA\\", "")
   end
 
-  @spec get_current_service_day(DateTime.t()) :: integer()
-  def get_current_service_day(now \\ DateTime.utc_now()) do
-    now
-    # Shift to EST to account for possible Daylight Savings Time
+  @doc """
+  Determines the MBTA service date for a given moment. The "service day" starts/ends at 4:00am.
+  """
+  @spec service_date() :: Date.t()
+  @spec service_date(DateTime.t()) :: Date.t()
+  def service_date(datetime \\ DateTime.utc_now()) do
+    datetime
     |> DateTime.shift_zone!("America/New_York")
-    # Shift time back 3 hours to account for MBTA's 3am-3am service day
-    |> DateTime.add(-180, :minute)
-    |> Date.day_of_week()
+    |> case do
+      %DateTime{hour: hour} = dt when hour < 4 -> Date.add(dt, -1)
+      dt -> DateTime.to_date(dt)
+    end
   end
 
   @spec format_changeset_errors(changeset :: Ecto.Changeset.t()) :: String.t()

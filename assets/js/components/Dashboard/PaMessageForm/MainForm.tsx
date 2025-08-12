@@ -153,8 +153,7 @@ const MainForm = ({
 
   const startDateTime = moment(`${startDate} ${startTime}`, "YYYY-MM-DD HH:mm");
   const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
-  const popoverText =
-    "A service day starts at 3:00 AM, and ends at 3:00 AM the following day";
+  const popoverText = "The service day starts and ends at 4:00 AM";
 
   const isEndTimeInvalid = validated && !moment(endTime, "HH:mm").isValid();
 
@@ -233,7 +232,7 @@ const MainForm = ({
                   <Button
                     className={paMessageStyles.serviceTimeButton}
                     variant="link"
-                    onClick={() => setStartTime("03:00")}
+                    onClick={() => setStartTime("04:00")}
                   >
                     Start of service day
                   </Button>
@@ -316,7 +315,7 @@ const MainForm = ({
                       onClick={() => {
                         if (isEndTimeInvalid) return;
 
-                        if (moment(endTime, "HH:mm").hour() >= 3) {
+                        if (moment(endTime, "HH:mm").hour() >= 4) {
                           setEndDate(
                             moment(endDate, "YYYY-MM-DD")
                               .add(1, "d")
@@ -324,7 +323,7 @@ const MainForm = ({
                           );
                         }
 
-                        setEndTime("03:00");
+                        setEndTime("04:00");
                       }}
                     >
                       End of service day
