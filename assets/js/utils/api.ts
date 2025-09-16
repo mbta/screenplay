@@ -7,6 +7,8 @@ import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfigur
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
+import LinkCopiedToast from "Components/LinkCopiedToast";
+import { withErrorHandlingDisplayGlobalError } from "./errorHandler";
 
 export const fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
@@ -22,7 +24,7 @@ export const fetchLineStops = async () => {
 interface AlertsResponse {
   all_alert_ids: string[];
   alerts: Alert[];
-  screens_by_alert: ScreensByAlert;
+  screens_by_alert: ScreensByAlert
 }
 
 export const fetchAlerts = async (): Promise<AlertsResponse> => {
@@ -76,19 +78,27 @@ export interface PendingAndLiveScreens {
   };
 }
 
-export const fetchExistingScreensAtPlacesWithPendingScreens =
+const _fetchExistingScreensAtPlacesWithPendingScreens =
   async (): Promise<PendingAndLiveScreensResponse> => {
     const response = await fetch(
       "/config/existing-screens-at-places-with-pending-screens",
-    );
+    ); 
+    if (!response.ok) {
+      throw response;
+    }
     const etag = response.headers.get("etag") as string;
     const data = (await response.json()) as Omit<
       PendingAndLiveScreensResponse,
       "etag"
     >;
-
     return { ...data, etag };
   };
+
+export const fetchExistingScreensAtPlacesWithPendingScreens =
+  withErrorHandlingDisplayGlobalError(
+    _fetchExistingScreensAtPlacesWithPendingScreens,
+    "Failed to load pending screens data. Please refresh the page.",
+  );
 
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
