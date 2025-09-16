@@ -20,8 +20,8 @@ defmodule ScreenplayWeb.AuthController do
     roles =
       get_in(auth.extra.raw_info.userinfo, ["resource_access", keycloak_client_id, "roles"]) || []
 
-    previous_path = Plug.Conn.get_session(conn, :previous_path)
-    Plug.Conn.delete_session(conn, :previous_path)
+    previous_path = Plug.Conn.get_session(conn, :previous_path_from_auth)
+    Plug.Conn.delete_session(conn, :previous_path_from_auth)
 
     conn
     |> configure_session(drop: true)

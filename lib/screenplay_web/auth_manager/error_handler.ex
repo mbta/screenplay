@@ -9,11 +9,16 @@ defmodule ScreenplayWeb.AuthManager.ErrorHandler do
 
   @impl Guardian.Plug.ErrorHandler
   def auth_error(conn, error, _opts) do
-    if conn.request_path =~ "api" or Plug.Conn.get_session(conn, :previous_path) =~ "api" do
+    request_path = conn.request_path
+
+    if request_path =~ "api" or Plug.Conn.get_session(conn, :previous_path) =~ "api" do
       Plug.Conn.send_resp(conn, 403, "Session expired")
     else
       auth_params = auth_params_for_error(error)
-      Phoenix.Controller.redirect(conn, to: ~p"/auth/keycloak?#{auth_params}")
+
+      conn
+      |> Plug.Conn.put_session(:previous_path_from_auth, request_path)
+      |> Phoenix.Controller.redirect(to: ~p"/auth/keycloak?#{auth_params}")
     end
   end
 
