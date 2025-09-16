@@ -6,10 +6,8 @@
 
   .modal-content {
     background-color: $cool-gray-20;
-
+    white-space: pre-wrap;
     .modal-header {
-      border-bottom: none;
-
       .btn-close:hover {
         background-color: transparent;
       }

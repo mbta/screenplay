@@ -1,41 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
+import {
+  clearErrorState,
+  getErrorState,
+  subscribeToError,
+  ErrorState,
+} from "Utils/errorHandler";
 
 interface ErrorModalProps {
-  title: string;
-  showErrorModal: boolean;
-  onHide: () => void;
-  errorMessage: string;
-  confirmButtonLabel: string;
-  onConfirm: () => void;
+  className?: string;
 }
 
-const ErrorModal = ({
-  title,
-  showErrorModal,
-  onHide,
-  errorMessage,
-  confirmButtonLabel,
-  onConfirm,
-}: ErrorModalProps) => {
+const ErrorModal: React.FC<ErrorModalProps> = () => {
+  const [errorState, setErrorState] = useState<ErrorState | null>(null);
+  const subscribe = subscribeToError((error) => {
+    setErrorState(error);
+  });
+
+  useEffect(() => {
+    // Set initial state
+    setErrorState(getErrorState());
+    return subscribe;
+  }, [errorState, subscribe]);
+
+  const handleDismiss = () => {
+    if (errorState?.onDismiss) {
+      errorState.onDismiss();
+    }
+    clearErrorState();
+  };
+
+  const handleRetry = () => {
+    if (errorState?.onRetry) {
+      errorState.onRetry();
+    }
+    clearErrorState();
+  };
+
+  if (!errorState?.show) {
+    return null;
+  }
+
   return (
     <Modal
-      show={showErrorModal}
+      show={errorState.show}
       className="error-modal"
       backdrop="static"
-      onHide={onHide}
+      onHide={handleDismiss}
     >
       <Modal.Header closeButton closeVariant="white">
-        {title && <Modal.Title>{title}</Modal.Title>}
+        {errorState.title && <Modal.Title>{errorState.title}</Modal.Title>}
       </Modal.Header>
-      <Modal.Body>{errorMessage}</Modal.Body>
+      <Modal.Body>{errorState.messageToDisplay}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={onHide} className="error-modal__cancel-button">
+        <Button onClick={handleDismiss} className="error-modal__cancel-button">
           Cancel
         </Button>
-        <Button className="error-modal__refresh-button" onClick={onConfirm}>
-          {confirmButtonLabel}
-        </Button>
+        {errorState.onRetry && (
+          <Button className="error-modal__refresh-button" onClick={handleRetry}>
+            Refresh
+          </Button>
+        )}
       </Modal.Footer>
     </Modal>
   );

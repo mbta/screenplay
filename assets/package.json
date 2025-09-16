@@ -7,7 +7,7 @@
     "watch": "webpack --mode development --watch",
     "lint": "eslint --fix \"{.,**}/*.{js,ts,tsx}\"",
     "lint:check": "eslint \"{.,**}/*.{js,ts,tsx}\"",
-    "format": "prettier --write \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
+    "format": "prettier --write \"{.,**}/*.{js,json,ts,tsx,css,scss}\" --list-different",
     "format:check": "prettier --check \"{.,**}/*.{js,json,ts,tsx,css,scss}\"",
     "test": "jest",
     "check": "npm run lint:check && npm run format:check"
