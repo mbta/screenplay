@@ -97,7 +97,9 @@ defmodule Screenplay.Places.Builder do
   defp get_showtime_screens do
     ScreensConfigStore.screens()
     |> Enum.reject(&hidden_screen?/1)
-    |> Enum.flat_map(fn {id, screen} -> screen |> stop_ids() |> Enum.map(&{&1, {id, screen}}) end)
+    |> Enum.flat_map(fn {id, screen} ->
+      screen |> stop_ids() |> Enum.map(&{&1, {id, screen}})
+    end)
     |> Enum.group_by(&elem(&1, 0), fn
       {_stop_id,
        {id,

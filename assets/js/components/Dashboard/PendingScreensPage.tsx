@@ -39,13 +39,13 @@ const PendingScreensPage: ComponentType = () => {
     const data = await fetchExistingScreensAtPlacesWithPendingScreens();
     if (data) {
       const { places_and_screens, etag, last_modified_ms } = data;
-          setExistingScreens(places_and_screens);
-          setEtag(etag);
-          if (last_modified_ms !== null) {
-            setLastModified(new Date(last_modified_ms));
-          }
-        }
-    }, [setExistingScreens, setEtag, setLastModified]);
+      setExistingScreens(places_and_screens);
+      setEtag(etag);
+      if (last_modified_ms !== null) {
+        setLastModified(new Date(last_modified_ms));
+      }
+    }
+  }, [setExistingScreens, setEtag, setLastModified]);
 
   const publish = useCallback(
     async (

@@ -7,7 +7,6 @@ import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfigur
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
-import LinkCopiedToast from "Components/LinkCopiedToast";
 import { withErrorHandlingDisplayGlobalError } from "./errorHandler";
 
 export const fetchPlaces = async (): Promise<Place[]> => {
@@ -24,7 +23,7 @@ export const fetchLineStops = async () => {
 interface AlertsResponse {
   all_alert_ids: string[];
   alerts: Alert[];
-  screens_by_alert: ScreensByAlert
+  screens_by_alert: ScreensByAlert;
 }
 
 export const fetchAlerts = async (): Promise<AlertsResponse> => {
@@ -82,8 +81,8 @@ const _fetchExistingScreensAtPlacesWithPendingScreens =
   async (): Promise<PendingAndLiveScreensResponse> => {
     const response = await fetch(
       "/config/existing-screens-at-places-with-pending-screens",
-    ); 
-    if (!response.ok) {
+    );
+    if (response.ok) {
       throw response;
     }
     const etag = response.headers.get("etag") as string;
@@ -209,7 +208,7 @@ const fetchOk = async (
   return res.json();
 };
 
-export const getSuppressedPredictions = async () => {
+const _getSuppressedPredictions = async () => {
   const res = await fetch("/api/suppressed-predictions");
   if (!res.ok) {
     throw res;
@@ -217,20 +216,31 @@ export const getSuppressedPredictions = async () => {
   return res.json();
 };
 
-export const createSuppressedPrediction = (data: SuppressedPrediction) => {
-  return fetchOk("/api/suppressed-predictions", { body: data, method: "POST" });
-};
+export const getSuppressedPredictions = withErrorHandlingDisplayGlobalError(
+  _getSuppressedPredictions,
+  "Failed to load suppressed predictions. Please refresh the page.",
+);
 
-export const deleteSuppressedPrediction = (data: SuppressedPrediction) => {
-  return fetchOk("/api/suppressed-predictions", {
-    body: data,
-    method: "DELETE",
-  });
-};
+export const createSuppressedPrediction = withErrorHandlingDisplayGlobalError(
+  (data: SuppressedPrediction) =>
+    fetchOk("/api/suppressed-predictions", { body: data, method: "POST" }),
+  "Failed to create a prediction supression. Please try again.",
+);
 
-export const updateSuppressedPrediction = (data: SuppressedPrediction) => {
-  return fetchOk("/api/suppressed-predictions", { body: data, method: "PUT" });
-};
+export const deleteSuppressedPrediction = withErrorHandlingDisplayGlobalError(
+  (data: SuppressedPrediction) =>
+    fetchOk("/api/suppressed-predictions", {
+      body: data,
+      method: "DELETE",
+    }),
+  "Failed to delete the prediction supression. Please try again.",
+);
+
+export const updateSuppressedPrediction = withErrorHandlingDisplayGlobalError(
+  (data: SuppressedPrediction) =>
+    fetchOk("/api/suppressed-predictions", { body: data, method: "PUT" }),
+  "Failed to update the prediction supression. Please try again.",
+);
 
 const getPostBodyAndHeaders = (
   bodyData: { [key: string]: any },

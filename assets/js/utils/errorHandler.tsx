@@ -1,6 +1,6 @@
 export interface ErrorHandlingOptions {
   /** Whether to show a global error modal for this error */
-  showGlobalError?: boolean;
+  showErrorModal?: boolean;
   /** Custom error message to display */
   customMessage?: string;
   /** Whether to log the error to console */
@@ -150,7 +150,7 @@ export const withErrorHandling = <T extends any[], R>(
 ) => {
   return async (...args: T): Promise<R | null> => {
     const {
-      showGlobalError: shouldShowGlobalError = true,
+      showErrorModal = true,
       logError = true,
       onError,
       retry = false,
@@ -182,7 +182,7 @@ export const withErrorHandling = <T extends any[], R>(
 
         // If this is the last attempt or we're not retrying, handle the error
         if (attempts > (retry ? retryAttempts : 0)) {
-          if (shouldShowGlobalError) {
+          if (showErrorModal) {
             showGlobalError(error as Error | Response, options);
           }
           return null;
@@ -207,7 +207,7 @@ export const withErrorHandlingDisplayGlobalError = <T extends any[], R>(
   customMessage?: string,
 ) => {
   return withErrorHandling(asyncFn, {
-    showGlobalError: true,
+    showErrorModal: true,
     logError: true,
     customMessage,
   });
@@ -219,7 +219,7 @@ export const withErrorHandlingSilent = <T extends any[], R>(
   onError?: (error: Error | Response) => void,
 ) => {
   return withErrorHandling(asyncFn, {
-    showGlobalError: false,
+    showErrorModal: false,
     logError: true,
     onError,
   });
@@ -235,7 +235,7 @@ export const withErrorHandlingRetry = <T extends any[], R>(
   } = {},
 ) => {
   return withErrorHandling(asyncFn, {
-    showGlobalError: true,
+    showErrorModal: true,
     logError: true,
     retry: true,
     ...options,

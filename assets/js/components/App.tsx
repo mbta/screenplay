@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import GlEinkWorkflow from "Components/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
-import GlobalErrorModal from './Dashboard/GlobalErrorModal';
+import GlobalErrorModal from "./Dashboard/GlobalErrorModal";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool"),

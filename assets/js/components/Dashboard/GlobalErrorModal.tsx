@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { 
-  subscribeToGlobalError, 
-  getGlobalError, 
+import {
+  subscribeToGlobalError,
+  getGlobalError,
   clearGlobalError,
-  GlobalErrorState 
+  GlobalErrorState,
 } from "Utils/errorHandler";
 
 interface GlobalErrorModalProps {
@@ -47,46 +47,21 @@ const GlobalErrorModal: React.FC<GlobalErrorModalProps> = ({ className }) => {
   return (
     <Modal
       show={errorState.show}
-      className={`global-error-modal ${className || ''}`}
+      className="error-modal"
       backdrop="static"
-      keyboard={false}
-      centered
+      onHide={handleDismiss}
     >
       <Modal.Header closeButton closeVariant="white">
-        <Modal.Title className="text-danger">
-          <i className="fas fa-exclamation-triangle me-2" />
-          {errorState.title}
-        </Modal.Title>
+        {errorState.title && <Modal.Title>{errorState.title}</Modal.Title>}
       </Modal.Header>
-      <Modal.Body>
-        <div className="d-flex align-items-start">
-          <i className="fas fa-exclamation-circle text-danger me-3 mt-1" />
-          <div>
-            <p className="mb-0">{errorState.message}</p>
-            {errorState.onRetry && (
-              <p className="text-muted small mt-2 mb-0">
-                You can try again or contact support if the problem persists.
-              </p>
-            )}
-          </div>
-        </div>
-      </Modal.Body>
+      <Modal.Body>{errorState.message}</Modal.Body>
       <Modal.Footer>
-        <Button 
-          variant="secondary" 
-          onClick={handleDismiss}
-          className="global-error-modal__dismiss-button"
-        >
-          Dismiss
+        <Button onClick={handleDismiss} className="error-modal__cancel-button">
+          Cancel
         </Button>
         {errorState.onRetry && (
-          <Button 
-            variant="primary" 
-            onClick={handleRetry}
-            className="global-error-modal__retry-button"
-          >
-            <i className="fas fa-redo me-2" />
-            Try Again
+          <Button className="error-modal__refresh-button" onClick={handleRetry}>
+            Refresh
           </Button>
         )}
       </Modal.Footer>
