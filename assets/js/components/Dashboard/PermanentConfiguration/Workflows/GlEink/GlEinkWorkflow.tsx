@@ -198,15 +198,13 @@ const GlEinkWorkflow: ComponentType = () => {
   );
 
   /**
-   * Handles version mismatch errors with automatic refresh
-   * @param error - The error (usually version mismatch)
-   * @param delay - Delay before auto-refresh in milliseconds (default: 2000)
+   * Handles version mismatch errors by displaying the error modal and automatic page refresh.
    */
-  const handleVersionMismatch = (error: Response | Error, delay = 2000) => {
+  const handleVersionMismatch = (error: Response | Error, delay: number) => {
     displayErrorModal(error, {
       customTitle: "Someone else is configuring these screens",
       customMessage:
-        "In order not to overwrite each others work, please refresh your browser and fill-out the form again.",
+        "In order not to overwrite each other's work, please refresh your browser and fill-out the form again.",
       onError: () => {
         // Auto-refresh after showing the error
         setTimeout(() => window.location.reload(), delay);
@@ -311,6 +309,7 @@ const GlEinkWorkflow: ComponentType = () => {
       );
       break;
   }
+
   return (
     <>
       {layout}

@@ -34,6 +34,23 @@ const ERROR_COOLDOWN_MS = 5000; // Don't show multiple errors within 5 seconds
 const RETRY_DELAY_DEFAULT_MS = 1000;
 const RETRY_ATTEMPTS_DEFAULT = 3;
 
+// Error state management: getting, setting, clearing.
+export const getErrorState = (): ErrorState | null => errorState;
+
+const setErrorState = (error: ErrorState | null) => {
+  errorState = error;
+  errorListeners.forEach((listener) => listener(error));
+};
+
+export const clearErrorState = () => {
+  setErrorState(null);
+};
+
+/**
+ * Subscribes to changes in the error state. Used by components that rely on these errors.
+ * @param listener - Function to call when error state changes
+ * @returns unsubscribe function to remove the listener
+ */
 export const subscribeToError = (
   listener: (error: ErrorState | null) => void,
 ) => {
@@ -43,13 +60,7 @@ export const subscribeToError = (
   };
 };
 
-export const getErrorState = (): ErrorState | null => errorState;
-
-const setErrorState = (error: ErrorState | null) => {
-  errorState = error;
-  errorListeners.forEach((listener) => listener(error));
-};
-
+/** Determines if multiple errors have happened during the cooldown window. */
 const isMultipleFailure = (): boolean => {
   const now = Date.now();
   if (now - lastErrorTime < ERROR_COOLDOWN_MS) {
@@ -62,21 +73,18 @@ const isMultipleFailure = (): boolean => {
   }
 };
 
-const getErrorMessage = (
-  error: Error | Response,
-  customMessage?: string,
-): string => {
-  if (customMessage) {
-    return customMessage;
-  }
-
+/**
+ * Generates a user friendly error message based on the error type.
+ * @returns the error message to display
+ */
+const getErrorMessage = (  error: Error | Response): string => {
   if (error instanceof Response) {
     if (error.status >= 500) {
       return "Server error. Please try again or contact engineering if the problem persists.";
     } else if (error.status === 403) {
       return "Your session has expired, please refresh your browser.";
     } else if (error.status === 404) {
-      return "The requested resource was not found.";
+      return "The requested resource was not found. Please try again or contact engineering if the problem persists.";
     }
   }
 
@@ -92,6 +100,9 @@ const getErrorMessage = (
   return "Something went wrong. Please try again and contact engineering if the issue persists.";
 };
 
+/**
+ * Generates a title for the error modal based on the error type and if there are multiple.
+ */
 const getErrorTitle = (
   error: Error | Response,
   isMultiple: string[],
@@ -113,10 +124,9 @@ const getErrorTitle = (
   return "Error";
 };
 
-export const clearErrorState = () => {
-  setErrorState(null);
-};
-
+/** 
+ * Surfaces the error to the user through the error modal. 
+*/
 export const displayErrorModal = (
   error: Error | Response,
   options: ErrorHandlingOptions = {},
@@ -130,7 +140,7 @@ export const displayErrorModal = (
   if (onError) {
     onError(error);
   }
-  const message = getErrorMessage(error, customMessage);
+  const message = customMessage ?? getErrorMessage(error);
   const errorMessages = getErrorState()?.errorMessages || [];
   errorMessages.push(message);
   const isMultiple = isMultipleFailure();
@@ -146,6 +156,11 @@ export const displayErrorModal = (
   });
 };
 
+/**
+ * Wrapper for operations that should display an error modal on their initial failure.
+ * @param asyncFn - the function that should be tried
+ * @param options - ErrorHandlingOptions
+ */
 export const withErrorHandling = <T extends any[], R>(
   asyncFn: (...args: T) => Promise<R>,
   options: ErrorHandlingOptions = {},
@@ -176,8 +191,12 @@ export const withErrorHandling = <T extends any[], R>(
           );
         }
 
-        if (onError) {
-          onError(error as Error | Response);
+        // If there's no handling specified and it's a session expiration error,
+        // then we want to refresh the page after displaying the error
+        if (!onError && isSessionExpirationError(error)) {
+          options.onError = () => {
+            setTimeout(() => window.location.reload(), 2000);
+          };
         }
 
         // If this is the last attempt or we're not retrying, handle the error
@@ -201,7 +220,9 @@ export const withErrorHandling = <T extends any[], R>(
   };
 };
 
-// Convenience wrapper for the most common use case
+/**
+ * Wrapper for operations that should display an error modal on their initial failure.
+ */
 export const withErrorHandlingDisplayError = <T extends any[], R>(
   asyncFn: (...args: T) => Promise<R>,
   customMessage?: string,
@@ -213,7 +234,9 @@ export const withErrorHandlingDisplayError = <T extends any[], R>(
   });
 };
 
-// Wrapper for operations that should fail silently (no global error)
+/**
+ * Wrapper for operations that should fail silently (no error modal)
+ */
 export const withErrorHandlingSilent = <T extends any[], R>(
   asyncFn: (...args: T) => Promise<R>,
   onError?: (error: Error | Response) => void,
@@ -225,7 +248,9 @@ export const withErrorHandlingSilent = <T extends any[], R>(
   });
 };
 
-// Wrapper for operations that should retry on failure
+/**
+ * Wrapper for operations that should retry on failure
+ */
 export const withErrorHandlingRetry = <T extends any[], R>(
   asyncFn: (...args: T) => Promise<R>,
   options: {
@@ -243,27 +268,8 @@ export const withErrorHandlingRetry = <T extends any[], R>(
 };
 
 /**
- * Handles session expiration errors with automatic refresh
- * @param error - The error response (usually 403 status)
- * @param delay - Delay before auto-refresh in milliseconds (default: 2000)
- */
-export const handleSessionExpiration = (
-  error: Response | Error,
-  delay: number = 2000,
-) => {
-  displayErrorModal(error, {
-    customMessage: "Your session has expired, please refresh your browser.",
-    onError: () => {
-      // Auto-refresh after showing the error
-      setTimeout(() => window.location.reload(), delay);
-    },
-  });
-};
-
-/**
- * Checks if an error is a session expiration error
- * @param error - The error to check
- * @returns true if it's a session expiration error
+ * Checks if an error is a session expiration error. 403 errors must be session expiration, 
+ * b/c a user must be logged in with proper permissions to access Screenplay initially.
  */
 export const isSessionExpirationError = (error: any): boolean => {
   return error instanceof Response && error.status === 403;
