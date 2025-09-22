@@ -1,8 +1,10 @@
 export interface ErrorHandlingOptions {
-  /** Whether to show a global error modal for this error */
+  /** Whether to show an error modal for this error */
   showErrorModal?: boolean;
   /** Custom error message to display */
   customMessage?: string;
+  /** Cutstom error title to display */
+  customTitle?: string;
   /** Whether to log the error to console */
   logError?: boolean;
   /** Custom error handler function */
@@ -15,7 +17,7 @@ export interface ErrorHandlingOptions {
   retryDelay?: number;
 }
 
-export interface GlobalErrorState {
+export interface ErrorState {
   show: boolean;
   messageToDisplay: string;
   errorMessages?: string[];
@@ -24,28 +26,28 @@ export interface GlobalErrorState {
   onDismiss: () => void;
 }
 
-let globalErrorState: GlobalErrorState | null = null;
-let globalErrorListeners: ((error: GlobalErrorState | null) => void)[] = [];
+let errorState: ErrorState | null = null;
+let errorListeners: ((error: ErrorState | null) => void)[] = [];
 let errorCount = 0;
 let lastErrorTime = 0;
 const ERROR_COOLDOWN_MS = 5000; // Don't show multiple errors within 5 seconds
 const RETRY_DELAY_DEFAULT_MS = 1000;
 const RETRY_ATTEMPTS_DEFAULT = 3;
 
-export const subscribeToGlobalError = (
-  listener: (error: GlobalErrorState | null) => void,
+export const subscribeToError = (
+  listener: (error: ErrorState | null) => void,
 ) => {
-  globalErrorListeners.push(listener);
+  errorListeners.push(listener);
   return () => {
-    globalErrorListeners = globalErrorListeners.filter((l) => l !== listener);
+    errorListeners = errorListeners.filter((l) => l !== listener);
   };
 };
 
-export const getGlobalError = (): GlobalErrorState | null => globalErrorState;
+export const getErrorState = (): ErrorState | null => errorState;
 
-const setGlobalError = (error: GlobalErrorState | null) => {
-  globalErrorState = error;
-  globalErrorListeners.forEach((listener) => listener(error));
+const setErrorState = (error: ErrorState | null) => {
+  errorState = error;
+  errorListeners.forEach((listener) => listener(error));
 };
 
 const isMultipleFailure = (): boolean => {
@@ -72,11 +74,9 @@ const getErrorMessage = (
     if (error.status >= 500) {
       return "Server error. Please try again or contact engineering if the problem persists.";
     } else if (error.status === 403) {
-      return "You don't have permission to perform this action.";
+      return "Your session has expired, please refresh your browser.";
     } else if (error.status === 404) {
       return "The requested resource was not found.";
-    } else if (error.status >= 400) {
-      return "Request failed. Please check your input and try again.";
     }
   }
 
@@ -85,11 +85,11 @@ const getErrorMessage = (
       return "Network error. Please check your connection and try again.";
     }
     if (error.message.includes("timeout")) {
-      return "Request timed out. Please try again.";
+      return "Request timed out. Please try again and contact engineering if the issue persists.";
     }
   }
 
-  return "Something went wrong. Please try again.";
+  return "Something went wrong. Please try again and contact engineering if the issue persists.";
 };
 
 const getErrorTitle = (
@@ -113,39 +113,37 @@ const getErrorTitle = (
   return "Error";
 };
 
-export const clearGlobalError = () => {
-  setGlobalError(null);
+export const clearErrorState = () => {
+  setErrorState(null);
 };
 
-export const showGlobalError = (
+export const displayErrorModal = (
   error: Error | Response,
   options: ErrorHandlingOptions = {},
 ) => {
-  const { customMessage, logError = true, onError } = options;
+  const { customMessage, customTitle, logError = true, onError } = options;
 
   if (logError) {
-    console.error("Global error occurred:", error);
+    console.error(error);
   }
 
   if (onError) {
     onError(error);
   }
   const message = getErrorMessage(error, customMessage);
-  let errorMessages = getGlobalError()?.errorMessages || [];
-  errorMessages.push(message)  
+  let errorMessages = getErrorState()?.errorMessages || [];
+  errorMessages.push(message);
   const isMultiple = isMultipleFailure();
-  const title = getErrorTitle(error, isMultiple ? errorMessages : []);
-   
-  setGlobalError({
+  const title =
+    customTitle ?? getErrorTitle(error, isMultiple ? errorMessages : []);
+
+  setErrorState({
     show: true,
     errorMessages: errorMessages,
-    messageToDisplay: isMultiple
-      ? `${errorMessages.join("\n")}`
-      : message,
+    messageToDisplay: isMultiple ? `${errorMessages.join("\n")}` : message,
     title,
-    onDismiss: clearGlobalError,
+    onDismiss: clearErrorState,
   });
-  console.log(getGlobalError())
 };
 
 export const withErrorHandling = <T extends any[], R>(
@@ -187,7 +185,7 @@ export const withErrorHandling = <T extends any[], R>(
         // If this is the last attempt or we're not retrying, handle the error
         if (attempts > (retry ? retryAttempts : 0)) {
           if (showErrorModal) {
-            showGlobalError(error as Error | Response, options);
+            displayErrorModal(error as Error | Response, options);
           }
           return null;
         }
@@ -206,7 +204,7 @@ export const withErrorHandling = <T extends any[], R>(
 };
 
 // Convenience wrapper for the most common use case
-export const withErrorHandlingDisplayGlobalError = <T extends any[], R>(
+export const withErrorHandlingDisplayError = <T extends any[], R>(
   asyncFn: (...args: T) => Promise<R>,
   customMessage?: string,
 ) => {
@@ -244,4 +242,31 @@ export const withErrorHandlingRetry = <T extends any[], R>(
     retry: true,
     ...options,
   });
+};
+
+/**
+ * Handles session expiration errors with automatic refresh
+ * @param error - The error response (usually 403 status)
+ * @param delay - Delay before auto-refresh in milliseconds (default: 2000)
+ */
+export const handleSessionExpiration = (
+  error: Response | Error,
+  delay: number = 2000,
+) => {
+  displayErrorModal(error, {
+    customMessage: "Your session has expired, please refresh your browser.",
+    onError: () => {
+      // Auto-refresh after showing the error
+      setTimeout(() => window.location.reload(), delay);
+    },
+  });
+};
+
+/**
+ * Checks if an error is a session expiration error
+ * @param error - The error to check
+ * @returns true if it's a session expiration error
+ */
+export const isSessionExpirationError = (error: any): boolean => {
+  return error instanceof Response && error.status === 403;
 };

@@ -7,39 +7,44 @@ import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfigur
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
-import { withErrorHandlingDisplayGlobalError } from "./errorHandler";
+import {
+  withErrorHandlingDisplayError,
+  withErrorHandlingSilent,
+  showErrorModal,
+} from "./errorHandler";
 
 const API_ENDPOINT_PREDICTION_SUPPRESSION = "/api/suppressed-predictions";
 const API_ENDPOINT_PA_MESSAGES = "/api/pa-messages";
 
-const REFRESH_PAGE_ERROR_MESSAGE = "Please refresh the page and contact engineering if the issue persists."
+const REFRESH_PAGE_ERROR_MESSAGE =
+  "Please refresh the page and contact engineering if the issue persists.";
 
-///////////////////
+/////////////////////
 // Location Fetching
-//////////////////
+////////////////////
 const _fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
-  if (response.ok) {
+  if (!response.ok) {
     throw response;
   }
-  return await response.json();
+  return response.json();
 };
 
 const _fetchLineStops = async () => {
   const response = await fetch("/api/line_stops");
-  if (response.ok) {
+  if (!response.ok) {
     throw response;
   }
   const { data } = await response.json();
   return data;
 };
 
-export const fetchPlaces = withErrorHandlingDisplayGlobalError(
+export const fetchPlaces = withErrorHandlingDisplayError(
   _fetchPlaces,
   `Failed to load places data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
-export const fetchLineStops = withErrorHandlingDisplayGlobalError(
+export const fetchLineStops = withErrorHandlingDisplayError(
   _fetchLineStops,
   `Failed to load line stops data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
@@ -54,9 +59,10 @@ interface AlertsResponse {
 }
 
 export const _fetchAlerts = async (): Promise<AlertsResponse> => {
-  const response = await fetch("/api/alerts");
+  let response = await fetch("/api/alerts");
+  console.log(response);
   if (response.status === 200) {
-    return await response.json();
+    return response.json();
   } else {
     throw response;
   }
@@ -65,18 +71,30 @@ export const _fetchAlerts = async (): Promise<AlertsResponse> => {
 export const _fetchActiveAndFutureAlerts =
   async (): Promise<AlertsResponse> => {
     const response = await fetch("/api/alerts/non_access_alerts");
-    return await response.json();
+    return response.json();
   };
 
-export const fetchActiveAndFutureAlerts = withErrorHandlingDisplayGlobalError(
+export const fetchActiveAndFutureAlerts = withErrorHandlingDisplayError(
   _fetchActiveAndFutureAlerts,
   `Failed to load active alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
-export const fetchAlerts = withErrorHandlingDisplayGlobalError(
-  _fetchAlerts,
-`Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-);
+// TODO: handle fetching alerts auth errors better
+export const fetchAlerts = withErrorHandlingSilent(_fetchAlerts, (error) => {
+  // Re-throw 403 errors to be handled by existing logic
+  if (error instanceof Response && error.status === 403) {
+    throw error;
+  }
+  // For other errors, show error modal
+  showErrorModal(error, {
+    customMessage: "Failed to load alerts. Please refresh the page.",
+  });
+});
+
+// export const fetchAlerts = withErrorHandlingDisplayError(
+//   _fetchAlerts,
+// `Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+// );
 
 ///////////
 // Screens
@@ -90,7 +108,7 @@ export interface ExistingScreensAtPlace {
   pending_screens: { [screen_id: string]: ScreenConfiguration };
 }
 
-export const fetchExistingScreens = async (
+const _fetchExistingScreens = async (
   appId: string,
   placeIds: string[],
 ): Promise<{ places_and_screens: ExistingScreens; version_id: string }> => {
@@ -98,9 +116,17 @@ export const fetchExistingScreens = async (
     `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`,
   );
 
-  return await response.json();
+  if (!response.ok) {
+    throw response;
+  }
+
+  return response.json();
 };
 
+export const fetchExistingScreens = withErrorHandlingDisplayError(
+  _fetchExistingScreens,
+  `Failed to load existing screens. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+);
 export interface PendingAndLiveScreensResponse {
   places_and_screens: PendingAndLiveScreens;
   etag: string;
@@ -123,7 +149,7 @@ const _fetchExistingScreensAtPlacesWithPendingScreens =
     const response = await fetch(
       "/config/existing-screens-at-places-with-pending-screens",
     );
-    if (response.ok) {
+    if (!response.ok) {
       throw response;
     }
     const etag = response.headers.get("etag") as string;
@@ -135,7 +161,7 @@ const _fetchExistingScreensAtPlacesWithPendingScreens =
   };
 
 export const fetchExistingScreensAtPlacesWithPendingScreens =
-  withErrorHandlingDisplayGlobalError(
+  withErrorHandlingDisplayError(
     _fetchExistingScreensAtPlacesWithPendingScreens,
     `Failed to load pending screens data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
   );
@@ -145,7 +171,7 @@ export const putPendingScreens = async (
   screenType: "gl_eink_v2" | null,
   version_id: string,
 ): Promise<Response> => {
-  return await fetch("/config/put", {
+  return fetch("/config/put", {
     ...getPostBodyAndHeaders({
       places_and_screens: placesAndScreens,
       screen_type: screenType,
@@ -257,12 +283,12 @@ const _getSuppressedPredictions = async () => {
   return res.json();
 };
 
-export const getSuppressedPredictions = withErrorHandlingDisplayGlobalError(
+export const getSuppressedPredictions = withErrorHandlingDisplayError(
   _getSuppressedPredictions,
   `Failed to load suppressed predictions. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
-export const createSuppressedPrediction = withErrorHandlingDisplayGlobalError(
+export const createSuppressedPrediction = withErrorHandlingDisplayError(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, {
       body: data,
@@ -271,7 +297,7 @@ export const createSuppressedPrediction = withErrorHandlingDisplayGlobalError(
   `Failed to create a prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
-export const deleteSuppressedPrediction = withErrorHandlingDisplayGlobalError(
+export const deleteSuppressedPrediction = withErrorHandlingDisplayError(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, {
       body: data,
@@ -280,7 +306,7 @@ export const deleteSuppressedPrediction = withErrorHandlingDisplayGlobalError(
   `Failed to delete the prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
-export const updateSuppressedPrediction = withErrorHandlingDisplayGlobalError(
+export const updateSuppressedPrediction = withErrorHandlingDisplayError(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, { body: data, method: "PUT" }),
   `Failed to update theprediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,

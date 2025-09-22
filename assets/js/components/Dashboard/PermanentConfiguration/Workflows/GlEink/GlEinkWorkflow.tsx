@@ -18,6 +18,7 @@ import {
 } from "Hooks/useScreenplayContext";
 import { putPendingScreens } from "Utils/api";
 import ErrorModal from "Components/ErrorModal";
+import { displayErrorModal } from "Utils/errorHandler";
 
 interface EditNavigationState {
   place_id: string;
@@ -169,7 +170,7 @@ const GlEinkWorkflow: ComponentType = () => {
       if (data.duplicate_screen_ids) {
         handleDuplicateIdsResponse(data.duplicate_screen_ids, fieldsWithErrors);
       } else {
-        handleVersionMismatchResponse();
+        handleVersionMismatch(response, 2000);
       }
     } else {
       setValidationErrorMessage(
@@ -197,10 +198,6 @@ const GlEinkWorkflow: ComponentType = () => {
     () => places.filter((place) => selectedPlaces.has(place.id)),
     [places, selectedPlaces],
   );
-
-  const handleVersionMismatchResponse = () => {
-    setShowErrorModal(true);
-  };
 
   let backButtonLabel;
   let forwardButtonLabel;
@@ -271,43 +268,24 @@ const GlEinkWorkflow: ComponentType = () => {
           );
         }
       };
-      layout = (
-        <>
-          <ErrorModal
-            title="Someone else is configuring these screens"
-            showErrorModal={showErrorModal}
-            onHide={() => setShowErrorModal(false)}
-            errorMessage="In order not to overwrite each others work, please refresh your
-              browser and fill-out the form again."
-            confirmButtonLabel="Refresh now"
-            onConfirm={() => window.location.reload()}
-          />
-          <ConfigureScreensWorkflowPage
-            selectedPlaces={filteredPlaces}
-            setPlacesAndScreensToUpdate={setPlacesAndScreensToUpdate}
-            setConfigVersion={setConfigVersion}
-            isEditing={isEditing}
-          />
-          {validationErrorMessage !== "" && (
-            <div className="config-validation-alert-container">
-              <Alert
-                show={showValidationAlert}
-                variant="primary"
-                onClose={() => setShowValidationAlert(false)}
-                dismissible
-                className="config-validation-alert"
-              >
-                <ExclamationCircleFill className="config-validation-alert__icon" />
-                <div className="config-validation-alert__text">
-                  {validationErrorMessage}
-                </div>
-              </Alert>
-            </div>
-          )}
-        </>
-      );
-      break;
   }
+
+  /**
+   * Handles version mismatch errors with automatic refresh
+   * @param error - The error (usually version mismatch)
+   * @param delay - Delay before auto-refresh in milliseconds (default: 2000)
+   */
+  const handleVersionMismatch = (error: Response | Error, delay = 2000) => {
+    displayErrorModal(error, {
+      customTitle: "Someone else is configuring these screens",
+      customMessage:
+        "In order not to overwrite each others work, please refresh your browser and fill-out the form again.",
+      onError: () => {
+        // Auto-refresh after showing the error
+        setTimeout(() => window.location.reload(), delay);
+      },
+    });
+  };
 
   return (
     <>

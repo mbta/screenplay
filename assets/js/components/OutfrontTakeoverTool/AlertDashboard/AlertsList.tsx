@@ -6,7 +6,7 @@ import { NoSymbolIcon } from "@heroicons/react/20/solid";
 import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
 import { BASE_URL } from "Constants/constants";
-import { withErrorHandlingDisplayGlobalError } from "Utils/errorHandler";
+import { withErrorHandlingDisplayError } from "Utils/errorHandler";
 
 interface AlertsListProps {
   startEditWizard: (data: AlertData, step: number) => void;
@@ -19,7 +19,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [pastAlertsData, setPastAlertsData] = useState([]);
   const [lastChangeTime, setLastChangeTime] = useState(Date.now());
 
-  const fetchActiveAlerts = withErrorHandlingDisplayGlobalError(async () => {
+  const fetchActiveAlerts = withErrorHandlingDisplayError(async () => {
     const response = await fetch(`${BASE_URL}/active_alerts`);
     if (!response.ok) {
       throw response;
@@ -27,7 +27,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
     return response.json();
   }, "Failed to load active alerts. Please refresh the page.");
 
-  const fetchPastAlerts = withErrorHandlingDisplayGlobalError(async () => {
+  const fetchPastAlerts = withErrorHandlingDisplayError(async () => {
     const response = await fetch(`${BASE_URL}/past_alerts`);
     if (!response.ok) {
       throw response;

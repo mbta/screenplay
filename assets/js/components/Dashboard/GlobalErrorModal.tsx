@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import {
-  subscribeToGlobalError,
-  getGlobalError,
-  clearGlobalError,
-  GlobalErrorState,
+  clearErrorState,
+  getErrorState,
+  subscribeToError,
+  ErrorState,
 } from "Utils/errorHandler";
 
 interface GlobalErrorModalProps {
@@ -12,32 +12,28 @@ interface GlobalErrorModalProps {
 }
 
 const GlobalErrorModal: React.FC<GlobalErrorModalProps> = ({ className }) => {
-  const [errorState, setErrorState] = useState<GlobalErrorState | null>(null);
-
+  const [errorState, setErrorState] = useState<ErrorState | null>(null);
+  const subscribe = subscribeToError((error) => {
+    setErrorState(error);
+  });
   useEffect(() => {
-    // Subscribe to global error state changes
-    const unsubscribe = subscribeToGlobalError((error) => {
-      setErrorState(error);
-    });
-
     // Set initial state
-    setErrorState(getGlobalError());
-
-    return unsubscribe;
+    setErrorState(getErrorState());
+    return subscribe;
   }, []);
 
   const handleDismiss = () => {
     if (errorState?.onDismiss) {
       errorState.onDismiss();
     }
-    clearGlobalError();
+    clearErrorState();
   };
 
   const handleRetry = () => {
     if (errorState?.onRetry) {
       errorState.onRetry();
     }
-    clearGlobalError();
+    clearErrorState();
   };
 
   if (!errorState?.show) {
