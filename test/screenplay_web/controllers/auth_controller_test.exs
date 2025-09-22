@@ -30,7 +30,7 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
         conn
         |> init_test_session(%{})
         |> assign(:ueberauth_auth, auth)
-        |> Plug.Conn.put_session(:previous_path, "/test")
+        |> Plug.Conn.put_session(:previous_path_from_auth, "/test")
         |> get(~p"/auth/keycloak/callback")
 
       assert redirected_to(conn) == "/test"
