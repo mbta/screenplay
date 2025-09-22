@@ -9,24 +9,51 @@ import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
 import { withErrorHandlingDisplayGlobalError } from "./errorHandler";
 
-export const fetchPlaces = async (): Promise<Place[]> => {
+const API_ENDPOINT_PREDICTION_SUPPRESSION = "/api/suppressed-predictions";
+const API_ENDPOINT_PA_MESSAGES = "/api/pa-messages";
+
+const REFRESH_PAGE_ERROR_MESSAGE = "Please refresh the page and contact engineering if the issue persists."
+
+///////////////////
+// Location Fetching
+//////////////////
+const _fetchPlaces = async (): Promise<Place[]> => {
   const response = await fetch("/api/dashboard");
+  if (response.ok) {
+    throw response;
+  }
   return await response.json();
 };
 
-export const fetchLineStops = async () => {
+const _fetchLineStops = async () => {
   const response = await fetch("/api/line_stops");
+  if (response.ok) {
+    throw response;
+  }
   const { data } = await response.json();
   return data;
 };
 
+export const fetchPlaces = withErrorHandlingDisplayGlobalError(
+  _fetchPlaces,
+  `Failed to load places data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+);
+
+export const fetchLineStops = withErrorHandlingDisplayGlobalError(
+  _fetchLineStops,
+  `Failed to load line stops data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+);
+
+///////////
+// Alerts
+///////////
 interface AlertsResponse {
   all_alert_ids: string[];
   alerts: Alert[];
   screens_by_alert: ScreensByAlert;
 }
 
-export const fetchAlerts = async (): Promise<AlertsResponse> => {
+export const _fetchAlerts = async (): Promise<AlertsResponse> => {
   const response = await fetch("/api/alerts");
   if (response.status === 200) {
     return await response.json();
@@ -35,11 +62,25 @@ export const fetchAlerts = async (): Promise<AlertsResponse> => {
   }
 };
 
-export const fetchActiveAndFutureAlerts = async (): Promise<AlertsResponse> => {
-  const response = await fetch("/api/alerts/non_access_alerts");
-  return await response.json();
-};
+export const _fetchActiveAndFutureAlerts =
+  async (): Promise<AlertsResponse> => {
+    const response = await fetch("/api/alerts/non_access_alerts");
+    return await response.json();
+  };
 
+export const fetchActiveAndFutureAlerts = withErrorHandlingDisplayGlobalError(
+  _fetchActiveAndFutureAlerts,
+  `Failed to load active alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+);
+
+export const fetchAlerts = withErrorHandlingDisplayGlobalError(
+  _fetchAlerts,
+`Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+);
+
+///////////
+// Screens
+///////////
 export interface ExistingScreens {
   [place_id: string]: ExistingScreensAtPlace;
 }
@@ -96,7 +137,7 @@ const _fetchExistingScreensAtPlacesWithPendingScreens =
 export const fetchExistingScreensAtPlacesWithPendingScreens =
   withErrorHandlingDisplayGlobalError(
     _fetchExistingScreensAtPlacesWithPendingScreens,
-    "Failed to load pending screens data. Please refresh the page.",
+    `Failed to load pending screens data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
   );
 
 export const putPendingScreens = async (
@@ -145,7 +186,7 @@ export const publishScreensForPlace = async (
 export const createNewPaMessage = async (
   message: NewPaMessageBody,
 ): Promise<{ status: number; errors: any }> => {
-  const response = await fetch("/api/pa-messages", {
+  const response = await fetch(API_ENDPOINT_PA_MESSAGES, {
     ...getPostBodyAndHeaders(message),
     credentials: "include",
   });
@@ -160,7 +201,7 @@ export const updateExistingPaMessage = async (
   id: string | number,
   updates: UpdatePaMessageBody,
 ): Promise<{ status: number; body: any }> => {
-  const response = await fetch(`/api/pa-messages/${id}`, {
+  const response = await fetch(`${API_ENDPOINT_PA_MESSAGES}${id}`, {
     method: "PUT",
     credentials: "include",
     headers: {
@@ -209,7 +250,7 @@ const fetchOk = async (
 };
 
 const _getSuppressedPredictions = async () => {
-  const res = await fetch("/api/suppressed-predictions");
+  const res = await fetch(API_ENDPOINT_PREDICTION_SUPPRESSION);
   if (!res.ok) {
     throw res;
   }
@@ -218,28 +259,31 @@ const _getSuppressedPredictions = async () => {
 
 export const getSuppressedPredictions = withErrorHandlingDisplayGlobalError(
   _getSuppressedPredictions,
-  "Failed to load suppressed predictions. Please refresh the page.",
+  `Failed to load suppressed predictions. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
 export const createSuppressedPrediction = withErrorHandlingDisplayGlobalError(
   (data: SuppressedPrediction) =>
-    fetchOk("/api/suppressed-predictions", { body: data, method: "POST" }),
-  "Failed to create a prediction supression. Please try again.",
+    fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, {
+      body: data,
+      method: "POST",
+    }),
+  `Failed to create a prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
 export const deleteSuppressedPrediction = withErrorHandlingDisplayGlobalError(
   (data: SuppressedPrediction) =>
-    fetchOk("/api/suppressed-predictions", {
+    fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, {
       body: data,
       method: "DELETE",
     }),
-  "Failed to delete the prediction supression. Please try again.",
+  `Failed to delete the prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
 export const updateSuppressedPrediction = withErrorHandlingDisplayGlobalError(
   (data: SuppressedPrediction) =>
-    fetchOk("/api/suppressed-predictions", { body: data, method: "PUT" }),
-  "Failed to update the prediction supression. Please try again.",
+    fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, { body: data, method: "PUT" }),
+  `Failed to update theprediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
 const getPostBodyAndHeaders = (

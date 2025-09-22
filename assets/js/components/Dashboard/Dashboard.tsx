@@ -11,6 +11,7 @@ import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
 import ErrorModal from "Components/ErrorModal";
+import { handleSessionExpiration, isSessionExpirationError } from "Utils/ses";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -28,49 +29,46 @@ const Dashboard: ComponentType = () => {
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    fetchAlerts().then(
-      ({
+  const updateAlertsData = async () => {
+    const alertsData = await fetchAlerts();
+    if (alertsData) {
+      const {
         all_alert_ids: allAPIalertIds,
         alerts: newAlerts,
         screens_by_alert: screensByAlertMap,
-      }) => {
-        findAndSetBannerAlert(alerts, newAlerts);
-        setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
-      },
-    );
+      } = alertsData;
+      findAndSetBannerAlert(alerts, newAlerts);
+      setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
+    }
+  };
+  useEffect(() => {
+    const loadInitialData = async () => {
+      await updateAlertsData();
+      // Load places and line stops with error handling
 
-    fetchPlaces().then(setPlaces);
+      const placesData = await fetchPlaces();
+      if (placesData) {
+        setPlaces(placesData);
+      }
 
-    fetchLineStops().then(setLineStops);
+      const lineStopsData = await fetchLineStops();
+      if (lineStopsData) {
+        setLineStops(lineStopsData);
+      }
+    };
+
+    loadInitialData();
 
     // Tests rely on this effect **not** having any dependencies listed.
     // This code pre-dates the addition of the react-hooks eslint rules.
     // - sloane 2024-08-20
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Fetch alerts every 4 seconds.
+  // Fetch alerts every 4 seconds. 
+  // Unlike line and stop data dispalyed on dashboard, alerts are subject to frequent updates
   useInterval(
-    () => {
-      fetchAlerts()
-        .then(
-          ({
-            all_alert_ids: allAPIalertIds,
-            alerts: newAlerts,
-            screens_by_alert: screensByAlertMap,
-          }) => {
-            findAndSetBannerAlert(alerts, newAlerts);
-            setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
-          },
-        )
-        .catch((response: Response) => {
-          if (response.status === 403) {
-            setIsAlertsIntervalRunning(false);
-            setShowModal(true);
-          } else {
-            throw response;
-          }
-        });
+    async () => {
+      await updateAlertsData();
     },
     isAlertsIntervalRunning ? 4000 : null,
   );

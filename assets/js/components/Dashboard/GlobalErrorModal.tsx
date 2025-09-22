@@ -54,7 +54,7 @@ const GlobalErrorModal: React.FC<GlobalErrorModalProps> = ({ className }) => {
       <Modal.Header closeButton closeVariant="white">
         {errorState.title && <Modal.Title>{errorState.title}</Modal.Title>}
       </Modal.Header>
-      <Modal.Body>{errorState.message}</Modal.Body>
+      <Modal.Body>{errorState.messageToDisplay}</Modal.Body>
       <Modal.Footer>
         <Button onClick={handleDismiss} className="error-modal__cancel-button">
           Cancel

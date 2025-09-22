@@ -17,7 +17,8 @@ export interface ErrorHandlingOptions {
 
 export interface GlobalErrorState {
   show: boolean;
-  message: string;
+  messageToDisplay: string;
+  errorMessages?: string[];
   title: string;
   onRetry?: () => void;
   onDismiss: () => void;
@@ -93,10 +94,10 @@ const getErrorMessage = (
 
 const getErrorTitle = (
   error: Error | Response,
-  isMultiple: boolean,
+  isMultiple: string[],
 ): string => {
-  if (isMultiple) {
-    return "Multiple Errors Occurred";
+  if (isMultiple.length > 1) {
+    return `${isMultiple.length} errors occurred`;
   }
 
   if (error instanceof Response) {
@@ -129,19 +130,22 @@ export const showGlobalError = (
   if (onError) {
     onError(error);
   }
-
-  const isMultiple = isMultipleFailure();
   const message = getErrorMessage(error, customMessage);
-  const title = getErrorTitle(error, isMultiple);
-
+  let errorMessages = getGlobalError()?.errorMessages || [];
+  errorMessages.push(message)  
+  const isMultiple = isMultipleFailure();
+  const title = getErrorTitle(error, isMultiple ? errorMessages : []);
+   
   setGlobalError({
     show: true,
-    message: isMultiple
-      ? `${message} (${errorCount} errors occurred)`
+    errorMessages: errorMessages,
+    messageToDisplay: isMultiple
+      ? `${errorMessages.join("\n")}`
       : message,
     title,
     onDismiss: clearGlobalError,
   });
+  console.log(getGlobalError())
 };
 
 export const withErrorHandling = <T extends any[], R>(
