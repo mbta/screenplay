@@ -131,7 +131,7 @@ export const displayErrorModal = (
     onError(error);
   }
   const message = getErrorMessage(error, customMessage);
-  let errorMessages = getErrorState()?.errorMessages || [];
+  const errorMessages = getErrorState()?.errorMessages || [];
   errorMessages.push(message);
   const isMultiple = isMultipleFailure();
   const title =
@@ -160,7 +160,6 @@ export const withErrorHandling = <T extends any[], R>(
       retryDelay = RETRY_DELAY_DEFAULT_MS,
     } = options;
 
-    let lastError: Error | Response | null = null;
     let attempts = 0;
 
     while (attempts <= (retry ? retryAttempts : 0)) {
@@ -168,7 +167,6 @@ export const withErrorHandling = <T extends any[], R>(
         const result = await asyncFn(...args);
         return result;
       } catch (error) {
-        lastError = error as Error | Response;
         attempts++;
 
         if (logError) {

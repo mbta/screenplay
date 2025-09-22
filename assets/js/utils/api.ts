@@ -59,7 +59,7 @@ interface AlertsResponse {
 }
 
 export const _fetchAlerts = async (): Promise<AlertsResponse> => {
-  let response = await fetch("/api/alerts");
+  const response = await fetch("/api/alerts");
   console.log(response);
   if (response.status === 200) {
     return response.json();

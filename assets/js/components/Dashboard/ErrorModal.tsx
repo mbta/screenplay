@@ -11,16 +11,17 @@ interface ErrorModalProps {
   className?: string;
 }
 
-const ErrorModal: React.FC<ErrorModalProps> = ({ className }) => {
+const ErrorModal: React.FC<ErrorModalProps> = () => {
   const [errorState, setErrorState] = useState<ErrorState | null>(null);
   const subscribe = subscribeToError((error) => {
     setErrorState(error);
   });
+
   useEffect(() => {
     // Set initial state
     setErrorState(getErrorState());
     return subscribe;
-  }, []);
+  }, [errorState, subscribe]);
 
   const handleDismiss = () => {
     if (errorState?.onDismiss) {

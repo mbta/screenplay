@@ -17,7 +17,6 @@ import {
   useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { putPendingScreens } from "Utils/api";
-import ErrorModal from "Components/ErrorModal";
 import { displayErrorModal } from "Utils/errorHandler";
 
 interface EditNavigationState {
@@ -51,7 +50,6 @@ const GlEinkWorkflow: ComponentType = () => {
   } = useConfigValidationState();
   const [validationErrorMessage, setValidationErrorMessage] =
     useState<string>("");
-  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
 
   useLayoutEffect(() => {
     if (location.state) {
