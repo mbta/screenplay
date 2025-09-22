@@ -29,7 +29,7 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
   useEffect(() => {
     fetchActiveAndFutureAlerts().then((data) => {
       if (data) {
-      setAlerts(data.alerts);
+        setAlerts(data.alerts);
       }
     });
   }, []);

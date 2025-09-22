@@ -77,7 +77,7 @@ const isMultipleFailure = (): boolean => {
  * Generates a user friendly error message based on the error type.
  * @returns the error message to display
  */
-const getErrorMessage = (  error: Error | Response): string => {
+const getErrorMessage = (error: Error | Response): string => {
   if (error instanceof Response) {
     if (error.status >= 500) {
       return "Server error. Please try again or contact engineering if the problem persists.";
@@ -124,9 +124,9 @@ const getErrorTitle = (
   return "Error";
 };
 
-/** 
- * Surfaces the error to the user through the error modal. 
-*/
+/**
+ * Surfaces the error to the user through the error modal.
+ */
 export const displayErrorModal = (
   error: Error | Response,
   options: ErrorHandlingOptions = {},
@@ -268,7 +268,7 @@ export const withErrorHandlingRetry = <T extends any[], R>(
 };
 
 /**
- * Checks if an error is a session expiration error. 403 errors must be session expiration, 
+ * Checks if an error is a session expiration error. 403 errors must be session expiration,
  * b/c a user must be logged in with proper permissions to access Screenplay initially.
  */
 export const isSessionExpirationError = (error: any): boolean => {
