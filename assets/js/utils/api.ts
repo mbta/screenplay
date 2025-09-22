@@ -7,11 +7,7 @@ import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfigur
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
-import {
-  withErrorHandlingDisplayError,
-  withErrorHandlingSilent,
-  showErrorModal,
-} from "./errorHandler";
+import { withErrorHandlingDisplayError } from "./errorHandler";
 
 const API_ENDPOINT_PREDICTION_SUPPRESSION = "/api/suppressed-predictions";
 const API_ENDPOINT_PA_MESSAGES = "/api/pa-messages";
@@ -32,7 +28,7 @@ const _fetchPlaces = async (): Promise<Place[]> => {
 
 const _fetchLineStops = async () => {
   const response = await fetch("/api/line_stops");
-  if (!response.ok) {
+  if (response.ok) {
     throw response;
   }
   const { data } = await response.json();
@@ -60,7 +56,6 @@ interface AlertsResponse {
 
 export const _fetchAlerts = async (): Promise<AlertsResponse> => {
   const response = await fetch("/api/alerts");
-  console.log(response);
   if (response.status === 200) {
     return response.json();
   } else {
@@ -79,22 +74,10 @@ export const fetchActiveAndFutureAlerts = withErrorHandlingDisplayError(
   `Failed to load active alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 );
 
-// TODO: handle fetching alerts auth errors better
-export const fetchAlerts = withErrorHandlingSilent(_fetchAlerts, (error) => {
-  // Re-throw 403 errors to be handled by existing logic
-  if (error instanceof Response && error.status === 403) {
-    throw error;
-  }
-  // For other errors, show error modal
-  showErrorModal(error, {
-    customMessage: "Failed to load alerts. Please refresh the page.",
-  });
-});
-
-// export const fetchAlerts = withErrorHandlingDisplayError(
-//   _fetchAlerts,
-// `Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-// );
+export const fetchAlerts = withErrorHandlingDisplayError(
+  _fetchAlerts,
+  `Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+);
 
 ///////////
 // Screens

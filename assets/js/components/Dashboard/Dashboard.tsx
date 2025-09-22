@@ -10,10 +10,7 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
-import {
-  handleSessionExpiration,
-  isSessionExpirationError,
-} from "Utils/errorHandler";
+import { ErrorState, subscribeToError } from "Utils/errorHandler";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -29,6 +26,10 @@ const Dashboard: ComponentType = () => {
   } = useScreenplayState();
   const [bannerDone, setBannerDone] = useState(false);
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
+  const [errorState, setErrorState] = useState<ErrorState | null>(null);
+  const subscribe = subscribeToError((error) => {
+    setErrorState(error);
+  });
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -52,6 +53,11 @@ const Dashboard: ComponentType = () => {
     // This code pre-dates the addition of the react-hooks eslint rules.
     // - sloane 2024-08-20
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    // If there are any active errors, stop refreshing alerts
+    setIsAlertsIntervalRunning(!errorState?.show);
+  }, [errorState, subscribe]);
 
   // Fetch alerts every 4 seconds.
   // Unlike line and stop data dispalyed on dashboard, alerts are subject to frequent updates
@@ -104,22 +110,14 @@ const Dashboard: ComponentType = () => {
 
   const updateAlertsData = async () => {
     const alertsData = await fetchAlerts();
-    try {
-      if (alertsData) {
-        const {
-          all_alert_ids: allAPIalertIds,
-          alerts: newAlerts,
-          screens_by_alert: screensByAlertMap,
-        } = alertsData;
-        findAndSetBannerAlert(alerts, newAlerts);
-        setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
-      }
-    } catch (error) {
-      // fetchAlerts might throw 403 errors that we want to handle specially
-      if (isSessionExpirationError(error)) {
-        setIsAlertsIntervalRunning(false);
-        handleSessionExpiration(error as Error | Response);
-      }
+    if (alertsData) {
+      const {
+        all_alert_ids: allAPIalertIds,
+        alerts: newAlerts,
+        screens_by_alert: screensByAlertMap,
+      } = alertsData;
+      findAndSetBannerAlert(alerts, newAlerts);
+      setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
     }
   };
 
