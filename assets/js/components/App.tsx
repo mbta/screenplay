@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import GlEinkWorkflow from "Components/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
+import ErrorModal from "./Dashboard/ErrorModal";
 
 const OutfrontTakeoverTool = React.lazy(
   () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool"),
@@ -69,6 +70,7 @@ const App = (): ReactElement<HTMLDivElement> => {
   return (
     <BrowserRouter>
       <AppRoutes />
+      <ErrorModal />
     </BrowserRouter>
   );
 };
