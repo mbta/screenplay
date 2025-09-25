@@ -7,7 +7,7 @@ import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfigur
 import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
-import { withErrorHandlingDisplayError } from "./errorHandler";
+import { withErrorHandling } from "./errorHandler";
 
 const API_ENDPOINT_PREDICTION_SUPPRESSION = "/api/suppressed-predictions";
 const API_ENDPOINT_PA_MESSAGES = "/api/pa-messages";
@@ -28,22 +28,20 @@ const _fetchPlaces = async (): Promise<Place[]> => {
 
 const _fetchLineStops = async () => {
   const response = await fetch("/api/line_stops");
-  if (response.ok) {
+  if (!response.ok) {
     throw response;
   }
   const { data } = await response.json();
   return data;
 };
 
-export const fetchPlaces = withErrorHandlingDisplayError(
-  _fetchPlaces,
-  `Failed to load places data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-);
+export const fetchPlaces = withErrorHandling(_fetchPlaces, {
+  customMessage: `Failed to load places data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+});
 
-export const fetchLineStops = withErrorHandlingDisplayError(
-  _fetchLineStops,
-  `Failed to load line stops data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-);
+export const fetchLineStops = withErrorHandling(_fetchLineStops, {
+  customMessage: `Failed to load line stops data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+});
 
 ///////////
 // Alerts
@@ -69,15 +67,16 @@ export const _fetchActiveAndFutureAlerts =
     return response.json();
   };
 
-export const fetchActiveAndFutureAlerts = withErrorHandlingDisplayError(
+export const fetchActiveAndFutureAlerts = withErrorHandling(
   _fetchActiveAndFutureAlerts,
-  `Failed to load active alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  {
+    customMessage: `Failed to load active alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  },
 );
 
-export const fetchAlerts = withErrorHandlingDisplayError(
-  _fetchAlerts,
-  `Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-);
+export const fetchAlerts = withErrorHandling(_fetchAlerts, {
+  customMessage: `Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+});
 
 ///////////
 // Screens
@@ -106,10 +105,9 @@ const _fetchExistingScreens = async (
   return response.json();
 };
 
-export const fetchExistingScreens = withErrorHandlingDisplayError(
-  _fetchExistingScreens,
-  `Failed to load existing screens. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-);
+export const fetchExistingScreens = withErrorHandling(_fetchExistingScreens, {
+  customMessage: `Failed to load existing screens. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+});
 export interface PendingAndLiveScreensResponse {
   places_and_screens: PendingAndLiveScreens;
   etag: string;
@@ -143,11 +141,12 @@ const _fetchExistingScreensAtPlacesWithPendingScreens =
     return { ...data, etag };
   };
 
-export const fetchExistingScreensAtPlacesWithPendingScreens =
-  withErrorHandlingDisplayError(
-    _fetchExistingScreensAtPlacesWithPendingScreens,
-    `Failed to load pending screens data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-  );
+export const fetchExistingScreensAtPlacesWithPendingScreens = withErrorHandling(
+  _fetchExistingScreensAtPlacesWithPendingScreens,
+  {
+    customMessage: `Failed to load pending screens data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  },
+);
 
 export const putPendingScreens = async (
   placesAndScreens: PlaceIdsAndNewScreens,
@@ -266,33 +265,41 @@ const _getSuppressedPredictions = async () => {
   return res.json();
 };
 
-export const getSuppressedPredictions = withErrorHandlingDisplayError(
+export const getSuppressedPredictions = withErrorHandling(
   _getSuppressedPredictions,
-  `Failed to load suppressed predictions. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  {
+    customMessage: `Failed to load suppressed predictions. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  },
 );
 
-export const createSuppressedPrediction = withErrorHandlingDisplayError(
+export const createSuppressedPrediction = withErrorHandling(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, {
       body: data,
       method: "POST",
     }),
-  `Failed to create a prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  {
+    customMessage: `Failed to create a prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  },
 );
 
-export const deleteSuppressedPrediction = withErrorHandlingDisplayError(
+export const deleteSuppressedPrediction = withErrorHandling(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, {
       body: data,
       method: "DELETE",
     }),
-  `Failed to delete the prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  {
+    customMessage: `Failed to delete the prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  },
 );
 
-export const updateSuppressedPrediction = withErrorHandlingDisplayError(
+export const updateSuppressedPrediction = withErrorHandling(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, { body: data, method: "PUT" }),
-  `Failed to update theprediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  {
+    customMessage: `Failed to update theprediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+  },
 );
 
 const getPostBodyAndHeaders = (

@@ -25,13 +25,19 @@ beforeAll(() => {
   document.body.appendChild(app);
 });
 
+let originalConsoleError: any;
 let originalFetch: any;
 
 beforeEach(() => {
+  // Suppress console.error during tests to reduce noise
+  originalConsoleError = console.error;
+  console.error = jest.fn();
+
   originalFetch = global.fetch;
   global.fetch = jest.fn(async (url) => {
     if (url === "/api/alerts") {
       return Promise.resolve({
+        ok: true,
         status: 200,
         json: () =>
           Promise.resolve({
@@ -41,11 +47,23 @@ beforeEach(() => {
           }),
       });
     } else if (url === "/api/dashboard") {
-      return Promise.resolve({ json: () => Promise.resolve(places) });
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(places),
+      });
     } else if (url === "/api/line_stops") {
-      return Promise.resolve({ json: () => Promise.resolve({ data: [] }) });
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ data: [] }),
+      });
     } else if (url === "/api/suppressed-predictions") {
-      return Promise.resolve({ json: () => Promise.resolve([]) });
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve([]),
+      });
     } else {
       throw "Missing mock";
     }
@@ -54,4 +72,5 @@ beforeEach(() => {
 
 afterEach(() => {
   global.fetch = originalFetch;
+  console.error = originalConsoleError;
 });

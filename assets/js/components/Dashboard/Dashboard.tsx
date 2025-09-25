@@ -10,7 +10,11 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
-import { ErrorState, subscribeToError } from "Utils/errorHandler";
+import {
+  ErrorState,
+  subscribeToErrorState,
+  unsubscribeFromErrorState,
+} from "Utils/errorHandler";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -27,8 +31,18 @@ const Dashboard: ComponentType = () => {
   const [bannerDone, setBannerDone] = useState(false);
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
   const [errorState, setErrorState] = useState<ErrorState | null>(null);
-  const subscribe = subscribeToError((error) => {
-    setErrorState(error);
+
+  useEffect(() => {
+    // On render, set Error State to initial null value and subscribe to receive any updates
+    const errorListener = (errorState: ErrorState | null) => {
+      setErrorState(errorState);
+    };
+    subscribeToErrorState(errorListener);
+
+    // Cleanup subscription on unmount
+    return () => {
+      unsubscribeFromErrorState(errorListener);
+    };
   });
 
   useEffect(() => {
@@ -57,7 +71,7 @@ const Dashboard: ComponentType = () => {
   useEffect(() => {
     // If there are any active errors, stop refreshing alerts
     setIsAlertsIntervalRunning(!errorState?.show);
-  }, [errorState, subscribe]);
+  }, [errorState]);
 
   // Fetch alerts every 4 seconds.
   // Unlike line and stop data dispalyed on dashboard, alerts are subject to frequent updates

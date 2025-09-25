@@ -6,7 +6,7 @@ import { NoSymbolIcon } from "@heroicons/react/20/solid";
 import { PastAlertsList } from "./PastAlertsList";
 import ReactTooltip from "react-tooltip";
 import { BASE_URL } from "Constants/constants";
-import { withErrorHandlingDisplayError } from "Utils/errorHandler";
+import { withErrorHandling } from "Utils/errorHandler";
 
 interface AlertsListProps {
   startEditWizard: (data: AlertData, step: number) => void;
@@ -19,21 +19,27 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [pastAlertsData, setPastAlertsData] = useState([]);
   const [lastChangeTime, setLastChangeTime] = useState(Date.now());
 
-  const fetchActiveAlerts = withErrorHandlingDisplayError(async () => {
-    const response = await fetch(`${BASE_URL}/active_alerts`);
-    if (!response.ok) {
-      throw response;
-    }
-    return response.json();
-  }, "Failed to load active alerts. Please refresh the page.");
+  const fetchActiveAlerts = withErrorHandling(
+    async () => {
+      const response = await fetch(`${BASE_URL}/active_alerts`);
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    },
+    { customMessage: "Failed to load active alerts. Please refresh the page." },
+  );
 
-  const fetchPastAlerts = withErrorHandlingDisplayError(async () => {
-    const response = await fetch(`${BASE_URL}/past_alerts`);
-    if (!response.ok) {
-      throw response;
-    }
-    return response.json();
-  }, "Failed to load past alerts. Please refresh the page.");
+  const fetchPastAlerts = withErrorHandling(
+    async () => {
+      const response = await fetch(`${BASE_URL}/past_alerts`);
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json();
+    },
+    { customMessage: "Failed to load past alerts. Please refresh the page." },
+  );
 
   useEffect(() => {
     const loadActiveAlerts = async () => {

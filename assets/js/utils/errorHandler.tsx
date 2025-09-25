@@ -26,14 +26,6 @@ export interface ErrorState {
   onDismiss: () => void;
 }
 
-let errorState: ErrorState | null = null;
-let errorListeners: ((error: ErrorState | null) => void)[] = [];
-let errorCount = 0;
-let lastErrorTime = 0;
-const ERROR_COOLDOWN_MS = 5000; // Don't show multiple errors within 5 seconds
-const RETRY_DELAY_DEFAULT_MS = 1000;
-const RETRY_ATTEMPTS_DEFAULT = 3;
-
 // Error state management: getting, setting, clearing.
 export const getErrorState = (): ErrorState | null => errorState;
 
@@ -46,18 +38,128 @@ export const clearErrorState = () => {
   setErrorState(null);
 };
 
+let errorState: ErrorState | null = null;
+let errorListeners: ((error: ErrorState | null) => void)[] = [];
+let errorCount = 0;
+let lastErrorTime = 0;
+
+// Retry attempt defaults
+const ERROR_COOLDOWN_MS = 5000; // Don't show multiple errors within 5 seconds
+const RETRY_DELAY_DEFAULT_MS = 1000;
+const RETRY_ATTEMPTS_DEFAULT = 3;
+
 /**
- * Subscribes to changes in the error state. Used by components that rely on these errors.
- * @param listener - Function to call when error state changes
- * @returns unsubscribe function to remove the listener
+ * Subscribes the error state by passing in a listener function to be called on state channges.
+ * Used by components that rely on the global error state.
  */
-export const subscribeToError = (
+export const subscribeToErrorState = (
   listener: (error: ErrorState | null) => void,
 ) => {
   errorListeners.push(listener);
   return () => {
     errorListeners = errorListeners.filter((l) => l !== listener);
   };
+};
+
+/**
+ * Unsubscribes to changes in the error state by passing in the subscribed listener function.
+ */
+export const unsubscribeFromErrorState = (
+  listener: (error: ErrorState | null) => void,
+) => {
+  errorListeners = errorListeners.filter((l) => l !== listener);
+};
+
+/**
+ * Wrapper for operations to handle errors and either retry, fail silently, or display an error modal.
+ * Defaults to displaying the error modal on first failure
+ * @param asyncFunction - the function that should be tried
+ * @param options - ErrorHandlingOptions
+ */
+export const withErrorHandling = <T extends any[], R>(
+  asyncFunction: (...args: T) => Promise<R>,
+  options: ErrorHandlingOptions = {},
+) => {
+  return async (...args: T): Promise<R | null> => {
+    const {
+      showErrorModal = true,
+      logError = true,
+      onError,
+      retry = false,
+      retryAttempts = RETRY_ATTEMPTS_DEFAULT,
+      retryDelay = RETRY_DELAY_DEFAULT_MS,
+    } = options;
+
+    let attempts = 0;
+
+    while (attempts <= (retry ? retryAttempts : 0)) {
+      try {
+        const result = await asyncFunction(...args);
+        return result;
+      } catch (error) {
+        attempts++;
+
+        if (logError) {
+          console.error(
+            `Error in ${asyncFunction.name} (attempt ${attempts}):`,
+            error,
+          );
+        }
+
+        // If there's no handling specified and it's a session expiration error,
+        // then we want to refresh the page after displaying the error
+        if (!onError && isSessionExpirationError(error)) {
+          options.onError = () => {
+            setTimeout(() => window.location.reload(), 2000);
+          };
+        }
+
+        // If this is the last attempt or we're not retrying, handle the error
+        if (attempts > (retry ? retryAttempts : 0)) {
+          if (showErrorModal) {
+            displayErrorModal(error as Error | Response, options);
+          }
+          return null;
+        } else {
+          // Wait before retrying
+          await new Promise((resolve) =>
+            setTimeout(resolve, retryDelay * attempts),
+          );
+        }
+      }
+    }
+
+    return null;
+  };
+};
+
+/**
+ * Surfaces the error to the user through the error modal.
+ */
+export const displayErrorModal = (
+  error: Error | Response,
+  options: ErrorHandlingOptions = {},
+) => {
+  const { customMessage, customTitle, onError } = options;
+
+  const message = customMessage ?? getErrorMessage(error);
+  const errorMessages = getErrorState()?.errorMessages || [];
+  errorMessages.push(message);
+  const isMultiple = isMultipleFailure();
+  const title =
+    customTitle ?? getErrorTitle(error, isMultiple ? errorMessages : []);
+
+  if (onError) {
+    onError(error);
+  }
+
+  setErrorState({
+    show: true,
+    errorMessages: errorMessages,
+    messageToDisplay: isMultiple ? `${errorMessages.join("\n")}` : message,
+    title,
+    onDismiss: clearErrorState,
+  });
 };
 
 /** Determines if multiple errors have happened during the cooldown window. */
@@ -122,149 +224,6 @@ const getErrorTitle = (
   }
 
   return "Error";
-};
-
-/**
- * Surfaces the error to the user through the error modal.
- */
-export const displayErrorModal = (
-  error: Error | Response,
-  options: ErrorHandlingOptions = {},
-) => {
-  const { customMessage, customTitle, logError = true, onError } = options;
-
-  if (logError) {
-    console.error(error);
-  }
-
-  if (onError) {
-    onError(error);
-  }
-  const message = customMessage ?? getErrorMessage(error);
-  const errorMessages = getErrorState()?.errorMessages || [];
-  errorMessages.push(message);
-  const isMultiple = isMultipleFailure();
-  const title =
-    customTitle ?? getErrorTitle(error, isMultiple ? errorMessages : []);
-
-  setErrorState({
-    show: true,
-    errorMessages: errorMessages,
-    messageToDisplay: isMultiple ? `${errorMessages.join("\n")}` : message,
-    title,
-    onDismiss: clearErrorState,
-  });
-};
-
-/**
- * Wrapper for operations that should display an error modal on their initial failure.
- * @param asyncFn - the function that should be tried
- * @param options - ErrorHandlingOptions
- */
-export const withErrorHandling = <T extends any[], R>(
-  asyncFn: (...args: T) => Promise<R>,
-  options: ErrorHandlingOptions = {},
-) => {
-  return async (...args: T): Promise<R | null> => {
-    const {
-      showErrorModal = true,
-      logError = true,
-      onError,
-      retry = false,
-      retryAttempts = RETRY_ATTEMPTS_DEFAULT,
-      retryDelay = RETRY_DELAY_DEFAULT_MS,
-    } = options;
-
-    let attempts = 0;
-
-    while (attempts <= (retry ? retryAttempts : 0)) {
-      try {
-        const result = await asyncFn(...args);
-        return result;
-      } catch (error) {
-        attempts++;
-
-        if (logError) {
-          console.error(
-            `Error in ${asyncFn.name} (attempt ${attempts}):`,
-            error,
-          );
-        }
-
-        // If there's no handling specified and it's a session expiration error,
-        // then we want to refresh the page after displaying the error
-        if (!onError && isSessionExpirationError(error)) {
-          options.onError = () => {
-            setTimeout(() => window.location.reload(), 2000);
-          };
-        }
-
-        // If this is the last attempt or we're not retrying, handle the error
-        if (attempts > (retry ? retryAttempts : 0)) {
-          if (showErrorModal) {
-            displayErrorModal(error as Error | Response, options);
-          }
-          return null;
-        }
-
-        // Wait before retrying
-        if (retry && attempts <= retryAttempts) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, retryDelay * attempts),
-          );
-        }
-      }
-    }
-
-    return null;
-  };
-};
-
-/**
- * Wrapper for operations that should display an error modal on their initial failure.
- */
-export const withErrorHandlingDisplayError = <T extends any[], R>(
-  asyncFn: (...args: T) => Promise<R>,
-  customMessage?: string,
-) => {
-  return withErrorHandling(asyncFn, {
-    showErrorModal: true,
-    logError: true,
-    customMessage,
-  });
-};
-
-/**
- * Wrapper for operations that should fail silently (no error modal)
- */
-export const withErrorHandlingSilent = <T extends any[], R>(
-  asyncFn: (...args: T) => Promise<R>,
-  onError?: (error: Error | Response) => void,
-) => {
-  return withErrorHandling(asyncFn, {
-    showErrorModal: false,
-    logError: true,
-    onError,
-  });
-};
-
-/**
- * Wrapper for operations that should retry on failure
- */
-export const withErrorHandlingRetry = <T extends any[], R>(
-  asyncFn: (...args: T) => Promise<R>,
-  options: {
-    retryAttempts?: number;
-    retryDelay?: number;
-    customMessage?: string;
-  } = {},
-) => {
-  return withErrorHandling(asyncFn, {
-    showErrorModal: true,
-    logError: true,
-    retry: true,
-    ...options,
-  });
 };
 
 /**
