@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import "../../../css/screenplay.scss";
 import { Alert } from "Models/alert";
 import Sidebar from "Components/Sidebar";
+import { useErrorState } from "Hooks/useErrorState";
 import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { useInterval } from "Hooks/useInterval";
 import { fetchAlerts, fetchPlaces, fetchLineStops } from "Utils/api";
@@ -10,11 +11,6 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
-import {
-  ErrorState,
-  subscribeToErrorState,
-  unsubscribeFromErrorState,
-} from "Utils/errorHandler";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -30,20 +26,8 @@ const Dashboard: ComponentType = () => {
   } = useScreenplayState();
   const [bannerDone, setBannerDone] = useState(false);
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
-  const [errorState, setErrorState] = useState<ErrorState | null>(null);
 
-  useEffect(() => {
-    // On render, set Error State to initial null value and subscribe to receive any updates
-    const errorListener = (errorState: ErrorState | null) => {
-      setErrorState(errorState);
-    };
-    subscribeToErrorState(errorListener);
-
-    // Cleanup subscription on unmount
-    return () => {
-      unsubscribeFromErrorState(errorListener);
-    };
-  });
+  const { errorState } = useErrorState();
 
   useEffect(() => {
     const loadInitialData = async () => {

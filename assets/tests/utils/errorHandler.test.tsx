@@ -47,13 +47,13 @@ describe("withErrorHandling", () => {
     });
   });
 
-  describe("Error handling without retry", () => {
+  describe("Error handling", () => {
     it("should return null and show error modal on failure", async () => {
       const mockFunction = jest
         .fn()
-        .mockRejectedValue(new Error("Test error without retry"));
+        .mockRejectedValue(new Error("Test error"));
       const wrappedFunction = withErrorHandling(mockFunction, {
-        customMessage: "Test error without retry user facing message",
+        customMessage: "Test error with user facing message",
       });
 
       const result = await wrappedFunction();
@@ -63,7 +63,7 @@ describe("withErrorHandling", () => {
       expect(getErrorState()).not.toBeNull();
       expect(getErrorState()?.show).toBe(true);
       expect(getErrorState()?.messageToDisplay).toBe(
-        "Test error without retry user facing message",
+        "Test error with user facing message",
       );
     });
 
@@ -87,49 +87,6 @@ describe("withErrorHandling", () => {
       await wrappedFunction();
 
       expect(onError).toHaveBeenCalledWith(expect.any(Error));
-    });
-  });
-
-  describe("Error handling with retry", () => {
-    it("should retry the specified number of times before failing", async () => {
-      const mockFunction = jest.fn().mockRejectedValue(new Error("Test error"));
-      const wrappedFunction = withErrorHandling(mockFunction, {
-        retry: true,
-        retryAttempts: 2,
-        retryDelay: 10,
-      });
-
-      const result = await wrappedFunction();
-
-      expect(result).toBeNull();
-      expect(mockFunction).toHaveBeenCalledTimes(3); // 1 initial + 2 retries
-    });
-
-    it("should succeed on retry and return result", async () => {
-      const mockFunction = jest
-        .fn()
-        .mockRejectedValueOnce(new Error("First attempt fails"))
-        .mockResolvedValue("Success on second attempt");
-
-      const wrappedFunction = withErrorHandling(mockFunction, {
-        retry: true,
-        retryAttempts: 2,
-        retryDelay: 10,
-      });
-
-      const result = await wrappedFunction();
-
-      expect(result).toBe("Success on second attempt");
-      expect(mockFunction).toHaveBeenCalledTimes(2);
-    });
-
-    it("should not retry when retry is false", async () => {
-      const mockFunction = jest.fn().mockRejectedValue(new Error("Test error"));
-      const wrappedFunction = withErrorHandling(mockFunction, { retry: false });
-
-      await wrappedFunction();
-
-      expect(mockFunction).toHaveBeenCalledTimes(1);
     });
   });
 

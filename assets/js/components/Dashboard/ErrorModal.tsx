@@ -1,32 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import {
-  clearErrorState,
-  subscribeToErrorState,
-  ErrorState,
-  unsubscribeFromErrorState,
-} from "Utils/errorHandler";
+import { useErrorState } from "Hooks/useErrorState";
+import { clearErrorState } from "Utils/errorHandler";
 
 interface ErrorModalProps {
   className?: string;
 }
 
 const ErrorModal: React.FC<ErrorModalProps> = () => {
-  // Initialize error state as null
-  const [errorState, setErrorState] = useState<ErrorState | null>(null);
-
-  useEffect(() => {
-    // On render, set Error State to initial value of null and subscribe to receive any updates
-    const errorListener = (errorState: ErrorState | null) => {
-      setErrorState(errorState);
-    };
-    subscribeToErrorState(errorListener);
-
-    // Cleanup subscription on unmount
-    return () => {
-      unsubscribeFromErrorState(errorListener);
-    };
-  });
+  const { errorState } = useErrorState();
 
   const handleDismiss = () => {
     if (errorState?.onDismiss) {
