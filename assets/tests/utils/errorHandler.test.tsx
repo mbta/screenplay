@@ -49,9 +49,7 @@ describe("withErrorHandling", () => {
 
   describe("Error handling", () => {
     it("should return null and show error modal on failure", async () => {
-      const mockFunction = jest
-        .fn()
-        .mockRejectedValue(new Error("Test error"));
+      const mockFunction = jest.fn().mockRejectedValue(new Error("Test error"));
       const wrappedFunction = withErrorHandling(mockFunction, {
         customMessage: "Test error with user facing message",
       });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useErrorState } from "Hooks/useErrorState";
 import { clearErrorState } from "Utils/errorHandler";
