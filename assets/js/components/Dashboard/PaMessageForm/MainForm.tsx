@@ -1,5 +1,11 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useState,
+  useEffect,
+} from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -24,6 +30,7 @@ import { Place } from "Models/place";
 import * as paMessageStyles from "Styles/pa-messages.module.scss";
 import { StaticTemplate } from "Models/static_template";
 import { MessageType } from "Models/pa_message";
+import { WaveFile } from "wavefile";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -41,6 +48,7 @@ interface Props {
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
+  audioURL: string;
   priority: number;
   setDays: Dispatch<SetStateAction<number[]>>;
   onError: (error: string | null) => void;
@@ -81,6 +89,7 @@ const MainForm = ({
   interval,
   navigateTo,
   phoneticText,
+  audioURL,
   priority,
   setDays,
   onError,
@@ -108,11 +117,47 @@ const MainForm = ({
 }: Props) => {
   const navigate = useNavigate();
   const [validated, setValidated] = useState(false);
+  const [wavAudio, setWavAudio] = useState<string>("");
+  useEffect(() => {
+    const fetchAndConvertAudio = async () => {
+      if (audioURL.length === 0) {
+        if (wavAudio.length) {
+          URL.revokeObjectURL(wavAudio);
+        }
+        setWavAudio("");
+        return;
+      }
+
+      const response = await fetch(audioURL);
+      const arrayBuffer = await response.arrayBuffer();
+      const pcmData = new Int16Array(arrayBuffer);
+
+      const wav = convertPCMToWAV(pcmData);
+      const blob = new Blob([wav.toBuffer()], { type: "audio/wav" });
+      const url = URL.createObjectURL(blob);
+
+      setWavAudio(url);
+    };
+
+    // Default values are PCM values from Polly
+    const convertPCMToWAV = (
+      pcmData: Int16Array,
+      numChannels = 1,
+      sampleRate = 16000,
+      bitDepth = "16",
+    ) => {
+      const wav = new WaveFile();
+      wav.fromScratch(numChannels, sampleRate, bitDepth, pcmData);
+      return wav;
+    };
+
+    fetchAndConvertAudio();
+  }, [audioURL]);
 
   const previewAudio = () => {
     if (audioState === AudioPreview.Playing) return;
 
-    if (phoneticText.length === 0) {
+    if (audioURL.length === 0 && phoneticText.length === 0) {
       setPhoneticText(visualText);
     }
 
@@ -384,97 +429,126 @@ const MainForm = ({
         </Card>
         <Card className={paMessageStyles.card}>
           <div className={paMessageStyles.cardTitle}>Message</div>
-          <div className="d-flex gap-4">
-            <div style={{ flex: 1 }}>
-              <MessageTextBox
-                id="visual-text-box"
-                text={visualText}
-                disabled={selectedTemplate !== null || isReadOnly}
-                onChangeText={(text) => {
-                  setVisualText(text);
-                  if (audioState !== AudioPreview.Unreviewed) {
-                    setAudioState(AudioPreview.Outdated);
-                  }
-                }}
-                label="Text"
-                maxLength={MAX_TEXT_LENGTH}
-                required
-                validationText={"Text cannot be blank"}
-                validated={validated}
-              />
-            </div>
-            <div className={paMessageStyles.copyButtonCol}>
-              <Button
-                disabled={
-                  visualText.length === 0 ||
-                  selectedTemplate !== null ||
-                  isReadOnly
-                }
-                className={paMessageStyles.copyTextButton}
-                onClick={() => {
-                  setPhoneticText(visualText);
-                  if (audioState !== AudioPreview.Unreviewed) {
-                    setAudioState(AudioPreview.Outdated);
-                  }
-                }}
-                aria-label="copy-visual-to-phonetic"
-              >
-                <ArrowRightShort />
-              </Button>
-            </div>
-            <div style={{ flex: 1 }}>
-              {phoneticText.length > 0 ? (
-                <>
-                  <MessageTextBox
-                    id="phonetic-audio-text-box"
-                    text={phoneticText}
-                    onChangeText={(text) => {
-                      setPhoneticText(text);
-                      if (audioState !== AudioPreview.Unreviewed) {
-                        setAudioState(AudioPreview.Outdated);
-                      }
-                    }}
-                    disabled={
-                      phoneticText.length === 0 ||
-                      selectedTemplate !== null ||
-                      isReadOnly
-                    }
-                    className="mb-2"
-                    label="Phonetic Audio"
-                    maxLength={MAX_TEXT_LENGTH}
-                    validated={validated}
-                  />
-                  {!selectedTemplate && (
-                    <ReviewAudioButton
-                      audioState={audioState}
-                      onClick={previewAudio}
-                      validated={validated}
-                    />
-                  )}
-                </>
-              ) : (
-                <>
-                  <div className="form-label">Phonetic Audio</div>
-                  <Card className={paMessageStyles.reviewAudioCard}>
-                    <ReviewAudioButton
-                      audioState={audioState}
-                      disabled={visualText.length === 0}
-                      onClick={previewAudio}
-                      validated={validated}
-                    />
-                  </Card>
-                </>
-              )}
-              {audioState === AudioPreview.Playing && (
-                <audio
-                  src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
-                  autoPlay
-                  onEnded={onAudioEnded}
-                  onError={onAudioError}
+          <>
+            {audioURL.length !== 0 && (
+              <div className="container-fluid gap-4">
+                <MessageTextBox
+                  className="mb-2"
+                  id="visual-text-box"
+                  text={visualText}
+                  disabled
+                  onChangeText={(_) => {}}
+                  maxLength={MAX_TEXT_LENGTH}
+                  label="Text"
+                  required
+                  validationText={"Text cannot be blank"}
+                  validated={validated}
                 />
-              )}
+                <ReviewAudioButton
+                  audioState={audioState}
+                  onClick={previewAudio}
+                  validated={validated}
+                />
+                {audioState === AudioPreview.Playing && wavAudio && (
+                  <audio
+                    src={wavAudio}
+                    autoPlay
+                    onEnded={onAudioEnded}
+                    onError={onAudioError}
+                  />
+                )}
+              </div>
+            )}
+          </>
+          {audioURL.length === 0 && (
+            <div className="d-flex gap-4">
+              <div style={{ flex: 1 }}>
+                <MessageTextBox
+                  id="visual-text-box"
+                  text={visualText}
+                  disabled={selectedTemplate !== null || isReadOnly}
+                  onChangeText={(text) => {
+                    setVisualText(text);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
+                    }
+                  }}
+                  label="Text"
+                  maxLength={MAX_TEXT_LENGTH}
+                  required
+                  validationText={"Text cannot be blank"}
+                  validated={validated}
+                />
+              </div>
+              <div className={paMessageStyles.copyButtonCol}>
+                <Button
+                  disabled={
+                    visualText.length === 0 ||
+                    selectedTemplate !== null ||
+                    isReadOnly
+                  }
+                  className={paMessageStyles.copyTextButton}
+                  onClick={() => {
+                    setPhoneticText(visualText);
+                    if (audioState !== AudioPreview.Unreviewed) {
+                      setAudioState(AudioPreview.Outdated);
+                    }
+                  }}
+                  aria-label="copy-visual-to-phonetic"
+                >
+                  <ArrowRightShort />
+                </Button>
+              </div>
+              <div style={{ flex: 1 }}>
+                {phoneticText.length > 0 ? (
+                  <>
+                    <MessageTextBox
+                      id="phonetic-audio-text-box"
+                      text={phoneticText}
+                      onChangeText={(text) => {
+                        setPhoneticText(text);
+                        if (audioState !== AudioPreview.Unreviewed) {
+                          setAudioState(AudioPreview.Outdated);
+                        }
+                      }}
+                      disabled={selectedTemplate !== null || isReadOnly}
+                      className="mb-2"
+                      label="Phonetic Audio"
+                      maxLength={MAX_TEXT_LENGTH}
+                      validated={validated}
+                    />
+                    {!selectedTemplate && (
+                      <ReviewAudioButton
+                        audioState={audioState}
+                        onClick={previewAudio}
+                        validated={validated}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="form-label">Phonetic Audio</div>
+                    <Card className={paMessageStyles.reviewAudioCard}>
+                      <ReviewAudioButton
+                        audioState={audioState}
+                        disabled={visualText.length === 0}
+                        onClick={previewAudio}
+                        validated={validated}
+                      />
+                    </Card>
+                  </>
+                )}
+                {audioState === AudioPreview.Playing && (
+                  <audio
+                    src={`/api/pa-messages/preview_audio?text=${phoneticText}`}
+                    autoPlay
+                    onEnded={onAudioEnded}
+                    onError={onAudioError}
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </Card>
         <div className="d-flex justify-content-end gap-3 mt-3">
           <Button

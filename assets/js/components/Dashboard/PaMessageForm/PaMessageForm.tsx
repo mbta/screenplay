@@ -23,6 +23,7 @@ interface PaMessageFormData {
   interval_in_minutes: number;
   visual_text: string;
   audio_text: string;
+  audio_url: string;
   message_type: MessageType;
   template_id: number | null;
 }
@@ -111,8 +112,11 @@ const PaMessageForm = ({
   const [visualText, setVisualText] = useState(
     defaultValues?.visual_text ?? "",
   );
-  const [phoneticText, setPhoneticText] = useState(
+  const [phoneticText, setPhoneticText] = useState<string>(
     defaultValues?.audio_text ?? "",
+  );
+  const [audioURL, setAudioURL] = useState<string>(
+    defaultValues?.audio_url ?? "",
   );
 
   const [signIds, setSignIds] = useState<string[]>(() => {
@@ -138,6 +142,7 @@ const PaMessageForm = ({
     setSelectedTemplate(null);
     setVisualText("");
     setPhoneticText("");
+    setAudioURL("");
     setAudioState(AudioPreview.Unreviewed);
     setPriority(defaultPriority);
   };
@@ -211,6 +216,7 @@ const PaMessageForm = ({
             interval_in_minutes: Number(interval),
             visual_text: visualText,
             audio_text: phoneticText,
+            audio_url: audioURL,
             message_type: selectedTemplate?.type ?? null,
             template_id: selectedTemplate?.id ?? null,
           };
@@ -223,6 +229,7 @@ const PaMessageForm = ({
           interval,
           navigateTo: setPage,
           phoneticText,
+          audioURL,
           priority,
           setDays,
           startDate,
@@ -296,9 +303,14 @@ const PaMessageForm = ({
           onSelect={(template) => {
             setSelectedTemplate(template);
             setVisualText(template.visual_text);
-            setPhoneticText(template.audio_text);
+            setPhoneticText(template.audio_text ?? "");
+            setAudioURL(template.audio_url ?? "");
             setPriority(template.type === "psa" ? 5 : 1);
-            setAudioState(AudioPreview.Reviewed);
+            setAudioState(
+              template.audio_url
+                ? AudioPreview.Unreviewed
+                : AudioPreview.Reviewed,
+            );
             setPage(Page.MAIN);
           }}
         />

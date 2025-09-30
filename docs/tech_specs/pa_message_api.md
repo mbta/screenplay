@@ -41,6 +41,14 @@ Lists all PA messages that are currently eligible to play.
     "interval_in_minutes": 2,
     "visual_text": "This message will be played.",
     "audio_text": "This message will be played."
+  },
+  {
+    "id": 4,
+    "sign_ids": ["sign_1"],
+    "priority": 0,
+    "interval_in_minutes": 2,
+    "visual_text": "This message will be played.",
+    "audio_url": "www.example.com/audio_url"
   }
 ]
 ```

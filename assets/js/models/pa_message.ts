@@ -9,6 +9,7 @@ export interface PaMessage {
   interval_in_minutes: number;
   visual_text: string;
   audio_text: string;
+  audio_url: string;
   paused: boolean;
   saved: boolean;
   inserted_at: string;

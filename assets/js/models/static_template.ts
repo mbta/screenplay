@@ -4,6 +4,7 @@ export interface StaticTemplate {
   id: number;
   title: string;
   visual_text: string;
-  audio_text: string;
+  audio_text?: string;
+  audio_url?: string;
   type: MessageType;
 }
