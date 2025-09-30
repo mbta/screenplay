@@ -42,4 +42,39 @@ defmodule Screenplay.Util do
     |> Enum.map_join(" ", fn {k, v} -> "#{k}=#{Jason.encode!(v)}" end)
     |> Logger.info()
   end
+
+  # Default values taken from Polly PCM
+  @spec convert_pcm_to_wav(binary()) :: binary()
+  def convert_pcm_to_wav(
+        pcm_data,
+        sample_rate \\ 16_000,
+        bits_per_sample \\ 16,
+        num_channels \\ 1,
+        audio_format \\ 1
+      ) do
+    data_size = byte_size(pcm_data)
+    total_data_size = 36 + data_size
+    byte_rate = sample_rate * num_channels * div(bits_per_sample, 8)
+    block_align = num_channels * div(bits_per_sample, 8)
+    chunk_size = 16
+
+    wav_header =
+      <<
+        "RIFF",
+        total_data_size::little-32,
+        "WAVE",
+        "fmt ",
+        chunk_size::little-32,
+        audio_format::little-16,
+        num_channels::little-16,
+        sample_rate::little-32,
+        byte_rate::little-32,
+        block_align::little-16,
+        bits_per_sample::little-16,
+        "data",
+        data_size::little-32
+      >>
+
+    wav_header <> pcm_data
+  end
 end
