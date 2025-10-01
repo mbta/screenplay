@@ -1,3 +1,5 @@
+import { REFRESH_PAGE_ERROR_MESSAGE } from "Constants/constants";
+
 export interface ErrorHandlingOptions {
   /** Custom error message to display */
   customMessage?: string;
@@ -117,11 +119,11 @@ export const displayErrorModal = (
 const getErrorMessage = (error: Error | Response): string => {
   if (error instanceof Response) {
     if (error.status >= 500) {
-      return "Server error. Please try again or contact engineering if the problem persists.";
+      return `Server error. ${REFRESH_PAGE_ERROR_MESSAGE}`;
     } else if (error.status === 403) {
       return "Your session has expired, please refresh your browser.";
     } else if (error.status === 404) {
-      return "The requested resource was not found. Please try again or contact engineering if the problem persists.";
+      return `The requested resource was not found. ${REFRESH_PAGE_ERROR_MESSAGE}`;
     }
   }
 
@@ -130,11 +132,11 @@ const getErrorMessage = (error: Error | Response): string => {
       return "Network error. Please check your connection and try again.";
     }
     if (error.message.includes("timeout")) {
-      return "Request timed out. Please try again and contact engineering if the issue persists.";
+      return `Request timed out. ${REFRESH_PAGE_ERROR_MESSAGE}`;
     }
   }
 
-  return "Something went wrong. Please try again and contact engineering if the issue persists.";
+  return `Something went wrong. ${REFRESH_PAGE_ERROR_MESSAGE}`;
 };
 
 /**
@@ -145,7 +147,7 @@ const getErrorTitle = (
   isMultiple: string[],
 ): string => {
   if (isMultiple.length > 1) {
-    return `${isMultiple.length} errors occurred`;
+    return `${isMultiple.length} Errors Occurred`;
   }
 
   if (error instanceof Response) {

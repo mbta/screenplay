@@ -8,12 +8,10 @@ import getCsrfToken from "../csrf";
 import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
 import { withErrorHandling } from "./errorHandler";
+import { REFRESH_PAGE_ERROR_MESSAGE } from "Constants/constants";
 
 const API_ENDPOINT_PREDICTION_SUPPRESSION = "/api/suppressed-predictions";
 const API_ENDPOINT_PA_MESSAGES = "/api/pa-messages";
-
-const REFRESH_PAGE_ERROR_MESSAGE =
-  "Please refresh the page and contact engineering if the issue persists.";
 
 /////////////////////
 // Location Fetching
