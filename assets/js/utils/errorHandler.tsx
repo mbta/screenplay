@@ -103,7 +103,9 @@ export const displayErrorModal = (
 
   setErrorState({
     errorMessages: errorMessages,
-    messageToDisplay: areMultipleErrors ? `${errorMessages.join("\n")}` : message,
+    messageToDisplay: areMultipleErrors
+      ? `${errorMessages.join("\n")}`
+      : message,
     title,
   });
 };

@@ -22,7 +22,10 @@ const ErrorModal: React.FC<ErrorModalProps> = () => {
       </Modal.Header>
       <Modal.Body>{errorState?.messageToDisplay}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={clearErrorState} className="error-modal__cancel-button">
+        <Button
+          onClick={clearErrorState}
+          className="error-modal__cancel-button"
+        >
           Cancel
         </Button>
       </Modal.Footer>

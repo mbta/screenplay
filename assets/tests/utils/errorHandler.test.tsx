@@ -64,7 +64,6 @@ describe("withErrorHandling", () => {
       );
     });
 
-
     it("should call custom onError handler", async () => {
       const mockFunction = jest.fn().mockRejectedValue(new Error("Test error"));
       const onError = jest.fn();
