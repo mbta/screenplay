@@ -1,23 +1,16 @@
 export interface ErrorHandlingOptions {
-  /** Whether to show an error modal for this error */
-  showErrorModal?: boolean;
   /** Custom error message to display */
   customMessage?: string;
   /** Cutstom error title to display */
   customTitle?: string;
-  /** Whether to log the error to console */
-  logError?: boolean;
   /** Custom error handler function */
   onError?: (error: Error | Response) => void;
 }
 
 export interface ErrorState {
-  show: boolean;
   messageToDisplay: string;
   errorMessages?: string[];
   title: string;
-  onRetry?: () => void;
-  onDismiss: () => void;
 }
 
 // Error state management: getting, setting, clearing.
@@ -58,8 +51,7 @@ export const unsubscribeFromErrorState = (
 };
 
 /**
- * Wrapper for operations to handle errors and either fail silently or display an error modal.
- * Defaults to displaying the error modal on first failure
+ * Wrapper for operations to handle errors and display an error modal in case of failure.
  * @param asyncFunction - the function that should be tried
  * @param options - ErrorHandlingOptions
  */
@@ -68,15 +60,13 @@ export const withErrorHandling = <T extends any[], R>(
   options: ErrorHandlingOptions = {},
 ) => {
   return async (...args: T): Promise<R | null> => {
-    const { showErrorModal = true, logError = true, onError } = options;
+    const { onError } = options;
 
     try {
       const result = await asyncFunction(...args);
       return result;
     } catch (error) {
-      if (logError) {
-        console.error(`Error in ${asyncFunction.name}:`, error);
-      }
+      console.error(`Error in ${asyncFunction.name}:`, error);
 
       // If there's no handling specified and it's a session expiration error,
       // then we want to refresh the page after displaying the error
@@ -86,9 +76,8 @@ export const withErrorHandling = <T extends any[], R>(
         };
       }
 
-      if (showErrorModal) {
-        displayErrorModal(error as Error | Response, options);
-      }
+      displayErrorModal(error as Error | Response, options);
+
       return null;
     }
   };
@@ -101,6 +90,7 @@ export const displayErrorModal = (
   error: Error | Response,
   options: ErrorHandlingOptions = {},
 ) => {
+  console.log('test')
   const { customMessage, customTitle, onError } = options;
 
   const message = customMessage ?? getErrorMessage(error);
@@ -115,11 +105,9 @@ export const displayErrorModal = (
   }
 
   setErrorState({
-    show: true,
     errorMessages: errorMessages,
     messageToDisplay: isMultiple ? `${errorMessages.join("\n")}` : message,
     title,
-    onDismiss: clearErrorState,
   });
 };
 

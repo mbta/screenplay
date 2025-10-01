@@ -10,44 +10,21 @@ interface ErrorModalProps {
 const ErrorModal: React.FC<ErrorModalProps> = () => {
   const { errorState } = useErrorState();
 
-  const handleDismiss = () => {
-    if (errorState?.onDismiss) {
-      errorState.onDismiss();
-    }
-    clearErrorState();
-  };
-
-  const handleRetry = () => {
-    if (errorState?.onRetry) {
-      errorState.onRetry();
-    }
-    clearErrorState();
-  };
-
-  if (!errorState?.show) {
-    return null;
-  }
-
   return (
     <Modal
-      show={errorState.show}
+      show={errorState !== null}
       className="error-modal"
       backdrop="static"
-      onHide={handleDismiss}
+      onHide={clearErrorState}
     >
       <Modal.Header closeButton closeVariant="white">
-        {errorState.title && <Modal.Title>{errorState.title}</Modal.Title>}
+        {errorState?.title && <Modal.Title>{errorState?.title}</Modal.Title>}
       </Modal.Header>
-      <Modal.Body>{errorState.messageToDisplay}</Modal.Body>
+      <Modal.Body>{errorState?.messageToDisplay}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleDismiss} className="error-modal__cancel-button">
+        <Button onClick={clearErrorState} className="error-modal__cancel-button">
           Cancel
         </Button>
-        {errorState.onRetry && (
-          <Button className="error-modal__refresh-button" onClick={handleRetry}>
-            Refresh
-          </Button>
-        )}
       </Modal.Footer>
     </Modal>
   );

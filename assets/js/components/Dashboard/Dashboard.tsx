@@ -54,7 +54,7 @@ const Dashboard: ComponentType = () => {
 
   useEffect(() => {
     // If there are any active errors, stop refreshing alerts
-    setIsAlertsIntervalRunning(!errorState?.show);
+    setIsAlertsIntervalRunning(errorState !== null);
   }, [errorState]);
 
   // Fetch alerts every 4 seconds.

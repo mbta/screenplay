@@ -59,23 +59,11 @@ describe("withErrorHandling", () => {
       expect(result).toBeNull();
       expect(mockFunction).toHaveBeenCalledTimes(1);
       expect(getErrorState()).not.toBeNull();
-      expect(getErrorState()?.show).toBe(true);
       expect(getErrorState()?.messageToDisplay).toBe(
         "Test error with user facing message",
       );
     });
 
-    it("should not show error modal when showErrorModal is false", async () => {
-      const mockFunction = jest.fn().mockRejectedValue(new Error("Test error"));
-      const wrappedFunction = withErrorHandling(mockFunction, {
-        showErrorModal: false,
-      });
-
-      const result = await wrappedFunction();
-
-      expect(result).toBeNull();
-      expect(getErrorState()).toBeNull();
-    });
 
     it("should call custom onError handler", async () => {
       const mockFunction = jest.fn().mockRejectedValue(new Error("Test error"));
@@ -99,7 +87,6 @@ describe("withErrorHandling", () => {
       await wrappedFunction();
 
       expect(getErrorState()).not.toBeNull();
-      expect(getErrorState()?.show).toBe(true);
 
       // Wait for the reload timeout
       await new Promise((resolve) => setTimeout(resolve, 2100));
@@ -182,7 +169,6 @@ describe("withErrorHandling", () => {
 
       expect(subscriber).toHaveBeenCalledWith(
         expect.objectContaining({
-          show: true,
           messageToDisplay: expect.any(String),
           title: expect.any(String),
         }),
