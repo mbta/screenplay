@@ -13,7 +13,10 @@ export interface ErrorState {
   title: string;
 }
 
-// Error state management: getting, setting, clearing.
+// Error state management: initializing, getting, setting, clearing.
+let errorState: ErrorState | null = null;
+let errorListeners: ((error: ErrorState | null) => void)[] = [];
+
 export const getErrorState = (): ErrorState | null => errorState;
 
 const setErrorState = (error: ErrorState | null) => {
@@ -24,12 +27,6 @@ const setErrorState = (error: ErrorState | null) => {
 export const clearErrorState = () => {
   setErrorState(null);
 };
-
-let errorState: ErrorState | null = null;
-let errorListeners: ((error: ErrorState | null) => void)[] = [];
-let errorCount = 0;
-let lastErrorTime = 0;
-const ERROR_COOLDOWN_MS = 5000; // Don't show multiple errors within 5 seconds
 
 /**
  * Subscribes the error state by passing in a listener function to be called on state channges.
@@ -90,15 +87,15 @@ export const displayErrorModal = (
   error: Error | Response,
   options: ErrorHandlingOptions = {},
 ) => {
-  console.log('test')
   const { customMessage, customTitle, onError } = options;
 
   const message = customMessage ?? getErrorMessage(error);
   const errorMessages = getErrorState()?.errorMessages || [];
   errorMessages.push(message);
-  const isMultiple = isMultipleFailure();
+
+  const areMultipleErrors = errorMessages.length > 1;
   const title =
-    customTitle ?? getErrorTitle(error, isMultiple ? errorMessages : []);
+    customTitle ?? getErrorTitle(error, areMultipleErrors ? errorMessages : []);
 
   if (onError) {
     onError(error);
@@ -106,22 +103,9 @@ export const displayErrorModal = (
 
   setErrorState({
     errorMessages: errorMessages,
-    messageToDisplay: isMultiple ? `${errorMessages.join("\n")}` : message,
+    messageToDisplay: areMultipleErrors ? `${errorMessages.join("\n")}` : message,
     title,
   });
-};
-
-/** Determines if multiple errors have happened during the cooldown window. */
-const isMultipleFailure = (): boolean => {
-  const now = Date.now();
-  if (now - lastErrorTime < ERROR_COOLDOWN_MS) {
-    errorCount++;
-    return errorCount > 1;
-  } else {
-    errorCount = 1;
-    lastErrorTime = now;
-    return false;
-  }
 };
 
 /**
