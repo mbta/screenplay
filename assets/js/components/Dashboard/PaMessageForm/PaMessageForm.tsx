@@ -296,7 +296,7 @@ const PaMessageForm = ({
           onSelect={(template) => {
             setSelectedTemplate(template);
             setVisualText(template.visual_text);
-            setPhoneticText(template.audio_text);
+            setPhoneticText(template.audio_text ?? "");
             setPriority(template.type === "psa" ? 5 : 1);
             setAudioState(AudioPreview.Reviewed);
             setPage(Page.MAIN);
