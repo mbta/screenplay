@@ -115,7 +115,7 @@ defmodule Screenplay.PaMessages.PaMessage do
         add_error(changeset, audio_url, "audio_text or audio_url must be assigned")
 
       {false, false} ->
-        add_error(changeset, audio_url, "audio_text or audio_url must be assigned")
+        add_error(changeset, audio_url, "audio_text and audio_url cannot both be assigned")
 
       _ ->
         changeset
