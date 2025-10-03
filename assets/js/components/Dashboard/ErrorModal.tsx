@@ -1,40 +1,32 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import { useErrorState } from "Hooks/useErrorState";
+import { clearErrorState } from "Utils/errorHandler";
 
 interface ErrorModalProps {
-  title: string;
-  showErrorModal: boolean;
-  onHide: () => void;
-  errorMessage: string;
-  confirmButtonLabel: string;
-  onConfirm: () => void;
+  className?: string;
 }
 
-const ErrorModal = ({
-  title,
-  showErrorModal,
-  onHide,
-  errorMessage,
-  confirmButtonLabel,
-  onConfirm,
-}: ErrorModalProps) => {
+const ErrorModal: React.FC<ErrorModalProps> = () => {
+  const { errorState } = useErrorState();
+
   return (
     <Modal
-      show={showErrorModal}
+      show={errorState !== null}
       className="error-modal"
       backdrop="static"
-      onHide={onHide}
+      onHide={clearErrorState}
     >
       <Modal.Header closeButton closeVariant="white">
-        {title && <Modal.Title>{title}</Modal.Title>}
+        {errorState?.title && <Modal.Title>{errorState?.title}</Modal.Title>}
       </Modal.Header>
-      <Modal.Body>{errorMessage}</Modal.Body>
+      <Modal.Body>{errorState?.messageToDisplay}</Modal.Body>
       <Modal.Footer>
-        <Button onClick={onHide} className="error-modal__cancel-button">
+        <Button
+          onClick={clearErrorState}
+          className="error-modal__cancel-button"
+        >
           Cancel
-        </Button>
-        <Button className="error-modal__refresh-button" onClick={onConfirm}>
-          {confirmButtonLabel}
         </Button>
       </Modal.Footer>
     </Modal>

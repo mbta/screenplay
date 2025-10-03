@@ -109,10 +109,13 @@ const ConfigureScreensWorkflowPage: ComponentType<
       fetchExistingScreens(
         "gl_eink_v2",
         selectedPlaces.map((place) => place.id),
-      ).then(({ places_and_screens, version_id }) => {
-        initializeExistingScreenValidationErrors(places_and_screens);
-        setConfigVersion(version_id);
-        setExistingScreens(places_and_screens);
+      ).then((data) => {
+        if (data) {
+          const { places_and_screens, version_id } = data;
+          initializeExistingScreenValidationErrors(places_and_screens);
+          setConfigVersion(version_id);
+          setExistingScreens(places_and_screens);
+        }
       });
     }
   }, [

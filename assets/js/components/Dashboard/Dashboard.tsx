@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import "../../../css/screenplay.scss";
 import { Alert } from "Models/alert";
 import Sidebar from "Components/Sidebar";
+import { useErrorState } from "Hooks/useErrorState";
 import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { useInterval } from "Hooks/useInterval";
 import { fetchAlerts, fetchPlaces, fetchLineStops } from "Utils/api";
@@ -10,7 +11,6 @@ import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
 import { useLocation } from "react-router-dom";
-import ErrorModal from "Components/ErrorModal";
 
 const Dashboard: ComponentType = () => {
   const {
@@ -26,51 +26,42 @@ const Dashboard: ComponentType = () => {
   } = useScreenplayState();
   const [bannerDone, setBannerDone] = useState(false);
   const [isAlertsIntervalRunning, setIsAlertsIntervalRunning] = useState(true);
-  const [showModal, setShowModal] = useState(false);
+
+  const { errorState } = useErrorState();
 
   useEffect(() => {
-    fetchAlerts().then(
-      ({
-        all_alert_ids: allAPIalertIds,
-        alerts: newAlerts,
-        screens_by_alert: screensByAlertMap,
-      }) => {
-        findAndSetBannerAlert(alerts, newAlerts);
-        setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
-      },
-    );
+    const loadInitialData = async () => {
+      await updateAlertsData();
+      // Load places and line stops with error handling
 
-    fetchPlaces().then(setPlaces);
+      const placesData = await fetchPlaces();
+      if (placesData) {
+        setPlaces(placesData);
+      }
 
-    fetchLineStops().then(setLineStops);
+      const lineStopsData = await fetchLineStops();
+      if (lineStopsData) {
+        setLineStops(lineStopsData);
+      }
+    };
+
+    loadInitialData();
 
     // Tests rely on this effect **not** having any dependencies listed.
     // This code pre-dates the addition of the react-hooks eslint rules.
     // - sloane 2024-08-20
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    // If there are any active errors, stop refreshing alerts
+    setIsAlertsIntervalRunning(errorState !== null);
+  }, [errorState]);
+
   // Fetch alerts every 4 seconds.
+  // Unlike line and stop data dispalyed on dashboard, alerts are subject to frequent updates
   useInterval(
-    () => {
-      fetchAlerts()
-        .then(
-          ({
-            all_alert_ids: allAPIalertIds,
-            alerts: newAlerts,
-            screens_by_alert: screensByAlertMap,
-          }) => {
-            findAndSetBannerAlert(alerts, newAlerts);
-            setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
-          },
-        )
-        .catch((response: Response) => {
-          if (response.status === 403) {
-            setIsAlertsIntervalRunning(false);
-            setShowModal(true);
-          } else {
-            throw response;
-          }
-        });
+    async () => {
+      await updateAlertsData();
     },
     isAlertsIntervalRunning ? 4000 : null,
   );
@@ -112,6 +103,19 @@ const Dashboard: ComponentType = () => {
         new Date(existingStartAtOrNull.getTime() + 40000).getTime()
     ) {
       setBannerDone(true);
+    }
+  };
+
+  const updateAlertsData = async () => {
+    const alertsData = await fetchAlerts();
+    if (alertsData) {
+      const {
+        all_alert_ids: allAPIalertIds,
+        alerts: newAlerts,
+        screens_by_alert: screensByAlertMap,
+      } = alertsData;
+      findAndSetBannerAlert(alerts, newAlerts);
+      setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
     }
   };
 
@@ -169,14 +173,6 @@ const Dashboard: ComponentType = () => {
         )}
         <Outlet />
       </div>
-      <ErrorModal
-        title="Session expired"
-        showErrorModal={showModal}
-        onHide={() => setShowModal(false)}
-        errorMessage="Your session has expired, please refresh your browser."
-        confirmButtonLabel="Refresh now"
-        onConfirm={() => window.location.reload()}
-      />
     </div>
   );
 };

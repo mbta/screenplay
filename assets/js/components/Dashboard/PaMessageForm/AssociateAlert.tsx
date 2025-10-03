@@ -27,8 +27,10 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
   useHideSidebar();
 
   useEffect(() => {
-    fetchActiveAndFutureAlerts().then(({ alerts: alerts }) => {
-      setAlerts(alerts);
+    fetchActiveAndFutureAlerts().then((data) => {
+      if (data) {
+        setAlerts(data.alerts);
+      }
     });
   }, []);
 

@@ -79,3 +79,6 @@ export const BASE_ROUTE_NAME_TO_ROUTE_IDS: { [key: string]: string[] } = {
   Mattapan: ["Mattapan"],
   Silver: SILVER_LINE_ROUTES,
 };
+
+export const REFRESH_PAGE_ERROR_MESSAGE =
+  "Please refresh the page and contact engineering if the issue persists.";
