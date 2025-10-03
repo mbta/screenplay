@@ -18,7 +18,8 @@ defmodule Screenplay.PaMessages.PaMessage do
           priority: integer(),
           interval_in_minutes: integer() | nil,
           visual_text: String.t(),
-          audio_text: String.t(),
+          audio_text: String.t() | nil,
+          audio_url: String.t() | nil,
           paused: boolean() | nil,
           saved: boolean() | nil,
           message_type: message_type(),
@@ -37,6 +38,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:interval_in_minutes, :integer)
     field(:visual_text, :string)
     field(:audio_text, :string)
+    field(:audio_url, :string)
     field(:paused, :boolean)
     field(:saved, :boolean)
     field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
@@ -78,6 +80,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     |> validate_inclusion(:priority, 1..5)
     |> validate_start_date()
     |> validate_end_date()
+    |> validate_audio_message()
     |> maybe_unpause()
   end
 
@@ -100,6 +103,22 @@ defmodule Screenplay.PaMessages.PaMessage do
       add_error(changeset, :end_datetime, "cannot have an end time if associated with an alert")
     else
       changeset
+    end
+  end
+
+  defp validate_audio_message(changeset) do
+    audio_text = get_field(changeset, :audio_text)
+    audio_url = get_field(changeset, :audio_url)
+
+    case {is_nil(audio_text), is_nil(audio_url)} do
+      {true, true} ->
+        add_error(changeset, audio_url, "audio_text or audio_url must be assigned")
+
+      {false, false} ->
+        add_error(changeset, audio_url, "audio_text and audio_url cannot both be assigned")
+
+      _ ->
+        changeset
     end
   end
 
