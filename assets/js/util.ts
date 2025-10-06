@@ -12,6 +12,7 @@ import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
 import moment from "moment";
 import fp from "lodash/fp";
+import { StaticTemplate } from "Models/static_template";
 
 export const color = (line: string) => {
   switch (line) {
@@ -362,3 +363,6 @@ export const sortRoutes = (routes: string[]) => {
 
   return routes.sort((a, b) => routeOrder.indexOf(a) - routeOrder.indexOf(b));
 };
+
+export const templateTypeLabel = (template: StaticTemplate): string =>
+  template.audio_url ? "Prerecorded Audio" : "Text to Speech";
