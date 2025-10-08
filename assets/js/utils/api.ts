@@ -207,7 +207,7 @@ export const updateExistingPaMessage = async (
   id: string | number,
   updates: UpdatePaMessageBody,
 ): Promise<{ status: number; body: any }> => {
-  const response = await fetch(`${API_ENDPOINT_PA_MESSAGES}${id}`, {
+  const response = await fetch(`${API_ENDPOINT_PA_MESSAGES}/${id}`, {
     method: "PUT",
     credentials: "include",
     headers: {

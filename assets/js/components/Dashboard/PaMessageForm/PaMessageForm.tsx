@@ -23,6 +23,7 @@ interface PaMessageFormData {
   interval_in_minutes: number;
   visual_text: string;
   audio_text: string;
+  audio_url: string;
   message_type: MessageType;
   template_id: number | null;
 }
@@ -114,6 +115,7 @@ const PaMessageForm = ({
   const [phoneticText, setPhoneticText] = useState(
     defaultValues?.audio_text ?? "",
   );
+  const [audioURL, setAudioURL] = useState(defaultValues?.audio_url ?? "");
 
   const [signIds, setSignIds] = useState<string[]>(() => {
     return defaultValues?.sign_ids ?? [];
@@ -138,6 +140,7 @@ const PaMessageForm = ({
     setSelectedTemplate(null);
     setVisualText("");
     setPhoneticText("");
+    setAudioURL("");
     setAudioState(AudioPreview.Unreviewed);
     setPriority(defaultPriority);
   };
@@ -211,6 +214,7 @@ const PaMessageForm = ({
             interval_in_minutes: Number(interval),
             visual_text: visualText,
             audio_text: phoneticText,
+            audio_url: audioURL,
             message_type: selectedTemplate?.type ?? null,
             template_id: selectedTemplate?.id ?? null,
           };
@@ -223,6 +227,7 @@ const PaMessageForm = ({
           interval,
           navigateTo: setPage,
           phoneticText,
+          audioURL,
           priority,
           setDays,
           startDate,
@@ -297,8 +302,9 @@ const PaMessageForm = ({
             setSelectedTemplate(template);
             setVisualText(template.visual_text);
             setPhoneticText(template.audio_text ?? "");
+            setAudioURL(template.audio_url ?? "");
             setPriority(template.type === "psa" ? 5 : 1);
-            setAudioState(AudioPreview.Reviewed);
+            setAudioState(AudioPreview.Unreviewed);
             setPage(Page.MAIN);
           }}
         />

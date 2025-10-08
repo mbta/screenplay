@@ -59,6 +59,7 @@ defmodule Screenplay.PaMessages.PaMessage do
       :interval_in_minutes,
       :visual_text,
       :audio_text,
+      :audio_url,
       :paused,
       :saved,
       :message_type,
@@ -70,8 +71,7 @@ defmodule Screenplay.PaMessages.PaMessage do
       :sign_ids,
       :priority,
       :interval_in_minutes,
-      :visual_text,
-      :audio_text
+      :visual_text
     ])
     |> validate_length(:sign_ids, min: 1)
     |> validate_subset(:days_of_week, 1..7)

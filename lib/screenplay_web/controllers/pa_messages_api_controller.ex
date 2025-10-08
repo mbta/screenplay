@@ -1,9 +1,12 @@
 defmodule ScreenplayWeb.PaMessagesApiController do
   use ScreenplayWeb, :controller
 
+  require Logger
+
   action_fallback ScreenplayWeb.FallbackController
 
   alias Screenplay.PaMessages
+  alias Screenplay.PaMessages.Fetch
   alias Screenplay.PaMessages.ListParams
 
   @watts_client Application.compile_env(:screenplay, :watts_client, Screenplay.Watts.Client)
@@ -18,6 +21,18 @@ defmodule ScreenplayWeb.PaMessagesApiController do
         send_download(conn, {:binary, audio_data}, filename: "preview.mp3")
 
       :error ->
+        send_resp(conn, 500, "Could not fetch audio preview")
+    end
+  end
+
+  def preview_audio(conn, %{"audioUrl" => audioUrl}) do
+    case Fetch.fetch_audio(audioUrl) do
+      {:success, body} ->
+        audio_data = Screenplay.Util.convert_pcm_to_wav(body)
+        send_download(conn, {:binary, audio_data}, filename: "preview.wav")
+
+      {:error, error} ->
+        Logger.info({error, "Error grabbing audio: #{audioUrl}"})
         send_resp(conn, 500, "Could not fetch audio preview")
     end
   end
