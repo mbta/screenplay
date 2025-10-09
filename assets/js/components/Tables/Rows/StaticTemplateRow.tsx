@@ -2,6 +2,7 @@ import { StaticTemplate } from "Models/static_template";
 import React, { ComponentType } from "react";
 import { Button } from "react-bootstrap";
 import * as messageTableStyles from "Styles/message-table.module.scss";
+import { templateTypeLabel } from "../../../util";
 
 interface StaticTemplateRowProps {
   template: StaticTemplate;
@@ -17,6 +18,9 @@ const StaticTemplateRow: ComponentType<StaticTemplateRowProps> = ({
       <td>
         <div>{template.title}</div>
         <div>{template.visual_text}</div>
+      </td>
+      <td>
+        <div>{templateTypeLabel(template)}</div>
       </td>
       <td className={messageTableStyles.select}>
         <Button variant="link" onClick={() => onSelect(template)}>

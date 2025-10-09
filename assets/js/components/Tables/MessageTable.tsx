@@ -2,6 +2,7 @@ import { camelCase } from "lodash";
 import React from "react";
 import { Spinner } from "react-bootstrap";
 import * as messageTableStyles from "Styles/message-table.module.scss";
+import { ChevronDown, ChevronUp } from "react-bootstrap-icons";
 
 interface MessageTableProps {
   isLoading?: boolean;
@@ -11,6 +12,13 @@ interface MessageTableProps {
   isReadOnly?: boolean;
   rows: JSX.Element[];
   emptyStateText?: string;
+  handleHeaderClick?: (header: string) => void;
+  sortColumn?: string;
+  sortDirection?: SortDirection;
+}
+export enum SortDirection {
+  Asc = 0,
+  Desc = 1,
 }
 
 const MessageTable = ({
@@ -21,17 +29,33 @@ const MessageTable = ({
   isReadOnly = true,
   rows,
   emptyStateText = "",
+  handleHeaderClick = (_) => {},
+  sortColumn = "",
+  sortDirection = SortDirection.Asc,
 }: MessageTableProps): JSX.Element => {
   return (
     <>
       <table className={messageTableStyles.table}>
         <thead>
           <tr>
-            {headers.map((header: string) => {
+            {headers.map((header) => {
               const cssName = camelCase(header.replace(" ", "-").toLowerCase());
               return (
-                <th key={cssName} className={messageTableStyles[cssName]}>
+                <th
+                  key={cssName}
+                  className={messageTableStyles[cssName]}
+                  onClick={() => handleHeaderClick(header)}
+                >
                   {header}
+                  {header === sortColumn && (
+                    <>
+                      {sortDirection === SortDirection.Asc ? (
+                        <ChevronDown style={{ marginLeft: 4 }} />
+                      ) : (
+                        <ChevronUp style={{ marginLeft: 4 }} />
+                      )}
+                    </>
+                  )}
                 </th>
               );
             })}
