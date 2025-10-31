@@ -175,7 +175,6 @@ const MainForm = ({
           associatedAlert={associatedAlert}
           onClearAssociatedAlert={onClearAssociatedAlert}
           navigateTo={navigateTo}
-          setEndWithEffectPeriod={setEndWithEffectPeriod}
           selectedTemplate={selectedTemplate}
           onClearSelectedTemplate={onClearSelectedTemplate}
           isReadOnly={isReadOnly}
@@ -583,7 +582,6 @@ interface NewPaMessageHeaderProps {
   associatedAlert: AlertModel | string | null;
   navigateTo: (page: Page) => void;
   onClearAssociatedAlert: () => void;
-  setEndWithEffectPeriod: (endWithEffectPeriod: boolean) => void;
   selectedTemplate: StaticTemplate | null;
   onClearSelectedTemplate: () => void;
   isReadOnly: boolean;
@@ -593,7 +591,6 @@ const NewPaMessageHeader = ({
   associatedAlert,
   navigateTo,
   onClearAssociatedAlert,
-  setEndWithEffectPeriod,
   selectedTemplate,
   onClearSelectedTemplate,
   isReadOnly,
@@ -680,7 +677,6 @@ const NewPaMessageHeader = ({
               variant="link"
               className={cx("ps-0", paMessageStyles.associateButton)}
               onClick={() => {
-                setEndWithEffectPeriod(true);
                 navigateTo(Page.ALERTS);
               }}
             >
