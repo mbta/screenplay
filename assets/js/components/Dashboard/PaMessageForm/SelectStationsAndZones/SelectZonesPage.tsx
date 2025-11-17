@@ -232,28 +232,26 @@ const SelectZonesPage = ({
             All
           </Button>
         </td>
-        {["left" as const, "middle" as const, "right" as const].map(
-          (section) => (
-            <td className={`cell ${section}-cell`} key={section}>
-              <div className="sign-button-group">
-                {zones[section].map((sign) => (
-                  <Button
-                    key={sign.id}
-                    onClick={() => toggleIds([sign.id])}
-                    className={cx("button-primary-outline", {
-                      "button-active": value.includes(sign.id),
-                    })}
-                    disabled={isReadOnly}
-                  >
-                    {section === "left" && <ArrowLeftShort />}{" "}
-                    {sign.label ?? getZoneLabel(sign.zone ?? "")}{" "}
-                    {section === "right" && <ArrowRightShort />}
-                  </Button>
-                ))}
-              </div>
-            </td>
-          ),
-        )}
+        {(["left", "middle", "right"] as const).map((section) => (
+          <td className={`cell ${section}-cell`} key={section}>
+            <div className="sign-button-group">
+              {zones[section].map((sign) => (
+                <Button
+                  key={sign.id}
+                  onClick={() => toggleIds([sign.id])}
+                  className={cx("button-primary-outline", {
+                    "button-active": value.includes(sign.id),
+                  })}
+                  disabled={isReadOnly}
+                >
+                  {section === "left" && <ArrowLeftShort />}{" "}
+                  {sign.label ?? getZoneLabel(sign.zone ?? "")}{" "}
+                  {section === "right" && <ArrowRightShort />}
+                </Button>
+              ))}
+            </div>
+          </td>
+        ))}
       </tr>
     );
   };
