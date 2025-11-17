@@ -6,15 +6,15 @@ import fp from "lodash/fp";
 import {
   getPlacesFromFilter,
   getRouteIdsForSign,
+  getZoneLabel,
   signIDs,
   signsByDirection,
   sortByStationOrder,
   sortRoutes,
 } from "../../../../util";
 import cx from "classnames";
-import { Dot } from "react-bootstrap-icons";
+import { ArrowLeftShort, ArrowRightShort, Dot } from "react-bootstrap-icons";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
-import PlaceZonesRow from "./PlaceZonesRow";
 import { RadioList } from "Components/RadioList";
 import * as styles from "Styles/pa-messages.module.scss";
 
@@ -184,6 +184,78 @@ const SelectZonesPage = ({
     );
   };
 
+  const toggleIds = (ids: string[]) => {
+    onChange(
+      fp.difference(ids, value).length === 0
+        ? fp.difference(value, ids)
+        : fp.union(value, ids),
+    );
+  };
+
+  const renderRow = (place: Place, routeId: string) => {
+    const rowSigns = getSignsFromPlaceForRouteId(place, routeId);
+    const rowSignIds = rowSigns.map((s) => s.id);
+    const zones = signsByDirection(rowSigns);
+    if (rowSigns.length === 0) {
+      return null;
+    }
+    return (
+      <tr className="table-row">
+        <td className="place-name-cell">
+          <div className="place-name-container">
+            {routeId === "Green" && (
+              <div className="route bg-green">
+                {fp
+                  .uniq(
+                    rowSigns.flatMap((s) =>
+                      getRouteIdsForSign(s).map((r) => r.split("-")[1]),
+                    ),
+                  )
+                  .sort()
+                  .join(" ")}
+              </div>
+            )}
+            <div className="place-name">{place.name}</div>
+            {routeId === "Bus" && <div className="route bg-bus">Bus</div>}
+          </div>
+        </td>
+        <td className="cell all-button-cell">
+          <Button
+            className={
+              fp.difference(rowSignIds, value).length === 0
+                ? "button-primary"
+                : "button-primary-outline"
+            }
+            onClick={() => toggleIds(rowSignIds)}
+            disabled={isReadOnly}
+          >
+            All
+          </Button>
+        </td>
+        {(["left", "middle", "right"] as const).map((section) => (
+          <td className={`cell ${section}-cell`} key={section}>
+            <div className="sign-button-group">
+              {zones[section].map((sign) => (
+                <Button
+                  key={sign.id}
+                  onClick={() => toggleIds([sign.id])}
+                  className={cx("button-primary-outline", {
+                    "button-active": value.includes(sign.id),
+                  })}
+                  disabled={isReadOnly}
+                >
+                  {section === "left" && <ArrowLeftShort />}{" "}
+                  {sign.label ?? getZoneLabel(sign.zone ?? "")}{" "}
+                  {section === "right" && <ArrowRightShort />}
+                </Button>
+              ))}
+            </div>
+          </td>
+        ))}
+      </tr>
+    );
+  };
+
   return (
     <div className="select-zones-page">
       <div className="d-flex align-items-center">
@@ -301,60 +373,10 @@ const SelectZonesPage = ({
             <tbody>
               {sortByStationOrder(filteredPlaces, selectedRouteFilter).map(
                 (place) => {
-                  const allSignsForRouteFilterAtPlace =
-                    getSignsFromPlaceForRouteId(place, selectedRouteFilter);
-                  const allBusSignsForRouteAtPlace =
-                    getSignsFromPlaceForRouteId(place, "Bus");
-
-                  const signsGroupedByZone = signsByDirection(
-                    allSignsForRouteFilterAtPlace,
-                  );
-                  const busSignsGroupedByZone =
-                    selectedRouteFilter === "Bus"
-                      ? signsGroupedByZone
-                      : signsByDirection(allBusSignsForRouteAtPlace);
-
-                  const branches =
-                    selectedRouteFilter === "Green"
-                      ? fp
-                          .uniq(
-                            allSignsForRouteFilterAtPlace.flatMap((s) =>
-                              fp.map(
-                                (r) => r.split("-")[1],
-                                getRouteIdsForSign(s),
-                              ),
-                            ),
-                          )
-                          .sort()
-                      : [];
-
                   return (
                     <Fragment key={`place-zones-row-${place.id}`}>
-                      <PlaceZonesRow
-                        place={place}
-                        allSelectedSigns={value}
-                        allSignsForRouteAtPlace={allSignsForRouteFilterAtPlace}
-                        setSignIds={onChange}
-                        leftZones={signsGroupedByZone.left}
-                        middleZones={signsGroupedByZone.middle}
-                        rightZones={signsGroupedByZone.right}
-                        route={selectedRouteFilter}
-                        branches={branches}
-                        disabled={isReadOnly}
-                      />
-                      {selectedRouteFilter !== "Bus" && (
-                        <PlaceZonesRow
-                          place={place}
-                          allSelectedSigns={value}
-                          allSignsForRouteAtPlace={allBusSignsForRouteAtPlace}
-                          setSignIds={onChange}
-                          leftZones={busSignsGroupedByZone.left}
-                          middleZones={busSignsGroupedByZone.middle}
-                          rightZones={busSignsGroupedByZone.right}
-                          route={"Bus"}
-                          disabled={isReadOnly}
-                        />
-                      )}
+                      {renderRow(place, selectedRouteFilter)}
+                      {selectedRouteFilter !== "Bus" && renderRow(place, "Bus")}
                     </Fragment>
                   );
                 },
