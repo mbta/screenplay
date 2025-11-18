@@ -47,7 +47,7 @@ interface Props {
   onError: (error: string | null) => void;
   setInterval: Dispatch<SetStateAction<string>>;
   setPhoneticText: Dispatch<SetStateAction<string>>;
-  setPriority: Dispatch<SetStateAction<number>>;
+  onChangePriority: (value: number) => void;
   setVisualText: Dispatch<SetStateAction<string>>;
   onClearAssociatedAlert: () => void;
   setEndWithEffectPeriod: Dispatch<SetStateAction<boolean>>;
@@ -88,7 +88,7 @@ const MainForm = ({
   onError,
   setInterval,
   setPhoneticText,
-  setPriority,
+  onChangePriority,
   setVisualText,
   setEndWithEffectPeriod,
   onClearAssociatedAlert,
@@ -344,7 +344,7 @@ const MainForm = ({
           <div className="d-flex gap-4">
             <PriorityPicker
               priority={priority}
-              onSelectPriority={setPriority}
+              onSelectPriority={onChangePriority}
               disabled={isReadOnly}
             />
             <IntervalPicker

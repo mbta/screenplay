@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import MainForm from "./MainForm";
 import { AudioPreview, Page } from "./types";
@@ -142,7 +142,7 @@ const PaMessageForm = ({
     setPhoneticText("");
     setAudioURL("");
     setAudioState(AudioPreview.Unreviewed);
-    setPriority(defaultPriority);
+    onChangePriority(defaultPriority);
   };
 
   const onImportMessage = (alertMessage: string) => {
@@ -184,15 +184,16 @@ const PaMessageForm = ({
   const startDateTime = moment(`${startDate} ${startTime}`, "YYYY-MM-DD HH:mm");
   const endDateTime = moment(`${endDate} ${endTime}`, "YYYY-MM-DD HH:mm");
 
-  useEffect(() => {
+  const onChangePriority = (value: number) => {
     const priorityToIntervalMap: { [priority: number]: string } = {
       1: "1",
       3: "4",
       4: "10",
       5: "12",
     };
-    setInterval(priorityToIntervalMap[priority]);
-  }, [priority]);
+    setPriority(value);
+    setInterval(priorityToIntervalMap[value]);
+  };
 
   return (
     <>
@@ -241,7 +242,7 @@ const PaMessageForm = ({
           onError,
           setInterval,
           setPhoneticText,
-          setPriority,
+          onChangePriority,
           setVisualText,
           onClearAssociatedAlert,
           setEndWithEffectPeriod,
@@ -303,7 +304,7 @@ const PaMessageForm = ({
             setVisualText(template.visual_text);
             setPhoneticText(template.audio_text ?? "");
             setAudioURL(template.audio_url ?? "");
-            setPriority(template.type === "psa" ? 5 : 1);
+            onChangePriority(template.type === "psa" ? 5 : 1);
             setAudioState(AudioPreview.Unreviewed);
             setPage(Page.MAIN);
           }}
