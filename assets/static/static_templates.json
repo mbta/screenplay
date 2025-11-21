@@ -146,7 +146,7 @@
   {
     "id": 18,
     "title": "Fare Evasion",
-    "visual_text": "Hi. I'm Phil Eng, General Manager of the MBTA. Paying your fare helps us improve our system, and provide the reliable service you depend on. Riders who don't pay may receive a warning or a citation. So thank you for paying your fare and keeping the T moving for everyone.",
+    "visual_text": "Hi. I'm Phil Eng, General Manager of the MBTA. Starting September 8th, riders who don't pay their fare may receive a warning or a citation. Paying your fare keeps the T moving for everyone, so thanks for doing your part.",
     "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_fare_evasion_phil_eng.pcm",
     "type": "psa",
     "archived": false
