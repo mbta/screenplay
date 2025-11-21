@@ -142,5 +142,13 @@
     "audio_text": "This is a test of the emergency messaging system. This is not an emergency, this is a test.",
     "type": "emergency",
     "archived": false
+  },
+  {
+    "id": 18,
+    "title": "Phil Eng",
+    "visual_text": "Hi. I'm Phil Eng, General Manager of the MBTA. Paying your fare helps us improve our system, and provide the reliable service you depend on. Riders who don't pay may receive a warning or a citation. So thank you for paying your fare and keeping the T moving for everyone.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_pay_your_fare_phil_eng.pcm",
+    "type": "psa",
+    "archived": false
   }
 ]
