@@ -21,7 +21,9 @@ defmodule Screenplay.Watts.Client do
   def fetch_tts(text) do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
-    request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
+
+    request_data =
+      Jason.encode!(%{text: "<speak>#{xml_escape(text)}</speak>", voice_id: "Matthew"})
 
     case @http_client.post(
            "#{watts_url}/tts",
@@ -48,6 +50,16 @@ defmodule Screenplay.Watts.Client do
     )
 
     :error
+  end
+
+  defp xml_escape(text) do
+    String.replace(text, ~w(" ' < > &), fn
+      "\"" -> "&quot;"
+      "'" -> "&apos;"
+      "<" -> "&lt;"
+      ">" -> "&gt;"
+      "&" -> "&amp;"
+    end)
   end
 end
 
