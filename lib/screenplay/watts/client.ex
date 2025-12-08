@@ -21,6 +21,8 @@ defmodule Screenplay.Watts.Client do
   def fetch_tts(text) do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
+
+    text = Phoenix.HTML.html_escape(text) |> Phoenix.HTML.safe_to_string()
     request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
 
     case @http_client.post(
