@@ -150,5 +150,13 @@
     "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_fare_evasion_phil_eng.pcm",
     "type": "psa",
     "archived": false
+  },
+  {
+    "id": 19,
+    "title": "Happy Holidays",
+    "visual_text": "Hi, this is Phil Eng, General Manager of the MBTA. The holidays are a time to come together, and we're grateful to be part of your journey. We appreciate your patience, kindness, and support. So from all of us at the MBTA, we wish you and your loved ones a joyful holiday season.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_happy_holidays_phil_eng.pcm",
+    "type": "psa",
+    "archived": false
   }
 ]
