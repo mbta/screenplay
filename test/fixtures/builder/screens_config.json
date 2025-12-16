@@ -573,6 +573,38 @@
       "hidden_from_screenplay": false,
       "vendor": "hanover",
       "device_id": ""
+    },
+    "PRE-105": {
+      "disabled": false,
+      "name": "PRE-105 Ashmont North",
+      "tags": [],
+      "app_id": "pre_fare_v2",
+      "app_params": {
+        "header": {
+          "stop_name": "Ashmont"
+        },
+        "template": "duo",
+        "content_summary": {
+          "parent_station_id": "place-asmnl"
+        },
+        "departures": null,
+        "elevator_status": {
+          "parent_station_id": "place-asmnl",
+          "platform_stop_ids": ["70093", "70094"]
+        },
+        "evergreen_content": [],
+        "full_line_map": [
+          {
+            "asset_path": "fake_full_line_map.png"
+          }
+        ],
+        "reconstructed_alert_widget": {
+          "stop_id": "place-asmnl"
+        }
+      },
+      "device_id": "121212",
+      "hidden_from_screenplay": false,
+      "vendor": "gds"
     }
   }
 }

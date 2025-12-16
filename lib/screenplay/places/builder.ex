@@ -13,7 +13,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.{Alerts, Departures, Footer, Header, MultiStopAlerts, Screen}
   alias ScreensConfig.Departures.{Query, Section}
-  alias ScreensConfig.Screen.{Dup, Elevator}
+  alias ScreensConfig.Screen.{Dup, Elevator, PreFare}
 
   use GenServer
 
@@ -223,6 +223,11 @@ defmodule Screenplay.Places.Builder do
 
   defp stop_ids(%Screen{app_params: %_app{alerts: %Alerts{stop_id: stop_id}}})
        when not is_nil(stop_id),
+       do: [stop_id]
+
+  defp stop_ids(%Screen{
+         app_params: %PreFare{reconstructed_alert_widget: %Alerts{stop_id: stop_id}}
+       }),
        do: [stop_id]
 
   defp stop_ids(%Screen{app_params: %_app{alerts: %MultiStopAlerts{stop_ids: stop_ids}}}),
