@@ -1,8 +1,8 @@
 defmodule Screenplay.Alerts.CacheTest do
   use ExUnit.Case
 
-  alias Screenplay.AlertsCacheHelpers
   alias Screenplay.Alerts.{Alert, Cache}
+  alias Screenplay.AlertsCacheHelpers
 
   test "It polls an API and updates the store" do
     now = DateTime.utc_now()
