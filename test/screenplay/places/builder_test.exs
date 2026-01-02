@@ -3,8 +3,8 @@ defmodule Screenplay.Places.BuilderTest do
 
   import Mox
 
-  alias Screenplay.Places.Cache, as: PlacesCache
   alias Screenplay.Places.{Builder, Place}
+  alias Screenplay.Places.Cache, as: PlacesCache
   alias Screenplay.ScreensConfig.Cache, as: ScreensConfigCache
 
   setup_all do
