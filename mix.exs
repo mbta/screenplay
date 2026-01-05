@@ -50,7 +50,7 @@ defmodule Screenplay.MixProject do
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.24.0"},
+      {:gettext, "~> 0.26.2"},
       {:jason, "~> 1.4"},
       {:plug_cowboy, "~> 2.6"},
       {:cowboy, "== 2.10.0"},
