@@ -14,8 +14,6 @@ import {
   ArrowDownShort,
   Icon,
 } from "react-bootstrap-icons";
-import TLogo from "../../../static/images/t-logo.svg";
-import TLogoBlack from "../../../static/images/t-logo-black.svg";
 import cx from "classnames";
 import * as sidebarStyles from "Styles/sidebar.module.scss";
 import * as predictionSuppressionStyles from "Styles/prediction-suppression.module.scss";
@@ -74,7 +72,11 @@ const Sidebar = () => {
     <nav className={sidebarStyles.container}>
       <a href="/dashboard" className={cx(sidebarStyles.logo, environment)}>
         <img
-          src={environment === "prod" ? TLogo : TLogoBlack}
+          src={
+            environment === "prod"
+              ? "/images/t-logo.svg"
+              : "/images/t-logo-black.svg"
+          }
           alt="Screenplay Logo"
           style={{ width: 32 }}
         />

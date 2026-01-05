@@ -19,7 +19,6 @@ const compat = new FlatCompat({
 export default [
   {
     ignores: [
-      "**/webpack.config.js",
       "**/.eslintrc.js",
       "**/socket.js",
       "**/node_modules",
@@ -67,7 +66,7 @@ export default [
     rules: {
       "no-console": 0,
       "prefer-rest-params": "off",
-      "eqeqeq": "error",
+      eqeqeq: "error",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-explicit-any": "off",
 

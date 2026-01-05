@@ -39,7 +39,7 @@
     <title>Screenplay</title>
     <link rel="icon" href={Routes.static_path(@conn, "/favicon.ico")} sizes="32x32">
     <link rel="icon" href={Routes.static_path(@conn, "/images/favicon-#{@environment_name || "prod"}.svg")} type="image/svg+xml">
-    <link rel="stylesheet" href={Routes.static_path(@conn, "/css/app.css")}/>
+    <link rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -48,6 +48,6 @@
     <main role="main">
       <%= @inner_content %>
     </main>
-    <script type="text/javascript" src={Routes.static_path(@conn, "/js/app.js")}></script>
+    <script type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
   </body>
 </html>
