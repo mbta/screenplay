@@ -14,8 +14,8 @@ import {
   ArrowDownShort,
   Icon,
 } from "react-bootstrap-icons";
-import TLogo from "../../../static/images/t-logo.svg";
-import TLogoBlack from "../../../static/images/t-logo-black.svg";
+import TLogo from "Images/t-logo.svg";
+import TLogoBlack from "Images/t-logo-black.svg";
 import cx from "classnames";
 import * as sidebarStyles from "Styles/sidebar.module.scss";
 import * as predictionSuppressionStyles from "Styles/prediction-suppression.module.scss";
