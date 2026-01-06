@@ -14,7 +14,7 @@
   "dependencies": {
     "@fullstory/browser": "^2.0.6",
     "@heroicons/react": "^2.1.5",
-    "@sentry/fullstory": "^3.0.0",
+    "@sentry/fullstory": "^5.0.0",
     "@sentry/react": "^8.34.0",
     "@types/pluralize": "^0.0.33",
     "bootstrap": "^5.3.8",
