@@ -17,7 +17,8 @@ const opts = {
       type: "css",
     }),
   ],
-  publicPath: "assets/",
+  loader: { ".svg": "file" },
+  publicPath: "/assets/",
 };
 
 if (cmd === "deploy") {
