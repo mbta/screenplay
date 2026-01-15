@@ -480,7 +480,7 @@ const MainForm = ({
                 id="visual-text-box"
                 text={visualText}
                 disabled
-                onChangeText={(_) => {}}
+                onChangeText={() => {}}
                 maxLength={MAX_TEXT_LENGTH}
                 label="Text"
                 required

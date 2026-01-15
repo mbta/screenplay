@@ -10,7 +10,6 @@ interface PaessScreenDetailProps {
 
 const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
   const generateSource = () => {
-    // @ts-ignore Suppressing "object could be null" warning
     const signsUiUrl = document
       .querySelector("meta[name=signs-ui-url]")
       ?.getAttribute("content");
