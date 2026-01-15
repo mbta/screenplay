@@ -110,6 +110,7 @@ const StationSelectPage: ComponentType<StationSelectPageProps> = ({
                 );
               }
               setPlacesAndScreensToUpdate((placesAndScreens) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { [place.id]: _discarded, ...newPlacesAndScreens } =
                   placesAndScreens;
                 return newPlacesAndScreens;

@@ -145,9 +145,9 @@ export const formatTime = (date: Date) => {
 };
 
 export const getMessageString = (message: CannedMessage | CustomMessage) => {
-  // @ts-ignore
+  // @ts-expect-error work around loose typing
   if (message.id !== undefined) return CANNED_MESSAGES[parseInt(message.id)];
-  // @ts-ignore
+  // @ts-expect-error work around loose typing
   else return message.text;
 };
 

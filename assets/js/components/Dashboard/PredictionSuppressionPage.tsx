@@ -371,7 +371,7 @@ const PredictionSuppressionPage = () => {
                 {noPredictions(place) ? (
                   <td colSpan={2} className="p-3">
                     <em className="text-secondary">
-                      Predictions aren't generated for this location
+                      Predictions aren’t generated for this location
                     </em>
                   </td>
                 ) : (
