@@ -29,7 +29,7 @@ const MessageTable = ({
   isReadOnly = true,
   rows,
   emptyStateText = "",
-  handleHeaderClick = (_) => {},
+  handleHeaderClick = () => {},
   sortColumn = "",
   sortDirection = SortDirection.Asc,
 }: MessageTableProps): JSX.Element => {
