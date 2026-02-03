@@ -113,7 +113,7 @@ const PaMessagesPage: ComponentType = () => {
               </Link>
             )}
             <Link
-              to="https://mbta.splunkcloud.com/en-US/app/search/paess__pa_message_announcement_log"
+              to="https://mbta.splunkcloud.com/en-US/app/search/paess__pa_message_annoucement_log"
               target="_blank"
               className={cx(styles.dashboardLink, "d-inline-block mt-3")}
             >
