@@ -83,9 +83,6 @@ defmodule Screenplay.PredictionSuppression do
                       # suppression type in order to suppress reverse predictions
                       {"place-hsmnl", "Green"} -> :terminal
                       {"place-asmnl", "Mattapan"} -> :terminal
-                      # Light rail doesn't currently have terminal predictions
-                      {_, "Green"} -> nil
-                      {_, "Mattapan"} -> nil
                       # Bus predictions don't have a concept of terminal or reverse predictions
                       {_, "Silver"} -> :stop
                       _ -> :terminal
