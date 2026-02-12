@@ -114,7 +114,7 @@ defmodule Screenplay.Alerts.Alert do
   # High priority (deliver to T-Alert subscribers immediately) -> 10
   def interpret_severity(severity) do
     cond do
-      severity in 1..3 -> "up to 10 minutes"
+      severity in 0..3 -> "up to 10 minutes"
       severity in 4..7 -> "up to #{5 * (severity - 1)} minutes"
       severity == 8 -> "more than 30 minutes"
       severity >= 9 -> "more than 60 minutes"
