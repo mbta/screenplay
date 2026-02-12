@@ -13,7 +13,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.{Alerts, Departures, Footer, Header, MultiStopAlerts, Screen}
   alias ScreensConfig.Departures.{Query, Section}
-  alias ScreensConfig.Screen.{Dup, Elevator, PreFare}
+  alias ScreensConfig.Screen.{Dup, PreFare}
 
   use GenServer
 
@@ -23,11 +23,6 @@ defmodule Screenplay.Places.Builder do
   @config_fetcher Application.compile_env!(:screenplay, :config_fetcher)
   @stops_mod Application.compile_env(:screenplay, :stops_mod, Screenplay.Stops.Stop)
   @routes_mod Application.compile_env(:screenplay, :routes_mod, Screenplay.Routes.Route)
-  @facilities_mod Application.compile_env(
-                    :screenplay,
-                    :facilities_mod,
-                    Screenplay.Facilities.Facility
-                  )
   @github_api_client Application.compile_env(
                        :screenplay,
                        :github_api_client,
@@ -205,12 +200,6 @@ defmodule Screenplay.Places.Builder do
 
         %{id: id, name: name, screens: screens_at_stop}
     end)
-  end
-
-  defp stop_ids(%Screen{app_params: %Elevator{elevator_id: elevator_id}}) do
-    {:ok, facility} = @facilities_mod.fetch(elevator_id)
-    %{"relationships" => %{"stop" => %{"data" => %{"id" => stop_id}}}} = facility
-    [stop_id]
   end
 
   defp stop_ids(%Screen{app_params: %_app{header: %Header.StopId{stop_id: stop_id}}})

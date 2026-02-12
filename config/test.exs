@@ -25,7 +25,6 @@ config :screenplay,
   local_signs_json_path: {:test, "signs.json"},
   stops_mod: Screenplay.Stops.Mock,
   routes_mod: Screenplay.Routes.Mock,
-  facilities_mod: Screenplay.Facilities.Mock,
   http_client: HTTPoison.Mock
 
 config :ueberauth, Ueberauth,
