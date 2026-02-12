@@ -20,7 +20,7 @@ type ScreenGroup = {
 };
 
 const groupScreens = (screens: Screen[]): ScreenGroup[] => {
-  const inlineScreenTypes = ["busway_v2", "elevator_v2"];
+  const inlineScreenTypes = ["busway_v2"];
 
   const inlineScreens = screens.filter((screen) =>
     inlineScreenTypes.includes(screen.type),

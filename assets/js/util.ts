@@ -208,7 +208,6 @@ const screenTypeOrder = [
   "bus_eink_v2",
   "gl_eink_v2",
   "pre_fare_v2",
-  "elevator_v2",
   "pa_ess",
 ];
 

@@ -37,10 +37,6 @@ defmodule Screenplay.Places.BuilderTest do
         {:ok, [%{"id" => "Red", "attributes" => %{"type" => 1}}]}
       end)
 
-      expect(Screenplay.Facilities.Mock, :fetch, 1, fn _ ->
-        {:ok, %{"relationships" => %{"stop" => %{"data" => %{"id" => "place-tapst"}}}}}
-      end)
-
       assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
@@ -62,13 +58,6 @@ defmodule Screenplay.Places.BuilderTest do
                      disabled: false,
                      direction_id: nil,
                      location: ""
-                   },
-                   %Place.ShowtimeScreen{
-                     direction_id: nil,
-                     disabled: false,
-                     id: "ELE-101",
-                     location: "",
-                     type: :elevator_v2
                    }
                  ],
                  description: nil
@@ -85,10 +74,6 @@ defmodule Screenplay.Places.BuilderTest do
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 2, fn _ ->
         {:ok, [%{"id" => "108", "attributes" => %{"type" => 3}}]}
-      end)
-
-      expect(Screenplay.Facilities.Mock, :fetch, 1, fn _ ->
-        {:ok, %{"relationships" => %{"stop" => %{"data" => %{"id" => "place-tapst"}}}}}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
@@ -147,10 +132,6 @@ defmodule Screenplay.Places.BuilderTest do
            ]}
       end)
 
-      expect(Screenplay.Facilities.Mock, :fetch, 1, fn _ ->
-        {:ok, %{"relationships" => %{"stop" => %{"data" => %{"id" => "place-tapst"}}}}}
-      end)
-
       assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
@@ -196,10 +177,6 @@ defmodule Screenplay.Places.BuilderTest do
 
       expect(Screenplay.Routes.Mock, :fetch_routes_for_stop, 1, fn _ ->
         {:ok, [%{"id" => "Blue", "attributes" => %{"type" => 1}}]}
-      end)
-
-      expect(Screenplay.Facilities.Mock, :fetch, 1, fn _ ->
-        {:ok, %{"relationships" => %{"stop" => %{"data" => %{"id" => "place-tapst"}}}}}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])
@@ -262,10 +239,6 @@ defmodule Screenplay.Places.BuilderTest do
 
         _ ->
           {:ok, [%{"id" => "Orange", "attributes" => %{"type" => 1}}]}
-      end)
-
-      expect(Screenplay.Facilities.Mock, :fetch, 1, fn _ ->
-        {:ok, %{"relationships" => %{"stop" => %{"data" => %{"id" => "place-tapst"}}}}}
       end)
 
       assert {:noreply, _} = Builder.handle_info(:build, [])

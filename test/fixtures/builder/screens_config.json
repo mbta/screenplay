@@ -545,22 +545,6 @@
       "device_id": null,
       "hidden_from_screenplay": true
     },
-    "ELE-101": {
-      "disabled": false,
-      "name": "",
-      "tags": [],
-      "app_id": "elevator_v2",
-      "app_params": {
-        "accessible_path_direction_arrow": "n",
-        "alternate_direction_text": "",
-        "elevator_id": "842",
-        "evergreen_content": []
-      },
-      "refresh_if_loaded_before": null,
-      "hidden_from_screenplay": false,
-      "vendor": "mimo",
-      "device_id": ""
-    },
     "BUS-101": {
       "disabled": false,
       "name": "",

@@ -47,7 +47,6 @@ export const SCREEN_TYPES: { label: string; ids: string[] }[] = [
   { label: "DUP", ids: ["dup_v2"] },
   { label: "E-Ink: Bus", ids: ["bus_eink_v2"] },
   { label: "E-Ink: Green Line", ids: ["gl_eink_v2"] },
-  { label: "Elevator", ids: ["elevator_v2"] },
   { label: "PA ESS", ids: ["pa_ess"] },
   { label: "Pre-Fare", ids: ["pre_fare_v2"] },
   { label: "Sectional", ids: ["busway_v2"] },
