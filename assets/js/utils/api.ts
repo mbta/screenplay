@@ -62,6 +62,9 @@ export const _fetchAlerts = async (): Promise<AlertsResponse> => {
 export const _fetchActiveAndFutureAlerts =
   async (): Promise<AlertsResponse> => {
     const response = await fetch("/api/alerts/non_access_alerts");
+    if (!response.ok) {
+      throw response;
+    }
     return response.json();
   };
 
