@@ -43,7 +43,7 @@ defmodule Screenplay.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.7.0"},
-      {:phoenix_html, "~> 3.0"},
+      {:phoenix_html, "~> 4.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_view, "~> 2.0"},
       {:phoenix_live_view, "~> 1.0.0"},
