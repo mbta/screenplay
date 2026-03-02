@@ -70,7 +70,7 @@ defmodule Screenplay.MixProject do
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:logster, "~> 1.1"},
       {:sobelow, "~> 0.8", only: :dev},
-      {:sentry, "~> 10.3"},
+      {:sentry, "~> 12.0"},
       {:stream_data, "~> 1.1", only: :test},
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
