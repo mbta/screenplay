@@ -3,29 +3,35 @@ updates:
   - package-ecosystem: mix
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
       time: "10:00"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
     groups:
-      mix-patches:
+      mix-patches-and-minor:
         update-types:
           - "patch"
+          - "minor"
   - package-ecosystem: npm
     directory: "/assets"
     schedule:
-      interval: daily
+      interval: weekly
       time: "10:00"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
     groups:
-      npm-patches:
+      npm-patches-and-minor:
         update-types:
           - "patch"
+          - "minor"
       eslint:
         patterns:
           - "eslint*"
