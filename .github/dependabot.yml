@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: mix
     directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
       day: "monday"
       time: "10:00"
     cooldown:
@@ -20,7 +20,7 @@ updates:
   - package-ecosystem: npm
     directory: "/assets"
     schedule:
-      interval: weekly
+      interval: "weekly"
       day: "monday"
       time: "10:00"
     cooldown:
