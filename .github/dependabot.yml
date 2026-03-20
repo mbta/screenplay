@@ -12,7 +12,7 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
     groups:
-      mix-patches-and-minor:
+      mix-minor:
         update-types:
           - "patch"
           - "minor"
@@ -28,7 +28,7 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-minor"]
     groups:
-      npm-patches-and-minor:
+      npm-minor:
         update-types:
           - "patch"
           - "minor"
