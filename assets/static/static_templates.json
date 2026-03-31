@@ -166,5 +166,245 @@
     "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_transit_driver_appreciation_march_2026_phil_eng.pcm",
     "type": "psa",
     "archived": false
+  },
+  {
+    "id": 21,
+    "title": "AAM-2026 - Aiden M.",
+    "visual_text": "Attention passengers, as part of Autism Acceptance month the MBTA let me make this announcement. We know you have places to go but be nice and make sure to let people off before you board. Thank you.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_AidenM.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 22,
+    "title": "AAM-2026 - Aiden K.",
+    "visual_text": "Hi everybody, my name is Aiden and the MBTA is letting me make this announcement because it's Autism Acceptance month, so here it goes! Never go on the tracks. If you dropped something important, we can always help you get it back just tell an MBTA employee. Thank you and have a great day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_AidenK.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 23,
+    "title": "AAM-2026 - Amir S.",
+    "visual_text": "Hey everybody, this is Amir. Happy Autism Acceptance month. Remember to let people leave the train before you get on. Help us keep the trains moving. Thanks!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_AmirS.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 24,
+    "title": "AAM-2026 - Andrew M.",
+    "visual_text": "Hi, my name is Andrew and I'm eleven years old. The MBTA asked me to make an announcement in honor of autism acceptance month, so here it goes! Remember to let people leave the train before we get on. Help us keep the trains moving. Thanks!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_AndrewM.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 25,
+    "title": "AAM-2026 - Cameron M.",
+    "visual_text": "Attention passengers, as part of autism acceptance month, the MBTA let me make this announcement. Please be considerate and offer your seat to passengers with disabilities or to the elderly. Thank you for riding the MBTA.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_CameronM.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 26,
+    "title": "AAM-2026 - Colson T.",
+    "visual_text": "Hey everybody, I'm Colson. Do you know that it's autism acceptance month? The MBTA is celebrating by letting some of us kids make announcements. If you score a seat on board the train, make sure nothing slips out of your pockets. Check your seat before you leave. Have a great day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_ColsonT.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 27,
+    "title": "AAM-2026 - Eli N.",
+    "visual_text": "Hello, I'm Eli. I'm 12 years old. The MBTA asked me to make an announcement in honor of autism acceptance month, so here it goes. If you see anything suspicious, please report it to the MBTA PD. Thank you and have a nice day.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_EliN.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 28,
+    "title": "AAM-2026 - Ella T.",
+    "visual_text": "Hey everybody! This is Ella Taylor. Happy autism acceptance month! Please report suspicious activity. Remember, if you see something, say something. Thanks and have a nice day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_EllaT.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 29,
+    "title": "AAM-2026 - Hugh R.",
+    "visual_text": "Hey everybody! Did you know it is Autism Acceptance month? The MBTA is celebrating by letting some of us kids make announcements. Accidents can happen when people stand too close to the platform edge. Please stand behind the yellow line. Thank you for riding the MBTA.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_HughR.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 30,
+    "title": "AAM-2026 - Jacob S.",
+    "visual_text": "This year the MBTA is recognizing autism acceptance month by letting me make this announcement. Need to report a problem? Be sure to note your train, car or bus number. This will help us know where to help.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_JacobS.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 31,
+    "title": "AAM-2026 - Jad S.",
+    "visual_text": "Attention passengers, as part of autism acceptance month, the MBTA let me make this announcement. The MBTA works hard to keep our stations and tracks clean, but you can help! Please use the garbage cans on the platform. Thanks!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_JadS.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 32,
+    "title": "AAM-2026 - Joey L.",
+    "visual_text": "Hi my name is Joey, and I'm 14 and a half years old. The MBTA asked me to make an announcement in honor of autism acceptance month, so here it goes. You can't watch videos when driving but you can on MBTA trains. Just please be a good transit rider and wear headphones. Alright everyone, have a great day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_JoeyL.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 33,
+    "title": "AAM-2026 - John G.",
+    "visual_text": "Hey everybody, it is John. Did you know it is Autism Acceptance month? The MBTA is celebrating by letting some of those kids make announcements. Help keep the MBTA clean. Please dispose of trash and remember to clean up after yourself. Thanks!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_JohnG.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 34,
+    "title": "AAM-2026 - Kai W.",
+    "visual_text": "Hi, my name is Kai and I am seven years old. The MBTA asked me to make an announcement in honor of autism acceptance month so here it goes. Please help make more space on crowded cars. Remember to take off your backpacks and keep your bags off the seats. Have a nice day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_KaiW.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 35,
+    "title": "AAM-2026 - Kevin L.",
+    "visual_text": "This is Kevin Leary and I love trains so much that the MBTA let me make this announcement during the autism acceptance month. Please be considerate and offer your seat to passengers with disabilities or to the elderly. Thank you for riding the MBTA.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_KevinL.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 36,
+    "title": "AAM-2026 - Luca G.",
+    "visual_text": "Hey everybody, this is Luca. Happy Autism Acceptance Month! You can't watch videos while driving but you can on MBTA trains. Just please be a good transit rider and wear your headphones. See you next time on the railway!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_LucaG.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 37,
+    "title": "AAM-2026 - Lucas G.",
+    "visual_text": "This is Lucas, and I love trains so much that the MBTA let me make this announcement during autism acceptance month. The MBTA works hard to keep our stations and tracks clean. You can help too by using the garbage cans on the platform. Thanks!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_LucasG.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 38,
+    "title": "AAM-2026 - Luke C.",
+    "visual_text": "Attention passengers, as part of the autism acceptance month, the MBTA let me make this announcement. To help keep the MBTA clean, please dispose of trash and remember to clean up after yourself. Thank you.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_LukeC.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 39,
+    "title": "AAM-2026 - Marc T.",
+    "visual_text": "Hi, my name is Marc, and the MBTA's letting me make this announcement because it's Autism Acceptance month. Here it goes! Need to report a problem? Be sure to note your train, car, or bus number. This will help us know where to help.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_MarcT.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 40,
+    "title": "AAM-2026 - Mason O.",
+    "visual_text": "Hi this is Mason and I love trains so much that the MBTA let me make this announcement during autism acceptance month. Please stand safely behind the yellow platform edge tiles as your train arrives. It scares the conductor if you are too close and it is not safe!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_MasonO.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 41,
+    "title": "AAM-2026 - Max W. (AAC speech device)",
+    "visual_text": "Hey everybody! Did you know it's Autism Acceptance month? The MBTA is celebrating by letting some of us kids make announcements. I'm using my AAC speech device to say this. Please be considerate and offer your seat to passengers with disabilities or to the elderly. Thank you for riding the MBTA.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_MaxW-AAC.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 42,
+    "title": "AAM-2026 - Max W.",
+    "visual_text": "Hey everybody! Did you know it's Autism Acceptance month? The MBTA is celebrating by letting some of us kids make announcements. Please be considerate and offer your seat to passengers with disabilities or to the elderly. Thank you for riding the MBTA.",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_MaxW.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 43,
+    "title": "AAM-2026 - Nate R.",
+    "visual_text": "This year the MBTA is recognizing autism acceptance month by letting me make this announcement. Please stand clear of the closing doors. If the doors don't close, the trains won't leave. Thanks and have a nice day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_NateR.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 44,
+    "title": "AAM-2026 - Nico L.",
+    "visual_text": "Hi, my name is Nico and the MBTA is making me make this announcement- here it goes. Please stand clear of the closing doors. If the doors don't close, the trains won't leave. Thanks, and have a nice day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_NicoLS.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 45,
+    "title": "AAM-2026 - Noah G.",
+    "visual_text": "Hi everybody, this is Noah. Welcome to and happy autism acceptance month. Please help make more spaces on crowded cars. Remember to take your belongings/backpacks, purses, and bags and flowers and keep your bags off the seats at all times. Have a nice day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_NoahG.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 46,
+    "title": "AAM-2026 - Owen M.",
+    "visual_text": "Hey everybody, this is Owen. Happy Autism Acceptance month. When the train arrives let customers exit before trying to get on. When you board, please move in as far as you can so others can get on quickly and safely. Thank you for riding MBTA!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_OwenM.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 47,
+    "title": "AAM-2026 - Reagan B.",
+    "visual_text": "Hi, my name is Reagan and the MBTA is letting me make this announcement because it is autism acceptance month. Here it goes! Please stand safely behind the yellow platform edge tiles as your train arrives. It scares the train operator if you are too close, and it is not safe!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_ReaganB.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 48,
+    "title": "AAM-2026 - Steven D.",
+    "visual_text": "Hi, I'm Steven and I love the T so much that the MBTA let me make this announcement during autism acceptance month. Never go onto the tracks even if you've dropped something important. We can always help you get it back, just tell an MBTA employee!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_StevenDA.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 49,
+    "title": "AAM-2026 - Tommy M.",
+    "visual_text": "Hello, this is Tommy Monteith. This year the MBTA's recognizing autism acceptance month by letting me make this announcement. Please help make more space on crowded cars. Remember to take your backpacks and keep your bags off the seats. Have a nice day!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_TommyM.pcm",
+    "type": "psa",
+    "archived": false
+  },
+  {
+    "id": 50,
+    "title": "AAM-2026 - Zurab M.",
+    "visual_text": "Attention passengers, as part of the autism acceptance month, the MBTA let me make this announcement. Please remember to stand clear of the closing doors. If it's too crowded, there will be another train soon, I promise. Thank you for listening to me!",
+    "audio_url": "https://mbta-screens.s3.us-east-1.amazonaws.com/screens-prod/audio/psa_aam_2026_ZurabM.pcm",
+    "type": "psa",
+    "archived": false
   }
 ]
