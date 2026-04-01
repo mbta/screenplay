@@ -59,6 +59,8 @@ defmodule Screenplay.MixProject do
       {:diskusage_logger, "0.2.0", only: :prod},
       {:guardian, "~> 2.3"},
       {:ueberauth, "~> 0.10.0"},
+      {:ueberauth_fake_oidcc,
+       github: "skyqrose/ueberauth_fake_oidcc", tag: "v0.1.2", only: [:dev, :test]},
       {:ueberauth_oidcc, "~> 0.4"},
       {:sftp_client, "~> 2.0"},
       {:ehmon, github: "mbta/ehmon", only: :prod},
