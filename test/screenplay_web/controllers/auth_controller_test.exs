@@ -7,34 +7,20 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
     test "redirects on success and saves refresh token", %{conn: conn} do
       current_time = System.system_time(:second)
 
-      auth = %Ueberauth.Auth{
-        provider: :keycloak,
-        uid: "foo@mbta.com",
-        credentials: %Ueberauth.Auth.Credentials{
-          expires_at: current_time + 1_000,
-          refresh_token: "test_refresh_token"
-        },
-        info: %{email: "foo@mbta.com", name: "Foo"},
-        extra: %Ueberauth.Auth.Extra{
-          raw_info: %UeberauthOidcc.RawInfo{
-            userinfo: %{
-              "resource_access" => %{
-                "test-client" => %{"roles" => ["test1"]}
-              }
-            }
-          }
-        }
-      }
-
       conn =
         conn
         |> init_test_session(%{})
-        |> assign(:ueberauth_auth, auth)
         |> Plug.Conn.put_session(:previous_path_from_auth, "/test")
-        |> get(~p"/auth/keycloak/callback")
+        |> get(
+          "/auth/keycloak/callback?email=user@test.com&roles[]=screens-admin&roles[]=screenplay-emergency-admin"
+        )
 
       assert redirected_to(conn) == "/test"
-      assert Guardian.Plug.current_claims(conn)["roles"] == ["test1"]
+
+      assert Guardian.Plug.current_claims(conn)["roles"] == [
+               "screens-admin",
+               "screenplay-emergency-admin"
+             ]
     end
 
     test "handles generic failure", %{conn: conn} do
