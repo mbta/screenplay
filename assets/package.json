@@ -20,7 +20,7 @@
     "@types/pluralize": "^0.0.33",
     "bootstrap": "^5.3.8",
     "classnames": "^2.5.1",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "lodash": "^4.17.23",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.48",
