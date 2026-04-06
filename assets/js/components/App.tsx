@@ -4,8 +4,8 @@ import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import GlEinkWorkflow from "Components/PermanentConfiguration/Workflows/GlEink/GlEinkWorkflow";
 import ErrorModal from "./Dashboard/ErrorModal";
 
-const OutfrontTakeoverTool = React.lazy(
-  () => import("./OutfrontTakeoverTool/OutfrontTakeoverTool"),
+const EmergencyTakeoverTool = React.lazy(
+  () => import("./EmergencyTakeoverTool/EmergencyTakeoverTool"),
 );
 const Dashboard = React.lazy(() => import("Components/Dashboard"));
 const PlacesPage = React.lazy(() => import("Components/PlacesPage"));
@@ -34,7 +34,7 @@ class AppRoutes extends React.Component {
         <Routes>
           <Route
             path="/emergency-takeover"
-            element={<OutfrontTakeoverTool />}
+            element={<EmergencyTakeoverTool />}
           ></Route>
           <Route
             path="*"

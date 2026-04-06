@@ -18,7 +18,7 @@ defmodule Screenplay.Application do
         {Phoenix.PubSub, name: Screenplay.PubSub},
         # Start the Endpoint (http/https)
         ScreenplayWeb.Endpoint,
-        Screenplay.OutfrontTakeoverTool.Alerts.State,
+        Screenplay.EmergencyTakeoverTool.Alerts.State,
         Screenplay.ScreensConfig
       ] ++
         if Application.get_env(:screenplay, :start_cache_processes) do

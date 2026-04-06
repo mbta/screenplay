@@ -6,7 +6,7 @@ defmodule Screenplay.Jobs.Reminders do
 
   require Logger
 
-  alias Screenplay.OutfrontTakeoverTool.Alerts.{Alert, State}
+  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State}
 
   @http_client Application.compile_env!(:screenplay, :http_client)
 

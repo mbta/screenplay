@@ -11,14 +11,14 @@
 @import "~bootstrap/scss/modal";
 
 html {
-  background: $gray-700;
   font-family: "Inter", sans-serif;
   body {
+    background: $gray-700;
     margin: 0;
   }
 }
 
-.outfront-container {
+.emergency-container {
   margin: 24px 60px;
 
   .app-title {
@@ -36,29 +36,6 @@ html {
     .stacked-title {
       color: white;
     }
-  }
-}
-
-.screen-icon {
-  background: $gray-400;
-  &.landscape {
-    height: 13.5px;
-    width: 24px;
-  }
-  &.portrait {
-    width: 13.5px;
-    height: 24px;
-  }
-  &.none {
-    background: repeating-linear-gradient(
-      45deg,
-      $gray-200,
-      $gray-200 12px,
-      white 10px,
-      white 15px
-    );
-    width: 13.5px;
-    height: 24px;
   }
 }
 
@@ -91,7 +68,7 @@ html {
   }
 }
 
-.outfront-container {
+.emergency-container {
   button {
     display: flex;
     align-items: center;
@@ -123,7 +100,7 @@ footer {
   margin-top: 48px;
 }
 
-.outfront-modal {
+.emergency-modal {
   --bs-modal-border-radius: 8px;
   --bs-modal-bg: #{$gray-200};
   --bs-modal-padding: 16px;

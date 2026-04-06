@@ -10,7 +10,7 @@ config :screenplay, ScreenplayWeb.AuthManager, secret_key: "test_auth_secret"
 
 config :screenplay,
   redirect_http?: false,
-  alerts_fetch_module: Screenplay.OutfrontTakeoverTool.Alerts.TestFetch,
+  alerts_fetch_module: Screenplay.EmergencyTakeoverTool.Alerts.TestFetch,
   config_fetcher: Screenplay.Places.LocalFetch,
   local_place_descriptions_file_spec: {:test, "place_descriptions.json"},
   local_paess_labels_file_spec: {:test, "paess_labels.json"},

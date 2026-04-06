@@ -33,7 +33,7 @@ defmodule ScreenplayWeb.Router do
     plug(ScreenplayWeb.Plugs.EnsureApiAuth)
   end
 
-  pipeline :ensure_outfront_admin, do: plug(EnsureRole, :emergency_admin)
+  pipeline :ensure_emergency_admin, do: plug(EnsureRole, :emergency_admin)
   pipeline :ensure_pa_message_admin, do: plug(EnsureRole, :pa_message_admin)
   pipeline :ensure_screens_admin, do: plug(EnsureRole, :screens_admin)
   pipeline :ensure_suppression_admin, do: plug(EnsureRole, :suppression_admin)
@@ -150,16 +150,16 @@ defmodule ScreenplayWeb.Router do
     )
   end
 
-  # Outfront Emergency Takeover Tool
+  # Emergency Takeover Tool
 
-  scope "/emergency-takeover", ScreenplayWeb.OutfrontTakeoverTool do
-    pipe_through([:browser, :authenticate, :ensure_outfront_admin])
+  scope "/emergency-takeover", ScreenplayWeb.EmergencyTakeoverTool do
+    pipe_through([:browser, :authenticate, :ensure_emergency_admin])
 
     get("/", PageController, :index)
   end
 
-  scope "/api/takeover_tool", ScreenplayWeb.OutfrontTakeoverTool do
-    pipe_through([:api, :browser, :authenticate, :ensure_outfront_admin])
+  scope "/api/takeover_tool", ScreenplayWeb.EmergencyTakeoverTool do
+    pipe_through([:api, :browser, :authenticate, :ensure_emergency_admin])
 
     post("/create", AlertController, :create)
     post("/edit", AlertController, :edit)
