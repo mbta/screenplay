@@ -9,9 +9,6 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-minor"]
     groups:
       mix-minor:
         update-types:
@@ -26,9 +23,6 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-minor"]
     groups:
       npm-minor:
         update-types:
