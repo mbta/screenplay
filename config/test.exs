@@ -29,7 +29,18 @@ config :screenplay,
 
 config :ueberauth, Ueberauth,
   providers: [
-    keycloak: {Screenplay.Ueberauth.Strategy.Fake, [roles: ["test1"]]}
+    keycloak:
+      {Ueberauth.Strategy.FakeOidcc,
+       [
+         client_id: "test-client",
+         auto_redirect: true,
+         roles: [
+           "screenplay-emergency-admin",
+           "screens-admin",
+           "pa-message-admin",
+           "suppression-admin"
+         ]
+       ]}
   ]
 
 config :ueberauth_oidcc,
