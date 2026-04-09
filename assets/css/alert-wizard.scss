@@ -61,20 +61,6 @@
         .hang-left {
           flex: 1;
         }
-        .hang-right {
-          text-align: right;
-          margin-left: 24px;
-          flex-shrink: 0;
-          .legend-entry {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-top: 8px;
-            .legend-text {
-              margin-right: 8px;
-            }
-          }
-        }
       }
 
       .step-body {

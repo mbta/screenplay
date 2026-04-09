@@ -3,7 +3,7 @@ import {
   CannedMessage,
   CustomMessage,
   StationsByLine,
-} from "./components/OutfrontTakeoverTool/OutfrontTakeoverTool";
+} from "./components/EmergencyTakeoverTool/EmergencyTakeoverTool";
 import CANNED_MESSAGES from "Constants/messages";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import { Alert, ActivePeriod } from "Models/alert";
