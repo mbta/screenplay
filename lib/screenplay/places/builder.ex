@@ -96,7 +96,13 @@ defmodule Screenplay.Places.Builder do
     |> Enum.group_by(&elem(&1, 0), fn
       {_stop_id,
        {id,
-        %Screen{app_id: app_id, disabled: disabled, app_params: app_params, location: location}}} ->
+        %Screen{
+          app_id: app_id,
+          disabled: disabled,
+          app_params: app_params,
+          location: location,
+          hidden_from_screenplay: hidden_from_screenplay
+        }}} ->
         direction_id =
           case app_params do
             %_app{direction_id: direction_id} -> direction_id
@@ -108,13 +114,13 @@ defmodule Screenplay.Places.Builder do
           type: app_id,
           disabled: disabled,
           direction_id: direction_id,
-          location: location || ""
+          location: location || "",
+          hidden?: hidden_from_screenplay
         }
     end)
   end
 
   defp hidden_screen?({_id, %Screen{app_id: :on_bus_v2}}), do: true
-  defp hidden_screen?({_id, %Screen{hidden_from_screenplay: true}}), do: true
   defp hidden_screen?(_), do: false
 
   defp append_routes_to_places(places) do

@@ -62,7 +62,7 @@ defmodule Screenplay.Places.BuilderTest do
                  ],
                  description: nil
                }
-             ] = PlacesCache.all(nil, return: :value)
+             ] = Screenplay.Places.get()
     end
 
     test "adds bus stops with screens" do
@@ -94,7 +94,7 @@ defmodule Screenplay.Places.BuilderTest do
                  ],
                  description: nil
                }
-             ] = PlacesCache.all(nil, return: :value)
+             ] = Screenplay.Places.get()
     end
 
     test "splits multi-place screens" do
@@ -165,7 +165,7 @@ defmodule Screenplay.Places.BuilderTest do
                  ],
                  description: nil
                }
-             ] = PlacesCache.all(nil, return: :value)
+             ] = Screenplay.Places.get()
     end
 
     test "omits screens with hidden_from_screenplay: true" do
@@ -189,7 +189,7 @@ defmodule Screenplay.Places.BuilderTest do
                  routes: ["Blue"],
                  screens: []
                }
-             ] = PlacesCache.all(nil, return: :value)
+             ] = Screenplay.Places.get()
     end
 
     test "adds PA/ESS screens" do
@@ -287,7 +287,7 @@ defmodule Screenplay.Places.BuilderTest do
                    }
                  ]
                }
-             ] = PlacesCache.all(nil, return: :value)
+             ] = Screenplay.Places.get()
     end
   end
 
