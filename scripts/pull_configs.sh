@@ -33,4 +33,3 @@ maybe_cp() {
 
 maybe_cp s3://mbta-ctd-config/screenplay/"$1".json priv/local/alerts.json
 maybe_cp s3://mbta-ctd-config/screenplay/"$1"/paess_labels.json priv/local/paess_labels.json
-maybe_cp s3://mbta-ctd-config/screenplay/"$1"/place_descriptions.json priv/local/place_descriptions.json

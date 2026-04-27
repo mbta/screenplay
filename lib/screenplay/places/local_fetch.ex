@@ -4,16 +4,6 @@ defmodule Screenplay.Places.LocalFetch do
   @behaviour Screenplay.Places.Fetch
 
   @impl true
-  def get_place_descriptions do
-    with {:ok, config_contents, version_id} <- do_get(:local_place_descriptions_file_spec),
-         {:ok, config_json} <- do_decode(config_contents, :local_place_descriptions_file_spec) do
-      {:ok, config_json, version_id}
-    else
-      _ -> :error
-    end
-  end
-
-  @impl true
   def get_paess_labels do
     with {:ok, config_contents, _} <- do_get(:local_paess_labels_file_spec),
          {:ok, config_json} <- do_decode(config_contents, :local_paess_labels_file_spec) do

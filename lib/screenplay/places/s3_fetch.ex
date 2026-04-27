@@ -6,16 +6,6 @@ defmodule Screenplay.Places.S3Fetch do
   @behaviour Screenplay.Places.Fetch
 
   @impl true
-  def get_place_descriptions do
-    with {:ok, place_description_contents, version_id} <- do_get(:place_descriptions),
-         {:ok, place_description_json} <- Jason.decode(place_description_contents) do
-      {:ok, place_description_json, version_id}
-    else
-      _ -> :error
-    end
-  end
-
-  @impl true
   def get_paess_labels do
     with {:ok, paess_labels_contents, _} <- do_get(:paess_labels),
          {:ok, paess_labels_json} <- Jason.decode(paess_labels_contents) do
@@ -47,17 +37,14 @@ defmodule Screenplay.Places.S3Fetch do
   end
 
   defp config_path_for_environment(file_spec) do
-    base_path = "screenplay/#{Application.get_env(:screenplay, :environment_name)}"
+    path_env = Application.get_env(:screenplay, :environment_name)
 
     case file_spec do
-      :place_descriptions ->
-        "#{base_path}/place_descriptions.json"
-
       :screens ->
-        "screens/screens-#{Application.get_env(:screenplay, :environment_name)}.json"
+        "screens/screens-#{path_env}.json"
 
       :paess_labels ->
-        "#{base_path}/paess_labels.json"
+        "screenplay/#{path_env}/paess_labels.json"
     end
   end
 
