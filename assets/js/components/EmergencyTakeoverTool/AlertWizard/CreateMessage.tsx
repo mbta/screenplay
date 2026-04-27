@@ -1,17 +1,16 @@
 import React from "react";
 import CANNED_MESSAGES from "Constants/messages";
 import { charLimit } from "Constants/misc";
+import { Message } from "../EmergencyTakeoverTool";
+import cx from "classnames";
+import { getMessageString } from "../../../util";
 
 interface CreateMessageProps {
-  messageOption: string;
-  cannedMessage: string;
-  customMessage: string;
-  changeMessageOption: (event: any) => void;
-  changeCannedMessage: (event: any) => void;
-  changeCustomMessage: (event: any) => void;
+  value: Message;
+  onChange: (value: Message) => void;
 }
 
-const CreateMessage = (props: CreateMessageProps) => {
+const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
   return (
     <>
       <div className="step-instructions">
@@ -29,20 +28,22 @@ const CreateMessage = (props: CreateMessageProps) => {
         </div>
         <div>
           <div
-            className={`radio-option option-one ${
-              props.messageOption === "1" ? "selected-option" : ""
-            }`}
+            className={cx("radio-option", "option-one", {
+              "selected-option": value.type === "canned",
+            })}
           >
             <input
               type="radio"
               value="1"
-              checked={props.messageOption === "1"}
-              onChange={props.changeMessageOption}
+              checked={value.type === "canned"}
+              onChange={() => onChange({ type: "canned", id: -1 })}
             />
             <select
               className="message-select text-16"
-              value={props.cannedMessage}
-              onChange={props.changeCannedMessage}
+              value={value.type === "canned" ? value.id : -1}
+              onChange={(e) =>
+                onChange({ type: "canned", id: +e.target.value })
+              }
             >
               <option value={-1} hidden>
                 Select canned message…
@@ -55,22 +56,26 @@ const CreateMessage = (props: CreateMessageProps) => {
             </select>
           </div>
           <div
-            className={`radio-option option-two ${
-              props.messageOption === "2" ? "selected-option" : ""
-            }`}
+            className={cx("radio-option", "option-two", {
+              "selected-option": value.type === "custom",
+            })}
           >
             <input
               type="radio"
               value="2"
-              checked={props.messageOption === "2"}
-              onChange={props.changeMessageOption}
+              checked={value.type === "custom"}
+              onChange={() =>
+                onChange({ type: "custom", text: getMessageString(value) })
+              }
             />
             <textarea
               className="message-textarea text-16"
-              value={props.customMessage}
+              value={getMessageString(value)}
               maxLength={charLimit}
               placeholder="Type, or select a canned message above to edit here..."
-              onChange={props.changeCustomMessage}
+              onChange={(e) =>
+                onChange({ type: "custom", text: e.target.value })
+              }
             ></textarea>
           </div>
         </div>

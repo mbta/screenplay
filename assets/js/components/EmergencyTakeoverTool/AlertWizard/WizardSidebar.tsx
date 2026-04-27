@@ -2,13 +2,12 @@ import React from "react";
 import StackedStationCards from "./StackedStationCards";
 
 import SVGPreviews from "./SVGPreviews";
-import { Station } from "../EmergencyTakeoverTool";
+import { Message, Station } from "../EmergencyTakeoverTool";
 
 interface WizardSidebarProps {
   selectedStations: Station[];
   step: number;
-  customMessage: string;
-  cannedMessageId: string;
+  message: Message;
 }
 
 class WizardSidebar extends React.Component<WizardSidebarProps> {
@@ -25,17 +24,17 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
           alt=""
         />
       );
-    } else if (this.props.cannedMessageId !== "") {
+    } else if (this.props.message.type === "canned") {
       return (
         <img
           className="portrait-png"
-          src={`/images/Outfront-Alert-${this.props.cannedMessageId}-portrait.png`}
+          src={`/images/Outfront-Alert-${this.props.message.id}-portrait.png`}
           alt=""
         />
       );
     }
 
-    return <SVGPreviews showText={true} message={this.props.customMessage} />;
+    return <SVGPreviews showText={true} message={this.props.message.text} />;
   }
 
   render() {
