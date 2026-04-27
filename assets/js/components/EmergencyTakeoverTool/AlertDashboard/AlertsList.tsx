@@ -14,36 +14,36 @@ interface AlertsListProps {
   closeModal: () => void;
 }
 
+const fetchActiveAlerts = withErrorHandling(
+  async () => {
+    const response = await fetch(`${BASE_URL}/active_alerts`);
+    if (!response.ok) {
+      throw response;
+    }
+    return response.json();
+  },
+  {
+    customMessage: "Failed to load active alerts. Please refresh the page.",
+  },
+);
+
+const fetchPastAlerts = withErrorHandling(
+  async () => {
+    const response = await fetch(`${BASE_URL}/past_alerts`);
+    if (!response.ok) {
+      throw response;
+    }
+    return response.json();
+  },
+  { customMessage: "Failed to load past alerts. Please refresh the page." },
+);
+
 const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [alertsData, setAlertsData] = useState([]);
   const [pastAlertsData, setPastAlertsData] = useState([]);
 
   const refreshAlerts = async () => {
     // Refresh active and past alerts on page load, alert clear, and at a regular interval.
-    const fetchActiveAlerts = withErrorHandling(
-      async () => {
-        const response = await fetch(`${BASE_URL}/active_alerts`);
-        if (!response.ok) {
-          throw response;
-        }
-        return response.json();
-      },
-      {
-        customMessage: "Failed to load active alerts. Please refresh the page.",
-      },
-    );
-
-    const fetchPastAlerts = withErrorHandling(
-      async () => {
-        const response = await fetch(`${BASE_URL}/past_alerts`);
-        if (!response.ok) {
-          throw response;
-        }
-        return response.json();
-      },
-      { customMessage: "Failed to load past alerts. Please refresh the page." },
-    );
-
     const activeData = await fetchActiveAlerts();
     if (activeData) {
       setAlertsData(activeData);
