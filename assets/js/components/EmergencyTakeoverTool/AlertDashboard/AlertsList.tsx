@@ -49,10 +49,9 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
       }
     };
     loadActiveAlerts();
-  }, [fetchActiveAlerts, lastChangeTime]);
+  }, [lastChangeTime]);
 
   useEffect(() => {
-    // TODO: I don't love this way of doing it, but have it working and moving on for now
     const loadPastAlerts = async () => {
       const data = await fetchPastAlerts();
       if (data) {
@@ -60,7 +59,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
       }
     };
     loadPastAlerts();
-  }, [fetchPastAlerts, lastChangeTime]);
+  }, [lastChangeTime]);
 
   useEffect(() => {
     setTimeout(() => setLastChangeTime(Date.now()), 60000);
