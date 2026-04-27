@@ -45,11 +45,12 @@ defmodule Screenplay.Places.Place do
             type: String.t(),
             disabled: boolean(),
             direction_id: String.t(),
-            location: String.t()
+            location: String.t(),
+            hidden?: boolean()
           }
 
     @enforce_keys [:id, :type, :disabled]
-    defstruct @enforce_keys ++ [:direction_id, location: ""]
+    defstruct @enforce_keys ++ [:direction_id, location: "", hidden?: false]
 
     def new(map) do
       map

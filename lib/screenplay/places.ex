@@ -34,5 +34,8 @@ defmodule Screenplay.Places do
   @spec get() :: list(Place.t())
   def get do
     Cache.all(nil, return: :value)
+    |> update_in([Access.all(), Access.key(:screens)], fn screens ->
+      Enum.reject(screens, &match?(%{hidden?: true}, &1))
+    end)
   end
 end
