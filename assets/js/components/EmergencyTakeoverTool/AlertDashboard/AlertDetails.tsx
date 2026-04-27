@@ -17,16 +17,14 @@ import AlertReminder from "./AlertReminder";
 
 interface AlertDetailsProps {
   data: any;
-  setLastChangeTime: (time: number) => void;
   startEditWizard: (data: AlertData, step: number) => void;
-  clearAlert: (id: string, setLastChangeTime: (time: number) => void) => void;
+  clearAlert: (id: string) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
 }
 
 const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   const {
     data,
-    setLastChangeTime,
     startEditWizard,
     triggerConfirmation,
     clearAlert: clearAlertFromProps,
@@ -71,10 +69,10 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
           Clear Alert
         </>
       ),
-      onSubmit: () => clearAlertFromProps(id, setLastChangeTime),
+      onSubmit: () => clearAlertFromProps(id),
     };
     triggerConfirmation(modalDetails);
-  }, [triggerConfirmation, id, clearAlertFromProps, setLastChangeTime]);
+  }, [triggerConfirmation, id, clearAlertFromProps]);
 
   return (
     <div className="alert-card">

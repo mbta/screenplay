@@ -17,58 +17,51 @@ interface AlertsListProps {
 const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [alertsData, setAlertsData] = useState([]);
   const [pastAlertsData, setPastAlertsData] = useState([]);
-  const [lastChangeTime, setLastChangeTime] = useState(Date.now());
 
-  const fetchActiveAlerts = withErrorHandling(
-    async () => {
-      const response = await fetch(`${BASE_URL}/active_alerts`);
-      if (!response.ok) {
-        throw response;
-      }
-      return response.json();
-    },
-    { customMessage: "Failed to load active alerts. Please refresh the page." },
-  );
+  const refreshAlerts = async () => {
+    // Refresh active and past alerts on page load, alert clear, and at a regular interval.
+    const fetchActiveAlerts = withErrorHandling(
+      async () => {
+        const response = await fetch(`${BASE_URL}/active_alerts`);
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      },
+      {
+        customMessage: "Failed to load active alerts. Please refresh the page.",
+      },
+    );
 
-  const fetchPastAlerts = withErrorHandling(
-    async () => {
-      const response = await fetch(`${BASE_URL}/past_alerts`);
-      if (!response.ok) {
-        throw response;
-      }
-      return response.json();
-    },
-    { customMessage: "Failed to load past alerts. Please refresh the page." },
-  );
+    const fetchPastAlerts = withErrorHandling(
+      async () => {
+        const response = await fetch(`${BASE_URL}/past_alerts`);
+        if (!response.ok) {
+          throw response;
+        }
+        return response.json();
+      },
+      { customMessage: "Failed to load past alerts. Please refresh the page." },
+    );
 
-  useEffect(() => {
-    const loadActiveAlerts = async () => {
-      const data = await fetchActiveAlerts();
-      if (data) {
-        setAlertsData(data);
-      }
-    };
-    loadActiveAlerts();
-  }, [lastChangeTime]);
+    const activeData = await fetchActiveAlerts();
+    if (activeData) {
+      setAlertsData(activeData);
+    }
 
-  useEffect(() => {
-    const loadPastAlerts = async () => {
-      const data = await fetchPastAlerts();
-      if (data) {
-        setPastAlertsData(data);
-      }
-    };
-    loadPastAlerts();
-  }, [lastChangeTime]);
+    const pastData = await fetchPastAlerts();
+    if (pastData) {
+      setPastAlertsData(pastData);
+    }
+  };
 
   useEffect(() => {
-    setTimeout(() => setLastChangeTime(Date.now()), 60000);
-  }, [lastChangeTime]);
+    refreshAlerts();
+    const interval = setInterval(refreshAlerts, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const clearAlert = (
-    id: string,
-    setLastChangeTime: (time: number) => void,
-  ) => {
+  const clearAlert = (id: string) => {
     const csrfMetaElement = document.head.querySelector(
       "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
@@ -93,7 +86,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
       })
       .then(({ success }) => {
         if (success) {
-          setLastChangeTime(Date.now());
+          refreshAlerts();
         } else {
           // Should this be a toast or other user-visible message?
           console.log("Error when clearing with id: ", id);
@@ -130,7 +123,7 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
       })
       .then(({ success }) => {
         if (success) {
-          setLastChangeTime(Date.now());
+          refreshAlerts();
         } else {
           // Should this be a toast or other user-visible message?
           console.log("Error when clearing all alerts");
@@ -182,7 +175,6 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
             return (
               <AlertDetails
                 data={data}
-                setLastChangeTime={setLastChangeTime}
                 startEditWizard={props.startEditWizard}
                 clearAlert={clearAlert}
                 triggerConfirmation={props.triggerConfirmation}
