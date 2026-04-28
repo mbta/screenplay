@@ -45,7 +45,8 @@ interface AlertData {
   cleared_by: string;
   created_by: string;
   edited_by: string;
-  message: Message;
+  indoor_message: Message;
+  outdoor_message: Message;
   schedule: Schedule;
   stations: string[];
   step: number | null;

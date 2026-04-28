@@ -16,7 +16,7 @@ import SVGPreviews from "../AlertWizard/SVGPreviews";
 import AlertReminder from "./AlertReminder";
 
 interface AlertDetailsProps {
-  data: any;
+  data: AlertData;
   startEditWizard: (data: AlertData, step: number) => void;
   clearAlert: (id: string) => void;
   triggerConfirmation: (modalDetails: ModalDetails) => void;
@@ -29,7 +29,14 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     triggerConfirmation,
     clearAlert: clearAlertFromProps,
   } = props;
-  const { created_by, id, message, schedule, stations } = data;
+  const {
+    created_by,
+    id,
+    indoor_message,
+    outdoor_message,
+    schedule,
+    stations,
+  } = data;
 
   const stationScreenOrientationList = useContext(
     StationScreenOrientationContext,
@@ -49,8 +56,6 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     const endDate = new Date(schedule.end);
     endDateString = formatDate(endDate) + " @ " + formatTime(endDate);
   }
-
-  const messageString = getMessageString(message);
 
   const editAlert = useCallback(
     (step: number) => startEditWizard(data, step),
@@ -77,12 +82,12 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        {message.id === undefined ? (
-          <SVGPreviews showText={true} message={messageString} />
+        {indoor_message.type === "custom" ? (
+          <SVGPreviews showText message={indoor_message.text} prefix="indoor" />
         ) : (
           <img
             className="portrait-png"
-            src={`/images/Outfront-Alert-${message.id}-portrait.png`}
+            src={`/images/Outfront-Alert-${indoor_message.id}-portrait.png`}
             alt=""
           />
         )}
@@ -109,10 +114,15 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
         </div>
         <table className="details-grid">
           <tbody>
-            <tr>
-              <td>Message text</td>
-              <td className="emphasized-cell">{messageString}</td>
-            </tr>
+            {[
+              { message: indoor_message, label: "Indoor" },
+              { message: outdoor_message, label: "Outdoor" },
+            ].map(({ message, label }) => (
+              <tr key={label}>
+                <td>{label} text</td>
+                <td className="emphasized-cell">{getMessageString(message)}</td>
+              </tr>
+            ))}
             <tr className="gray-row">
               <td>Start</td>
               <td className="emphasized-cell">{startDateString}</td>

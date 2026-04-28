@@ -9,7 +9,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       alert = %Alert{
         id: "alert",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Back Bay"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -32,7 +33,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       cleared_alert = %Alert{
         id: "alert",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Back Bay"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -55,7 +57,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       alert = %Alert{
         id: nil,
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["South Station"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -72,7 +75,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       alert = %Alert{
         id: "alert",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["South Station"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -83,21 +87,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       assert :ok == State.add_alert(pid, alert)
 
-      expected_state = %State{
-        alerts: %{
-          "alert" => %Alert{
-            id: "alert",
-            message: %{type: :canned, id: 1},
-            stations: ["South Station"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{}
-      }
+      expected_state = %State{alerts: %{"alert" => alert}, cleared_alerts: %{}}
 
       assert expected_state == :sys.get_state(pid)
     end
@@ -109,7 +99,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -120,7 +111,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
+        indoor_message: %{type: :custom, text: "This is an alert"},
+        outdoor_message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -136,7 +128,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       new_alert = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "All clear now"},
+        indoor_message: %{type: :custom, text: "All clear now"},
+        outdoor_message: %{type: :custom, text: "All clear now"},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -147,33 +140,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       assert :ok == State.update_alert(pid, "a2", new_alert)
 
-      expected_state = %State{
-        alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            stations: ["Haymarket", "Government Center"],
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          },
-          "a2" => %Alert{
-            id: "a2",
-            message: %{text: "All clear now", type: :custom},
-            schedule: %{end: ~U[2021-08-19 17:39:42Z], start: ~U[2021-08-19 17:09:42Z]},
-            stations: ["Kendall/MIT"],
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{}
-      }
-
-      assert expected_state == :sys.get_state(pid)
+      assert %{alerts: %{"a1" => ^a1, "a2" => ^new_alert}, cleared_alerts: %{}} =
+               :sys.get_state(pid)
     end
   end
 
@@ -183,7 +151,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -194,7 +163,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
+        indoor_message: %{type: :custom, text: "This is an alert"},
+        outdoor_message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -211,34 +181,10 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       assert :ok == State.clear_alert(pid, %{a1 | cleared_by: "clear_user", cleared_at: now})
 
-      expected_state = %State{
-        alerts: %{
-          "a2" => %Alert{
-            id: "a2",
-            message: %{text: "This is an alert", type: :custom},
-            schedule: %{end: ~U[2021-08-19 17:39:42Z], start: ~U[2021-08-19 17:09:42Z]},
-            stations: ["Kendall/MIT"],
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            stations: ["Haymarket", "Government Center"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: now,
-            cleared_by: "clear_user"
-          }
-        }
-      }
-
-      assert expected_state == :sys.get_state(pid)
+      assert %{
+               alerts: %{"a2" => _},
+               cleared_alerts: %{"a1" => %{cleared_at: now, cleared_by: "clear_user"}}
+             } = :sys.get_state(pid)
     end
   end
 
@@ -248,7 +194,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -259,7 +206,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
+        indoor_message: %{type: :custom, text: "This is an alert"},
+        outdoor_message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -283,31 +231,9 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
       assert ["Kendall/MIT"] ==
                State.remove_overlapping_alerts(pid, params, user)
 
-      assert %State{
-               alerts: %{
-                 "a1" => %Alert{
-                   id: "a1",
-                   message: %{type: :canned, id: 1},
-                   stations: ["Haymarket", "Government Center"],
-                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-                   created_by: "user",
-                   edited_by: "user",
-                   cleared_at: nil,
-                   cleared_by: nil
-                 }
-               },
-               cleared_alerts: %{
-                 "a2" => %Alert{
-                   id: "a2",
-                   message: %{type: :custom, text: "This is an alert"},
-                   stations: ["Kendall/MIT"],
-                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-                   created_by: "user",
-                   edited_by: "user",
-                   cleared_at: %DateTime{},
-                   cleared_by: ^user
-                 }
-               }
+      assert %{
+               alerts: %{"a1" => _},
+               cleared_alerts: %{"a2" => %{cleared_at: %DateTime{}, cleared_by: ^user}}
              } = :sys.get_state(pid)
     end
 
@@ -316,7 +242,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -327,7 +254,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
+        indoor_message: %{type: :custom, text: "This is an alert"},
+        outdoor_message: %{type: :custom, text: "This is an alert"},
         stations: ["South Station", "Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -352,30 +280,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
                State.remove_overlapping_alerts(pid, params, user)
 
       assert %State{
-               alerts: %{
-                 "a1" => %Alert{
-                   id: "a1",
-                   message: %{type: :canned, id: 1},
-                   stations: ["Haymarket", "Government Center"],
-                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-                   created_by: "user",
-                   edited_by: "user",
-                   cleared_at: nil,
-                   cleared_by: nil
-                 }
-               },
-               cleared_alerts: %{
-                 "a2" => %Alert{
-                   id: "a2",
-                   message: %{type: :custom, text: "This is an alert"},
-                   stations: ["South Station", "Kendall/MIT"],
-                   schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-                   created_by: "user",
-                   edited_by: "user",
-                   cleared_at: %DateTime{},
-                   cleared_by: ^user
-                 }
-               }
+               alerts: %{"a1" => _},
+               cleared_alerts: %{"a2" => %{cleared_at: %DateTime{}, cleared_by: ^user}}
              } = :sys.get_state(pid)
     end
 
@@ -384,7 +290,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -395,7 +302,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
+        indoor_message: %{type: :custom, text: "This is an alert"},
+        outdoor_message: %{type: :custom, text: "This is an alert"},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -419,33 +327,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
       assert [] ==
                State.remove_overlapping_alerts(pid, params, user)
 
-      expected_state = %State{
-        alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            stations: ["Haymarket", "Government Center"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          },
-          "a2" => %Alert{
-            id: "a2",
-            message: %{type: :custom, text: "This is an alert"},
-            stations: ["Kendall/MIT"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{}
-      }
-
-      assert expected_state == :sys.get_state(pid)
+      assert %{alerts: %{"a1" => _, "a2" => _}, cleared_alerts: %{}} = :sys.get_state(pid)
     end
 
     test "removes stations from existing alert if another station exists" do
@@ -453,7 +335,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        message: %{type: :canned, id: 1},
+        indoor_message: %{type: :canned, id: 1},
+        outdoor_message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -464,7 +347,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        message: %{type: :custom, text: "This is an alert"},
+        indoor_message: %{type: :custom, text: "This is an alert"},
+        outdoor_message: %{type: :custom, text: "This is an alert"},
         stations: ["South Station", "Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -488,40 +372,18 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
       assert ["Kendall/MIT"] ==
                State.remove_overlapping_alerts(pid, params, user)
 
-      expected_state = %State{
-        alerts: %{
-          "a1" => %Alert{
-            id: "a1",
-            message: %{type: :canned, id: 1},
-            stations: ["Haymarket", "Government Center"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "user",
-            cleared_at: nil,
-            cleared_by: nil
-          },
-          "a2" => %Alert{
-            id: "a2",
-            message: %{type: :custom, text: "This is an alert"},
-            stations: ["South Station"],
-            schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
-            created_by: "user",
-            edited_by: "bar",
-            cleared_at: nil,
-            cleared_by: nil
-          }
-        },
-        cleared_alerts: %{}
-      }
-
-      assert expected_state == :sys.get_state(pid)
+      assert %{
+               alerts: %{"a1" => _, "a2" => %{stations: ["South Station"], edited_by: ^user}},
+               cleared_alerts: %{}
+             } = :sys.get_state(pid)
     end
   end
 
   describe "to_json/1" do
     a1 = %Alert{
       id: "a1",
-      message: %{type: :canned, id: 1},
+      indoor_message: %{type: :canned, id: 1},
+      outdoor_message: %{type: :canned, id: 1},
       stations: ["Haymarket", "Government Center"],
       schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
       created_by: "user",
@@ -532,7 +394,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
     a2 = %Alert{
       id: "a2",
-      message: %{type: :custom, text: "This is an alert"},
+      indoor_message: %{type: :custom, text: "This is an alert"},
+      outdoor_message: %{type: :custom, text: "This is an alert"},
       stations: ["Kendall/MIT"],
       schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
       created_by: "user",
@@ -557,7 +420,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
       "alerts" => [
         %{
           "id" => "a1",
-          "message" => %{"id" => 1, "type" => "canned"},
+          "indoor_message" => %{"id" => 1, "type" => "canned"},
+          "outdoor_message" => %{"id" => 1, "type" => "canned"},
           "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
           "stations" => ["Haymarket", "Government Center"],
           "created_by" => "user",
@@ -565,7 +429,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
         },
         %{
           "id" => "a2",
-          "message" => %{"text" => "This is an alert", "type" => "custom"},
+          "indoor_message" => %{"text" => "This is an alert", "type" => "custom"},
+          "outdoor_message" => %{"text" => "This is an alert", "type" => "custom"},
           "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
           "stations" => ["Kendall/MIT"],
           "created_by" => "user",

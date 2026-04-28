@@ -8,7 +8,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
   @enforce_keys [
     :id,
-    :message,
+    :indoor_message,
+    :outdoor_message,
     :stations,
     :schedule,
     :created_by,
@@ -40,14 +41,16 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @type user :: String.t()
 
   @type update_map :: %{
-          optional(:message) => canned_message() | custom_message(),
+          optional(:indoor_message) => canned_message() | custom_message(),
+          optional(:outdoor_message) => canned_message() | custom_message(),
           optional(:stations) => list(station),
           optional(:schedule) => schedule()
         }
 
   @type t :: %__MODULE__{
           id: id(),
-          message: canned_message() | custom_message(),
+          indoor_message: canned_message() | custom_message(),
+          outdoor_message: canned_message() | custom_message(),
           stations: list(station()),
           schedule: schedule(),
           created_by: user(),
@@ -62,11 +65,18 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     length |> :crypto.strong_rand_bytes() |> Base.url_encode64()
   end
 
-  @spec new(canned_message() | custom_message(), list(station()), schedule(), user()) :: t()
-  def new(message, stations, schedule, user) do
+  @spec new(
+          canned_message() | custom_message(),
+          canned_message() | custom_message(),
+          list(station()),
+          schedule(),
+          user()
+        ) :: t()
+  def new(indoor_message, outdoor_message, stations, schedule, user) do
     %__MODULE__{
       id: State.get_unused_alert_id(),
-      message: message,
+      indoor_message: indoor_message,
+      outdoor_message: outdoor_message,
       stations: stations,
       schedule: schedule,
       created_by: Util.trim_username(user),
@@ -93,7 +103,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @spec to_json(t()) :: map()
   def to_json(%__MODULE__{
         id: id,
-        message: message,
+        indoor_message: indoor_message,
+        outdoor_message: outdoor_message,
         stations: stations,
         schedule: schedule,
         created_by: created_by,
@@ -103,7 +114,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
       }) do
     %{
       "id" => id,
-      "message" => message_to_json(message),
+      "indoor_message" => message_to_json(indoor_message),
+      "outdoor_message" => message_to_json(outdoor_message),
       "stations" => stations_to_json(stations),
       "schedule" => schedule_to_json(schedule),
       "created_by" => Util.trim_username(created_by),
@@ -116,7 +128,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @spec from_json(map()) :: t()
   def from_json(%{
         "id" => id,
-        "message" => message_json,
+        "indoor_message" => indoor_message_json,
+        "outdoor_message" => outdoor_message_json,
         "stations" => stations_json,
         "schedule" => schedule_json,
         "created_by" => created_by,
@@ -126,7 +139,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
       }) do
     %__MODULE__{
       id: id,
-      message: message_from_json(message_json),
+      indoor_message: message_from_json(indoor_message_json),
+      outdoor_message: message_from_json(outdoor_message_json),
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
       created_by: Util.trim_username(created_by),
@@ -138,7 +152,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
   def from_json(%{
         "id" => id,
-        "message" => message_json,
+        "indoor_message" => indoor_message_json,
+        "outdoor_message" => outdoor_message_json,
         "stations" => stations_json,
         "schedule" => schedule_json,
         "created_by" => created_by,
@@ -146,7 +161,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
       }) do
     %__MODULE__{
       id: id,
-      message: message_from_json(message_json),
+      indoor_message: message_from_json(indoor_message_json),
+      outdoor_message: message_from_json(outdoor_message_json),
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
       created_by: Util.trim_username(created_by),

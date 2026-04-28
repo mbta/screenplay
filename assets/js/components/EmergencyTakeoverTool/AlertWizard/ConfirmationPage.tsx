@@ -1,12 +1,13 @@
 import React from "react";
-import { formatDate, formatTime } from "../../../util";
+import { formatDate, formatTime, getMessageString } from "../../../util";
 import StackedStationCards from "./StackedStationCards";
-import { Station } from "../EmergencyTakeoverTool";
+import { Message, Station } from "../EmergencyTakeoverTool";
 
 interface ConfirmationPageProps {
   goToStep: (step: number) => void;
   selectedStations: Station[];
-  message: string;
+  indoorMessage: Message;
+  outdoorMessage: Message;
   duration: number | string;
 }
 
@@ -34,15 +35,20 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
       </div>
       <table className="details-grid">
         <tbody>
-          <tr className="gray-row">
-            <td>Message text</td>
-            <td className="emphasized-cell">{props.message}</td>
-            <td>
-              <div className="edit-link" onClick={() => props.goToStep(1)}>
-                Edit
-              </div>
-            </td>
-          </tr>
+          {[
+            { message: props.indoorMessage, label: "Indoor" },
+            { message: props.outdoorMessage, label: "Outdoor" },
+          ].map(({ message, label }) => (
+            <tr key={label} className="gray-row">
+              <td>{label} text</td>
+              <td className="emphasized-cell">{getMessageString(message)}</td>
+              <td>
+                <div className="edit-link" onClick={() => props.goToStep(1)}>
+                  Edit
+                </div>
+              </td>
+            </tr>
+          ))}
           <tr>
             <td>Stations</td>
             <td>

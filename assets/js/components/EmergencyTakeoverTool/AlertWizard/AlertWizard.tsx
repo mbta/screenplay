@@ -15,7 +15,7 @@ import {
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
-import { getMessageString, matchStation } from "../../../util";
+import { matchStation } from "../../../util";
 
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
@@ -32,7 +32,8 @@ interface AlertWizardState {
   step: number;
   cancelModal: boolean;
   selectedStations: Station[];
-  message: Message;
+  indoorMessage: Message;
+  outdoorMessage: Message;
   duration: string | number;
   id: string | null;
   activeAlertsList: any[];
@@ -52,7 +53,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         cancelModal: false,
         // User input state
         selectedStations: [],
-        message: { type: "canned", id: -1 },
+        indoorMessage: { type: "canned", id: -1 },
+        outdoorMessage: { type: "canned", id: -1 },
         duration: 1,
         activeAlertsList: [],
         showErrorMessage: false,
@@ -74,7 +76,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   initializeState(alertData: AlertData) {
-    const { id, message, stations, schedule } = alertData;
+    const { id, indoor_message, outdoor_message, stations, schedule } =
+      alertData;
 
     const selectedStations = stations.map((station: string) =>
       matchStation(station, this.props.stationScreenOrientationList),
@@ -99,7 +102,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       cancelModal: false,
       // User input state
       selectedStations: selectedStations,
-      message,
+      indoorMessage: indoor_message,
+      outdoorMessage: outdoor_message,
       duration: duration,
       activeAlertsList: [],
       showErrorMessage: false,
@@ -138,25 +142,30 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <ConfirmationPage
             goToStep={this.goToStep}
             selectedStations={this.state.selectedStations}
-            message={getMessageString(this.state.message)}
+            indoorMessage={this.state.indoorMessage}
+            outdoorMessage={this.state.outdoorMessage}
             duration={this.state.duration}
           />
         );
       default:
         return (
           <CreateMessage
-            value={this.state.message}
-            onChange={(v) => this.setState({ message: v })}
+            indoorValue={this.state.indoorMessage}
+            onChangeIndoor={(v) => this.setState({ indoorMessage: v })}
+            outdoorValue={this.state.outdoorMessage}
+            onChangeOutdoor={(v) => this.setState({ outdoorMessage: v })}
           />
         );
     }
   }
 
   waitingForInput() {
-    const { message } = this.state;
+    const { indoorMessage, outdoorMessage } = this.state;
+    const invalidMessage = (message: Message) =>
+      message.type === "canned" ? message.id === -1 : !message.text;
     switch (this.state.step) {
       case 1:
-        return message.type === "canned" ? message.id === -1 : !message.text;
+        return invalidMessage(indoorMessage) || invalidMessage(outdoorMessage);
       case 2:
         return this.state.selectedStations.length === 0;
       // Because 1 hour is automatically selected
@@ -216,14 +225,21 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const duration = this.state.duration;
     const pngs = Object.fromEntries(
       await Promise.all(
-        ["portrait", "landscape"].map(async (orientation) => {
-          return [orientation, await this.makePNG(orientation)];
-        }),
+        [
+          { message: this.state.indoorMessage, prefix: "indoor" },
+          { message: this.state.outdoorMessage, prefix: "outdoor" },
+        ].flatMap(({ message, prefix }) =>
+          ["portrait", "landscape"].map(async (orientation) => [
+            `${prefix}_${orientation}`,
+            await this.makePNG(message, prefix, orientation),
+          ]),
+        ),
       ),
     );
 
     const data = {
-      message: this.state.message,
+      indoor_message: this.state.indoorMessage,
+      outdoor_message: this.state.outdoorMessage,
       stations,
       duration,
       pngs,
@@ -319,7 +335,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
   }
 
-  async makePNG(orientation: string) {
+  async makePNG(message: Message, prefix: string, orientation: string) {
     const [width, height] =
       orientation === "portrait"
         ? [svgShortSide, svgLongSide]
@@ -342,10 +358,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     await new Promise((resolve) => {
       img.onload = resolve;
       img.src =
-        this.state.message.type === "canned"
-          ? `/images/Outfront-Alert-${this.state.message.id}-${orientation}.png`
+        message.type === "canned"
+          ? `/images/Outfront-Alert-${message.id}-${orientation}.png`
           : svg_to_uri(
-              document.getElementById(orientation + "-svg") as HTMLElement,
+              document.getElementById(`${prefix}-${orientation}-svg`)!,
             );
     });
 
@@ -388,7 +404,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <WizardSidebar
             selectedStations={this.state.selectedStations}
             step={this.state.step}
-            message={this.state.message}
+            indoorMessage={this.state.indoorMessage}
+            outdoorMessage={this.state.outdoorMessage}
           />
         </div>
         <WizardNavFooter

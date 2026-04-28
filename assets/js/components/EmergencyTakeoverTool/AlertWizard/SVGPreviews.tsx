@@ -16,6 +16,7 @@ import {
 interface SVGPreviewsProps {
   showText: boolean;
   message: string;
+  prefix: string;
 }
 
 const createSVGText = (message: string, orientation: string) => {
@@ -232,7 +233,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
         ) : (
           /* Portrait SVG */
           <svg
-            id="portrait-svg"
+            id={`${this.props.prefix}-portrait-svg`}
             className="portrait-svg"
             width={svgShortSide}
             height={svgLongSide}
@@ -341,7 +342,7 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
 
         {/* Landscape SVG */}
         <svg
-          id="landscape-svg"
+          id={`${this.props.prefix}-landscape-svg`}
           className="landscape-hidden"
           width={svgLongSide}
           height={svgShortSide}
