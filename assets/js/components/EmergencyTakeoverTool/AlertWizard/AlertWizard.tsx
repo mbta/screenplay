@@ -34,8 +34,6 @@ interface AlertWizardState {
   selectedStations: Station[];
   message: Message;
   duration: string | number;
-  landscapePNG: string | null;
-  portraitPNG: string | null;
   id: string | null;
   activeAlertsList: any[];
   showErrorMessage: boolean;
@@ -56,8 +54,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         selectedStations: [],
         message: { type: "canned", id: -1 },
         duration: 1,
-        landscapePNG: null,
-        portraitPNG: null,
         activeAlertsList: [],
         showErrorMessage: false,
       };
@@ -105,8 +101,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       selectedStations: selectedStations,
       message,
       duration: duration,
-      landscapePNG: null,
-      portraitPNG: null,
       activeAlertsList: [],
       showErrorMessage: false,
     };
@@ -183,12 +177,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     if (this.state.step === 4) {
       this.handleSubmit();
     } else {
-      // Temporary hack: to avoid race conditions, convert the SVG to a PNG upon station selection,
-      // which must always happen after message selection.
-      if (this.state.step === 2) {
-        this.generatePNGs();
-      }
-
       this.setState((state) => ({
         step: state.step + 1,
       }));
@@ -215,7 +203,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       });
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     const endpoint =
       this.state.id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
 
@@ -226,15 +214,19 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const stations = this.state.selectedStations.map(({ name }) => name);
     const duration = this.state.duration;
-    const landscapePNG = this.state.landscapePNG;
-    const portraitPNG = this.state.portraitPNG;
+    const pngs = Object.fromEntries(
+      await Promise.all(
+        ["portrait", "landscape"].map(async (orientation) => {
+          return [orientation, await this.makePNG(orientation)];
+        }),
+      ),
+    );
 
     const data = {
       message: this.state.message,
       stations,
       duration,
-      portrait_png: portraitPNG,
-      landscape_png: landscapePNG,
+      pngs,
       id: this.state.id,
     };
 
@@ -327,12 +319,11 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
   }
 
-  makePNG(
-    orientation: string,
-    width: number,
-    height: number,
-    callback: (dataUrl: string) => void,
-  ) {
+  async makePNG(orientation: string) {
+    const [width, height] =
+      orientation === "portrait"
+        ? [svgShortSide, svgLongSide]
+        : [svgLongSide, svgShortSide];
     const canvas = document.createElement("canvas");
     canvas.width = width * svgScale;
     canvas.height = height * svgScale;
@@ -344,36 +335,25 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const img = new Image();
 
-    if (this.state.message.type === "canned") {
-      img.src = `/images/Outfront-Alert-${this.state.message.id}-${orientation}.png`;
-    } else {
-      const svg = document.getElementById(orientation + "-svg") as HTMLElement;
-      const data = new XMLSerializer().serializeToString(svg);
+    const svg_to_uri = (svg: HTMLElement) =>
+      "data:image/svg+xml;base64," +
+      btoa(new XMLSerializer().serializeToString(svg));
+
+    await new Promise((resolve) => {
+      img.onload = resolve;
       img.src =
-        "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(data)));
-    }
+        this.state.message.type === "canned"
+          ? `/images/Outfront-Alert-${this.state.message.id}-${orientation}.png`
+          : svg_to_uri(
+              document.getElementById(orientation + "-svg") as HTMLElement,
+            );
+    });
 
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, width, height);
-      const imgURI = canvas.toDataURL("image/png");
-      callback(imgURI);
-    };
-  }
-
-  generatePNGs() {
-    this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
-      this.setState({ portraitPNG: url }),
-    );
-    this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
-      this.setState({ landscapePNG: url }),
-    );
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL("image/png");
   }
 
   render() {
-    const { step, landscapePNG, portraitPNG } = this.state;
-    if (step > 2 && (landscapePNG === null || portraitPNG === null)) {
-      this.generatePNGs();
-    }
     const modalDetails: ModalDetails = {
       icon: <NoSymbolIcon className="icon" />,
       header: "Cancel new Takeover Alert",

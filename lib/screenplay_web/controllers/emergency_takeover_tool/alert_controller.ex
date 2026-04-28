@@ -11,8 +11,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
           "message" => message,
           "stations" => stations,
           "duration" => duration_in_hours,
-          "portrait_png" => portrait_png,
-          "landscape_png" => landscape_png
+          "pngs" => pngs
         }
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
@@ -31,8 +30,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     _ = UserActionLogger.log(user, :create_alert, params_to_log)
     :ok = State.add_alert(alert)
 
-    portrait_image_data = decode_png(portrait_png)
-    landscape_image_data = decode_png(landscape_png)
+    portrait_image_data = decode_png(pngs["portrait"])
+    landscape_image_data = decode_png(pngs["landscape"])
 
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
@@ -50,8 +49,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
           "message" => message,
           "stations" => stations,
           "duration" => duration_in_hours,
-          "portrait_png" => portrait_png,
-          "landscape_png" => landscape_png
+          "pngs" => pngs
         }
       ) do
     alert = State.get_alert(id)
@@ -69,8 +67,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     _ = UserActionLogger.log(user, :update_alert, params_to_log)
     :ok = State.update_alert(id, new_alert)
 
-    portrait_image_data = decode_png(portrait_png)
-    landscape_image_data = decode_png(landscape_png)
+    portrait_image_data = decode_png(pngs["portrait"])
+    landscape_image_data = decode_png(pngs["landscape"])
 
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
