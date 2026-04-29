@@ -304,7 +304,7 @@ config :screenplay,
     ],
     blue: [
       %{
-        place_id: "place-bowd",
+        place_id: "place-bomnl",
         name: "Bowdoin",
         portrait: false,
         landscape: false,

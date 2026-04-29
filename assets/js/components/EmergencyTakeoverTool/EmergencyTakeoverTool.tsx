@@ -74,13 +74,16 @@ class EmergencyTakeoverTool extends React.Component<
     fetch(`${BASE_URL}/stations_and_screens`)
       .then((response) => response.json())
       .then((stationsMap: { [stationName: string]: Station }) => {
-        // Group stations by line using STATION_ORDER_BY_LINE
+        // Group stations by line
         const stationsByLine: StationsByLine = {};
 
         Object.keys(STATION_ORDER_BY_LINE).forEach((line) => {
-          stationsByLine[line] = STATION_ORDER_BY_LINE[line]
-            .map((stationInfo) => stationsMap[stationInfo.name])
-            .filter((station) => station !== undefined);
+          const stationInfo = STATION_ORDER_BY_LINE[line];
+          if (stationInfo) {
+            stationsByLine[line] = stationInfo
+              .map((station) => stationsMap[station.name])
+              .filter((station) => station !== undefined);
+          }
         });
 
         this.setState({ stationScreenOrientationList: stationsByLine });
