@@ -33,7 +33,6 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
     portrait_image_data = decode_png(portrait_png)
     landscape_image_data = decode_png(landscape_png)
-
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
     json(conn, %{success: true})

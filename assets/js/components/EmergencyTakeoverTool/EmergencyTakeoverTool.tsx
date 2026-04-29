@@ -3,6 +3,7 @@ import AlertDashboard from "./AlertDashboard/AlertDashboard";
 import AlertWizard from "./AlertWizard/AlertWizard";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
+import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 
 export interface Station {
   name: string;
@@ -56,7 +57,6 @@ class EmergencyTakeoverTool extends React.Component<
   constructor(props = {}) {
     super(props);
     this.state = {
-      // TODO
       alertWizardOpen: false,
       alertData: null,
       modalOpen: false,
@@ -71,11 +71,20 @@ class EmergencyTakeoverTool extends React.Component<
       stationScreenOrientationList: null,
     };
 
-    fetch(`${BASE_URL}/stations_and_screen_orientations`)
+    fetch(`${BASE_URL}/stations_and_screens`)
       .then((response) => response.json())
-      .then((result) =>
-        this.setState({ stationScreenOrientationList: result }),
-      );
+      .then((stationsMap: { [stationName: string]: Station }) => {
+        // Group stations by line using STATION_ORDER_BY_LINE
+        const stationsByLine: StationsByLine = {};
+
+        Object.keys(STATION_ORDER_BY_LINE).forEach((line) => {
+          stationsByLine[line] = STATION_ORDER_BY_LINE[line]
+            .map((stationInfo) => stationsMap[stationInfo.name])
+            .filter((station) => station !== undefined);
+        });
+
+        this.setState({ stationScreenOrientationList: stationsByLine });
+      });
 
     this.toggleAlertWizard = this.toggleAlertWizard.bind(this);
     this.openModal = this.openModal.bind(this);

@@ -168,7 +168,7 @@ defmodule ScreenplayWeb.Router do
     get("/active_alerts", AlertController, :active_alerts)
     get("/past_alerts", AlertController, :past_alerts)
 
-    get("/stations_and_screen_orientations", PageController, :stations_and_screen_orientations)
+    get("/stations_and_screens", PageController, :stations_and_screens)
   end
 
   # Enables LiveDashboard only for development

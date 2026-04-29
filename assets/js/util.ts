@@ -119,6 +119,12 @@ export const matchStation = (
   station: string,
   stationScreenOrientationList: StationsByLine,
 ) => {
+  console.log(
+    "Matching station",
+    station,
+    "in list",
+    stationScreenOrientationList,
+  );
   const result = Object.values(stationScreenOrientationList)
     .flat()
     .find(({ name }) => name === station);
