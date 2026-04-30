@@ -5,9 +5,12 @@ import PickStations from "./PickStations";
 import SetSchedule from "./SetSchedule";
 import WizardNavFooter from "./WizardNavFooter";
 import WizardStepper from "./WizardStepper";
-import { AlertData, Station, StationsByLine } from "../EmergencyTakeoverTool";
-
-import CANNED_MESSAGES from "Constants/messages";
+import {
+  AlertData,
+  Message,
+  Station,
+  StationsByLine,
+} from "../EmergencyTakeoverTool";
 
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
@@ -29,12 +32,9 @@ interface AlertWizardState {
   step: number;
   cancelModal: boolean;
   selectedStations: Station[];
-  messageOption: string;
-  cannedMessage: string;
-  customMessage: string;
+  indoorMessage: Message;
+  outdoorMessage: Message;
   duration: string | number;
-  landscapePNG: string | null;
-  portraitPNG: string | null;
   id: string | null;
   activeAlertsList: any[];
   showErrorMessage: boolean;
@@ -53,12 +53,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         cancelModal: false,
         // User input state
         selectedStations: [],
-        messageOption: "1",
-        cannedMessage: "",
-        customMessage: "",
+        indoorMessage: { type: "canned", id: -1 },
+        outdoorMessage: { type: "canned", id: -1 },
         duration: 1,
-        landscapePNG: null,
-        portraitPNG: null,
         activeAlertsList: [],
         showErrorMessage: false,
       };
@@ -75,26 +72,12 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     this.checkStation = this.checkStation.bind(this);
     this.checkLine = this.checkLine.bind(this);
-    this.changeMessageOption = this.changeMessageOption.bind(this);
-    this.changeCannedMessage = this.changeCannedMessage.bind(this);
-    this.changeCustomMessage = this.changeCustomMessage.bind(this);
     this.changeDuration = this.changeDuration.bind(this);
   }
 
   initializeState(alertData: AlertData) {
-    const { id, message, stations, schedule } = alertData;
-
-    let messageOption, cannedMessage, customMessage;
-
-    if (message.type === "canned") {
-      messageOption = "1";
-      cannedMessage = message.id.toString();
-      customMessage = CANNED_MESSAGES[message.id];
-    } else {
-      messageOption = "2";
-      cannedMessage = "";
-      customMessage = message.text;
-    }
+    const { id, indoor_message, outdoor_message, stations, schedule } =
+      alertData;
 
     const selectedStations = stations.map((station: string) =>
       matchStation(station, this.props.stationScreenOrientationList),
@@ -119,12 +102,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       cancelModal: false,
       // User input state
       selectedStations: selectedStations,
-      messageOption: messageOption,
-      cannedMessage: cannedMessage,
-      customMessage: customMessage,
+      indoorMessage: indoor_message,
+      outdoorMessage: outdoor_message,
       duration: duration,
-      landscapePNG: null,
-      portraitPNG: null,
       activeAlertsList: [],
       showErrorMessage: false,
     };
@@ -162,32 +142,30 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <ConfirmationPage
             goToStep={this.goToStep}
             selectedStations={this.state.selectedStations}
-            message={
-              this.state.messageOption === "1"
-                ? CANNED_MESSAGES[parseInt(this.state.cannedMessage)]
-                : this.state.customMessage
-            }
+            indoorMessage={this.state.indoorMessage}
+            outdoorMessage={this.state.outdoorMessage}
             duration={this.state.duration}
           />
         );
       default:
         return (
           <CreateMessage
-            messageOption={this.state.messageOption}
-            cannedMessage={this.state.cannedMessage}
-            customMessage={this.state.customMessage}
-            changeMessageOption={this.changeMessageOption}
-            changeCannedMessage={this.changeCannedMessage}
-            changeCustomMessage={this.changeCustomMessage}
+            indoorValue={this.state.indoorMessage}
+            onChangeIndoor={(v) => this.setState({ indoorMessage: v })}
+            outdoorValue={this.state.outdoorMessage}
+            onChangeOutdoor={(v) => this.setState({ outdoorMessage: v })}
           />
         );
     }
   }
 
   waitingForInput() {
+    const { indoorMessage, outdoorMessage } = this.state;
+    const invalidMessage = (message: Message) =>
+      message.type === "canned" ? message.id === -1 : !message.text;
     switch (this.state.step) {
       case 1:
-        return !this.state.cannedMessage && !this.state.customMessage;
+        return invalidMessage(indoorMessage) || invalidMessage(outdoorMessage);
       case 2:
         return this.state.selectedStations.length === 0;
       // Because 1 hour is automatically selected
@@ -208,12 +186,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     if (this.state.step === 4) {
       this.handleSubmit();
     } else {
-      // Temporary hack: to avoid race conditions, convert the SVG to a PNG upon station selection,
-      // which must always happen after message selection.
-      if (this.state.step === 2) {
-        this.generatePNGs();
-      }
-
       this.setState((state) => ({
         step: state.step + 1,
       }));
@@ -240,7 +212,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       });
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     const endpoint =
       this.state.id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
 
@@ -249,24 +221,28 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
 
-    let message;
-    if (this.state.messageOption === "1") {
-      message = { type: "canned", id: parseInt(this.state.cannedMessage) };
-    } else {
-      message = { type: "custom", text: this.state.customMessage };
-    }
-
     const stations = this.state.selectedStations.map(({ name }) => name);
     const duration = this.state.duration;
-    const landscapePNG = this.state.landscapePNG;
-    const portraitPNG = this.state.portraitPNG;
+    const pngs = Object.fromEntries(
+      await Promise.all(
+        [
+          { message: this.state.indoorMessage, prefix: "indoor" },
+          { message: this.state.outdoorMessage, prefix: "outdoor" },
+        ].flatMap(({ message, prefix }) =>
+          ["portrait", "landscape"].map(async (orientation) => [
+            `${prefix}_${orientation}`,
+            await this.makePNG(message, prefix, orientation),
+          ]),
+        ),
+      ),
+    );
 
     const data = {
-      message,
+      indoor_message: this.state.indoorMessage,
+      outdoor_message: this.state.outdoorMessage,
       stations,
       duration,
-      portrait_png: portraitPNG,
-      landscape_png: landscapePNG,
+      pngs,
       id: this.state.id,
     };
 
@@ -351,27 +327,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
   }
 
-  changeMessageOption(event: any) {
-    this.setState({ messageOption: event.target.value });
-  }
-
-  changeCannedMessage(event: any) {
-    const index = parseInt(event.target.value);
-    this.setState({
-      messageOption: "1",
-      cannedMessage: event.target.value,
-      customMessage: CANNED_MESSAGES[index],
-    });
-  }
-
-  changeCustomMessage(event: any) {
-    this.setState({
-      messageOption: "2",
-      cannedMessage: "",
-      customMessage: event.target.value,
-    });
-  }
-
   changeDuration(event: any) {
     if (event.target.value === "Open ended") {
       this.setState({ duration: event.target.value });
@@ -380,12 +335,11 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
   }
 
-  makePNG(
-    orientation: string,
-    width: number,
-    height: number,
-    callback: (dataUrl: string) => void,
-  ) {
+  async makePNG(message: Message, prefix: string, orientation: string) {
+    const [width, height] =
+      orientation === "portrait"
+        ? [svgShortSide, svgLongSide]
+        : [svgLongSide, svgShortSide];
     const canvas = document.createElement("canvas");
     canvas.width = width * svgScale;
     canvas.height = height * svgScale;
@@ -397,36 +351,25 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const img = new Image();
 
-    if (this.state.cannedMessage !== "") {
-      img.src = `/images/Outfront-Alert-${this.state.cannedMessage}-${orientation}.png`;
-    } else {
-      const svg = document.getElementById(orientation + "-svg") as HTMLElement;
-      const data = new XMLSerializer().serializeToString(svg);
+    const svg_to_uri = (svg: HTMLElement) =>
+      "data:image/svg+xml;base64," +
+      btoa(new XMLSerializer().serializeToString(svg));
+
+    await new Promise((resolve) => {
+      img.onload = resolve;
       img.src =
-        "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(data)));
-    }
+        message.type === "canned"
+          ? `/images/Outfront-Alert-${message.id}-${orientation}.png`
+          : svg_to_uri(
+              document.getElementById(`${prefix}-${orientation}-svg`)!,
+            );
+    });
 
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, width, height);
-      const imgURI = canvas.toDataURL("image/png");
-      callback(imgURI);
-    };
-  }
-
-  generatePNGs() {
-    this.makePNG("portrait", svgShortSide, svgLongSide, (url) =>
-      this.setState({ portraitPNG: url }),
-    );
-    this.makePNG("landscape", svgLongSide, svgShortSide, (url) =>
-      this.setState({ landscapePNG: url }),
-    );
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL("image/png");
   }
 
   render() {
-    const { step, landscapePNG, portraitPNG } = this.state;
-    if (step > 2 && (landscapePNG === null || portraitPNG === null)) {
-      this.generatePNGs();
-    }
     const modalDetails: ModalDetails = {
       icon: <NoSymbolIcon className="icon" />,
       header: "Cancel new Takeover Alert",
@@ -461,10 +404,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <WizardSidebar
             selectedStations={this.state.selectedStations}
             step={this.state.step}
-            customMessage={
-              this.state.messageOption === "1" ? "" : this.state.customMessage
-            }
-            cannedMessageId={this.state.cannedMessage}
+            indoorMessage={this.state.indoorMessage}
+            outdoorMessage={this.state.outdoorMessage}
           />
         </div>
         <WizardNavFooter

@@ -38,13 +38,16 @@ interface Schedule {
   end: string;
 }
 
+export type Message = CannedMessage | CustomMessage;
+
 interface AlertData {
   id: string;
   cleared_at: string;
   cleared_by: string;
   created_by: string;
   edited_by: string;
-  message: CannedMessage | CustomMessage;
+  indoor_message: Message;
+  outdoor_message: Message;
   schedule: Schedule;
   stations: string[];
   step: number | null;

@@ -191,7 +191,12 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.State do
                 stations_to_delete: Enum.concat(acc.stations_to_delete, a.stations)
               }
             else
-              changes = %{message: a.message, stations: stations_no_overlap, schedule: a.schedule}
+              changes = %{
+                indoor_message: a.indoor_message,
+                outdoor_message: a.outdoor_message,
+                stations: stations_no_overlap,
+                schedule: a.schedule
+              }
 
               %{
                 alerts: Map.put(acc.alerts, existing_id, Alert.update(a, changes, user)),

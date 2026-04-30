@@ -1,7 +1,6 @@
 import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
 import {
-  CannedMessage,
-  CustomMessage,
+  Message,
   StationsByLine,
 } from "./components/EmergencyTakeoverTool/EmergencyTakeoverTool";
 import CANNED_MESSAGES from "Constants/messages";
@@ -144,11 +143,11 @@ export const formatTime = (date: Date) => {
   }).format(date);
 };
 
-export const getMessageString = (message: CannedMessage | CustomMessage) => {
-  // @ts-expect-error work around loose typing
-  if (message.id !== undefined) return CANNED_MESSAGES[parseInt(message.id)];
-  // @ts-expect-error work around loose typing
-  else return message.text;
+export const getMessageString = (message: Message) => {
+  if (message.type === "canned") {
+    return message.id === -1 ? "" : CANNED_MESSAGES[message.id];
+  }
+  return message.text;
 };
 
 export const classWithModifier = (baseClass: string, modifier: string) => {

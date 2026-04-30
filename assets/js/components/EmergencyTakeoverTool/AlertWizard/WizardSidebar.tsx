@@ -2,13 +2,13 @@ import React from "react";
 import StackedStationCards from "./StackedStationCards";
 
 import SVGPreviews from "./SVGPreviews";
-import { Station } from "../EmergencyTakeoverTool";
+import { Message, Station } from "../EmergencyTakeoverTool";
 
 interface WizardSidebarProps {
   selectedStations: Station[];
   step: number;
-  customMessage: string;
-  cannedMessageId: string;
+  indoorMessage: Message;
+  outdoorMessage: Message;
 }
 
 class WizardSidebar extends React.Component<WizardSidebarProps> {
@@ -16,7 +16,7 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
     super(props);
   }
 
-  getPreviewImage() {
+  getPreviewImage(message: Message, prefix: string) {
     if (this.props.step === 1) {
       return (
         <img
@@ -25,24 +25,25 @@ class WizardSidebar extends React.Component<WizardSidebarProps> {
           alt=""
         />
       );
-    } else if (this.props.cannedMessageId !== "") {
+    } else if (message.type === "canned") {
       return (
         <img
           className="portrait-png"
-          src={`/images/Outfront-Alert-${this.props.cannedMessageId}-portrait.png`}
+          src={`/images/Outfront-Alert-${message.id}-portrait.png`}
           alt=""
         />
       );
     }
 
-    return <SVGPreviews showText={true} message={this.props.customMessage} />;
+    return <SVGPreviews showText prefix={prefix} message={message.text} />;
   }
 
   render() {
     return (
       <div className="wizard-sidebar">
         <span className="preview-title text-16">Preview</span>
-        {this.getPreviewImage()}
+        {this.getPreviewImage(this.props.indoorMessage, "indoor")}
+        {this.getPreviewImage(this.props.outdoorMessage, "outdoor")}
         <StackedStationCards stations={this.props.selectedStations} />
       </div>
     );

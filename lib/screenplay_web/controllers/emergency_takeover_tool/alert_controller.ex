@@ -8,11 +8,11 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def create(
         conn,
         params = %{
-          "message" => message,
+          "indoor_message" => indoor_message,
+          "outdoor_message" => outdoor_message,
           "stations" => stations,
           "duration" => duration_in_hours,
-          "portrait_png" => portrait_png,
-          "landscape_png" => landscape_png
+          "pngs" => pngs
         }
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
@@ -20,19 +20,20 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
     remove_overlapping_alerts(params, user)
 
-    message = Alert.message_from_json(message)
-    alert = Alert.new(message, stations, schedule, user)
+    indoor_message = Alert.message_from_json(indoor_message)
+    outdoor_message = Alert.message_from_json(outdoor_message)
+    alert = Alert.new(indoor_message, outdoor_message, stations, schedule, user)
 
     params_to_log =
       params
-      |> Map.take(["message", "stations", "duration"])
+      |> Map.take(["indoor_message", "outdoor_message", "stations", "duration"])
       |> Map.merge(%{"id" => alert.id})
 
     _ = UserActionLogger.log(user, :create_alert, params_to_log)
     :ok = State.add_alert(alert)
 
-    portrait_image_data = decode_png(portrait_png)
-    landscape_image_data = decode_png(landscape_png)
+    portrait_image_data = decode_png(pngs["indoor_portrait"])
+    landscape_image_data = decode_png(pngs["outdoor_landscape"])
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
     json(conn, %{success: true})
@@ -46,17 +47,24 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn,
         params = %{
           "id" => id,
-          "message" => message,
+          "indoor_message" => indoor_message,
+          "outdoor_message" => outdoor_message,
           "stations" => stations,
           "duration" => duration_in_hours,
-          "portrait_png" => portrait_png,
-          "landscape_png" => landscape_png
+          "pngs" => pngs
         }
       ) do
     alert = State.get_alert(id)
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
-    message = Alert.message_from_json(message)
-    changes = %{message: message, stations: stations, schedule: schedule}
+    indoor_message = Alert.message_from_json(indoor_message)
+    outdoor_message = Alert.message_from_json(outdoor_message)
+
+    changes = %{
+      indoor_message: indoor_message,
+      outdoor_message: outdoor_message,
+      stations: stations,
+      schedule: schedule
+    }
 
     user = get_session(conn, "username")
 
@@ -64,12 +72,14 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
     new_alert = Alert.update(alert, changes, user)
 
-    params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
+    params_to_log =
+      Map.take(params, ["indoor_message", "outdoor_message", "stations", "duration", "id"])
+
     _ = UserActionLogger.log(user, :update_alert, params_to_log)
     :ok = State.update_alert(id, new_alert)
 
-    portrait_image_data = decode_png(portrait_png)
-    landscape_image_data = decode_png(landscape_png)
+    portrait_image_data = decode_png(pngs["indoor_portrait"])
+    landscape_image_data = decode_png(pngs["outdoor_landscape"])
 
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
 
