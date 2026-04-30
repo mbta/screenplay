@@ -6,6 +6,7 @@ defmodule Screenplay.Places do
   use Supervisor
 
   alias Screenplay.Places.{Builder, Cache, Place}
+  alias Screenplay.Places.Place.OutfrontTakeoverScreen
 
   @spec start_link(keyword()) :: Supervisor.on_start()
   def start_link(_) do
@@ -33,6 +34,16 @@ defmodule Screenplay.Places do
 
   @spec get() :: list(Place.t())
   def get do
+    Cache.all(nil, return: :value)
+    |> update_in([Access.all(), Access.key(:screens)], fn screens ->
+      Enum.reject(screens, fn screen ->
+        match?(%{hidden?: true}, screen) or match?(%OutfrontTakeoverScreen{}, screen)
+      end)
+    end)
+  end
+
+  @spec get_all() :: list(Place.t())
+  def get_all do
     Cache.all(nil, return: :value)
     |> update_in([Access.all(), Access.key(:screens)], fn screens ->
       Enum.reject(screens, &match?(%{hidden?: true}, &1))

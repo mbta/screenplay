@@ -1,7 +1,7 @@
 defmodule Screenplay.Places.Place do
   @moduledoc """
   Module used to define struct for screen configs stored in `Screenplay.Places.Cache`.
-  A screen config can either be a `PaEssScreen.t()` or a `ShowtimeScreen.t()`.
+  A screen config can either be a `PaEssScreen.t()`, a `ShowtimeScreen.t()`, or an `OutfrontTakeoverScreen.t()`.
   """
 
   defmodule PaEssScreen do
@@ -59,9 +59,34 @@ defmodule Screenplay.Places.Place do
     end
   end
 
+  defmodule OutfrontTakeoverScreen do
+    @moduledoc """
+    Module used to define struct for Outfront Takeover screen configs stored in `Screenplay.Places.Cache`.
+    """
+
+    @derive Jason.Encoder
+
+    @type t :: %__MODULE__{
+            id: String.t(),
+            type: String.t(),
+            portrait: boolean(),
+            landscape: boolean(),
+            sftp_dir_name: String.t()
+          }
+
+    @enforce_keys [:id, :type, :portrait, :landscape, :sftp_dir_name]
+    defstruct @enforce_keys
+
+    def new(map) do
+      map
+      |> Map.new(fn {k, v} -> {String.to_existing_atom(k), v} end)
+      |> then(&struct!(__MODULE__, &1))
+    end
+  end
+
   @type route :: String.t()
 
-  @type screen :: PaEssScreen.t() | ShowtimeScreen.t()
+  @type screen :: PaEssScreen.t() | ShowtimeScreen.t() | OutfrontTakeoverScreen.t()
 
   @type t :: %__MODULE__{
           id: String.t(),
@@ -79,8 +104,14 @@ defmodule Screenplay.Places.Place do
 
     screens =
       Enum.map(screens, fn
-        pa_ess_screen = %{"type" => "pa_ess"} -> PaEssScreen.new(pa_ess_screen)
-        showtime_screen -> ShowtimeScreen.new(showtime_screen)
+        pa_ess_screen = %{"type" => "pa_ess"} ->
+          PaEssScreen.new(pa_ess_screen)
+
+        outfront_screen = %{"type" => "outfront_takeover"} ->
+          OutfrontTakeoverScreen.new(outfront_screen)
+
+        showtime_screen ->
+          ShowtimeScreen.new(showtime_screen)
       end)
 
     %__MODULE__{

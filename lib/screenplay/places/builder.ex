@@ -9,7 +9,7 @@ defmodule Screenplay.Places.Builder do
 
   alias Screenplay.Places
   alias Screenplay.Places.Place
-  alias Screenplay.Places.Place.{PaEssScreen, ShowtimeScreen}
+  alias Screenplay.Places.Place.{OutfrontTakeoverScreen, PaEssScreen, ShowtimeScreen}
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.{Alerts, Departures, Footer, Header, MultiStopAlerts, Screen}
   alias ScreensConfig.Departures.{Query, Section}
@@ -57,6 +57,7 @@ defmodule Screenplay.Places.Builder do
   defp build do
     live_showtime_screens = get_showtime_screens()
     paess_places = get_paess_places()
+    outfront_ett_places = get_outfront_ett_places()
     {:ok, parent_stations} = @stops_mod.fetch_all_parent_stations()
 
     # All parent stations should be displayed in Screenplay,
@@ -81,6 +82,10 @@ defmodule Screenplay.Places.Builder do
     # Add on PA/ESS signs
     |> Enum.map(fn %{id: id, screens: screens} = place ->
       Map.put(place, :screens, screens ++ (paess_places[id] || []))
+    end)
+    # Add on Outfront ETT screens
+    |> Enum.map(fn %{id: id, screens: screens} = place ->
+      Map.put(place, :screens, screens ++ (outfront_ett_places[id] || []))
     end)
     # Get rid of CR and Bus stops with no screens
     |> Enum.reject(fn %{routes: routes, screens: screens} ->
@@ -421,5 +426,26 @@ defmodule Screenplay.Places.Builder do
       _ ->
         []
     end
+  end
+
+  defp get_outfront_ett_places do
+    outfront_config = Application.get_env(:screenplay, :outfront_takeover_screens, %{})
+
+    outfront_config
+    |> Enum.flat_map(fn {_line, stations} ->
+      Enum.map(stations, fn station ->
+        %{
+          place_id: station.place_id,
+          screen: %OutfrontTakeoverScreen{
+            id: "#{station.place_id}-outfront",
+            type: "outfront_takeover",
+            portrait: station.portrait,
+            landscape: station.landscape,
+            sftp_dir_name: station.sftp_dir_name
+          }
+        }
+      end)
+    end)
+    |> Enum.group_by(& &1.place_id, & &1.screen)
   end
 end
