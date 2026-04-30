@@ -15,7 +15,7 @@ const SelectableStation = (props: SelectableStationProps): JSX.Element => {
   };
   return (
     <>
-      {!props.station.landscape && !props.station.portrait ? (
+      {!isStationSelectable(props.station) ? (
         <label>
           <div className="station-name disabled">{props.station.name}</div>
         </label>
@@ -36,4 +36,12 @@ const SelectableStation = (props: SelectableStationProps): JSX.Element => {
   );
 };
 
+const isStationSelectable = (station: Station): boolean => {
+  return (
+    station.landscape ||
+    station.portrait ||
+    station.indoor_screens.length > 0 ||
+    station.outdoor_screens.length > 0
+  );
+};
 export default SelectableStation;

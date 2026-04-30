@@ -7,8 +7,11 @@ import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 
 export interface Station {
   name: string;
-  portrait: boolean;
   landscape: boolean;
+  portrait: boolean;
+  indoor_screens: string[];
+  outdoor_screens: string[];
+  sftp_folder: string;
 }
 
 export interface StationsByLine {
