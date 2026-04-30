@@ -3,136 +3,136 @@ import Config
 config :screenplay,
   landscape_dir: "Landscape",
   portrait_dir: "Portrait",
-  outfront_takeover_tool_screens: %{
+  outfront_ett_screens: %{
     red: [
       %{
-        name: "Alewife",
+        place_id: "place-alfcl",
         portrait: true,
         landscape: false,
         sftp_dir_name: "008_RED_ALEWIFE"
       },
       %{
-        name: "Davis",
+        place_id: "place-davis",
         portrait: true,
         landscape: false,
         sftp_dir_name: "009_RED_DAVIS"
       },
       %{
-        name: "Porter",
+        place_id: "place-portr",
         portrait: true,
         landscape: false,
         sftp_dir_name: "010_RED_CR_PORTER"
       },
       %{
-        name: "Harvard",
+        place_id: "place-harsq",
         portrait: true,
         landscape: false,
         sftp_dir_name: "011_RED_HARVARD"
       },
       %{
-        name: "Central",
+        place_id: "place-cntsq",
         portrait: true,
         landscape: false,
         sftp_dir_name: "012_RED_CENTRAL"
       },
       %{
-        name: "Kendall/MIT",
+        place_id: "place-knncl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "013_RED_KENDALL"
       },
       %{
-        name: "Charles/MGH",
+        place_id: "place-chmnl",
         portrait: true,
         landscape: false,
         sftp_dir_name: "014_RED_CHARLES"
       },
       %{
-        name: "Park Street",
+        place_id: "place-pktrm",
         portrait: true,
         landscape: true,
         sftp_dir_name: "001_XFER_RED_GREEN_PARK"
       },
       %{
-        name: "Downtown Crossing",
+        place_id: "place-dwnxg",
         portrait: true,
         landscape: false,
         sftp_dir_name: "002_XFER_RED_ORANGE_SILVER_DOWNTOWNCROSSING"
       },
       %{
-        name: "South Station",
+        place_id: "place-sstat",
         portrait: true,
         landscape: true,
         sftp_dir_name: "003_XFER_RED_SILVER_CR_SOUTHSTATION"
       },
       %{
-        name: "Broadway",
+        place_id: "place-brdwy",
         portrait: true,
         landscape: true,
         sftp_dir_name: "015_RED_BROADWAY"
       },
       %{
-        name: "Andrew",
+        place_id: "place-andrw",
         portrait: false,
         landscape: false,
         sftp_dir_name: "016_RED_ANDREW"
       },
       %{
-        name: "JFK/UMass",
+        place_id: "place-jfk",
         portrait: true,
         landscape: false,
         sftp_dir_name: "017_RED_CR_JFKUMASS"
       },
       %{
-        name: "Savin Hill",
+        place_id: "place-shmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "018_A_RED_SAVINHILL"
       },
       %{
-        name: "Fields Corner",
+        place_id: "place-fldcr",
         portrait: false,
         landscape: false,
         sftp_dir_name: "019_A_RED_FIELDSCORNER"
       },
       %{
-        name: "Shawmut",
+        place_id: "place-smmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "020_A_RED_SHAWMUT"
       },
       %{
-        name: "ASHMONT",
+        place_id: "place-asmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "021_A_RED_ASHMONT"
       },
       %{
-        name: "North Quincy",
+        place_id: "place-nqncy",
         portrait: false,
         landscape: false,
         sftp_dir_name: "022_B_RED_NORTHQUINCY"
       },
       %{
-        name: "Wollaston",
+        place_id: "place-wlsta",
         portrait: false,
         landscape: false,
         sftp_dir_name: "023_B_RED_WOLLASTON"
       },
       %{
-        name: "Quincy Center",
+        place_id: "place-qnctr",
         portrait: true,
         landscape: true,
         sftp_dir_name: "024_B_RED_CR_QUINCYCENTER"
       },
       %{
-        name: "Quincy Adams",
+        place_id: "place-qamnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "025_B_RED_QUINCYADAMS"
       },
       %{
-        name: "BRAINTREE",
+        place_id: "place-brntn",
         portrait: false,
         landscape: false,
         sftp_dir_name: "026_B_RED_CR_BRAINTREE"
@@ -140,121 +140,121 @@ config :screenplay,
     ],
     orange: [
       %{
-        name: "Oak Grove",
+        place_id: "place-ogmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "034_ORANGE_OAKGROVE"
       },
       %{
-        name: "Malden Center",
+        place_id: "place-mlmnl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "035_ORANGE_CR_MALDENCENTER"
       },
       %{
-        name: "Wellington",
+        place_id: "place-welln",
         portrait: true,
         landscape: false,
         sftp_dir_name: "036_ORANGE_WELLINGTON"
       },
       %{
-        name: "Assembly",
+        place_id: "place-astao",
         portrait: false,
         landscape: false,
         sftp_dir_name: "037_ORANGE_ASSEMBLY"
       },
       %{
-        name: "Sullivan Square",
+        place_id: "place-sull",
         portrait: true,
         landscape: true,
         sftp_dir_name: "038_ORANGE_SULLIVAN"
       },
       %{
-        name: "Community College",
+        place_id: "place-ccmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "039_ORANGE_COMMUNITYCOLLEGE"
       },
       %{
-        name: "North Station",
+        place_id: "place-north",
         portrait: true,
         landscape: false,
         sftp_dir_name: "004_XFER_ORANGE_GREEN_CR_NORTHSTATION"
       },
       %{
-        name: "Haymarket",
+        place_id: "place-haecl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "005_XFER_ORANGE_GREEN_HAYMARKET"
       },
       %{
-        name: "State",
+        place_id: "place-state",
         portrait: true,
         landscape: false,
         sftp_dir_name: "006_XFER_ORANGE_BLUE_STATE"
       },
       %{
-        name: "Downtown Crossing",
+        place_id: "place-dwnxg",
         portrait: true,
         landscape: false,
         sftp_dir_name: "002_XFER_RED_ORANGE_SILVER_DOWNTOWNCROSSING"
       },
       %{
-        name: "Chinatown",
+        place_id: "place-chncl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "040_ORANGE_SILVER_CHINATOWN"
       },
       %{
-        name: "Tufts Medical Center",
+        place_id: "place-tumnl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "041_ORANGE_SILVER_TUFTSMEDICAL"
       },
       %{
-        name: "Back Bay",
+        place_id: "place-bbsta",
         portrait: true,
         landscape: true,
         sftp_dir_name: "042_ORANGE_CR_BACKBAY"
       },
       %{
-        name: "Massachusetts Avenue",
+        place_id: "place-masta",
         portrait: true,
         landscape: false,
         sftp_dir_name: "043_ORANGE_MASSAVE"
       },
       %{
-        name: "Ruggles",
+        place_id: "place-rugg",
         portrait: true,
         landscape: false,
         sftp_dir_name: "044_ORANGE_CR_RUGGLES"
       },
       %{
-        name: "Roxbury Crossing",
+        place_id: "place-rcmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "045_ORANGE_ROXBURYCROSSING"
       },
       %{
-        name: "Jackson Square",
+        place_id: "place-jaksn",
         portrait: false,
         landscape: false,
         sftp_dir_name: "046_ORANGE_JACKSON"
       },
       %{
-        name: "Stony Brook",
+        place_id: "place-sbmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "047_ORANGE_STONYBROOK"
       },
       %{
-        name: "Green Street",
+        place_id: "place-grnst",
         portrait: false,
         landscape: false,
         sftp_dir_name: "048_ORANGE_GREENST"
       },
       %{
-        name: "Forest Hills",
+        place_id: "place-forhl",
         portrait: true,
         landscape: false,
         sftp_dir_name: "049_ORANGE_CR_FORESTHILLS"
@@ -262,73 +262,73 @@ config :screenplay,
     ],
     blue: [
       %{
-        name: "Bowdoin",
+        place_id: "place-bomnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "059_BLUE_BOWDOIN"
       },
       %{
-        name: "Government Center",
+        place_id: "place-gover",
         portrait: true,
         landscape: false,
         sftp_dir_name: "007_XFER_BLUE_GREEN_GOVERNMENTCENTER"
       },
       %{
-        name: "State",
+        place_id: "place-state",
         portrait: true,
         landscape: false,
         sftp_dir_name: "006_XFER_ORANGE_BLUE_STATE"
       },
       %{
-        name: "Aquarium",
+        place_id: "place-aqucl",
         portrait: false,
         landscape: true,
         sftp_dir_name: "058_BLUE_AQUARIUM"
       },
       %{
-        name: "Maverick",
+        place_id: "place-mvbcl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "057_BLUE_MAVERICK"
       },
       %{
-        name: "Airport",
+        place_id: "place-aport",
         portrait: true,
         landscape: true,
         sftp_dir_name: "056_BLUE_SILVER_AIRPORT"
       },
       %{
-        name: "Wood Island",
+        place_id: "place-wimnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "055_BLUE_WOODISLAND"
       },
       %{
-        name: "Orient Heights",
+        place_id: "place-orhte",
         portrait: false,
         landscape: false,
         sftp_dir_name: "054_BLUE_ORIENTHEIGHTS"
       },
       %{
-        name: "Suffolk Downs",
+        place_id: "place-sdmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "053_BLUE_SUFFOLKDOWNS"
       },
       %{
-        name: "Beachmont",
+        place_id: "place-bmmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "052_BLUE_BEACHMONT"
       },
       %{
-        name: "Revere Beach",
+        place_id: "place-rbmnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "051_BLUE_REVEREBEACH"
       },
       %{
-        name: "Wonderland",
+        place_id: "place-wondl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "050_BLUE_WONDERLAND"
@@ -336,7 +336,7 @@ config :screenplay,
     ],
     silver: [
       %{
-        name: "World Trade Center",
+        place_id: "place-wtcst",
         portrait: false,
         landscape: true,
         sftp_dir_name: "125_1_2_3_SILVER_WORLDTRADE"
@@ -344,67 +344,67 @@ config :screenplay,
     ],
     green: [
       %{
-        name: "North Station",
+        place_id: "place-north",
         portrait: true,
         landscape: false,
         sftp_dir_name: "004_XFER_ORANGE_GREEN_CR_NORTHSTATION"
       },
       %{
-        name: "Haymarket",
+        place_id: "place-haecl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "005_XFER_ORANGE_GREEN_HAYMARKET"
       },
       %{
-        name: "Government Center",
+        place_id: "place-gover",
         portrait: true,
         landscape: false,
         sftp_dir_name: "007_XFER_BLUE_GREEN_GOVERNMENTCENTER"
       },
       %{
-        name: "Park Street",
+        place_id: "place-pktrm",
         portrait: true,
         landscape: true,
         sftp_dir_name: "001_XFER_RED_GREEN_PARK"
       },
       %{
-        name: "Boylston",
+        place_id: "place-boyls",
         portrait: true,
         landscape: false,
         sftp_dir_name: "062_GREEN_SILVER_BOYLSTON"
       },
       %{
-        name: "Arlington",
+        place_id: "place-armnl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "063_GREEN_ARLINGTON"
       },
       %{
-        name: "Copley",
+        place_id: "place-coecl",
         portrait: true,
         landscape: false,
         sftp_dir_name: "064_GREEN_COPLEY"
       },
       %{
-        name: "Hynes Convention Center",
+        place_id: "place-hymnl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "065_GREEN_HYNES"
       },
       %{
-        name: "Kenmore",
+        place_id: "place-kencl",
         portrait: true,
         landscape: true,
         sftp_dir_name: "066_GREEN_KENMORE"
       },
       %{
-        name: "Prudential",
+        place_id: "place-prmnl",
         portrait: false,
         landscape: true,
         sftp_dir_name: "111_E_GREEN_PRUDENTIAL"
       },
       %{
-        name: "Symphony",
+        place_id: "place-symcl",
         portrait: false,
         landscape: false,
         sftp_dir_name: "112_E_GREEN_SYMPHONY"

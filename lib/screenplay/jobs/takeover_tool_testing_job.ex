@@ -74,15 +74,15 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     {:ok, portrait_dirs} = sftp_client_module().list_dir(conn, "./Portrait")
     {:ok, landscape_dirs} = sftp_client_module().list_dir(conn, "./Landscape")
 
-    outfront_takeover_tool_screens =
+    outfront_takeover_screens =
       :screenplay
-      |> Application.get_env(:outfront_takeover_tool_screens)
+      |> Application.get_env(:outfront_takeover_screens)
       |> Map.values()
       |> List.flatten()
       |> Enum.uniq()
 
-    portrait_stations = Enum.filter(outfront_takeover_tool_screens, & &1.portrait)
-    landscape_stations = Enum.filter(outfront_takeover_tool_screens, & &1.landscape)
+    portrait_stations = Enum.filter(outfront_takeover_screens, & &1.portrait)
+    landscape_stations = Enum.filter(outfront_takeover_screens, & &1.landscape)
 
     log_missing_dirs(portrait_dirs, portrait_stations, @portrait_dir)
     log_missing_dirs(landscape_dirs, landscape_stations, @landscape_dir)
