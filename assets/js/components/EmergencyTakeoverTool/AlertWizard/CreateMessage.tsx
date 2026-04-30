@@ -55,7 +55,7 @@ const MessageInput = ({
     <div className="step-body">
       <div className="info">
         <div>{label} text</div>
-        <div className="text-14">(144 character max)</div>
+        <div className="text-14">&nbsp;(144 character max)</div>
       </div>
       <div>
         <div
