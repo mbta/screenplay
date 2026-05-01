@@ -1,9 +1,12 @@
 defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State}
+  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State, S3Fetch}
   alias Screenplay.Outfront.SFTP
   alias ScreenplayWeb.UserActionLogger
+
+  # TODO:
+  # Screenplay.ScreensConfig.Fetch.S3 is where there are functions we can use to get and modify the screens config
 
   def create(
         conn,
@@ -35,6 +38,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     portrait_image_data = decode_png(pngs["indoor_portrait"])
     landscape_image_data = decode_png(pngs["outdoor_landscape"])
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
+    _ = S3Fetch.upload_takeover_image(id, portrait_image_data, "indoor_portrait")
+    _ = S3Fetch.upload_takeover_image(id, landscape_image_data, "outdoor_landscape")
 
     json(conn, %{success: true})
   end
@@ -82,6 +87,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     landscape_image_data = decode_png(pngs["outdoor_landscape"])
 
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
+    _ = S3Fetch.upload_takeover_image(id, portrait_image_data, "indoor_portrait")
+    _ = S3Fetch.upload_takeover_image(id, landscape_image_data, "outdoor_landscape")
 
     json(conn, %{success: true})
   end
@@ -99,6 +106,9 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     :ok = alert |> Alert.clear(user) |> State.clear_alert()
 
     _ = SFTP.clear_takeover_images(stations)
+    # TODO: Should make sure we modify configs before deletion
+    # In case of failure or config modification taking a long time
+    _ = S3Fetch.delete_takeover_images(id)
 
     json(conn, %{success: true})
   end
