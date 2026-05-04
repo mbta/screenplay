@@ -30,7 +30,10 @@ export interface CannedMessage {
 
 export interface CustomMessage {
   type: "custom";
-  text: string;
+  text: {
+    indoor: string;
+    outdoor: string;
+  };
 }
 
 interface Schedule {
@@ -46,8 +49,7 @@ interface AlertData {
   cleared_by: string;
   created_by: string;
   edited_by: string;
-  indoor_message: Message;
-  outdoor_message: Message;
+  message: Message;
   schedule: Schedule;
   stations: string[];
   step: number | null;

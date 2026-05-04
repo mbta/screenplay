@@ -6,12 +6,8 @@
       "created_by": "user",
       "edited_by": "user",
       "id": "a1",
-      "indoor_message": {
+      "message": {
         "id": 1,
-        "type": "canned"
-      },
-      "outdoor_message": {
-        "id": 2,
         "type": "canned"
       },
       "schedule": {
@@ -29,12 +25,11 @@
       "created_by": "user",
       "edited_by": "user",
       "id": "a2",
-      "indoor_message": {
-        "text": "This is an alert",
-        "type": "custom"
-      },
-      "outdoor_message": {
-        "text": "Test",
+      "message": {
+        "text": {
+          "indoor": "This is an alert",
+          "outdoor": "Test"
+        },
         "type": "custom"
       },
       "schedule": {

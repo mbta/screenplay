@@ -15,7 +15,7 @@ import {
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
-import { matchStation } from "../../../util";
+import { getMessageImageUrl, matchStation } from "../../../util";
 
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
@@ -32,8 +32,7 @@ interface AlertWizardState {
   step: number;
   cancelModal: boolean;
   selectedStations: Station[];
-  indoorMessage: Message;
-  outdoorMessage: Message;
+  message: Message;
   duration: string | number;
   id: string | null;
   activeAlertsList: any[];
@@ -53,8 +52,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         cancelModal: false,
         // User input state
         selectedStations: [],
-        indoorMessage: { type: "canned", id: -1 },
-        outdoorMessage: { type: "canned", id: -1 },
+        message: { type: "canned", id: -1 },
         duration: 1,
         activeAlertsList: [],
         showErrorMessage: false,
@@ -76,8 +74,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   initializeState(alertData: AlertData) {
-    const { id, indoor_message, outdoor_message, stations, schedule } =
-      alertData;
+    const { id, message, stations, schedule } = alertData;
 
     const selectedStations = stations.map((station: string) =>
       matchStation(station, this.props.stationScreenOrientationList),
@@ -102,8 +99,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
       cancelModal: false,
       // User input state
       selectedStations: selectedStations,
-      indoorMessage: indoor_message,
-      outdoorMessage: outdoor_message,
+      message,
       duration: duration,
       activeAlertsList: [],
       showErrorMessage: false,
@@ -142,30 +138,27 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <ConfirmationPage
             goToStep={this.goToStep}
             selectedStations={this.state.selectedStations}
-            indoorMessage={this.state.indoorMessage}
-            outdoorMessage={this.state.outdoorMessage}
+            message={this.state.message}
             duration={this.state.duration}
           />
         );
       default:
         return (
           <CreateMessage
-            indoorValue={this.state.indoorMessage}
-            onChangeIndoor={(v) => this.setState({ indoorMessage: v })}
-            outdoorValue={this.state.outdoorMessage}
-            onChangeOutdoor={(v) => this.setState({ outdoorMessage: v })}
+            value={this.state.message}
+            onChange={(v) => this.setState({ message: v })}
           />
         );
     }
   }
 
   waitingForInput() {
-    const { indoorMessage, outdoorMessage } = this.state;
-    const invalidMessage = (message: Message) =>
-      message.type === "canned" ? message.id === -1 : !message.text;
+    const { message } = this.state;
     switch (this.state.step) {
       case 1:
-        return invalidMessage(indoorMessage) || invalidMessage(outdoorMessage);
+        return message.type === "canned"
+          ? message.id === -1
+          : !message.text.indoor || !message.text.outdoor;
       case 2:
         return this.state.selectedStations.length === 0;
       // Because 1 hour is automatically selected
@@ -223,26 +216,25 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const stations = this.state.selectedStations.map(({ name }) => name);
     const duration = this.state.duration;
-    const pngs = Object.fromEntries(
+    const images = Object.fromEntries(
       await Promise.all(
-        [
-          { message: this.state.indoorMessage, prefix: "indoor" },
-          { message: this.state.outdoorMessage, prefix: "outdoor" },
-        ].flatMap(({ message, prefix }) =>
-          ["portrait", "landscape"].map(async (orientation) => [
-            `${prefix}_${orientation}`,
-            await this.makePNG(message, prefix, orientation),
-          ]),
+        ["indoor" as const, "outdoor" as const].flatMap((where) =>
+          ["portrait" as const, "landscape" as const].map(
+            async (orientation) => [
+              `${where}_${orientation}`,
+              await this.makeImage(where, orientation),
+            ],
+          ),
         ),
       ),
     );
+    console.log(images);
 
     const data = {
-      indoor_message: this.state.indoorMessage,
-      outdoor_message: this.state.outdoorMessage,
+      message: this.state.message,
       stations,
       duration,
-      pngs,
+      images,
       id: this.state.id,
     };
 
@@ -335,7 +327,23 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     }
   }
 
-  async makePNG(message: Message, prefix: string, orientation: string) {
+  async makeImage(
+    where: "indoor" | "outdoor",
+    orientation: "portrait" | "landscape",
+  ) {
+    const { message } = this.state;
+    if (message.type === "canned") {
+      const res = await fetch(getMessageImageUrl(message, where, orientation));
+      if (!res.ok) {
+        throw res;
+      }
+      const blob = await res.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    }
     const [width, height] =
       orientation === "portrait"
         ? [svgShortSide, svgLongSide]
@@ -357,12 +365,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     await new Promise((resolve) => {
       img.onload = resolve;
-      img.src =
-        message.type === "canned"
-          ? `/images/Outfront-Alert-${message.id}-${orientation}.png`
-          : svg_to_uri(
-              document.getElementById(`${prefix}-${orientation}-svg`)!,
-            );
+      img.src = svg_to_uri(
+        document.getElementById(`${where}-${orientation}-svg`)!,
+      );
     });
 
     ctx.drawImage(img, 0, 0, width, height);
@@ -404,8 +409,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
           <WizardSidebar
             selectedStations={this.state.selectedStations}
             step={this.state.step}
-            indoorMessage={this.state.indoorMessage}
-            outdoorMessage={this.state.outdoorMessage}
+            message={this.state.message}
           />
         </div>
         <WizardNavFooter

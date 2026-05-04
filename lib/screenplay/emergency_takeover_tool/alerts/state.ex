@@ -192,8 +192,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.State do
               }
             else
               changes = %{
-                indoor_message: a.indoor_message,
-                outdoor_message: a.outdoor_message,
+                message: a.message,
                 stations: stations_no_overlap,
                 schedule: a.schedule
               }
