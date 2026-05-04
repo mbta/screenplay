@@ -14,7 +14,7 @@ const AlertPreview = ({ message, where, empty }: AlertPreviewProps) => {
     return (
       <img
         className="portrait-png"
-        src={`/images/Outfront-Alert-Empty-Preview.png`}
+        src={`/images/alerts/Empty-preview.png`}
         alt=""
       />
     );

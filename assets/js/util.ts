@@ -150,7 +150,7 @@ export const getMessageImageUrl = (
   orientation: "portrait" | "landscape",
 ) => {
   return (
-    "/images/" +
+    "/images/alerts/" +
     CANNED_MESSAGES.find((m) => m.id === message.id)!.images[where][orientation]
   );
 };
