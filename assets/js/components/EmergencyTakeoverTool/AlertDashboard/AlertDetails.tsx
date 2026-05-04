@@ -59,7 +59,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
       icon: <NoSymbolIcon className="icon" />,
       header: "Clear Alert",
       description:
-        "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
+        "This stops the Emergency Takeover and returns to regularly scheduled content.",
       cancelText: "Keep Alert",
       confirmJSX: (
         <>
