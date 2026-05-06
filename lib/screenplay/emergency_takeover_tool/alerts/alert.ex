@@ -8,8 +8,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
   @enforce_keys [
     :id,
-    :indoor_message,
-    :outdoor_message,
+    :message,
     :stations,
     :schedule,
     :created_by,
@@ -28,7 +27,10 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
   @type custom_message :: %{
           type: :custom,
-          text: String.t()
+          text: %{
+            indoor: String.t(),
+            outdoor: String.t()
+          }
         }
 
   @type station :: String.t()
@@ -41,16 +43,14 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @type user :: String.t()
 
   @type update_map :: %{
-          optional(:indoor_message) => canned_message() | custom_message(),
-          optional(:outdoor_message) => canned_message() | custom_message(),
+          optional(:message) => canned_message() | custom_message(),
           optional(:stations) => list(station),
           optional(:schedule) => schedule()
         }
 
   @type t :: %__MODULE__{
           id: id(),
-          indoor_message: canned_message() | custom_message(),
-          outdoor_message: canned_message() | custom_message(),
+          message: canned_message() | custom_message(),
           stations: list(station()),
           schedule: schedule(),
           created_by: user(),
@@ -67,16 +67,14 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
   @spec new(
           canned_message() | custom_message(),
-          canned_message() | custom_message(),
           list(station()),
           schedule(),
           user()
         ) :: t()
-  def new(indoor_message, outdoor_message, stations, schedule, user) do
+  def new(message, stations, schedule, user) do
     %__MODULE__{
       id: State.get_unused_alert_id(),
-      indoor_message: indoor_message,
-      outdoor_message: outdoor_message,
+      message: message,
       stations: stations,
       schedule: schedule,
       created_by: Util.trim_username(user),
@@ -103,8 +101,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @spec to_json(t()) :: map()
   def to_json(%__MODULE__{
         id: id,
-        indoor_message: indoor_message,
-        outdoor_message: outdoor_message,
+        message: message,
         stations: stations,
         schedule: schedule,
         created_by: created_by,
@@ -114,8 +111,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
       }) do
     %{
       "id" => id,
-      "indoor_message" => message_to_json(indoor_message),
-      "outdoor_message" => message_to_json(outdoor_message),
+      "message" => message_to_json(message),
       "stations" => stations_to_json(stations),
       "schedule" => schedule_to_json(schedule),
       "created_by" => Util.trim_username(created_by),
@@ -128,8 +124,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @spec from_json(map()) :: t()
   def from_json(%{
         "id" => id,
-        "indoor_message" => indoor_message_json,
-        "outdoor_message" => outdoor_message_json,
+        "message" => message_json,
         "stations" => stations_json,
         "schedule" => schedule_json,
         "created_by" => created_by,
@@ -139,8 +134,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
       }) do
     %__MODULE__{
       id: id,
-      indoor_message: message_from_json(indoor_message_json),
-      outdoor_message: message_from_json(outdoor_message_json),
+      message: message_from_json(message_json),
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
       created_by: Util.trim_username(created_by),
@@ -152,8 +146,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
   def from_json(%{
         "id" => id,
-        "indoor_message" => indoor_message_json,
-        "outdoor_message" => outdoor_message_json,
+        "message" => message_json,
         "stations" => stations_json,
         "schedule" => schedule_json,
         "created_by" => created_by,
@@ -161,8 +154,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
       }) do
     %__MODULE__{
       id: id,
-      indoor_message: message_from_json(indoor_message_json),
-      outdoor_message: message_from_json(outdoor_message_json),
+      message: message_from_json(message_json),
       stations: stations_from_json(stations_json),
       schedule: schedule_from_json(schedule_json),
       created_by: Util.trim_username(created_by),
@@ -176,16 +168,19 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     %{"type" => "canned", "id" => id}
   end
 
-  defp message_to_json(%{type: :custom, text: text}) do
-    %{"type" => "custom", "text" => text}
+  defp message_to_json(%{type: :custom, text: %{indoor: indoor, outdoor: outdoor}}) do
+    %{"type" => "custom", "text" => %{"indoor" => indoor, "outdoor" => outdoor}}
   end
 
   def message_from_json(%{"type" => "canned", "id" => id}) do
     %{type: :canned, id: id}
   end
 
-  def message_from_json(%{"type" => "custom", "text" => text}) do
-    %{type: :custom, text: text}
+  def message_from_json(%{
+        "type" => "custom",
+        "text" => %{"indoor" => indoor, "outdoor" => outdoor}
+      }) do
+    %{type: :custom, text: %{indoor: indoor, outdoor: outdoor}}
   end
 
   defp station_to_json(station), do: station

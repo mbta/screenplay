@@ -12,8 +12,8 @@ import {
 } from "../../../util";
 import { NoSymbolIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { ModalDetails } from "../ConfirmationModal";
-import SVGPreviews from "../AlertWizard/SVGPreviews";
 import AlertReminder from "./AlertReminder";
+import AlertPreview from "../AlertWizard/AlertPreview";
 
 interface AlertDetailsProps {
   data: AlertData;
@@ -29,14 +29,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     triggerConfirmation,
     clearAlert: clearAlertFromProps,
   } = props;
-  const {
-    created_by,
-    id,
-    indoor_message,
-    outdoor_message,
-    schedule,
-    stations,
-  } = data;
+  const { created_by, id, message, schedule, stations } = data;
 
   const stationScreenOrientationList = useContext(
     StationScreenOrientationContext,
@@ -66,7 +59,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
       icon: <NoSymbolIcon className="icon" />,
       header: "Clear Alert",
       description:
-        "This stops the Outfront Media screen Takeover, and returns to the regularly scheduled content loop.",
+        "This stops the Emergency Takeover and returns to regularly scheduled content.",
       cancelText: "Keep Alert",
       confirmJSX: (
         <>
@@ -82,15 +75,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        {indoor_message.type === "custom" ? (
-          <SVGPreviews showText message={indoor_message.text} prefix="indoor" />
-        ) : (
-          <img
-            className="portrait-png"
-            src={`/images/Outfront-Alert-${indoor_message.id}-portrait.png`}
-            alt=""
-          />
-        )}
+        <AlertPreview message={message} where="indoor" />
       </div>
       <div className="alert-details">
         <AlertReminder
@@ -115,12 +100,14 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
         <table className="details-grid">
           <tbody>
             {[
-              { message: indoor_message, label: "Indoor" },
-              { message: outdoor_message, label: "Outdoor" },
-            ].map(({ message, label }) => (
+              { where: "indoor" as const, label: "Indoor" },
+              { where: "outdoor" as const, label: "Outdoor" },
+            ].map(({ where, label }) => (
               <tr key={label}>
                 <td>{label} text</td>
-                <td className="emphasized-cell">{getMessageString(message)}</td>
+                <td className="emphasized-cell">
+                  {getMessageString(message, where)}
+                </td>
               </tr>
             ))}
             <tr className="gray-row">

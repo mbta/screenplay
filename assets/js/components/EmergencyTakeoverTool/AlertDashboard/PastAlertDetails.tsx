@@ -16,15 +16,8 @@ interface PastAlertDetailsProps {
 }
 
 const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
-  const {
-    cleared_at,
-    cleared_by,
-    created_by,
-    indoor_message,
-    outdoor_message,
-    schedule,
-    stations,
-  } = props.data;
+  const { cleared_at, cleared_by, created_by, message, schedule, stations } =
+    props.data;
   const stationScreenOrientationList = useContext(
     StationScreenOrientationContext,
   );
@@ -51,12 +44,14 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
         <table className="details-grid past-alert">
           <tbody>
             {[
-              { message: indoor_message, label: "Indoor" },
-              { message: outdoor_message, label: "Outdoor" },
-            ].map(({ message, label }) => (
+              { where: "indoor" as const, label: "Indoor" },
+              { where: "outdoor" as const, label: "Outdoor" },
+            ].map(({ where, label }) => (
               <tr key={label}>
                 <td>{label} text</td>
-                <td className="emphasized-cell">{getMessageString(message)}</td>
+                <td className="emphasized-cell">
+                  {getMessageString(message, where)}
+                </td>
               </tr>
             ))}
             <tr className="gray-row">

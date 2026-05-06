@@ -11,11 +11,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def create(
         conn,
         params = %{
-          "indoor_message" => indoor_message,
-          "outdoor_message" => outdoor_message,
+          "message" => message,
           "stations" => stations,
           "duration" => duration_in_hours,
-          "pngs" => pngs
+          "images" => images
         }
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
@@ -23,20 +22,19 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
     remove_overlapping_alerts(params, user)
 
-    indoor_message = Alert.message_from_json(indoor_message)
-    outdoor_message = Alert.message_from_json(outdoor_message)
-    alert = Alert.new(indoor_message, outdoor_message, stations, schedule, user)
+    message = Alert.message_from_json(message)
+    alert = Alert.new(message, stations, schedule, user)
 
     params_to_log =
       params
-      |> Map.take(["indoor_message", "outdoor_message", "stations", "duration"])
+      |> Map.take(["message", "stations", "duration"])
       |> Map.merge(%{"id" => alert.id})
 
     _ = UserActionLogger.log(user, :create_alert, params_to_log)
     :ok = State.add_alert(alert)
 
-    portrait_image_data = decode_png(pngs["indoor_portrait"])
-    landscape_image_data = decode_png(pngs["outdoor_landscape"])
+    portrait_image_data = decode_image(images["indoor_portrait"])
+    landscape_image_data = decode_image(images["outdoor_landscape"])
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
     _ = S3Fetch.upload_takeover_image(id, portrait_image_data, "indoor_portrait")
     _ = S3Fetch.upload_takeover_image(id, landscape_image_data, "outdoor_landscape")
@@ -52,21 +50,18 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn,
         params = %{
           "id" => id,
-          "indoor_message" => indoor_message,
-          "outdoor_message" => outdoor_message,
+          "message" => message,
           "stations" => stations,
           "duration" => duration_in_hours,
-          "pngs" => pngs
+          "images" => images
         }
       ) do
     alert = State.get_alert(id)
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
-    indoor_message = Alert.message_from_json(indoor_message)
-    outdoor_message = Alert.message_from_json(outdoor_message)
+    message = Alert.message_from_json(message)
 
     changes = %{
-      indoor_message: indoor_message,
-      outdoor_message: outdoor_message,
+      message: message,
       stations: stations,
       schedule: schedule
     }
@@ -78,13 +73,13 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     new_alert = Alert.update(alert, changes, user)
 
     params_to_log =
-      Map.take(params, ["indoor_message", "outdoor_message", "stations", "duration", "id"])
+      Map.take(params, ["message", "stations", "duration", "id"])
 
     _ = UserActionLogger.log(user, :update_alert, params_to_log)
     :ok = State.update_alert(id, new_alert)
 
-    portrait_image_data = decode_png(pngs["indoor_portrait"])
-    landscape_image_data = decode_png(pngs["outdoor_landscape"])
+    portrait_image_data = decode_image(images["indoor_portrait"])
+    landscape_image_data = decode_image(images["outdoor_landscape"])
 
     _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
     _ = S3Fetch.upload_takeover_image(id, portrait_image_data, "indoor_portrait")
@@ -146,9 +141,12 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     %{start: start_dt, end: end_dt}
   end
 
-  defp decode_png(png) do
-    "data:image/png;base64," <> raw = png
-    Base.decode64!(raw)
+  defp decode_image("data:image/png;base64," <> raw) do
+    {Base.decode64!(raw), "png"}
+  end
+
+  defp decode_image("data:image/gif;base64," <> raw) do
+    {Base.decode64!(raw), "gif"}
   end
 
   defp remove_overlapping_alerts(params, user) do

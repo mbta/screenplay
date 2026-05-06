@@ -1,5 +1,6 @@
 import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
 import {
+  CannedMessage,
   Message,
   StationsByLine,
 } from "./components/EmergencyTakeoverTool/EmergencyTakeoverTool";
@@ -143,11 +144,27 @@ export const formatTime = (date: Date) => {
   }).format(date);
 };
 
-export const getMessageString = (message: Message) => {
+export const getMessageImageUrl = (
+  message: CannedMessage,
+  where: "indoor" | "outdoor",
+  orientation: "portrait" | "landscape",
+) => {
+  return (
+    "/images/alerts/" +
+    CANNED_MESSAGES.find((m) => m.id === message.id)!.images[where][orientation]
+  );
+};
+
+export const getMessageString = (
+  message: Message,
+  where: "indoor" | "outdoor",
+) => {
   if (message.type === "canned") {
-    return message.id === -1 ? "" : CANNED_MESSAGES[message.id];
+    return message.id === -1
+      ? ""
+      : CANNED_MESSAGES.find((m) => m.id === message.id)!.text[where];
   }
-  return message.text;
+  return message.text[where];
 };
 
 export const classWithModifier = (baseClass: string, modifier: string) => {
