@@ -44,13 +44,13 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
         <table className="details-grid past-alert">
           <tbody>
             {[
-              { where: "indoor" as const, label: "Indoor" },
-              { where: "outdoor" as const, label: "Outdoor" },
-            ].map(({ where, label }) => (
+              { location: "indoor" as const, label: "Indoor" },
+              { location: "outdoor" as const, label: "Outdoor" },
+            ].map(({ location, label }) => (
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(message, where)}
+                  {getMessageString(message, location)}
                 </td>
               </tr>
             ))}

@@ -146,25 +146,27 @@ export const formatTime = (date: Date) => {
 
 export const getMessageImageUrl = (
   message: CannedMessage,
-  where: "indoor" | "outdoor",
+  location: "indoor" | "outdoor",
   orientation: "portrait" | "landscape",
 ) => {
   return (
     "/images/alerts/" +
-    CANNED_MESSAGES.find((m) => m.id === message.id)!.images[where][orientation]
+    CANNED_MESSAGES.find((m) => m.id === message.id)!.images[location][
+      orientation
+    ]
   );
 };
 
 export const getMessageString = (
   message: Message,
-  where: "indoor" | "outdoor",
+  location: "indoor" | "outdoor",
 ) => {
   if (message.type === "canned") {
     return message.id === -1
       ? ""
-      : CANNED_MESSAGES.find((m) => m.id === message.id)!.text[where];
+      : CANNED_MESSAGES.find((m) => m.id === message.id)!.text[location];
   }
-  return message.text[where];
+  return message.text[location];
 };
 
 export const classWithModifier = (baseClass: string, modifier: string) => {

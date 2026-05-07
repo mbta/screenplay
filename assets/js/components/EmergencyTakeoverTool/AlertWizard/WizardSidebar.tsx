@@ -18,8 +18,8 @@ const WizardSidebar = ({
   return (
     <div className="wizard-sidebar">
       <span className="preview-title text-16">Preview</span>
-      <AlertPreview message={message} where="indoor" empty={step === 1} />
-      <AlertPreview message={message} where="outdoor" empty={step === 1} />
+      <AlertPreview message={message} location="indoor" empty={step === 1} />
+      <AlertPreview message={message} location="outdoor" empty={step === 1} />
       <StackedStationCards stations={selectedStations} />
     </div>
   );

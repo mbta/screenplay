@@ -12,8 +12,8 @@ interface CreateMessageProps {
 
 const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
   const fields = [
-    { where: "indoor" as const, label: "Indoor" },
-    { where: "outdoor" as const, label: "Outdoor" },
+    { location: "indoor" as const, label: "Indoor" },
+    { location: "outdoor" as const, label: "Outdoor" },
   ];
   return (
     <>
@@ -49,8 +49,8 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
           </select>
         </div>
         <div className="message-subgrid">
-          {fields.map(({ where, label }) => (
-            <label key={label} htmlFor={`${where}-text`}>
+          {fields.map(({ location, label }) => (
+            <label key={label} htmlFor={`${location}-text`}>
               {label} text ({charLimit} character max)
             </label>
           ))}
@@ -60,12 +60,12 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
             "selected-option": value.type === "custom",
           })}
         >
-          {fields.map(({ where }) => (
+          {fields.map(({ location }) => (
             <textarea
-              key={where}
-              id={`${where}-text`}
+              key={location}
+              id={`${location}-text`}
               className="message-textarea text-16"
-              value={getMessageString(value, where)}
+              value={getMessageString(value, location)}
               maxLength={charLimit}
               placeholder="Type, or select a canned message above to edit here..."
               onChange={(e) => {
@@ -81,7 +81,7 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
                     : value;
                 onChange({
                   ...base,
-                  text: { ...base.text, [where]: e.target.value },
+                  text: { ...base.text, [location]: e.target.value },
                 });
               }}
             ></textarea>

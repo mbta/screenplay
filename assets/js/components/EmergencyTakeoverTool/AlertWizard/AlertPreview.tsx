@@ -5,11 +5,11 @@ import { getMessageImageUrl } from "../../../util";
 
 interface AlertPreviewProps {
   message: Message;
-  where: "indoor" | "outdoor";
+  location: "indoor" | "outdoor";
   empty?: boolean;
 }
 
-const AlertPreview = ({ message, where, empty }: AlertPreviewProps) => {
+const AlertPreview = ({ message, location, empty }: AlertPreviewProps) => {
   if (empty) {
     return (
       <img
@@ -23,13 +23,15 @@ const AlertPreview = ({ message, where, empty }: AlertPreviewProps) => {
     return (
       <img
         className="portrait-png"
-        src={getMessageImageUrl(message, where, "portrait")}
+        src={getMessageImageUrl(message, location, "portrait")}
         alt=""
       />
     );
   }
 
-  return <SVGPreviews showText prefix={where} message={message.text[where]} />;
+  return (
+    <SVGPreviews showText prefix={location} message={message.text[location]} />
+  );
 };
 
 export default AlertPreview;

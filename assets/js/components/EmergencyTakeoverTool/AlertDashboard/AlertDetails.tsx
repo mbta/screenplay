@@ -75,7 +75,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        <AlertPreview message={message} where="indoor" />
+        <AlertPreview message={message} location="indoor" />
       </div>
       <div className="alert-details">
         <AlertReminder
@@ -100,13 +100,13 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
         <table className="details-grid">
           <tbody>
             {[
-              { where: "indoor" as const, label: "Indoor" },
-              { where: "outdoor" as const, label: "Outdoor" },
-            ].map(({ where, label }) => (
+              { location: "indoor" as const, label: "Indoor" },
+              { location: "outdoor" as const, label: "Outdoor" },
+            ].map(({ location, label }) => (
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(message, where)}
+                  {getMessageString(message, location)}
                 </td>
               </tr>
             ))}

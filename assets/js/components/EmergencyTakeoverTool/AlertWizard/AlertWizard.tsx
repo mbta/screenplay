@@ -218,11 +218,11 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const duration = this.state.duration;
     const images = Object.fromEntries(
       await Promise.all(
-        ["indoor" as const, "outdoor" as const].flatMap((where) =>
+        ["indoor" as const, "outdoor" as const].flatMap((location) =>
           ["portrait" as const, "landscape" as const].map(
             async (orientation) => [
-              `${where}_${orientation}`,
-              await this.makeImage(where, orientation),
+              `${location}_${orientation}`,
+              await this.makeImage(location, orientation),
             ],
           ),
         ),
@@ -328,12 +328,14 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   async makeImage(
-    where: "indoor" | "outdoor",
+    location: "indoor" | "outdoor",
     orientation: "portrait" | "landscape",
   ) {
     const { message } = this.state;
     if (message.type === "canned") {
-      const res = await fetch(getMessageImageUrl(message, where, orientation));
+      const res = await fetch(
+        getMessageImageUrl(message, location, orientation),
+      );
       if (!res.ok) {
         throw res;
       }
@@ -366,7 +368,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     await new Promise((resolve) => {
       img.onload = resolve;
       img.src = svg_to_uri(
-        document.getElementById(`${where}-${orientation}-svg`)!,
+        document.getElementById(`${location}-${orientation}-svg`)!,
       );
     });
 

@@ -35,13 +35,13 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
       <table className="details-grid">
         <tbody>
           {[
-            { where: "indoor" as const, label: "Indoor" },
-            { where: "outdoor" as const, label: "Outdoor" },
-          ].map(({ where, label }) => (
+            { location: "indoor" as const, label: "Indoor" },
+            { location: "outdoor" as const, label: "Outdoor" },
+          ].map(({ location, label }) => (
             <tr key={label} className="gray-row">
               <td>{label} text</td>
               <td className="emphasized-cell">
-                {getMessageString(props.message, where)}
+                {getMessageString(props.message, location)}
               </td>
               <td>
                 <div className="edit-link" onClick={() => props.goToStep(1)}>
