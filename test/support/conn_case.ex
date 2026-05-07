@@ -29,8 +29,6 @@ defmodule ScreenplayWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint ScreenplayWeb.Endpoint
-
-      use ScreenplayWeb, :verified_routes
     end
   end
 
