@@ -6,12 +6,12 @@ export const landscapeHeightMedian = 230;
 
 export const svgScale = 1920 / svgLongSide;
 
-export const svgPortraitLineLength = 19;
-export const svgLandscapeLineLength = 40;
-export const svgLineHeight = 104;
-export const svgFontSize = 88;
+export const svgPortraitLineLength = 12;
+export const svgLandscapeLineLength = 24;
+export const svgLineHeight = 163;
+export const svgFontSize = 138;
 
-export const charLimit = 155;
+export const charLimit = 60;
 
 export const defaultButtonColor = "#0075db99";
 

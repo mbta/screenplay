@@ -9,8 +9,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       alert = %Alert{
         id: "alert",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Back Bay"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -33,8 +32,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       cleared_alert = %Alert{
         id: "alert",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Back Bay"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -57,8 +55,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       alert = %Alert{
         id: nil,
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["South Station"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -75,8 +72,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       alert = %Alert{
         id: "alert",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["South Station"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -99,8 +95,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -111,8 +106,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "This is an alert"},
-        outdoor_message: %{type: :custom, text: "This is an alert"},
+        message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -128,8 +122,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       new_alert = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "All clear now"},
-        outdoor_message: %{type: :custom, text: "All clear now"},
+        message: %{type: :custom, text: %{indoor: "All clear now", outdoor: "Test"}},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -151,8 +144,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -163,8 +155,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "This is an alert"},
-        outdoor_message: %{type: :custom, text: "This is an alert"},
+        message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -183,7 +174,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       assert %{
                alerts: %{"a2" => _},
-               cleared_alerts: %{"a1" => %{cleared_at: now, cleared_by: "clear_user"}}
+               cleared_alerts: %{"a1" => %{cleared_at: ^now, cleared_by: "clear_user"}}
              } = :sys.get_state(pid)
     end
   end
@@ -194,8 +185,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -206,8 +196,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "This is an alert"},
-        outdoor_message: %{type: :custom, text: "This is an alert"},
+        message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -242,8 +231,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -254,8 +242,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "This is an alert"},
-        outdoor_message: %{type: :custom, text: "This is an alert"},
+        message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
         stations: ["South Station", "Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -290,8 +277,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -302,8 +288,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "This is an alert"},
-        outdoor_message: %{type: :custom, text: "This is an alert"},
+        message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
         stations: ["Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -335,8 +320,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a1 = %Alert{
         id: "a1",
-        indoor_message: %{type: :canned, id: 1},
-        outdoor_message: %{type: :canned, id: 1},
+        message: %{type: :canned, id: 1},
         stations: ["Haymarket", "Government Center"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -347,8 +331,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
       a2 = %Alert{
         id: "a2",
-        indoor_message: %{type: :custom, text: "This is an alert"},
-        outdoor_message: %{type: :custom, text: "This is an alert"},
+        message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
         stations: ["South Station", "Kendall/MIT"],
         schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
         created_by: "user",
@@ -382,8 +365,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
   describe "to_json/1" do
     a1 = %Alert{
       id: "a1",
-      indoor_message: %{type: :canned, id: 1},
-      outdoor_message: %{type: :canned, id: 1},
+      message: %{type: :canned, id: 1},
       stations: ["Haymarket", "Government Center"],
       schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
       created_by: "user",
@@ -394,8 +376,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
 
     a2 = %Alert{
       id: "a2",
-      indoor_message: %{type: :custom, text: "This is an alert"},
-      outdoor_message: %{type: :custom, text: "This is an alert"},
+      message: %{type: :custom, text: %{indoor: "This is an alert", outdoor: "Test"}},
       stations: ["Kendall/MIT"],
       schedule: %{start: ~U[2021-08-19 17:09:42Z], end: ~U[2021-08-19 17:39:42Z]},
       created_by: "user",
@@ -420,8 +401,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
       "alerts" => [
         %{
           "id" => "a1",
-          "indoor_message" => %{"id" => 1, "type" => "canned"},
-          "outdoor_message" => %{"id" => 1, "type" => "canned"},
+          "message" => %{"id" => 1, "type" => "canned"},
           "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
           "stations" => ["Haymarket", "Government Center"],
           "created_by" => "user",
@@ -429,8 +409,10 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.StateTest do
         },
         %{
           "id" => "a2",
-          "indoor_message" => %{"text" => "This is an alert", "type" => "custom"},
-          "outdoor_message" => %{"text" => "This is an alert", "type" => "custom"},
+          "message" => %{
+            "text" => %{"indoor" => "This is an alert", "outdoor" => "Test"},
+            "type" => "custom"
+          },
           "schedule" => %{"start" => "2021-08-19T17:09:42Z", "end" => "2021-08-19T17:39:42Z"},
           "stations" => ["Kendall/MIT"],
           "created_by" => "user",

@@ -6,18 +6,15 @@ import cx from "classnames";
 import { getMessageString } from "../../../util";
 
 interface CreateMessageProps {
-  indoorValue: Message;
-  onChangeIndoor: (value: Message) => void;
-  outdoorValue: Message;
-  onChangeOutdoor: (value: Message) => void;
+  value: Message;
+  onChange: (value: Message) => void;
 }
 
-const CreateMessage = ({
-  indoorValue,
-  onChangeIndoor,
-  outdoorValue,
-  onChangeOutdoor,
-}: CreateMessageProps) => {
+const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
+  const fields = [
+    { location: "indoor" as const, label: "Indoor" },
+    { location: "outdoor" as const, label: "Outdoor" },
+  ];
   return (
     <>
       <div className="step-instructions">
@@ -28,47 +25,14 @@ const CreateMessage = ({
           action.
         </div>
       </div>
-      <MessageInput
-        value={indoorValue}
-        onChange={onChangeIndoor}
-        label="Indoor"
-      />
-      <MessageInput
-        value={outdoorValue}
-        onChange={onChangeOutdoor}
-        label="Outdoor"
-      />
-    </>
-  );
-};
 
-const MessageInput = ({
-  value,
-  onChange,
-  label,
-}: {
-  value: Message;
-  onChange: (value: Message) => void;
-  label: string;
-}) => {
-  return (
-    <div className="step-body">
-      <div className="info">
-        <div>{label} text</div>
-        <div className="text-14">&nbsp;(144 character max)</div>
-      </div>
-      <div>
+      <div className="message-inputs">
         <div
-          className={cx("radio-option", "option-one", {
+          style={{ gridColumn: 2 }}
+          className={cx("message-option", "option-one", {
             "selected-option": value.type === "canned",
           })}
         >
-          <input
-            type="radio"
-            value="1"
-            checked={value.type === "canned"}
-            onChange={() => onChange({ type: "canned", id: -1 })}
-          />
           <select
             className="message-select text-16"
             value={value.type === "canned" ? value.id : -1}
@@ -77,36 +41,54 @@ const MessageInput = ({
             <option value={-1} hidden>
               Select canned message…
             </option>
-            {CANNED_MESSAGES.map((message, index) => (
-              <option key={index} value={index}>
-                {message}
+            {CANNED_MESSAGES.map((message) => (
+              <option key={message.id} value={message.id}>
+                {message.name}
               </option>
             ))}
           </select>
         </div>
+        <div className="message-subgrid">
+          {fields.map(({ location, label }) => (
+            <label key={label} htmlFor={`${location}-text`}>
+              {label} text ({charLimit} character max)
+            </label>
+          ))}
+        </div>
         <div
-          className={cx("radio-option", "option-two", {
+          className={cx("message-subgrid", "message-option", "option-two", {
             "selected-option": value.type === "custom",
           })}
         >
-          <input
-            type="radio"
-            value="2"
-            checked={value.type === "custom"}
-            onChange={() =>
-              onChange({ type: "custom", text: getMessageString(value) })
-            }
-          />
-          <textarea
-            className="message-textarea text-16"
-            value={getMessageString(value)}
-            maxLength={charLimit}
-            placeholder="Type, or select a canned message above to edit here..."
-            onChange={(e) => onChange({ type: "custom", text: e.target.value })}
-          ></textarea>
+          {fields.map(({ location }) => (
+            <textarea
+              key={location}
+              id={`${location}-text`}
+              className="message-textarea text-16"
+              value={getMessageString(value, location)}
+              maxLength={charLimit}
+              placeholder="Type, or select a canned message above to edit here..."
+              onChange={(e) => {
+                const base =
+                  value.type === "canned"
+                    ? {
+                        type: "custom" as const,
+                        text: {
+                          indoor: getMessageString(value, "indoor"),
+                          outdoor: getMessageString(value, "outdoor"),
+                        },
+                      }
+                    : value;
+                onChange({
+                  ...base,
+                  text: { ...base.text, [location]: e.target.value },
+                });
+              }}
+            ></textarea>
+          ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

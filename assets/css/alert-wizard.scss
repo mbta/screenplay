@@ -68,44 +68,51 @@
         // ok this padding will need to be auto eventually
         padding: 24px;
         display: flex;
-
-        // CREATE MESSAGE CLASSES
-        .info {
-          margin-right: 50px;
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-        }
-        .message-select {
-          white-space: normal;
-          height: auto;
-          width: 100%;
-          font: unset;
-          color: $gray-900;
-          background-color: white;
-        }
-        .message-textarea {
-          flex-grow: 1;
-          width: 100%;
-          font: inherit;
-          height: 90px;
-          background: white;
-        }
-        //  END OF CREATE MESSAGE CLASSES
-
-        // PICK STATIONS CLASSES
-        .station-column {
-          flex: 1 1 0px;
-          margin-right: 24px;
-
-          &.green {
-            margin-right: 0;
-          }
-        }
-
-        // END PICK STATIONS CLASSES
       }
+
+      // CREATE MESSAGE CLASSES
+      .info {
+        margin-right: 50px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+      }
+      .message-select {
+        white-space: normal;
+        height: auto;
+        width: 100%;
+        font: unset;
+        color: $gray-900;
+        background-color: white;
+      }
+      .message-textarea {
+        flex-grow: 1;
+        width: 100%;
+        font: inherit;
+        height: 90px;
+        background: white;
+      }
+      //  END OF CREATE MESSAGE CLASSES
+
+      // PICK STATIONS CLASSES
+      .station-column {
+        flex: 1 1 0px;
+        margin-right: 24px;
+
+        &.green {
+          margin-right: 0;
+        }
+      }
+      // END PICK STATIONS CLASSES
     }
+  }
+
+  .message-inputs {
+    background: $gray-100;
+    padding: 24px;
+    display: grid;
+    column-gap: 50px;
+    grid-template-columns: 220px 1fr;
   }
 }
 
@@ -169,10 +176,14 @@
   }
 }
 
-.radio-option {
-  display: inline-flex;
+.message-subgrid {
+  grid-row: span 2;
+  display: grid;
+  grid-template-rows: subgrid;
+  gap: 12px;
   align-items: center;
-  width: 100%;
+}
+.message-option {
   background: white;
   border: 1px solid $gray-200;
   padding: 12px;
@@ -182,10 +193,6 @@
   }
   &.option-two {
     border-radius: 0 0 6px 6px;
-  }
-
-  input[type="radio"] {
-    margin-right: 17px;
   }
 }
 .selected-option {

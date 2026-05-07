@@ -6,8 +6,7 @@ import { Message, Station } from "../EmergencyTakeoverTool";
 interface ConfirmationPageProps {
   goToStep: (step: number) => void;
   selectedStations: Station[];
-  indoorMessage: Message;
-  outdoorMessage: Message;
+  message: Message;
   duration: number | string;
 }
 
@@ -36,12 +35,14 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
       <table className="details-grid">
         <tbody>
           {[
-            { message: props.indoorMessage, label: "Indoor" },
-            { message: props.outdoorMessage, label: "Outdoor" },
-          ].map(({ message, label }) => (
+            { location: "indoor" as const, label: "Indoor" },
+            { location: "outdoor" as const, label: "Outdoor" },
+          ].map(({ location, label }) => (
             <tr key={label} className="gray-row">
               <td>{label} text</td>
-              <td className="emphasized-cell">{getMessageString(message)}</td>
+              <td className="emphasized-cell">
+                {getMessageString(props.message, location)}
+              </td>
               <td>
                 <div className="edit-link" onClick={() => props.goToStep(1)}>
                   Edit
