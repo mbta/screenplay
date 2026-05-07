@@ -51,7 +51,7 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
         <div className="message-subgrid">
           {fields.map(({ where, label }) => (
             <label key={label} htmlFor={`${where}-text`}>
-              {label} text (144 character max)
+              {label} text ({charLimit} character max)
             </label>
           ))}
         </div>
