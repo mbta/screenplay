@@ -4,6 +4,7 @@ import AlertWizard from "./AlertWizard/AlertWizard";
 import ConfirmationModal, { ModalDetails } from "./ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
+import { CannedMessagesProvider } from "./CannedMessagesContext";
 
 export interface Station {
   name: string;
@@ -29,6 +30,21 @@ interface AppState {
 export interface CannedMessage {
   type: "canned";
   id: number;
+  name?: string;
+  text?: {
+    indoor: string;
+    outdoor: string;
+  };
+  images?: {
+    indoor: {
+      portrait: string;
+      landscape: string;
+    };
+    outdoor: {
+      portrait: string;
+      landscape: string;
+    };
+  };
 }
 
 export interface CustomMessage {
@@ -144,42 +160,44 @@ class EmergencyTakeoverTool extends React.Component<
   render() {
     return (
       !!this.state.stationScreenOrientationList && (
-        <StationScreenOrientationContext.Provider
-          value={this.state.stationScreenOrientationList}
-        >
-          <div className="emergency-container">
-            <div className="app-title">
-              <img src="/images/t-identity.png" alt="Logo" className="logo" />
-              <div className="stacked-title text-30">
-                <div>Real-time Info Screens</div>
-                <div className="weight-700">Emergency Takeover</div>
+        <CannedMessagesProvider>
+          <StationScreenOrientationContext.Provider
+            value={this.state.stationScreenOrientationList}
+          >
+            <div className="emergency-container">
+              <div className="app-title">
+                <img src="/images/t-identity.png" alt="Logo" className="logo" />
+                <div className="stacked-title text-30">
+                  <div>Real-time Info Screens</div>
+                  <div className="weight-700">Emergency Takeover</div>
+                </div>
               </div>
+              {this.state.alertWizardOpen ? (
+                <AlertWizard
+                  triggerConfirmation={this.openModal}
+                  toggleAlertWizard={this.toggleAlertWizard.bind(this)}
+                  alertData={this.state.alertData}
+                  stationScreenOrientationList={
+                    this.state.stationScreenOrientationList
+                  }
+                />
+              ) : (
+                <AlertDashboard
+                  startAlertWizard={this.startAlertWizard.bind(this)}
+                  startEditWizard={this.startEditWizard.bind(this)}
+                  triggerConfirmation={this.openModal}
+                  closeModal={this.toggleModal}
+                />
+              )}
             </div>
-            {this.state.alertWizardOpen ? (
-              <AlertWizard
-                triggerConfirmation={this.openModal}
-                toggleAlertWizard={this.toggleAlertWizard.bind(this)}
-                alertData={this.state.alertData}
-                stationScreenOrientationList={
-                  this.state.stationScreenOrientationList
-                }
-              />
-            ) : (
-              <AlertDashboard
-                startAlertWizard={this.startAlertWizard.bind(this)}
-                startEditWizard={this.startEditWizard.bind(this)}
-                triggerConfirmation={this.openModal}
-                closeModal={this.toggleModal}
-              />
-            )}
-          </div>
-          <ConfirmationModal
-            show={this.state.modalOpen}
-            onHide={this.toggleModal}
-            // onSubmit={this.toggleAlertWizard}
-            modalDetails={this.state.modalDetails}
-          />
-        </StationScreenOrientationContext.Provider>
+            <ConfirmationModal
+              show={this.state.modalOpen}
+              onHide={this.toggleModal}
+              // onSubmit={this.toggleAlertWizard}
+              modalDetails={this.state.modalDetails}
+            />
+          </StationScreenOrientationContext.Provider>
+        </CannedMessagesProvider>
       )
     );
   }

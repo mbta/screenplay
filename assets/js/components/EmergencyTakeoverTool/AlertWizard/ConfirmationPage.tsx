@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { formatDate, formatTime, getMessageString } from "../../../util";
 import StackedStationCards from "./StackedStationCards";
 import { Message, Station } from "../EmergencyTakeoverTool";
+import { CannedMessagesContext } from "../CannedMessagesContext";
 
 interface ConfirmationPageProps {
   goToStep: (step: number) => void;
@@ -11,6 +12,7 @@ interface ConfirmationPageProps {
 }
 
 const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
+  const { messages: cannedMessages } = useContext(CannedMessagesContext);
   let durationString = "",
     expirationString = "",
     expirationTime = "";
@@ -41,7 +43,7 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
             <tr key={label} className="gray-row">
               <td>{label} text</td>
               <td className="emphasized-cell">
-                {getMessageString(props.message, where)}
+                {getMessageString(props.message, where, cannedMessages)}
               </td>
               <td>
                 <div className="edit-link" onClick={() => props.goToStep(1)}>

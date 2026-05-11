@@ -15,7 +15,7 @@ import {
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
-import { getMessageImageUrl, matchStation } from "../../../util";
+import { matchStation } from "../../../util";
 
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
@@ -214,8 +214,18 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
 
-    const stations = this.state.selectedStations.map(({ name }) => name);
+    // Map station names to whether they have an outfront screen (portrait or landscape)
+    const stations = Object.fromEntries(
+      this.state.selectedStations.map(({ name, portrait, landscape }) => [
+        name,
+        portrait || landscape,
+      ])
+    );
+    const showtimeScreenIds = this.state.selectedStations.flatMap(({ indoor_screens, outdoor_screens }) => indoor_screens.concat(outdoor_screens));
+
     const duration = this.state.duration;
+  
+
     const images = Object.fromEntries(
       await Promise.all(
         ["indoor" as const, "outdoor" as const].flatMap((where) =>
@@ -228,14 +238,14 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         ),
       ),
     );
-    console.log(images);
 
     const data = {
       message: this.state.message,
       stations,
+      showtimeScreenIds,
       duration,
       images,
-      id: this.state.id,
+      id: this.state.id
     };
 
     fetch(endpoint, {
@@ -329,8 +339,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     orientation: "portrait" | "landscape",
   ) {
     const { message } = this.state;
-    if (message.type === "canned") {
-      const res = await fetch(getMessageImageUrl(message, where, orientation));
+    
+    if (message.type === "canned" && message.images) {
+      const imageUrl = message.images[where][orientation];
+      const res = await fetch(`/images/alerts/${imageUrl}`);
       if (!res.ok) {
         throw res;
       }

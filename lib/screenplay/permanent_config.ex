@@ -4,6 +4,7 @@ defmodule Screenplay.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
+  alias Screenplay.EmergencyTakeoverTool.Alerts.Alert
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
   alias Screenplay.Places.Fetch
@@ -11,7 +12,18 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
-  alias ScreensConfig.{Alerts, Config, Departures, Footer, LineMap, PendingConfig, Screen}
+
+  alias ScreensConfig.{
+    Alerts,
+    Config,
+    Departures,
+    EmergencyTakeover,
+    Footer,
+    LineMap,
+    PendingConfig,
+    Screen
+  }
+
   alias ScreensConfig.Departures.{Query, Section}
   alias ScreensConfig.Header.Destination
   alias ScreensConfig.Screen.GlEink
@@ -83,6 +95,78 @@ defmodule Screenplay.PermanentConfig do
       version_id: metadata.version_id,
       last_modified_ms: DateTime.to_unix(metadata.last_modified, :millisecond)
     }
+  end
+
+  def update_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
+    with {published_config, _published_version_id} <- get_current_published_config(),
+         {:ok, published_config_deserialized} <-
+           Jason.decode(published_config) do
+      %Config{screens: published_screens, devops: devops} =
+        published_config_deserialized |> Config.from_json()
+
+      indoor_text = Alert.indoor_text(message)
+      outdoor_text = Alert.outdoor_text(message)
+
+      # TODO: Instead of going through full list of screens, go through list of screens to modify and pull from the Map of screens, then update those keys in the full map
+      updated_screens =
+        Enum.map(published_screens, fn {id, screen} ->
+          if id in showtime_screen_ids do
+            emergency_takeover = %EmergencyTakeover{
+              :audio_asset_path => nil,
+              :text_for_audio =>
+                if(screen.app_params.emergency_messaging_location == :inside,
+                  do: indoor_text,
+                  else: outdoor_text
+                ),
+              :visual_asset_path =>
+                Alert.image_location_for_message(
+                  message,
+                  alert_id,
+                  screen.app_id,
+                  screen.app_params.emergency_messaging_location
+                )
+            }
+
+            app_params =
+              screen.app_params
+              |> Map.update(:emergency_takeover, emergency_takeover, fn _ ->
+                emergency_takeover
+              end)
+
+            screen_with_takeover =
+              Map.update(screen, :app_params, app_params, fn _ ->
+                app_params
+              end)
+
+            {id, screen_with_takeover}
+          else
+            {id, screen}
+          end
+        end)
+        |> Enum.into(%{})
+
+      updated_config = %Config{screens: updated_screens, devops: devops}
+      publish_new_config(updated_config)
+    else
+      error ->
+        IO.inspect(error,
+          label: "Error fetching or decoding published config in showtime takeover creation"
+        )
+    end
+  end
+
+  def publish_new_config(new_config) do
+    with(:ok <- PublishedScreensFetch.put_config(new_config)) do
+      PublishedScreensFetch.commit()
+    end
+  end
+
+  def get_published_config() do
+    with {published_config, _published_version_id} <- get_current_published_config(),
+         {:ok, published_config_deserialized} <-
+           Jason.decode(published_config) do
+      published_config_deserialized |> Config.from_json()
+    end
   end
 
   @spec put_pending_screens(map(), screen_type(), Fetch.version_id()) ::
@@ -381,7 +465,7 @@ defmodule Screenplay.PermanentConfig do
     Application.get_env(:screenplay, :route_pattern_mod, RoutePattern)
   end
 
-  defp get_current_published_config do
+  def get_current_published_config do
     case PublishedScreensFetch.fetch_config() do
       {:ok, config, version_id} -> {config, version_id}
       error -> error

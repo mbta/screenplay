@@ -6,6 +6,7 @@ import {
   getMessageString,
   matchStation,
 } from "../../../util";
+import { CannedMessagesContext } from "../CannedMessagesContext";
 import {
   AlertData,
   StationScreenOrientationContext,
@@ -21,6 +22,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   const stationScreenOrientationList = useContext(
     StationScreenOrientationContext,
   );
+  const { messages: cannedMessages } = useContext(CannedMessagesContext);
 
   const stationDetails = stations.map((station: string) =>
     matchStation(station, stationScreenOrientationList),
@@ -50,7 +52,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(message, where)}
+                  {getMessageString(message, where, cannedMessages)}
                 </td>
               </tr>
             ))}

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Message } from "../EmergencyTakeoverTool";
 import SVGPreviews from "./SVGPreviews";
-import { getMessageImageUrl } from "../../../util";
+import { CannedMessagesContext } from "../CannedMessagesContext";
 
 interface AlertPreviewProps {
   message: Message;
@@ -10,6 +10,8 @@ interface AlertPreviewProps {
 }
 
 const AlertPreview = ({ message, where, empty }: AlertPreviewProps) => {
+  const { messages: cannedMessages } = useContext(CannedMessagesContext);
+
   if (empty) {
     return (
       <img
@@ -20,16 +22,27 @@ const AlertPreview = ({ message, where, empty }: AlertPreviewProps) => {
     );
   }
   if (message.type === "canned") {
-    return (
-      <img
-        className="portrait-png"
-        src={getMessageImageUrl(message, where, "portrait")}
-        alt=""
-      />
-    );
+    // Use images from message if available, otherwise look up from context
+    let imageUrl: string | undefined;
+    if (message.images) {
+      imageUrl = message.images[where].portrait;
+    } else {
+      const cannedMessage = cannedMessages.find((m) => m.id === message.id);
+      imageUrl = cannedMessage?.images?.[where]?.portrait;
+    }
+    
+    if (imageUrl) {
+      return (
+        <img
+          className="portrait-png"
+          src={`/images/alerts/${imageUrl}`}
+          alt=""
+        />
+      );
+    }
   }
 
-  return <SVGPreviews showText prefix={where} message={message.text[where]} />;
+  return <SVGPreviews showText prefix={where} message={message.text?.[where] || ""} />;
 };
 
 export default AlertPreview;

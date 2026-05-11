@@ -4,7 +4,7 @@ import {
   Message,
   StationsByLine,
 } from "./components/EmergencyTakeoverTool/EmergencyTakeoverTool";
-import CANNED_MESSAGES from "Constants/messages";
+import { type CannedMessage as CannedMessageType } from "Constants/messages";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import { Alert, ActivePeriod } from "Models/alert";
 import { Place } from "Models/place";
@@ -148,23 +148,37 @@ export const getMessageImageUrl = (
   message: CannedMessage,
   where: "indoor" | "outdoor",
   orientation: "portrait" | "landscape",
+  cannedMessages: CannedMessageType[],
 ) => {
   return (
     "/images/alerts/" +
-    CANNED_MESSAGES.find((m) => m.id === message.id)!.images[where][orientation]
+    cannedMessages.find((m) => m.id === message.id)!.images[where][orientation]
   );
 };
 
 export const getMessageString = (
   message: Message,
   where: "indoor" | "outdoor",
+  cannedMessages?: CannedMessageType[],
 ) => {
   if (message.type === "canned") {
-    return message.id === -1
-      ? ""
-      : CANNED_MESSAGES.find((m) => m.id === message.id)!.text[where];
+    if (message.id === -1) {
+      return "";
+    }
+    // If message has text data built-in, use it; otherwise lookup from cannedMessages
+    if (message.text) {
+      return message.text[where];
+    }
+    if (!cannedMessages) {
+      return "";
+    }
+    return cannedMessages.find((m) => m.id === message.id)!.text[where];
   }
   return message.text[where];
+};
+
+export const getCannedMessageInfo = (id: number, cannedMessages: CannedMessageType[]) => {
+  return cannedMessages.find((m) => m.id === id);
 };
 
 export const classWithModifier = (baseClass: string, modifier: string) => {

@@ -1,18 +1,22 @@
 defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State, S3Fetch}
+  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State}
   alias Screenplay.Outfront.SFTP
+  alias Screenplay.PermanentConfig
   alias ScreenplayWeb.UserActionLogger
+  alias ScreensConfig.{Config, EmergencyTakeover}
 
-  # TODO:
-  # Screenplay.ScreensConfig.Fetch.S3 is where there are functions we can use to get and modify the screens config
+  # TODO: Consolidate with usage in stations_and_screens
+  portrait_screen_types = [:busway_v2, :pre_fare_v2]
+  landscape_screen_types = [:dup_v2]
 
   def create(
         conn,
         params = %{
           "message" => message,
-          "stations" => stations,
+          "stations" => stations_map,
+          "showtimeScreenIds" => showtime_screen_ids,
           "duration" => duration_in_hours,
           "images" => images
         }
@@ -23,7 +27,9 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     remove_overlapping_alerts(params, user)
 
     message = Alert.message_from_json(message)
-    alert = Alert.new(message, stations, schedule, user)
+    # Extract just the station names for the alert
+    station_names = Map.keys(stations_map)
+    alert = Alert.new(message, station_names, schedule, user)
 
     params_to_log =
       params
@@ -33,17 +39,75 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     _ = UserActionLogger.log(user, :create_alert, params_to_log)
     :ok = State.add_alert(alert)
 
-    portrait_image_data = decode_image(images["indoor_portrait"])
-    landscape_image_data = decode_image(images["outdoor_landscape"])
-    _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
-    _ = S3Fetch.upload_takeover_image(id, portrait_image_data, "indoor_portrait")
-    _ = S3Fetch.upload_takeover_image(id, landscape_image_data, "outdoor_landscape")
+    # Extract only the stations that have an outfront screen (portrait or landscape)
+    outfront_stations =
+      stations_map
+      |> Enum.filter(fn {_name, has_outfront} -> has_outfront end)
+      |> Enum.map(fn {name, _has_outfront} -> name end)
+
+    _ = create_outfront_takeovers(outfront_stations, images)
+
+    _ =
+      create_showtime_takeovers(
+        alert.id,
+        showtime_screen_ids,
+        message,
+        images
+      )
 
     json(conn, %{success: true})
   end
 
   def create(conn, _params) do
     json(conn, %{success: false})
+  end
+
+  def create_outfront_takeovers(stations, images) do
+    portrait_image_data = decode_image(images["indoor_portrait"])
+    landscape_image_data = decode_image(images["outdoor_landscape"])
+    _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
+  end
+
+  def create_showtime_takeovers(
+        alert_id,
+        showtime_screen_ids,
+        %{type: :canned} = message,
+        _images
+      ) do
+    _ = PermanentConfig.update_emergency_takeover_configs(alert_id, showtime_screen_ids, message)
+  end
+
+  def create_showtime_takeovers(
+        alert_id,
+        showtime_screen_ids,
+        %{type: :custom} = message,
+        images
+      ) do
+    # Only upload images for custom messages; canned messages use pre-existing image URLs
+    _ = upload_takeover_images(alert_id, images)
+    _ = PermanentConfig.update_emergency_takeover_configs(alert_id, showtime_screen_ids, message)
+  end
+
+  def upload_takeover_images(alert_id, images) do
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+
+    # Handle image uploads for all 4 image types
+    upload_images = fn image_type ->
+      case images[image_type] do
+        nil ->
+          :ok
+
+        image_data_string ->
+          {image_binary, _format} = decode_image(image_data_string)
+          alerts_fetch_module.upload_takeover_image(alert_id, image_binary, image_type)
+      end
+    end
+
+    # Upload all 4 image types
+    _ = upload_images.("indoor_portrait")
+    _ = upload_images.("outdoor_portrait")
+    _ = upload_images.("indoor_landscape")
+    _ = upload_images.("outdoor_landscape")
   end
 
   def edit(
@@ -78,12 +142,16 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     _ = UserActionLogger.log(user, :update_alert, params_to_log)
     :ok = State.update_alert(id, new_alert)
 
-    portrait_image_data = decode_image(images["indoor_portrait"])
-    landscape_image_data = decode_image(images["outdoor_landscape"])
+    # Only upload images for custom messages; canned messages use pre-existing image URLs
+    if message.type == :custom do
+      _ = upload_takeover_images(id, images)
 
-    _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
-    _ = S3Fetch.upload_takeover_image(id, portrait_image_data, "indoor_portrait")
-    _ = S3Fetch.upload_takeover_image(id, landscape_image_data, "outdoor_landscape")
+      # Set SFTP images for outfront takeovers
+      portrait_indoor_image = decode_image(images["indoor_portrait"])
+      landscape_outdoor_image = decode_image(images["outdoor_landscape"])
+
+      _ = SFTP.set_takeover_images(stations, portrait_indoor_image, landscape_outdoor_image)
+    end
 
     json(conn, %{success: true})
   end
@@ -101,9 +169,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     :ok = alert |> Alert.clear(user) |> State.clear_alert()
 
     _ = SFTP.clear_takeover_images(stations)
-    # TODO: Should make sure we modify configs before deletion
-    # In case of failure or config modification taking a long time
-    _ = S3Fetch.delete_takeover_images(id)
+
+    # Get the configured fetch module based on environment and delete images
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+    _ = alerts_fetch_module.delete_takeover_images(id)
 
     json(conn, %{success: true})
   end

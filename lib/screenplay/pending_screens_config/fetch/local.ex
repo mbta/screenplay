@@ -29,7 +29,10 @@ defmodule Screenplay.PendingScreensConfig.Fetch.Local do
   @impl true
   # sobelow_skip ["Traversal.FileModule"]
   def put_config(config) do
-    json = config |> PendingConfig.to_json() |> Jason.encode!(pretty: true)
+    json =
+      config
+      |> PendingConfig.to_json()
+      |> Jason.encode!(pretty: true)
 
     File.copy!(local_config_path(), local_config_path() <> ".temp")
 

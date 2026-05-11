@@ -4,6 +4,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   """
 
   alias Screenplay.EmergencyTakeoverTool.Alerts.State
+  alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.Util
 
   @enforce_keys [
@@ -212,4 +213,75 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     {:ok, dt, _offset} = DateTime.from_iso8601(json)
     dt
   end
+
+  def indoor_text(%{type: :canned, id: message_id}) do
+    case CannedMessages.get(message_id) do
+      %{text: %{indoor: text}} -> text
+      nil -> nil
+    end
+  end
+
+  def indoor_text(%{type: :custom, text: %{indoor: text}}) do
+    text
+  end
+
+  def outdoor_text(%{type: :canned, id: message_id}) do
+    case CannedMessages.get(message_id) do
+      %{text: %{outdoor: text}} -> text
+      nil -> nil
+    end
+  end
+
+  def outdoor_text(%{type: :custom, text: %{outdoor: text}}) do
+    text
+  end
+
+  def image_location_for_message(message, alert_id, screen_type, messaging_location) do
+    where = messaging_location_to_text(messaging_location)
+    orientation = screen_orientation(screen_type)
+
+    case message do
+      %{type: :canned, id: id} ->
+        case CannedMessages.get(id) do
+          %{images: images} -> get_canned_image_path(images, where, orientation)
+          _ -> nil
+        end
+
+      %{type: :custom} ->
+        build_image_location(alert_id, screen_type, messaging_location)
+
+      _ ->
+        nil
+    end
+  end
+
+  # TODO: Actually link to S3 for canned images
+  defp get_canned_image_path(images, where, orientation) when is_map(images) do
+    image_path =
+      case get_in(images, [where, orientation]) do
+        path when is_binary(path) -> path
+        nil -> get_in(images, [where, orientation])
+      end
+  end
+
+  def build_image_location(alert_id, screen_type, messaging_location) do
+    image_key = determine_image_key(screen_type, messaging_location)
+    "emergency-takeovers/#{alert_id}/#{image_key}.png"
+  end
+
+  @spec determine_image_key(Screen.app_id(), EmergencyMessagingLocation.t()) :: String.t()
+  defp determine_image_key(screen_type, messaging_location) do
+    key_prefix = messaging_location_to_text(messaging_location) |> Atom.to_string()
+    key_suffix = screen_orientation(screen_type) |> Atom.to_string()
+
+    "#{key_prefix}_#{key_suffix}"
+  end
+
+  defp messaging_location_to_text(:inside), do: :indoor
+  defp messaging_location_to_text(:outside), do: :outdoor
+
+  defp screen_orientation(screen_type) when screen_type in [:busway_v2, :pre_fare_v2],
+    do: :portrait
+
+  defp screen_orientation(screen_type) when screen_type in [:dup_v2], do: :landscape
 end

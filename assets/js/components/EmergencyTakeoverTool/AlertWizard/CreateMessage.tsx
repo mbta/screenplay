@@ -1,5 +1,5 @@
-import React from "react";
-import CANNED_MESSAGES from "Constants/messages";
+import React, { useContext } from "react";
+import { CannedMessagesContext } from "../CannedMessagesContext";
 import { charLimit } from "Constants/misc";
 import { Message } from "../EmergencyTakeoverTool";
 import cx from "classnames";
@@ -11,10 +11,17 @@ interface CreateMessageProps {
 }
 
 const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
+  const { messages: cannedMessages, loading } = useContext(CannedMessagesContext);
+
   const fields = [
     { where: "indoor" as const, label: "Indoor" },
     { where: "outdoor" as const, label: "Outdoor" },
   ];
+
+  if (loading) {
+    return <div className="step-instructions">Loading messages...</div>;
+  }
+
   return (
     <>
       <div className="step-instructions">
@@ -36,12 +43,23 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
           <select
             className="message-select text-16"
             value={value.type === "canned" ? value.id : -1}
-            onChange={(e) => onChange({ type: "canned", id: +e.target.value })}
+            onChange={(e) => {
+              const selectedMessage = cannedMessages.find((m) => m.id === +e.target.value);
+              if (selectedMessage) {
+                onChange({
+                  type: "canned",
+                  id: selectedMessage.id,
+                  name: selectedMessage.name,
+                  text: selectedMessage.text,
+                  images: selectedMessage.images,
+                });
+              }
+            }}
           >
             <option value={-1} hidden>
               Select canned message…
             </option>
-            {CANNED_MESSAGES.map((message) => (
+            {cannedMessages.map((message) => (
               <option key={message.id} value={message.id}>
                 {message.name}
               </option>
@@ -65,7 +83,7 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
               key={where}
               id={`${where}-text`}
               className="message-textarea text-16"
-              value={getMessageString(value, where)}
+              value={getMessageString(value, where, cannedMessages)}
               maxLength={charLimit}
               placeholder="Type, or select a canned message above to edit here..."
               onChange={(e) => {
@@ -74,8 +92,8 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
                     ? {
                         type: "custom" as const,
                         text: {
-                          indoor: getMessageString(value, "indoor"),
-                          outdoor: getMessageString(value, "outdoor"),
+                          indoor: getMessageString(value, "indoor", cannedMessages),
+                          outdoor: getMessageString(value, "outdoor", cannedMessages),
                         },
                       }
                     : value;
