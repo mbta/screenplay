@@ -39,7 +39,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
   end
 
   def emergency_asset_path do
-    "screens/#{env_name()}/emergency-takeovers/"
+    "screenplay/#{env_name()}/emergency-takeovers/"
   end
 
   defp bucket, do: Application.get_env(:screenplay, :alerts_s3_bucket)
