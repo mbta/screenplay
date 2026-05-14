@@ -325,7 +325,7 @@ config :screenplay,
         sftp_dir_name: "006_XFER_ORANGE_BLUE_STATE"
       },
       %{
-        place_id: "place-aquar",
+        place_id: "place-aqucl",
         name: "Aquarium",
         portrait: false,
         landscape: true,

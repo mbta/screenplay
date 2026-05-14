@@ -1,7 +1,8 @@
 import React from "react";
-import { formatDate, formatTime, getMessageString } from "../../../util";
+import { formatDate, formatTime } from "../../../util";
 import StackedStationCards from "./StackedStationCards";
-import { Message, Station } from "../EmergencyTakeoverTool";
+import { Station } from "../EmergencyTakeoverTool";
+import { getMessageString, Message } from "Utils/emergencyMessages";
 
 interface ConfirmationPageProps {
   goToStep: (step: number) => void;

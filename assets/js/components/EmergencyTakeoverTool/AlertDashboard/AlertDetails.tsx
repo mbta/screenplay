@@ -4,16 +4,13 @@ import {
   AlertData,
   StationScreenOrientationContext,
 } from "../EmergencyTakeoverTool";
-import {
-  formatDate,
-  formatTime,
-  getMessageString,
-  matchStation,
-} from "../../../util";
+import { CannedMessagesContext } from "../CannedMessagesContext";
+import { formatDate, formatTime, matchStation } from "../../../util";
 import { NoSymbolIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import AlertReminder from "./AlertReminder";
 import AlertPreview from "../AlertWizard/AlertPreview";
+import { messageDetails, getMessageString } from "Utils/emergencyMessages";
 
 interface AlertDetailsProps {
   data: AlertData;
@@ -31,13 +28,13 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   } = props;
   const { created_by, id, message, schedule, stations } = data;
 
-  const stationScreenOrientationList = useContext(
-    StationScreenOrientationContext,
+  const stationsAndScreens = useContext(StationScreenOrientationContext);
+  const stationDetails = stations.map((station: string) =>
+    matchStation(station, stationsAndScreens),
   );
 
-  const stationDetails = stations.map((station: string) =>
-    matchStation(station, stationScreenOrientationList),
-  );
+  const { messages: cannedMessages } = useContext(CannedMessagesContext);
+  const enrichedMessage = messageDetails(message, cannedMessages);
 
   const startDate = new Date(schedule.start);
   const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
@@ -75,7 +72,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        <AlertPreview message={message} location="indoor" />
+        <AlertPreview message={enrichedMessage} location="indoor" />
       </div>
       <div className="alert-details">
         <AlertReminder
@@ -106,7 +103,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(message, location)}
+                  {getMessageString(enrichedMessage, location)}
                 </td>
               </tr>
             ))}

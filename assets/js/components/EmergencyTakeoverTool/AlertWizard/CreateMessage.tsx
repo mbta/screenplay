@@ -1,9 +1,8 @@
-import React from "react";
-import CANNED_MESSAGES from "Constants/messages";
+import React, { useContext } from "react";
+import { CannedMessagesContext } from "../CannedMessagesContext";
 import { charLimit } from "Constants/misc";
-import { Message } from "../EmergencyTakeoverTool";
 import cx from "classnames";
-import { getMessageString } from "../../../util";
+import { getMessageString, Message } from "Utils/emergencyMessages";
 
 interface CreateMessageProps {
   value: Message;
@@ -11,10 +10,19 @@ interface CreateMessageProps {
 }
 
 const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
+  const { messages: cannedMessages, loading } = useContext(
+    CannedMessagesContext,
+  );
+
   const fields = [
     { location: "indoor" as const, label: "Indoor" },
     { location: "outdoor" as const, label: "Outdoor" },
   ];
+
+  if (loading) {
+    return <div className="step-instructions">Loading Canned Messages...</div>;
+  }
+
   return (
     <>
       <div className="step-instructions">
@@ -36,12 +44,19 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
           <select
             className="message-select text-16"
             value={value.type === "canned" ? value.id : -1}
-            onChange={(e) => onChange({ type: "canned", id: +e.target.value })}
+            onChange={(e) => {
+              const selectedMessage = cannedMessages.find(
+                (m) => m.id === +e.target.value,
+              );
+              if (selectedMessage) {
+                onChange(selectedMessage);
+              }
+            }}
           >
             <option value={-1} hidden>
               Select canned message…
             </option>
-            {CANNED_MESSAGES.map((message) => (
+            {cannedMessages.map((message) => (
               <option key={message.id} value={message.id}>
                 {message.name}
               </option>

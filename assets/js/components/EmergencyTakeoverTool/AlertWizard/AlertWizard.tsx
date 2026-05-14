@@ -5,21 +5,17 @@ import PickStations from "./PickStations";
 import SetSchedule from "./SetSchedule";
 import WizardNavFooter from "./WizardNavFooter";
 import WizardStepper from "./WizardStepper";
-import {
-  AlertData,
-  Message,
-  Station,
-  StationsByLine,
-} from "../EmergencyTakeoverTool";
+import { AlertData, Station, StationsByLine } from "../EmergencyTakeoverTool";
 
 import { NoSymbolIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import WizardSidebar from "./WizardSidebar";
 import { svgLongSide, svgScale, svgShortSide } from "Constants/misc";
-import { getMessageImageUrl, matchStation } from "../../../util";
+import { matchStation } from "../../../util";
 
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
+import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
@@ -228,7 +224,6 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         ),
       ),
     );
-    console.log(images);
 
     const data = {
       message: this.state.message,
@@ -332,6 +327,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     orientation: "portrait" | "landscape",
   ) {
     const { message } = this.state;
+
     if (message.type === "canned") {
       const res = await fetch(
         getMessageImageUrl(message, location, orientation),

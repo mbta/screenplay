@@ -1,7 +1,6 @@
 import React from "react";
-import { Message } from "../EmergencyTakeoverTool";
 import SVGPreviews from "./SVGPreviews";
-import { getMessageImageUrl } from "../../../util";
+import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
 
 interface AlertPreviewProps {
   message: Message;
@@ -20,17 +19,16 @@ const AlertPreview = ({ message, location, empty }: AlertPreviewProps) => {
     );
   }
   if (message.type === "canned") {
-    return (
-      <img
-        className="portrait-png"
-        src={getMessageImageUrl(message, location, "portrait")}
-        alt=""
-      />
-    );
+    const imageUrl = getMessageImageUrl(message, location, "portrait");
+    return <img className="portrait-png" src={imageUrl} alt="" />;
   }
 
   return (
-    <SVGPreviews showText prefix={location} message={message.text[location]} />
+    <SVGPreviews
+      showText
+      prefix={location}
+      message={message.text?.[location] || ""}
+    />
   );
 };
 
