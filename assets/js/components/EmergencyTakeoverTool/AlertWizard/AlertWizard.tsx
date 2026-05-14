@@ -15,7 +15,7 @@ import { matchStation } from "../../../util";
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
-import { Message } from "Utils/emergencyMessages";
+import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
@@ -328,9 +328,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   ) {
     const { message } = this.state;
 
-    if (message.type === "canned" && message.images) {
-      const imageUrl = message.images[location][orientation];
-      const res = await fetch(`/images/alerts/${imageUrl}`);
+    if (message.type === "canned") {
+      const res = await fetch(
+        getMessageImageUrl(message, location, orientation),
+      );
       if (!res.ok) {
         throw res;
       }
