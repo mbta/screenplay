@@ -107,12 +107,12 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.State do
 
   @impl true
   def handle_call(:get_active_alerts, _from, state = %State{alerts: alerts}) do
-    {:reply, Map.values(alerts), state}
+    {:reply, Map.values(alerts) |> Enum.sort_by(& &1.schedule.start, :desc), state}
   end
 
   @impl true
   def handle_call(:get_past_alerts, _from, state = %State{cleared_alerts: cleared_alerts}) do
-    {:reply, Map.values(cleared_alerts), state}
+    {:reply, Map.values(cleared_alerts) |> Enum.sort_by(& &1.cleared_at, :desc), state}
   end
 
   def handle_call({:add_alert, new_alert = %{id: new_alert_id}}, _from, %State{
