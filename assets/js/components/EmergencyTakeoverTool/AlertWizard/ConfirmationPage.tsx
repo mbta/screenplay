@@ -24,7 +24,6 @@ const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
     expirationString = formatDate(expirationDate);
     expirationTime = formatTime(expirationDate);
   }
-
   return (
     <>
       <div className="step-instructions flex">

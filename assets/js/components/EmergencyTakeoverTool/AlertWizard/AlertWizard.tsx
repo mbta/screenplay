@@ -16,6 +16,7 @@ import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
 import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
+import { isStationSelectable } from "./SelectableStation";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
@@ -210,7 +211,15 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     ) as HTMLMetaElement;
     const csrfToken = csrfMetaElement.content;
 
-    const stations = this.state.selectedStations.map(({ name }) => name);
+
+    // Map station names to whether they have an outfront screen (portrait or landscape)
+    const stations = Object.fromEntries(
+      this.state.selectedStations.map(({ name, portrait, landscape }) => [
+        name,
+        portrait || landscape,
+      ])
+    );
+    const selectedShowtimeScreenIds = this.state.selectedStations.flatMap(({ showtime_screen_ids }) => showtime_screen_ids)
     const duration = this.state.duration;
     const images = Object.fromEntries(
       await Promise.all(
@@ -228,6 +237,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const data = {
       message: this.state.message,
       stations,
+      showtimeScreenIds: selectedShowtimeScreenIds,
       duration,
       images,
       id: this.state.id,
@@ -294,12 +304,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   checkLine(line: string, checked: boolean) {
-    if (line === "silver") {
-      return;
-    }
     if (checked) {
       this.props.stationScreenOrientationList[line]
-        .filter((station) => station.portrait || station.landscape)
+        .filter((station) => isStationSelectable(station))
         .forEach((station) => {
           if (
             !this.state.selectedStations.some((x) => x.name === station.name)

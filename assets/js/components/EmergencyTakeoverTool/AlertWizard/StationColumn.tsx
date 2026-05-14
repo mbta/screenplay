@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import SelectableLine from "./SelectableLine";
-import SelectableStation from "./SelectableStation";
+import SelectableStation, { isStationSelectable } from "./SelectableStation";
 import {
   Station,
   StationScreenOrientationContext,
@@ -23,7 +23,7 @@ const StationColumn = (props: StationColumnProps): JSX.Element => {
         line={props.line}
         checked={stationScreenOrientationList[props.line]
           // Ignore disabled stations when determining whether the whole line is selected
-          .filter(({ landscape, portrait }) => landscape || portrait)
+          .filter(lineStation => isStationSelectable(lineStation))
           .every((lineStation) =>
             props.selectedStations.some((x) => x.name === lineStation.name),
           )}

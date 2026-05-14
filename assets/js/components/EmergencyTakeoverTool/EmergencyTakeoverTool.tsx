@@ -11,6 +11,7 @@ export interface Station {
   name: string;
   portrait: boolean;
   landscape: boolean;
+  showtime_screen_ids: string[];
 }
 
 export interface StationsByLine {

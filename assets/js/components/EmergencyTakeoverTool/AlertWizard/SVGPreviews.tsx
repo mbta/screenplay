@@ -110,9 +110,9 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
                 src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
               }`}
             </style>
-            <title>Outfront Alert - Empty Preview</title>
+            <title>Alert - Empty Preview</title>
             <g
-              id="Outfront-Alert-Empty-Preview"
+              id="Alert-Empty-Preview"
               stroke="none"
               strokeWidth="1"
               fill="none"
@@ -258,9 +258,9 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
                 src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
               }`}
             </style>
-            <title>Outfront Alert Portrait</title>
+            <title>Alert Portrait</title>
             <g
-              id="Outfront-Alert-Portrait"
+              id="Alert-Portrait"
               stroke="none"
               strokeWidth="1"
               fill="none"
@@ -367,9 +367,9 @@ class SVGPreviews extends React.Component<SVGPreviewsProps> {
                 src: url('data:font/truetype;charset=utf-8;base64,${interBase64Weight500}');
               }`}
           </style>
-          <title>Outfront Alert Landscape</title>
+          <title>Alert Landscape</title>
           <g
-            id="Outfront-Alert-Landscape"
+            id="Alert-Landscape"
             stroke="none"
             strokeWidth="1"
             fill="none"
