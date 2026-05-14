@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
 import StackedStationCards from "../AlertWizard/StackedStationCards";
-import {
-  formatDate,
-  formatTime,
-  getMessageString,
-  matchStation,
-} from "../../../util";
+import { formatDate, formatTime, matchStation } from "../../../util";
 import {
   AlertData,
   StationScreenOrientationContext,
 } from "../EmergencyTakeoverTool";
+import {
+  fullCannedMessageDetails,
+  getMessageString,
+} from "Utils/emergencyMessages";
+import { CannedMessagesContext } from "../CannedMessagesContext";
 
 interface PastAlertDetailsProps {
   data: AlertData;
@@ -18,13 +18,17 @@ interface PastAlertDetailsProps {
 const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   const { cleared_at, cleared_by, created_by, message, schedule, stations } =
     props.data;
-  const stationScreenOrientationList = useContext(
-    StationScreenOrientationContext,
+
+  const stationsAndScreens = useContext(StationScreenOrientationContext);
+  const stationDetails = stations.map((station: string) =>
+    matchStation(station, stationsAndScreens),
   );
 
-  const stationDetails = stations.map((station: string) =>
-    matchStation(station, stationScreenOrientationList),
-  );
+  const { messages: cannedMessages } = useContext(CannedMessagesContext);
+  const messageDetails =
+    message.type === "custom"
+      ? message
+      : fullCannedMessageDetails(message, cannedMessages);
 
   const startDate = new Date(schedule.start);
   const clearedDate = new Date(cleared_at);
@@ -50,7 +54,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(message, location)}
+                  {getMessageString(messageDetails, location)}
                 </td>
               </tr>
             ))}

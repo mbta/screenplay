@@ -1,10 +1,5 @@
 import { BASE_ROUTE_NAME_TO_ROUTE_IDS } from "Constants/constants";
-import {
-  CannedMessage,
-  Message,
-  StationsByLine,
-} from "./components/EmergencyTakeoverTool/EmergencyTakeoverTool";
-import CANNED_MESSAGES from "Constants/messages";
+import { StationsByLine } from "./components/EmergencyTakeoverTool/EmergencyTakeoverTool";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import { Alert, ActivePeriod } from "Models/alert";
 import { Place } from "Models/place";
@@ -142,31 +137,6 @@ export const formatTime = (date: Date) => {
   return new Intl.DateTimeFormat(undefined, {
     timeStyle: "short",
   }).format(date);
-};
-
-export const getMessageImageUrl = (
-  message: CannedMessage,
-  location: "indoor" | "outdoor",
-  orientation: "portrait" | "landscape",
-) => {
-  return (
-    "/images/alerts/" +
-    CANNED_MESSAGES.find((m) => m.id === message.id)!.images[location][
-      orientation
-    ]
-  );
-};
-
-export const getMessageString = (
-  message: Message,
-  location: "indoor" | "outdoor",
-) => {
-  if (message.type === "canned") {
-    return message.id === -1
-      ? ""
-      : CANNED_MESSAGES.find((m) => m.id === message.id)!.text[location];
-  }
-  return message.text[location];
 };
 
 export const classWithModifier = (baseClass: string, modifier: string) => {

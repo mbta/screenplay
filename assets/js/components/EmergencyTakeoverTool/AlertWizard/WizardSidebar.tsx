@@ -2,7 +2,8 @@ import React from "react";
 import StackedStationCards from "./StackedStationCards";
 import AlertPreview from "./AlertPreview";
 
-import { Message, Station } from "../EmergencyTakeoverTool";
+import { Station } from "../EmergencyTakeoverTool";
+import { Message } from "Utils/emergencyMessages";
 
 interface WizardSidebarProps {
   selectedStations: Station[];

@@ -1,6 +1,7 @@
 defmodule ScreenplayWeb.EmergencyTakeoverTool.PageController do
   use ScreenplayWeb, :controller
 
+  alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.Places
   alias Screenplay.Places.Place.OutfrontTakeoverScreen
 
@@ -52,5 +53,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.PageController do
       |> Map.new()
 
     json(conn, outfront_screens)
+  end
+
+  def canned_messages(conn, _params) do
+    messages = CannedMessages.all()
+    json(conn, messages)
   end
 end
