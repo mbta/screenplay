@@ -10,10 +10,7 @@ import { NoSymbolIcon, PencilIcon } from "@heroicons/react/20/solid";
 import { ModalDetails } from "../ConfirmationModal";
 import AlertReminder from "./AlertReminder";
 import AlertPreview from "../AlertWizard/AlertPreview";
-import {
-  fullCannedMessageDetails,
-  getMessageString,
-} from "Utils/emergencyMessages";
+import { messageDetails, getMessageString } from "Utils/emergencyMessages";
 
 interface AlertDetailsProps {
   data: AlertData;
@@ -37,10 +34,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   );
 
   const { messages: cannedMessages } = useContext(CannedMessagesContext);
-  const messageDetails =
-    message.type === "custom"
-      ? message
-      : fullCannedMessageDetails(message, cannedMessages);
+  const enrichedMessage = messageDetails(message, cannedMessages);
 
   const startDate = new Date(schedule.start);
   const startDateString = formatDate(startDate) + " @ " + formatTime(startDate);
@@ -78,7 +72,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
   return (
     <div className="alert-card">
       <div className="alert-preview">
-        <AlertPreview message={messageDetails} location="indoor" />
+        <AlertPreview message={enrichedMessage} location="indoor" />
       </div>
       <div className="alert-details">
         <AlertReminder
@@ -109,7 +103,7 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(messageDetails, location)}
+                  {getMessageString(enrichedMessage, location)}
                 </td>
               </tr>
             ))}

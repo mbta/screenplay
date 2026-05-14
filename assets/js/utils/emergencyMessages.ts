@@ -45,10 +45,14 @@ export const getCannedMessages = withErrorHandling<[], CannedMessage[]>(
   },
 );
 
-export const fullCannedMessageDetails = (
-  message: CannedMessage,
+export const messageDetails = (
+  message: Message,
   cannedMessages: CannedMessage[],
-): CannedMessage => {
+): Message => {
+  if (message.type === "custom") {
+    return message;
+  }
+
   // We only store canned alert history by their IDs, so we need to add on full message details
   const cannedMessage = cannedMessages.find((m) => m.id === message.id);
   if (!cannedMessage) {

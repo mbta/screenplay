@@ -5,10 +5,7 @@ import {
   AlertData,
   StationScreenOrientationContext,
 } from "../EmergencyTakeoverTool";
-import {
-  fullCannedMessageDetails,
-  getMessageString,
-} from "Utils/emergencyMessages";
+import { getMessageString, messageDetails } from "Utils/emergencyMessages";
 import { CannedMessagesContext } from "../CannedMessagesContext";
 
 interface PastAlertDetailsProps {
@@ -25,10 +22,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
   );
 
   const { messages: cannedMessages } = useContext(CannedMessagesContext);
-  const messageDetails =
-    message.type === "custom"
-      ? message
-      : fullCannedMessageDetails(message, cannedMessages);
+  const enrichedMessage = messageDetails(message, cannedMessages);
 
   const startDate = new Date(schedule.start);
   const clearedDate = new Date(cleared_at);
@@ -54,7 +48,7 @@ const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
               <tr key={label}>
                 <td>{label} text</td>
                 <td className="emphasized-cell">
-                  {getMessageString(messageDetails, location)}
+                  {getMessageString(enrichedMessage, location)}
                 </td>
               </tr>
             ))}

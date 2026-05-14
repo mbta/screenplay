@@ -19,7 +19,7 @@ const AlertPreview = ({ message, location, empty }: AlertPreviewProps) => {
     );
   }
   if (message.type === "canned") {
-    const imageUrl = getMessageImageUrl(message, "indoor", "portrait");
+    const imageUrl = getMessageImageUrl(message, location, "portrait");
     return <img className="portrait-png" src={imageUrl} alt="" />;
   }
 
