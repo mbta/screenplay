@@ -54,11 +54,14 @@ const AlertDetails: ComponentType = () => {
               {formatEffect(selectedAlert.effect)} #{selectedAlert.id}
             </span>
             <Button
-              href={alertsUiUrl + `/edit/${selectedAlert.id}`}
+              href={
+                alertsUiUrl +
+                `/alerts?${new URLSearchParams({ "filter[multi_column_search]": selectedAlert.id, "filter[timeline]": "all" }).toString()}`
+              }
               target="_blank"
               className="alert-details__external-link"
             >
-              Edit Alert <ArrowUpRight className="bootstrap-line-icon" />
+              View Alert <ArrowUpRight className="bootstrap-line-icon" />
             </Button>
           </div>
         </div>
