@@ -249,7 +249,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
 
       %{type: :custom} ->
         # TODO: S3 path shouldn't be returned locally
-        "https://mbta-ctd-config.s3.amazonaws.com/#{custom_image_path(alert_id, screen_type, messaging_location)}"
+        "https://mbta-ctd-config.s3.amazonaws.com#{custom_image_path(alert_id, screen_type, messaging_location)}"
 
       _ ->
         nil

@@ -18,7 +18,10 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
     image_path = "#{emergency_asset_path()}#{alert_id}/#{image_type}.png"
 
     %{status_code: 200} =
-      ExAws.S3.put_object(bucket(), image_path, image_data, content_type: "image/png")
+      ExAws.S3.put_object(bucket(), image_path, image_data,
+        content_type: "image/png",
+        acl: :public_read
+      )
       |> ExAws.request!()
 
     :ok
