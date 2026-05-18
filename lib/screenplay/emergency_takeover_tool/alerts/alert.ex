@@ -316,13 +316,13 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   defp with_asset_path(path_suffix, canned: true) do
     alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
 
-    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}/canned/#{path_suffix}"
+    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}canned/#{path_suffix}"
   end
 
   defp with_asset_path(path_suffix) do
     alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
 
-    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}/#{path_suffix}"
+    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}#{path_suffix}"
   end
 
   defp messaging_location_to_text(:inside), do: :indoor
