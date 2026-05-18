@@ -288,7 +288,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     key_prefix = messaging_location_to_text(messaging_location) |> Atom.to_string()
     key_suffix = screen_orientation(screen_type) |> Atom.to_string()
 
-    "#{key_prefix}-#{key_suffix}"
+    "#{key_prefix}_#{key_suffix}"
   end
 
   @spec audio_path_for_message(message(), EmergencyMessagingLocation.t()) :: String.t() | nil
