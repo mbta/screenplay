@@ -3,6 +3,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   Represents a single Emergency Takeover Alert.
   """
 
+  alias ScreensConfig.{Screen, EmergencyMessagingLocation}
   alias Screenplay.EmergencyTakeoverTool.Alerts.State
   alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.Util
@@ -34,6 +35,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
           }
         }
 
+  @type message :: canned_message() | custom_message()
+
   @type station :: String.t()
 
   @type schedule :: %{
@@ -44,14 +47,14 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   @type user :: String.t()
 
   @type update_map :: %{
-          optional(:message) => canned_message() | custom_message(),
+          optional(:message) => message(),
           optional(:stations) => list(station),
           optional(:schedule) => schedule()
         }
 
   @type t :: %__MODULE__{
           id: id(),
-          message: canned_message() | custom_message(),
+          message: message(),
           stations: list(station()),
           schedule: schedule(),
           created_by: user(),
@@ -67,7 +70,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   end
 
   @spec new(
-          canned_message() | custom_message(),
+          message(),
           list(station()),
           schedule(),
           user()
@@ -236,42 +239,48 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     text
   end
 
-  def image_location_for_message(message, alert_id, screen_type, messaging_location) do
-    where = messaging_location_to_text(messaging_location)
-    orientation = screen_orientation(screen_type)
-
+  @spec img_path_for_message(
+          message(),
+          String.t(),
+          Screen.app_id(),
+          EmergencyMessagingLocation.t()
+        ) :: String.t() | nil
+  def img_path_for_message(message, alert_id, screen_type, messaging_location) do
     case message do
       %{type: :canned, id: id} ->
         case CannedMessages.get(id) do
-          %{images: images} -> canned_image_path(images, where, orientation)
-          _ -> nil
+          %{images: images} ->
+            where = messaging_location_to_text(messaging_location)
+            orientation = screen_orientation(screen_type)
+            canned_image_path(images, where, orientation)
+
+          _ ->
+            nil
         end
 
       %{type: :custom} ->
         # TODO: S3 path shouldn't be returned locally
-        "https://mbta-ctd-config.s3.amazonaws.com#{custom_image_path(alert_id, screen_type, messaging_location)}"
+        custom_image_path(alert_id, screen_type, messaging_location)
 
       _ ->
         nil
     end
   end
 
-  @spec canned_image_path(map(), String.t(), String.t()) :: String.t() | nil
   defp canned_image_path(images, where, orientation) when is_map(images) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-
     image_path =
       case get_in(images, [where, orientation]) do
         path when is_binary(path) -> path
       end
 
-    "#{alerts_fetch_module.emergency_asset_path()}/#{image_path}"
+    with_asset_path("images/#{image_path}", canned: true)
   end
 
-  def custom_image_path(alert_id, screen_type, messaging_location) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+  @spec custom_image_path(String.t(), Screen.app_id(), EmergencyMessagingLocation.t()) ::
+          String.t()
+  defp custom_image_path(alert_id, screen_type, messaging_location) do
     image_key = determine_image_key(screen_type, messaging_location)
-    "#{alerts_fetch_module.emergency_asset_path()}/#{alert_id}/#{image_key}.png"
+    with_asset_path("#{alert_id}/#{image_key}.png")
   end
 
   @spec determine_image_key(Screen.app_id(), EmergencyMessagingLocation.t()) :: String.t()
@@ -279,7 +288,41 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     key_prefix = messaging_location_to_text(messaging_location) |> Atom.to_string()
     key_suffix = screen_orientation(screen_type) |> Atom.to_string()
 
-    "#{key_prefix}_#{key_suffix}"
+    "#{key_prefix}-#{key_suffix}"
+  end
+
+  @spec audio_path_for_message(message(), EmergencyMessagingLocation.t()) :: String.t() | nil
+  def audio_path_for_message(%{type: :canned, id: id}, messaging_location) do
+    # Only include audio assets for canned messages
+    case CannedMessages.get(id) do
+      %{audio_path: %{indoor: indoor_path, outdoor: outdoor_path}} ->
+        case messaging_location do
+          :inside -> canned_audio_path(indoor_path)
+          :outside -> canned_audio_path(outdoor_path)
+          _ -> nil
+        end
+
+      _ ->
+        nil
+    end
+  end
+
+  def audio_path_for_message(_message, _messaging_location), do: nil
+
+  defp canned_audio_path(audio) do
+    with_asset_path("audio/#{audio}", canned: true)
+  end
+
+  defp with_asset_path(path_suffix, canned: true) do
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+
+    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}/canned/#{path_suffix}"
+  end
+
+  defp with_asset_path(path_suffix) do
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+
+    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}/#{path_suffix}"
   end
 
   defp messaging_location_to_text(:inside), do: :indoor
@@ -289,4 +332,25 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     do: :portrait
 
   defp screen_orientation(screen_type) when screen_type in [:dup_v2], do: :landscape
+
+  def build_emergency_takeover(message, alert_id, screen_app_id, emergency_messaging_location) do
+    text_for_audio =
+      if emergency_messaging_location == :inside do
+        indoor_text(message)
+      else
+        outdoor_text(message)
+      end
+
+    %ScreensConfig.EmergencyTakeover{
+      audio_asset_path: audio_path_for_message(message, emergency_messaging_location),
+      text_for_audio: text_for_audio,
+      visual_asset_path:
+        img_path_for_message(
+          message,
+          alert_id,
+          screen_app_id,
+          emergency_messaging_location
+        )
+    }
+  end
 end

@@ -8,6 +8,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   alias Screenplay.Places.Place.ShowtimeScreen
   alias ScreenplayWeb.UserActionLogger
 
+  @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(
         conn,
         params = %{
@@ -21,18 +22,19 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
     user = get_session(conn, "username")
 
-    remove_overlapping_alerts(params, user)
-
     message = Alert.message_from_json(message)
     station_names = Map.keys(stations_map)
     alert = Alert.new(message, station_names, schedule, user)
 
+    # Log create action details
     params_to_log =
       params
       |> Map.take(["message", "stations", "duration"])
       |> Map.merge(%{"id" => alert.id})
 
     _ = UserActionLogger.log(user, :create_alert, params_to_log)
+
+    remove_overlapping_alerts(params, user)
     :ok = State.add_alert(alert)
 
     # Extract only the stations that have an outfront screen (portrait or landscape)
@@ -41,15 +43,9 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
       |> Enum.filter(fn {_name, has_outfront} -> has_outfront end)
       |> Enum.map(fn {name, _has_outfront} -> name end)
 
-    _ = create_outfront_takeovers(outfront_stations, images)
+    _ = add_outfront_takeovers(outfront_stations, images)
 
-    _ =
-      create_showtime_takeovers(
-        alert.id,
-        showtime_screen_ids,
-        message,
-        images
-      )
+    _ = add_showtime_takeovers(alert.id, showtime_screen_ids, message, images)
 
     json(conn, %{success: true})
   end
@@ -58,54 +54,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     json(conn, %{success: false})
   end
 
-  def create_outfront_takeovers(stations, images) do
-    portrait_image_data = decode_image(images["indoor_portrait"])
-    landscape_image_data = decode_image(images["outdoor_landscape"])
-    _ = SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
-  end
-
-  def create_showtime_takeovers(
-        alert_id,
-        showtime_screen_ids,
-        %{type: :canned} = message,
-        _images
-      ) do
-    _ = PermanentConfig.update_emergency_takeover_configs(alert_id, showtime_screen_ids, message)
-  end
-
-  def create_showtime_takeovers(
-        alert_id,
-        showtime_screen_ids,
-        %{type: :custom} = message,
-        images
-      ) do
-    # Only upload images for custom messages; canned messages use pre-existing image URLs
-    _ = upload_takeover_images(alert_id, images)
-    _ = PermanentConfig.update_emergency_takeover_configs(alert_id, showtime_screen_ids, message)
-  end
-
-  def upload_takeover_images(alert_id, images) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-
-    # Handle image uploads for all 4 image types
-    upload_images = fn image_type ->
-      case images[image_type] do
-        nil ->
-          :ok
-
-        image_data_string ->
-          {image_binary, _format} = decode_image(image_data_string)
-          alerts_fetch_module.upload_takeover_image(alert_id, image_binary, image_type)
-      end
-    end
-
-    # Upload all 4 image types
-    _ = upload_images.("indoor_portrait")
-    _ = upload_images.("outdoor_portrait")
-    _ = upload_images.("indoor_landscape")
-    _ = upload_images.("outdoor_landscape")
-  end
-
+  @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def edit(
         conn,
         params = %{
@@ -147,10 +96,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     _ = UserActionLogger.log(user, :update_alert, params_to_log)
     :ok = State.update_alert(id, new_alert)
 
-    _ = create_outfront_takeovers(outfront_stations, images)
+    _ = add_outfront_takeovers(outfront_stations, images)
 
     _ =
-      create_showtime_takeovers(
+      add_showtime_takeovers(
         alert.id,
         showtime_screen_ids,
         message,
@@ -164,6 +113,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     json(conn, %{success: false})
   end
 
+  @spec clear(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def clear(conn, params = %{"id" => id}) do
     user = get_session(conn, "username")
     _ = UserActionLogger.log(user, :clear_alert, params)
@@ -182,6 +132,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     json(conn, %{success: true})
   end
 
+  @spec clear_all(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def clear_all(conn, _params) do
     user = get_session(conn, "username")
     _ = UserActionLogger.log(user, :clear_all_alerts)
@@ -193,6 +144,61 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end)
 
     json(conn, %{success: true})
+  end
+
+  @spec add_outfront_takeovers(list(String.t()), %{String.t() => String.t()}) :: any()
+  def add_outfront_takeovers(stations, images) do
+    portrait_image_data = decode_image(images["indoor_portrait"])
+    landscape_image_data = decode_image(images["outdoor_landscape"])
+    SFTP.set_takeover_images(stations, portrait_image_data, landscape_image_data)
+  end
+
+  @spec add_showtime_takeovers(
+          String.t(),
+          list(String.t()),
+          %{:type => :canned | :custom, optional(any()) => any()},
+          %{String.t() => String.t()}
+        ) :: any()
+  def add_showtime_takeovers(
+        alert_id,
+        showtime_screen_ids,
+        %{type: :canned} = message,
+        _images
+      ) do
+    _ = PermanentConfig.add_emergency_takeover_configs(alert_id, showtime_screen_ids, message)
+  end
+
+  def add_showtime_takeovers(
+        alert_id,
+        showtime_screen_ids,
+        %{type: :custom} = message,
+        images
+      ) do
+    # Only upload images for custom messages; canned messages use pre-existing image URLs
+    _ = upload_takeover_images(alert_id, images)
+    _ = PermanentConfig.add_emergency_takeover_configs(alert_id, showtime_screen_ids, message)
+  end
+
+  def upload_takeover_images(alert_id, images) do
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+
+    # Handle image uploads for all 4 image types
+    upload_images = fn image_type ->
+      case images[image_type] do
+        nil ->
+          :ok
+
+        image_data_string ->
+          {image_binary, _format} = decode_image(image_data_string)
+          alerts_fetch_module.upload_takeover_image(alert_id, image_binary, image_type)
+      end
+    end
+
+    # Upload all 4 image types
+    _ = upload_images.("indoor_portrait")
+    _ = upload_images.("outdoor_portrait")
+    _ = upload_images.("indoor_landscape")
+    _ = upload_images.("outdoor_landscape")
   end
 
   def active_alerts(conn, _params) do
@@ -226,7 +232,6 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   defp remove_overlapping_alerts(params, user) do
     stations_to_delete = State.remove_overlapping_alerts(params, user)
 
-    IO.inspect(stations_to_delete, label: "Stations to delete takeovers from")
     SFTP.clear_takeover_images(stations_to_delete)
     remove_takeovers_from_showtime_screens(stations_to_delete)
   end
@@ -237,6 +242,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     |> PermanentConfig.clear_emergency_takeover_configs()
   end
 
+  @spec showtime_screens_at_stations(list(String.t())) :: list(String.t())
   defp showtime_screens_at_stations(station_names) do
     Places.get_all()
     |> Enum.filter(fn place -> place.name in station_names end)

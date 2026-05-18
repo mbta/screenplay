@@ -3,11 +3,26 @@ defmodule Screenplay.PermanentConfigTest do
 
   import Mox
 
+  alias ScreensConfig.ElevatorStatus
+  alias ScreensConfig.ContentSummary
+  alias ScreensConfig.Screen.PreFare
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig
   alias Screenplay.Places.{Cache, Place}
   alias Screenplay.Places.Place.ShowtimeScreen
-  alias ScreensConfig.{Alerts, Departures, Footer, Header, LineMap, PendingConfig, Screen}
+
+  alias ScreensConfig.{
+    Alerts,
+    Config,
+    Departures,
+    EmergencyTakeover,
+    Footer,
+    Header,
+    LineMap,
+    PendingConfig,
+    Screen
+  }
+
   alias ScreensConfig.Screen.GlEink
 
   def fetch_current_config_version do
@@ -421,6 +436,110 @@ defmodule Screenplay.PermanentConfigTest do
                   description: nil
                 }
               ]} = PermanentConfig.publish_pending_screens("place-test", :gl_eink_v2, ["23456"])
+    end
+  end
+
+  describe "add_emergency_takeover_configs/3" do
+    setup do
+      published_screens_path = get_fixture_path("screens_config.json")
+
+      config =
+        %Config{
+          screens: %{
+            "PRE-1" => %Screen{
+              vendor: :mercury,
+              device_id: nil,
+              name: nil,
+              app_id: :pre_fare_v2,
+              refresh_if_loaded_before: nil,
+              disabled: false,
+              hidden_from_screenplay: false,
+              app_params: %PreFare{
+                emergency_messaging_location: :inside,
+                emergency_takeover: nil,
+                content_summary: %ContentSummary{parent_station_id: "place-test"},
+                elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
+                full_line_map: [],
+                header: %Header.StopId{stop_id: "place-test"},
+                reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
+              },
+              tags: []
+            },
+            "PRE-2" => %Screen{
+              vendor: :mercury,
+              device_id: nil,
+              name: nil,
+              app_id: :pre_fare_v2,
+              refresh_if_loaded_before: nil,
+              disabled: false,
+              hidden_from_screenplay: false,
+              app_params: %PreFare{
+                emergency_messaging_location: :inside,
+                emergency_takeover: nil,
+                content_summary: %ContentSummary{parent_station_id: "place-test"},
+                elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
+                full_line_map: [],
+                header: %Header.StopId{stop_id: "place-test"},
+                reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
+              },
+              tags: []
+            }
+          }
+        }
+        |> Config.to_json()
+        |> Jason.encode!()
+
+      File.write(published_screens_path, config)
+    end
+
+    test "adds an emergency takeover config to a screen" do
+      alert_id = "alert-1"
+      takeover_screen_id = "PRE-1"
+      message = %{type: :custom, text: %{indoor: "Indoor Message", outdoor: "Outdoor Message"}}
+
+      assert PermanentConfig.add_emergency_takeover_configs(
+               alert_id,
+               [takeover_screen_id],
+               message
+             ) == :ok
+
+      {:ok, file_contents, _metadata} = Screenplay.ScreensConfig.Fetch.Local.fetch_config()
+      %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
+
+      expected_takeover = %EmergencyTakeover{
+        audio_asset_path: nil,
+        text_for_audio: "Indoor Message",
+        visual_asset_path:
+          "https://mbta-ctd-config.s3.amazonaws.com/test/fixtures/emergency_takeover_images//alert-1/indoor-portrait.png"
+      }
+
+      assert screens[takeover_screen_id].app_params.emergency_takeover == expected_takeover
+      assert screens["PRE-2"].app_params.emergency_takeover == nil
+    end
+
+    test "adds a canned emergency takeover config to a screen" do
+      alert_id = "alert-1"
+      takeover_screen_id = "PRE-1"
+      message = %{type: :canned, id: 1}
+
+      assert PermanentConfig.add_emergency_takeover_configs(
+               alert_id,
+               [takeover_screen_id],
+               message
+             ) == :ok
+
+      {:ok, file_contents, _metadata} = Screenplay.ScreensConfig.Fetch.Local.fetch_config()
+      %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
+
+      expected_takeover = %EmergencyTakeover{
+        audio_asset_path:
+          "https://mbta-ctd-config.s3.amazonaws.com/test/fixtures/emergency_takeover_images//canned/audio/LeaveStation-Indoor.mp3",
+        text_for_audio: "Emergency reported. Use nearest exit.",
+        visual_asset_path:
+          "https://mbta-ctd-config.s3.amazonaws.com/test/fixtures/emergency_takeover_images//canned/images/LeaveStation-indoor-portrait.gif"
+      }
+
+      assert screens[takeover_screen_id].app_params.emergency_takeover == expected_takeover
     end
   end
 end
