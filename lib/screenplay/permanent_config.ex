@@ -12,7 +12,6 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.RoutePatterns.RoutePattern
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
-
   alias ScreensConfig.{Alerts, Config, Departures, Footer, LineMap, PendingConfig, Screen}
   alias ScreensConfig.Departures.{Query, Section}
   alias ScreensConfig.Header.Destination

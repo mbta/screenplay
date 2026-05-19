@@ -247,19 +247,15 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   end
 
   defp decode_image("data:image/png;base64," <> raw) do
-    try do
-      {:ok, Base.decode64!(raw), "png"}
-    rescue
-      _ -> {:error, "Failed to decode PNG image."}
-    end
+    {:ok, Base.decode64!(raw), "png"}
+  rescue
+    _ -> {:error, "Failed to decode PNG image."}
   end
 
   defp decode_image("data:image/gif;base64," <> raw) do
-    try do
-      {:ok, Base.decode64!(raw), "gif"}
-    rescue
-      _ -> {:error, "Failed to decode GIF image."}
-    end
+    {:ok, Base.decode64!(raw), "gif"}
+  rescue
+    _ -> {:error, "Failed to decode GIF image."}
   end
 
   defp decode_image(_) do

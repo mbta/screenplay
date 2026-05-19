@@ -3,8 +3,8 @@ defmodule Screenplay.PermanentConfigTest do
 
   import Mox
 
-  alias ScreensConfig.ElevatorStatus
   alias ScreensConfig.ContentSummary
+  alias ScreensConfig.ElevatorStatus
   alias ScreensConfig.Screen.PreFare
   alias Screenplay.PendingScreensConfig.Fetch.Local
   alias Screenplay.PermanentConfig

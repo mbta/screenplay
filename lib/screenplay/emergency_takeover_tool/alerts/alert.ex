@@ -3,10 +3,10 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   Represents a single Emergency Takeover Alert.
   """
 
-  alias ScreensConfig.{Screen, EmergencyMessagingLocation, EmergencyTakeover}
   alias Screenplay.EmergencyTakeoverTool.Alerts.State
   alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.Util
+  alias ScreensConfig.{EmergencyMessagingLocation, EmergencyTakeover, Screen}
 
   @enforce_keys [
     :id,
