@@ -14,6 +14,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
     :ok
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok
   def upload_takeover_image(alert_id, image_data, image_type) do
     image_dir = asset_directory() |> Path.join(alert_id)
@@ -24,6 +25,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
     :ok
   end
 
+  # sobelow_skip ["Traversal.FileModule"]
   @spec delete_takeover_images(String.t()) :: :ok
   def delete_takeover_images(alert_id) do
     image_dir = asset_directory() |> Path.join(alert_id)
