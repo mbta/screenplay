@@ -16,7 +16,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
 
   @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok
   def upload_takeover_image(alert_id, image_data, image_type) do
-    image_dir = emergency_asset_path() |> Path.join(alert_id)
+    image_dir = asset_directory() |> Path.join(alert_id)
     File.mkdir_p!(image_dir)
 
     image_path = Path.join(image_dir, "#{image_type}.png")
@@ -26,7 +26,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
 
   @spec delete_takeover_images(String.t()) :: :ok
   def delete_takeover_images(alert_id) do
-    image_dir = emergency_asset_path() |> Path.join(alert_id)
+    image_dir = asset_directory() |> Path.join(alert_id)
 
     if File.exists?(image_dir) do
       File.rm_rf!(image_dir)
@@ -35,11 +35,13 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
     :ok
   end
 
-  # TODO: What if I wrote this to the Screens directory?
-  # "../screens/priv/static/images/emergency-takeovers"
-  def emergency_asset_path do
-    Path.join([:code.priv_dir(:screenplay), "local", "emergency-takeovers"])
+  @spec with_asset_path(String.t()) :: String.t()
+  def with_asset_path(path_suffix) do
+    "#{asset_directory()}#{path_suffix}"
   end
+
+  defp asset_directory,
+    do: Path.join([:code.priv_dir(:screenplay), "local", "emergency-takeovers"])
 
   defp file_path, do: Path.join([:code.priv_dir(:screenplay), "local", "alerts.json"])
 end

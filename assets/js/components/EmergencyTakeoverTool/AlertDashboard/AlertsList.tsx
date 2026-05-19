@@ -38,6 +38,60 @@ const fetchPastAlerts = withErrorHandling(
   { customMessage: "Failed to load past alerts. Please refresh the page." },
 );
 
+const handleClearAlert = withErrorHandling(
+  async (id: string) => {
+    const csrfMetaElement = document.head.querySelector(
+      "[name~=csrf-token][content]",
+    ) as HTMLMetaElement;
+    const csrfToken = csrfMetaElement.content;
+    const data = { id };
+
+    const response = await fetch(`${BASE_URL}/clear`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-csrf-token": csrfToken,
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || response.statusText);
+    }
+
+    return response.json();
+  },
+  { customMessage: "Failed to clear alert." },
+);
+
+const handleClearAllAlerts = withErrorHandling(
+  async () => {
+    const csrfMetaElement = document.head.querySelector(
+      "[name~=csrf-token][content]",
+    ) as HTMLMetaElement;
+    const csrfToken = csrfMetaElement.content;
+
+    const response = await fetch(`${BASE_URL}/clear_all`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-csrf-token": csrfToken,
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || response.statusText);
+    }
+
+    return response.json();
+  },
+  { customMessage: "Failed to clear all alerts." },
+);
+
 const AlertsList = (props: AlertsListProps): JSX.Element => {
   const [alertsData, setAlertsData] = useState([]);
   const [pastAlertsData, setPastAlertsData] = useState([]);
@@ -61,79 +115,19 @@ const AlertsList = (props: AlertsListProps): JSX.Element => {
     return () => clearInterval(interval);
   }, []);
 
-  const clearAlert = (id: string) => {
-    const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]",
-    ) as HTMLMetaElement;
-    const csrfToken = csrfMetaElement.content;
-    const data = { id };
-
-    fetch(`${BASE_URL}/clear`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-csrf-token": csrfToken,
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-
-        return response.json();
-      })
-      .then(({ success }) => {
-        if (success) {
-          refreshAlerts();
-        } else {
-          // Should this be a toast or other user-visible message?
-          console.log("Error when clearing with id: ", id);
-        }
-      })
-      .catch((error) => {
-        // Should this be a toast or other user-visible message?
-        console.log("Failed to clear alert: ", error);
-      });
-
+  const clearAlert = async (id: string) => {
+    const result = await handleClearAlert(id);
+    if (result?.success) {
+      refreshAlerts();
+    }
     props.closeModal();
   };
 
-  const clearAllAlerts = () => {
-    const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]",
-    ) as HTMLMetaElement;
-    const csrfToken = csrfMetaElement.content;
-
-    fetch(`${BASE_URL}/clear_all`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-csrf-token": csrfToken,
-      },
-      credentials: "include",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-
-        return response.json();
-      })
-      .then(({ success }) => {
-        if (success) {
-          refreshAlerts();
-        } else {
-          // Should this be a toast or other user-visible message?
-          console.log("Error when clearing all alerts");
-        }
-      })
-      .catch((error) => {
-        // Should this be a toast or other user-visible message?
-        console.log("Failed to clear all alerts: ", error);
-      });
-
+  const clearAllAlerts = async () => {
+    const result = await handleClearAllAlerts();
+    if (result?.success) {
+      refreshAlerts();
+    }
     props.closeModal();
   };
 

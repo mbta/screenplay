@@ -13,17 +13,7 @@ defmodule Screenplay.PermanentConfig do
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
 
-  alias ScreensConfig.{
-    Alerts,
-    Config,
-    Departures,
-    EmergencyTakeover,
-    Footer,
-    LineMap,
-    PendingConfig,
-    Screen
-  }
-
+  alias ScreensConfig.{Alerts, Config, Departures, Footer, LineMap, PendingConfig, Screen}
   alias ScreensConfig.Departures.{Query, Section}
   alias ScreensConfig.Header.Destination
   alias ScreensConfig.Screen.GlEink
@@ -486,8 +476,7 @@ defmodule Screenplay.PermanentConfig do
       |> publish_new_config()
     else
       _error ->
-        IO.inspect("error in add_emergency_takeover_configs")
-        :error
+        {:error, "Could not fetch published screens config"}
     end
   end
 
@@ -527,7 +516,7 @@ defmodule Screenplay.PermanentConfig do
       |> publish_new_config()
     else
       _error ->
-        :error
+        {:error, "Could not fetch published screens config"}
     end
   end
 

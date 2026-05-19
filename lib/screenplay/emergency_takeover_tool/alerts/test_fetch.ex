@@ -21,7 +21,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.TestFetch do
     :ok
   end
 
-  def emergency_asset_path do
-    "test/fixtures/emergency_takeover_images/"
+  @spec with_asset_path(String.t()) :: String.t()
+  def with_asset_path(path_suffix) do
+    "test/fixtures/emergency_takeover_images/#{path_suffix}"
   end
 end

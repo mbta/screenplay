@@ -23,7 +23,7 @@ const StationColumn = (props: StationColumnProps): JSX.Element => {
         line={props.line}
         checked={stationScreenOrientationList[props.line]
           // Ignore disabled stations when determining whether the whole line is selected
-          .filter(lineStation => isStationSelectable(lineStation))
+          .filter((lineStation) => isStationSelectable(lineStation))
           .every((lineStation) =>
             props.selectedStations.some((x) => x.name === lineStation.name),
           )}

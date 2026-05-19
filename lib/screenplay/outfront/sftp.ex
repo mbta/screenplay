@@ -40,6 +40,8 @@ defmodule Screenplay.Outfront.SFTP do
         write_image(conn, station, dir, data, ext)
       end
     end)
+
+    :ok
   end
 
   def clear_takeover_images(stations) do
@@ -50,6 +52,8 @@ defmodule Screenplay.Outfront.SFTP do
         delete_image(conn, station, dir, ext)
       end
     end)
+
+    :ok
   end
 
   def get_outfront_directory_for_station(station) do

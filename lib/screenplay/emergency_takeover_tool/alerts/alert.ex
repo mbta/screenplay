@@ -3,7 +3,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
   Represents a single Emergency Takeover Alert.
   """
 
-  alias ScreensConfig.{Screen, EmergencyMessagingLocation}
+  alias ScreensConfig.{Screen, EmergencyMessagingLocation, EmergencyTakeover}
   alias Screenplay.EmergencyTakeoverTool.Alerts.State
   alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.Util
@@ -217,35 +217,28 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     dt
   end
 
-  def indoor_text(%{type: :canned, id: message_id}) do
-    case CannedMessages.get(message_id) do
-      %{text: %{indoor: text}} -> text
-      nil -> nil
-    end
-  end
-
-  def indoor_text(%{type: :custom, text: %{indoor: text}}) do
-    text
-  end
-
-  def outdoor_text(%{type: :canned, id: message_id}) do
-    case CannedMessages.get(message_id) do
-      %{text: %{outdoor: text}} -> text
-      nil -> nil
-    end
-  end
-
-  def outdoor_text(%{type: :custom, text: %{outdoor: text}}) do
-    text
-  end
-
-  @spec img_path_for_message(
+  @spec build_emergency_takeover(
           message(),
           String.t(),
           Screen.app_id(),
           EmergencyMessagingLocation.t()
-        ) :: String.t() | nil
-  def img_path_for_message(message, alert_id, screen_type, messaging_location) do
+        ) :: EmergencyTakeover.t()
+  def build_emergency_takeover(message, alert_id, app_id, eml) do
+    %EmergencyTakeover{
+      audio_asset_path: audio_path(message, eml),
+      text_for_audio: text_for_audio(message, eml),
+      visual_asset_path: img_path(message, alert_id, app_id, eml)
+    }
+  end
+
+  @spec text_for_audio(message(), EmergencyMessagingLocation.t()) :: String.t() | nil
+  defp text_for_audio(%{type: :canned}, _eml), do: nil
+  defp text_for_audio(%{type: :custom, text: %{indoor: text}}, :inside), do: text
+  defp text_for_audio(%{type: :custom, text: %{outdoor: text}}, :outside), do: text
+
+  @spec img_path(message(), String.t(), Screen.app_id(), EmergencyMessagingLocation.t()) ::
+          String.t() | nil
+  def img_path(message, alert_id, screen_type, messaging_location) do
     case message do
       %{type: :canned, id: id} ->
         case CannedMessages.get(id) do
@@ -259,7 +252,6 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
         end
 
       %{type: :custom} ->
-        # TODO: S3 path shouldn't be returned locally
         custom_image_path(alert_id, screen_type, messaging_location)
 
       _ ->
@@ -267,20 +259,25 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     end
   end
 
+  @spec canned_image_path(map(), :indoor | :outdoor, :landscape | :portrait) :: String.t() | nil
   defp canned_image_path(images, where, orientation) when is_map(images) do
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+
     image_path =
       case get_in(images, [where, orientation]) do
         path when is_binary(path) -> path
       end
 
-    with_asset_path("images/#{image_path}", canned: true)
+    alerts_fetch_module.with_asset_path("canned/images/#{image_path}")
   end
 
   @spec custom_image_path(String.t(), Screen.app_id(), EmergencyMessagingLocation.t()) ::
           String.t()
   defp custom_image_path(alert_id, screen_type, messaging_location) do
+    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+
     image_key = determine_image_key(screen_type, messaging_location)
-    with_asset_path("#{alert_id}/#{image_key}.png")
+    alerts_fetch_module.with_asset_path("#{alert_id}/#{image_key}.png")
   end
 
   @spec determine_image_key(Screen.app_id(), EmergencyMessagingLocation.t()) :: String.t()
@@ -291,8 +288,8 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     "#{key_prefix}_#{key_suffix}"
   end
 
-  @spec audio_path_for_message(message(), EmergencyMessagingLocation.t()) :: String.t() | nil
-  def audio_path_for_message(%{type: :canned, id: id}, messaging_location) do
+  @spec audio_path(message(), EmergencyMessagingLocation.t()) :: String.t() | nil
+  def audio_path(%{type: :canned, id: id}, messaging_location) do
     # Only include audio assets for canned messages
     case CannedMessages.get(id) do
       %{audio_path: %{indoor: indoor_path, outdoor: outdoor_path}} ->
@@ -307,22 +304,11 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     end
   end
 
-  def audio_path_for_message(_message, _messaging_location), do: nil
+  def audio_path(_message, _messaging_location), do: nil
 
-  defp canned_audio_path(audio) do
-    with_asset_path("audio/#{audio}", canned: true)
-  end
-
-  defp with_asset_path(path_suffix, canned: true) do
+  defp canned_audio_path(audio_path_suffix) do
     alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-
-    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}canned/#{path_suffix}"
-  end
-
-  defp with_asset_path(path_suffix) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-
-    "https://mbta-ctd-config.s3.amazonaws.com/#{alerts_fetch_module.emergency_asset_path()}#{path_suffix}"
+    alerts_fetch_module.with_asset_path("canned/audio/#{audio_path_suffix}")
   end
 
   defp messaging_location_to_text(:inside), do: :indoor
@@ -332,25 +318,4 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.Alert do
     do: :portrait
 
   defp screen_orientation(screen_type) when screen_type in [:dup_v2], do: :landscape
-
-  def build_emergency_takeover(message, alert_id, screen_app_id, emergency_messaging_location) do
-    text_for_audio =
-      if emergency_messaging_location == :inside do
-        indoor_text(message)
-      else
-        outdoor_text(message)
-      end
-
-    %ScreensConfig.EmergencyTakeover{
-      audio_asset_path: audio_path_for_message(message, emergency_messaging_location),
-      text_for_audio: text_for_audio,
-      visual_asset_path:
-        img_path_for_message(
-          message,
-          alert_id,
-          screen_app_id,
-          emergency_messaging_location
-        )
-    }
-  end
 end

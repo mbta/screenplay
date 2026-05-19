@@ -5,8 +5,6 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
 
   describe "callback" do
     test "redirects on success and saves refresh token", %{conn: conn} do
-      current_time = System.system_time(:second)
-
       conn =
         conn
         |> init_test_session(%{})

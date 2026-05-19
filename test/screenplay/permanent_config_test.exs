@@ -509,8 +509,7 @@ defmodule Screenplay.PermanentConfigTest do
       expected_takeover = %EmergencyTakeover{
         audio_asset_path: nil,
         text_for_audio: "Indoor Message",
-        visual_asset_path:
-          "https://mbta-ctd-config.s3.amazonaws.com/test/fixtures/emergency_takeover_images//alert-1/indoor-portrait.png"
+        visual_asset_path: "test/fixtures/emergency_takeover_images/alert-1/indoor_portrait.png"
       }
 
       assert screens[takeover_screen_id].app_params.emergency_takeover == expected_takeover
@@ -533,10 +532,10 @@ defmodule Screenplay.PermanentConfigTest do
 
       expected_takeover = %EmergencyTakeover{
         audio_asset_path:
-          "https://mbta-ctd-config.s3.amazonaws.com/test/fixtures/emergency_takeover_images//canned/audio/LeaveStation-Indoor.mp3",
-        text_for_audio: "Emergency reported. Use nearest exit.",
+          "test/fixtures/emergency_takeover_images/canned/audio/LeaveStation-Indoor.mp3",
+        text_for_audio: nil,
         visual_asset_path:
-          "https://mbta-ctd-config.s3.amazonaws.com/test/fixtures/emergency_takeover_images//canned/images/LeaveStation-indoor-portrait.gif"
+          "test/fixtures/emergency_takeover_images/canned/images/LeaveStation-indoor-portrait.gif"
       }
 
       assert screens[takeover_screen_id].app_params.emergency_takeover == expected_takeover

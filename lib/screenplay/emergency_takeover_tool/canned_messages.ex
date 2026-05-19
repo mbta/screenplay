@@ -94,9 +94,6 @@ defmodule Screenplay.EmergencyTakeoverTool.CannedMessages do
     }
   ]
 
-  @image_path_s3 "emergency-takeovers/canned/images/"
-  @audio_path_s3 "emergency-takeovers/canned/audio/"
-
   @spec all() :: list(map())
   def all do
     # Only return fields needed for the FE list, selection, and preview of canned messages
