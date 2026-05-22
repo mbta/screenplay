@@ -13,7 +13,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.{Alerts, Departures, Footer, Header, MultiStopAlerts, Screen}
   alias ScreensConfig.Departures.{Query, Section}
-  alias ScreensConfig.Screen.{Dup, PreFare}
+  alias ScreensConfig.Screen.{Busway, Dup, PreFare}
 
   use GenServer
 
@@ -236,23 +236,28 @@ defmodule Screenplay.Places.Builder do
   defp stop_ids(%Screen{app_params: %_app{alerts: %MultiStopAlerts{stop_ids: stop_ids}}}),
     do: stop_ids
 
-  defp stop_ids(%Screen{app_params: %_app{departures: %Departures{sections: sections}}}),
-    do: stop_ids_from_sections(sections)
+  defp stop_ids(%Screen{
+         app_params: %Busway{departures: primary, secondary_departures: secondary}
+       }) do
+    [primary, secondary] |> Enum.flat_map(&stop_ids_from_departures/1) |> Enum.uniq()
+  end
 
   defp stop_ids(%Screen{
-         app_params: %Dup{
-           primary_departures: %Departures{sections: primary_sections},
-           secondary_departures: %Departures{sections: secondary_sections}
-         }
-       }),
-       do: stop_ids_from_sections(primary_sections ++ secondary_sections)
+         app_params: %Dup{primary_departures: primary, secondary_departures: secondary}
+       }) do
+    [primary, secondary] |> Enum.flat_map(&stop_ids_from_departures/1) |> Enum.uniq()
+  end
 
-  defp stop_ids_from_sections(sections) do
-    sections
-    |> Enum.flat_map(fn %Section{query: %Query{params: %Query.Params{stop_ids: stop_ids}}} ->
-      stop_ids
-    end)
-    |> Enum.uniq()
+  defp stop_ids(%Screen{app_params: %_app{departures: departures}}),
+    do: departures |> stop_ids_from_departures() |> Enum.uniq()
+
+  defp stop_ids_from_departures(nil), do: []
+
+  defp stop_ids_from_departures(%Departures{sections: sections}) do
+    Enum.flat_map(
+      sections,
+      fn %Section{query: %Query{params: %Query.Params{stop_ids: stop_ids}}} -> stop_ids end
+    )
   end
 
   defp string_is_number?(string) do
@@ -320,6 +325,10 @@ defmodule Screenplay.Places.Builder do
     Enum.sort_by(routes, fn route -> Enum.find_index(route_order, &(&1 == route)) end)
   end
 
+  @hidden_signs_path Path.join([:code.priv_dir(:screenplay), "config", "hidden_paess_signs.json"])
+  @external_resource @hidden_signs_path
+  @hidden_signs @hidden_signs_path |> File.read!() |> Jason.decode!()
+
   defp get_paess_places do
     signs = fetch_signs_json()
     sources = Enum.flat_map(signs, &get_paess_sources/1)
@@ -335,8 +344,6 @@ defmodule Screenplay.Places.Builder do
         {id, stop["relationships"]["parent_station"]["data"]["id"] || id}
       end)
       |> Enum.into(%{})
-
-    hidden_signs = get_hidden_signs()
 
     labels =
       case @config_fetcher.get_paess_labels() do
@@ -361,23 +368,9 @@ defmodule Screenplay.Places.Builder do
       }
     end)
     |> Enum.filter(fn
-      {_parent_station, %{id: id}} -> id not in hidden_signs
+      {_parent_station, %{id: id}} -> id not in @hidden_signs
     end)
     |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
-  end
-
-  # sobelow_skip ["Traversal.FileModule"]
-  defp get_hidden_signs do
-    hidden_signs_path =
-      Path.join([:code.priv_dir(:screenplay), "config", "hidden_paess_signs.json"])
-
-    case File.read(hidden_signs_path) do
-      {:ok, contents} ->
-        Jason.decode!(contents)
-
-      _ ->
-        []
-    end
   end
 
   defp get_stop_id_from_sources(sources) do

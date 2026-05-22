@@ -15,12 +15,14 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
   end
 
   describe "active/2" do
+    @tag :capture_log
     test "responds 403 if x-api-key is missing", %{conn: conn} do
       conn = get(conn, "/api/pa-messages/active")
 
       assert %{status: 403, halted: true, resp_body: "Invalid API key"} = conn
     end
 
+    @tag :capture_log
     test "responds 403 if x-api-key does not match app API key", %{conn: conn} do
       conn =
         conn |> Plug.Conn.put_req_header("x-api-key", "1234") |> get("/api/pa-messages/active")
@@ -285,6 +287,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :authenticated_pa_message_admin
+    @tag :capture_log
     test "returns an error object when passed invalid params", %{conn: conn} do
       assert %{"errors" => _} =
                conn
@@ -293,6 +296,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :authenticated
+    @tag :capture_log
     test "requires the PA message admin role", %{conn: conn} do
       conn = post(conn, "/api/pa-messages", @valid_params)
       assert response(conn, :unauthorized)
@@ -323,6 +327,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :authenticated_pa_message_admin
+    @tag :capture_log
     test "returns a 404 when the pa message does not exist", %{conn: conn} do
       assert %{"error" => "not_found"} ==
                conn
@@ -331,6 +336,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :authenticated
+    @tag :capture_log
     test "requires the PA message admin role", %{conn: conn} do
       conn = put(conn, "/api/pa-messages/1", %{visual_text: "Updated Visual Text"})
       assert response(conn, :unauthorized)
@@ -370,6 +376,7 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
     end
 
     @tag :authenticated
+    @tag :capture_log
     test "returns a 404 if the PA message doesn't exist", %{conn: conn} do
       assert %{"error" => "not_found"} =
                conn
