@@ -11,6 +11,8 @@
   padding: 16px;
 
   &--inline {
+    // account for widest "inline" screen type, currently Sectional Duos
+    min-width: 390px;
     flex-grow: 1;
 
     &:not(:last-child) {
