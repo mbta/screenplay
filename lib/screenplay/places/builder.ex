@@ -313,6 +313,10 @@ defmodule Screenplay.Places.Builder do
     Enum.sort_by(routes, fn route -> Enum.find_index(route_order, &(&1 == route)) end)
   end
 
+  @hidden_signs_path Path.join([:code.priv_dir(:screenplay), "config", "hidden_paess_signs.json"])
+  @external_resource @hidden_signs_path
+  @hidden_signs @hidden_signs_path |> File.read!() |> Jason.decode!()
+
   defp get_paess_places do
     signs = fetch_signs_json()
     sources = Enum.flat_map(signs, &get_paess_sources/1)
@@ -328,8 +332,6 @@ defmodule Screenplay.Places.Builder do
         {id, stop["relationships"]["parent_station"]["data"]["id"] || id}
       end)
       |> Enum.into(%{})
-
-    hidden_signs = get_hidden_signs()
 
     labels =
       case @config_fetcher.get_paess_labels() do
@@ -354,23 +356,9 @@ defmodule Screenplay.Places.Builder do
       }
     end)
     |> Enum.filter(fn
-      {_parent_station, %{id: id}} -> id not in hidden_signs
+      {_parent_station, %{id: id}} -> id not in @hidden_signs
     end)
     |> Enum.group_by(&elem(&1, 0), &elem(&1, 1))
-  end
-
-  # sobelow_skip ["Traversal.FileModule"]
-  defp get_hidden_signs do
-    hidden_signs_path =
-      Path.join([:code.priv_dir(:screenplay), "config", "hidden_paess_signs.json"])
-
-    case File.read(hidden_signs_path) do
-      {:ok, contents} ->
-        Jason.decode!(contents)
-
-      _ ->
-        []
-    end
   end
 
   defp get_stop_id_from_sources(sources) do
