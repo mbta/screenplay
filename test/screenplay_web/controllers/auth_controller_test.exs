@@ -14,6 +14,7 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
       assert redirected_to(conn) == "/test"
     end
 
+    @tag :capture_log
     test "handles generic failure", %{conn: conn} do
       conn =
         conn
