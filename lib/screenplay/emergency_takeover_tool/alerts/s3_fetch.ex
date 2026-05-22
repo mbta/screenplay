@@ -1,5 +1,6 @@
 defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
   @moduledoc false
+  require Logger
 
   @spec get_state!() :: binary()
   def get_state! do
@@ -35,10 +36,18 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
       ["indoor_portrait", "outdoor_portrait", "indoor_landscape", "outdoor_landscape"]
       |> Enum.map(&"#{image_path_prefix}#{&1}.png")
 
-    %{status_code: 200} =
-      ExAws.S3.delete_multiple_objects(bucket(), image_paths) |> ExAws.request!()
+    case ExAws.S3.delete_multiple_objects(bucket(), image_paths) |> ExAws.request() do
+      {:ok, %{deleted: _, errors: []}} ->
+        :ok
 
-    :ok
+      {:ok, %{deleted: _, errors: errors}} ->
+        Logger.error("Error deleting images from S3: #{inspect(errors)}")
+        :error
+
+      {:error, reason} ->
+        Logger.error("Error deleting images from S3: #{inspect(reason)}")
+        :error
+    end
   end
 
   @spec with_asset_path(String.t()) :: String.t()
