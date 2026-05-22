@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { ComponentType, useState, useEffect } from "react";
 import AlertDetails from "./AlertDetails";
 import { AlertData } from "../EmergencyTakeoverTool";
 import { ModalDetails } from "../ConfirmationModal";
@@ -92,7 +92,7 @@ const handleClearAllAlerts = withErrorHandling(
   { customMessage: "Failed to clear all alerts." },
 );
 
-const AlertsList = (props: AlertsListProps): JSX.Element => {
+const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   const [alertsData, setAlertsData] = useState([]);
   const [pastAlertsData, setPastAlertsData] = useState([]);
 

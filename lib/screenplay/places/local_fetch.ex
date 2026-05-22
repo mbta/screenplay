@@ -23,6 +23,7 @@ defmodule Screenplay.Places.LocalFetch do
     end
   end
 
+  # sobelow suppressions on this and below functions b/c the directory/file names don't come from user input
   # sobelow_skip ["Traversal.FileModule"]
   defp do_get(file_spec) do
     path = local_path(file_spec)
