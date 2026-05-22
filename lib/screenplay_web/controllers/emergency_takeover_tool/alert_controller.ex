@@ -13,7 +13,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn,
         params = %{
           "message" => message,
-          "stations" => stations_map,
+          "stations" => stations,
           "showtimeScreenIds" => showtime_screen_ids,
           "duration" => duration_in_hours,
           "images" => images
@@ -22,8 +22,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     with schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
          user <- get_session(conn, "username"),
          message_struct <- Alert.message_from_json(message),
-         station_names = Map.keys(stations_map),
-         alert <- Alert.new(message_struct, station_names, schedule, user),
+         alert <- Alert.new(message_struct, stations, schedule, user),
          params_to_log =
            params
            |> Map.take(["message", "stations", "duration"])
@@ -31,11 +30,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
          :ok <- UserActionLogger.log(user, :create_alert, params_to_log),
          :ok <- remove_overlapping_alerts(params, user),
          :ok <- State.add_alert(alert),
-         outfront_stations =
-           stations_map
-           |> Enum.filter(fn {_name, has_outfront} -> has_outfront end)
-           |> Enum.map(fn {name, _has_outfront} -> name end),
-         :ok <- add_outfront_takeovers(outfront_stations, images),
+         :ok <- add_outfront_takeovers(stations, images),
          :ok <- add_showtime_takeovers(alert.id, showtime_screen_ids, message_struct, images) do
       json(conn, %{success: true})
     else
@@ -56,7 +51,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         params = %{
           "id" => id,
           "message" => message,
-          "stations" => stations_map,
+          "stations" => stations,
           "showtimeScreenIds" => showtime_screen_ids,
           "duration" => duration_in_hours,
           "images" => images
@@ -65,24 +60,19 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     with alert <- State.get_alert(id),
          schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
          message_struct <- Alert.message_from_json(message),
-         station_names = Map.keys(stations_map),
          changes = %{
            message: message_struct,
-           stations: station_names,
+           stations: stations,
            schedule: schedule
          },
          user <- get_session(conn, "username"),
          :ok <- remove_overlapping_alerts(params, user),
          new_alert <- Alert.update(alert, changes, user),
-         outfront_stations =
-           stations_map
-           |> Enum.filter(fn {_name, has_outfront} -> has_outfront end)
-           |> Enum.map(fn {name, _has_outfront} -> name end),
          params_to_log =
            Map.take(params, ["message", "stations", "duration", "id"]),
          :ok <- UserActionLogger.log(user, :update_alert, params_to_log),
          :ok <- State.update_alert(id, new_alert),
-         :ok <- add_outfront_takeovers(outfront_stations, images),
+         :ok <- add_outfront_takeovers(stations, images),
          :ok <-
            add_showtime_takeovers(
              alert.id,

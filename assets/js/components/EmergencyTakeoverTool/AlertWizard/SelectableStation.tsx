@@ -37,11 +37,7 @@ const SelectableStation = (props: SelectableStationProps): JSX.Element => {
 };
 
 export const isStationSelectable = (station: Station): boolean => {
-  return (
-    station.landscape ||
-    station.portrait ||
-    station.showtime_screen_ids.length > 0
-  );
+  return station.has_outfront || station.showtime_screen_ids.length > 0;
 };
 
 export default SelectableStation;

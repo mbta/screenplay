@@ -232,13 +232,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   async handleSubmit() {
-    // Map station names to whether they have an outfront screen (portrait or landscape)
-    const stations = Object.fromEntries(
-      this.state.selectedStations.map(({ name, portrait, landscape }) => [
-        name,
-        portrait || landscape,
-      ]),
-    );
+    const stations = this.state.selectedStations.map(({ name }) => name);
     const selectedShowtimeScreenIds = this.state.selectedStations.flatMap(
       ({ showtime_screen_ids }) => showtime_screen_ids,
     );
@@ -280,8 +274,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   stationsAreEqual(s1: Station, s2: Station): boolean {
     return (
       s1.name === s2.name &&
-      s1.portrait === s2.portrait &&
-      s1.landscape === s2.landscape
+      s1.has_outfront === s2.has_outfront &&
+      s1.showtime_screen_ids.length === s2.showtime_screen_ids.length
     );
   }
 

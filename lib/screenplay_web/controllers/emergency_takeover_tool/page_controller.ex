@@ -59,8 +59,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.PageController do
         {place.name,
          %{
            name: place.name,
-           landscape: outfront_screen.landscape,
-           portrait: outfront_screen.portrait,
+           has_outfront: outfront_screen.landscape or outfront_screen.portrait,
            showtime_screen_ids: showtime_screen_ids
          }}
       end)
