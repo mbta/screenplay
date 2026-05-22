@@ -82,7 +82,7 @@ defmodule Screenplay.MixProject do
       {:ex_machina, "~> 2.7", only: :test},
       {:remote_ip, "~> 1.2"},
       {:faker, "~> 0.18"},
-      {:nebulex, "~> 2.6"},
+      {:nebulex, "~> 3.0"},
       {:oban, "~> 2.18"}
     ]
   end
