@@ -11,6 +11,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
   end
 
   describe "GET /api/suppressed-predictions with index/2" do
+    @tag :capture_log
     test "responds 403 if not authenticated", %{conn: conn} do
       conn =
         conn
@@ -60,6 +61,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     }
 
     @tag :authenticated
+    @tag :capture_log
     test "returns error when user is not a suppression admin", %{conn: conn} do
       conn = post(conn, "/api/suppressed-predictions", @valid_params)
       assert response(conn, 401)
@@ -79,6 +81,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    @tag :capture_log
     test "returns an error when passing in a Green Line branch route instead of Green", %{
       conn: conn
     } do
@@ -99,6 +102,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    @tag :capture_log
     test "returns an error when passing in a Silver Line route that is not 741, 742, 743 or 746",
          %{
            conn: conn
@@ -120,6 +124,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    @tag :capture_log
     test "returns an error when passed invalid location id", %{conn: conn} do
       assert %{"errors" => _} =
                conn
@@ -131,6 +136,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    @tag :capture_log
     test "returns an error when passed invalid direction id", %{conn: conn} do
       assert %{"errors" => _} =
                conn
@@ -181,6 +187,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    @tag :capture_log
     test "returns 404 when SuppressedPrediction with id is not found", %{conn: conn} do
       assert %{"error" => "not_found"} =
                conn
@@ -230,6 +237,7 @@ defmodule ScreenplayWeb.SuppressedPredictionsApiControllerTest do
     end
 
     @tag :authenticated_suppression_admin
+    @tag :capture_log
     test "returns 404 when SuppressedPrediction with id is not found", %{conn: conn} do
       assert %{"error" => "not_found"} =
                conn
