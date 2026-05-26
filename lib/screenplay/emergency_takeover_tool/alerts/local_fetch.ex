@@ -25,18 +25,6 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
     :ok
   end
 
-  # sobelow_skip ["Traversal.FileModule"]
-  @spec delete_takeover_images(String.t()) :: :ok
-  def delete_takeover_images(alert_id) do
-    image_dir = asset_directory() |> Path.join(alert_id)
-
-    if File.exists?(image_dir) do
-      File.rm_rf!(image_dir)
-    end
-
-    :ok
-  end
-
   @spec with_asset_path(String.t()) :: String.t()
   def with_asset_path(path_suffix) do
     "#{asset_directory()}#{path_suffix}"

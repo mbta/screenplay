@@ -16,11 +16,6 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.TestFetch do
     :ok
   end
 
-  @spec delete_takeover_images(String.t()) :: :ok
-  def delete_takeover_images(_alert_id) do
-    :ok
-  end
-
   @spec with_asset_path(String.t()) :: String.t()
   def with_asset_path(path_suffix) do
     "test/fixtures/emergency_takeover_images/#{path_suffix}"

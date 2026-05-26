@@ -102,9 +102,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
          cleared_alert <- Alert.clear(alert, user),
          :ok <- State.clear_alert(cleared_alert),
          :ok <- SFTP.clear_takeover_images(stations),
-         :ok <- remove_takeovers_from_showtime_screens(stations),
-         alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module),
-         :ok <- alerts_fetch_module.delete_takeover_images(id) do
+         :ok <- remove_takeovers_from_showtime_screens(stations) do
       json(conn, %{success: true})
     else
       {:error, reason} ->

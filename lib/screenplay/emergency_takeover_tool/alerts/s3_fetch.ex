@@ -36,29 +36,6 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
     end
   end
 
-  @spec delete_takeover_images(String.t()) :: :ok
-  def delete_takeover_images(alert_id) do
-    image_path_prefix = "#{asset_directory()}#{alert_id}/"
-
-    image_paths =
-      ["indoor_portrait", "outdoor_portrait", "indoor_landscape", "outdoor_landscape"]
-      |> Enum.map(&"#{image_path_prefix}#{&1}.png")
-
-    case ExAws.S3.delete_multiple_objects(bucket(), image_paths) |> ExAws.request() do
-      {:ok, %{deleted: _, errors: []}} ->
-        :ok
-
-      # Even on errors, we don't want to crash the process since deletion isn't essential.
-      {:ok, %{deleted: _, errors: errors}} ->
-        Logger.error("Error deleting images from S3: #{inspect(errors)}")
-        :ok
-
-      {:error, reason} ->
-        Logger.error("Error deleting images from S3: #{inspect(reason)}")
-        :ok
-    end
-  end
-
   @spec with_asset_path(String.t()) :: String.t()
   def with_asset_path(path_suffix) do
     "https://#{bucket()}.s3.amazonaws.com/#{asset_directory()}#{path_suffix}"
