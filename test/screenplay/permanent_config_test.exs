@@ -25,6 +25,65 @@ defmodule Screenplay.PermanentConfigTest do
 
   alias ScreensConfig.Screen.GlEink
 
+  @screen_without_takeover %Screen{
+    vendor: :mercury,
+    device_id: nil,
+    name: nil,
+    app_id: :pre_fare_v2,
+    refresh_if_loaded_before: nil,
+    disabled: false,
+    hidden_from_screenplay: false,
+    app_params: %PreFare{
+      emergency_messaging_location: :inside,
+      emergency_takeover: nil,
+      content_summary: %ContentSummary{parent_station_id: "place-test"},
+      elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
+      full_line_map: [],
+      header: %Header.StopId{stop_id: "place-test"},
+      reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
+    },
+    tags: []
+  }
+  @gl_eink_screen %Screen{
+    vendor: :mercury,
+    device_id: nil,
+    name: nil,
+    app_id: :gl_eink_v2,
+    refresh_if_loaded_before: nil,
+    disabled: false,
+    hidden_from_screenplay: false,
+    app_params: %GlEink{
+      departures: %Departures{
+        sections: [
+          %Departures.Section{
+            query: %Departures.Query{
+              params: %Departures.Query.Params{
+                stop_ids: ["place-test"],
+                route_ids: ["Green-B"],
+                direction_id: 1
+              }
+            }
+          }
+        ]
+      },
+      footer: %Footer{stop_id: "place-test"},
+      header: %Header.Destination{
+        route_id: "Green-B",
+        direction_id: 1
+      },
+      alerts: %Alerts{stop_id: "456"},
+      line_map: %LineMap{
+        stop_id: "456",
+        station_id: "place-test",
+        direction_id: 1,
+        route_id: "Green-B"
+      },
+      evergreen_content: [],
+      platform_location: :back
+    },
+    tags: []
+  }
+
   def fetch_current_config_version do
     {:ok, _config, metadata} = Local.fetch_config()
     metadata.version_id
@@ -440,65 +499,6 @@ defmodule Screenplay.PermanentConfigTest do
   end
 
   describe "add_emergency_takeover_configs/3" do
-    @screen_without_takeover %Screen{
-      vendor: :mercury,
-      device_id: nil,
-      name: nil,
-      app_id: :pre_fare_v2,
-      refresh_if_loaded_before: nil,
-      disabled: false,
-      hidden_from_screenplay: false,
-      app_params: %PreFare{
-        emergency_messaging_location: :inside,
-        emergency_takeover: nil,
-        content_summary: %ContentSummary{parent_station_id: "place-test"},
-        elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
-        full_line_map: [],
-        header: %Header.StopId{stop_id: "place-test"},
-        reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
-      },
-      tags: []
-    }
-    @gl_eink_screen %Screen{
-      vendor: :mercury,
-      device_id: nil,
-      name: nil,
-      app_id: :gl_eink_v2,
-      refresh_if_loaded_before: nil,
-      disabled: false,
-      hidden_from_screenplay: false,
-      app_params: %GlEink{
-        departures: %Departures{
-          sections: [
-            %Departures.Section{
-              query: %Departures.Query{
-                params: %Departures.Query.Params{
-                  stop_ids: ["place-test"],
-                  route_ids: ["Green-B"],
-                  direction_id: 1
-                }
-              }
-            }
-          ]
-        },
-        footer: %Footer{stop_id: "place-test"},
-        header: %Header.Destination{
-          route_id: "Green-B",
-          direction_id: 1
-        },
-        alerts: %Alerts{stop_id: "456"},
-        line_map: %LineMap{
-          stop_id: "456",
-          station_id: "place-test",
-          direction_id: 1,
-          route_id: "Green-B"
-        },
-        evergreen_content: [],
-        platform_location: :back
-      },
-      tags: []
-    }
-
     setup do
       published_screens_path = get_fixture_path("screens_config.json")
 
@@ -579,26 +579,6 @@ defmodule Screenplay.PermanentConfigTest do
   end
 
   describe "clear_emergency_takeover_configs/1" do
-    @screen_without_takeover %Screen{
-      vendor: :mercury,
-      device_id: nil,
-      name: nil,
-      app_id: :pre_fare_v2,
-      refresh_if_loaded_before: nil,
-      disabled: false,
-      hidden_from_screenplay: false,
-      app_params: %PreFare{
-        emergency_messaging_location: :inside,
-        emergency_takeover: nil,
-        content_summary: %ContentSummary{parent_station_id: "place-test"},
-        elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
-        full_line_map: [],
-        header: %Header.StopId{stop_id: "place-test"},
-        reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
-      },
-      tags: []
-    }
-
     setup do
       published_screens_path = get_fixture_path("screens_config.json")
 
@@ -617,7 +597,8 @@ defmodule Screenplay.PermanentConfigTest do
         %Config{
           screens: %{
             "PRE-1" => screen_with_takeover,
-            "PRE-2" => @screen_without_takeover
+            "PRE-2" => @screen_without_takeover,
+            "GL-1" => @gl_eink_screen
           }
         }
         |> Config.to_json()
@@ -636,6 +617,7 @@ defmodule Screenplay.PermanentConfigTest do
 
       assert screens[takeover_screen_id] == @screen_without_takeover
       assert screens["PRE-2"] == @screen_without_takeover
+      assert screens["GL-1"] == @gl_eink_screen
     end
   end
 end
