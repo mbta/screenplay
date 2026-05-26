@@ -480,9 +480,11 @@ defmodule Screenplay.PermanentConfig do
   end
 
   defp update_screens_with_emergency_takeover(screens, screen_ids, alert_id, message) do
-    for {id, %Screen{app_params: %{emergency_messaging_location: eml}} = screen} <- screens,
+    for {id, screen} <- screens,
         into: %{} do
       if id in screen_ids do
+        %Screen{app_params: %{emergency_messaging_location: eml}} = screen
+
         emergency_takeover =
           Alert.build_emergency_takeover(
             message,
