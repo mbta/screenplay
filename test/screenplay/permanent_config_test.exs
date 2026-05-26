@@ -440,50 +440,34 @@ defmodule Screenplay.PermanentConfigTest do
   end
 
   describe "add_emergency_takeover_configs/3" do
+    @screen_without_takeover %Screen{
+      vendor: :mercury,
+      device_id: nil,
+      name: nil,
+      app_id: :pre_fare_v2,
+      refresh_if_loaded_before: nil,
+      disabled: false,
+      hidden_from_screenplay: false,
+      app_params: %PreFare{
+        emergency_messaging_location: :inside,
+        emergency_takeover: nil,
+        content_summary: %ContentSummary{parent_station_id: "place-test"},
+        elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
+        full_line_map: [],
+        header: %Header.StopId{stop_id: "place-test"},
+        reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
+      },
+      tags: []
+    }
+
     setup do
       published_screens_path = get_fixture_path("screens_config.json")
 
       config =
         %Config{
           screens: %{
-            "PRE-1" => %Screen{
-              vendor: :mercury,
-              device_id: nil,
-              name: nil,
-              app_id: :pre_fare_v2,
-              refresh_if_loaded_before: nil,
-              disabled: false,
-              hidden_from_screenplay: false,
-              app_params: %PreFare{
-                emergency_messaging_location: :inside,
-                emergency_takeover: nil,
-                content_summary: %ContentSummary{parent_station_id: "place-test"},
-                elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
-                full_line_map: [],
-                header: %Header.StopId{stop_id: "place-test"},
-                reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
-              },
-              tags: []
-            },
-            "PRE-2" => %Screen{
-              vendor: :mercury,
-              device_id: nil,
-              name: nil,
-              app_id: :pre_fare_v2,
-              refresh_if_loaded_before: nil,
-              disabled: false,
-              hidden_from_screenplay: false,
-              app_params: %PreFare{
-                emergency_messaging_location: :inside,
-                emergency_takeover: nil,
-                content_summary: %ContentSummary{parent_station_id: "place-test"},
-                elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
-                full_line_map: [],
-                header: %Header.StopId{stop_id: "place-test"},
-                reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
-              },
-              tags: []
-            }
+            "PRE-1" => @screen_without_takeover,
+            "PRE-2" => @screen_without_takeover
           }
         }
         |> Config.to_json()
@@ -512,8 +496,13 @@ defmodule Screenplay.PermanentConfigTest do
         visual_asset_path: "test/fixtures/emergency_takeover_images/alert-1/indoor_portrait.png"
       }
 
-      assert screens[takeover_screen_id].app_params.emergency_takeover == expected_takeover
-      assert screens["PRE-2"].app_params.emergency_takeover == nil
+      assert screens[takeover_screen_id] ==
+               put_in(
+                 @screen_without_takeover.app_params.emergency_takeover,
+                 expected_takeover
+               )
+
+      assert screens["PRE-2"] == @screen_without_takeover
     end
 
     test "adds a canned emergency takeover config to a screen" do
@@ -538,7 +527,74 @@ defmodule Screenplay.PermanentConfigTest do
           "test/fixtures/emergency_takeover_images/canned/images/LeaveStation-indoor-portrait.gif"
       }
 
-      assert screens[takeover_screen_id].app_params.emergency_takeover == expected_takeover
+      assert screens[takeover_screen_id] ==
+               put_in(
+                 @screen_without_takeover.app_params.emergency_takeover,
+                 expected_takeover
+               )
+
+      assert screens["PRE-2"] == @screen_without_takeover
+    end
+  end
+
+  describe "clear_emergency_takeover_configs/1" do
+    @screen_without_takeover %Screen{
+      vendor: :mercury,
+      device_id: nil,
+      name: nil,
+      app_id: :pre_fare_v2,
+      refresh_if_loaded_before: nil,
+      disabled: false,
+      hidden_from_screenplay: false,
+      app_params: %PreFare{
+        emergency_messaging_location: :inside,
+        emergency_takeover: nil,
+        content_summary: %ContentSummary{parent_station_id: "place-test"},
+        elevator_status: %ElevatorStatus{parent_station_id: "place-test"},
+        full_line_map: [],
+        header: %Header.StopId{stop_id: "place-test"},
+        reconstructed_alert_widget: %ScreensConfig.Alerts{stop_id: "place-test"}
+      },
+      tags: []
+    }
+
+    setup do
+      published_screens_path = get_fixture_path("screens_config.json")
+
+      screen_with_takeover =
+        put_in(
+          @screen_without_takeover.app_params.emergency_takeover,
+          %EmergencyTakeover{
+            audio_asset_path: nil,
+            text_for_audio: "Indoor Message",
+            visual_asset_path:
+              "test/fixtures/emergency_takeover_images/alert-1/indoor_portrait.png"
+          }
+        )
+
+      config =
+        %Config{
+          screens: %{
+            "PRE-1" => screen_with_takeover,
+            "PRE-2" => @screen_without_takeover
+          }
+        }
+        |> Config.to_json()
+        |> Jason.encode!()
+
+      File.write(published_screens_path, config)
+    end
+
+    test "clears emergency takeover configs from screens" do
+      takeover_screen_id = "PRE-1"
+
+      assert PermanentConfig.clear_emergency_takeover_configs([takeover_screen_id]) == :ok
+
+      {:ok, file_contents, _metadata} = Screenplay.ScreensConfig.Fetch.Local.fetch_config()
+      %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
+
+      assert screens[takeover_screen_id] == @screen_without_takeover
+      assert screens["PRE-2"] == @screen_without_takeover
     end
   end
 end
