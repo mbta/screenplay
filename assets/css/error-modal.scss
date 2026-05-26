@@ -1,5 +1,6 @@
 .modal.error-modal {
-  color: $text-primary;
+  --bs-modal-color: #{$text-primary};
+
   .modal-dialog {
     margin-top: 362px;
   }

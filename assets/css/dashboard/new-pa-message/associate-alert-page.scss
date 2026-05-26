@@ -20,7 +20,7 @@
 }
 
 .alert-items-modal {
-  color: white;
+  --bs-modal-color: #{$text-primary};
 
   .modal-dialog {
     min-width: 800px;
