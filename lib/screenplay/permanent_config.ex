@@ -4,6 +4,7 @@ defmodule Screenplay.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
+  alias Screenplay.EmergencyTakeoverTool.Alerts.Alert
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
   alias Screenplay.Places.Fetch
@@ -455,4 +456,82 @@ defmodule Screenplay.PermanentConfig do
 
   defp screen_to_place_id(%Screen{app_id: app_id}),
     do: raise("screen_to_place_id/1 not implemented for app_id: #{app_id}")
+
+  def add_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
+    with {published_config, _published_version_id} <- get_current_published_config(),
+         {:ok, published_config_deserialized} <- Jason.decode(published_config) do
+      %Config{screens: published_screens, devops: devops} =
+        published_config_deserialized |> Config.from_json()
+
+      updated_screens =
+        update_screens_with_emergency_takeover(
+          published_screens,
+          showtime_screen_ids,
+          alert_id,
+          message
+        )
+
+      %Config{screens: updated_screens, devops: devops}
+      |> publish_new_config()
+    else
+      _error ->
+        {:error, "Could not fetch published screens config"}
+    end
+  end
+
+  defp update_screens_with_emergency_takeover(screens, screen_ids, alert_id, message) do
+    for {id, %Screen{app_params: %{emergency_messaging_location: eml}} = screen} <- screens,
+        into: %{} do
+      if id in screen_ids do
+        emergency_takeover =
+          Alert.build_emergency_takeover(
+            message,
+            alert_id,
+            screen.app_id,
+            eml
+          )
+
+        {id,
+         put_in(
+           screen,
+           [Access.key!(:app_params), Access.key!(:emergency_takeover)],
+           emergency_takeover
+         )}
+      else
+        {id, screen}
+      end
+    end
+  end
+
+  def clear_emergency_takeover_configs(showtime_screen_ids) do
+    with {published_config, _published_version_id} <- get_current_published_config(),
+         {:ok, published_config_deserialized} <- Jason.decode(published_config) do
+      %Config{screens: published_screens, devops: devops} =
+        published_config_deserialized |> Config.from_json()
+
+      updated_screens = clear_screens_emergency_takeover(published_screens, showtime_screen_ids)
+
+      %Config{screens: updated_screens, devops: devops}
+      |> publish_new_config()
+    else
+      _error ->
+        {:error, "Could not fetch published screens config"}
+    end
+  end
+
+  defp clear_screens_emergency_takeover(screens, screen_ids) do
+    for {id, screen} <- screens, into: %{} do
+      if id in screen_ids do
+        {id, put_in(screen, [Access.key!(:app_params), Access.key!(:emergency_takeover)], nil)}
+      else
+        {id, screen}
+      end
+    end
+  end
+
+  def publish_new_config(new_config) do
+    with(:ok <- PublishedScreensFetch.put_config(new_config)) do
+      PublishedScreensFetch.commit()
+    end
+  end
 end

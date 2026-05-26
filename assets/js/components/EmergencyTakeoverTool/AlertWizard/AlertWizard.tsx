@@ -16,6 +16,8 @@ import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
 import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
+import { isStationSelectable } from "./SelectableStation";
+import { withErrorHandling } from "Utils/errorHandler";
 
 interface AlertWizardProps {
   alertData: AlertData | null;
@@ -34,6 +36,34 @@ interface AlertWizardState {
   activeAlertsList: any[];
   showErrorMessage: boolean;
 }
+
+const handleAlertSubmit = withErrorHandling(
+  async (data: Record<string, unknown>, id: string | null) => {
+    const endpoint = id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
+    const csrfMetaElement = document.head.querySelector(
+      "[name~=csrf-token][content]",
+    ) as HTMLMetaElement;
+    const csrfToken = csrfMetaElement.content;
+
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-csrf-token": csrfToken,
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || response.statusText);
+    }
+
+    return response.json();
+  },
+  { customMessage: "Failed to submit alert." },
+);
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   constructor(props: AlertWizardProps) {
@@ -202,15 +232,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   async handleSubmit() {
-    const endpoint =
-      this.state.id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
-
-    const csrfMetaElement = document.head.querySelector(
-      "[name~=csrf-token][content]",
-    ) as HTMLMetaElement;
-    const csrfToken = csrfMetaElement.content;
-
     const stations = this.state.selectedStations.map(({ name }) => name);
+    const selectedShowtimeScreenIds = this.state.selectedStations.flatMap(
+      ({ showtime_screen_ids }) => showtime_screen_ids,
+    );
     const duration = this.state.duration;
     const images = Object.fromEntries(
       await Promise.all(
@@ -228,39 +253,16 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     const data = {
       message: this.state.message,
       stations,
+      showtimeScreenIds: selectedShowtimeScreenIds,
       duration,
       images,
       id: this.state.id,
     };
 
-    fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-csrf-token": csrfToken,
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-
-        return response.json();
-      })
-      .then(({ success }) => {
-        if (success) {
-          this.props.toggleAlertWizard();
-        } else {
-          // Should this be a toast or other user-visible message?
-          console.log("Error when creating alert with data: ", data);
-        }
-      })
-      .catch((error) => {
-        // Should this be a toast or other user-visible message?
-        console.log("Failed to create alert: ", error);
-      });
+    const result = await handleAlertSubmit(data, this.state.id);
+    if (result?.success) {
+      this.props.toggleAlertWizard();
+    }
   }
 
   addStation(station: Station) {
@@ -272,8 +274,8 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   stationsAreEqual(s1: Station, s2: Station): boolean {
     return (
       s1.name === s2.name &&
-      s1.portrait === s2.portrait &&
-      s1.landscape === s2.landscape
+      s1.has_outfront === s2.has_outfront &&
+      s1.showtime_screen_ids.length === s2.showtime_screen_ids.length
     );
   }
 
@@ -294,12 +296,9 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   checkLine(line: string, checked: boolean) {
-    if (line === "silver") {
-      return;
-    }
     if (checked) {
       this.props.stationScreenOrientationList[line]
-        .filter((station) => station.portrait || station.landscape)
+        .filter((station) => isStationSelectable(station))
         .forEach((station) => {
           if (
             !this.state.selectedStations.some((x) => x.name === station.name)

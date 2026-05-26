@@ -74,12 +74,7 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
     {:ok, portrait_dirs} = sftp_client_module().list_dir(conn, "./Portrait")
     {:ok, landscape_dirs} = sftp_client_module().list_dir(conn, "./Landscape")
 
-    outfront_takeover_screens =
-      :screenplay
-      |> Application.get_env(:outfront_takeover_screens)
-      |> Map.values()
-      |> List.flatten()
-      |> Enum.uniq()
+    outfront_takeover_screens = SFTP.all_stations()
 
     portrait_stations = Enum.filter(outfront_takeover_screens, & &1.portrait)
     landscape_stations = Enum.filter(outfront_takeover_screens, & &1.landscape)
@@ -89,8 +84,10 @@ defmodule Screenplay.Jobs.TakeoverToolTestingJob do
   end
 
   defp log_missing_dirs(sftp_dirs, stations, orientation) do
+    station_sftp_details = SFTP.all_stations()
+
     Enum.each(stations, fn %{name: station_name} ->
-      station_dir = SFTP.get_outfront_directory_for_station(station_name)
+      %{sftp_dir_name: station_dir} = SFTP.get_station(station_sftp_details, station_name)
 
       if station_dir in sftp_dirs do
         Logger.info("[takeover_tool_testing] #{orientation} directory exists for #{station_name}")

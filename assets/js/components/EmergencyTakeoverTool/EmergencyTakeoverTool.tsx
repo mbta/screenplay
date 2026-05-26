@@ -9,8 +9,8 @@ import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 
 export interface Station {
   name: string;
-  portrait: boolean;
-  landscape: boolean;
+  has_outfront: boolean;
+  showtime_screen_ids: string[];
 }
 
 export interface StationsByLine {

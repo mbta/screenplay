@@ -21,9 +21,9 @@ defmodule Screenplay.EmergencyTakeoverTool.CannedMessages do
           landscape: "LeaveStation-outdoor-landscape.gif"
         }
       },
-      audio_asset_path: %{
-        indoor: "LeaveStation-indoor.mp3",
-        outdoor: "LeaveStation-outdoor.mp3"
+      audio_path: %{
+        indoor: "LeaveStation-Indoor.mp3",
+        outdoor: "LeaveStation-Outdoor.mp3"
       }
     },
     %{
@@ -43,7 +43,7 @@ defmodule Screenplay.EmergencyTakeoverTool.CannedMessages do
           landscape: "FollowInstructions-landscape.gif"
         }
       },
-      audio_asset_path: %{
+      audio_path: %{
         indoor: "FollowInstructions.mp3",
         outdoor: "FollowInstructions.mp3"
       }
@@ -65,7 +65,7 @@ defmodule Screenplay.EmergencyTakeoverTool.CannedMessages do
           landscape: "EmergencyEnded-landscape.gif"
         }
       },
-      audio_asset_path: %{
+      audio_path: %{
         indoor: "EmergencyEnded.mp3",
         outdoor: "EmergencyEnded.mp3"
       }
@@ -87,7 +87,7 @@ defmodule Screenplay.EmergencyTakeoverTool.CannedMessages do
           landscape: "Test-outdoor-landscape.gif"
         }
       },
-      audio_asset_path: %{
+      audio_path: %{
         indoor: "TestEmergency.mp3",
         outdoor: "TestEmergency.mp3"
       }

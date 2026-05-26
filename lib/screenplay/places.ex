@@ -34,6 +34,7 @@ defmodule Screenplay.Places do
 
   @spec get() :: list(Place.t())
   def get do
+    # Gets places and excludes screens to be hidden from general Screenplay functionality.
     Cache.all(nil, return: :value)
     |> update_in([Access.all(), Access.key(:screens)], fn screens ->
       Enum.reject(screens, fn screen ->
@@ -45,8 +46,5 @@ defmodule Screenplay.Places do
   @spec get_all() :: list(Place.t())
   def get_all do
     Cache.all(nil, return: :value)
-    |> update_in([Access.all(), Access.key(:screens)], fn screens ->
-      Enum.reject(screens, &match?(%{hidden?: true}, &1))
-    end)
   end
 end

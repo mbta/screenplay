@@ -4,6 +4,7 @@ import {
   Station,
   StationScreenOrientationContext,
 } from "../EmergencyTakeoverTool";
+import { isStationSelectable } from "./SelectableStation";
 
 interface StackedStationCardsProps {
   stations: Station[];
@@ -21,7 +22,7 @@ const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
       }`}
     >
       {props.stations.map((station) => {
-        if (!station.portrait && !station.landscape) {
+        if (!isStationSelectable(station)) {
           return null;
         }
 

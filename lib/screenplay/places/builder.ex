@@ -113,11 +113,18 @@ defmodule Screenplay.Places.Builder do
             _ -> nil
           end
 
+        emergency_messaging_location =
+          case app_params do
+            %_app{emergency_messaging_location: eml} -> eml
+            _ -> nil
+          end
+
         %ShowtimeScreen{
           id: id,
           type: app_id,
           disabled: disabled,
           direction_id: direction_id,
+          emergency_messaging_location: emergency_messaging_location,
           location: location || "",
           hidden?: hidden_from_screenplay
         }
