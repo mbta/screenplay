@@ -104,11 +104,9 @@ const AssociateAlert = ({ onApply, onCancel }: AssociateAlertPageProps) => {
         </div>
         <div style={{ flex: 1 }}>
           <MessageTable
-            isLoading={false}
             isReadOnly={false}
             headers={["Alert message", "ID", "Start-End", "Last modified"]}
             addSelectColumn
-            addMoreActions={false}
             rows={filteredAlerts.map((alert: Alert) => {
               return (
                 <AssociateAlertsRow

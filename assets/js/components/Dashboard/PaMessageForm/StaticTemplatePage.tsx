@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import type { StaticTemplate, TemplateType } from "Models/static_template";
 import MessageTable, { SortDirection } from "../../Tables/MessageTable";
-import _staticTemplates from "../../../../static/static_templates.json";
+import staticTemplatesJSON from "../../../../static/static_templates.json";
 import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
 import { RadioList } from "Components/RadioList";
 import * as styles from "Styles/pa-messages.module.scss";
@@ -14,7 +14,9 @@ interface Props {
   onSelect: (template: StaticTemplate) => void;
 }
 
-export const STATIC_TEMPLATES = _staticTemplates as StaticTemplate[];
+export const STATIC_TEMPLATES = staticTemplatesJSON as StaticTemplate[];
+
+const SELECTABLE_TEMPLATES = STATIC_TEMPLATES.filter((t) => !t.archived);
 
 const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
   const [selectedTemplateType, setSelectedTemplateType] =
@@ -33,27 +35,25 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
     }
   };
 
-  const sortedTemplates = sortColumn
-    ? STATIC_TEMPLATES.filter(
-        (template) => template.type === selectedTemplateType,
-      ).sort((first: StaticTemplate, second: StaticTemplate) => {
-        let firstValue;
-        let secondValue;
+  const templates = SELECTABLE_TEMPLATES.filter(
+    (template) => template.type === selectedTemplateType,
+  ).sort((first: StaticTemplate, second: StaticTemplate) => {
+    let firstValue: string;
+    let secondValue: string;
 
-        if (sortColumn === "Message") {
-          firstValue = first.title;
-          secondValue = second.title;
-        } else {
-          firstValue = templateTypeLabel(first);
-          secondValue = templateTypeLabel(second);
-        }
+    if (sortColumn === "Message") {
+      firstValue = first.title;
+      secondValue = second.title;
+    } else {
+      firstValue = templateTypeLabel(first);
+      secondValue = templateTypeLabel(second);
+    }
 
-        return (
-          firstValue.localeCompare(secondValue) *
-          (sortDirection === SortDirection.Asc ? 1 : -1)
-        );
-      })
-    : STATIC_TEMPLATES;
+    return (
+      firstValue.localeCompare(secondValue) *
+      (sortDirection === SortDirection.Asc ? 1 : -1)
+    );
+  });
 
   useHideSidebar();
 
@@ -88,10 +88,8 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
           <MessageTable
             headers={["Message", "Type"]}
             isReadOnly={false}
-            isLoading={false}
             addSelectColumn
-            addMoreActions={false}
-            rows={sortedTemplates.map((template) => {
+            rows={templates.map((template) => {
               return (
                 <StaticTemplateRow
                   key={template.title}
@@ -100,7 +98,6 @@ const StaticTemplatePage = ({ onCancel, onSelect }: Props) => {
                 />
               );
             })}
-            emptyStateText=""
             handleHeaderClick={setColumnSorting}
             sortColumn={sortColumn}
             sortDirection={sortDirection}

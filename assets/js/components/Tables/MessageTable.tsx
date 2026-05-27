@@ -50,9 +50,9 @@ const MessageTable = ({
                   {header === sortColumn && (
                     <>
                       {sortDirection === SortDirection.Asc ? (
-                        <ChevronDown style={{ marginLeft: 4 }} />
-                      ) : (
                         <ChevronUp style={{ marginLeft: 4 }} />
+                      ) : (
+                        <ChevronDown style={{ marginLeft: 4 }} />
                       )}
                     </>
                   )}
