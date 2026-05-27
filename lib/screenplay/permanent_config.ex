@@ -4,6 +4,8 @@ defmodule Screenplay.PermanentConfig do
   # Suppress dialyzer warning until more app_ids are implemented.
   @dialyzer [{:nowarn_function, get_route_id: 3}, {:nowarn_function, json_to_struct: 4}]
 
+  require Logger
+
   alias Screenplay.EmergencyTakeoverTool.Alerts.Alert
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
@@ -480,23 +482,31 @@ defmodule Screenplay.PermanentConfig do
   end
 
   defp update_screens_with_emergency_takeover(screens, screen_ids, alert_id, message) do
-    for {id, %Screen{app_params: %{emergency_messaging_location: eml}} = screen} <- screens,
+    for {id, screen} <- screens,
         into: %{} do
       if id in screen_ids do
-        emergency_takeover =
-          Alert.build_emergency_takeover(
-            message,
-            alert_id,
-            screen.app_id,
-            eml
-          )
+        case screen do
+          %Screen{app_params: %{emergency_messaging_location: eml}} when not is_nil(eml) ->
+            emergency_takeover =
+              Alert.build_emergency_takeover(
+                message,
+                alert_id,
+                screen.app_id,
+                eml
+              )
 
-        {id,
-         put_in(
-           screen,
-           [Access.key!(:app_params), Access.key!(:emergency_takeover)],
-           emergency_takeover
-         )}
+            {id,
+             put_in(
+               screen,
+               [Access.key!(:app_params), Access.key!(:emergency_takeover)],
+               emergency_takeover
+             )}
+
+          _ ->
+            Logger.error("Tried to takeover #{id} without an emergency_messaging_location")
+
+            {id, screen}
+        end
       else
         {id, screen}
       end
