@@ -160,7 +160,6 @@ const PaMessagesPage: ComponentType = () => {
           <MessageTable
             isLoading={shouldShowLoadingState}
             headers={["Message", "Interval", "Start-End"]}
-            addSelectColumn={false}
             addMoreActions={showMoreActions}
             isReadOnly={isReadOnly}
             rows={
