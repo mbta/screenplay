@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import { StaticTemplate } from "Models/static_template";
+import type { StaticTemplate, TemplateType } from "Models/static_template";
 import MessageTable, { SortDirection } from "../../Tables/MessageTable";
 import _staticTemplates from "../../../../static/static_templates.json";
 import StaticTemplateRow from "../../Tables/Rows/StaticTemplateRow";
@@ -13,8 +13,6 @@ interface Props {
   onCancel: () => void;
   onSelect: (template: StaticTemplate) => void;
 }
-
-type TemplateType = "psa" | "emergency";
 
 export const STATIC_TEMPLATES = _staticTemplates as StaticTemplate[];
 

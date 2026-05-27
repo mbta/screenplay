@@ -1,4 +1,4 @@
-import { type MessageType } from "./pa_message";
+export type TemplateType = "psa" | "emergency";
 
 export interface StaticTemplate {
   id: number;
@@ -6,5 +6,6 @@ export interface StaticTemplate {
   visual_text: string;
   audio_text?: string;
   audio_url?: string;
-  type: MessageType;
+  type: TemplateType;
+  archived: boolean;
 }

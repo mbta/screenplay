@@ -1,7 +1,7 @@
 import React, { ComponentType } from "react";
 import KebabMenu from "Components/KebabMenu";
 import { updateExistingPaMessage } from "Utils/api";
-import { PaMessage, UpdatePaMessageBody } from "Models/pa_message";
+import type { PaMessage, PaMessageChange } from "Models/pa_message";
 import moment from "moment";
 import cx from "classnames";
 import { useNavigate } from "react-router-dom";
@@ -48,9 +48,8 @@ const PaMessageRow: ComponentType<PaMessageRowProps> = ({
   const togglePaused = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     try {
-      await updateExistingPaMessage(paMessage.id, {
-        paused: !paMessage.paused,
-      } as UpdatePaMessageBody);
+      const change: PaMessageChange = { paused: !paMessage.paused };
+      await updateExistingPaMessage(paMessage.id, change);
       onUpdate();
     } catch (error) {
       setErrorMessage((error as Error).message);
