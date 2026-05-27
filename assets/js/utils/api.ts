@@ -5,7 +5,7 @@ import { ScreenConfiguration } from "../models/screen_configuration";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
-import { NewPaMessageBody, UpdatePaMessageBody } from "Models/pa_message";
+import type { PaMessageChange } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
 import { withErrorHandling } from "./errorHandler";
 import { REFRESH_PAGE_ERROR_MESSAGE } from "Constants/constants";
@@ -193,7 +193,7 @@ export const publishScreensForPlace = async (
 };
 
 export const createNewPaMessage = async (
-  message: NewPaMessageBody,
+  message: PaMessageChange,
 ): Promise<{ status: number; errors: any }> => {
   const response = await fetch(API_ENDPOINT_PA_MESSAGES, {
     ...getPostBodyAndHeaders(message),
@@ -208,7 +208,7 @@ export const createNewPaMessage = async (
 
 export const updateExistingPaMessage = async (
   id: string | number,
-  updates: UpdatePaMessageBody,
+  change: PaMessageChange,
 ): Promise<{ status: number; body: any }> => {
   const response = await fetch(`${API_ENDPOINT_PA_MESSAGES}/${id}`, {
     method: "PUT",
@@ -217,7 +217,7 @@ export const updateExistingPaMessage = async (
       "content-type": "application/json",
       "x-csrf-token": getCsrfToken(),
     },
-    body: JSON.stringify(updates),
+    body: JSON.stringify(change),
   });
 
   if (response.status === 422) {

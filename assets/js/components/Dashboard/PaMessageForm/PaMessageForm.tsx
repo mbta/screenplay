@@ -10,32 +10,17 @@ import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import Toast from "Components/Toast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
 import fp from "lodash/fp";
-import { StaticTemplate } from "Models/static_template";
-import { MessageType } from "Models/pa_message";
-
-interface PaMessageFormData {
-  alert_id: string | null;
-  start_datetime: string;
-  end_datetime: string | null;
-  days_of_week: number[];
-  sign_ids: string[];
-  priority: number;
-  interval_in_minutes: number;
-  visual_text: string;
-  audio_text: string;
-  audio_url: string;
-  message_type: MessageType;
-  template_id: number | null;
-}
+import type { PaMessageChange } from "Models/pa_message";
+import type { StaticTemplate } from "Models/static_template";
 
 interface Props {
   title: string;
-  onSubmit: (data: PaMessageFormData) => any;
+  onSubmit: (data: PaMessageChange) => any;
   onError: (message: string | null) => void;
   onErrorsChange: (errors: string[]) => void;
   errorMessage: string | null;
   errors: string[];
-  defaultValues?: Partial<PaMessageFormData>;
+  defaultValues?: PaMessageChange;
   defaultAlert?: Alert | string | null;
   defaultTemplate?: StaticTemplate | null;
   defaultAudioState?: AudioPreview;
@@ -200,7 +185,7 @@ const PaMessageForm = ({
       <MainForm
         hide={page !== Page.MAIN}
         onSubmit={() => {
-          const formData: PaMessageFormData = {
+          const formData: PaMessageChange = {
             alert_id:
               typeof associatedAlert === "string"
                 ? associatedAlert

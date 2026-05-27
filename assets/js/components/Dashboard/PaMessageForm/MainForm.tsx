@@ -22,8 +22,7 @@ import { AudioPreview, Page } from "./types";
 import SelectedSignsByRouteTags from "./SelectedSignsByRouteTags";
 import { Place } from "Models/place";
 import * as paMessageStyles from "Styles/pa-messages.module.scss";
-import { StaticTemplate } from "Models/static_template";
-import { MessageType } from "Models/pa_message";
+import type { StaticTemplate, TemplateType } from "Models/static_template";
 
 const MAX_TEXT_LENGTH = 2000;
 
@@ -604,14 +603,12 @@ const NewPaMessageHeader = ({
     );
   };
 
-  const formatMessageType = (messageType: MessageType) => {
-    switch (messageType) {
+  const formatTemplateType = (templateType: TemplateType) => {
+    switch (templateType) {
       case "psa":
         return "PSA";
       case "emergency":
         return "Emergency";
-      default:
-        return "";
     }
   };
 
@@ -652,7 +649,7 @@ const NewPaMessageHeader = ({
         className={cx("d-flex align-items-center", paMessageStyles.alertHeader)}
       >
         <span className={paMessageStyles.larger}>
-          Template: {formatMessageType(selectedTemplate.type)} -{" "}
+          Template: {formatTemplateType(selectedTemplate.type)} -{" "}
           {selectedTemplate.title}
         </span>
         {!isReadOnly && (
