@@ -24,7 +24,7 @@ defmodule Screenplay.Watts.ClientTest do
 
       expect(HTTPoison.Mock, :post, fn _, request_data, _ ->
         assert request_data ==
-                 ~s({"text":"<speak>&lt;lang xml:lang=&quot;es-US&quot;&gt;Hello World&lt;/lang&gt;</speak>","voice_id":"Matthew"})
+                 ~s({"text":"<speak><amazon:effect name=\\"drc\\"><prosody rate=\\"90%\\">&lt;lang xml:lang=&quot;es-US&quot;&gt;Hello World&lt;/lang&gt;</prosody></amazon:effect></speak>","voice_id":"Matthew"})
 
         {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(input)}}
       end)
@@ -37,7 +37,7 @@ defmodule Screenplay.Watts.ClientTest do
 
       expect(HTTPoison.Mock, :post, fn _, request_data, _ ->
         assert request_data ==
-                 ~s({"text":"<speak><lang xml:lang=\\"es-US\\">Hello World</lang></speak>","voice_id":"Matthew"})
+                 ~s({"text":"<speak><amazon:effect name=\\"drc\\"><prosody rate=\\"90%\\"><lang xml:lang=\\"es-US\\">Hello World</lang></prosody></amazon:effect></speak>","voice_id":"Matthew"})
 
         {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(input)}}
       end)

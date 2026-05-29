@@ -27,7 +27,12 @@ defmodule Screenplay.Watts.Client do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
 
-    request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
+    request_data =
+      Jason.encode!(%{
+        text:
+          ~s(<speak><amazon:effect name="drc"><prosody rate="90%">#{text}</prosody></amazon:effect></speak>),
+        voice_id: "Matthew"
+      })
 
     case @http_client.post(
            "#{watts_url}/tts",
