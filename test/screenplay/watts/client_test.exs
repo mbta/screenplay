@@ -5,7 +5,7 @@ defmodule Screenplay.Watts.ClientTest do
 
   alias Screenplay.Watts.Client
 
-  describe "fetch_tts/1" do
+  describe "fetch_tts/2" do
     setup do
       original_watts_url = Application.get_env(:screenplay, :watts_url)
       Application.put_env(:screenplay, :watts_url, "https://fake-watts-url.com")
@@ -19,7 +19,7 @@ defmodule Screenplay.Watts.ClientTest do
       end)
     end
 
-    test "sanitizes text sent to watts" do
+    test "sanitizes text when ssml flag is not set" do
       input = ~s(<lang xml:lang="es-US">Hello World</lang>)
 
       expect(HTTPoison.Mock, :post, fn _, request_data, _ ->
@@ -29,7 +29,20 @@ defmodule Screenplay.Watts.ClientTest do
         {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(input)}}
       end)
 
-      Client.fetch_tts(input)
+      Client.fetch_tts(input, false)
+    end
+
+    test "does not sanitize text when ssml flag is set" do
+      input = ~s(<lang xml:lang="es-US">Hello World</lang>)
+
+      expect(HTTPoison.Mock, :post, fn _, request_data, _ ->
+        assert request_data ==
+                 ~s({"text":"<speak><lang xml:lang=\\"es-US\\">Hello World</lang></speak>","voice_id":"Matthew"})
+
+        {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(input)}}
+      end)
+
+      assert Client.fetch_tts(input, true)
     end
   end
 end
