@@ -466,7 +466,7 @@ const MainForm = ({
                 )}
                 {audioState === AudioPreview.Playing && (
                   <audio
-                    src={`/api/pa-messages/preview_audio?text=${encodeURIComponent(phoneticText)}&is_ssml=${phoneticTextHasSsml}`}
+                    src={`/api/pa-messages/preview_audio?text=${encodeURIComponent(phoneticText)}&has_ssml=${phoneticTextHasSsml}`}
                     autoPlay
                     onEnded={onAudioEnded}
                     onError={onAudioError}
