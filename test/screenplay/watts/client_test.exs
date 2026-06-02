@@ -5,6 +5,8 @@ defmodule Screenplay.Watts.ClientTest do
 
   alias Screenplay.Watts.Client
 
+  setup :verify_on_exit!
+
   describe "fetch_tts/2" do
     setup do
       original_watts_url = Application.get_env(:screenplay, :watts_url)
