@@ -27,7 +27,7 @@
     "id": 4,
     "title": "Bicycles (English + Spanish)",
     "visual_text": "To make space for other passengers, bicycles are not permitted on trains during rush hour, or at any time of day on the Green Line. For details visit mbta.com/bikes.\n\nPara dejar espacio para otros pasajeros, bicicletas no son permitidas en los trenes durante hora pico y nunca son permitidas en la linea verde. Para mas informacion, visite mbta.com/bikes",
-    "audio_text": "To make space for other passengers, bicycles are not permitted on trains during rush hour, or at any time of day on the Green Line. For details visit mbta.com/bikes.\n\n<lang xml:lang=\"es-US\"> Para dejar espacio para otros pasajeros, bicicletas no son permitidas en los trenes durante hora pico y nunca son permitidas en la línea verde. Para más información, visite [mbta.com/bikes](http://mbta.com/bikes) </lang>",
+    "audio_text": "To make space for other passengers, bicycles are not permitted on trains during rush hour, or at any time of day on the Green Line. For details visit mbta.com/bikes.\n\n<lang xml:lang=\"es-US\"> Para dejar espacio para otros pasajeros, bicicletas no son permitidas en los trenes durante hora pico y nunca son permitidas en la línea verde. Para más información, visite mbta.com/bikes </lang>",
     "audio_text_has_ssml": true,
     "type": "psa",
     "archived": false
