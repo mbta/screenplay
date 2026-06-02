@@ -100,9 +100,6 @@ const PaMessageForm = ({
   const [phoneticText, setPhoneticText] = useState(
     defaultValues?.audio_text ?? "",
   );
-  const [phoneticTextHasSsml, setPhoneticTextHasSsml] = useState<boolean>(
-    defaultValues?.audio_text_has_ssml ?? false,
-  );
   const [audioURL, setAudioURL] = useState(defaultValues?.audio_url ?? "");
 
   const [signIds, setSignIds] = useState<string[]>(() => {
@@ -128,7 +125,6 @@ const PaMessageForm = ({
     setSelectedTemplate(null);
     setVisualText("");
     setPhoneticText("");
-    setPhoneticTextHasSsml(false);
     setAudioURL("");
     setAudioState(AudioPreview.Unreviewed);
     onChangePriority(defaultPriority);
@@ -217,7 +213,6 @@ const PaMessageForm = ({
           interval,
           navigateTo: setPage,
           phoneticText,
-          phoneticTextHasSsml,
           audioURL,
           priority,
           setDays,
@@ -293,7 +288,6 @@ const PaMessageForm = ({
             setSelectedTemplate(template);
             setVisualText(template.visual_text);
             setPhoneticText(template.audio_text ?? "");
-            setPhoneticTextHasSsml(template.audio_text_has_ssml ?? false);
             setAudioURL(template.audio_url ?? "");
             onChangePriority(template.type === "psa" ? 5 : 1);
             setAudioState(AudioPreview.Unreviewed);

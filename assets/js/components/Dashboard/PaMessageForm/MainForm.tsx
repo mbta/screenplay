@@ -40,7 +40,6 @@ interface Props {
   interval: string;
   navigateTo: (page: Page) => void;
   phoneticText: string;
-  phoneticTextHasSsml: boolean;
   audioURL: string;
   priority: number;
   setDays: Dispatch<SetStateAction<number[]>>;
@@ -82,7 +81,6 @@ const MainForm = ({
   interval,
   navigateTo,
   phoneticText,
-  phoneticTextHasSsml,
   audioURL,
   priority,
   setDays,
@@ -466,7 +464,7 @@ const MainForm = ({
                 )}
                 {audioState === AudioPreview.Playing && (
                   <audio
-                    src={`/api/pa-messages/preview_audio?text=${encodeURIComponent(phoneticText)}&has_ssml=${phoneticTextHasSsml}`}
+                    src={`/api/pa-messages/preview_audio?text=${encodeURIComponent(phoneticText)}&has_ssml=${selectedTemplate?.audio_text_has_ssml ?? false}`}
                     autoPlay
                     onEnded={onAudioEnded}
                     onError={onAudioError}
