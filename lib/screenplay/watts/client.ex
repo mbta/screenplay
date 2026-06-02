@@ -4,7 +4,7 @@ defmodule Screenplay.Watts.ClientBehaviour do
   @doc """
   Fetches an audio file from Watts given a string.
   """
-  @callback fetch_tts(String.t()) :: {:ok, binary()} | :error
+  @callback fetch_tts(String.t(), is_ssml :: boolean) :: {:ok, binary()} | :error
 end
 
 defmodule Screenplay.Watts.Client do
@@ -18,12 +18,21 @@ defmodule Screenplay.Watts.Client do
   @http_client Application.compile_env!(:screenplay, :http_client)
 
   @impl true
-  def fetch_tts(text) do
+  def fetch_tts(text, _is_ssml = false) do
+    Phoenix.HTML.html_escape(text) |> Phoenix.HTML.safe_to_string() |> fetch_tts(true)
+  end
+
+  @impl true
+  def fetch_tts(text, _is_ssml = true) do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
 
-    text = Phoenix.HTML.html_escape(text) |> Phoenix.HTML.safe_to_string()
-    request_data = Jason.encode!(%{text: "<speak>#{text}</speak>", voice_id: "Matthew"})
+    request_data =
+      Jason.encode!(%{
+        text:
+          ~s(<speak><amazon:effect name="drc"><prosody rate="90%">#{text}</prosody></amazon:effect></speak>),
+        voice_id: "Matthew"
+      })
 
     case @http_client.post(
            "#{watts_url}/tts",
@@ -62,7 +71,7 @@ defmodule Screenplay.Watts.FakeClient do
 
   @impl true
   # sobelow_skip ["Traversal.FileModule"]
-  def fetch_tts(_) do
+  def fetch_tts(_, _) do
     path = Path.join(:code.priv_dir(:screenplay), "static.mp3")
 
     case File.read(path) do

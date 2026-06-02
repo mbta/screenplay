@@ -15,8 +15,8 @@ defmodule ScreenplayWeb.PaMessagesApiController do
     json(conn, PaMessages.get_active_messages())
   end
 
-  def preview_audio(conn, %{"text" => text}) do
-    case @watts_client.fetch_tts(text) do
+  def preview_audio(conn, %{"text" => text, "has_ssml" => has_ssml}) do
+    case @watts_client.fetch_tts(text, has_ssml == "true") do
       {:ok, audio_data} ->
         send_download(conn, {:binary, audio_data}, filename: "preview.mp3")
 
