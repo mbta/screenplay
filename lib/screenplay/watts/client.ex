@@ -4,7 +4,7 @@ defmodule Screenplay.Watts.ClientBehaviour do
   @doc """
   Fetches an audio file from Watts given a string.
   """
-  @callback fetch_tts(String.t(), boolean) :: {:ok, binary()} | :error
+  @callback fetch_tts(String.t(), is_ssml :: boolean) :: {:ok, binary()} | :error
 end
 
 defmodule Screenplay.Watts.Client do
@@ -18,12 +18,12 @@ defmodule Screenplay.Watts.Client do
   @http_client Application.compile_env!(:screenplay, :http_client)
 
   @impl true
-  def fetch_tts(text, false) do
+  def fetch_tts(text, _is_ssml = false) do
     Phoenix.HTML.html_escape(text) |> Phoenix.HTML.safe_to_string() |> fetch_tts(true)
   end
 
   @impl true
-  def fetch_tts(text, true) do
+  def fetch_tts(text, _is_ssml = true) do
     watts_url = Application.fetch_env!(:screenplay, :watts_url)
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
 
