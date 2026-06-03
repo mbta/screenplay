@@ -14,6 +14,7 @@ const [cmd] = process.argv.slice(2);
  */
 const useKeywordAdoptionOpts = {
   // Suppress warnings from Bootstrap (and other third party dependencies)
+  quietDeps: true,
   // We still need to use `@import` on Bootstrap, and `quietDeps` does not
   // suppress those import statements.
   silenceDeprecations: ["import"],
