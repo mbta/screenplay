@@ -1,4 +1,4 @@
-@use "../screenplay-form-variables";
+@use "../variables-screenplay-forms";
 
 .bottom-action-bar {
   position: absolute;
@@ -18,7 +18,7 @@
   }
 
   .forward {
-    background-color: screenplay-form-variables.$form-check-input-checked-bg-color;
+    background-color: variables-screenplay-forms.$form-check-input-checked-bg-color;
     color: black;
     &:hover {
       background-color: #72a4cd;
