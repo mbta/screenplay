@@ -8,7 +8,7 @@ const [cmd] = process.argv.slice(2);
  * Sass plugin options used to suppress `@import` related warnings when
  * building the project. These options have been added until Bootstrap migrates
  * to more modern `@use` syntax. Once the migration is complete and Bootstrap
- * has been migrated, these options should be removed.
+ * has been upgraded, these options should be removed.
  *
  * @type {Partial<import("esbuild-sass-plugin").SassPluginOptions>}
  */
@@ -47,7 +47,7 @@ if (cmd === "deploy") {
   const result = await esbuild.build({ ...opts, minify: true });
   if (result.warnings.length > 0) {
     console.error(
-      `The build exited with one or more warnings, which are treated as warnings for the '${cmd}' command.`,
+      `The build exited with one or more warnings, which are treated as errors for the '${cmd}' command.`,
     );
     console.error("Exiting.");
     exit(1);
