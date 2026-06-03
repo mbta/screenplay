@@ -1,9 +1,9 @@
 /* This file is for your main application css. */
-@use "alert-dashboard.scss";
-@use "alert-wizard.scss";
-@use "variables.scss";
-@use "stacked-stations.scss";
-@use "components.scss";
+@use "alert-dashboard";
+@use "alert-wizard";
+@use "variables";
+@use "stacked-stations";
+@use "components";
 
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";

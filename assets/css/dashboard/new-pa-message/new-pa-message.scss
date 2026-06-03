@@ -1,8 +1,8 @@
-@use "../../variables.scss";
-@use "select-stations-page.scss";
-@use "selected-stations-summary.scss";
-@use "select-zones-page.scss";
-@use "associate-alert-page.scss";
+@use "../../variables";
+@use "select-stations-page";
+@use "selected-stations-summary";
+@use "select-zones-page";
+@use "associate-alert-page";
 
 .selected-group-tag {
   height: 36px;

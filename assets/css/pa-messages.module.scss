@@ -1,4 +1,4 @@
-@use "variables.scss";
+@use "variables";
 
 @mixin flat-button {
   --bs-btn-active-color: var(--bs-btn-color);

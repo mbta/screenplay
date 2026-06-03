@@ -1,4 +1,4 @@
-@use "variables.scss";
+@use "variables";
 
 .modal.error-modal {
   --bs-modal-color: #{variables.$text-primary};
