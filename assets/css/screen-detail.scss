@@ -1,3 +1,5 @@
+@use "variables.scss";
+
 .screen-detail__inline-layout {
   display: flex;
   justify-content: space-between;
@@ -6,7 +8,7 @@
 }
 
 .screen-detail__container {
-  background-color: $cool-gray-40;
+  background-color: variables.$cool-gray-40;
   border-radius: 8px;
   padding: 16px;
 
@@ -27,33 +29,49 @@
   &--paess-g {
     background: linear-gradient(
       to bottom,
-      $mbta-green 40px,
-      $cool-gray-40 40px
+      variables.$mbta-green 40px,
+      variables.$cool-gray-40 40px
     );
   }
 
   &--paess-r {
-    background: linear-gradient(to bottom, $mbta-red 40px, $cool-gray-40 40px);
+    background: linear-gradient(
+      to bottom,
+      variables.$mbta-red 40px,
+      variables.$cool-gray-40 40px
+    );
   }
 
   &--paess-m {
-    background: linear-gradient(to bottom, $mbta-red 40px, $cool-gray-40 40px);
+    background: linear-gradient(
+      to bottom,
+      variables.$mbta-red 40px,
+      variables.$cool-gray-40 40px
+    );
   }
 
   &--paess-b {
-    background: linear-gradient(to bottom, $mbta-blue 40px, $cool-gray-40 40px);
+    background: linear-gradient(
+      to bottom,
+      variables.$mbta-blue 40px,
+      variables.$cool-gray-40 40px
+    );
   }
 
   &--paess-o {
     background: linear-gradient(
       to bottom,
-      $mbta-orange 40px,
-      $cool-gray-40 40px
+      variables.$mbta-orange 40px,
+      variables.$cool-gray-40 40px
     );
   }
 
   &--paess-s {
-    background: linear-gradient(to bottom, $mbta-bus 40px, $cool-gray-40 40px);
+    background: linear-gradient(
+      to bottom,
+      variables.$mbta-bus 40px,
+      variables.$cool-gray-40 40px
+    );
   }
 }
 

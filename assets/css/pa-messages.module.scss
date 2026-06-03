@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@use "variables.scss";
 
 @mixin flat-button {
   --bs-btn-active-color: var(--bs-btn-color);
@@ -15,7 +15,7 @@
 }
 
 .associateAlertSubtext {
-  color: $text-secondary;
+  color: variables.$text-secondary;
 }
 
 .formButtons {
@@ -29,7 +29,7 @@
 .card {
   margin-top: 24px;
   padding: 18px 24px;
-  background-color: $cool-gray-20;
+  background-color: variables.$cool-gray-20;
   color: white;
 }
 
@@ -42,7 +42,7 @@
 .formLabel {
   margin-top: 16px;
   margin-bottom: 8px;
-  color: $text-secondary;
+  color: variables.$text-secondary;
 }
 
 .larger {
@@ -59,12 +59,12 @@
 }
 
 .alertEndedText {
-  color: $text-error;
+  color: variables.$text-error;
 }
 
 .associateButton {
   @include flat-button;
-  --bs-btn-color: #{$text-link-primary};
+  --bs-btn-color: #{variables.$text-link-primary};
   --bs-btn-line-height: 0.8;
   text-decoration: none;
   font-size: 20px;
@@ -74,10 +74,10 @@
 .copyTextButton {
   width: 38px;
   height: 38px;
-  --bs-btn-color: #{$text-disabled};
+  --bs-btn-color: #{variables.$text-disabled};
   --bs-btn-active-color: var(--bs-btn-color);
   --bs-btn-hover-color: var(--bs-btn-color);
-  --bs-btn-bg: #{$bg-border-disabled};
+  --bs-btn-bg: #{variables.$bg-border-disabled};
   --bs-btn-active-bg: var(--bs-btn-bg);
   --bs-btn-hover-bg: var(--bs-btn-bg);
   --bs-btn-focus-box-shadow: 0px 0px 0px 4px #0d6efd40;
@@ -93,49 +93,49 @@
 
 .reviewAudioCard {
   height: 250px;
-  background-color: $cool-gray-15;
+  background-color: variables.$cool-gray-15;
 }
 
 .clearAlertButton {
   @include flat-button;
-  --bs-btn-color: #{$text-secondary};
+  --bs-btn-color: #{variables.$text-secondary};
   margin-left: 16px;
   padding: 0px;
 }
 
 .addStationsZonesButton {
   @include flat-button;
-  --bs-btn-color: #{$button-primary};
+  --bs-btn-color: #{variables.$button-primary};
   --bs-btn-bg: transparent;
-  --bs-btn-border-color: #{$button-primary};
+  --bs-btn-border-color: #{variables.$button-primary};
   border: 1px dashed;
 }
 
 .reviewAudioButton {
   @include flat-button;
-  --bs-btn-color: #{$button-primary};
+  --bs-btn-color: #{variables.$button-primary};
   margin: auto;
   padding: 0;
   --bs-btn-focus-box-shadow: 0px 0px 0px 4px #8ecdff80;
   &.playing {
-    --bs-btn-color: #{$text-primary};
+    --bs-btn-color: #{variables.$text-primary};
     text-decoration: none;
   }
   &:disabled {
-    --bs-btn-disabled-color: #{$text-secondary};
+    --bs-btn-disabled-color: #{variables.$text-secondary};
     text-decoration: none;
   }
 }
 
 .serviceTimeButton {
   @include flat-button;
-  --bs-btn-color: #{$text-link-primary};
+  --bs-btn-color: #{variables.$text-link-primary};
   padding-left: 0;
   padding-right: 8px;
 }
 
 .audioReviewedText {
-  color: $text-primary;
+  color: variables.$text-primary;
 }
 
 .daysDropdown {
@@ -147,13 +147,13 @@
 }
 
 .inputField {
-  --bs-body-bg: #{$dark-bg};
-  --bs-body-color: #{$text-secondary};
-  --bs-border-color: #{$border-primary};
+  --bs-body-bg: #{variables.$dark-bg};
+  --bs-body-color: #{variables.$text-secondary};
+  --bs-border-color: #{variables.$border-primary};
 
   &:disabled {
-    border-color: $bg-elevation-5;
-    background-color: $bg-elevation-4;
+    border-color: variables.$bg-elevation-5;
+    background-color: variables.$bg-elevation-4;
   }
 
   &[type="number"] {
@@ -174,7 +174,7 @@
       position: absolute;
       right: 0;
       margin-right: 8px;
-      color: $text-secondary;
+      color: variables.$text-secondary;
     }
   }
   &:global(.is-invalid) {
@@ -186,8 +186,8 @@
 .messageTextBox {
   height: 250px;
   resize: none;
-  --bs-secondary-bg: #{$bg-elevation-4};
-  --bs-border-color: #{$cool-gray-30};
+  --bs-secondary-bg: #{variables.$bg-elevation-4};
+  --bs-border-color: #{variables.$cool-gray-30};
 }
 
 .startEndItem {
@@ -197,20 +197,20 @@
 .dropdown {
   :global(.dropdown-toggle) {
     @include flat-button;
-    --bs-btn-bg: #{$dark-bg};
-    --bs-btn-color: #{$text-secondary};
-    --bs-btn-border-color: #{$border-primary};
+    --bs-btn-bg: #{variables.$dark-bg};
+    --bs-btn-color: #{variables.$text-secondary};
+    --bs-btn-border-color: #{variables.$border-primary};
     --bs-btn-focus-box-shadow: 0px 0px 0px 4px #0d6efd40;
     &:focus-visible {
       --bs-btn-hover-border-color: #86b7fe;
     }
   }
   :global(.dropdown-menu) {
-    --bs-dropdown-bg: #{$cool-gray-30};
-    --bs-dropdown-link-color: #{$text-primary};
-    --bs-dropdown-link-hover-color: #{$text-primary};
-    --bs-dropdown-link-hover-bg: #{$cool-gray-20};
-    --bs-dropdown-link-active-bg: #{$button-primary};
+    --bs-dropdown-bg: #{variables.$cool-gray-30};
+    --bs-dropdown-link-color: #{variables.$text-primary};
+    --bs-dropdown-link-hover-color: #{variables.$text-primary};
+    --bs-dropdown-link-hover-bg: #{variables.$cool-gray-20};
+    --bs-dropdown-link-active-bg: #{variables.$button-primary};
     --bs-dropdown-link-active-color: #{button-secondary};
   }
 }
@@ -221,7 +221,7 @@
 
 .dashboardLink {
   text-decoration: none;
-  color: $text-secondary;
+  color: variables.$text-secondary;
   .text {
     text-decoration: underline;
     text-underline-offset: 4px;
@@ -231,28 +231,28 @@
 
 .transparentButton {
   text-decoration: none;
-  --bs-btn-color: #{$text-link-primary};
+  --bs-btn-color: #{variables.$text-link-primary};
   --bs-btn-active-color: var(--bs-btn-color);
   --bs-btn-hover-color: var(--bs-btn-color);
-  --bs-btn-hover-bg: #{$cool-gray-15};
+  --bs-btn-hover-bg: #{variables.$cool-gray-15};
 }
 
 .pausedPill {
   padding: 6px 16px;
-  background-color: $theme-secondary;
+  background-color: variables.$theme-secondary;
   border-radius: 200px;
   font-size: 24px;
   vertical-align: middle;
 }
 
 .editStationsButton {
-  --bs-btn-color: #{$text-secondary};
+  --bs-btn-color: #{variables.$text-secondary};
   --bs-btn-active-color: var(--bs-btn-color);
   --bs-btn-hover-color: var(--bs-btn-color);
   --bs-btn-bg: transparent;
-  --bs-btn-active-bg: #{$button-secondary-outline-hover-bg};
-  --bs-btn-hover-bg: #{$button-secondary-outline-hover-bg};
-  --bs-btn-border-color: #{$button-secondary-outline-bg};
+  --bs-btn-active-bg: #{variables.$button-secondary-outline-hover-bg};
+  --bs-btn-hover-bg: #{variables.$button-secondary-outline-hover-bg};
+  --bs-btn-border-color: #{variables.$button-secondary-outline-bg};
   --bs-btn-active-border-color: var(--bs-btn-border-color);
   --bs-btn-hover-border-color: var(--bs-btn-border-color);
 }

@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@use "variables.scss";
 
 .emergency-container {
   .intro-block {
@@ -13,7 +13,7 @@
       height: 64px;
       width: 64px;
       border-radius: 32px;
-      background: $pink-700;
+      background: variables.$pink-700;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,16 +36,16 @@
       }
       .emphasized {
         font-weight: 700;
-        color: $pink-700;
+        color: variables.$pink-700;
       }
     }
 
     .create-alert-button {
-      background-color: $pink-700;
+      background-color: variables.$pink-700;
       color: white;
       height: 50px;
       &:hover {
-        background-color: $pink-900;
+        background-color: variables.$pink-900;
       }
     }
   }
@@ -58,7 +58,7 @@
 
     .clear-all-alerts-button {
       margin-left: auto;
-      background-color: $cyan-700;
+      background-color: variables.$cyan-700;
     }
   }
 
@@ -69,7 +69,7 @@
 
     .alert-preview {
       padding: 24px;
-      background: $gray-500;
+      background: variables.$gray-500;
       border-radius: 8px 0 0 8px;
     }
     .alert-details {
@@ -89,7 +89,7 @@
     }
     .alert-reminder {
       align-items: center;
-      background-color: $pink-700;
+      background-color: variables.$pink-700;
       color: white;
       display: flex;
       font-weight: 700;
@@ -112,25 +112,25 @@
     }
     .alert-header {
       display: flex;
-      background: $gray-200;
+      background: variables.$gray-200;
       align-items: center;
       border-top-right-radius: 8px;
-      border-bottom: 1px solid $gray-400;
+      border-bottom: 1px solid variables.$gray-400;
       padding: 12px 24px;
       button {
         margin-left: 24px;
       }
       .edit-button {
-        color: $gray-700;
-        background-color: $gray-50;
+        color: variables.$gray-700;
+        background-color: variables.$gray-50;
         &:hover {
           background-color: white;
         }
       }
       .clear-button {
-        background-color: $cyan-700;
+        background-color: variables.$cyan-700;
         &:hover {
-          background-color: $cyan-900;
+          background-color: variables.$cyan-900;
         }
       }
     }
@@ -146,9 +146,9 @@
     display: flex;
     justify-content: space-between;
     margin: 24px;
-    border-top: 2px solid $gray-800;
+    border-top: 2px solid variables.$gray-800;
     font-weight: 500;
-    color: $gray-400;
+    color: variables.$gray-400;
     .page-stepper {
       padding: 16px 0;
       width: 150px;
@@ -167,7 +167,7 @@
       &.current {
         margin-top: -2px;
         color: white;
-        border-top: 2px solid $pink-700;
+        border-top: 2px solid variables.$pink-700;
       }
     }
     .page-stepper:hover,
@@ -177,7 +177,7 @@
   }
 
   hr.solid-separator {
-    border-top: 1px solid $gray-800;
+    border-top: 1px solid variables.$gray-800;
     margin: 48px 24px 16px 24px;
   }
 }

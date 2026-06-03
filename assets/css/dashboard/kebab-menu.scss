@@ -1,7 +1,9 @@
+@use "../variables.scss";
+
 .kebab-menu-dropdown {
   &__menu {
     padding: 0px;
-    background-color: $cool-gray-30;
+    background-color: variables.$cool-gray-30;
   }
 
   &__item {
@@ -12,7 +14,7 @@
 
     &:hover,
     &:focus {
-      background-color: $cool-gray-15;
+      background-color: variables.$cool-gray-15;
       color: white;
     }
 
@@ -38,7 +40,7 @@
 
   &:hover,
   &:focus {
-    background-color: $cool-gray-15;
+    background-color: variables.$cool-gray-15;
   }
 
   &:focus {

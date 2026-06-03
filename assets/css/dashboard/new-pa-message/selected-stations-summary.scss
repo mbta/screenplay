@@ -1,9 +1,11 @@
+@use "../../variables.scss";
+
 .selected-stations-summary {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   border-radius: 8px;
-  background-color: $cool-gray-30;
+  background-color: variables.$cool-gray-30;
   margin: 40px 40px 0 40px;
   padding: 15px 18px;
   font-weight: 500;
@@ -16,7 +18,7 @@
   }
 
   span {
-    color: $text-secondary;
+    color: variables.$text-secondary;
   }
 
   .geo-alt-fill-icon {

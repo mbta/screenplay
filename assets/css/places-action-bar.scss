@@ -1,3 +1,5 @@
+@use "variables.scss";
+
 .places-action-bar {
   box-sizing: border-box;
   width: 100%;
@@ -5,7 +7,7 @@
   padding-left: 16px;
   padding-right: 16px;
 
-  background: $cool-gray-40;
+  background: variables.$cool-gray-40;
 
   border-left: 1px solid rgba(255, 255, 255, 0.2);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -28,7 +30,7 @@
     color: white;
     font-size: 16px;
 
-    background-color: $cool-gray-30;
+    background-color: variables.$cool-gray-30;
     border: 1px solid rgba(23, 31, 38, 0.3);
     border-radius: 6px;
   }

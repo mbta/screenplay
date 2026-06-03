@@ -1,20 +1,20 @@
-@import "./variables.scss";
+@use "variables.scss";
 
 .segment {
   width: 44px;
   height: 1000px;
   &:global(.green) {
-    --line-color: #{$mbta-green};
+    --line-color: #{variables.$mbta-green};
   }
   &:global(.blue) {
-    --line-color: #{$mbta-blue};
+    --line-color: #{variables.$mbta-blue};
   }
   &:global(.red),
   &:global(.mattapan) {
-    --line-color: #{$mbta-red};
+    --line-color: #{variables.$mbta-red};
   }
   &:global(.orange) {
-    --line-color: #{$mbta-orange};
+    --line-color: #{variables.$mbta-orange};
   }
 }
 

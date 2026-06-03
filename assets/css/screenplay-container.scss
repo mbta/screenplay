@@ -1,7 +1,9 @@
+@use "variables.scss";
+
 .screenplay-container {
   display: flex;
   height: 100vh;
-  background-color: $cool-gray-30;
+  background-color: variables.$cool-gray-30;
 
   .page-content {
     flex-grow: 1;
@@ -9,8 +11,8 @@
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    color: $text-primary;
-    background-color: $dark-bg;
+    color: variables.$text-primary;
+    background-color: variables.$dark-bg;
     min-width: 900px;
 
     .page-content__header {

@@ -1,12 +1,13 @@
-@import "./select-stations-page.scss";
-@import "./selected-stations-summary.scss";
-@import "./select-zones-page.scss";
-@import "./associate-alert-page.scss";
+@use "../../variables.scss";
+@use "select-stations-page.scss";
+@use "selected-stations-summary.scss";
+@use "select-zones-page.scss";
+@use "associate-alert-page.scss";
 
 .selected-group-tag {
   height: 36px;
   padding: 6px 12px;
-  border: 1px solid $text-secondary;
+  border: 1px solid variables.$text-secondary;
   border-radius: 4px;
   font-weight: 500;
   font-size: 16px;
@@ -17,37 +18,37 @@
   cursor: pointer;
 
   .label {
-    color: $text-primary;
+    color: variables.$text-primary;
   }
 
   &--green {
-    background-color: $mbta-green;
+    background-color: variables.$mbta-green;
   }
   &--red {
-    background-color: $mbta-red;
+    background-color: variables.$mbta-red;
   }
   &--orange {
-    background-color: $mbta-orange;
+    background-color: variables.$mbta-orange;
   }
   &--blue {
-    background-color: $mbta-blue;
+    background-color: variables.$mbta-blue;
   }
   &--mattapan {
-    background-color: $mbta-red;
+    background-color: variables.$mbta-red;
   }
   &--silver {
-    background-color: $mbta-silver;
+    background-color: variables.$mbta-silver;
   }
   &--bus {
-    background-color: $mbta-bus;
-    fill: $text-invert;
+    background-color: variables.$mbta-bus;
+    fill: variables.$text-invert;
 
     .label {
-      color: $text-invert;
+      color: variables.$text-invert;
     }
 
     .x-button {
-      fill: $text-invert;
+      fill: variables.$text-invert;
     }
   }
 }

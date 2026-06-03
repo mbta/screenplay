@@ -1,19 +1,19 @@
 /* This file is for your main application css. */
-@import "./alert-dashboard.scss";
-@import "./alert-wizard.scss";
-@import "./variables.scss";
-@import "./stacked-stations.scss";
-@import "./components.scss";
+@use "alert-dashboard.scss";
+@use "alert-wizard.scss";
+@use "variables.scss";
+@use "stacked-stations.scss";
+@use "components.scss";
 
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/modal";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/modal";
 
 html {
   font-family: "Inter", sans-serif;
   body {
-    background: $gray-700;
+    background: variables.$gray-700;
     margin: 0;
   }
 }
@@ -75,7 +75,7 @@ html {
     padding: 0 17px;
     font-weight: 500;
     font-size: 16px;
-    background: $pink-700;
+    background: variables.$pink-700;
     border: none;
     border-radius: 6px;
     :first-child {
@@ -83,17 +83,17 @@ html {
     }
   }
   button[disabled] {
-    background: $gray-500;
+    background: variables.$gray-500;
     opacity: 1;
   }
   input[type="submit"][disabled]:hover {
-    background-color: $gray-600;
-    border-color: $gray-600;
+    background-color: variables.$gray-600;
+    border-color: variables.$gray-600;
   }
 }
 
 footer {
-  color: $gray-400;
+  color: variables.$gray-400;
   text-align: center;
   padding: 32px 0;
   border-top: 1px solid #e5e7eb40;
@@ -102,33 +102,33 @@ footer {
 
 .emergency-modal {
   --bs-modal-border-radius: 8px;
-  --bs-modal-bg: #{$gray-200};
+  --bs-modal-bg: #{variables.$gray-200};
   --bs-modal-padding: 16px;
   --bs-modal-header-padding: 16px;
 }
 
 .cancel-button {
-  background-color: $gray-50;
-  border: 1px solid $gray-300;
-  color: $gray-700;
+  background-color: variables.$gray-50;
+  border: 1px solid variables.$gray-300;
+  color: variables.$gray-700;
   &:hover {
-    color: $gray-700;
+    color: variables.$gray-700;
     background-color: white;
   }
 }
 .confirm-button {
   margin-left: 24px;
-  background-color: $cyan-700;
-  border: 1px solid $gray-300;
+  background-color: variables.$cyan-700;
+  border: 1px solid variables.$gray-300;
   &:hover {
-    background-color: $cyan-900;
+    background-color: variables.$cyan-900;
   }
 }
 
 .icon-circle {
   height: 40px;
   width: 40px;
-  background-color: $cyan-700;
+  background-color: variables.$cyan-700;
   border-radius: 24px;
   display: flex;
   align-items: center;
@@ -140,13 +140,13 @@ footer {
     text-align: center;
   }
   &.pink {
-    background-color: $pink-700;
+    background-color: variables.$pink-700;
   }
   &.gray {
     background-color: unset;
     border: 1px solid white;
     .icon {
-      color: $gray-600;
+      color: variables.$gray-600;
     }
   }
 }
@@ -154,35 +154,35 @@ footer {
 .dot-grid {
   margin-top: 120px;
   height: 400px;
-  background-image: radial-gradient($gray-600 2px, transparent 0);
+  background-image: radial-gradient(variables.$gray-600 2px, transparent 0);
   background-size: 40px 40px;
   background-position: -19px -19px;
 }
 
 .bg-mbta-green {
-  background-color: $mbta-green !important;
+  background-color: variables.$mbta-green !important;
 }
 .bg-mbta-red {
-  background-color: $mbta-red !important;
+  background-color: variables.$mbta-red !important;
 }
 .bg-mbta-orange {
-  background-color: $mbta-orange !important;
+  background-color: variables.$mbta-orange !important;
 }
 .bg-mbta-blue {
-  background-color: $mbta-blue !important;
+  background-color: variables.$mbta-blue !important;
 }
 .bg-mbta-silver {
-  background-color: $mbta-silver !important;
+  background-color: variables.$mbta-silver !important;
 }
 .bg-mbta-bus {
-  background-color: $mbta-bus !important;
+  background-color: variables.$mbta-bus !important;
 }
 .bg-dark {
-  background-color: $dark-bg !important;
+  background-color: variables.$dark-bg !important;
 }
 .text-invert {
-  color: $text-invert !important;
+  color: variables.$text-invert !important;
 }
 .text-secondary {
-  color: $text-secondary !important;
+  color: variables.$text-secondary !important;
 }

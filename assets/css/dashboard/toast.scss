@@ -1,3 +1,5 @@
+@use "../variables.scss";
+
 .toast-container {
   margin-bottom: 40px;
 
@@ -13,11 +15,11 @@
     }
 
     &--warning {
-      background-color: $alert-yellow;
+      background-color: variables.$alert-yellow;
     }
 
     &--info {
-      background-color: $accessibility-blue;
+      background-color: variables.$accessibility-blue;
       color: white;
     }
 

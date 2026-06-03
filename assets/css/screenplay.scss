@@ -1,50 +1,44 @@
-@import "variables.scss";
+@use "variables.scss";
 
 $theme-colors: (
-  "primary": $theme-primary,
+  "primary": variables.$theme-primary,
 );
 
-$form-check-input-checked-color: #0f1417;
-$form-check-input-checked-bg-color: #8ecdff;
-$form-check-input-bg: #0f1417;
-$form-check-input-border: 1px solid #8b9198;
-$form-feedback-invalid-color: $text-error;
-
-@import "~bootstrap/scss/bootstrap";
-@import "dashboard.scss";
-@import "dashboard/places-page.scss";
-@import "dashboard/alerts-page.scss";
-@import "dashboard/overrides-page.scss";
-@import "dashboard/pending-screens-page.scss";
-@import "dashboard/pending-screen-detail.scss";
-@import "dashboard/alert-details.scss";
-@import "dashboard/configure-screens-page.scss";
-@import "dashboard/button-image.scss";
-@import "dashboard/appbar.scss";
-@import "dashboard/bottom-action-bar.scss";
-@import "dashboard/configure-screens-workflow-page.scss";
-@import "dashboard/pa-messages-page.scss";
-@import "dashboard/new-pa-message/new-pa-message.scss";
-@import "place-row.scss";
-@import "places-action-bar.scss";
-@import "filter-dropdown.scss";
-@import "screenplay-container.scss";
-@import "screen-detail.scss";
-@import "screen-simulation.scss";
-@import "paess.scss";
-@import "alert-card.scss";
-@import "map-segment.scss";
-@import "alert-not-found.scss";
-@import "alert-banner.scss";
-@import "animation.scss";
-@import "screen-detail-action-bar.scss";
-@import "workflow.scss";
-@import "sort-label.scss";
-@import "search-bar.scss";
-@import "dashboard/picker.scss";
-@import "error-modal.scss";
-@import "dashboard/toast.scss";
-@import "dashboard/kebab-menu.scss";
+@use "bootstrap/scss/bootstrap";
+@use "dashboard.scss";
+@use "dashboard/places-page.scss";
+@use "dashboard/alerts-page.scss";
+@use "dashboard/overrides-page.scss";
+@use "dashboard/pending-screens-page.scss";
+@use "dashboard/pending-screen-detail.scss";
+@use "dashboard/alert-details.scss";
+@use "dashboard/configure-screens-page.scss";
+@use "dashboard/button-image.scss";
+@use "dashboard/appbar.scss";
+@use "dashboard/bottom-action-bar.scss";
+@use "dashboard/configure-screens-workflow-page.scss";
+@use "dashboard/pa-messages-page.scss";
+@use "dashboard/new-pa-message/new-pa-message.scss";
+@use "place-row.scss";
+@use "places-action-bar.scss";
+@use "filter-dropdown.scss";
+@use "screenplay-container.scss";
+@use "screen-detail.scss";
+@use "screen-simulation.scss";
+@use "paess.scss";
+@use "alert-card.scss";
+@use "map-segment.scss";
+@use "alert-not-found.scss";
+@use "alert-banner.scss";
+@use "animation.scss";
+@use "screen-detail-action-bar.scss";
+@use "workflow.scss";
+@use "sort-label.scss";
+@use "search-bar.scss";
+@use "dashboard/picker.scss";
+@use "error-modal.scss";
+@use "dashboard/toast.scss";
+@use "dashboard/kebab-menu.scss";
 
 html {
   font-size: 16px;
@@ -61,12 +55,12 @@ body {
 }
 
 .screenplay-button {
-  background: $main-blue;
+  background: variables.$main-blue;
   border: 1px solid rgba(23, 31, 38, 0.3);
   border-radius: 6px;
 
   &:hover {
-    background: $hover-blue;
+    background: variables.$hover-blue;
   }
 }
 
@@ -119,12 +113,12 @@ input[type="button"] {
 
 .button-secondary-outline {
   background-color: transparent;
-  border: 1px solid $text-primary;
-  color: $text-secondary;
+  border: 1px solid variables.$text-primary;
+  color: variables.$text-secondary;
 
   &:hover {
     background-color: #c1c7ce14;
-    border-color: $text-secondary;
+    border-color: variables.$text-secondary;
   }
 
   &:focus {
@@ -134,11 +128,11 @@ input[type="button"] {
 }
 
 .button-primary.btn {
-  color: $text-invert;
-  background-color: $button-primary;
+  color: variables.$text-invert;
+  background-color: variables.$button-primary;
 
   &:hover {
-    background-color: $button-primary-hover;
+    background-color: variables.$button-primary-hover;
   }
 
   &:focus {
@@ -148,8 +142,8 @@ input[type="button"] {
 
 .button-primary-outline {
   background-color: transparent;
-  color: $button-primary;
-  border: 1px solid $button-primary;
+  color: variables.$button-primary;
+  border: 1px solid variables.$button-primary;
 
   &:focus {
     box-shadow: 0px 0px 0px 4px #8ecdff80;
@@ -158,7 +152,7 @@ input[type="button"] {
 
 .invalid-feedback,
 .validation-error {
-  color: $text-error;
+  color: variables.$text-error;
   font-size: 14px;
   margin-top: 4px;
 }

@@ -1,5 +1,7 @@
+@use "variables.scss";
+
 .alert-card-container {
-  color: $gray-900;
+  color: variables.$gray-900;
   position: relative;
 }
 
@@ -81,7 +83,7 @@
   }
 
   &__place-details {
-    background-color: $cool-gray-40;
+    background-color: variables.$cool-gray-40;
     color: #ffffff;
     min-width: 228px;
     padding: 16px;

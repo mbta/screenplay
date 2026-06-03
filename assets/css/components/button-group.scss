@@ -1,3 +1,5 @@
+@use "../variables.scss";
+
 .button-group {
   display: flex;
   flex-direction: column;
@@ -5,8 +7,8 @@
   button {
     text-align: left;
     height: 38px;
-    color: $text-secondary;
-    background-color: $cool-gray-20;
+    color: variables.$text-secondary;
+    background-color: variables.$cool-gray-20;
     border: none;
   }
 }
