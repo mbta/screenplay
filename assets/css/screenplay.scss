@@ -1,10 +1,8 @@
 @use "variables";
 
-$theme-colors: (
-  "primary": variables.$theme-primary,
+@use "bootstrap/scss/bootstrap" with (
+  $primary: variables.$theme-primary
 );
-
-@use "bootstrap/scss/bootstrap";
 @use "dashboard";
 @use "dashboard/places-page";
 @use "dashboard/alerts-page";
