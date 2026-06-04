@@ -1,8 +1,28 @@
 import * as esbuild from "esbuild";
 import { sassPlugin } from "esbuild-sass-plugin";
+import { exit } from "node:process";
 
 const [cmd] = process.argv.slice(2);
 
+/**
+ * Sass plugin options used to suppress `@import` related warnings when
+ * building the project. These options have been added until Bootstrap migrates
+ * to more modern `@use` syntax. Once the migration is complete and Bootstrap
+ * has been upgraded, these options should be removed.
+ *
+ * @type {Partial<import("esbuild-sass-plugin").SassPluginOptions>}
+ */
+const useKeywordAdoptionOpts = {
+  // Suppress warnings from Bootstrap (and other third party dependencies)
+  quietDeps: true,
+  // We still need to use `@import` on Bootstrap, and `quietDeps` does not
+  // suppress those import statements.
+  silenceDeprecations: ["import"],
+};
+
+/**
+ * @type {Partial<import("esbuild").BuildOptions>}
+ */
 const opts = {
   entryPoints: ["js/app.tsx"],
   bundle: true,
@@ -11,10 +31,12 @@ const opts = {
     sassPlugin({
       filter: /\.module\.scss$/,
       type: "local-css",
+      ...useKeywordAdoptionOpts,
     }),
     sassPlugin({
       filter: /\.scss$/,
       type: "css",
+      ...useKeywordAdoptionOpts,
     }),
   ],
   loader: { ".svg": "file" },
@@ -22,7 +44,14 @@ const opts = {
 };
 
 if (cmd === "deploy") {
-  await esbuild.build({ ...opts, minify: true });
+  const result = await esbuild.build({ ...opts, minify: true });
+  if (result.warnings.length > 0) {
+    console.error(
+      `The build exited with one or more warnings, which are treated as errors for the '${cmd}' command.`,
+    );
+    console.error("Exiting.");
+    exit(1);
+  }
 } else if (cmd === "watch") {
   const ctx = await esbuild.context({ ...opts, sourcemap: "inline" });
   await ctx.watch();

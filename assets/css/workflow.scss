@@ -1,10 +1,12 @@
+@use "variables";
+
 .workflow-container {
   padding: 40px 16px;
 }
 
 .workflow {
   &__places-list-header-row {
-    background: $cool-gray-40;
+    background: variables.$cool-gray-40;
     display: flex;
     align-items: center;
     border-radius: 8px 8px 0 0;
@@ -34,7 +36,7 @@
 
 .config-validation-alert {
   width: 400px;
-  background-color: $alert-yellow;
+  background-color: variables.$alert-yellow;
   font-size: 16px;
   display: flex;
   align-items: center;

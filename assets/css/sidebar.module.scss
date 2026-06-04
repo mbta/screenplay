@@ -1,7 +1,7 @@
-@import "./variables.scss";
+@use "variables";
 
 .container {
-  width: $sidebar-width;
+  width: variables.$sidebar-width;
   flex: none;
   height: 100vh;
   display: flex;

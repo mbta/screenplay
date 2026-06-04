@@ -1,13 +1,13 @@
-@import "./variables.scss";
+@use "variables";
 
 .tableRow {
-  border-bottom: 1px solid $light-gray;
-  border-top: 1px solid $light-gray;
+  border-bottom: 1px solid variables.$light-gray;
+  border-top: 1px solid variables.$light-gray;
   &:nth-child(odd) {
-    background-color: $bg-elevation-3;
+    background-color: variables.$bg-elevation-3;
   }
   &:nth-child(even) {
-    background-color: $cool-gray-15;
+    background-color: variables.$cool-gray-15;
   }
 }
 
@@ -16,15 +16,15 @@
   padding: 0.375rem 0.75rem;
   display: inline-flex;
   align-items: center;
-  color: $text-link-primary;
+  color: variables.$text-link-primary;
   &:not(:has(:disabled)) {
     cursor: pointer;
   }
   &:has(:checked) {
-    color: $text-invert;
-    background-color: $button-primary;
+    color: variables.$text-invert;
+    background-color: variables.$button-primary;
     &:has(:disabled) {
-      background-color: rgba($button-primary, 0.6);
+      background-color: rgba(variables.$button-primary, 0.6);
     }
   }
   &:has(:focus-visible) {
@@ -38,8 +38,8 @@
 }
 
 .badge {
-  color: $text-invert;
-  background-color: $button-primary;
+  color: variables.$text-invert;
+  background-color: variables.$button-primary;
   border-radius: var(--bs-border-radius);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
@@ -57,7 +57,7 @@
 
 .pill {
   border-radius: 100px;
-  background-color: $mbta-silver;
+  background-color: variables.$mbta-silver;
   padding: 0 0.5rem;
   font-size: 14px;
 }

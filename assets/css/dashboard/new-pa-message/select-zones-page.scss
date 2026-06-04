@@ -1,3 +1,5 @@
+@use "../../variables";
+
 .select-zones-page {
   display: flex;
   flex-direction: column;
@@ -6,25 +8,25 @@
   margin: 24px 40px 0 40px;
 
   .bg-green {
-    background-color: $mbta-green;
+    background-color: variables.$mbta-green;
   }
   .bg-red,
   .bg-mattapan {
-    background-color: $mbta-red;
+    background-color: variables.$mbta-red;
   }
   .bg-orange {
-    background-color: $mbta-orange;
+    background-color: variables.$mbta-orange;
   }
   .bg-blue {
-    background-color: $mbta-blue;
+    background-color: variables.$mbta-blue;
   }
   .bg-silver {
-    background-color: $mbta-silver;
+    background-color: variables.$mbta-silver;
   }
   .bg-bus {
-    background-color: $mbta-bus;
-    color: $text-invert;
-    fill: $text-invert;
+    background-color: variables.$mbta-bus;
+    color: variables.$text-invert;
+    fill: variables.$text-invert;
   }
 
   .zone-selection {
@@ -71,14 +73,14 @@
             &:disabled:not(.button-active) {
               background-color: inherit;
               border-color: inherit;
-              color: $text-secondary;
+              color: variables.$text-secondary;
             }
           }
         }
       }
 
       .zones-table {
-        background-color: $cool-gray-15;
+        background-color: variables.$cool-gray-15;
         border-bottom: 1px solid #6c757d;
         width: 100%;
 
@@ -98,14 +100,14 @@
 
         .table-header {
           height: 72px;
-          color: $text-secondary;
+          color: variables.$text-secondary;
           font-size: 16px;
           border-bottom: 1px solid #6c757d;
         }
 
         .table-row {
           &:nth-child(odd) {
-            background-color: $bg-elevation-3;
+            background-color: variables.$bg-elevation-3;
           }
 
           td:not(:first-child) {
@@ -125,7 +127,7 @@
             .place-name {
               font-size: 20px;
               line-height: 30px;
-              color: $text-secondary;
+              color: variables.$text-secondary;
               text-align: start;
             }
 
@@ -172,7 +174,7 @@
             &:disabled:not(.button-active) {
               background-color: inherit;
               border-color: inherit;
-              color: $text-secondary;
+              color: variables.$text-secondary;
             }
           }
         }
@@ -181,12 +183,12 @@
   }
 
   .button-active {
-    color: $text-invert;
-    background-color: $button-primary;
-    border-color: $button-primary;
+    color: variables.$text-invert;
+    background-color: variables.$button-primary;
+    border-color: variables.$button-primary;
 
     &:hover {
-      background-color: $button-primary-hover;
+      background-color: variables.$button-primary-hover;
     }
 
     &:focus {

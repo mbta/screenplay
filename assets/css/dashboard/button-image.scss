@@ -1,3 +1,5 @@
+@use "../variables";
+
 .button-image-container {
   display: flex;
 
@@ -6,14 +8,14 @@
     flex-direction: column;
     height: 268px;
     border-radius: 16px;
-    background: $bg-elevation-4;
+    background: variables.$bg-elevation-4;
     border-color: transparent;
     flex: 1 1 306px;
     align-items: center;
     padding-bottom: 18px;
 
     &:hover {
-      background: $cool-gray-30;
+      background: variables.$cool-gray-30;
       border-color: transparent;
     }
 

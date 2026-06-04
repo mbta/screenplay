@@ -1,3 +1,6 @@
+@use "../../variables-screenplay-forms";
+@use "../../variables";
+
 .alert-description {
   padding: 16px;
 
@@ -20,15 +23,15 @@
 }
 
 .alert-items-modal {
-  --bs-modal-color: #{$text-primary};
+  --bs-modal-color: #{variables.$text-primary};
 
   .modal-dialog {
     min-width: 800px;
   }
 
   .modal-content {
-    background-color: $cool-gray-20;
-    border: 1px solid $border-primary;
+    background-color: variables.$cool-gray-20;
+    border: 1px solid variables.$border-primary;
 
     button {
       margin-left: 8px;
@@ -37,16 +40,16 @@
     }
 
     .cancel-button {
-      color: $text-link-primary;
+      color: variables.$text-link-primary;
       text-decoration: none;
 
       &:hover {
-        background-color: $cool-gray-30;
+        background-color: variables.$cool-gray-30;
       }
     }
 
     .apply-button {
-      background-color: $form-check-input-checked-bg-color;
+      background-color: variables-screenplay-forms.$form-check-input-checked-bg-color;
       color: black;
 
       &:hover {
@@ -62,7 +65,7 @@
         margin-top: 4px;
         font-family: Inter;
         font-size: 14px;
-        color: $text-secondary;
+        color: variables.$text-secondary;
       }
     }
 
@@ -82,7 +85,7 @@
       .alert-description {
         background-color: #2b3741;
         border-radius: 8px;
-        border: 1px solid $border-primary;
+        border: 1px solid variables.$border-primary;
         margin-bottom: 24px;
       }
     }

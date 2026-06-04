@@ -1,3 +1,5 @@
+@use "variables";
+
 .filter-dropdown__button-group {
   width: 100%;
 
@@ -11,7 +13,7 @@
       &--large {
         &:hover,
         &:focus {
-          background-color: $main-blue !important;
+          background-color: variables.$main-blue !important;
         }
       }
     }
@@ -20,7 +22,7 @@
   &:not(.filter-dropdown__button-group--modes-and-lines) {
     .filter-dropdown__clear-button,
     .filter-dropdown__dropdown > .filter-dropdown__dropdown-button--small {
-      background-color: $main-blue !important;
+      background-color: variables.$main-blue !important;
     }
   }
 
@@ -84,7 +86,7 @@
       padding: 6px 16px;
 
       &:not(.active) {
-        color: $main-blue;
+        color: variables.$main-blue;
       }
     }
   }

@@ -1,10 +1,12 @@
+@use "../variables";
+
 .pending-screens-page {
   height: 100%;
 
   .add-new-button {
     height: 48px;
-    background-color: $button-primary;
-    color: $button-secondary;
+    background-color: variables.$button-primary;
+    color: variables.$button-secondary;
   }
 }
 
@@ -31,7 +33,7 @@
     rgba(255, 255, 255, 0) 1px
   );
 
-  background-color: $cool-gray-30;
+  background-color: variables.$cool-gray-30;
   box-shadow: 0px 4px 32px rgba(0, 0, 0, 0.25);
   margin-bottom: 2px;
   border-bottom: 0px;
@@ -77,8 +79,8 @@
       }
 
       .publish-button {
-        background-color: $button-primary;
-        color: $button-secondary;
+        background-color: variables.$button-primary;
+        color: variables.$button-secondary;
       }
     }
   }

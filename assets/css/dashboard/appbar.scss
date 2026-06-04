@@ -1,8 +1,10 @@
+@use "../variables";
+
 .navbar-dark {
-  background: $cool-gray-15;
+  background: variables.$cool-gray-15;
 
   .navbar-brand {
-    color: $text-primary;
+    color: variables.$text-primary;
   }
 
   .btn-close {

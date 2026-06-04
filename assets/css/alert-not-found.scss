@@ -1,12 +1,14 @@
+@use "variables";
+
 .modal-backdrop.alert-not-found {
-  left: $sidebar-width;
+  left: variables.$sidebar-width;
   opacity: 1;
   background-color: rgba(15, 21, 26, 0.9);
   backdrop-filter: blur(4px);
 }
 
 .alert-not-found {
-  left: calc($sidebar-width / 2);
+  left: calc(variables.$sidebar-width / 2);
 
   .alert-not-found_icon {
     flex-shrink: 0;
@@ -36,8 +38,8 @@
     box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.36);
   }
   .modal-content {
-    background-color: $cool-gray-40;
-    color: $gray-50;
+    background-color: variables.$cool-gray-40;
+    color: variables.$gray-50;
   }
   .modal-body {
     display: flex;
@@ -51,7 +53,7 @@
     color: white;
     display: flex;
     height: 100%;
-    background-color: $cool-gray-20;
+    background-color: variables.$cool-gray-20;
     padding: 120px 0 0 120px;
     .alert-not-found_detail {
       width: 640px;

@@ -1,10 +1,12 @@
+@use "variables";
+
 .screen-simulation__iframe-container {
   .kebab-menu-button {
-    background-color: $gray-700;
+    background-color: variables.$gray-700;
   }
 
   .kebab-menu-dropdown__menu {
-    background-color: $gray-700;
+    background-color: variables.$gray-700;
   }
 }
 

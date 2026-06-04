@@ -1,8 +1,8 @@
-@import "./variables.scss";
+@use "variables";
 
 .popover {
-  --bs-popover-bg: #{$dark-bg};
-  --bs-popover-body-color: #{$text-primary};
-  --bs-popover-border-color: #{$border-primary};
+  --bs-popover-bg: #{variables.$dark-bg};
+  --bs-popover-body-color: #{variables.$text-primary};
+  --bs-popover-border-color: #{variables.$border-primary};
   margin-bottom: 13px;
 }

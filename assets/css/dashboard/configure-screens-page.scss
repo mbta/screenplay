@@ -1,7 +1,9 @@
+@use "../variables";
+
 .configure-screens-page {
   display: flex;
   flex-direction: column;
-  color: $text-primary;
+  color: variables.$text-primary;
   background-color: #0f1417;
   overflow-y: scroll;
   min-height: 100%;

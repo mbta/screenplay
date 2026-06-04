@@ -1,3 +1,5 @@
+@use "../../variables";
+
 .select-stations-page {
   display: flex;
   flex-direction: column;
@@ -17,7 +19,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     flex-grow: 0;
-    scrollbar-color: $theme-secondary $bg-elevation-4;
+    scrollbar-color: variables.$theme-secondary variables.$bg-elevation-4;
 
     .form-check {
       display: flex;
@@ -36,7 +38,7 @@
     }
 
     .col {
-      background-color: $cool-gray-20;
+      background-color: variables.$cool-gray-20;
       border-radius: 0px 0px 8px 8px;
       margin-right: 24px;
       display: flex;
@@ -69,7 +71,7 @@
       min-width: 273px;
 
       .title {
-        background-color: $cool-gray-40;
+        background-color: variables.$cool-gray-40;
       }
 
       .route-groups {
@@ -97,7 +99,7 @@
       }
 
       .group-title {
-        color: $text-secondary;
+        color: variables.$text-secondary;
       }
 
       hr {
@@ -125,7 +127,7 @@
 
       &--green {
         .title {
-          background-color: $mbta-green;
+          background-color: variables.$mbta-green;
           height: fit-content;
         }
 
@@ -135,7 +137,7 @@
 
           .title {
             border-radius: 0;
-            background-color: $bg-elevation-4;
+            background-color: variables.$bg-elevation-4;
             font-size: 16px;
           }
         }
@@ -144,32 +146,32 @@
       &--red,
       &--mattapan {
         .title {
-          background-color: $mbta-red;
+          background-color: variables.$mbta-red;
         }
       }
 
       &--orange {
         .title {
-          background-color: $mbta-orange;
+          background-color: variables.$mbta-orange;
         }
       }
 
       &--blue {
         .title {
-          background-color: $mbta-blue;
+          background-color: variables.$mbta-blue;
         }
       }
 
       &--silver {
         .title {
-          background-color: $mbta-silver;
+          background-color: variables.$mbta-silver;
         }
       }
 
       &--bus {
         .title {
-          color: $text-invert;
-          background-color: $mbta-bus;
+          color: variables.$text-invert;
+          background-color: variables.$mbta-bus;
         }
       }
     }

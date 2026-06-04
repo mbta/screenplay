@@ -1,3 +1,5 @@
+@use "../variables";
+
 .alert-details {
   display: flex;
   flex-direction: column;
@@ -7,7 +9,7 @@
     height: 40px;
     font-weight: 500;
     margin-right: 24px;
-    background: $main-blue;
+    background: variables.$main-blue;
     border: 1px solid rgba(23, 31, 38, 0.3);
     border-radius: 6px;
 
@@ -19,7 +21,7 @@
 
   &__external-link {
     margin-left: 24px;
-    background: $cool-gray-30;
+    background: variables.$cool-gray-30;
     border: 1px solid rgba(23, 31, 38, 0.3);
     border-radius: 6px;
 

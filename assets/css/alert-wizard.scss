@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@use "variables";
 
 .wizard-container {
   display: flex;
@@ -10,19 +10,19 @@
     flex-grow: 1;
 
     .wizard-header {
-      background: $gray-200;
-      border-bottom: 1px solid $gray-400;
+      background: variables.$gray-200;
+      border-bottom: 1px solid variables.$gray-400;
       border-radius: 8px 0 0 0;
       display: flex;
       align-items: center;
       padding: 24px;
 
       .wizard-cancel {
-        background-color: $gray-50;
-        border: 1px solid $gray-300;
+        background-color: variables.$gray-50;
+        border: 1px solid variables.$gray-300;
         box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
         border-radius: 6px;
-        color: $gray-600;
+        color: variables.$gray-600;
         padding: 0 17px 0 15px;
         margin: 0 20px 0 0;
         &:hover {
@@ -37,20 +37,20 @@
       }
     }
     .wizard-stepper {
-      background: $gray-200;
+      background: variables.$gray-200;
     }
     .wizard-body {
       flex-grow: 1;
       background: white;
       border-radius: 0 0 0 8px;
-      color: $gray-600;
+      color: variables.$gray-600;
       padding-bottom: 17px;
 
       .step-instructions {
         padding: 24px;
 
         .step-header {
-          color: $gray-800;
+          color: variables.$gray-800;
           font-size: 20px;
           margin-bottom: 16px;
         }
@@ -64,7 +64,7 @@
       }
 
       .step-body {
-        background: $gray-100;
+        background: variables.$gray-100;
         // ok this padding will need to be auto eventually
         padding: 24px;
         display: flex;
@@ -82,7 +82,7 @@
         height: auto;
         width: 100%;
         font: unset;
-        color: $gray-900;
+        color: variables.$gray-900;
         background-color: white;
       }
       .message-textarea {
@@ -108,7 +108,7 @@
   }
 
   .message-inputs {
-    background: $gray-100;
+    background: variables.$gray-100;
     padding: 24px;
     display: grid;
     column-gap: 50px;
@@ -117,7 +117,7 @@
 }
 
 .wizard-sidebar {
-  background: $gray-500;
+  background: variables.$gray-500;
   width: 318px;
   padding: 24px;
   display: flex;
@@ -157,7 +157,7 @@
     display: flex;
     margin-left: auto;
     .disabled-text {
-      color: $pink-700;
+      color: variables.$pink-700;
       font-weight: bold;
     }
   }
@@ -166,12 +166,12 @@
     box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.25);
     margin: 24px;
     &:not(.disabled):hover {
-      background: $pink-900;
+      background: variables.$pink-900;
     }
   }
   .disabled {
     cursor: default;
-    background: $gray-500;
+    background: variables.$gray-500;
     opacity: 1;
   }
 }
@@ -185,7 +185,7 @@
 }
 .message-option {
   background: white;
-  border: 1px solid $gray-200;
+  border: 1px solid variables.$gray-200;
   padding: 12px;
 
   &.option-one {
@@ -196,8 +196,8 @@
   }
 }
 .selected-option {
-  background: $pink-100 !important;
-  border-color: $pink-700 !important;
+  background: variables.$pink-100 !important;
+  border-color: variables.$pink-700 !important;
 }
 
 .landscape-hidden {
@@ -212,11 +212,11 @@
 .details-grid {
   margin-bottom: 0;
   .gray-row {
-    background: $gray-100;
+    background: variables.$gray-100;
   }
   td,
   .padded-by-line {
-    color: $gray-600;
+    color: variables.$gray-600;
     vertical-align: top;
     padding: 24px;
   }
@@ -229,14 +229,14 @@
   }
   .emphasized-cell {
     font-weight: 600;
-    color: $gray-800;
+    color: variables.$gray-800;
     &.round-corner {
       border-bottom-right-radius: 8px;
     }
   }
   .edit-link {
     cursor: pointer;
-    color: $pink-700;
+    color: variables.$pink-700;
   }
 }
 
@@ -249,13 +249,13 @@
   border-radius: 0 8px 8px 0;
   background: repeating-linear-gradient(
     135deg,
-    $bright-yellow,
-    $bright-yellow 12px,
+    variables.$bright-yellow,
+    variables.$bright-yellow 12px,
     black 12px,
     black 28px
   );
   .submit-button {
-    background-color: $gray-50;
+    background-color: variables.$gray-50;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
     color: #171f26;
     &:hover {
@@ -266,7 +266,7 @@
 
 .stepper {
   display: flex;
-  background-color: $gray-200;
+  background-color: variables.$gray-200;
   .step {
     display: flex;
     flex-grow: 1;
@@ -274,20 +274,20 @@
     align-items: center;
   }
   .step-text {
-    color: $gray-800;
+    color: variables.$gray-800;
     &.emphasized {
-      color: $pink-700;
+      color: variables.$pink-700;
       font-weight: 700;
     }
     &.muted {
-      color: $gray-600;
+      color: variables.$gray-600;
     }
   }
 }
 
 .concurrent-warning-container {
   display: flex;
-  background-color: $pink-700;
+  background-color: variables.$pink-700;
   color: white;
   align-items: center;
   justify-content: start;
