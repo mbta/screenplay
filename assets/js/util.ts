@@ -170,17 +170,19 @@ export const placesWithSelectedAlert = (
     : [];
 };
 
+export const signDirection = (sign: Screen) => {
+  const directionIds = sign.routes?.map((r) => r.direction_id);
+  if (fp.intersection(directionIds, [0, 1]).length === 2) {
+    return "middle";
+  } else if (directionIds?.includes(0)) {
+    return "left";
+  } else {
+    return "right";
+  }
+};
+
 export const signsByDirection = (signs: Screen[]) => {
-  const groupedSigns = fp.groupBy((sign) => {
-    const directionIds = sign.routes?.map((r) => r.direction_id);
-    if (fp.intersection(directionIds, [0, 1]).length === 2) {
-      return "middle";
-    } else if (directionIds?.includes(0)) {
-      return "left";
-    } else {
-      return "right";
-    }
-  }, signs);
+  const groupedSigns = fp.groupBy(signDirection, signs);
 
   return {
     left: groupedSigns["left"] ?? [],
