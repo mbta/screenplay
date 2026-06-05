@@ -1,4 +1,3 @@
-@use "../../variables-screenplay-forms";
 @use "../../variables";
 
 .alert-description {
@@ -49,7 +48,7 @@
     }
 
     .apply-button {
-      background-color: variables-screenplay-forms.$form-check-input-checked-bg-color;
+      background-color: variables.$button-primary;
       color: black;
 
       &:hover {
