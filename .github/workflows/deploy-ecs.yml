@@ -15,7 +15,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: mbta/workflows/.github/workflows/deploy-ecs.yml@v2
+    uses: mbta/workflows/.github/workflows/deploy-ecs.yml@v5
     with:
       app-name: screenplay
       environment: ${{ github.event.inputs.environment || 'dev' }}
