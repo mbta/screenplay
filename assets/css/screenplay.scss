@@ -1,7 +1,13 @@
 @use "variables";
 
 @use "bootstrap/scss/bootstrap" with (
-  $primary: variables.$theme-primary
+  $primary: variables.$theme-primary,
+  // Overrides for Bootstrap's `$form-*` variables
+  $form-check-input-checked-color: variables.$dark-bg,
+  $form-check-input-checked-bg-color: variables.$button-primary,
+  $form-check-input-bg: variables.$dark-bg,
+  $form-check-input-border: 1px solid variables.$border-primary,
+  $form-feedback-invalid-color: variables.$text-error
 );
 @use "dashboard";
 @use "dashboard/places-page";
