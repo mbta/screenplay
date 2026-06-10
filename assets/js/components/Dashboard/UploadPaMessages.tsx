@@ -6,6 +6,7 @@ import { createNewPaMessage } from "Utils/api";
 import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { signDirection } from "../../util";
 import Toast from "Components/Toast";
+import { isPaMessageAdmin } from "Utils/auth";
 
 const gameDates = [
   {
@@ -149,14 +150,18 @@ const UploadPaMessages = () => {
         ))}
       </select>
       <div className="mt-4">
-        <Button
-          disabled={!file || loading}
-          type="submit"
-          className="button-primary"
-          onClick={submit}
-        >
-          {loading ? "Loading..." : "Upload"}
-        </Button>
+        {!isPaMessageAdmin() ? (
+          <div>You do not have sufficient privileges to upload a file.</div>
+        ) : (
+          <Button
+            disabled={!file || loading}
+            type="submit"
+            className="button-primary"
+            onClick={submit}
+          >
+            {loading ? "Loading..." : "Upload"}
+          </Button>
+        )}
       </div>
       <Toast message={result} variant="info" onClose={() => setResult(null)} />
     </div>
