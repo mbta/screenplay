@@ -1,7 +1,8 @@
 defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
-  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State}
+  alias Screenplay.EmergencyTakeovers
+  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
   alias Screenplay.Outfront.SFTP
   alias Screenplay.PermanentConfig
   alias Screenplay.Places
@@ -21,17 +22,20 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
       ) do
     with schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
          user <- get_session(conn, "username"),
-         message_struct <- Alert.message_from_json(message),
-         alert <- Alert.new(message_struct, stations, schedule, user),
-         params_to_log =
-           params
-           |> Map.take(["message", "stations", "duration"])
-           |> Map.merge(%{"id" => alert.id}),
+         message_struct <- EmergencyTakeover.message_from_json(message),
+         alert <- EmergencyTakeover.new(message_struct, stations, schedule, user),
+         params_to_log = Map.take(params, ["message", "stations", "duration"]),
          :ok <- UserActionLogger.log(user, :create_alert, params_to_log),
-         :ok <- remove_overlapping_alerts(params, user),
-         :ok <- State.add_alert(alert),
+         :ok <- remove_overlapping_alerts(nil, params, user),
+         {:ok, db_alert} <- EmergencyTakeovers.create_alert(alert),
          :ok <- add_outfront_takeovers(stations, images),
-         :ok <- add_showtime_takeovers(alert.id, showtime_screen_ids, message_struct, images) do
+         :ok <-
+           add_showtime_takeovers(
+             Integer.to_string(db_alert.id),
+             showtime_screen_ids,
+             message_struct,
+             images
+           ) do
       json(conn, %{success: true})
     else
       {:error, reason} ->
@@ -49,7 +53,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def edit(
         conn,
         params = %{
-          "id" => id,
+          "id" => id_str,
           "message" => message,
           "stations" => stations,
           "showtimeScreenIds" => showtime_screen_ids,
@@ -57,29 +61,22 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
           "images" => images
         }
       ) do
-    with alert <- State.get_alert(id),
-         schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
-         message_struct <- Alert.message_from_json(message),
+    with schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
+         message_struct <- EmergencyTakeover.message_from_json(message),
          changes = %{
            message: message_struct,
            stations: stations,
            schedule: schedule
          },
          user <- get_session(conn, "username"),
-         :ok <- remove_overlapping_alerts(params, user),
-         new_alert <- Alert.update(alert, changes, user),
+         id <- String.to_integer(id_str),
+         :ok <- remove_overlapping_alerts(id, params, user),
          params_to_log =
            Map.take(params, ["message", "stations", "duration", "id"]),
          :ok <- UserActionLogger.log(user, :update_alert, params_to_log),
-         :ok <- State.update_alert(id, new_alert),
+         :ok <- EmergencyTakeovers.edit_alert(id, changes, user),
          :ok <- add_outfront_takeovers(stations, images),
-         :ok <-
-           add_showtime_takeovers(
-             alert.id,
-             showtime_screen_ids,
-             message_struct,
-             images
-           ) do
+         :ok <- add_showtime_takeovers(id_str, showtime_screen_ids, message_struct, images) do
       json(conn, %{success: true})
     else
       {:error, reason} ->
@@ -97,10 +94,9 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def clear(conn, params = %{"id" => id}) do
     with user <- get_session(conn, "username"),
          :ok <- UserActionLogger.log(user, :clear_alert, params),
-         alert <- State.get_alert(id),
-         %Alert{stations: stations} = alert,
-         cleared_alert <- Alert.clear(alert, user),
-         :ok <- State.clear_alert(cleared_alert),
+         alert <- EmergencyTakeovers.get_alert(id),
+         %EmergencyTakeover{stations: stations} = alert,
+         :ok <- EmergencyTakeovers.clear_alert(alert, user),
          :ok <- SFTP.clear_takeover_images(stations),
          :ok <- remove_takeovers_from_showtime_screens(stations) do
       json(conn, %{success: true})
@@ -109,6 +105,11 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn
         |> put_status(:internal_server_error)
         |> json(%{success: false, error: reason})
+
+      :error ->
+        conn
+        |> put_status(:internal_server_error)
+        |> json(%{success: false, error: "An unknown error occurred while clearing the alert."})
     end
   end
 
@@ -116,7 +117,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def clear_all(conn, _params) do
     with user <- get_session(conn, "username"),
          :ok <- UserActionLogger.log(user, :clear_all_alerts),
-         alerts = State.get_active_alerts(),
+         alerts = EmergencyTakeovers.get_active_alerts_non_json(),
          :ok <-
            Enum.reduce_while(alerts, :ok, fn alert, _ ->
              case clear_single_alert_for_clear_all(alert, user) do
@@ -137,15 +138,14 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end
   end
 
-  @spec clear_single_alert_for_clear_all(Alert.t(), String.t()) :: :ok | {:error, String.t()}
-  defp clear_single_alert_for_clear_all(alert = %Alert{stations: stations}, user) do
-    with cleared_alert <- Alert.clear(alert, user),
-         :ok <- State.clear_alert(cleared_alert),
+  @spec clear_single_alert_for_clear_all(map(), String.t()) :: :ok | {:error, String.t()}
+  defp clear_single_alert_for_clear_all(alert = %EmergencyTakeover{stations: stations}, user) do
+    with :ok <- EmergencyTakeovers.clear_alert(alert, user),
          :ok <- SFTP.clear_takeover_images(stations) do
       :ok
     else
       {:error, reason} -> {:error, reason}
-      _ -> {:error, "Unknown error clearing alert #{alert.id}"}
+      :error -> {:error, "Unknown error clearing alert #{alert.id}"}
     end
   end
 
@@ -169,7 +169,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   @spec add_showtime_takeovers(
           String.t(),
           list(String.t()),
-          Alert.message(),
+          EmergencyTakeover.message(),
           %{String.t() => String.t()}
         ) :: :ok | {:error, String.t()}
   def add_showtime_takeovers(alert_id, screen_ids, message = %{type: :canned}, _images) do
@@ -214,13 +214,13 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end)
   end
 
-  def active_alerts(conn, _params) do
-    alerts_json = State.get_active_alerts() |> Enum.map(&Alert.to_json/1)
-    json(conn, alerts_json)
+  def active_and_past_alerts(conn, _params) do
+    {current_alerts, past_alerts} = EmergencyTakeovers.get_active_and_past_alerts()
+    json(conn, %{"current" => current_alerts, "past" => past_alerts})
   end
 
-  def past_alerts(conn, _params) do
-    alerts_json = State.get_past_alerts() |> Enum.map(&Alert.to_json/1)
+  def active_alerts(conn, _params) do
+    alerts_json = EmergencyTakeovers.get_active_alerts()
     json(conn, alerts_json)
   end
 
@@ -231,7 +231,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         _ -> DateTime.add(start_dt, 60 * 60 * duration, :second)
       end
 
-    %{start: start_dt, end: end_dt}
+    %{start_time: start_dt, end_time: end_dt}
   end
 
   defp decode_image("data:image/png;base64," <> raw) do
@@ -250,11 +250,12 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     {:error, "Unsupported image format."}
   end
 
-  @spec remove_overlapping_alerts(map(), String.t()) :: :ok | {:error, String.t()}
-  defp remove_overlapping_alerts(params, user) do
-    stations_to_delete = State.remove_overlapping_alerts(params, user)
-
-    with :ok <- SFTP.clear_takeover_images(stations_to_delete),
+  @spec remove_overlapping_alerts(integer() | nil, map(), String.t()) ::
+          :ok | {:error, String.t()}
+  defp remove_overlapping_alerts(id, params, user) do
+    with stations_to_delete <-
+           EmergencyTakeovers.remove_overlapping_alerts(id, params["stations"], user),
+         :ok <- SFTP.clear_takeover_images(stations_to_delete),
          :ok <- remove_takeovers_from_showtime_screens(stations_to_delete) do
       :ok
     else
