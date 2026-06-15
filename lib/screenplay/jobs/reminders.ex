@@ -6,7 +6,8 @@ defmodule Screenplay.Jobs.Reminders do
 
   require Logger
 
-  alias Screenplay.EmergencyTakeoverTool.Alerts.{Alert, State}
+  alias Screenplay.EmergencyTakeovers
+  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
 
   @http_client Application.compile_env!(:screenplay, :http_client)
 
@@ -21,12 +22,12 @@ defmodule Screenplay.Jobs.Reminders do
   end
 
   defp send_slack_messages_for_outdated_alerts(url) do
-    case State.get_outdated_alerts() do
+    case EmergencyTakeovers.get_outdated_alerts() do
       [] ->
         Logger.debug("No outdated alerts found")
 
       alerts ->
-        Enum.each(alerts, fn %Alert{stations: stations} ->
+        Enum.each(alerts, fn %EmergencyTakeover{stations: stations} ->
           stations
           |> format_slack_message()
           |> send_slack_message(url)

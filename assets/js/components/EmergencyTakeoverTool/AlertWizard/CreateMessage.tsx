@@ -45,6 +45,7 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
             className="message-select text-16"
             value={value.type === "canned" ? value.id : -1}
             onChange={(e) => {
+              // TODO: This needs to be updated so that it has the images on creation of CreateMessage
               const selectedMessage = cannedMessages.find(
                 (m) => m.id === +e.target.value,
               );

@@ -168,6 +168,7 @@ defmodule ScreenplayWeb.Router do
     post("/clear_all", AlertController, :clear_all)
     get("/active_alerts", AlertController, :active_alerts)
     get("/past_alerts", AlertController, :past_alerts)
+    get("/active_and_past_alerts", AlertController, :active_and_past_alerts)
 
     get("/stations_and_screens", PageController, :stations_and_screens)
     get("/canned_messages", PageController, :canned_messages)

@@ -2,19 +2,6 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
   @moduledoc false
 
   # sobelow_skip ["Traversal.FileModule"]
-  @spec get_state!() :: binary()
-  def get_state! do
-    file_path() |> File.read!()
-  end
-
-  # sobelow_skip ["Traversal.FileModule"]
-  @spec put_state!(binary()) :: :ok
-  def put_state!(state) do
-    file_path() |> File.write!(state)
-    :ok
-  end
-
-  # sobelow_skip ["Traversal.FileModule"]
   @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok
   def upload_takeover_image(alert_id, image_data, image_type) do
     image_dir = asset_directory() |> Path.join(alert_id)
@@ -32,6 +19,4 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
 
   defp asset_directory,
     do: Path.join([:code.priv_dir(:screenplay), "local", "emergency-takeovers"])
-
-  defp file_path, do: Path.join([:code.priv_dir(:screenplay), "local", "alerts.json"])
 end

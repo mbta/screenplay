@@ -14,28 +14,39 @@ interface AlertsListProps {
   closeModal: () => void;
 }
 
-const fetchActiveAlerts = withErrorHandling(
-  async () => {
-    const response = await fetch(`${BASE_URL}/active_alerts`);
-    if (!response.ok) {
-      throw response;
-    }
-    return response.json();
-  },
-  {
-    customMessage: "Failed to load active alerts. Please refresh the page.",
-  },
-);
+// const fetchActiveAlerts = withErrorHandling(
+//   async () => {
+//     const response = await fetch(`${BASE_URL}/active_alerts`);
+//     if (!response.ok) {
+//       throw response;
+//     }
+//     return response.json();
+//   },
+//   {
+//     customMessage: "Failed to load active alerts. Please refresh the page.",
+//   },
+// );
 
-const fetchPastAlerts = withErrorHandling(
+// const fetchPastAlerts = withErrorHandling(
+//   async () => {
+//     const response = await fetch(`${BASE_URL}/past_alerts`);
+//     if (!response.ok) {
+//       throw response;
+//     }
+//     return response.json();
+//   },
+//   { customMessage: "Failed to load past alerts. Please refresh the page." },
+// );
+
+const fetchAllAlerts = withErrorHandling(
   async () => {
-    const response = await fetch(`${BASE_URL}/past_alerts`);
+    const response = await fetch(`${BASE_URL}/active_and_past_alerts`);
     if (!response.ok) {
       throw response;
     }
     return response.json();
   },
-  { customMessage: "Failed to load past alerts. Please refresh the page." },
+  { customMessage: "Failed to load current and past alerts. Please refresh the page." },
 );
 
 const handleClearAlert = withErrorHandling(
@@ -98,14 +109,11 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
 
   const refreshAlerts = async () => {
     // Refresh active and past alerts on page load, alert clear, and at a regular interval.
-    const activeData = await fetchActiveAlerts();
-    if (activeData) {
-      setAlertsData(activeData);
-    }
-
-    const pastData = await fetchPastAlerts();
-    if (pastData) {
-      setPastAlertsData(pastData);
+    const alertData = await fetchAllAlerts();
+    // TODO: Maybe need to check both here
+    if (alertData) {
+      setAlertsData(alertData.current);
+      setPastAlertsData(alertData.past);
     }
   };
 
