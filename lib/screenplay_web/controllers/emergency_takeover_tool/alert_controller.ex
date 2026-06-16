@@ -26,7 +26,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
          alert <- EmergencyTakeover.new(message_struct, stations, schedule, user),
          params_to_log = Map.take(params, ["message", "stations", "duration"]),
          :ok <- UserActionLogger.log(user, :create_alert, params_to_log),
-         #  :ok <- remove_overlapping_alerts(params, user),
+         :ok <- remove_overlapping_alerts(nil, params, user),
          {:ok, db_alert} <- EmergencyTakeovers.create_alert(alert),
          :ok <- add_outfront_takeovers(stations, images),
          :ok <-
@@ -53,7 +53,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def edit(
         conn,
         params = %{
-          "id" => id,
+          "id" => id_str,
           "message" => message,
           "stations" => stations,
           "showtimeScreenIds" => showtime_screen_ids,
@@ -69,19 +69,14 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
            schedule: schedule
          },
          user <- get_session(conn, "username"),
+         id <- String.to_integer(id_str),
          :ok <- remove_overlapping_alerts(id, params, user),
          params_to_log =
            Map.take(params, ["message", "stations", "duration", "id"]),
          :ok <- UserActionLogger.log(user, :update_alert, params_to_log),
          :ok <- EmergencyTakeovers.edit_alert(id, changes, user),
          :ok <- add_outfront_takeovers(stations, images),
-         :ok <-
-           add_showtime_takeovers(
-             Integer.to_string(id),
-             showtime_screen_ids,
-             message_struct,
-             images
-           ) do
+         :ok <- add_showtime_takeovers(id_str, showtime_screen_ids, message_struct, images) do
       json(conn, %{success: true})
     else
       {:error, reason} ->

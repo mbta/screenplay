@@ -83,7 +83,7 @@ defmodule Screenplay.EmergencyTakeovers do
     |> Repo.insert()
   end
 
-  @spec edit_alert(integer(), alert_update(), String.t()) :: :ok | :error
+  @spec edit_alert(integer(), alert_update(), String.t()) :: :ok | {:error, String.t()}
   def edit_alert(id, changes, user) do
     alert = Repo.get(EmergencyTakeover, id)
 
@@ -180,7 +180,7 @@ defmodule Screenplay.EmergencyTakeovers do
             user
           )
 
-        # Return the full list of stations in existing alerts to have their images cleared, since even if some stations are removed from the alert, the alert might still have takeover images for those stations that need to be cleared.
+        # Return the full list of stations to have their current takeovers cleared.
         acc ++ (alert.stations -- stations_no_overlap)
       end
     end)

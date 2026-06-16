@@ -4,9 +4,9 @@ defmodule Screenplay.EmergencyTakeoverTool.ScreensConfig do
   of active Emergency Takeover Alerts.
   """
 
-  alias ScreensConfig.{EmergencyMessagingLocation, EmergencyTakeover, Screen}
   alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover, as: EmergencyTakeoverContext
+  alias ScreensConfig.{EmergencyMessagingLocation, EmergencyTakeover, Screen}
 
   @spec build_emergency_takeover(
           EmergencyTakeoverContext.message(),
