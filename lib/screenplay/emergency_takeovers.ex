@@ -1,6 +1,6 @@
 defmodule Screenplay.EmergencyTakeovers do
   @moduledoc """
-  Module
+    Context module for managing Emergency Takeover Alerts.
   """
 
   import Ecto.Query
