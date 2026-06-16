@@ -22,7 +22,10 @@ const fetchAllAlerts = withErrorHandling(
     }
     return response.json();
   },
-  { customMessage: "Failed to load current and past alerts. Please refresh the page." },
+  {
+    customMessage:
+      "Failed to load current and past alerts. Please refresh the page.",
+  },
 );
 
 const handleClearAlert = withErrorHandling(
@@ -88,7 +91,7 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
     const alertData = await fetchAllAlerts();
     if (alertData?.current) {
       setAlertsData(alertData.current);
-    } 
+    }
     if (alertData?.past) {
       setPastAlertsData(alertData.past);
     }
