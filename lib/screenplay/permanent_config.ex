@@ -6,7 +6,7 @@ defmodule Screenplay.PermanentConfig do
 
   require Logger
 
-  alias Screenplay.EmergencyTakeoverTool.Config, as: EmergencyTakeoverConfig
+  alias Screenplay.EmergencyTakeoverTool.ScreensConfig, as: EmergencyTakeoverConfig
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
   alias Screenplay.Places.Fetch

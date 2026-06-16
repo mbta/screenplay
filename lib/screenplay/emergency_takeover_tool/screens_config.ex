@@ -1,4 +1,4 @@
-defmodule Screenplay.EmergencyTakeoverTool.Config do
+defmodule Screenplay.EmergencyTakeoverTool.ScreensConfig do
   @moduledoc """
   Module responsible for building the EmergencyTakeover struct used in Screens configurations
   of active Emergency Takeover Alerts.

@@ -36,10 +36,12 @@ defmodule Screenplay.EmergencyTakeovers do
   def get_overlapping_alerts(new_stations, alert_id) do
     # Find all active alerts that have any station overlap with the new alert,
     # excluding the alert being edited when editing an existing alert.
+    excluded_alert_id = alert_id || -1
+
     EmergencyTakeover
     |> where(
       [alert],
-      is_nil(alert.cleared_at) and alert.id != ^alert_id and
+      is_nil(alert.cleared_at) and alert.id != ^excluded_alert_id and
         fragment("? && ?", alert.stations, ^new_stations)
     )
     |> Repo.all()
@@ -98,9 +100,9 @@ defmodule Screenplay.EmergencyTakeovers do
       {:ok, _updated_alert} ->
         :ok
 
-      {:error, _changeset} ->
-        :error
-        # TODO:  Handle validation errors
+      {:error, changeset} ->
+        {:error,
+         "Failed to edit alert #{alert.id} with the changes: #{inspect(changeset.errors)}"}
     end
   end
 
@@ -116,13 +118,14 @@ defmodule Screenplay.EmergencyTakeovers do
       {:ok, _updated_alert} ->
         :ok
 
-      {:error, _changeset} ->
-        :error
+      {:error, changeset} ->
+        {:error,
+         "Failed to clear alert #{alert.id} with the changes: #{inspect(changeset.errors)}"}
     end
   end
 
   @spec to_json(EmergencyTakeover.t()) :: map()
-  def to_json(%EmergencyTakeover{} = alert) do
+  def to_json(alert = %EmergencyTakeover{}) do
     %{
       "id" => to_string(alert.id),
       "message" => stringify_keys(alert.message),
@@ -161,7 +164,7 @@ defmodule Screenplay.EmergencyTakeovers do
       if Enum.empty?(stations_no_overlap) do
         # Clear entire alert if all the existing alert's stations overlap with the new alert
         :ok = clear_alert(alert, user)
-        acc
+        acc ++ alert.stations
       else
         :ok =
           edit_alert(

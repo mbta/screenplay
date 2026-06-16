@@ -23,8 +23,6 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
           updated_at: DateTime.t()
         }
 
-  @type user :: String.t()
-
   @type canned_message :: %{
           type: :canned,
           id: non_neg_integer()
@@ -43,8 +41,8 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   @type station :: String.t()
 
   @type schedule :: %{
-          start: DateTime.t(),
-          end: DateTime.t() | nil
+          start_time: DateTime.t(),
+          end_time: DateTime.t() | nil
         }
 
   schema "emergency_takeover" do
@@ -79,11 +77,8 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
       :created_by
     ])
     |> validate_length(:stations, min: 1)
-
-    # TODO: Add more validation for message content once the structure is finalized
   end
 
-  @spec new(message(), list(station()), schedule(), user()) :: t()
   def new(message, stations, schedule, user) do
     %{
       message: message,

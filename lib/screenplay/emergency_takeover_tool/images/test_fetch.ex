@@ -1,4 +1,4 @@
-defmodule Screenplay.EmergencyTakeoverTool.Alerts.TestFetch do
+defmodule Screenplay.EmergencyTakeoverTool.Images.TestFetch do
   @moduledoc false
 
   @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok

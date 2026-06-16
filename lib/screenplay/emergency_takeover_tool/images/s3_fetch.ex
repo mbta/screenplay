@@ -1,4 +1,4 @@
-defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
+defmodule Screenplay.EmergencyTakeoverTool.Images.S3Fetch do
   @moduledoc false
   require Logger
 

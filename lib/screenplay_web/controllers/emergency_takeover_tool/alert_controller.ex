@@ -29,7 +29,13 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
          #  :ok <- remove_overlapping_alerts(params, user),
          {:ok, db_alert} <- EmergencyTakeovers.create_alert(alert),
          :ok <- add_outfront_takeovers(stations, images),
-         :ok <- add_showtime_takeovers(db_alert.id, showtime_screen_ids, message_struct, images) do
+         :ok <-
+           add_showtime_takeovers(
+             Integer.to_string(db_alert.id),
+             showtime_screen_ids,
+             message_struct,
+             images
+           ) do
       json(conn, %{success: true})
     else
       {:error, reason} ->
@@ -71,7 +77,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
          :ok <- add_outfront_takeovers(stations, images),
          :ok <-
            add_showtime_takeovers(
-             id,
+             Integer.to_string(id),
              showtime_screen_ids,
              message_struct,
              images
@@ -104,6 +110,11 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn
         |> put_status(:internal_server_error)
         |> json(%{success: false, error: reason})
+
+      :error ->
+        conn
+        |> put_status(:internal_server_error)
+        |> json(%{success: false, error: "An unknown error occurred while clearing the alert."})
     end
   end
 
@@ -133,13 +144,13 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   end
 
   @spec clear_single_alert_for_clear_all(map(), String.t()) :: :ok | {:error, String.t()}
-  defp clear_single_alert_for_clear_all(%EmergencyTakeover{stations: stations} = alert, user) do
+  defp clear_single_alert_for_clear_all(alert = %EmergencyTakeover{stations: stations}, user) do
     with :ok <- EmergencyTakeovers.clear_alert(alert, user),
          :ok <- SFTP.clear_takeover_images(stations) do
       :ok
     else
       {:error, reason} -> {:error, reason}
-      _ -> {:error, "Unknown error clearing alert #{alert.id}"}
+      :error -> {:error, "Unknown error clearing alert #{alert.id}"}
     end
   end
 

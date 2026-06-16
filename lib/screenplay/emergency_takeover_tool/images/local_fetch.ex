@@ -1,4 +1,4 @@
-defmodule Screenplay.EmergencyTakeoverTool.Alerts.LocalFetch do
+defmodule Screenplay.EmergencyTakeoverTool.Images.LocalFetch do
   @moduledoc false
 
   # sobelow_skip ["Traversal.FileModule"]
