@@ -14,30 +14,6 @@ interface AlertsListProps {
   closeModal: () => void;
 }
 
-// const fetchActiveAlerts = withErrorHandling(
-//   async () => {
-//     const response = await fetch(`${BASE_URL}/active_alerts`);
-//     if (!response.ok) {
-//       throw response;
-//     }
-//     return response.json();
-//   },
-//   {
-//     customMessage: "Failed to load active alerts. Please refresh the page.",
-//   },
-// );
-
-// const fetchPastAlerts = withErrorHandling(
-//   async () => {
-//     const response = await fetch(`${BASE_URL}/past_alerts`);
-//     if (!response.ok) {
-//       throw response;
-//     }
-//     return response.json();
-//   },
-//   { customMessage: "Failed to load past alerts. Please refresh the page." },
-// );
-
 const fetchAllAlerts = withErrorHandling(
   async () => {
     const response = await fetch(`${BASE_URL}/active_and_past_alerts`);
@@ -110,9 +86,10 @@ const AlertsList: ComponentType<AlertsListProps> = (props: AlertsListProps) => {
   const refreshAlerts = async () => {
     // Refresh active and past alerts on page load, alert clear, and at a regular interval.
     const alertData = await fetchAllAlerts();
-    // TODO: Maybe need to check both here
-    if (alertData) {
+    if (alertData?.current) {
       setAlertsData(alertData.current);
+    } 
+    if (alertData?.past) {
       setPastAlertsData(alertData.past);
     }
   };

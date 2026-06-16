@@ -19,7 +19,6 @@ const AlertPreview = ({ message, location, empty }: AlertPreviewProps) => {
     );
   }
   if (message.type === "canned") {
-    console.log("Rendering canned message preview with message:", message);
     const imageUrl = getMessageImageUrl(message, location, "portrait");
     return <img className="portrait-png" src={imageUrl} alt="" />;
   }
