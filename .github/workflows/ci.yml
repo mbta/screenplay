@@ -51,7 +51,7 @@ jobs:
           path: ~/.asdf
           key: ${{ runner.os }}-asdf-${{ hashFiles('.tool-versions') }}
         id: asdf-cache
-      - uses: mbta/actions/reshim-asdf@v2
+      - uses: mbta/actions/reshim-asdf@v2.18
       # The asdf job should have prepared the cache. exit if it didn't for some reason
       - run: exit 1
         if: steps.asdf-cache.outputs.cache-hit != 'true'
@@ -90,4 +90,4 @@ jobs:
       - run: npm --prefix assets run check
       - run: npm --prefix assets test
 
-      - uses: mbta/actions/dialyzer@v2
+      - uses: mbta/actions/dialyzer@v2.18
