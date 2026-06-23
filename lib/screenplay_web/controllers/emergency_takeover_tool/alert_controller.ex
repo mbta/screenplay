@@ -20,12 +20,13 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
           "images" => images
         }
       ) do
-    with schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
-         user <- get_session(conn, "username"),
-         message_struct <- EmergencyTakeover.message_from_json(message),
-         alert <- EmergencyTakeover.new(message_struct, stations, schedule, user),
-         params_to_log = Map.take(params, ["message", "stations", "duration"]),
-         :ok <- UserActionLogger.log(user, :create_alert, params_to_log),
+    schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
+    user = get_session(conn, "username")
+    message_struct = EmergencyTakeover.message_from_json(message)
+    alert = EmergencyTakeover.new(message_struct, stations, schedule, user)
+    params_to_log = Map.take(params, ["message", "stations", "duration"])
+
+    with :ok <- UserActionLogger.log(user, :create_alert, params_to_log),
          :ok <- remove_overlapping_alerts(nil, params, user),
          {:ok, db_alert} <- EmergencyTakeovers.create_alert(alert),
          :ok <- add_outfront_takeovers(stations, images),
@@ -61,18 +62,14 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
           "images" => images
         }
       ) do
-    with schedule <- schedule_from_duration(DateTime.utc_now(), duration_in_hours),
-         message_struct <- EmergencyTakeover.message_from_json(message),
-         changes = %{
-           message: message_struct,
-           stations: stations,
-           schedule: schedule
-         },
-         user <- get_session(conn, "username"),
-         id <- String.to_integer(id_str),
-         :ok <- remove_overlapping_alerts(id, params, user),
-         params_to_log =
-           Map.take(params, ["message", "stations", "duration", "id"]),
+    schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
+    message_struct = EmergencyTakeover.message_from_json(message)
+    changes = %{message: message_struct, stations: stations, schedule: schedule}
+    user = get_session(conn, "username")
+    id = String.to_integer(id_str)
+    params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
+
+    with :ok <- remove_overlapping_alerts(id, params, user),
          :ok <- UserActionLogger.log(user, :update_alert, params_to_log),
          :ok <- EmergencyTakeovers.update_alert(id, changes, user),
          :ok <- add_outfront_takeovers(stations, images),
@@ -92,10 +89,11 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
   @spec clear(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def clear(conn, params = %{"id" => id}) do
-    with user <- get_session(conn, "username"),
-         :ok <- UserActionLogger.log(user, :clear_alert, params),
-         alert <- EmergencyTakeovers.get_alert(id),
-         %EmergencyTakeover{stations: stations} = alert,
+    user = get_session(conn, "username")
+    alert = EmergencyTakeovers.get_alert(id)
+    %EmergencyTakeover{stations: stations} = alert
+
+    with :ok <- UserActionLogger.log(user, :clear_alert, params),
          :ok <- EmergencyTakeovers.clear_alert(alert, user),
          :ok <- SFTP.clear_takeover_images(stations),
          :ok <- remove_takeovers_from_showtime_screens(stations) do
@@ -115,9 +113,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
   @spec clear_all(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def clear_all(conn, _params) do
-    with user <- get_session(conn, "username"),
-         :ok <- UserActionLogger.log(user, :clear_all_alerts),
-         alerts = EmergencyTakeovers.get_active_alerts_non_json(),
+    user = get_session(conn, "username")
+    alerts = EmergencyTakeovers.get_active_alerts_non_json()
+
+    with :ok <- UserActionLogger.log(user, :clear_all_alerts),
          :ok <-
            Enum.reduce_while(alerts, :ok, fn alert, _ ->
              case clear_single_alert_for_clear_all(alert, user) do
