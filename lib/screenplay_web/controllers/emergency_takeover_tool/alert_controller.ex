@@ -49,8 +49,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     json(conn, %{success: false})
   end
 
-  @spec edit(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def edit(
+  @spec update(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def update(
         conn,
         params = %{
           "id" => id_str,
@@ -74,7 +74,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
          params_to_log =
            Map.take(params, ["message", "stations", "duration", "id"]),
          :ok <- UserActionLogger.log(user, :update_alert, params_to_log),
-         :ok <- EmergencyTakeovers.edit_alert(id, changes, user),
+         :ok <- EmergencyTakeovers.update_alert(id, changes, user),
          :ok <- add_outfront_takeovers(stations, images),
          :ok <- add_showtime_takeovers(id_str, showtime_screen_ids, message_struct, images) do
       json(conn, %{success: true})
@@ -86,7 +86,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end
   end
 
-  def edit(conn, _params) do
+  def update(conn, _params) do
     json(conn, %{success: false})
   end
 
@@ -191,7 +191,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   @spec upload_takeover_images(String.t(), %{String.t() => String.t()}) ::
           :ok | {:error, String.t()}
   def upload_takeover_images(alert_id, images) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+    image_store_module = Application.get_env(:screenplay, :image_store_module)
     image_types = ["indoor_portrait", "outdoor_portrait", "indoor_landscape", "outdoor_landscape"]
 
     Enum.reduce_while(image_types, :ok, fn image_type, _acc ->
@@ -202,7 +202,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         image_data_string ->
           case decode_image(image_data_string) do
             {:ok, image_binary, _format} ->
-              case alerts_fetch_module.upload_takeover_image(alert_id, image_binary, image_type) do
+              case image_store_module.upload_takeover_image(alert_id, image_binary, image_type) do
                 :ok -> {:cont, :ok}
                 error -> {:halt, error}
               end
@@ -214,9 +214,9 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end)
   end
 
-  def active_and_past_alerts(conn, _params) do
-    {current_alerts, past_alerts} = EmergencyTakeovers.get_active_and_past_alerts()
-    json(conn, %{"current" => current_alerts, "past" => past_alerts})
+  def alerts(conn, _params) do
+    {active_alerts, past_alerts} = EmergencyTakeovers.get_alerts()
+    json(conn, %{"active" => active_alerts, "past" => past_alerts})
   end
 
   def active_alerts(conn, _params) do

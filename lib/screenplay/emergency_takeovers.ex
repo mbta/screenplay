@@ -15,16 +15,16 @@ defmodule Screenplay.EmergencyTakeovers do
           schedule: EmergencyTakeover.schedule()
         }
 
-  @spec get_active_and_past_alerts() :: {[map()], [map()]}
-  def get_active_and_past_alerts do
+  @spec get_alerts() :: {[map()], [map()]}
+  def get_alerts do
     EmergencyTakeover
-    |> order_by([alert], desc: alert.start_time)
+    |> order_by(desc: :start_time)
     |> Repo.all()
     |> Enum.map(&to_json/1)
     |> Enum.group_by(fn %{"cleared_at" => cleared_at} ->
-      if cleared_at, do: :past, else: :current
+      if cleared_at, do: :past, else: :active
     end)
-    |> then(fn groups -> {groups[:current] || [], groups[:past] || []} end)
+    |> then(fn groups -> {groups[:active] || [], groups[:past] || []} end)
   end
 
   @spec get_alert(integer()) :: map() | nil
@@ -51,7 +51,7 @@ defmodule Screenplay.EmergencyTakeovers do
   def get_active_alerts do
     EmergencyTakeover
     |> where([alert], is_nil(alert.cleared_at))
-    |> order_by([alert], desc: alert.start_time)
+    |> order_by(desc: :start_time)
     |> Repo.all()
     |> Enum.map(&to_json/1)
   end
@@ -83,8 +83,8 @@ defmodule Screenplay.EmergencyTakeovers do
     |> Repo.insert()
   end
 
-  @spec edit_alert(integer(), alert_update(), String.t()) :: :ok | {:error, String.t()}
-  def edit_alert(id, changes, user) do
+  @spec update_alert(integer(), alert_update(), String.t()) :: :ok | {:error, String.t()}
+  def update_alert(id, changes, user) do
     alert = Repo.get(EmergencyTakeover, id)
 
     changeset =
@@ -167,7 +167,7 @@ defmodule Screenplay.EmergencyTakeovers do
         acc ++ alert.stations
       else
         :ok =
-          edit_alert(
+          update_alert(
             alert.id,
             %{
               stations: stations_no_overlap,

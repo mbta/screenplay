@@ -58,23 +58,23 @@ defmodule Screenplay.EmergencyTakeoverTool.ScreensConfig do
 
   @spec canned_image_path(map(), :indoor | :outdoor, :landscape | :portrait) :: String.t() | nil
   defp canned_image_path(images, where, orientation) when is_map(images) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+    image_store_module = Application.get_env(:screenplay, :image_store_module)
 
     image_path =
       case get_in(images, [where, orientation]) do
         path when is_binary(path) -> path
       end
 
-    alerts_fetch_module.with_asset_path("canned/images/#{image_path}")
+    image_store_module.with_asset_path("canned/images/#{image_path}")
   end
 
   @spec custom_image_path(String.t(), Screen.app_id(), EmergencyMessagingLocation.t()) ::
           String.t()
   defp custom_image_path(alert_id, screen_type, messaging_location) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
+    image_store_module = Application.get_env(:screenplay, :image_store_module)
 
     image_key = determine_image_key(screen_type, messaging_location)
-    alerts_fetch_module.with_asset_path("#{alert_id}/#{image_key}.png")
+    image_store_module.with_asset_path("#{alert_id}/#{image_key}.png")
   end
 
   @spec determine_image_key(Screen.app_id(), EmergencyMessagingLocation.t()) :: String.t()
@@ -105,8 +105,8 @@ defmodule Screenplay.EmergencyTakeoverTool.ScreensConfig do
   def audio_path(_message, _messaging_location), do: nil
 
   defp canned_audio_path(audio_path_suffix) do
-    alerts_fetch_module = Application.get_env(:screenplay, :alerts_fetch_module)
-    alerts_fetch_module.with_asset_path("canned/audio/#{audio_path_suffix}")
+    image_store_module = Application.get_env(:screenplay, :image_store_module)
+    image_store_module.with_asset_path("canned/audio/#{audio_path_suffix}")
   end
 
   defp messaging_location_to_text(:inside), do: :indoor

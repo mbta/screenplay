@@ -5,9 +5,9 @@ defmodule Screenplay.EmergencyTakeoversTest do
   alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
   import Screenplay.Factory
 
-  describe "get_active_and_past_alerts/0" do
+  describe "get_alerts/0" do
     test "returns empty lists when there are no alerts" do
-      assert {[], []} == EmergencyTakeovers.get_active_and_past_alerts()
+      assert {[], []} == EmergencyTakeovers.get_alerts()
     end
 
     test "returns only active alerts" do
@@ -23,7 +23,7 @@ defmodule Screenplay.EmergencyTakeoversTest do
           cleared_at: nil
         )
 
-      {active_alerts, past_alerts} = EmergencyTakeovers.get_active_and_past_alerts()
+      {active_alerts, past_alerts} = EmergencyTakeovers.get_alerts()
 
       assert Enum.empty?(past_alerts)
       assert length(active_alerts) == 2
@@ -47,7 +47,7 @@ defmodule Screenplay.EmergencyTakeoversTest do
           cleared_at: ~U[2026-01-02 13:00:00Z]
         )
 
-      {active_alerts, past_alerts} = EmergencyTakeovers.get_active_and_past_alerts()
+      {active_alerts, past_alerts} = EmergencyTakeovers.get_alerts()
 
       assert Enum.empty?(active_alerts)
       assert length(past_alerts) == 2
@@ -71,7 +71,7 @@ defmodule Screenplay.EmergencyTakeoversTest do
           cleared_at: ~U[2026-01-01 13:00:00Z]
         )
 
-      {active_alerts, past_alerts} = EmergencyTakeovers.get_active_and_past_alerts()
+      {active_alerts, past_alerts} = EmergencyTakeovers.get_alerts()
 
       assert length(active_alerts) == 1
       assert [to_string(active_alert.id)] == Enum.map(active_alerts, & &1["id"])
