@@ -3,25 +3,12 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   Represents an emergency takeover alert persisted in Postgres.
   """
   alias Screenplay.Util
+  alias __MODULE__.NewEmergencyTakeover
 
   use Ecto.Schema
   import Ecto.Changeset
 
   @derive {Jason.Encoder, except: [:__meta__]}
-
-  @type t() :: %__MODULE__{
-          id: integer(),
-          message: map(),
-          stations: [String.t()],
-          start_time: DateTime.t(),
-          end_time: DateTime.t() | nil,
-          created_by: String.t(),
-          edited_by: String.t() | nil,
-          cleared_by: String.t() | nil,
-          cleared_at: DateTime.t() | nil,
-          inserted_at: DateTime.t(),
-          updated_at: DateTime.t()
-        }
 
   @type canned_message :: %{
           type: :canned,
@@ -43,6 +30,36 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   @type schedule :: %{
           start_time: DateTime.t(),
           end_time: DateTime.t() | nil
+        }
+
+  defmodule NewEmergencyTakeover do
+    alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
+
+    @type t() :: %__MODULE__{
+            message: EmergencyTakeover.message(),
+            stations: [EmergencyTakeover.station()],
+            start_time: DateTime.t(),
+            end_time: DateTime.t() | nil,
+            created_by: String.t(),
+            edited_by: String.t() | nil,
+            cleared_by: String.t() | nil,
+            cleared_at: DateTime.t() | nil
+          }
+    defstruct ~w[message stations start_time end_time created_by edited_by cleared_by cleared_at]a
+  end
+
+  @type t() :: %__MODULE__{
+          id: integer(),
+          message: message(),
+          stations: [station()],
+          start_time: DateTime.t(),
+          end_time: DateTime.t() | nil,
+          created_by: String.t(),
+          edited_by: String.t() | nil,
+          cleared_by: String.t() | nil,
+          cleared_at: DateTime.t() | nil,
+          inserted_at: DateTime.t(),
+          updated_at: DateTime.t()
         }
 
   schema "emergency_takeover" do
@@ -79,8 +96,9 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     |> validate_length(:stations, min: 1)
   end
 
+  @spec new(message(), [station()], schedule(), String.t()) :: NewEmergencyTakeover.t()
   def new(message, stations, schedule, user) do
-    %{
+    %NewEmergencyTakeover{
       message: message,
       stations: stations,
       start_time: schedule.start_time,
