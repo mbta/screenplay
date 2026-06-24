@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { CannedMessagesContext } from "../CannedMessagesContext";
 import { charLimit } from "Constants/misc";
 import cx from "classnames";
@@ -13,6 +13,17 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
   const { messages: cannedMessages, loading } = useContext(
     CannedMessagesContext,
   );
+
+  useEffect(() => {
+    if (loading || value.type !== "canned" || value.id === -1) {
+      return;
+    }
+
+    const selectedMessage = cannedMessages.find((m) => m.id === value.id);
+    if (selectedMessage) {
+      onChange(selectedMessage);
+    }
+  }, [loading, value, onChange]);
 
   const fields = [
     { location: "indoor" as const, label: "Indoor" },
@@ -45,7 +56,6 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
             className="message-select text-16"
             value={value.type === "canned" ? value.id : -1}
             onChange={(e) => {
-              // TODO: Bug found: this needs to be updated so that it has the images on creation of CreateMessage
               const selectedMessage = cannedMessages.find(
                 (m) => m.id === +e.target.value,
               );
