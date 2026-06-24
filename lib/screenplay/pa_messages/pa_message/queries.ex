@@ -46,21 +46,13 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   @spec current(queryable :: Ecto.Queryable.t(), alerts :: [Alert.t()], now :: DateTime.t()) ::
           Ecto.Query.t()
   def current(q \\ PaMessage, alerts, now) do
-    alert_ids = alerts |> Enum.reject(&alert_will_fall_off?(&1, now)) |> Enum.map(& &1.id)
+    alert_ids = alerts |> Enum.reject(&Alert.will_fall_off?(&1, now)) |> Enum.map(& &1.id)
 
     from m in q,
       where:
         m.start_datetime <= ^now and
           ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)
   end
-
-  @spec alert_will_fall_off?(Alert.t(), DateTime.t()) :: boolean()
-  defp alert_will_fall_off?(%Alert{active_period: [{_, period_end}]}, now)
-       when period_end != nil do
-    DateTime.compare(period_end, now) in [:lt, :eq]
-  end
-
-  defp alert_will_fall_off?(_, _), do: false
 
   @doc """
   Limit the query to only PaMessages that have an end_datetime in the past or

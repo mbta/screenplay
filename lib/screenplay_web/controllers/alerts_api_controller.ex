@@ -36,7 +36,9 @@ defmodule ScreenplayWeb.AlertsApiController do
   def non_access_alerts(conn, _params) do
     non_access_alerts =
       AlertsCache.alerts()
-      |> Enum.reject(&Alert.access_alert?/1)
+      |> Enum.reject(fn alert ->
+        Alert.access_alert?(alert) || Alert.will_fall_off?(alert)
+      end)
       |> Enum.map(&Alert.to_full_map/1)
 
     json(conn, %{alerts: non_access_alerts})

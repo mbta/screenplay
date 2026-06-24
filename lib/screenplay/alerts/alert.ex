@@ -169,4 +169,14 @@ defmodule Screenplay.Alerts.Alert do
   def access_alert?(alert) do
     Enum.any?(alert.informed_entities, &(not is_nil(&1.facility)))
   end
+
+  @spec will_fall_off?(t(), DateTime.t()) :: boolean()
+  def will_fall_off?(alert, now \\ DateTime.utc_now())
+
+  def will_fall_off?(%__MODULE__{active_period: [{_, period_end}]}, now)
+      when period_end != nil do
+    DateTime.compare(period_end, now) in [:lt, :eq]
+  end
+
+  def will_fall_off?(_, _), do: false
 end
