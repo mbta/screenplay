@@ -6,8 +6,14 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
 
   import Screenplay.Factory
 
+  @seeded_alert_end_datetime_utc ~U[2024-05-01T06:00:00Z]
+
   setup_all do
-    AlertsCacheHelpers.seed_alerts_cache(2, ~U[2024-05-01T04:00:00Z], ~U[2024-05-01T06:00:00Z])
+    AlertsCacheHelpers.seed_alerts_cache(
+      2,
+      ~U[2024-05-01T04:00:00Z],
+      @seeded_alert_end_datetime_utc
+    )
 
     start_supervised!(Screenplay.Places.Cache)
 
@@ -94,6 +100,40 @@ defmodule ScreenplayWeb.PaMessagesApiControllerTest do
       })
 
       assert [%{"id" => 2}] =
+               conn
+               |> get("/api/pa-messages?state=current&now=#{now}")
+               |> json_response(200)
+    end
+
+    @tag :authenticated
+    test "filters out PA messages associated with an ended alert", %{conn: conn} do
+      insert(:pa_message, %{
+        id: 1,
+        alert_id: "1",
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_datetime: ~U[2024-05-01 00:00:00Z],
+        end_datetime: nil
+      })
+
+      assert [] =
+               conn
+               |> get("/api/pa-messages?state=current&now=#{@seeded_alert_end_datetime_utc}")
+               |> json_response(200)
+    end
+
+    @tag :authenticated
+    test "does not filter PA messages associated with an ongoing alert", %{conn: conn} do
+      now = DateTime.add(@seeded_alert_end_datetime_utc, -10, :minute)
+
+      insert(:pa_message, %{
+        id: 1,
+        alert_id: "1",
+        days_of_week: [1, 2, 3, 4, 5, 6, 7],
+        start_datetime: ~U[2024-05-01 00:00:00Z],
+        end_datetime: nil
+      })
+
+      assert [%{"id" => 1}] =
                conn
                |> get("/api/pa-messages?state=current&now=#{now}")
                |> json_response(200)

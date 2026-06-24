@@ -57,14 +57,14 @@ defmodule Screenplay.PaMessages do
       |> Map.put_new_lazy(:now, &DateTime.utc_now/0)
       |> Map.put_new(:state, :all)
 
-    alert_ids = AlertsCache.alert_ids()
+    alerts = AlertsCache.alerts()
 
     signs_for_routes = RoutesToSigns.signs_for_routes(opts[:routes])
 
     now = opts[:now] || DateTime.utc_now()
 
     PaMessage
-    |> PaMessage.Queries.state(opts[:state], alert_ids, now)
+    |> PaMessage.Queries.state(opts[:state], alerts, now)
     |> PaMessage.Queries.signs(opts[:signs])
     |> PaMessage.Queries.signs(signs_for_routes)
     |> order_by(desc: :inserted_at)
@@ -88,7 +88,7 @@ defmodule Screenplay.PaMessages do
   @spec get_active_messages() :: [PaMessage.t()]
   @spec get_active_messages(now :: DateTime.t()) :: [PaMessage.t()]
   def get_active_messages(now \\ DateTime.utc_now()) do
-    AlertsCache.alert_ids()
+    AlertsCache.alerts()
     |> PaMessage.Queries.active(now)
     |> Repo.all()
   end

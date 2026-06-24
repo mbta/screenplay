@@ -7,13 +7,14 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   """
   import Ecto.Query
 
+  alias Screenplay.Alerts.Alert
   alias Screenplay.PaMessages.PaMessage
   alias Screenplay.Util
 
-  def state(q \\ PaMessage, state, alert_ids, now)
-  def state(q, :current, alert_ids, now), do: current(q, alert_ids, now)
+  def state(q \\ PaMessage, state, alerts, now)
+  def state(q, :current, alerts, now), do: current(q, alerts, now)
   def state(q, :future, _alert_ids, now), do: future(q, now)
-  def state(q, :past, alert_ids, now), do: past(q, alert_ids, now)
+  def state(q, :past, alerts, now), do: past(q, alerts, now)
   def state(q, :all, _, _), do: q
 
   @doc """
@@ -24,14 +25,14 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   """
   @spec active(
           queryable :: Ecto.Queryable.t(),
-          alert_ids :: [String.t()],
+          alerts :: [Alert.t()],
           now :: DateTime.t()
         ) ::
           Ecto.Query.t()
-  def active(q \\ PaMessage, alert_ids, now) do
+  def active(q \\ PaMessage, alerts, now) do
     service_day_of_week = now |> Util.service_date() |> Date.day_of_week()
 
-    current(q, alert_ids, now)
+    current(q, alerts, now)
     |> where([m], (is_nil(m.paused) or not m.paused) and ^service_day_of_week in m.days_of_week)
   end
 
@@ -42,20 +43,32 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   either its end time is in the future or it has no end time and its associated
   alert is in passed list of alert IDs.
   """
-  @spec active(queryable :: Ecto.Queryable.t(), alert_ids :: [String.t()], now :: DateTime.t()) ::
+  @spec current(queryable :: Ecto.Queryable.t(), alerts :: [Alert.t()], now :: DateTime.t()) ::
           Ecto.Query.t()
-  def current(q \\ PaMessage, alert_ids, now) do
+  def current(q \\ PaMessage, alerts, now) do
+    alert_ids = alerts |> Enum.reject(&alert_will_fall_off?(&1, now)) |> Enum.map(& &1.id)
+
     from m in q,
       where:
         m.start_datetime <= ^now and
           ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)
   end
 
+  @spec alert_will_fall_off?(Alert.t(), DateTime.t()) :: boolean()
+  defp alert_will_fall_off?(%Alert{active_period: [{_, period_end}]}, now)
+       when period_end != nil do
+    DateTime.compare(period_end, now) in [:lt, :eq]
+  end
+
+  defp alert_will_fall_off?(_, _), do: false
+
   @doc """
   Limit the query to only PaMessages that have an end_datetime in the past or
   are associated with a past alert.
   """
-  def past(q \\ PaMessage, alert_ids, now) do
+  def past(q \\ PaMessage, alerts, now) do
+    alert_ids = Enum.map(alerts, & &1.id)
+
     from m in q,
       where: m.end_datetime < ^now or (is_nil(m.end_datetime) and m.alert_id not in ^alert_ids)
   end
