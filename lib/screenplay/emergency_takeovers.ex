@@ -6,7 +6,7 @@ defmodule Screenplay.EmergencyTakeovers do
   import Ecto.Query
 
   alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
-  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover.NewEmergencyTakeover
+  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover.{MessageType, NewEmergencyTakeover}
   alias Screenplay.Repo
   alias Screenplay.Util
 
@@ -16,25 +16,24 @@ defmodule Screenplay.EmergencyTakeovers do
           schedule: EmergencyTakeover.schedule()
         }
 
-  @spec get_alerts() :: {[map()], [map()]}
+  @spec get_alerts() :: {[EmergencyTakeover.t()], [EmergencyTakeover.t()]}
   def get_alerts do
     EmergencyTakeover
     |> order_by(desc: :start_time)
     |> Repo.all()
-    |> Enum.map(&to_json/1)
-    |> Enum.group_by(fn %{"cleared_at" => cleared_at} ->
+    |> Enum.group_by(fn %{cleared_at: cleared_at} ->
       if cleared_at, do: :past, else: :active
     end)
     |> then(fn groups -> {groups[:active] || [], groups[:past] || []} end)
   end
 
-  @spec get_alert(integer()) :: map() | nil
+  @spec get_alert(integer()) :: EmergencyTakeover.t() | nil
   def get_alert(id) do
     Repo.get(EmergencyTakeover, id)
   end
 
   @spec get_overlapping_alerts(list(String.t()), integer() | nil) :: list(EmergencyTakeover.t())
-  def get_overlapping_alerts(new_stations, alert_id) do
+  defp get_overlapping_alerts(new_stations, alert_id) do
     # Find all active alerts that have any station overlap with the new alert,
     # excluding the alert being edited when editing an existing alert.
     excluded_alert_id = alert_id || -1
@@ -48,20 +47,11 @@ defmodule Screenplay.EmergencyTakeovers do
     |> Repo.all()
   end
 
-  @spec get_active_alerts() :: [map()]
+  @spec get_active_alerts() :: [EmergencyTakeover.t()]
   def get_active_alerts do
     EmergencyTakeover
     |> where([alert], is_nil(alert.cleared_at))
     |> order_by(desc: :start_time)
-    |> Repo.all()
-    |> Enum.map(&to_json/1)
-  end
-
-  @spec get_active_alerts_non_json() :: [EmergencyTakeover.t()]
-  def get_active_alerts_non_json do
-    EmergencyTakeover
-    |> where([alert], is_nil(alert.cleared_at))
-    |> order_by([alert], desc: alert.start_time)
     |> Repo.all()
   end
 
@@ -85,7 +75,8 @@ defmodule Screenplay.EmergencyTakeovers do
     |> Repo.insert()
   end
 
-  @spec update_alert(integer(), alert_update(), String.t()) :: :ok | {:error, String.t()}
+  @spec update_alert(integer(), alert_update(), String.t()) ::
+          {:ok, EmergencyTakeover.t()} | {:error, String.t()}
   def update_alert(id, changes, user) do
     alert = Repo.get(EmergencyTakeover, id)
 
@@ -99,8 +90,8 @@ defmodule Screenplay.EmergencyTakeovers do
       })
 
     case Repo.update(changeset) do
-      {:ok, _updated_alert} ->
-        :ok
+      {:ok, updated_alert} ->
+        {:ok, updated_alert}
 
       {:error, changeset} ->
         {:error,
@@ -108,7 +99,8 @@ defmodule Screenplay.EmergencyTakeovers do
     end
   end
 
-  @spec clear_alert(EmergencyTakeover.t(), String.t()) :: :ok | :error
+  @spec clear_alert(EmergencyTakeover.t(), String.t()) ::
+          {:ok, EmergencyTakeover.t()} | {:error, String.t()}
   def clear_alert(alert, user) do
     changeset =
       EmergencyTakeover.changeset(alert, %{
@@ -117,8 +109,8 @@ defmodule Screenplay.EmergencyTakeovers do
       })
 
     case Repo.update(changeset) do
-      {:ok, _updated_alert} ->
-        :ok
+      {:ok, updated_alert} ->
+        {:ok, updated_alert}
 
       {:error, changeset} ->
         {:error,
@@ -130,7 +122,7 @@ defmodule Screenplay.EmergencyTakeovers do
   def to_json(alert = %EmergencyTakeover{}) do
     %{
       "id" => to_string(alert.id),
-      "message" => stringify_keys(alert.message),
+      "message" => MessageType.stringify_keys(alert.message),
       "stations" => alert.stations,
       "schedule" => %{
         "start" => serialize_datetime(alert.start_time),
@@ -146,15 +138,6 @@ defmodule Screenplay.EmergencyTakeovers do
   defp serialize_datetime(nil), do: nil
   defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
 
-  defp stringify_keys(value) when is_map(value) do
-    value
-    |> Enum.map(fn {k, v} -> {to_string(k), stringify_keys(v)} end)
-    |> Enum.into(%{})
-  end
-
-  defp stringify_keys(value) when is_list(value), do: Enum.map(value, &stringify_keys/1)
-  defp stringify_keys(value), do: value
-
   @spec remove_overlapping_alerts(integer() | nil, list(String.t()), String.t()) ::
           list(String.t())
   def remove_overlapping_alerts(id, new_stations, user) do
@@ -165,10 +148,10 @@ defmodule Screenplay.EmergencyTakeovers do
 
       if Enum.empty?(stations_no_overlap) do
         # Clear entire alert if all the existing alert's stations overlap with the new alert
-        :ok = clear_alert(alert, user)
+        {:ok, _cleared_alert} = clear_alert(alert, user)
         acc ++ alert.stations
       else
-        :ok =
+        {:ok, _updated_alert} =
           update_alert(
             alert.id,
             %{

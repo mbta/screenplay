@@ -2,8 +2,8 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   @moduledoc """
   Represents an emergency takeover alert persisted in Postgres.
   """
+  alias __MODULE__.{MessageType, NewEmergencyTakeover}
   alias Screenplay.Util
-  alias __MODULE__.NewEmergencyTakeover
 
   use Ecto.Schema
   import Ecto.Changeset
@@ -31,6 +31,62 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
           start_time: DateTime.t(),
           end_time: DateTime.t() | nil
         }
+  defmodule MessageType do
+    @behaviour Ecto.Type
+
+    @impl true
+    def type, do: :map
+
+    @impl true
+    def cast(%{type: :canned, id: id}) when is_integer(id) and id >= 0 do
+      {:ok, %{type: :canned, id: id}}
+    end
+
+    def cast(%{"type" => "canned", "id" => id}) when is_integer(id) and id >= 0 do
+      {:ok, %{type: :canned, id: id}}
+    end
+
+    def cast(%{type: :custom, text: %{indoor: indoor, outdoor: outdoor}})
+        when is_binary(indoor) and is_binary(outdoor) do
+      {:ok, %{type: :custom, text: %{indoor: indoor, outdoor: outdoor}}}
+    end
+
+    def cast(%{"type" => "custom", "text" => %{"indoor" => indoor, "outdoor" => outdoor}})
+        when is_binary(indoor) and is_binary(outdoor) do
+      {:ok, %{type: :custom, text: %{indoor: indoor, outdoor: outdoor}}}
+    end
+
+    def cast(_), do: :error
+
+    def stringify_keys(value) when is_map(value) do
+      value
+      |> Enum.map(fn {k, v} -> {to_string(k), stringify_keys(v)} end)
+      |> Enum.into(%{})
+    end
+
+    def stringify_keys(value), do: value
+
+    @impl true
+    def dump(message) do
+      with {:ok, normalized_message} <- cast(message) do
+        {:ok, stringify_keys(normalized_message)}
+      end
+    end
+
+    @impl true
+    def load(message), do: cast(message)
+
+    @impl true
+    def embed_as(_format), do: :self
+
+    @impl true
+    def equal?(left, right) do
+      normalize(left) == normalize(right)
+    end
+
+    defp normalize(nil), do: {:ok, nil}
+    defp normalize(value), do: cast(value)
+  end
 
   defmodule NewEmergencyTakeover do
     alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
@@ -63,7 +119,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
         }
 
   schema "emergency_takeover" do
-    field :message, :map
+    field :message, MessageType
     field :stations, {:array, :string}
     field :start_time, :utc_datetime_usec
     field :end_time, :utc_datetime_usec
@@ -96,10 +152,12 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     |> validate_length(:stations, min: 1)
   end
 
-  @spec new(message(), [station()], schedule(), String.t()) :: NewEmergencyTakeover.t()
+  @spec new(message() | map(), [station()], schedule(), String.t()) :: NewEmergencyTakeover.t()
   def new(message, stations, schedule, user) do
+    normalized_message = message_from_json(message)
+
     %NewEmergencyTakeover{
-      message: message,
+      message: normalized_message,
       stations: stations,
       start_time: schedule.start_time,
       end_time: schedule.end_time,
@@ -111,13 +169,29 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   end
 
   def message_from_json(%{"type" => "canned", "id" => id}) do
-    %{type: :canned, id: id}
+    case MessageType.cast(%{"type" => "canned", "id" => id}) do
+      {:ok, message} -> message
+      :error -> raise ArgumentError, "invalid canned message payload"
+    end
   end
 
   def message_from_json(%{
         "type" => "custom",
         "text" => %{"indoor" => indoor, "outdoor" => outdoor}
       }) do
-    %{type: :custom, text: %{indoor: indoor, outdoor: outdoor}}
+    case MessageType.cast(%{
+           "type" => "custom",
+           "text" => %{"indoor" => indoor, "outdoor" => outdoor}
+         }) do
+      {:ok, message} -> message
+      :error -> raise ArgumentError, "invalid custom message payload"
+    end
+  end
+
+  def message_from_json(message) do
+    case MessageType.cast(message) do
+      {:ok, normalized_message} -> normalized_message
+      :error -> raise ArgumentError, "invalid emergency takeover message payload"
+    end
   end
 end

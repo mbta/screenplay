@@ -22,8 +22,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
     user = get_session(conn, "username")
-    message_struct = EmergencyTakeover.message_from_json(message)
-    alert = EmergencyTakeover.new(message_struct, stations, schedule, user)
+    alert = EmergencyTakeover.new(message, stations, schedule, user)
     params_to_log = Map.take(params, ["message", "stations", "duration"])
 
     with :ok <- UserActionLogger.log(user, :create_alert, params_to_log),
@@ -34,7 +33,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
            add_showtime_takeovers(
              Integer.to_string(db_alert.id),
              showtime_screen_ids,
-             message_struct,
+             alert.message,
              images
            ) do
       json(conn, %{success: true})
@@ -63,17 +62,16 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         }
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
-    message_struct = EmergencyTakeover.message_from_json(message)
-    changes = %{message: message_struct, stations: stations, schedule: schedule}
+    changes = %{message: message, stations: stations, schedule: schedule}
     user = get_session(conn, "username")
     id = String.to_integer(id_str)
     params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
 
     with :ok <- remove_overlapping_alerts(id, params, user),
          :ok <- UserActionLogger.log(user, :update_alert, params_to_log),
-         :ok <- EmergencyTakeovers.update_alert(id, changes, user),
+         {:ok, updated_alert} <- EmergencyTakeovers.update_alert(id, changes, user),
          :ok <- add_outfront_takeovers(stations, images),
-         :ok <- add_showtime_takeovers(id_str, showtime_screen_ids, message_struct, images) do
+         :ok <- add_showtime_takeovers(id_str, showtime_screen_ids, updated_alert.message, images) do
       json(conn, %{success: true})
     else
       {:error, reason} ->
@@ -94,7 +92,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     %EmergencyTakeover{stations: stations} = alert
 
     with :ok <- UserActionLogger.log(user, :clear_alert, params),
-         :ok <- EmergencyTakeovers.clear_alert(alert, user),
+         {:ok, _cleared_alert} <- EmergencyTakeovers.clear_alert(alert, user),
          :ok <- SFTP.clear_takeover_images(stations),
          :ok <- remove_takeovers_from_showtime_screens(stations) do
       json(conn, %{success: true})
@@ -103,18 +101,13 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn
         |> put_status(:internal_server_error)
         |> json(%{success: false, error: reason})
-
-      :error ->
-        conn
-        |> put_status(:internal_server_error)
-        |> json(%{success: false, error: "An unknown error occurred while clearing the alert."})
     end
   end
 
   @spec clear_all(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def clear_all(conn, _params) do
     user = get_session(conn, "username")
-    alerts = EmergencyTakeovers.get_active_alerts_non_json()
+    alerts = EmergencyTakeovers.get_active_alerts() |> Enum.map(&EmergencyTakeovers.to_json/1)
 
     with :ok <- UserActionLogger.log(user, :clear_all_alerts),
          :ok <-
@@ -139,12 +132,11 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
   @spec clear_single_alert_for_clear_all(map(), String.t()) :: :ok | {:error, String.t()}
   defp clear_single_alert_for_clear_all(alert = %EmergencyTakeover{stations: stations}, user) do
-    with :ok <- EmergencyTakeovers.clear_alert(alert, user),
+    with {:ok, _cleared_alert} <- EmergencyTakeovers.clear_alert(alert, user),
          :ok <- SFTP.clear_takeover_images(stations) do
       :ok
     else
       {:error, reason} -> {:error, reason}
-      :error -> {:error, "Unknown error clearing alert #{alert.id}"}
     end
   end
 
@@ -213,13 +205,21 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end)
   end
 
+  @spec alerts(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def alerts(conn, _params) do
     {active_alerts, past_alerts} = EmergencyTakeovers.get_alerts()
-    json(conn, %{"active" => active_alerts, "past" => past_alerts})
+
+    json(conn, %{
+      "active" => Enum.map(active_alerts, &EmergencyTakeovers.to_json/1),
+      "past" => Enum.map(past_alerts, &EmergencyTakeovers.to_json/1)
+    })
   end
 
+  @spec active_alerts(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def active_alerts(conn, _params) do
-    alerts_json = EmergencyTakeovers.get_active_alerts()
+    alerts_json =
+      EmergencyTakeovers.get_active_alerts() |> Enum.map(&EmergencyTakeovers.to_json/1)
+
     json(conn, alerts_json)
   end
 

@@ -28,10 +28,7 @@ defmodule Screenplay.EmergencyTakeoversTest do
       assert Enum.empty?(past_alerts)
       assert length(active_alerts) == 2
 
-      assert Enum.map(active_alerts, & &1["id"]) == [
-               to_string(active_alert_2.id),
-               to_string(active_alert_1.id)
-             ]
+      assert Enum.map(active_alerts, & &1.id) == [active_alert_2.id, active_alert_1.id]
     end
 
     test "returns only past alerts" do
@@ -52,10 +49,7 @@ defmodule Screenplay.EmergencyTakeoversTest do
       assert Enum.empty?(active_alerts)
       assert length(past_alerts) == 2
 
-      assert Enum.map(past_alerts, & &1["id"]) == [
-               to_string(past_alert_2.id),
-               to_string(past_alert_1.id)
-             ]
+      assert Enum.map(past_alerts, & &1.id) == [past_alert_2.id, past_alert_1.id]
     end
 
     test "returns a mix of active and past alerts" do
@@ -74,9 +68,9 @@ defmodule Screenplay.EmergencyTakeoversTest do
       {active_alerts, past_alerts} = EmergencyTakeovers.get_alerts()
 
       assert length(active_alerts) == 1
-      assert [to_string(active_alert.id)] == Enum.map(active_alerts, & &1["id"])
+      assert [active_alert.id] == Enum.map(active_alerts, & &1.id)
       assert length(past_alerts) == 1
-      assert [to_string(past_alert.id)] == Enum.map(past_alerts, & &1["id"])
+      assert [past_alert.id] == Enum.map(past_alerts, & &1.id)
     end
   end
 
@@ -102,7 +96,7 @@ defmodule Screenplay.EmergencyTakeoversTest do
       active_alerts = EmergencyTakeovers.get_active_alerts()
 
       assert length(active_alerts) == 1
-      assert ["123"] == Enum.map(active_alerts, & &1["id"])
+      assert [123] == Enum.map(active_alerts, & &1.id)
     end
   end
 
