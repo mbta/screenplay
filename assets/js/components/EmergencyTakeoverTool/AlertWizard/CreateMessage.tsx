@@ -23,7 +23,7 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
     if (selectedMessage) {
       onChange(selectedMessage);
     }
-  }, [loading, value, onChange]);
+  }, [loading, value]);
 
   const fields = [
     { location: "indoor" as const, label: "Indoor" },
