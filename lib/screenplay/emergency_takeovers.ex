@@ -33,7 +33,7 @@ defmodule Screenplay.EmergencyTakeovers do
   end
 
   @spec get_overlapping_alerts(list(String.t()), integer() | nil) :: list(EmergencyTakeover.t())
-  defp get_overlapping_alerts(new_stations, alert_id) do
+  def get_overlapping_alerts(new_stations, alert_id) do
     # Find all active alerts that have any station overlap with the new alert,
     # excluding the alert being edited when editing an existing alert.
     excluded_alert_id = alert_id || -1
