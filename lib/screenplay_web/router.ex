@@ -163,11 +163,11 @@ defmodule ScreenplayWeb.Router do
     pipe_through([:api, :browser, :authenticate, :ensure_emergency_admin])
 
     post("/create", AlertController, :create)
-    post("/edit", AlertController, :edit)
+    post("/update", AlertController, :update)
     post("/clear", AlertController, :clear)
     post("/clear_all", AlertController, :clear_all)
     get("/active_alerts", AlertController, :active_alerts)
-    get("/past_alerts", AlertController, :past_alerts)
+    get("/alerts", AlertController, :alerts)
 
     get("/stations_and_screens", PageController, :stations_and_screens)
     get("/canned_messages", PageController, :canned_messages)

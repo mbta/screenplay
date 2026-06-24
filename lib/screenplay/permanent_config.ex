@@ -6,7 +6,7 @@ defmodule Screenplay.PermanentConfig do
 
   require Logger
 
-  alias Screenplay.EmergencyTakeoverTool.Alerts.Alert
+  alias Screenplay.EmergencyTakeoverTool.ScreensConfig, as: EmergencyTakeoverConfig
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
   alias Screenplay.Places.Fetch
@@ -488,7 +488,7 @@ defmodule Screenplay.PermanentConfig do
         case screen do
           %Screen{app_params: %{emergency_messaging_location: eml}} when not is_nil(eml) ->
             emergency_takeover =
-              Alert.build_emergency_takeover(
+              EmergencyTakeoverConfig.build_emergency_takeover(
                 message,
                 alert_id,
                 screen.app_id,

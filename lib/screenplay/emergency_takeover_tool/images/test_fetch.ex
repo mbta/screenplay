@@ -1,15 +1,5 @@
-defmodule Screenplay.EmergencyTakeoverTool.Alerts.TestFetch do
+defmodule Screenplay.EmergencyTakeoverTool.Images.TestFetch do
   @moduledoc false
-
-  @spec get_state!() :: binary()
-  def get_state! do
-    File.read!("test/fixtures/alerts.json")
-  end
-
-  @spec put_state!(binary()) :: :ok
-  def put_state!(_state) do
-    :ok
-  end
 
   @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok
   def upload_takeover_image(_alert_id, _image_data, _image_type) do

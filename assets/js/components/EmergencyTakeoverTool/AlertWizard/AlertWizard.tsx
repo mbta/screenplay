@@ -39,7 +39,7 @@ interface AlertWizardState {
 
 const handleAlertSubmit = withErrorHandling(
   async (data: Record<string, unknown>, id: string | null) => {
-    const endpoint = id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
+    const endpoint = id === null ? `${BASE_URL}/create` : `${BASE_URL}/update`;
     const csrfMetaElement = document.head.querySelector(
       "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
