@@ -165,6 +165,15 @@ defmodule Screenplay.Alerts.Alert do
     DateTime.compare(t, start_t) in [:gt, :eq] && DateTime.compare(t, end_t) in [:lt, :eq]
   end
 
+  @spec closed?(t(), DateTime.t()) :: boolean()
+  def closed?(alert, now \\ DateTime.utc_now())
+
+  def closed?(%__MODULE__{active_period: [{_, period_end}]}, now) when period_end != nil do
+    DateTime.compare(period_end, now) in [:lt, :eq]
+  end
+
+  def closed?(_, _), do: false
+
   @spec access_alert?(t()) :: boolean()
   def access_alert?(alert) do
     Enum.any?(alert.informed_entities, &(not is_nil(&1.facility)))

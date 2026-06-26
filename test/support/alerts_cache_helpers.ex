@@ -7,7 +7,12 @@ defmodule Screenplay.AlertsCacheHelpers do
 
   alias Screenplay.Alerts.Cache, as: AlertsCache
 
-  def seed_alerts_cache(num_alerts, start_dt, end_dt) do
+  def seed_alerts_cache(num_alerts, start_dt, end_dt, now_fn \\ nil) do
+    # Alerts whose end time occurs before "now" will be filtered out by
+    # the `AlertsCache`. Have `now_fn` default to just before the end
+    # time of the new Alert to prevent filtering by default in tests
+    now_fn = now_fn || fn -> DateTime.add(end_dt, -1, :minute) end
+
     get_json_fn = fn "/alerts", %{"include" => "routes"} ->
       {:ok,
        %{
@@ -24,7 +29,7 @@ defmodule Screenplay.AlertsCacheHelpers do
        }}
     end
 
-    {:ok, fetcher} = start_supervised({AlertsCache, get_json_fn: get_json_fn})
+    {:ok, fetcher} = start_supervised({AlertsCache, get_json_fn: get_json_fn, now_fn: now_fn})
     send(fetcher, :fetch)
   end
 

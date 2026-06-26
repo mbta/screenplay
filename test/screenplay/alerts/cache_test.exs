@@ -13,6 +13,36 @@ defmodule Screenplay.Alerts.CacheTest do
     assert %Alert{id: "1"} = Cache.alert("1")
   end
 
+  test "alerts that have ended are not added to the store" do
+    now = ~U[2026-06-01T01:00:00Z]
+
+    AlertsCacheHelpers.seed_alerts_cache(
+      1,
+      DateTime.add(now, -10, :minute),
+      DateTime.add(now, -5, :minute),
+      fn -> now end
+    )
+
+    _ = await_updated()
+
+    assert [] = Cache.alerts()
+  end
+
+  test "alerts that have just ended are not added to the store" do
+    now = ~U[2026-06-01T01:00:00Z]
+
+    AlertsCacheHelpers.seed_alerts_cache(
+      1,
+      DateTime.add(now, -10, :minute),
+      now,
+      fn -> now end
+    )
+
+    _ = await_updated()
+
+    assert [] = Cache.alerts()
+  end
+
   test "It handles a failed API response and does not update the store" do
     get_json_fn = fn "/alerts", %{"include" => "routes"} ->
       :error

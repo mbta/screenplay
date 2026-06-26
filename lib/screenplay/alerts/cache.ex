@@ -12,6 +12,7 @@ defmodule Screenplay.Alerts.Cache do
 
   @default_opts [
     get_json_fn: &V3Api.get_json/2,
+    now_fn: &DateTime.utc_now/0,
     update_interval_ms: 4_000
   ]
 
@@ -54,18 +55,22 @@ defmodule Screenplay.Alerts.Cache do
     :ets.new(:alerts, [:protected, :named_table, read_concurrency: true])
 
     get_json_fn = Keyword.get(opts, :get_json_fn)
+    now_fn = Keyword.get(opts, :now_fn)
     update_interval_ms = Keyword.get(opts, :update_interval_ms)
 
     schedule_fetch(update_interval_ms)
 
-    {:ok, {get_json_fn, update_interval_ms}}
+    {:ok, {get_json_fn, now_fn, update_interval_ms}}
   end
 
   @impl true
-  def handle_info(:fetch, state = {get_json_fn, update_interval_ms}) do
+  def handle_info(:fetch, state = {get_json_fn, now_fn, update_interval_ms}) do
     case Alert.fetch(get_json_fn) do
       {:ok, alerts} ->
-        alerts_to_insert = Enum.map(alerts, fn alert -> {alert.id, alert} end)
+        alerts_to_insert =
+          alerts
+          |> Enum.reject(&Alert.closed?(&1, now_fn.()))
+          |> Enum.map(fn alert -> {alert.id, alert} end)
 
         :ets.delete_all_objects(:alerts)
         :ets.insert(:alerts, alerts_to_insert)

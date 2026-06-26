@@ -220,4 +220,62 @@ defmodule Screenplay.Alerts.AlertTest do
       end
     end
   end
+
+  describe "closed?/2" do
+    test "returns false when there are no active periods" do
+      refute Alert.closed?(%Alert{active_period: []})
+    end
+
+    test "returns false when end of active period is nil" do
+      refute Alert.closed?(%Alert{active_period: [{~U[2026-06-01T01:00:00Z], nil}]})
+    end
+
+    test "returns false when there are multiple active periods" do
+      refute Alert.closed?(%Alert{
+               active_period: [
+                 {~U[2026-06-01T01:00:00Z], ~U[2026-06-01T02:00:00Z]},
+                 {~U[2026-06-02T01:00:00Z], ~U[2026-06-02T02:00:00Z]}
+               ]
+             })
+    end
+
+    test "returns false when the end time is later than the current time" do
+      now = ~U[2026-06-01T02:00:00Z]
+
+      refute Alert.closed?(
+               %Alert{
+                 active_period: [
+                   {~U[2026-06-01T01:00:00Z], DateTime.add(now, 1, :minute)}
+                 ]
+               },
+               now
+             )
+    end
+
+    test "returns true when the end time is equal to the current time" do
+      now = ~U[2026-06-01T02:00:00Z]
+
+      assert Alert.closed?(
+               %Alert{
+                 active_period: [
+                   {~U[2026-06-01T01:00:00Z], now}
+                 ]
+               },
+               now
+             )
+    end
+
+    test "returns true when the end time is before than the current time" do
+      now = ~U[2026-06-01T02:00:00Z]
+
+      assert Alert.closed?(
+               %Alert{
+                 active_period: [
+                   {~U[2026-06-01T01:00:00Z], DateTime.add(now, -1, :minute)}
+                 ]
+               },
+               now
+             )
+    end
+  end
 end
