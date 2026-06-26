@@ -11,7 +11,7 @@ defmodule Screenplay.AlertsCacheHelpers do
     # Alerts whose end time occurs before "now" will be filtered out by
     # the `AlertsCache`. Have `now_fn` default to just before the end
     # time of the new Alert to prevent filtering by default in tests
-    now_fn = now_fn || fn -> DateTime.add(end_dt, -5, :minute) end
+    now_fn = now_fn || fn -> DateTime.add(end_dt, -1, :minute) end
 
     get_json_fn = fn "/alerts", %{"include" => "routes"} ->
       {:ok,
