@@ -9,6 +9,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   alias Screenplay.Places.Place.ShowtimeScreen
   alias ScreenplayWeb.UserActionLogger
 
+  @image_store Application.compile_env!(:screenplay, :image_store_module)
+
   @spec create(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create(
         conn,
@@ -182,7 +184,6 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   @spec upload_takeover_images(String.t(), %{String.t() => String.t()}) ::
           :ok | {:error, String.t()}
   def upload_takeover_images(alert_id, images) do
-    image_store_module = Application.get_env(:screenplay, :image_store_module)
     image_types = ["indoor_portrait", "outdoor_portrait", "indoor_landscape", "outdoor_landscape"]
 
     Enum.reduce_while(image_types, :ok, fn image_type, _acc ->
@@ -193,7 +194,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         image_data_string ->
           case decode_image(image_data_string) do
             {:ok, image_binary, _format} ->
-              case image_store_module.upload_takeover_image(alert_id, image_binary, image_type) do
+              case @image_store.upload_takeover_image(alert_id, image_binary, image_type) do
                 :ok -> {:cont, :ok}
                 error -> {:halt, error}
               end
@@ -252,9 +253,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   @spec remove_overlapping_alerts(integer() | nil, map(), String.t()) ::
           :ok | {:error, String.t()}
   defp remove_overlapping_alerts(id, params, user) do
-    with stations_to_delete <-
-           EmergencyTakeovers.remove_overlapping_alerts(id, params["stations"], user),
-         :ok <- SFTP.clear_takeover_images(stations_to_delete),
+    stations_to_delete =
+      EmergencyTakeovers.remove_overlapping_alerts(id, params["stations"], user)
+
+    with :ok <- SFTP.clear_takeover_images(stations_to_delete),
          :ok <- remove_takeovers_from_showtime_screens(stations_to_delete) do
       :ok
     else
