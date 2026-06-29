@@ -15,7 +15,15 @@ import { matchStation } from "../../../util";
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
-import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
+import {
+  getMessageImageUrl,
+  Message,
+  messageDetails,
+} from "Utils/emergencyMessages";
+import {
+  CannedMessagesContext,
+  CannedMessagesContextType,
+} from "../CannedMessagesContext";
 import { isStationSelectable } from "./SelectableStation";
 import { withErrorHandling } from "Utils/errorHandler";
 
@@ -66,6 +74,9 @@ const handleAlertSubmit = withErrorHandling(
 );
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
+  static contextType = CannedMessagesContext;
+  context!: CannedMessagesContextType;
+
   constructor(props: AlertWizardProps) {
     super(props);
 
@@ -205,9 +216,18 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     if (this.state.step === 4) {
       this.handleSubmit();
     } else {
-      this.setState((state) => ({
-        step: state.step + 1,
-      }));
+      this.setState((state) => {
+        if (state.step === 1 && state.message.type === "canned") {
+          return {
+            step: state.step + 1,
+            message: messageDetails(state.message, this.context.messages),
+          };
+        }
+        return {
+          step: state.step + 1,
+          message: state.message,
+        };
+      });
     }
 
     this.setState({ showErrorMessage: false });

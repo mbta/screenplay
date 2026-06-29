@@ -1,7 +1,7 @@
 import React, { ReactNode, useState, useEffect } from "react";
 import { getCannedMessages, CannedMessage } from "Utils/emergencyMessages";
 
-interface CannedMessagesContextType {
+export interface CannedMessagesContextType {
   messages: CannedMessage[];
   loading: boolean;
 }
