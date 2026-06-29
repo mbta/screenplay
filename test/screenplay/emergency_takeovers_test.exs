@@ -100,67 +100,6 @@ defmodule Screenplay.EmergencyTakeoversTest do
     end
   end
 
-  describe "get_overlapping_alerts/2" do
-    test "returns an empty list when there are no overlapping alerts" do
-      insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
-
-      overlapping_alerts =
-        EmergencyTakeovers.get_overlapping_alerts(["station3", "station4"], nil)
-
-      assert Enum.empty?(overlapping_alerts)
-    end
-
-    test "returns the overlapping alert" do
-      alert = insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
-
-      overlapping_alerts =
-        EmergencyTakeovers.get_overlapping_alerts(["station2", "station3"], nil)
-
-      assert length(overlapping_alerts) == 1
-      assert hd(overlapping_alerts).id == alert.id
-    end
-
-    test "returns multiple overlapping alerts" do
-      alert1 = insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
-      alert2 = insert(:emergency_takeover, stations: ["station3", "station4"], cleared_at: nil)
-
-      overlapping_alerts =
-        EmergencyTakeovers.get_overlapping_alerts(["station2", "station3"], nil)
-
-      assert length(overlapping_alerts) == 2
-
-      assert Enum.map(overlapping_alerts, & &1.id) |> Enum.sort() ==
-               [alert1.id, alert2.id] |> Enum.sort()
-    end
-
-    test "does not return the alert being edited" do
-      alert = insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
-
-      overlapping_alerts =
-        EmergencyTakeovers.get_overlapping_alerts(["station1", "station2"], alert.id)
-
-      assert Enum.empty?(overlapping_alerts)
-    end
-
-    test "does not return cleared alerts" do
-      insert(:emergency_takeover,
-        stations: ["station1", "station2"],
-        cleared_at: DateTime.utc_now()
-      )
-
-      overlapping_alerts =
-        EmergencyTakeovers.get_overlapping_alerts(["station1", "station2"], nil)
-
-      assert Enum.empty?(overlapping_alerts)
-    end
-
-    test "returns an empty list for empty new_stations" do
-      insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
-      overlapping_alerts = EmergencyTakeovers.get_overlapping_alerts([], nil)
-      assert Enum.empty?(overlapping_alerts)
-    end
-  end
-
   describe "remove_overlapping_alerts/3" do
     test "does nothing when there are no overlapping alerts" do
       insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
@@ -239,6 +178,15 @@ defmodule Screenplay.EmergencyTakeoversTest do
 
       assert cleared_stations == []
       assert Enum.empty?(EmergencyTakeovers.get_active_alerts())
+    end
+
+    test "returns empty list for empty new_stations" do
+      insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
+
+      cleared_stations = EmergencyTakeovers.remove_overlapping_alerts(nil, [], "test_user")
+
+      assert cleared_stations == []
+      assert length(EmergencyTakeovers.get_active_alerts()) == 1
     end
   end
 end

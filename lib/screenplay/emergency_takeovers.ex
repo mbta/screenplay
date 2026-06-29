@@ -31,21 +31,6 @@ defmodule Screenplay.EmergencyTakeovers do
     Repo.get(EmergencyTakeover, id)
   end
 
-  @spec get_overlapping_alerts(list(String.t()), integer() | nil) :: list(EmergencyTakeover.t())
-  def get_overlapping_alerts(new_stations, alert_id) do
-    # Find all active alerts that have any station overlap with the new alert,
-    # excluding the alert being edited when editing an existing alert.
-    excluded_alert_id = alert_id || -1
-
-    EmergencyTakeover
-    |> where(
-      [alert],
-      is_nil(alert.cleared_at) and alert.id != ^excluded_alert_id and
-        fragment("? && ?", alert.stations, ^new_stations)
-    )
-    |> Repo.all()
-  end
-
   @spec get_active_alerts() :: [EmergencyTakeover.t()]
   def get_active_alerts do
     EmergencyTakeover
@@ -117,26 +102,6 @@ defmodule Screenplay.EmergencyTakeovers do
     end
   end
 
-  @spec to_json(EmergencyTakeover.t()) :: map()
-  def to_json(alert = %EmergencyTakeover{}) do
-    %{
-      "id" => to_string(alert.id),
-      "message" => alert.message,
-      "stations" => alert.stations,
-      "schedule" => %{
-        "start" => serialize_datetime(alert.start_time),
-        "end" => serialize_datetime(alert.end_time)
-      },
-      "created_by" => Util.trim_username(alert.created_by),
-      "edited_by" => Util.trim_username(alert.edited_by),
-      "cleared_at" => serialize_datetime(alert.cleared_at),
-      "cleared_by" => Util.trim_username(alert.cleared_by)
-    }
-  end
-
-  defp serialize_datetime(nil), do: nil
-  defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
-
   @spec remove_overlapping_alerts(integer() | nil, list(String.t()), String.t()) ::
           list(String.t())
   def remove_overlapping_alerts(id, new_stations, user) do
@@ -169,4 +134,39 @@ defmodule Screenplay.EmergencyTakeovers do
       end
     end)
   end
+
+  @spec get_overlapping_alerts(list(String.t()), integer() | nil) :: list(EmergencyTakeover.t())
+  defp get_overlapping_alerts(new_stations, alert_id) do
+    # Find all active alerts that have any station overlap with the new alert,
+    # excluding the alert being edited when editing an existing alert.
+    excluded_alert_id = alert_id || -1
+
+    EmergencyTakeover
+    |> where(
+      [alert],
+      is_nil(alert.cleared_at) and alert.id != ^excluded_alert_id and
+        fragment("? && ?", alert.stations, ^new_stations)
+    )
+    |> Repo.all()
+  end
+
+  @spec to_json(EmergencyTakeover.t()) :: map()
+  def to_json(alert = %EmergencyTakeover{}) do
+    %{
+      "id" => to_string(alert.id),
+      "message" => alert.message,
+      "stations" => alert.stations,
+      "schedule" => %{
+        "start" => serialize_datetime(alert.start_time),
+        "end" => serialize_datetime(alert.end_time)
+      },
+      "created_by" => Util.trim_username(alert.created_by),
+      "edited_by" => Util.trim_username(alert.edited_by),
+      "cleared_at" => serialize_datetime(alert.cleared_at),
+      "cleared_by" => Util.trim_username(alert.cleared_by)
+    }
+  end
+
+  defp serialize_datetime(nil), do: nil
+  defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
 end
