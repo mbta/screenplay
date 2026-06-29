@@ -6,7 +6,7 @@ defmodule Screenplay.EmergencyTakeovers do
   import Ecto.Query
 
   alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
-  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover.{MessageType, NewEmergencyTakeover}
+  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover.MessageType
   alias Screenplay.Repo
   alias Screenplay.Util
 
@@ -67,7 +67,7 @@ defmodule Screenplay.EmergencyTakeovers do
     |> Repo.all()
   end
 
-  @spec create_alert(NewEmergencyTakeover.t()) ::
+  @spec create_alert(EmergencyTakeover.t()) ::
           {:ok, EmergencyTakeover.t()} | {:error, Ecto.Changeset.t()}
   def create_alert(alert) do
     %EmergencyTakeover{}

@@ -2,7 +2,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   @moduledoc """
   Represents an emergency takeover alert persisted in Postgres.
   """
-  alias __MODULE__.{MessageType, NewEmergencyTakeover}
+  alias __MODULE__.MessageType
   alias Screenplay.Util
 
   use Ecto.Schema
@@ -88,24 +88,8 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     defp normalize(value), do: cast(value)
   end
 
-  defmodule NewEmergencyTakeover do
-    alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
-
-    @type t() :: %__MODULE__{
-            message: EmergencyTakeover.message(),
-            stations: [EmergencyTakeover.station()],
-            start_time: DateTime.t(),
-            end_time: DateTime.t() | nil,
-            created_by: String.t(),
-            edited_by: String.t() | nil,
-            cleared_by: String.t() | nil,
-            cleared_at: DateTime.t() | nil
-          }
-    defstruct ~w[message stations start_time end_time created_by edited_by cleared_by cleared_at]a
-  end
-
   @type t() :: %__MODULE__{
-          id: integer(),
+          id: integer() | nil,
           message: message(),
           stations: [station()],
           start_time: DateTime.t(),
@@ -114,8 +98,8 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
           edited_by: String.t() | nil,
           cleared_by: String.t() | nil,
           cleared_at: DateTime.t() | nil,
-          inserted_at: DateTime.t(),
-          updated_at: DateTime.t()
+          inserted_at: DateTime.t() | nil,
+          updated_at: DateTime.t() | nil
         }
 
   schema "emergency_takeover" do
@@ -152,11 +136,11 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     |> validate_length(:stations, min: 1)
   end
 
-  @spec new(message() | map(), [station()], schedule(), String.t()) :: NewEmergencyTakeover.t()
+  @spec new(message() | map(), [station()], schedule(), String.t()) :: __MODULE__.t()
   def new(message, stations, schedule, user) do
     normalized_message = message_from_json(message)
 
-    %NewEmergencyTakeover{
+    %__MODULE__{
       message: normalized_message,
       stations: stations,
       start_time: schedule.start_time,
