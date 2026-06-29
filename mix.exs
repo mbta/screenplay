@@ -67,7 +67,7 @@ defmodule Screenplay.MixProject do
       {:ex_aws, "~> 2.5"},
       {:ex_aws_s3, "~> 2.5"},
       {:ex_aws_rds, "~> 2.0.2"},
-      {:httpoison, "~> 2.2.1"},
+      {:httpoison, "~> 2.3.0"},
       {:timex, "~> 3.0"},
       {:lcov_ex, "~> 0.2", only: [:dev, :test], runtime: false},
       {:logster, "~> 1.1"},
