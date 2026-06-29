@@ -121,7 +121,7 @@ defmodule Screenplay.EmergencyTakeovers do
   def to_json(alert = %EmergencyTakeover{}) do
     %{
       "id" => to_string(alert.id),
-      "message" => stringify_keys(alert.message),
+      "message" => alert.message,
       "stations" => alert.stations,
       "schedule" => %{
         "start" => serialize_datetime(alert.start_time),
@@ -133,14 +133,6 @@ defmodule Screenplay.EmergencyTakeovers do
       "cleared_by" => Util.trim_username(alert.cleared_by)
     }
   end
-
-  defp stringify_keys(value) when is_map(value) do
-    value
-    |> Enum.map(fn {k, v} -> {to_string(k), stringify_keys(v)} end)
-    |> Enum.into(%{})
-  end
-
-  defp stringify_keys(value), do: value
 
   defp serialize_datetime(nil), do: nil
   defp serialize_datetime(dt = %DateTime{}), do: DateTime.to_iso8601(dt)
