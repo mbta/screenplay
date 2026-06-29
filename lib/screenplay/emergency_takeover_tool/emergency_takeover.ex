@@ -31,9 +31,9 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
           start_time: DateTime.t(),
           end_time: DateTime.t() | nil
         }
-  defmodule MessageType do
-    @behaviour Ecto.Type
 
+  defmodule MessageType do
+    use Ecto.Type
     @impl true
     def type, do: :map
 
@@ -58,34 +58,11 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
 
     def cast(_), do: :error
 
-    def stringify_keys(value) when is_map(value) do
-      value
-      |> Enum.map(fn {k, v} -> {to_string(k), stringify_keys(v)} end)
-      |> Enum.into(%{})
-    end
-
-    def stringify_keys(value), do: value
-
     @impl true
-    def dump(message) do
-      with {:ok, normalized_message} <- cast(message) do
-        {:ok, stringify_keys(normalized_message)}
-      end
-    end
+    def dump(message), do: {:ok, message}
 
     @impl true
     def load(message), do: cast(message)
-
-    @impl true
-    def embed_as(_format), do: :self
-
-    @impl true
-    def equal?(left, right) do
-      normalize(left) == normalize(right)
-    end
-
-    defp normalize(nil), do: {:ok, nil}
-    defp normalize(value), do: cast(value)
   end
 
   @type t() :: %__MODULE__{
@@ -138,7 +115,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
 
   @spec new(message() | map(), [station()], schedule(), String.t()) :: __MODULE__.t()
   def new(message, stations, schedule, user) do
-    normalized_message = message_from_json(message)
+    {:ok, normalized_message} = MessageType.cast(message)
 
     %__MODULE__{
       message: normalized_message,
@@ -150,32 +127,5 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
       cleared_at: nil,
       cleared_by: nil
     }
-  end
-
-  def message_from_json(%{"type" => "canned", "id" => id}) do
-    case MessageType.cast(%{"type" => "canned", "id" => id}) do
-      {:ok, message} -> message
-      :error -> raise ArgumentError, "invalid canned message payload"
-    end
-  end
-
-  def message_from_json(%{
-        "type" => "custom",
-        "text" => %{"indoor" => indoor, "outdoor" => outdoor}
-      }) do
-    case MessageType.cast(%{
-           "type" => "custom",
-           "text" => %{"indoor" => indoor, "outdoor" => outdoor}
-         }) do
-      {:ok, message} -> message
-      :error -> raise ArgumentError, "invalid custom message payload"
-    end
-  end
-
-  def message_from_json(message) do
-    case MessageType.cast(message) do
-      {:ok, normalized_message} -> normalized_message
-      :error -> raise ArgumentError, "invalid emergency takeover message payload"
-    end
   end
 end

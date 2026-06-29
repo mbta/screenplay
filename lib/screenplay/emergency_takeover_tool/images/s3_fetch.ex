@@ -2,7 +2,7 @@ defmodule Screenplay.EmergencyTakeoverTool.Images.S3Fetch do
   @moduledoc false
   require Logger
 
-  @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok
+  @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok | {:error, String.t()}
   def upload_takeover_image(alert_id, image_data, image_type) do
     image_path = "#{asset_directory()}#{alert_id}/#{image_type}.png"
 
@@ -16,11 +16,11 @@ defmodule Screenplay.EmergencyTakeoverTool.Images.S3Fetch do
 
       {:ok, response} ->
         Logger.error("Error uploading takeover image to S3: #{inspect(response)}")
-        :error
+        {:error, "Failed to upload takeover image: #{inspect(response)}"}
 
       {:error, reason} ->
         Logger.error("Error uploading takeover image to S3: #{inspect(reason)}")
-        :error
+        {:error, "Failed to upload takeover image: #{inspect(reason)}"}
     end
   end
 
