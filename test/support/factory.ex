@@ -27,4 +27,23 @@ defmodule Screenplay.Factory do
       clear_at_end_of_day: false
     }
   end
+
+  def emergency_takeover_factory do
+    %Screenplay.EmergencyTakeoverTool.EmergencyTakeover{
+      message: %{
+        type: :custom,
+        text: %{
+          indoor: "Indoor test message",
+          outdoor: "Outdoor test message"
+        }
+      },
+      station_ids: ["place-aqucl", "place-mvbcl"],
+      start_time: ~U[2023-01-01 12:00:00Z],
+      end_time: ~U[2023-01-01 13:00:00Z],
+      created_by: "test_user",
+      edited_by: "test_user",
+      cleared_at: nil,
+      cleared_by: nil
+    }
+  end
 end

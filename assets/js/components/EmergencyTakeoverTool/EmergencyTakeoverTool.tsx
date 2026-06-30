@@ -8,6 +8,7 @@ import { Message } from "Utils/emergencyMessages";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 
 export interface Station {
+  id: string;
   name: string;
   has_outfront: boolean;
   showtime_screen_ids: string[];
@@ -38,7 +39,7 @@ interface AlertData {
   edited_by: string;
   message: Message;
   schedule: Schedule;
-  stations: string[];
+  station_ids: string[];
   step: number | null;
 }
 
@@ -65,7 +66,7 @@ class EmergencyTakeoverTool extends React.Component<
 
     fetch(`${BASE_URL}/stations_and_screens`)
       .then((response) => response.json())
-      .then((stationsMap: { [stationName: string]: Station }) => {
+      .then((stationsMap: { [stationName: string]: Omit<Station, "name"> }) => {
         // Group stations by line
         const stationsByLine: StationsByLine = {};
 
@@ -73,8 +74,11 @@ class EmergencyTakeoverTool extends React.Component<
           const stationInfo = STATION_ORDER_BY_LINE[line];
           if (stationInfo) {
             stationsByLine[line] = stationInfo
-              .map((station) => stationsMap[station.name])
-              .filter((station) => station !== undefined);
+              .map((station) => {
+                const data = stationsMap[station.name];
+                return data ? { ...data, name: station.name } : undefined;
+              })
+              .filter((station): station is Station => station !== undefined);
           }
         });
 

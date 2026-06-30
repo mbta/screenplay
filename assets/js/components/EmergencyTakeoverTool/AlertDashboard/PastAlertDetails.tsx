@@ -13,12 +13,12 @@ interface PastAlertDetailsProps {
 }
 
 const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
-  const { cleared_at, cleared_by, created_by, message, schedule, stations } =
+  const { cleared_at, cleared_by, created_by, message, schedule, station_ids } =
     props.data;
 
   const stationsAndScreens = useContext(StationScreenOrientationContext);
-  const stationDetails = stations.map((station: string) =>
-    matchStation(station, stationsAndScreens),
+  const stationDetails = station_ids.map((stationId: string) =>
+    matchStation(stationId, stationsAndScreens),
   );
 
   const { messages: cannedMessages } = useContext(CannedMessagesContext);

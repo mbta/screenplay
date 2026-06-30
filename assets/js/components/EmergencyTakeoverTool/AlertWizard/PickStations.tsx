@@ -15,9 +15,9 @@ const PickStations = (props: PickStationsProps): JSX.Element => {
   const { activeAlertsStations, selectedStations } = props;
   const filteredAlerts = useMemo(
     () =>
-      activeAlertsStations.filter((station) =>
-        selectedStations.map((station) => station.name).includes(station),
-      ),
+      selectedStations
+        .filter((station) => activeAlertsStations.includes(station.id))
+        .map((station) => station.name),
     [activeAlertsStations, selectedStations],
   );
 

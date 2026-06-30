@@ -47,4 +47,11 @@ defmodule Screenplay.Places do
   def get_all do
     Cache.all(nil, return: :value)
   end
+
+  @spec names_from_ids(list(String.t())) :: list(String.t())
+  def names_from_ids(place_ids) do
+    Cache.all(nil, return: :value)
+    |> Enum.filter(fn place -> place.id in place_ids end)
+    |> Enum.map(& &1.name)
+  end
 end

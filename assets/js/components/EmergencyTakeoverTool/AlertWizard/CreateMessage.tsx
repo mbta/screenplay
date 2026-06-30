@@ -2,7 +2,11 @@ import React, { useContext } from "react";
 import { CannedMessagesContext } from "../CannedMessagesContext";
 import { charLimit } from "Constants/misc";
 import cx from "classnames";
-import { getMessageString, Message } from "Utils/emergencyMessages";
+import {
+  getMessageString,
+  Message,
+  messageDetails,
+} from "Utils/emergencyMessages";
 
 interface CreateMessageProps {
   value: Message;
@@ -13,6 +17,8 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
   const { messages: cannedMessages, loading } = useContext(
     CannedMessagesContext,
   );
+
+  const selectedMessage = messageDetails(value, cannedMessages);
 
   const fields = [
     { location: "indoor" as const, label: "Indoor" },
@@ -38,12 +44,12 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
         <div
           style={{ gridColumn: 2 }}
           className={cx("message-option", "option-one", {
-            "selected-option": value.type === "canned",
+            "selected-option": selectedMessage.type === "canned",
           })}
         >
           <select
             className="message-select text-16"
-            value={value.type === "canned" ? value.id : -1}
+            value={selectedMessage.type === "canned" ? selectedMessage.id : -1}
             onChange={(e) => {
               const selectedMessage = cannedMessages.find(
                 (m) => m.id === +e.target.value,
@@ -72,7 +78,7 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
         </div>
         <div
           className={cx("message-subgrid", "message-option", "option-two", {
-            "selected-option": value.type === "custom",
+            "selected-option": selectedMessage.type === "custom",
           })}
         >
           {fields.map(({ location }) => (
@@ -80,20 +86,20 @@ const CreateMessage = ({ value, onChange }: CreateMessageProps) => {
               key={location}
               id={`${location}-text`}
               className="message-textarea text-16"
-              value={getMessageString(value, location)}
+              value={getMessageString(selectedMessage, location)}
               maxLength={charLimit}
               placeholder="Type, or select a canned message above to edit here..."
               onChange={(e) => {
                 const base =
-                  value.type === "canned"
+                  selectedMessage.type === "canned"
                     ? {
                         type: "custom" as const,
                         text: {
-                          indoor: getMessageString(value, "indoor"),
-                          outdoor: getMessageString(value, "outdoor"),
+                          indoor: getMessageString(selectedMessage, "indoor"),
+                          outdoor: getMessageString(selectedMessage, "outdoor"),
                         },
                       }
-                    : value;
+                    : selectedMessage;
                 onChange({
                   ...base,
                   text: { ...base.text, [location]: e.target.value },

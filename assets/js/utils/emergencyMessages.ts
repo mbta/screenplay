@@ -56,7 +56,9 @@ export const messageDetails = (
   // We only store canned alert history by their IDs, so we need to add on full message details
   const cannedMessage = cannedMessages.find((m) => m.id === message.id);
   if (!cannedMessage) {
-    console.error(`Canned message with id ${message.id} not found`);
+    if (message.id !== -1) {
+      console.error(`Canned message with id ${message.id} not found`);
+    }
     return message;
   }
   return cannedMessage;

@@ -111,15 +111,15 @@ export const convertArrayToListString = (array: string[]) => {
 };
 
 export const matchStation = (
-  station: string,
+  stationId: string,
   stationScreenOrientationList: StationsByLine,
 ) => {
   const result = Object.values(stationScreenOrientationList)
     .flat()
-    .find(({ name }) => name === station);
+    .find(({ id }) => id === stationId);
   if (result === undefined) {
     throw new TypeError(
-      `Station ${station} not present in list of all stations!`,
+      `Station with ID ${stationId} not present in list of all stations!`,
     );
   }
   return result;

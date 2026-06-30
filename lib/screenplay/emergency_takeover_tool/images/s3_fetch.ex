@@ -1,20 +1,8 @@
-defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
+defmodule Screenplay.EmergencyTakeoverTool.Images.S3Fetch do
   @moduledoc false
   require Logger
 
-  @spec get_state!() :: binary()
-  def get_state! do
-    %{body: body, status_code: 200} = ExAws.S3.get_object(bucket(), path()) |> ExAws.request!()
-    body
-  end
-
-  @spec put_state!(binary()) :: :ok
-  def put_state!(state) do
-    %{status_code: 200} = ExAws.S3.put_object(bucket(), path(), state) |> ExAws.request!()
-    :ok
-  end
-
-  @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok
+  @spec upload_takeover_image(String.t(), binary(), String.t()) :: :ok | {:error, String.t()}
   def upload_takeover_image(alert_id, image_data, image_type) do
     image_path = "#{asset_directory()}#{alert_id}/#{image_type}.png"
 
@@ -28,11 +16,11 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
 
       {:ok, response} ->
         Logger.error("Error uploading takeover image to S3: #{inspect(response)}")
-        :error
+        {:error, "Failed to upload takeover image: #{inspect(response)}"}
 
       {:error, reason} ->
         Logger.error("Error uploading takeover image to S3: #{inspect(reason)}")
-        :error
+        {:error, "Failed to upload takeover image: #{inspect(reason)}"}
     end
   end
 
@@ -43,6 +31,5 @@ defmodule Screenplay.EmergencyTakeoverTool.Alerts.S3Fetch do
 
   defp asset_directory, do: "screenplay/#{env_name()}/emergency-takeovers/"
   defp bucket, do: Application.get_env(:screenplay, :alerts_s3_bucket)
-  defp path, do: Application.get_env(:screenplay, :alerts_s3_path)
   defp env_name, do: Application.get_env(:screenplay, :environment_name)
 end

@@ -15,7 +15,15 @@ import { matchStation } from "../../../util";
 import { differenceInHours, parseISO } from "date-fns";
 import { ModalDetails } from "../ConfirmationModal";
 import { BASE_URL } from "Constants/constants";
-import { getMessageImageUrl, Message } from "Utils/emergencyMessages";
+import {
+  getMessageImageUrl,
+  Message,
+  messageDetails,
+} from "Utils/emergencyMessages";
+import {
+  CannedMessagesContext,
+  CannedMessagesContextType,
+} from "../CannedMessagesContext";
 import { isStationSelectable } from "./SelectableStation";
 import { withErrorHandling } from "Utils/errorHandler";
 
@@ -39,7 +47,7 @@ interface AlertWizardState {
 
 const handleAlertSubmit = withErrorHandling(
   async (data: Record<string, unknown>, id: string | null) => {
-    const endpoint = id === null ? `${BASE_URL}/create` : `${BASE_URL}/edit`;
+    const endpoint = id === null ? `${BASE_URL}/create` : `${BASE_URL}/update`;
     const csrfMetaElement = document.head.querySelector(
       "[name~=csrf-token][content]",
     ) as HTMLMetaElement;
@@ -66,6 +74,9 @@ const handleAlertSubmit = withErrorHandling(
 );
 
 class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
+  static contextType = CannedMessagesContext;
+  context!: CannedMessagesContextType;
+
   constructor(props: AlertWizardProps) {
     super(props);
 
@@ -100,10 +111,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   initializeState(alertData: AlertData) {
-    const { id, message, stations, schedule } = alertData;
+    const { id, message, station_ids, schedule } = alertData;
 
-    const selectedStations = stations.map((station: string) =>
-      matchStation(station, this.props.stationScreenOrientationList),
+    const selectedStations = station_ids.map((stationId: string) =>
+      matchStation(stationId, this.props.stationScreenOrientationList),
     );
 
     let duration;
@@ -139,7 +150,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         if (this.state.activeAlertsList.length > 0) {
           stationNamesWithActiveAlerts = this.state.activeAlertsList
             .filter((alert) => alert.id !== this.state.id)
-            .map((alert) => alert.stations)
+            .map((alert) => alert.station_ids)
             .reduce((result, current) => {
               return current.concat(result);
             }, []);
@@ -205,9 +216,18 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
     if (this.state.step === 4) {
       this.handleSubmit();
     } else {
-      this.setState((state) => ({
-        step: state.step + 1,
-      }));
+      this.setState((state) => {
+        if (state.step === 1 && state.message.type === "canned") {
+          return {
+            step: state.step + 1,
+            message: messageDetails(state.message, this.context.messages),
+          };
+        }
+        return {
+          step: state.step + 1,
+          message: state.message,
+        };
+      });
     }
 
     this.setState({ showErrorMessage: false });
@@ -232,7 +252,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   async handleSubmit() {
-    const stations = this.state.selectedStations.map(({ name }) => name);
+    const stationIds = this.state.selectedStations.map(({ id }) => id);
     const selectedShowtimeScreenIds = this.state.selectedStations.flatMap(
       ({ showtime_screen_ids }) => showtime_screen_ids,
     );
@@ -252,7 +272,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const data = {
       message: this.state.message,
-      stations,
+      stationIds,
       showtimeScreenIds: selectedShowtimeScreenIds,
       duration,
       images,

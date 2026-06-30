@@ -26,11 +26,11 @@ const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
     triggerConfirmation,
     clearAlert: clearAlertFromProps,
   } = props;
-  const { created_by, id, message, schedule, stations } = data;
+  const { created_by, id, message, schedule, station_ids } = data;
 
   const stationsAndScreens = useContext(StationScreenOrientationContext);
-  const stationDetails = stations.map((station: string) =>
-    matchStation(station, stationsAndScreens),
+  const stationDetails = station_ids.map((stationId: string) =>
+    matchStation(stationId, stationsAndScreens),
   );
 
   const { messages: cannedMessages } = useContext(CannedMessagesContext);
