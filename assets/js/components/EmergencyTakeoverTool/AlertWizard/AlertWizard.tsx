@@ -252,7 +252,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   async handleSubmit() {
-    const stations = this.state.selectedStations.map(({ id }) => id);
+    const stationIds = this.state.selectedStations.map(({ id }) => id);
     const selectedShowtimeScreenIds = this.state.selectedStations.flatMap(
       ({ showtime_screen_ids }) => showtime_screen_ids,
     );
@@ -272,7 +272,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
 
     const data = {
       message: this.state.message,
-      stations,
+      stationIds,
       showtimeScreenIds: selectedShowtimeScreenIds,
       duration,
       images,
