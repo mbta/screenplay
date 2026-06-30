@@ -27,8 +27,8 @@ defmodule Screenplay.Jobs.Reminders do
         Logger.debug("No outdated alerts found")
 
       alerts ->
-        Enum.each(alerts, fn %EmergencyTakeover{stations: stations} ->
-          stations
+        Enum.each(alerts, fn %EmergencyTakeover{station_ids: station_ids} ->
+          station_ids
           |> format_slack_message()
           |> send_slack_message(url)
         end)

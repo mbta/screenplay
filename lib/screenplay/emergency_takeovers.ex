@@ -11,7 +11,7 @@ defmodule Screenplay.EmergencyTakeovers do
 
   @type alert_update :: %{
           message: EmergencyTakeover.message(),
-          stations: list(EmergencyTakeover.station()),
+          station_ids: list(EmergencyTakeover.station()),
           schedule: EmergencyTakeover.schedule()
         }
 
@@ -67,7 +67,7 @@ defmodule Screenplay.EmergencyTakeovers do
     changeset =
       EmergencyTakeover.changeset(alert, %{
         message: changes.message,
-        stations: changes.stations,
+        station_ids: changes.station_ids,
         start_time: changes.schedule.start_time,
         end_time: changes.schedule.end_time,
         edited_by: user
@@ -108,18 +108,18 @@ defmodule Screenplay.EmergencyTakeovers do
     get_overlapping_alerts(new_stations, id)
     |> Enum.reduce([], fn alert, acc ->
       stations_no_overlap =
-        Enum.reject(alert.stations, fn station -> station in new_stations end)
+        Enum.reject(alert.station_ids, fn station -> station in new_stations end)
 
       if Enum.empty?(stations_no_overlap) do
         # Clear entire alert if all the existing alert's stations overlap with the new alert
         {:ok, _cleared_alert} = clear_alert(alert, user)
-        acc ++ alert.stations
+        acc ++ alert.station_ids
       else
         {:ok, _updated_alert} =
           update_alert(
             alert.id,
             %{
-              stations: stations_no_overlap,
+              station_ids: stations_no_overlap,
               message: alert.message,
               schedule: %{
                 start_time: alert.start_time,
@@ -130,7 +130,7 @@ defmodule Screenplay.EmergencyTakeovers do
           )
 
         # Return the full list of stations to have their current takeovers cleared.
-        acc ++ (alert.stations -- stations_no_overlap)
+        acc ++ (alert.station_ids -- stations_no_overlap)
       end
     end)
   end
@@ -145,7 +145,7 @@ defmodule Screenplay.EmergencyTakeovers do
     |> where(
       [alert],
       is_nil(alert.cleared_at) and alert.id != ^excluded_alert_id and
-        fragment("? && ?", alert.stations, ^new_stations)
+        fragment("? && ?", alert.station_ids, ^new_stations)
     )
     |> Repo.all()
   end
@@ -155,7 +155,7 @@ defmodule Screenplay.EmergencyTakeovers do
     %{
       "id" => to_string(alert.id),
       "message" => alert.message,
-      "stations" => alert.stations,
+      "station_ids" => alert.station_ids,
       "schedule" => %{
         "start" => serialize_datetime(alert.start_time),
         "end" => serialize_datetime(alert.end_time)

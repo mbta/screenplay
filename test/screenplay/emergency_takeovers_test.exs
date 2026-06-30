@@ -102,67 +102,77 @@ defmodule Screenplay.EmergencyTakeoversTest do
 
   describe "remove_overlapping_alerts/3" do
     test "does nothing when there are no overlapping alerts" do
-      insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
+      insert(:emergency_takeover, station_ids: ["place-aqucl", "place-mvbcl"], cleared_at: nil)
 
       cleared_stations =
-        EmergencyTakeovers.remove_overlapping_alerts(nil, ["station3"], "test_user")
+        EmergencyTakeovers.remove_overlapping_alerts(nil, ["place-harsq"], "test_user")
 
       assert cleared_stations == []
       assert length(EmergencyTakeovers.get_active_alerts()) == 1
     end
 
     test "clears an alert with full station overlap" do
-      alert = insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
+      alert =
+        insert(:emergency_takeover, station_ids: ["place-aqucl", "place-mvbcl"], cleared_at: nil)
 
       cleared_stations =
         EmergencyTakeovers.remove_overlapping_alerts(
           nil,
-          ["station1", "station2", "station3"],
+          ["place-aqucl", "place-mvbcl", "place-harsq"],
           "test_user"
         )
 
-      assert Enum.sort(cleared_stations) == ["station1", "station2"]
+      assert Enum.sort(cleared_stations) == ["place-aqucl", "place-mvbcl"]
       assert Repo.get(EmergencyTakeover, alert.id).cleared_at != nil
     end
 
     test "edits an alert with partial station overlap" do
       alert =
         insert(:emergency_takeover,
-          stations: ["station1", "station2", "station3"],
+          station_ids: ["place-aqucl", "place-mvbcl", "place-harsq"],
           cleared_at: nil
         )
 
       cleared_stations =
-        EmergencyTakeovers.remove_overlapping_alerts(nil, ["station2", "station4"], "test_user")
+        EmergencyTakeovers.remove_overlapping_alerts(
+          nil,
+          ["place-mvbcl", "station4"],
+          "test_user"
+        )
 
-      assert cleared_stations == ["station2"]
+      assert cleared_stations == ["place-mvbcl"]
       updated_alert = Repo.get(EmergencyTakeover, alert.id)
-      assert updated_alert.stations == ["station1", "station3"]
+      assert updated_alert.station_ids == ["place-aqucl", "place-harsq"]
       assert updated_alert.cleared_at == nil
     end
 
     test "handles multiple overlapping alerts" do
-      alert_to_clear = insert(:emergency_takeover, stations: ["station1"], cleared_at: nil)
+      alert_to_clear = insert(:emergency_takeover, station_ids: ["place-aqucl"], cleared_at: nil)
 
       alert_to_edit =
-        insert(:emergency_takeover, stations: ["station2", "station3"], cleared_at: nil)
+        insert(:emergency_takeover, station_ids: ["place-mvbcl", "place-harsq"], cleared_at: nil)
 
       cleared_stations =
-        EmergencyTakeovers.remove_overlapping_alerts(nil, ["station1", "station2"], "test_user")
+        EmergencyTakeovers.remove_overlapping_alerts(
+          nil,
+          ["place-aqucl", "place-mvbcl"],
+          "test_user"
+        )
 
-      assert Enum.sort(cleared_stations) == ["station1", "station2"]
+      assert Enum.sort(cleared_stations) == ["place-aqucl", "place-mvbcl"]
       refute Repo.get(EmergencyTakeover, alert_to_clear.id).cleared_at == nil
       updated_alert = Repo.get(EmergencyTakeover, alert_to_edit.id)
-      assert updated_alert.stations == ["station3"]
+      assert updated_alert.station_ids == ["place-harsq"]
     end
 
     test "does not consider the alert being edited" do
-      alert = insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
+      alert =
+        insert(:emergency_takeover, station_ids: ["place-aqucl", "place-mvbcl"], cleared_at: nil)
 
       cleared_stations =
         EmergencyTakeovers.remove_overlapping_alerts(
           alert.id,
-          ["station1", "station2"],
+          ["place-aqucl", "place-mvbcl"],
           "test_user"
         )
 
@@ -171,17 +181,17 @@ defmodule Screenplay.EmergencyTakeoversTest do
     end
 
     test "ignores already cleared alerts" do
-      insert(:emergency_takeover, stations: ["station1"], cleared_at: DateTime.utc_now())
+      insert(:emergency_takeover, station_ids: ["place-aqucl"], cleared_at: DateTime.utc_now())
 
       cleared_stations =
-        EmergencyTakeovers.remove_overlapping_alerts(nil, ["station1"], "test_user")
+        EmergencyTakeovers.remove_overlapping_alerts(nil, ["place-aqucl"], "test_user")
 
       assert cleared_stations == []
       assert Enum.empty?(EmergencyTakeovers.get_active_alerts())
     end
 
     test "returns empty list for empty new_stations" do
-      insert(:emergency_takeover, stations: ["station1", "station2"], cleared_at: nil)
+      insert(:emergency_takeover, station_ids: ["place-aqucl", "place-mvbcl"], cleared_at: nil)
 
       cleared_stations = EmergencyTakeovers.remove_overlapping_alerts(nil, [], "test_user")
 

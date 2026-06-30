@@ -111,10 +111,10 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   initializeState(alertData: AlertData) {
-    const { id, message, stations, schedule } = alertData;
+    const { id, message, station_ids, schedule } = alertData;
 
-    const selectedStations = stations.map((station: string) =>
-      matchStation(station, this.props.stationScreenOrientationList),
+    const selectedStations = station_ids.map((stationId: string) =>
+      matchStation(stationId, this.props.stationScreenOrientationList),
     );
 
     let duration;
@@ -150,7 +150,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
         if (this.state.activeAlertsList.length > 0) {
           stationNamesWithActiveAlerts = this.state.activeAlertsList
             .filter((alert) => alert.id !== this.state.id)
-            .map((alert) => alert.stations)
+            .map((alert) => alert.station_ids)
             .reduce((result, current) => {
               return current.concat(result);
             }, []);
@@ -252,7 +252,7 @@ class AlertWizard extends React.Component<AlertWizardProps, AlertWizardState> {
   }
 
   async handleSubmit() {
-    const stations = this.state.selectedStations.map(({ name }) => name);
+    const stations = this.state.selectedStations.map(({ id }) => id);
     const selectedShowtimeScreenIds = this.state.selectedStations.flatMap(
       ({ showtime_screen_ids }) => showtime_screen_ids,
     );

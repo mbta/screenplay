@@ -64,7 +64,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         }
       ) do
     schedule = schedule_from_duration(DateTime.utc_now(), duration_in_hours)
-    changes = %{message: message, stations: stations, schedule: schedule}
+    changes = %{message: message, station_ids: stations, schedule: schedule}
     user = get_session(conn, "username")
     id = String.to_integer(id_str)
     params_to_log = Map.take(params, ["message", "stations", "duration", "id"])
@@ -91,12 +91,12 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   def clear(conn, params = %{"id" => id}) do
     user = get_session(conn, "username")
     alert = EmergencyTakeovers.get_alert(id)
-    %EmergencyTakeover{stations: stations} = alert
+    %EmergencyTakeover{station_ids: station_ids} = alert
 
     with :ok <- UserActionLogger.log(user, :clear_alert, params),
          {:ok, _cleared_alert} <- EmergencyTakeovers.clear_alert(alert, user),
-         :ok <- SFTP.clear_takeover_images(stations),
-         :ok <- remove_takeovers_from_showtime_screens(stations) do
+         :ok <- SFTP.clear_takeover_images(station_ids),
+         :ok <- remove_takeovers_from_showtime_screens(station_ids) do
       json(conn, %{success: true})
     else
       {:error, reason} ->
@@ -133,9 +133,12 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   end
 
   @spec clear_single_alert_for_clear_all(map(), String.t()) :: :ok | {:error, String.t()}
-  defp clear_single_alert_for_clear_all(alert = %EmergencyTakeover{stations: stations}, user) do
+  defp clear_single_alert_for_clear_all(
+         alert = %EmergencyTakeover{station_ids: station_ids},
+         user
+       ) do
     with {:ok, _cleared_alert} <- EmergencyTakeovers.clear_alert(alert, user),
-         :ok <- SFTP.clear_takeover_images(stations) do
+         :ok <- SFTP.clear_takeover_images(station_ids) do
       :ok
     else
       {:error, reason} -> {:error, reason}
@@ -269,16 +272,16 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   end
 
   @spec remove_takeovers_from_showtime_screens(list(String.t())) :: :ok
-  defp remove_takeovers_from_showtime_screens(station_names) do
-    station_names
+  defp remove_takeovers_from_showtime_screens(station_ids) do
+    station_ids
     |> showtime_screens_at_stations()
     |> PermanentConfig.clear_emergency_takeover_configs()
   end
 
   @spec showtime_screens_at_stations(list(String.t())) :: list(String.t())
-  defp showtime_screens_at_stations(station_names) do
+  defp showtime_screens_at_stations(station_ids) do
     Places.get_all()
-    |> Enum.filter(fn place -> place.name in station_names end)
+    |> Enum.filter(fn place -> place.id in station_ids end)
     |> Enum.flat_map(fn place ->
       place.screens
       |> Enum.filter(fn screen ->

@@ -39,12 +39,12 @@ defmodule Screenplay.Outfront.SFTP do
   end
 
   @spec get_station([station()], String.t()) :: station() | nil
-  def get_station(all_stations, station_name) do
-    Enum.find(all_stations, &(&1.name == station_name))
+  def get_station(all_stations, station_id) do
+    Enum.find(all_stations, &(&1.place_id == station_id))
   end
 
   def set_takeover_images(
-        station_names,
+        station_ids,
         {portrait_data, portrait_ext},
         {landscape_data, landscape_ext}
       )
@@ -54,14 +54,14 @@ defmodule Screenplay.Outfront.SFTP do
 
       # For each station, we check if it has portrait and/or landscape screens,
       # and if so, delete any existing takeover images for that orientation and write the new one.
-      for station_name <- station_names do
-        station = get_station(all_stations, station_name)
+      for station_id <- station_ids do
+        station = get_station(all_stations, station_id)
         station_directory = station.sftp_dir_name
 
         if station.portrait do
           set_orientation_image(
             conn,
-            station_name,
+            station_id,
             station_directory,
             @portrait_dir,
             portrait_data,
@@ -72,7 +72,7 @@ defmodule Screenplay.Outfront.SFTP do
         if station.landscape do
           set_orientation_image(
             conn,
-            station_name,
+            station_id,
             station_directory,
             @landscape_dir,
             landscape_data,
@@ -85,20 +85,20 @@ defmodule Screenplay.Outfront.SFTP do
     :ok
   end
 
-  def clear_takeover_images(station_names) do
+  def clear_takeover_images(station_ids) do
     run(fn conn ->
       all_stations = all_stations()
 
-      for station_name <- station_names do
-        station = get_station(all_stations, station_name)
+      for station_id <- station_ids do
+        station = get_station(all_stations, station_id)
         station_directory = station.sftp_dir_name
 
         if station.portrait do
-          clear_orientation_images(conn, station_name, station_directory, @portrait_dir)
+          clear_orientation_images(conn, station_id, station_directory, @portrait_dir)
         end
 
         if station.landscape do
-          clear_orientation_images(conn, station_name, station_directory, @landscape_dir)
+          clear_orientation_images(conn, station_id, station_directory, @landscape_dir)
         end
       end
     end)
@@ -108,7 +108,7 @@ defmodule Screenplay.Outfront.SFTP do
 
   defp set_orientation_image(
          conn,
-         station_name,
+         station_id,
          station_directory,
          orientation_dir,
          image_data,
@@ -117,17 +117,17 @@ defmodule Screenplay.Outfront.SFTP do
     List.delete(@extensions, image_ext)
     |> Enum.each(fn ext ->
       path = Path.join([orientation_dir, station_directory, "takeover.#{ext}"])
-      delete_image(conn, path, station_name, orientation_dir)
+      delete_image(conn, path, station_id, orientation_dir)
     end)
 
     path = Path.join([orientation_dir, station_directory, "takeover.#{image_ext}"])
-    write_image(conn, path, image_data, station_name, orientation_dir)
+    write_image(conn, path, image_data, station_id, orientation_dir)
   end
 
-  defp clear_orientation_images(conn, station_name, station_directory, orientation_dir) do
+  defp clear_orientation_images(conn, station_id, station_directory, orientation_dir) do
     Enum.each(@extensions, fn ext ->
       path = Path.join([orientation_dir, station_directory, "takeover.#{ext}"])
-      delete_image(conn, path, station_name, orientation_dir)
+      delete_image(conn, path, station_id, orientation_dir)
     end)
   end
 

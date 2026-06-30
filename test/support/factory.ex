@@ -37,7 +37,7 @@ defmodule Screenplay.Factory do
           outdoor: "Outdoor test message"
         }
       },
-      stations: ["station1", "station2"],
+      station_ids: ["place-aqucl", "place-mvbcl"],
       start_time: ~U[2023-01-01 12:00:00Z],
       end_time: ~U[2023-01-01 13:00:00Z],
       created_by: "test_user",

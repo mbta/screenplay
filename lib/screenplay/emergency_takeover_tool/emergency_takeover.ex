@@ -68,7 +68,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   @type t() :: %__MODULE__{
           id: integer() | nil,
           message: message(),
-          stations: [station()],
+          station_ids: [station()],
           start_time: DateTime.t(),
           end_time: DateTime.t() | nil,
           created_by: String.t(),
@@ -81,7 +81,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
 
   schema "emergency_takeover" do
     field :message, MessageType
-    field :stations, {:array, :string}
+    field :station_ids, {:array, :string}
     field :start_time, :utc_datetime_usec
     field :end_time, :utc_datetime_usec
     field :created_by, :string
@@ -96,7 +96,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     takeover
     |> cast(attrs, [
       :message,
-      :stations,
+      :station_ids,
       :start_time,
       :end_time,
       :created_by,
@@ -106,20 +106,20 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     ])
     |> validate_required([
       :start_time,
-      :stations,
+      :station_ids,
       :message,
       :created_by
     ])
-    |> validate_length(:stations, min: 1)
+    |> validate_length(:station_ids, min: 1)
   end
 
   @spec new(message() | map(), [station()], schedule(), String.t()) :: __MODULE__.t()
-  def new(message, stations, schedule, user) do
+  def new(message, station_ids, schedule, user) do
     {:ok, normalized_message} = MessageType.cast(message)
 
     %__MODULE__{
       message: normalized_message,
-      stations: stations,
+      station_ids: station_ids,
       start_time: schedule.start_time,
       end_time: schedule.end_time,
       created_by: Util.trim_username(user),
