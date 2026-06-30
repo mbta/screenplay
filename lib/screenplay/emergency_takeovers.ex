@@ -11,7 +11,7 @@ defmodule Screenplay.EmergencyTakeovers do
 
   @type alert_update :: %{
           message: EmergencyTakeover.message(),
-          station_ids: list(EmergencyTakeover.station()),
+          station_ids: list(EmergencyTakeover.station_id()),
           schedule: EmergencyTakeover.schedule()
         }
 

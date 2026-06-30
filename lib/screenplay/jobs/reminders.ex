@@ -8,6 +8,7 @@ defmodule Screenplay.Jobs.Reminders do
 
   alias Screenplay.EmergencyTakeovers
   alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
+  alias Screenplay.Places
 
   @http_client Application.compile_env!(:screenplay, :http_client)
 
@@ -29,6 +30,7 @@ defmodule Screenplay.Jobs.Reminders do
       alerts ->
         Enum.each(alerts, fn %EmergencyTakeover{station_ids: station_ids} ->
           station_ids
+          |> Places.names_from_ids()
           |> format_slack_message()
           |> send_slack_message(url)
         end)

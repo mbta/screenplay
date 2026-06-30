@@ -57,7 +57,7 @@ export const messageDetails = (
   const cannedMessage = cannedMessages.find((m) => m.id === message.id);
   if (!cannedMessage) {
     if (message.id !== -1) {
-      console.error(`Canned message with id ${cannedMessage.id} not found`);
+      console.error(`Canned message with id ${message.id} not found`);
     }
     return message;
   }

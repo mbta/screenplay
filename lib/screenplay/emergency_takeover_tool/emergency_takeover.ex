@@ -25,7 +25,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
 
   @type message :: canned_message() | custom_message()
 
-  @type station :: String.t()
+  @type station_id :: String.t()
 
   @type schedule :: %{
           start_time: DateTime.t(),
@@ -68,7 +68,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
   @type t() :: %__MODULE__{
           id: integer() | nil,
           message: message(),
-          station_ids: [station()],
+          station_ids: [station_id()],
           start_time: DateTime.t(),
           end_time: DateTime.t() | nil,
           created_by: String.t(),
@@ -113,7 +113,7 @@ defmodule Screenplay.EmergencyTakeoverTool.EmergencyTakeover do
     |> validate_length(:station_ids, min: 1)
   end
 
-  @spec new(message() | map(), [station()], schedule(), String.t()) :: __MODULE__.t()
+  @spec new(message() | map(), [station_id()], schedule(), String.t()) :: __MODULE__.t()
   def new(message, station_ids, schedule, user) do
     {:ok, normalized_message} = MessageType.cast(message)
 
