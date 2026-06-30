@@ -135,6 +135,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   @spec clear_single_alert(map(), String.t()) :: :ok | {:error, String.t()}
   defp clear_single_alert(alert = %EmergencyTakeover{station_ids: station_ids}, user) do
     with {:ok, _cleared_alert} <- EmergencyTakeovers.clear_alert(alert, user),
+         :ok <- remove_takeovers_from_showtime_screens(station_ids),
          :ok <- SFTP.clear_takeover_images(station_ids) do
       :ok
     else
