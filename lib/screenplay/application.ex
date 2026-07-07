@@ -16,15 +16,14 @@ defmodule Screenplay.Application do
         ScreenplayWeb.Telemetry,
         # Start the PubSub system
         {Phoenix.PubSub, name: Screenplay.PubSub},
-        # Start the Endpoint (http/https)
-        ScreenplayWeb.Endpoint,
         Screenplay.ScreensConfig
       ] ++
         if Application.get_env(:screenplay, :start_cache_processes) do
           [Screenplay.Alerts.Cache, Screenplay.Places, Screenplay.PredictionSuppression]
         else
           []
-        end
+        end ++
+        [ScreenplayWeb.Endpoint]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
