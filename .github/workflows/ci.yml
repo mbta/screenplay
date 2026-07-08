@@ -10,9 +10,7 @@ jobs:
   asdf:
     name: ASDF
     runs-on: ubuntu-latest
-    outputs:
-      asdf_dir: ${{ steps.asdf_env_setup.outputs.ASDF_DIR }}
-      asdf_data_dir: ${{ steps.asdf_env_setup.outputs.ASDF_DATA_DIR }}
+
     steps:
       - uses: actions/checkout@v7.0.0
       # cache the ASDF directory, using the values from .tool-versions
@@ -25,12 +23,6 @@ jobs:
       # only run `asdf install` if we didn't hit the cache
       - uses: asdf-vm/actions/install@v4
         if: steps.asdf-cache.outputs.cache-hit != 'true'
-      # if we did hit the cache, set up the environment
-      - name: Setup ASDF environment
-        uses: asdf-vm/actions/setup@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
-        with:
-          skip_install: true
-        if: steps.asdf-cache.outputs.cache-hit == 'true'
 
   build:
     name: Build and test
@@ -59,16 +51,15 @@ jobs:
           path: ~/.asdf
           key: ${{ runner.os }}-asdf-${{ hashFiles('.tool-versions') }}
         id: asdf-cache
-      - name: Reshim ASDF
-        run: |
-          echo "$ASDF_DIR/bin" >> $GITHUB_PATH
-          echo "$ASDF_DIR/shims" >> $GITHUB_PATH
-          $ASDF_DIR/bin/asdf reshim
-        env:
-          ASDF_DIR: ${{ needs.asdf.outputs.asdf_dir }}
-          ASDF_DATA_DIR: ${{ needs.asdf.outputs.asdf_data_dir }}
-      - run: exit 1
+      - name: Exit if ASDF cache isn't setup
+        run: exit 1
         if: steps.asdf-cache.outputs.cache-hit != 'true'
+      - name: Setup ASDF environment
+        uses: asdf-vm/actions/setup@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
+        with:
+          skip_install: true
+      - name: Reshim ASDF
+        run: asdf reshim
       - name: Restore dependencies cache
         id: deps-cache
         uses: actions/cache@v6.1.0
