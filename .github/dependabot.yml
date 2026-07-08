@@ -9,6 +9,10 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    groups:
+      all-updates:
+        patterns:
+          - "*"
   - package-ecosystem: mix
     directory: "/"
     schedule:
