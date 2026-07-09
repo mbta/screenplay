@@ -6,7 +6,7 @@ defmodule Screenplay.PermanentConfig do
 
   require Logger
 
-  alias Screenplay.EmergencyTakeoverTool.ScreensConfig, as: EmergencyTakeoverConfig
+  alias Screenplay.EmergencyTakeoverTool.ConfigUpdater, as: EmergencyTakeoverConfig
   alias Screenplay.PendingScreensConfig.Fetch, as: PendingScreensFetch
   alias Screenplay.Places
   alias Screenplay.Places.Fetch
@@ -459,6 +459,7 @@ defmodule Screenplay.PermanentConfig do
   defp screen_to_place_id(%Screen{app_id: app_id}),
     do: raise("screen_to_place_id/1 not implemented for app_id: #{app_id}")
 
+  # TODO: This will be deleted, but I want a clean commit without doing too much work that is about to be deleted
   def add_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
     with {published_config, _published_version_id} <- get_current_published_config(),
          {:ok, published_config_deserialized} <- Jason.decode(published_config) do
