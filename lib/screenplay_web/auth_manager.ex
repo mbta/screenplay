@@ -12,7 +12,6 @@ defmodule ScreenplayWeb.AuthManager do
 
   @roles %{
     "screenplay-emergency-admin" => :emergency_admin,
-    "screens-admin" => :screens_admin,
     "pa-message-admin" => :pa_message_admin,
     "suppression-admin" => :suppression_admin
   }

@@ -1,9 +1,7 @@
 import fp from "lodash/fp";
 import { Alert } from "../models/alert";
 import { Place } from "../models/place";
-import { ScreenConfiguration } from "../models/screen_configuration";
 import { ScreensByAlert } from "../models/screensByAlert";
-import { PlaceIdsAndNewScreens } from "../components/Dashboard/PermanentConfiguration/Workflows/GlEink/ConfigureScreensPage";
 import getCsrfToken from "../csrf";
 import type { PaMessageChange } from "Models/pa_message";
 import { SuppressedPrediction } from "Models/suppressed_prediction";
@@ -50,7 +48,7 @@ interface AlertsResponse {
   screens_by_alert: ScreensByAlert;
 }
 
-export const _fetchAlerts = async (): Promise<AlertsResponse> => {
+const _fetchAlerts = async (): Promise<AlertsResponse> => {
   const response = await fetch("/api/alerts");
   if (response.status === 200) {
     return response.json();
@@ -59,7 +57,7 @@ export const _fetchAlerts = async (): Promise<AlertsResponse> => {
   }
 };
 
-export const _fetchActiveAndFutureAlerts =
+const _fetchActiveAndFutureAlerts =
   async (): Promise<AlertsResponse> => {
     const response = await fetch("/api/alerts/non_access_alerts");
     if (!response.ok) {
@@ -79,118 +77,9 @@ export const fetchAlerts = withErrorHandling(_fetchAlerts, {
   customMessage: `Failed to load alerts. ${REFRESH_PAGE_ERROR_MESSAGE}`,
 });
 
-///////////
-// Screens
-///////////
-export interface ExistingScreens {
-  [place_id: string]: ExistingScreensAtPlace;
-}
-
-export interface ExistingScreensAtPlace {
-  live_screens?: { [screen_id: string]: ScreenConfiguration };
-  pending_screens: { [screen_id: string]: ScreenConfiguration };
-}
-
-const _fetchExistingScreens = async (
-  appId: string,
-  placeIds: string[],
-): Promise<{ places_and_screens: ExistingScreens; version_id: string }> => {
-  const response = await fetch(
-    `/config/existing-screens/${appId}?place_ids=${placeIds.join(",")}`,
-  );
-
-  if (!response.ok) {
-    throw response;
-  }
-
-  return response.json();
-};
-
-export const fetchExistingScreens = withErrorHandling(_fetchExistingScreens, {
-  customMessage: `Failed to load existing screens. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-});
-export interface PendingAndLiveScreensResponse {
-  places_and_screens: PendingAndLiveScreens;
-  etag: string;
-  version_id: string;
-  last_modified_ms: number | null;
-}
-
-// Very similar to the `ExistingScreens` interface, except:
-// 1. key is a string that combines place and app ID, and
-// 2. place and app IDs are added to each `ExistingScreensAtPlace` object, so that we don't have to parse them from the combined string.
-export interface PendingAndLiveScreens {
-  [placeAndAppID: string]: ExistingScreensAtPlace & {
-    place_id: string;
-    app_id: string;
-  };
-}
-
-const _fetchExistingScreensAtPlacesWithPendingScreens =
-  async (): Promise<PendingAndLiveScreensResponse> => {
-    const response = await fetch(
-      "/config/existing-screens-at-places-with-pending-screens",
-    );
-    if (!response.ok) {
-      throw response;
-    }
-    const etag = response.headers.get("etag") as string;
-    const data = (await response.json()) as Omit<
-      PendingAndLiveScreensResponse,
-      "etag"
-    >;
-    return { ...data, etag };
-  };
-
-export const fetchExistingScreensAtPlacesWithPendingScreens = withErrorHandling(
-  _fetchExistingScreensAtPlacesWithPendingScreens,
-  {
-    customMessage: `Failed to load pending screens data. ${REFRESH_PAGE_ERROR_MESSAGE}`,
-  },
-);
-
-export const putPendingScreens = async (
-  placesAndScreens: PlaceIdsAndNewScreens,
-  screenType: "gl_eink_v2" | null,
-  version_id: string,
-): Promise<Response> => {
-  return fetch("/config/put", {
-    ...getPostBodyAndHeaders({
-      places_and_screens: placesAndScreens,
-      screen_type: screenType,
-      version_id: version_id,
-    }),
-    credentials: "include",
-  });
-};
-
-interface PublishScreensForPlaceResponse {
-  message: string;
-  new_config?: Place[];
-}
-
-export const publishScreensForPlace = async (
-  placeId: string,
-  appId: string,
-  hiddenFromScreenplayIds: string[],
-  etag: string,
-): Promise<{ status: number; message: string; newConfig: Place[] }> => {
-  const bodyData = {
-    hidden_from_screenplay_ids: hiddenFromScreenplayIds,
-  };
-  const response = await fetch(`/config/publish/${placeId}/${appId}`, {
-    ...getPostBodyAndHeaders(bodyData, { "if-match": etag }),
-    credentials: "include",
-  });
-
-  const json: PublishScreensForPlaceResponse = await response.json();
-
-  return {
-    status: response.status,
-    message: json.message,
-    newConfig: json.new_config ?? [],
-  };
-};
+///////////////
+// PA Messages
+///////////////
 
 export const createNewPaMessage = async (
   message: PaMessageChange,
@@ -236,6 +125,10 @@ export const updateExistingPaMessage = async (
     body: await response.json(),
   };
 };
+
+/////////////////////////
+// Suppressed Predictions
+/////////////////////////
 
 const fetchOk = async (
   url: string,

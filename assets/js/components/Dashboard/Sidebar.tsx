@@ -9,8 +9,6 @@ import {
   VolumeUpFill,
   Lightning,
   LightningFill,
-  Signpost,
-  SignpostFill,
   ArrowDownShort,
   Icon,
 } from "react-bootstrap-icons";
@@ -19,8 +17,7 @@ import TLogoBlack from "Images/t-logo-black.svg";
 import cx from "classnames";
 import * as sidebarStyles from "Styles/sidebar.module.scss";
 import * as predictionSuppressionStyles from "Styles/prediction-suppression.module.scss";
-
-import { isEmergencyAdmin, isScreensAdmin } from "Utils/auth";
+import { isEmergencyAdmin } from "Utils/auth";
 import { usePredictionSuppressionState } from "Hooks/useScreenplayContext";
 
 const SidebarLink = ({
@@ -120,11 +117,6 @@ const Sidebar = () => {
           reloadDocument
         >
           Emergency Takeover
-        </SidebarLink>
-      )}
-      {isScreensAdmin() && (
-        <SidebarLink to="/pending" icon={Signpost} activeIcon={SignpostFill}>
-          Configure
         </SidebarLink>
       )}
     </nav>

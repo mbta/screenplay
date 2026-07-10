@@ -9,7 +9,7 @@ defmodule ScreenplayWeb.Controllers.AuthControllerTest do
         conn
         |> init_test_session(%{})
         |> Plug.Conn.put_session(:previous_path_from_auth, "/test")
-        |> get("/auth/keycloak/callback?email=user@test.com&roles[]=screens-admin")
+        |> get("/auth/keycloak/callback?email=user@test.com&roles[]=pa-message-admin")
 
       assert redirected_to(conn) == "/test"
     end

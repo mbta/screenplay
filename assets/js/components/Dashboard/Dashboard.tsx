@@ -154,7 +154,6 @@ const Dashboard: ComponentType = () => {
 
   const pathname = useLocation().pathname;
   const showAlertBanner =
-    !pathname.includes("configure-screens") &&
     !pathname.includes("pa-messages") &&
     !pathname.includes("prediction-suppression") &&
     bannerAlert?.alert;

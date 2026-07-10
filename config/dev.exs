@@ -70,9 +70,7 @@ config :screenplay,
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
   config_fetcher: Screenplay.Places.LocalFetch,
   screens_config_fetcher: Screenplay.ScreensConfig.Fetch.Local,
-  pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.Local,
   local_screens_config_file_spec: "../screens/priv/local.json",
-  local_pending_screens_config_file_spec: "../screens/priv/local_pending.json",
   local_place_descriptions_file_spec: {:priv, "place_descriptions.json"},
   local_paess_labels_file_spec: {:priv, "paess_labels.json"},
   api_v3_key: System.get_env("API_V3_KEY"),
@@ -88,7 +86,6 @@ config :ueberauth, Ueberauth,
          client_id: "dev-client",
          roles: [
            "screenplay-emergency-admin",
-           "screens-admin",
            "pa-message-admin",
            "suppression-admin"
          ]

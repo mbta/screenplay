@@ -6,7 +6,6 @@ import { DirectionID } from "../models/direction_id";
 import { ScreensByAlert } from "../models/screensByAlert";
 import { LineStop } from "../models/line_stop";
 import { SuppressedPrediction } from "../models/suppressed_prediction";
-import { ConfigValidationErrors } from "../models/configValidationErrors";
 import {
   PLACES_PAGE_MODES_AND_LINES,
   ALERTS_PAGE_MODES_AND_LINES,
@@ -138,40 +137,6 @@ const AlertsListStateContainer = ({ children }: Props) => {
   );
 };
 
-interface ConfigValidationState {
-  newScreenValidationErrors: ConfigValidationErrors;
-  pendingScreenValidationErrors: ConfigValidationErrors;
-  setValidationErrors: (
-    arg0: ConfigValidationErrors,
-    arg1: ConfigValidationErrors,
-  ) => void;
-}
-
-const [useConfigValidationState, ConfigValidationStateProvider] =
-  createGenericContext<ConfigValidationState>();
-
-const ConfigValidationStateContainer = ({ children }: Props) => {
-  const [newScreenValidationErrors, setNewScreenValidationErrors] =
-    useState<ConfigValidationErrors>({});
-  const [pendingScreenValidationErrors, setPendingScreenValidationErrors] =
-    useState<ConfigValidationErrors>({});
-
-  return (
-    <ConfigValidationStateProvider
-      value={{
-        newScreenValidationErrors,
-        pendingScreenValidationErrors,
-        setValidationErrors: (newErrors, pendingErrors) => {
-          setNewScreenValidationErrors(newErrors);
-          setPendingScreenValidationErrors(pendingErrors);
-        },
-      }}
-    >
-      {children}
-    </ConfigValidationStateProvider>
-  );
-};
-
 interface PlacesListState {
   sortDirection: DirectionID;
   modeLineFilterValue: FilterValue;
@@ -280,11 +245,9 @@ const ScreenplayProvider = ({ children }: Props) => {
     <ScreenplayStateContainer>
       <PlacesListStateContainer>
         <AlertsListStateContainer>
-          <ConfigValidationStateContainer>
-            <PredictionSuppressionStateContainer>
-              {children}
-            </PredictionSuppressionStateContainer>
-          </ConfigValidationStateContainer>
+          <PredictionSuppressionStateContainer>
+            {children}
+          </PredictionSuppressionStateContainer>
         </AlertsListStateContainer>
       </PlacesListStateContainer>
     </ScreenplayStateContainer>
@@ -292,13 +255,12 @@ const ScreenplayProvider = ({ children }: Props) => {
 };
 
 // Types & Interfaces
-export { FilterValue, DirectionID };
+export { DirectionID };
 
 // Values
 export {
   useScreenplayState,
   usePlacesListState,
-  useConfigValidationState,
   useAlertsListState,
   usePredictionSuppressionState,
   ScreenplayProvider,

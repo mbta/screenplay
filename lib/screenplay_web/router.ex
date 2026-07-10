@@ -35,7 +35,6 @@ defmodule ScreenplayWeb.Router do
 
   pipeline :ensure_emergency_admin, do: plug(EnsureRole, :emergency_admin)
   pipeline :ensure_pa_message_admin, do: plug(EnsureRole, :pa_message_admin)
-  pipeline :ensure_screens_admin, do: plug(EnsureRole, :screens_admin)
   pipeline :ensure_suppression_admin, do: plug(EnsureRole, :suppression_admin)
 
   # Load balancer health check, exempt from authentication, SSL redirects, etc.
@@ -126,29 +125,6 @@ defmodule ScreenplayWeb.Router do
     put("/", SuppressedPredictionsApiController, :update)
     patch("/", SuppressedPredictionsApiController, :update)
     delete("/", SuppressedPredictionsApiController, :delete)
-  end
-
-  # Permanent Configuration
-
-  scope "/", ScreenplayWeb do
-    pipe_through([:browser, :authenticate, :ensure_screens_admin])
-
-    get("/pending", ConfigController, :index)
-    get("/configure-screens/*app_id", ConfigController, :index)
-  end
-
-  scope "/config", ScreenplayWeb do
-    pipe_through([:api, :authenticate, :ensure_screens_admin])
-
-    post("/put", ConfigController, :put)
-    post("/publish/:place_id/:app_id", ConfigController, :publish)
-    get("/existing-screens/:app_id", ConfigController, :existing_screens)
-
-    get(
-      "/existing-screens-at-places-with-pending-screens",
-      ConfigController,
-      :existing_screens_at_places_with_pending_screens
-    )
   end
 
   # Emergency Takeover Tool
