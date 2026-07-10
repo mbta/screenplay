@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 import React from "react";
 import { Container, Fade } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";

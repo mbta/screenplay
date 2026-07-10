@@ -21,7 +21,7 @@ import {
   useScreenplayState,
 } from "Hooks/useScreenplayContext";
 import { usePrevious } from "Hooks/usePrevious";
-import moment from "moment";
+import moment from "moment-timezone";
 
 const AlertsPage: ComponentType = () => {
   const { places, alerts, screensByAlertMap } = useScreenplayState();

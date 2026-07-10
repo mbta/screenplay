@@ -5,7 +5,7 @@ import { Alert, ActivePeriod } from "Models/alert";
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
-import moment from "moment";
+import moment from "moment-timezone";
 import fp from "lodash/fp";
 import { StaticTemplate } from "Models/static_template";
 
