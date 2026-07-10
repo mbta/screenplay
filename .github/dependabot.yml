@@ -10,9 +10,10 @@ updates:
       default-days: 7
     open-pull-requests-limit: 5
     groups:
-      all-updates:
-        patterns:
-          - "*"
+      github-actions-minor:
+        update-types:
+          - "patch"
+          - "minor"
   - package-ecosystem: mix
     directory: "/"
     schedule:
