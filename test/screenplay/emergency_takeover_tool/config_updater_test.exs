@@ -2,6 +2,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
   use ExUnit.Case
 
   alias Screenplay.EmergencyTakeoverTool.ConfigUpdater
+  alias Screenplay.ScreensConfig.Fetch.Local
 
   alias ScreensConfig.{
     Alerts,
@@ -124,7 +125,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                message
              ) == :ok
 
-      {:ok, file_contents, _metadata} = Screenplay.ScreensConfig.Fetch.Local.fetch_config()
+      {:ok, file_contents, _metadata} = Local.fetch_config()
       %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
 
       expected_takeover = %EmergencyTakeover{
@@ -154,7 +155,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                message
              ) == :ok
 
-      {:ok, file_contents, _metadata} = Screenplay.ScreensConfig.Fetch.Local.fetch_config()
+      {:ok, file_contents, _metadata} = Local.fetch_config()
       %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
 
       expected_takeover = %EmergencyTakeover{
@@ -209,7 +210,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
 
       assert ConfigUpdater.clear_emergency_takeover_configs([takeover_screen_id]) == :ok
 
-      {:ok, file_contents, _metadata} = Screenplay.ScreensConfig.Fetch.Local.fetch_config()
+      {:ok, file_contents, _metadata} = Local.fetch_config()
       %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
 
       assert screens[takeover_screen_id] == @screen_without_takeover
