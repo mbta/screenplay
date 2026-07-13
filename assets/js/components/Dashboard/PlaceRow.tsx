@@ -243,5 +243,4 @@ const PlaceRow = ({
   );
 };
 
-export { AccordionToggle };
 export default PlaceRow;

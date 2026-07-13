@@ -10,7 +10,8 @@
     "format:check": "prettier --check \"{.,**}/*.{js,mjs,json,ts,tsx,css,scss}\"",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "check": "npm run typecheck && npm run lint:check && npm run format:check"
+    "unused": "knip --tags=-knipignore",
+    "check": "npm run typecheck && npm run lint:check && npm run format:check && npm run unused"
   },
   "dependencies": {
     "@fullstory/browser": "^2.0.8",
@@ -30,10 +31,9 @@
     "react-bootstrap": "^2.10.10",
     "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^18.3.1",
+    "react-router": "^6.22.3",
     "react-router-dom": "^6.3.0",
-    "react-search-autocomplete": "^8.5.2",
     "react-tooltip": "^4.2.21",
-    "regenerator-runtime": "^0.14.1",
     "swr": "^2.2.5"
   },
   "devDependencies": {
@@ -42,10 +42,8 @@
     "@testing-library/react": "^16.0.1",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.23",
-    "@types/phoenix": "^1.6.7",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/react-test-renderer": "^18.3.0",
     "esbuild": "^0.27.7",
     "esbuild-sass-plugin": "^3.3.1",
     "eslint": "^9.39.2",
@@ -54,6 +52,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "jest": "^29.7.0",
     "jest-fixed-jsdom": "^0.0.11",
+    "knip": "^6.17.1",
     "prettier": "3.2.5",
     "ts-jest": "^29.1.5",
     "typescript": "^5.9.3",

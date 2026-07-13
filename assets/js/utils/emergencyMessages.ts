@@ -21,7 +21,7 @@ export interface CannedMessage {
   };
 }
 
-export interface CustomMessage {
+interface CustomMessage {
   type: "custom";
   text: {
     indoor: string;

@@ -15,9 +15,7 @@ config :screenplay,
   local_place_descriptions_file_spec: {:test, "place_descriptions.json"},
   local_paess_labels_file_spec: {:test, "paess_labels.json"},
   screens_config_fetcher: Screenplay.ScreensConfig.Fetch.Local,
-  pending_screens_config_fetcher: Screenplay.PendingScreensConfig.Fetch.Local,
   local_screens_config_file_spec: {:test, "screens_config.json"},
-  local_pending_screens_config_file_spec: {:test, "pending_config.json"},
   api_v3_url: "https://fake-mbta-api",
   api_key: "test_api_key",
   sftp_client_module: Screenplay.Outfront.FakeSFTPClient,
@@ -36,7 +34,6 @@ config :ueberauth, Ueberauth,
          auto_redirect: true,
          roles: [
            "screenplay-emergency-admin",
-           "screens-admin",
            "pa-message-admin",
            "suppression-admin"
          ]

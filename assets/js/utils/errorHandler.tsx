@@ -85,7 +85,7 @@ export const withErrorHandling = <T extends any[], R>(
 /**
  * Surfaces the error to the user through the error modal.
  */
-export const displayErrorModal = (
+const displayErrorModal = (
   error: Error | Response,
   options: ErrorHandlingOptions = {},
 ) => {

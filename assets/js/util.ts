@@ -5,7 +5,7 @@ import { Alert, ActivePeriod } from "Models/alert";
 import { Place } from "Models/place";
 import { Screen } from "Models/screen";
 import { ScreensByAlert } from "Models/screensByAlert";
-import moment from "moment";
+import moment from "moment-timezone";
 import fp from "lodash/fp";
 import { StaticTemplate } from "Models/static_template";
 
@@ -75,38 +75,6 @@ export const translateRouteID = (id: string) => {
       return "Commuter Rail";
     default:
       return "";
-  }
-};
-
-export const getModeFromAffectedList = (affectedList: string[]) => {
-  if (
-    [
-      "red",
-      "orange",
-      "blue",
-      "green",
-      "green-b",
-      "green-c",
-      "green-d",
-      "green-e",
-    ].some((line) => affectedList.includes(line))
-  ) {
-    return "subway";
-  } else {
-    return affectedList[0];
-  }
-};
-
-export const convertArrayToListString = (array: string[]) => {
-  if (array.length === 1) {
-    return array[0];
-  } else if (array.length === 2) {
-    return `${array[0]} and ${array[1]}`;
-  } else {
-    return (
-      array.slice(0, array.length - 1).join(", ") +
-      `and ${array[array.length - 1]}`
-    );
   }
 };
 
@@ -260,14 +228,6 @@ export const capitalizeTerminalStops = (
   return isTerminalStop ? stationName.toUpperCase() : stationName;
 };
 
-export const capitalize = (str: string) => {
-  if (str.length <= 1) {
-    return str.toUpperCase();
-  } else {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-};
-
 export const getAlertEarliestStartLatestEnd = (
   activePeriods: ActivePeriod[],
 ) => {
@@ -289,7 +249,7 @@ export const getAlertEarliestStartLatestEnd = (
   return [start, end];
 };
 
-export const allRouteIdsAtPlaces = (places: Place[]) => {
+const allRouteIdsAtPlaces = (places: Place[]) => {
   return fp.uniq(
     places.flatMap((place) => place.screens.flatMap(getRouteIdsForSign)),
   );

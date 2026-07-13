@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Alert } from "Models/alert";
 import { getAlertEarliestStartLatestEnd } from "../../../util";
 import * as messageTableStyles from "Styles/message-table.module.scss";

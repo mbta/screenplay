@@ -2,7 +2,7 @@ import React, { ComponentType } from "react";
 import KebabMenu from "Components/KebabMenu";
 import { updateExistingPaMessage } from "Utils/api";
 import type { PaMessage, PaMessageChange } from "Models/pa_message";
-import moment from "moment";
+import moment from "moment-timezone";
 import cx from "classnames";
 import { useNavigate } from "react-router-dom";
 import { Dropdown, FormCheck } from "react-bootstrap";

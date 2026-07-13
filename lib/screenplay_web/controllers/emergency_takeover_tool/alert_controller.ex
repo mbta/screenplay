@@ -2,9 +2,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
 
   alias Screenplay.EmergencyTakeovers
-  alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover
+  alias Screenplay.EmergencyTakeoverTool.{ConfigUpdater, EmergencyTakeover}
   alias Screenplay.Outfront.SFTP
-  alias Screenplay.PermanentConfig
   alias Screenplay.Places
   alias Screenplay.Places.Place.ShowtimeScreen
   alias ScreenplayWeb.UserActionLogger
@@ -167,7 +166,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
           %{String.t() => String.t()}
         ) :: :ok | {:error, String.t()}
   def add_showtime_takeovers(alert_id, screen_ids, message = %{type: :canned}, _images) do
-    case PermanentConfig.add_emergency_takeover_configs(alert_id, screen_ids, message) do
+    case ConfigUpdater.add_emergency_takeover_configs(alert_id, screen_ids, message) do
       :ok -> :ok
       {:error, reason} -> {:error, "Failed to add canned message takeovers: #{reason}"}
     end
@@ -175,7 +174,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
 
   def add_showtime_takeovers(alert_id, screen_ids, message = %{type: :custom}, images) do
     with :ok <- upload_takeover_images(alert_id, images),
-         :ok <- PermanentConfig.add_emergency_takeover_configs(alert_id, screen_ids, message) do
+         :ok <- ConfigUpdater.add_emergency_takeover_configs(alert_id, screen_ids, message) do
       :ok
     else
       {:error, reason} -> {:error, "Failed to add custom message takeovers: #{reason}"}
@@ -272,7 +271,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   defp remove_takeovers_from_showtime_screens(station_ids) do
     station_ids
     |> showtime_screens_at_stations()
-    |> PermanentConfig.clear_emergency_takeover_configs()
+    |> ConfigUpdater.clear_emergency_takeover_configs()
   end
 
   @spec showtime_screens_at_stations(list(String.t())) :: list(String.t())

@@ -3,17 +3,10 @@ import { Screen } from "Models/screen";
 
 interface Props {
   screen: Screen;
-  isPending?: boolean;
 }
 
-const ScreenSimulation = ({
-  screen,
-  isPending = false,
-}: Props): JSX.Element => {
-  const src = useMemo(
-    () => generateSource(screen, isPending),
-    [screen, isPending],
-  );
+const ScreenSimulation = ({ screen }: Props): JSX.Element => {
+  const src = useMemo(() => generateSource(screen), [screen]);
 
   return (
     <div
@@ -28,15 +21,13 @@ const ScreenSimulation = ({
   );
 };
 
-const generateSource = ({ id }: Screen, isPending: boolean) => {
+const generateSource = ({ id }: Screen) => {
   const screensUrl = document
     .querySelector("meta[name=screens-url]")
     ?.getAttribute("content");
   const queryParams = "requestor=screenplay";
 
-  return `${screensUrl}/v2/screen${
-    isPending ? "/pending/" : "/"
-  }${id}/simulation?${queryParams}`;
+  return `${screensUrl}/v2/screen/${id}/simulation?${queryParams}`;
 };
 
 export default ScreenSimulation;
