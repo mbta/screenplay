@@ -5,9 +5,12 @@ import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvi
 
 describe("PlacesPage", () => {
   describe("filtering", () => {
-    test("filters places by screen type", async () => {
+    beforeEach(async () => {
       renderWithScreenplayProvider(<PlacesPage />);
+      await screen.findAllByRole("button", { name: "All MODES" });
+    });
 
+    test("filters places by screen type", async () => {
       fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
       fireEvent.click(await screen.findByRole("button", { name: "DUP" }));
       expect(await screen.findByText("Davis")).toBeInTheDocument();
@@ -36,8 +39,6 @@ describe("PlacesPage", () => {
     });
 
     test("filters places by mode and route", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(await screen.findByRole("button", { name: "Blue Line" }));
       expect(await screen.findByText("WONDERLAND")).toBeInTheDocument();
@@ -64,8 +65,6 @@ describe("PlacesPage", () => {
     });
 
     test("adds `filtered` class to PlaceRow when filtered", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(await screen.findByRole("button", { name: "Blue Line" }));
       expect(
@@ -74,8 +73,6 @@ describe("PlacesPage", () => {
     });
 
     test("reset button clears filters", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(await screen.findByRole("button", { name: "Blue Line" }));
       fireEvent.click(
@@ -86,9 +83,12 @@ describe("PlacesPage", () => {
   });
 
   describe("sorting", () => {
-    test("sort label changes depending on filter selected", async () => {
+    beforeEach(async () => {
       renderWithScreenplayProvider(<PlacesPage />);
+      await screen.findAllByRole("button", { name: "All MODES" });
+    });
 
+    test("sort label changes depending on filter selected", async () => {
       expect(screen.getByTestId("sort-label").textContent?.trim()).toBe("ABC");
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(await screen.findByRole("button", { name: "Blue Line" }));
@@ -110,8 +110,6 @@ describe("PlacesPage", () => {
     });
 
     test("sort label changes when clicked", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       expect(screen.getByTestId("sort-label").textContent?.trim()).toBe("ABC");
       fireEvent.click(screen.getByTestId("sort-label"));
       expect(
@@ -140,8 +138,6 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for RL", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(await screen.findByRole("button", { name: "Red Line" }));
       expect(
@@ -159,8 +155,6 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for OL", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(screen.getByRole("button", { name: "Orange Line" }));
       expect(
@@ -190,8 +184,6 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for GL", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(screen.getByRole("button", { name: "Green Line" }));
 
@@ -240,8 +232,6 @@ describe("PlacesPage", () => {
     });
 
     test("sort order changes for BL", async () => {
-      renderWithScreenplayProvider(<PlacesPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All MODES" }));
       fireEvent.click(screen.getByRole("button", { name: "Blue Line" }));
 

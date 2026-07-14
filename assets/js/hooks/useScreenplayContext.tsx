@@ -16,6 +16,7 @@ import { BannerAlert } from "../components/Dashboard/AlertBanner";
 import { ActionOutcomeToastProps } from "../components/Dashboard/ActionOutcomeToast";
 import useSWR, { KeyedMutator } from "swr";
 import { getSuppressedPredictions } from "Utils/api";
+import fp from "lodash/fp";
 
 interface Props {
   children: React.ReactNode;
@@ -28,9 +29,9 @@ interface FilterValue {
 }
 
 interface ScreenplayState {
-  places: Place[];
+  places?: Place[];
   lineStops: LineStop[];
-  alerts: Alert[];
+  alerts?: Alert[];
   allAPIAlertIds: string[];
   screensByAlertMap: ScreensByAlert;
   bannerAlert?: BannerAlert;
@@ -55,9 +56,9 @@ const [useScreenplayState, ScreenplayStateProvider] =
   createGenericContext<ScreenplayState>();
 
 const ScreenplayStateContainer = ({ children }: Props) => {
-  const [places, setPlaces] = useState<Place[]>([]);
+  const [places, setPlaces] = useState<Place[]>();
   const [lineStops, setLineStops] = useState<LineStop[]>([]);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [alerts, setAlerts] = useState<Alert[]>();
   const [allAPIAlertIds, setAllAPIAlertIds] = useState<string[]>([]);
   const [screensByAlertMap, setScreensByAlertMap] = useState<ScreensByAlert>(
     {},
@@ -156,10 +157,30 @@ interface PlacesListState {
 const [usePlacesListState, PlacesListStateProvider] =
   createGenericContext<PlacesListState>();
 
-const PlacesListStateContainer = ({ children }: Props) => {
+interface PlacesListStateContainerProps {
+  children: React.ReactNode;
+  places?: Place[];
+}
+
+const PlacesListStateContainer = ({
+  children,
+  places,
+}: PlacesListStateContainerProps) => {
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState<FilterValue>(
-    PLACES_PAGE_MODES_AND_LINES[0],
+    () => {
+      return places
+        ? fp
+            .reverse(PLACES_PAGE_MODES_AND_LINES)
+            .find(
+              ({ ids }) =>
+                ids[0] === "All" ||
+                places.every(
+                  (place) => fp.intersection(ids, place.routes).length > 0,
+                ),
+            )!
+        : PLACES_PAGE_MODES_AND_LINES[0];
+    },
   );
   const [screenTypeFilterValue, setScreenTypeFilterValue] =
     useState<FilterValue>(SCREEN_TYPES[0]);
