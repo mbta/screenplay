@@ -26,7 +26,7 @@ import type { StaticTemplate, TemplateType } from "Models/static_template";
 
 const MAX_TEXT_LENGTH = 2000;
 // A negated set regex used to limit the visual text sent to signs.
-const INVALID_VISUAL_TEXT_CHARACTERS = /[^a-zA-Z0-9,\/!@':\s\-.]/g;
+const INVALID_VISUAL_TEXT_CHARACTERS = /[^a-zA-Z0-9,/!@':\s\-.]/g;
 
 interface Props {
   title: string;
