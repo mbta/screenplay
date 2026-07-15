@@ -25,6 +25,7 @@ import * as paMessageStyles from "Styles/pa-messages.module.scss";
 import type { StaticTemplate, TemplateType } from "Models/static_template";
 
 const MAX_TEXT_LENGTH = 2000;
+// A negated set regex used to limit the visual text sent to signs.
 const INVALID_VISUAL_TEXT_CHARACTERS = /[^a-zA-Z0-9,\/!@':\s\-.]/g;
 
 interface Props {
@@ -67,6 +68,14 @@ interface Props {
   onClearSelectedTemplate: () => void;
   isReadOnly?: boolean;
 }
+
+export const getInvalidVisualText = (visualText: string): Set<string> => {
+  return new Set(
+    [...visualText.matchAll(INVALID_VISUAL_TEXT_CHARACTERS)].map(
+      (match) => match[0],
+    ),
+  );
+};
 
 const MainForm = ({
   title,
@@ -158,12 +167,7 @@ const MainForm = ({
   const popoverText = "The service day starts and ends at 4:00 AM";
 
   const isEndTimeInvalid = validated && !moment(endTime, "HH:mm").isValid();
-
-  const invalidVisualTextInputs = new Set(
-    [...visualText.matchAll(INVALID_VISUAL_TEXT_CHARACTERS)].map(
-      (match) => match[0],
-    ),
-  );
+  const invalidVisualTextInputs = getInvalidVisualText(visualText);
 
   return (
     <div className={paMessageStyles.editPage}>
