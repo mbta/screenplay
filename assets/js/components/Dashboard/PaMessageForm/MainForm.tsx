@@ -25,6 +25,7 @@ import * as paMessageStyles from "Styles/pa-messages.module.scss";
 import type { StaticTemplate, TemplateType } from "Models/static_template";
 
 const MAX_TEXT_LENGTH = 2000;
+const INVALID_VISUAL_TEXT_CHARACTERS = /[^a-zA-Z0-9,\/!@':\s\-.]/g;
 
 interface Props {
   title: string;
@@ -157,6 +158,12 @@ const MainForm = ({
   const popoverText = "The service day starts and ends at 4:00 AM";
 
   const isEndTimeInvalid = validated && !moment(endTime, "HH:mm").isValid();
+
+  const invalidVisualTextInputs = new Set(
+    [...visualText.matchAll(INVALID_VISUAL_TEXT_CHARACTERS)].map(
+      (match) => match[0],
+    ),
+  );
 
   return (
     <div className={paMessageStyles.editPage}>
@@ -403,6 +410,15 @@ const MainForm = ({
                   validationText={"Text cannot be blank"}
                   validated={validated}
                 />
+                {validated && invalidVisualTextInputs.size > 0 && (
+                  <div className="validation-error">
+                    The following characters are not permitted and must be
+                    replaced:{" "}
+                    {Array.from(invalidVisualTextInputs)
+                      .map((char) => `'${char}'`)
+                      .join(", ")}
+                  </div>
+                )}
               </div>
               <div className={paMessageStyles.copyButtonCol}>
                 <Button
