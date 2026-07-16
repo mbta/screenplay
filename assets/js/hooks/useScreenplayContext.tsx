@@ -169,7 +169,7 @@ const PlacesListStateContainer = ({
   const [sortDirection, setSortDirection] = useState<DirectionID>(0);
   const [modeLineFilterValue, setModeLineFilterValue] = useState<FilterValue>(
     () => {
-      return places
+      return places && places.length > 0
         ? fp
             .reverse(PLACES_PAGE_MODES_AND_LINES)
             .find(
