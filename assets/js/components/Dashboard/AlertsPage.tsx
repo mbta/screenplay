@@ -26,6 +26,10 @@ import moment from "moment-timezone";
 const AlertsPage: ComponentType = () => {
   const { places, alerts, screensByAlertMap } = useScreenplayState();
 
+  if (!places || !alerts) {
+    return null;
+  }
+
   const alertsWithPlaces = alerts.filter(
     (alert) => screensByAlertMap[alert.id],
   );

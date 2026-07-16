@@ -18,6 +18,7 @@ import {
 import { DirectionID } from "Models/direction_id";
 import { usePrevious } from "Hooks/usePrevious";
 import { sortByStationOrder } from "../../util";
+import fp from "lodash/fp";
 
 const getSortLabel = (
   modeLineFilterValue: { label: string },
@@ -36,6 +37,9 @@ const getSortLabel = (
 const PlacesPage: ComponentType = () => {
   const { places } = useScreenplayState();
 
+  if (!places) {
+    return null;
+  }
   return (
     <div className="places-page">
       <div className="page-content__header">Places</div>
@@ -48,16 +52,16 @@ const PlacesPage: ComponentType = () => {
 
 interface PlacesListProps {
   places: Place[];
-  noModeFilter?: boolean;
   isAlertPlacesList?: boolean;
   showAnimationForNewPlaces?: boolean;
+  showLineMap?: boolean;
 }
 
 const PlacesList: ComponentType<PlacesListProps> = ({
   places,
-  noModeFilter,
   isAlertPlacesList,
   showAnimationForNewPlaces,
+  showLineMap = true,
 }: PlacesListProps) => {
   // ascending/southbound/westbound = 0, descending/northbound/eastbound = 1
   const {
@@ -175,6 +179,11 @@ const PlacesList: ComponentType<PlacesListProps> = ({
     statusFilterValue !== STATUSES[0] ||
     screenTypeFilterValue !== SCREEN_TYPES[0];
 
+  const allPlaceRoutes = fp.uniq(places.flatMap(({ routes }) => routes));
+  const modeOptions = MODES_AND_LINES.filter(({ ids }) => {
+    return ids[0] === "All" || fp.intersection(ids, allPlaceRoutes).length > 0;
+  });
+
   return (
     <>
       <Container fluid>
@@ -187,14 +196,12 @@ const PlacesList: ComponentType<PlacesListProps> = ({
             />
           </Col>
           <Col lg={3} className="d-flex justify-content-end pe-3">
-            {!noModeFilter && (
-              <FilterDropdown
-                list={MODES_AND_LINES}
-                onSelect={(value: any) => handleSelectModeOrLine(value)}
-                selectedValue={modeLineFilterValue}
-                className="modes-and-lines"
-              />
-            )}
+            <FilterDropdown
+              list={modeOptions}
+              onSelect={(value: any) => handleSelectModeOrLine(value)}
+              selectedValue={modeLineFilterValue}
+              className="modes-and-lines"
+            />
           </Col>
           <Col lg={3} className="place-screen-types pe-3">
             <FilterDropdown
@@ -245,7 +252,9 @@ const PlacesList: ComponentType<PlacesListProps> = ({
               }
               activeEventKeys={activeEventKeys}
               sortDirection={sortDirection}
-              filteredLine={isOnlyFilteredByRoute ? getFilteredLine() : null}
+              filteredLine={
+                showLineMap && isOnlyFilteredByRoute ? getFilteredLine() : null
+              }
               className={isFiltered || isAlertPlacesList ? "filtered" : ""}
             />
           );

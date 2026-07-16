@@ -6,7 +6,7 @@ export const usePlacesWithPaEss = () => {
   const { places } = useScreenplayState();
   return useMemo(
     () =>
-      places
+      (places ?? [])
         .map((place) => ({
           ...place,
           screens: place.screens.filter((screen) => screen.type === "pa_ess"),

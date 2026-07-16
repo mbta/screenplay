@@ -114,7 +114,7 @@ const Dashboard: ComponentType = () => {
         alerts: newAlerts,
         screens_by_alert: screensByAlertMap,
       } = alertsData;
-      findAndSetBannerAlert(alerts, newAlerts);
+      findAndSetBannerAlert(alerts ?? [], newAlerts);
       setAlerts(newAlerts, allAPIalertIds, screensByAlertMap);
     }
   };

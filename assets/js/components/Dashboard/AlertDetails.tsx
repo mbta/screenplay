@@ -28,7 +28,7 @@ const AlertDetails: ComponentType = () => {
 
   const navigate = useNavigate();
 
-  const foundAlert = alerts.find((alert) => alert.id === id);
+  const foundAlert = (alerts ?? []).find((alert) => alert.id === id);
   useEffect(() => {
     if (foundAlert) {
       setSelectedAlert(foundAlert);
@@ -37,9 +37,17 @@ const AlertDetails: ComponentType = () => {
 
   const validAlertId = id && allAPIAlertIds.includes(id) ? id : undefined;
 
+  if (!alerts || !places) {
+    return null;
+  }
+  const alertPlaces = placesWithSelectedAlert(
+    selectedAlert,
+    places,
+    screensByAlertMap,
+  );
   return selectedAlert ? (
     // Define a new ContextProvider so state is not saved to Context used on the PlacesPage.
-    <PlacesListStateContainer>
+    <PlacesListStateContainer places={alertPlaces}>
       <div className="alert-details">
         <div className="page-content__header">
           <div>
@@ -69,14 +77,10 @@ const AlertDetails: ComponentType = () => {
           <div className="page-content__body">
             <AlertCard alert={selectedAlert} classNames="selected-alert" />
             <PlacesList
-              places={placesWithSelectedAlert(
-                selectedAlert,
-                places,
-                screensByAlertMap,
-              )}
-              noModeFilter
+              places={alertPlaces}
               isAlertPlacesList
               showAnimationForNewPlaces
+              showLineMap={false}
             />
           </div>
         )}

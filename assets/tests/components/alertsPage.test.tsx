@@ -5,9 +5,12 @@ import { renderWithScreenplayProvider } from "../utils/renderWithScreenplayProvi
 
 describe("Alerts Page", () => {
   describe("filtering", () => {
-    test("filters places by mode and route", async () => {
+    beforeEach(async () => {
       renderWithScreenplayProvider(<AlertsPage />);
+      await screen.findAllByRole("button", { name: "All MODES" });
+    });
 
+    test("filters places by mode and route", async () => {
       expect(await screen.findByTestId("1")).toBeInTheDocument();
       // Verify alerts not present on a screen are not visible
       expect(screen.queryByTestId("5")).toBeNull();
@@ -33,8 +36,6 @@ describe("Alerts Page", () => {
     });
 
     test("filters places by screen type", async () => {
-      renderWithScreenplayProvider(<AlertsPage />);
-
       fireEvent.click(screen.getByRole("button", { name: "All SCREEN TYPES" }));
       fireEvent.click(
         await screen.findByRole("button", { name: "Bus Shelter" }),

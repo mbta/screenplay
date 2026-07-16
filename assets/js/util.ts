@@ -122,7 +122,7 @@ export const formatEffect = (effect: string) => {
 // Filters out screens that don't have the alert, then filters out places with empty
 // screens array
 export const placesWithSelectedAlert = (
-  alert: Alert | null,
+  alert: Alert | undefined,
   places: Place[],
   screensByAlertMap: ScreensByAlert,
 ) => {
