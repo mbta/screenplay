@@ -76,7 +76,13 @@ const Sidebar = () => {
           style={{ width: 32 }}
         />
         <span className={sidebarStyles.environmentName}>
-          {{ dev: "Dev", "dev-green": "Dev-Green" }[environment]}
+          {
+            {
+              dev: "Dev",
+              "dev-green": "Dev-Green",
+              "dev-blue": "Dev-Blue",
+            }[environment]
+          }
         </span>
       </a>
       <SidebarLink to="/dashboard" icon={GeoAlt} activeIcon={GeoAltFill}>
