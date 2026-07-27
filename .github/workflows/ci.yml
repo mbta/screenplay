@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
       # cache the ASDF directory, using the values from .tool-versions
       - name: ASDF cache
         uses: actions/cache@v6.1.0
@@ -44,7 +44,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     needs: asdf
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
       - name: ASDF cache
         uses: actions/cache@v6.1.0
         with:
