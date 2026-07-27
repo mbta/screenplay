@@ -54,6 +54,10 @@
     color: black;
     background-color: #7fee91;
   }
+  &:global(.dev-blue) {
+    color: black;
+    background-color: #36acd3;
+  }
 }
 
 .environmentName {

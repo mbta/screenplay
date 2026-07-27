@@ -11,9 +11,9 @@ if [ $# -eq 0 ]; then
 fi
 
 case $1 in
-  prod | dev | dev-green) true;;
+  prod | dev | dev-green | dev-blue) true;;
   * )
-    echo "Environment should be: prod | dev | dev-green" >&2
+    echo "Environment should be: prod | dev | dev-green | dev-blue" >&2
     exit 2
     ;;
 esac
@@ -31,6 +31,5 @@ maybe_cp() {
   fi
 }
 
-maybe_cp s3://mbta-ctd-config/screenplay/"$1".json priv/local/alerts.json
 maybe_cp s3://mbta-ctd-config/screenplay/"$1"/paess_labels.json priv/local/paess_labels.json
 maybe_cp s3://mbta-ctd-config/screenplay/"$1"/place_descriptions.json priv/local/place_descriptions.json
