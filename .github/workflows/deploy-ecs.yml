@@ -9,6 +9,7 @@ on:
         default: dev
         options:
         - dev
+        - dev-blue
         - dev-green
   push:
     branches: [main]
