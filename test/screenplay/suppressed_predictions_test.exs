@@ -150,75 +150,75 @@ defmodule Screenplay.SuppressedPredictionsTest do
       :ets.insert(:line_stops, {:value, new_line_stops})
 
       assert [
-               %{
-                 direction_id: 0,
-                 route_id: "741",
-                 stop_id: "place-six",
-                 suppression_type: :terminal
-               },
-               %{
-                 direction_id: 0,
-                 route_id: "742",
-                 stop_id: "place-six",
-                 suppression_type: :terminal
-               },
-               %{
-                 direction_id: 0,
-                 route_id: "743",
-                 stop_id: "place-six",
-                 suppression_type: :terminal
-               },
-               %{
-                 direction_id: 1,
-                 route_id: "741",
-                 stop_id: "place-six",
-                 suppression_type: :none
-               },
-               %{
-                 direction_id: 1,
-                 route_id: "742",
-                 stop_id: "place-six",
-                 suppression_type: :none
-               },
-               %{
-                 direction_id: 1,
-                 route_id: "743",
-                 stop_id: "place-six",
-                 suppression_type: :none
-               },
                %{stop_id: "70085", route_id: "Red", direction_id: 0, suppression_type: :none},
                %{stop_id: "70086", route_id: "Red", direction_id: 1, suppression_type: :stop},
                %{stop_id: "70095", route_id: "Red", direction_id: 0, suppression_type: :stop},
                %{stop_id: "70096", route_id: "Red", direction_id: 1, suppression_type: :none},
                %{
-                 direction_id: 0,
-                 route_id: "Green-B",
-                 stop_id: "place-four",
-                 suppression_type: :terminal
-               },
-               %{
-                 stop_id: "place-four",
-                 route_id: "Green-C",
-                 direction_id: 0,
-                 suppression_type: :terminal
-               },
-               %{
-                 stop_id: "place-four",
-                 route_id: "Green-B",
-                 direction_id: 1,
-                 suppression_type: :none
-               },
-               %{
-                 stop_id: "place-four",
-                 route_id: "Green-C",
-                 direction_id: 1,
-                 suppression_type: :none
-               },
-               %{
                  stop_id: "place-two",
                  route_id: "Blue",
                  direction_id: 0,
                  suppression_type: :stop
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "741",
+                 stop_id: "place-six",
+                 suppression_type: :terminal
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "742",
+                 stop_id: "place-six",
+                 suppression_type: :terminal
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "743",
+                 stop_id: "place-six",
+                 suppression_type: :terminal
+               },
+               %{
+                 direction_id: 1,
+                 route_id: "741",
+                 stop_id: "place-six",
+                 suppression_type: :none
+               },
+               %{
+                 direction_id: 1,
+                 route_id: "742",
+                 stop_id: "place-six",
+                 suppression_type: :none
+               },
+               %{
+                 direction_id: 1,
+                 route_id: "743",
+                 stop_id: "place-six",
+                 suppression_type: :none
+               },
+               %{
+                 direction_id: 0,
+                 route_id: "Green-B",
+                 stop_id: "place-four",
+                 suppression_type: :terminal
+               },
+               %{
+                 stop_id: "place-four",
+                 route_id: "Green-C",
+                 direction_id: 0,
+                 suppression_type: :terminal
+               },
+               %{
+                 stop_id: "place-four",
+                 route_id: "Green-B",
+                 direction_id: 1,
+                 suppression_type: :none
+               },
+               %{
+                 stop_id: "place-four",
+                 route_id: "Green-C",
+                 direction_id: 1,
+                 suppression_type: :none
                }
              ] = SuppressedPredictions.get_all_suppressed_predictions_for_data()
     end

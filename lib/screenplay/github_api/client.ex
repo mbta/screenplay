@@ -20,10 +20,10 @@ defmodule Screenplay.GithubApi.Client do
 
     case @http_client.get(url) do
       {:ok, %{status_code: 200, body: body}} ->
-        %{"content" => response_json} = Jason.decode!(body)
+        %{"content" => response_json} = JSON.decode!(body)
 
         contents =
-          response_json |> String.replace("\n", "") |> Base.decode64!() |> Jason.decode!()
+          response_json |> String.replace("\n", "") |> Base.decode64!() |> JSON.decode!()
 
         {:ok, contents}
 
@@ -57,7 +57,7 @@ defmodule Screenplay.GithubApi.FakeClient do
 
     case File.read(path) do
       {:ok, file} ->
-        {:ok, Jason.decode!(file)}
+        {:ok, JSON.decode!(file)}
 
       {:error, _} ->
         Logger.error("Could not fetch local signs.json. Please ensure RTS repo has been cloned.")

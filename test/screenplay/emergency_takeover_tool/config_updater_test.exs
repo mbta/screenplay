@@ -89,7 +89,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
 
       File.write(
         published_screens_path,
-        Jason.encode!(empty_config)
+        JSON.encode!(empty_config)
       )
 
       File.rm(published_screens_path <> ".temp")
@@ -109,7 +109,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
           }
         }
         |> Config.to_json()
-        |> Jason.encode!()
+        |> JSON.encode!()
 
       File.write(published_screens_path, config)
     end
@@ -126,7 +126,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
              ) == :ok
 
       {:ok, file_contents, _metadata} = Local.fetch_config()
-      %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
+      %Config{screens: screens} = file_contents |> JSON.decode!() |> Config.from_json()
 
       expected_takeover = %EmergencyTakeover{
         audio_asset_path: nil,
@@ -156,7 +156,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
              ) == :ok
 
       {:ok, file_contents, _metadata} = Local.fetch_config()
-      %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
+      %Config{screens: screens} = file_contents |> JSON.decode!() |> Config.from_json()
 
       expected_takeover = %EmergencyTakeover{
         audio_asset_path:
@@ -200,7 +200,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
           }
         }
         |> Config.to_json()
-        |> Jason.encode!()
+        |> JSON.encode!()
 
       File.write(published_screens_path, config)
     end
@@ -211,7 +211,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
       assert ConfigUpdater.clear_emergency_takeover_configs([takeover_screen_id]) == :ok
 
       {:ok, file_contents, _metadata} = Local.fetch_config()
-      %Config{screens: screens} = file_contents |> Jason.decode!() |> Config.from_json()
+      %Config{screens: screens} = file_contents |> JSON.decode!() |> Config.from_json()
 
       assert screens[takeover_screen_id] == @screen_without_takeover
       assert screens["PRE-2"] == @screen_without_takeover

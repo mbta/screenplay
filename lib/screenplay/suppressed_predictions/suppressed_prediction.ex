@@ -7,7 +7,7 @@ defmodule Screenplay.SuppressedPredictions.SuppressedPrediction do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, except: [:__meta__]}
+  @derive {JSON.Encoder, except: [:__meta__]}
 
   @type t() :: %__MODULE__{
           location_id: String.t(),

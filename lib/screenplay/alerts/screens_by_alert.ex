@@ -13,7 +13,7 @@ defmodule Screenplay.Alerts.ScreensByAlert do
            {:http_request, @http_client.get(url)},
          {:response_success, %{status_code: 200, body: body}} <-
            {:response_success, response},
-         {:parse, {:ok, parsed}} <- {:parse, Jason.decode(body)} do
+         {:parse, {:ok, parsed}} <- {:parse, JSON.decode(body)} do
       {:ok, parsed}
     else
       {:http_request, e} ->

@@ -34,7 +34,7 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
 
   defp update do
     {:ok, body, _new_version} = Fetch.fetch_config()
-    {:ok, deserialized} = Jason.decode(body)
+    {:ok, deserialized} = JSON.decode(body)
 
     deserialized
     |> Config.from_json()

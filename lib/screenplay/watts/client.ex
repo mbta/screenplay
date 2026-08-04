@@ -28,7 +28,7 @@ defmodule Screenplay.Watts.Client do
     watts_api_key = Application.fetch_env!(:screenplay, :watts_api_key)
 
     request_data =
-      Jason.encode!(%{
+      JSON.encode!(%{
         text:
           ~s(<speak><amazon:effect name="drc"><prosody rate="90%">#{text}</prosody></amazon:effect></speak>),
         voice_id: "Matthew"
