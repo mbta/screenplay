@@ -38,7 +38,7 @@ jobs:
       DATABASE_HOST: localhost
     services:
       postgres:
-        image: postgres@sha256:d0f363f8366fbc3f52d172c6e76bc27151c3d643b870e1062b4e8bfe65baf609 # v16.3-bookworm
+        image: postgres:v16.3-bookworm@sha256:d0f363f8366fbc3f52d172c6e76bc27151c3d643b870e1062b4e8bfe65baf609
         ports:
           - 5432:5432
         env:
