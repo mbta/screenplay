@@ -14,12 +14,17 @@ on:
   push:
     branches: [main]
 
+permissions: {}
+
 jobs:
   call-workflow:
-    uses: mbta/workflows/.github/workflows/deploy-ecs.yml@v5
+    uses: mbta/workflows/.github/workflows/deploy-ecs.yml@ead2d40fcc0c546bd6f099a6d8fcd9f9950eab03 # v5.0.0
     with:
       app-name: screenplay
       environment: ${{ github.event.inputs.environment || 'dev' }}
+    permissions:
+      contents: read # Needed to check out the repository
+      id-token: write # Needed to authenticate against AWS
     secrets:
       aws-role-arn: ${{ secrets.AWS_ROLE_ARN }}
       docker-repo: ${{ secrets.DOCKER_REPO }}
