@@ -62,7 +62,7 @@ defmodule Screenplay.Jobs.Reminders do
   end
 
   defp send_slack_message(message, url) do
-    {:ok, json} = Jason.encode(message)
+    json = JSON.encode!(message)
 
     case @http_client.post(url, json) do
       {:ok, response} ->

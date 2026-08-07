@@ -9,7 +9,7 @@ defmodule Screenplay.Places.Place do
     Module used to define struct for PA/ESS screen configs stored in `Screenplay.Places.Cache`.
     """
 
-    @derive Jason.Encoder
+    @derive JSON.Encoder
 
     @type route :: %{id: String.t(), direction_id: 0 | 1}
 
@@ -38,7 +38,7 @@ defmodule Screenplay.Places.Place do
     Module used to define struct for Showtime screen configs stored in `Screenplay.Places.Cache`.
     """
 
-    @derive Jason.Encoder
+    @derive JSON.Encoder
 
     @type t :: %__MODULE__{
             id: String.t(),
@@ -66,7 +66,7 @@ defmodule Screenplay.Places.Place do
     Module used to define struct for Outfront Takeover screen configs stored in `Screenplay.Places.Cache`.
     """
 
-    @derive Jason.Encoder
+    @derive JSON.Encoder
 
     @type t :: %__MODULE__{
             id: String.t(),
@@ -98,7 +98,7 @@ defmodule Screenplay.Places.Place do
           description: String.t() | nil
         }
 
-  @derive Jason.Encoder
+  @derive JSON.Encoder
   defstruct id: nil, name: nil, routes: [], screens: [], description: nil
 
   def from_map(place_map) do

@@ -28,7 +28,7 @@ defmodule Screenplay.Watts.ClientTest do
         assert request_data ==
                  ~s({"text":"<speak><amazon:effect name=\\"drc\\"><prosody rate=\\"90%\\">&lt;lang xml:lang=&quot;es-US&quot;&gt;Hello World&lt;/lang&gt;</prosody></amazon:effect></speak>","voice_id":"Matthew"})
 
-        {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(input)}}
+        {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(input)}}
       end)
 
       Client.fetch_tts(input, false)
@@ -41,7 +41,7 @@ defmodule Screenplay.Watts.ClientTest do
         assert request_data ==
                  ~s({"text":"<speak><amazon:effect name=\\"drc\\"><prosody rate=\\"90%\\"><lang xml:lang=\\"es-US\\">Hello World</lang></prosody></amazon:effect></speak>","voice_id":"Matthew"})
 
-        {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(input)}}
+        {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(input)}}
       end)
 
       assert Client.fetch_tts(input, true)

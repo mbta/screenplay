@@ -5,7 +5,7 @@ defmodule Screenplay.PaMessages.PaMessage do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, except: [:__meta__]}
+  @derive {JSON.Encoder, except: [:__meta__]}
 
   @type message_type :: nil | :psa | :emergency
 

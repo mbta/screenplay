@@ -34,12 +34,12 @@ defmodule Screenplay.Util do
   end
 
   @doc """
-  Log structured data. All passed values must implement the Jason.Encoder protocol
+  Log structured data. All passed values must implement the JSON.Encoder protocol
   """
   @spec log(String.t(), keyword()) :: :ok
   def log(event, extras) do
     ([event: event] ++ extras)
-    |> Enum.map_join(" ", fn {k, v} -> "#{k}=#{Jason.encode!(v)}" end)
+    |> Enum.map_join(" ", fn {k, v} -> "#{k}=#{JSON.encode!(v)}" end)
     |> Logger.info()
   end
 

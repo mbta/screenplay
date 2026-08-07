@@ -8,7 +8,7 @@ defmodule Screenplay.Places.S3Fetch do
   @impl true
   def get_place_descriptions do
     with {:ok, place_description_contents, version_id} <- do_get(:place_descriptions),
-         {:ok, place_description_json} <- Jason.decode(place_description_contents) do
+         {:ok, place_description_json} <- JSON.decode(place_description_contents) do
       {:ok, place_description_json, version_id}
     else
       _ -> :error
@@ -18,7 +18,7 @@ defmodule Screenplay.Places.S3Fetch do
   @impl true
   def get_paess_labels do
     with {:ok, paess_labels_contents, _} <- do_get(:paess_labels),
-         {:ok, paess_labels_json} <- Jason.decode(paess_labels_contents) do
+         {:ok, paess_labels_json} <- JSON.decode(paess_labels_contents) do
       {:ok, paess_labels_json}
     else
       _ -> :error

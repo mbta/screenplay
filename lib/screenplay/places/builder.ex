@@ -327,7 +327,7 @@ defmodule Screenplay.Places.Builder do
 
   @hidden_signs_path Path.join([:code.priv_dir(:screenplay), "config", "hidden_paess_signs.json"])
   @external_resource @hidden_signs_path
-  @hidden_signs @hidden_signs_path |> File.read!() |> Jason.decode!()
+  @hidden_signs @hidden_signs_path |> File.read!() |> JSON.decode!()
 
   defp get_paess_places do
     signs = fetch_signs_json()
