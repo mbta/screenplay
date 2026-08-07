@@ -35,7 +35,7 @@ config :screenplay,
   start_cache_processes: config_env() != :test
 
 # Configures Elixir's Logger
-config :logger, :default_handler,
+config :logger, :default_formatter,
   format: "$time $metadata[$level] $message\n",
   metadata: [:remote_ip, :request_id]
 
