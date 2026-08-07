@@ -47,7 +47,7 @@ defmodule Screenplay.Places.LocalFetch do
         {:ok, data}
 
       {:error, json_error} ->
-        "Couldn't decode JSON for spec #{inspect(file_spec)}. Error reported: #{Exception.message(json_error)}. File contents:\n#{json_string}"
+        "Couldn't decode JSON for spec #{inspect(file_spec)}. Error reported: #{inspect(json_error)}. File contents:\n#{json_string}"
         |> IO.warn()
 
         :error
