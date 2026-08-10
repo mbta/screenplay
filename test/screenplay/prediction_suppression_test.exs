@@ -104,7 +104,7 @@ defmodule Screenplay.PredictionSuppressionTest do
   test "update" do
     expect(HTTPoison.Mock, :get, fn url, _, _ ->
       assert url =~ "/route_patterns"
-      {:ok, %HTTPoison.Response{status_code: 200, body: Jason.encode!(@api_response)}}
+      {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(@api_response)}}
     end)
 
     PredictionSuppression.init([])

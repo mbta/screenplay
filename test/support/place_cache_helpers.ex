@@ -14,7 +14,12 @@ defmodule Screenplay.PlaceCacheHelpers do
     contents =
       fixture_path
       |> File.read!()
-      |> Jason.decode!(keys: :atoms)
+      |> JSON.decode(%{},
+        object_push: fn key, value, acc ->
+          [{String.to_atom(key), value} | acc]
+        end
+      )
+      |> elem(0)
       |> Enum.map(fn %{screens: screens} = place ->
         struct(Place, %{place | screens: Enum.map(screens, &struct(PaEssScreen, &1))})
       end)

@@ -6,6 +6,8 @@ defmodule Screenplay.Application do
   use Application
 
   def start(_type, _args) do
+    LoggerBackends.add(Logger.Sentry.LoggerBackend)
+
     children =
       [
         {Ecto.Migrator, repos: Application.fetch_env!(:screenplay, :ecto_repos)},

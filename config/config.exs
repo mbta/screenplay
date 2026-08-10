@@ -34,20 +34,16 @@ config :screenplay,
   record_sentry: false,
   start_cache_processes: config_env() != :test
 
-# Include 2 logger backends
-config :logger,
-  backends: [:console, Sentry.LoggerBackend]
-
 # Configures Elixir's Logger
-config :logger, :console,
+config :logger, :default_formatter,
   format: "$time $metadata[$level] $message\n",
   metadata: [:remote_ip, :request_id]
 
-# Use Jason for JSON parsing in Phoenix
-config :phoenix, :json_library, Jason
+# Use JSON for JSON parsing in Phoenix
+config :phoenix, :json_library, JSON
 
-# Use Jason for JSON parsing in ExAws
-config :ex_aws, json_codec: Jason
+# Use JSON for JSON parsing in ExAws
+config :ex_aws, json_codec: JSON
 
 # 12 hours in seconds
 max_session_time = 12 * 60 * 60

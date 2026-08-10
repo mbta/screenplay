@@ -5,8 +5,6 @@ defmodule Screenplay.Jobs.ClearSuppressedPredictions do
   alias Screenplay.SuppressedPredictions
   use Oban.Worker, unique: true
 
-  require Logger
-
   @impl Oban.Worker
   def perform(_) do
     SuppressedPredictions.clear_suppressed_predictions_for_end_of_day()

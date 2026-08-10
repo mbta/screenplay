@@ -2,7 +2,6 @@ defmodule Screenplay.PredictionSuppressionUtils do
   @moduledoc """
   Utility functions for validating, checking prediction suppression and getting suppression type
   """
-  require Logger
 
   @green_line_routes ["Green-B", "Green-C", "Green-D", "Green-E"]
   def green_line_routes, do: @green_line_routes

@@ -5,12 +5,13 @@ defmodule Screenplay.MixProject do
     [
       app: :screenplay,
       version: "0.1.0",
-      elixir: "~> 1.17",
+      elixir: "~> 1.20",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      test_coverage: [tool: LcovEx]
+      test_coverage: [tool: LcovEx],
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
@@ -81,9 +82,10 @@ defmodule Screenplay.MixProject do
       {:tzdata, "~> 1.1"},
       {:ex_machina, "~> 2.7", only: :test},
       {:remote_ip, "~> 1.2"},
-      {:faker, "~> 0.18"},
+      {:faker, "~> 0.19"},
       {:nebulex, "~> 2.6"},
-      {:oban, "~> 2.18"}
+      {:oban, "~> 2.18"},
+      {:logger_backends, "~> 1.0"}
     ]
   end
 

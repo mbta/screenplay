@@ -14,7 +14,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdater do
 
   def add_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
     with {published_config, _published_version_id} <- get_current_published_config(),
-         {:ok, published_config_deserialized} <- Jason.decode(published_config) do
+         {:ok, published_config_deserialized} <- JSON.decode(published_config) do
       %Config{screens: published_screens, devops: devops} =
         published_config_deserialized |> Config.from_json()
 
@@ -62,7 +62,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdater do
 
   def clear_emergency_takeover_configs(showtime_screen_ids) do
     with {published_config, _published_version_id} <- get_current_published_config(),
-         {:ok, published_config_deserialized} <- Jason.decode(published_config) do
+         {:ok, published_config_deserialized} <- JSON.decode(published_config) do
       %Config{screens: published_screens, devops: devops} =
         published_config_deserialized |> Config.from_json()
 

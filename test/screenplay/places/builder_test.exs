@@ -244,6 +244,23 @@ defmodule Screenplay.Places.BuilderTest do
       assert {:noreply, _} = Builder.handle_info(:build, [])
 
       assert [
+               %Place{
+                 description: nil,
+                 id: "place-ogmnl",
+                 name: "Oak Grove",
+                 routes: ["Orange"],
+                 screens: [
+                   %Place.PaEssScreen{
+                     id: "oak_grove_mezzanine_southbound",
+                     label: nil,
+                     station_code: "OOAK",
+                     type: "pa_ess",
+                     zone: "m",
+                     routes: [%{id: "Orange", direction_id: 0}],
+                     location: nil
+                   }
+                 ]
+               },
                %Screenplay.Places.Place{
                  id: "place-wtcst",
                  name: "World Trade Center - Silver Line - South Station",
@@ -269,23 +286,6 @@ defmodule Screenplay.Places.BuilderTest do
                    }
                  ],
                  description: nil
-               },
-               %Place{
-                 description: nil,
-                 id: "place-ogmnl",
-                 name: "Oak Grove",
-                 routes: ["Orange"],
-                 screens: [
-                   %Place.PaEssScreen{
-                     id: "oak_grove_mezzanine_southbound",
-                     label: nil,
-                     station_code: "OOAK",
-                     type: "pa_ess",
-                     zone: "m",
-                     routes: [%{id: "Orange", direction_id: 0}],
-                     location: nil
-                   }
-                 ]
                }
              ] = Screenplay.Places.get()
     end
@@ -297,7 +297,7 @@ defmodule Screenplay.Places.BuilderTest do
     config =
       screens_config_path
       |> File.read!()
-      |> Jason.decode!()
+      |> JSON.decode!()
       |> ScreensConfig.Config.from_json()
 
     ScreensConfigCache.put_all(Map.to_list(config.screens))

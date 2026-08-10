@@ -3,7 +3,6 @@ defmodule Screenplay.Stops.Stop do
   Functions used to fetch stop data from the V3 API.
   """
 
-  require Logger
   alias Screenplay.V3Api
 
   @callback fetch_by_ids(list(String.t())) :: {:ok, list(map())} | :error
