@@ -61,7 +61,7 @@ const AlertBanner: ComponentType<AlertBannerProps> = ({
     const affectedListString = getAffectedListString();
 
     if (
-      ["dashboard", "alerts", "pending"].includes(route) ||
+      ["dashboard", "alerts"].includes(route) ||
       (params.id && params.id !== alert.id)
     ) {
       if (type === "closed") {
