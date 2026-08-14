@@ -44,8 +44,8 @@ describe("PlacesActionBar", () => {
   test("Renders, shows place and screen counts, shows appropriate buttons", async () => {
     const handleClickResetFilters = jest.fn();
     const handleClickToggleScreenlessPlaces = jest.fn();
-    expect(handleClickResetFilters).not.toBeCalled();
-    expect(handleClickToggleScreenlessPlaces).not.toBeCalled();
+    expect(handleClickResetFilters).not.toHaveBeenCalled();
+    expect(handleClickToggleScreenlessPlaces).not.toHaveBeenCalled();
 
     const { getByTestId, queryByTestId } = render(
       <PlacesActionBar
@@ -75,8 +75,8 @@ describe("PlacesActionBar", () => {
   test("Renders 'Screenless places' toggle button when list contains one or more screenless places", async () => {
     const handleClickResetFilters = jest.fn();
     const handleClickToggleScreenlessPlaces = jest.fn();
-    expect(handleClickResetFilters).not.toBeCalled();
-    expect(handleClickToggleScreenlessPlaces).not.toBeCalled();
+    expect(handleClickResetFilters).not.toHaveBeenCalled();
+    expect(handleClickToggleScreenlessPlaces).not.toHaveBeenCalled();
 
     const { getByTestId } = render(
       <PlacesActionBar

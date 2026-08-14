@@ -6,12 +6,15 @@ import {
   subscribeToErrorState,
   unsubscribeFromErrorState,
 } from "../../js/utils/errorHandler";
+import * as WindowHelper from "../../js/utils/windowHelper";
 
 // Mock window.location.reload
-const mockReload = jest.fn();
-Object.defineProperty(window, "location", {
-  value: { reload: mockReload },
-  writable: true,
+let mockReload: jest.Spied<typeof WindowHelper.reloadWindow>;
+
+beforeEach(() => {
+  mockReload = jest
+    .spyOn(WindowHelper, "reloadWindow")
+    .mockImplementation(() => {});
 });
 
 describe("withErrorHandling", () => {
