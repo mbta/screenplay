@@ -1,9 +1,10 @@
 import { REFRESH_PAGE_ERROR_MESSAGE } from "Constants/constants";
+import { reloadWindow } from "Utils/windowHelper";
 
 export interface ErrorHandlingOptions {
   /** Custom error message to display */
   customMessage?: string;
-  /** Cutstom error title to display */
+  /** Custom error title to display */
   customTitle?: string;
   /** Custom error handler function */
   onError?: (error: Error | Response) => void;
@@ -31,7 +32,7 @@ export const clearErrorState = () => {
 };
 
 /**
- * Subscribes the error state by passing in a listener function to be called on state channges.
+ * Subscribes the error state by passing in a listener function to be called on state changes.
  * Used by components that rely on the global error state.
  */
 export const subscribeToErrorState = (
@@ -71,7 +72,7 @@ export const withErrorHandling = <T extends any[], R>(
       // then we want to refresh the page after displaying the error
       if (!onError && isSessionExpirationError(error)) {
         options.onError = () => {
-          setTimeout(() => window.location.reload(), 2000);
+          setTimeout(() => reloadWindow(), 2000);
         };
       }
 
