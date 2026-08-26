@@ -39,6 +39,7 @@ This repo expects Realtime Signs to be cloned and for `../realtime_signs/priv/si
 1. `cp .envrc.template .envrc`
 1. Fill in `API_V3_KEY` with a [V3 API key](https://api-v3.mbta.com/)
 1. Fill in `DATABASE_USER` and `DATABASE_PASSWORD` with the username and password of a DB user configured in your local psql server
+1. Fill in `SCREENS_API_KEY` with a corresponding value from your local Screens configuration, or an API key from 1Password for a deployed dev environment.
 1. `direnv allow`
 
 Note the various `_URL` values in `.envrc`, which default to the production

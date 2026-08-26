@@ -1,8 +1,9 @@
 defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
   use ExUnit.Case
 
+  import Mox
+
   alias Screenplay.EmergencyTakeoverTool.ConfigUpdater
-  alias Screenplay.ScreensConfig.Fetch.Local
 
   alias ScreensConfig.{
     Alerts,
@@ -18,6 +19,20 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
   }
 
   alias ScreensConfig.Screen.{GlEink, PreFare}
+
+  setup :verify_on_exit!
+
+  setup do
+    Application.put_env(:screenplay, :http_client, HTTPoisonMock)
+    original_token = Application.get_env(:screenplay, :screens_api_key)
+    Application.put_env(:screenplay, :screens_api_key, "test-token")
+
+    on_exit(fn ->
+      Application.put_env(:screenplay, :screens_api_key, original_token)
+    end)
+
+    :ok
+  end
 
   @screen_without_takeover %Screen{
     vendor: :mercury,
@@ -78,46 +93,17 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
     tags: []
   }
 
-  def get_fixture_path(file_name) do
-    Path.join(~w[#{File.cwd!()} test fixtures #{file_name}])
-  end
-
-  setup_all do
-    on_exit(fn ->
-      empty_config = %{screens: %{}}
-      published_screens_path = get_fixture_path("screens_config.json")
-
-      File.write(
-        published_screens_path,
-        JSON.encode!(empty_config)
-      )
-
-      File.rm(published_screens_path <> ".temp")
-    end)
-  end
-
   describe "add_emergency_takeover_configs/3" do
-    setup do
-      published_screens_path = get_fixture_path("screens_config.json")
-
-      config =
-        %Config{
-          screens: %{
-            "PRE-1" => @screen_without_takeover,
-            "PRE-2" => @screen_without_takeover,
-            "GL-1" => @gl_eink_screen
-          }
-        }
-        |> Config.to_json()
-        |> JSON.encode!()
-
-      File.write(published_screens_path, config)
-    end
-
     test "adds an emergency takeover config to a screen" do
       alert_id = "alert-1"
       takeover_screen_id = "PRE-1"
       message = %{type: :custom, text: %{indoor: "Indoor Message", outdoor: "Outdoor Message"}}
+
+      expect_config_fetch_and_post(%{
+        "PRE-1" => @screen_without_takeover,
+        "PRE-2" => @screen_without_takeover,
+        "GL-1" => @gl_eink_screen
+      })
 
       assert ConfigUpdater.add_emergency_takeover_configs(
                alert_id,
@@ -125,8 +111,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                message
              ) == :ok
 
-      {:ok, file_contents, _metadata} = Local.fetch_config()
-      %Config{screens: screens} = file_contents |> JSON.decode!() |> Config.from_json()
+      screens = posted_screens()
 
       expected_takeover = %EmergencyTakeover{
         audio_asset_path: nil,
@@ -140,8 +125,8 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                  expected_takeover
                )
 
-      assert screens["PRE-2"] == @screen_without_takeover
-      assert screens["GL-1"] == @gl_eink_screen
+      # Only the modified screen should be in the posted data
+      assert map_size(screens) == 1
     end
 
     test "adds a canned emergency takeover config to a screen" do
@@ -149,14 +134,19 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
       takeover_screen_id = "PRE-1"
       message = %{type: :canned, id: 1}
 
+      expect_config_fetch_and_post(%{
+        "PRE-1" => @screen_without_takeover,
+        "PRE-2" => @screen_without_takeover,
+        "GL-1" => @gl_eink_screen
+      })
+
       assert ConfigUpdater.add_emergency_takeover_configs(
                alert_id,
                [takeover_screen_id],
                message
              ) == :ok
 
-      {:ok, file_contents, _metadata} = Local.fetch_config()
-      %Config{screens: screens} = file_contents |> JSON.decode!() |> Config.from_json()
+      screens = posted_screens()
 
       expected_takeover = %EmergencyTakeover{
         audio_asset_path:
@@ -172,13 +162,14 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                  expected_takeover
                )
 
-      assert screens["PRE-2"] == @screen_without_takeover
+      # Only the modified screen should be in the posted data
+      assert map_size(screens) == 1
     end
   end
 
   describe "clear_emergency_takeover_configs/1" do
-    setup do
-      published_screens_path = get_fixture_path("screens_config.json")
+    test "clears emergency takeover configs from screens" do
+      takeover_screen_id = "PRE-1"
 
       screen_with_takeover =
         put_in(
@@ -191,31 +182,51 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
           }
         )
 
-      config =
-        %Config{
-          screens: %{
-            "PRE-1" => screen_with_takeover,
-            "PRE-2" => @screen_without_takeover,
-            "GL-1" => @gl_eink_screen
-          }
-        }
-        |> Config.to_json()
-        |> JSON.encode!()
-
-      File.write(published_screens_path, config)
-    end
-
-    test "clears emergency takeover configs from screens" do
-      takeover_screen_id = "PRE-1"
+      expect_config_fetch_and_post(%{
+        "PRE-1" => screen_with_takeover,
+        "PRE-2" => @screen_without_takeover,
+        "GL-1" => @gl_eink_screen
+      })
 
       assert ConfigUpdater.clear_emergency_takeover_configs([takeover_screen_id]) == :ok
 
-      {:ok, file_contents, _metadata} = Local.fetch_config()
-      %Config{screens: screens} = file_contents |> JSON.decode!() |> Config.from_json()
+      screens = posted_screens()
 
       assert screens[takeover_screen_id] == @screen_without_takeover
-      assert screens["PRE-2"] == @screen_without_takeover
-      assert screens["GL-1"] == @gl_eink_screen
+      # Only the modified screen should be in the posted data
+      assert map_size(screens) == 1
     end
+  end
+
+  defp expect_config_fetch_and_post(existing_screens) do
+    api_config =
+      %Config{screens: existing_screens}
+      |> Config.to_json()
+      |> JSON.encode!()
+
+    expect(HTTPoisonMock, :get, fn _url, _headers ->
+      {:ok, %{status_code: 200, body: JSON.encode!(%{"success" => true, "config" => api_config})}}
+    end)
+
+    test_pid = self()
+
+    expect(HTTPoisonMock, :post, fn _url, body, _headers ->
+      send(test_pid, {:posted_screen_configs, body})
+      {:ok, %{status_code: 201, body: JSON.encode!(%{"success" => true})}}
+    end)
+  end
+
+  defp posted_screens do
+    assert_receive {:posted_screen_configs, body}
+
+    %{"screen_configs" => screen_configs} = JSON.decode!(body)
+
+    screens =
+      Enum.reduce(screen_configs, %{}, fn %{"id" => screen_id, "config" => config}, acc ->
+        Map.put(acc, screen_id, config)
+      end)
+
+    %Config{screens: screens} = Config.from_json(%{"screens" => screens})
+    screens
   end
 end

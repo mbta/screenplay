@@ -7,95 +7,71 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdater do
 
   alias Screenplay.EmergencyTakeoverTool.CannedMessages
   alias Screenplay.EmergencyTakeoverTool.EmergencyTakeover, as: EmergencyTakeoverContext
-  alias Screenplay.ScreensConfig.Fetch, as: PublishedScreensFetch
+  alias Screenplay.ScreensConfig.Api, as: ConfigApi
   alias ScreensConfig.{Config, EmergencyMessagingLocation, EmergencyTakeover, Screen}
 
   @image_store Application.compile_env!(:screenplay, :image_store_module)
 
   def add_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
-    with {published_config, _published_version_id} <- get_current_published_config(),
-         {:ok, published_config_deserialized} <- JSON.decode(published_config) do
-      %Config{screens: published_screens, devops: devops} =
-        published_config_deserialized |> Config.from_json()
+    with {:ok, config} <- ConfigApi.fetch_config(showtime_screen_ids),
+         {:ok, config_deserialized} <- JSON.decode(config) do
+      %Config{screens: published_screens} =
+        config_deserialized |> Config.from_json()
 
       updated_screens =
-        update_screens_with_emergency_takeover(
-          published_screens,
-          showtime_screen_ids,
-          alert_id,
-          message
-        )
+        published_screens
+        |> Enum.filter(fn {id, _screen} -> id in showtime_screen_ids end)
+        |> update_screens_with_emergency_takeover(alert_id, message)
 
-      %Config{screens: updated_screens, devops: devops}
-      |> publish_new_config()
+      ConfigApi.put_config(%Config{screens: updated_screens})
     else
       _error ->
         {:error, "Could not fetch published screens config"}
     end
   end
 
-  defp update_screens_with_emergency_takeover(screens, screen_ids, alert_id, message) do
+  defp update_screens_with_emergency_takeover(screens, alert_id, message) do
     for {id, screen} <- screens,
         into: %{} do
-      if id in screen_ids do
-        case screen do
-          %Screen{app_params: %{emergency_messaging_location: eml}} when not is_nil(eml) ->
-            emergency_takeover = build_emergency_takeover(message, alert_id, screen.app_id, eml)
+      case screen do
+        %Screen{app_params: %{emergency_messaging_location: eml}} when not is_nil(eml) ->
+          emergency_takeover = build_emergency_takeover(message, alert_id, screen.app_id, eml)
 
-            {id,
-             put_in(
-               screen,
-               [Access.key!(:app_params), Access.key!(:emergency_takeover)],
-               emergency_takeover
-             )}
+          {id,
+           put_in(
+             screen,
+             [Access.key!(:app_params), Access.key!(:emergency_takeover)],
+             emergency_takeover
+           )}
 
-          _ ->
-            Logger.error("Tried to takeover #{id} without an emergency_messaging_location")
+        _ ->
+          Logger.error("Tried to takeover #{id} without an emergency_messaging_location")
 
-            {id, screen}
-        end
-      else
-        {id, screen}
+          {id, screen}
       end
     end
   end
 
   def clear_emergency_takeover_configs(showtime_screen_ids) do
-    with {published_config, _published_version_id} <- get_current_published_config(),
-         {:ok, published_config_deserialized} <- JSON.decode(published_config) do
-      %Config{screens: published_screens, devops: devops} =
-        published_config_deserialized |> Config.from_json()
+    with {:ok, config} <- ConfigApi.fetch_config(showtime_screen_ids),
+         {:ok, config_deserialized} <- JSON.decode(config) do
+      %Config{screens: published_screens} = Config.from_json(config_deserialized)
 
-      updated_screens = clear_screens_emergency_takeover(published_screens, showtime_screen_ids)
+      updated_screens =
+        published_screens
+        |> Enum.filter(fn {id, _screen} -> id in showtime_screen_ids end)
+        |> clear_screens_emergency_takeover()
 
-      %Config{screens: updated_screens, devops: devops}
-      |> publish_new_config()
+      ConfigApi.put_config(%Config{screens: updated_screens})
     else
       _error ->
         {:error, "Could not fetch published screens config"}
     end
   end
 
-  defp clear_screens_emergency_takeover(screens, screen_ids) do
+  defp clear_screens_emergency_takeover(screens) do
     for {id, screen} <- screens, into: %{} do
-      if id in screen_ids do
-        {id, put_in(screen, [Access.key!(:app_params), Access.key!(:emergency_takeover)], nil)}
-      else
-        {id, screen}
-      end
-    end
-  end
-
-  defp get_current_published_config do
-    case PublishedScreensFetch.fetch_config() do
-      {:ok, config, version_id} -> {config, version_id}
-      error -> error
-    end
-  end
-
-  def publish_new_config(new_config) do
-    with(:ok <- PublishedScreensFetch.put_config(new_config)) do
-      PublishedScreensFetch.commit()
+      {id, put_in(screen, [Access.key!(:app_params), Access.key!(:emergency_takeover)], nil)}
     end
   end
 
