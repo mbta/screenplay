@@ -256,7 +256,10 @@ defmodule Screenplay.Places.Builder do
   defp stop_ids_from_departures(%Departures{sections: sections}) do
     Enum.flat_map(
       sections,
-      fn %Section{query: %Query{params: %Query.Params{stop_ids: stop_ids}}} -> stop_ids end
+      fn
+        %Section{query: nil} -> []
+        %Section{query: %Query{params: %Query.Params{stop_ids: stop_ids}}} -> stop_ids
+      end
     )
   end
 
