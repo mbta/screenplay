@@ -23,7 +23,8 @@ config :screenplay,
   stops_mod: Screenplay.Stops.Mock,
   routes_mod: Screenplay.Routes.Mock,
   http_client: HTTPoison.Mock,
-  screens_url: "https://screens.example"
+  screens_url: "https://screens.example",
+  screens_api_key: "test_screens_api_key"
 
 config :ueberauth, Ueberauth,
   providers: [

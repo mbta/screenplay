@@ -9,18 +9,6 @@ defmodule Screenplay.ScreensConfig.ApiTest do
 
   setup :verify_on_exit!
 
-  setup do
-    Application.put_env(:screenplay, :http_client, HTTPoisonMock)
-    original_token = Application.get_env(:screenplay, :screens_api_key)
-    Application.put_env(:screenplay, :screens_api_key, "test-token")
-
-    on_exit(fn ->
-      Application.put_env(:screenplay, :screens_api_key, original_token)
-    end)
-
-    :ok
-  end
-
   describe "fetch_config/1" do
     test "fetches and transforms config when response body success is true" do
       api_response = %{
@@ -28,7 +16,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
         "config" => valid_config() |> Config.to_json() |> JSON.encode!()
       }
 
-      expect(HTTPoisonMock, :get, fn _url, _headers ->
+      expect(HttpClientMock, :get, fn _url, _headers ->
         {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(api_response)}}
       end)
 
@@ -38,7 +26,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
     end
 
     test "returns :error when API request fails" do
-      expect(HTTPoisonMock, :get, fn _url, _headers ->
+      expect(HttpClientMock, :get, fn _url, _headers ->
         {:error, %HTTPoison.Error{reason: :econnrefused}}
       end)
 
@@ -48,7 +36,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
     end
 
     test "returns :error when API response has invalid format" do
-      expect(HTTPoisonMock, :get, fn _url, _headers ->
+      expect(HttpClientMock, :get, fn _url, _headers ->
         {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(%{"success" => true})}}
       end)
 
@@ -62,7 +50,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
     test "posts screens payload as screen_configs list" do
       config = valid_config()
 
-      expect(HTTPoisonMock, :post, fn _url, body, _headers ->
+      expect(HttpClientMock, :post, fn _url, body, _headers ->
         decoded = JSON.decode!(body)
 
         assert %{"screen_configs" => screen_configs} = decoded
@@ -83,7 +71,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
     test "returns error when post fails" do
       config = valid_config()
 
-      expect(HTTPoisonMock, :post, fn _url, _body, _headers ->
+      expect(HttpClientMock, :post, fn _url, _body, _headers ->
         {:error, %HTTPoison.Error{reason: :econnrefused}}
       end)
 
@@ -95,7 +83,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
     test "returns error when post response success is false" do
       config = valid_config()
 
-      expect(HTTPoisonMock, :post, fn _url, _body, _headers ->
+      expect(HttpClientMock, :post, fn _url, _body, _headers ->
         {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(%{"success" => false})}}
       end)
 

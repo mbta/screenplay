@@ -19,18 +19,6 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
 
   setup :verify_on_exit!
 
-  setup do
-    Application.put_env(:screenplay, :http_client, HTTPoisonMock)
-    original_token = Application.get_env(:screenplay, :screens_api_key)
-    Application.put_env(:screenplay, :screens_api_key, "test-token")
-
-    on_exit(fn ->
-      Application.put_env(:screenplay, :screens_api_key, original_token)
-    end)
-
-    :ok
-  end
-
   @screen_without_takeover %Screen{
     vendor: :mercury,
     device_id: nil,
@@ -190,13 +178,13 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
       |> Config.to_json()
       |> JSON.encode!()
 
-    expect(HTTPoisonMock, :get, fn _url, _headers ->
+    expect(HttpClientMock, :get, fn _url, _headers ->
       {:ok, %{status_code: 200, body: JSON.encode!(%{"success" => true, "config" => api_config})}}
     end)
 
     test_pid = self()
 
-    expect(HTTPoisonMock, :post, fn _url, body, _headers ->
+    expect(HttpClientMock, :post, fn _url, body, _headers ->
       send(test_pid, {:posted_screen_configs, body})
       {:ok, %{status_code: 201, body: JSON.encode!(%{"success" => true})}}
     end)
