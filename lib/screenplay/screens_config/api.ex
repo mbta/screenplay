@@ -8,8 +8,8 @@ defmodule Screenplay.ScreensConfig.Api do
   alias ScreensConfig.Config
 
   @spec fetch_config(list(String.t()) | nil) :: {:ok, String.t()} | {:error, term()}
-  def fetch_config(ids \\ nil) do
-    url = get_config_url(ids)
+  def fetch_config(screen_ids \\ nil) do
+    url = get_config_url(screen_ids)
     headers = auth_headers()
 
     case http_client().get(url, headers) do

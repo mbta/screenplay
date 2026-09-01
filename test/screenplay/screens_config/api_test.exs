@@ -10,7 +10,6 @@ defmodule Screenplay.ScreensConfig.ApiTest do
   setup :verify_on_exit!
 
   setup do
-    Application.put_env(:screenplay, :screens_url, "https://screens.example")
     Application.put_env(:screenplay, :http_client, HTTPoisonMock)
     original_token = Application.get_env(:screenplay, :screens_api_key)
     Application.put_env(:screenplay, :screens_api_key, "test-token")
@@ -86,7 +85,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
 
         assert get_in(merged_screens, ["SCREEN-1", "app_id"]) == "busway_v2"
 
-        {:ok, %HTTPoison.Response{status_code: 500, body: JSON.encode!(%{"success" => true})}}
+        {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(%{"success" => true})}}
       end)
 
       assert Api.put_config(config) == :ok
