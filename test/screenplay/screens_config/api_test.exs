@@ -25,25 +25,16 @@ defmodule Screenplay.ScreensConfig.ApiTest do
     test "fetches and transforms config when response body success is true" do
       api_response = %{
         "success" => true,
-        "config" =>
-          JSON.encode!(%{
-            "screens" => %{
-              "TPS-TEST" => %{"app_id" => "busway_v2"},
-              "TPS-SECOND" => %{"app_id" => "dup_v2"}
-            }
-          })
+        "config" => valid_config() |> Config.to_json() |> JSON.encode!()
       }
 
       expect(HTTPoisonMock, :get, fn _url, _headers ->
         {:ok, %HTTPoison.Response{status_code: 200, body: JSON.encode!(api_response)}}
       end)
 
-      {:ok, body} = Api.fetch_config()
+      {:ok, %Config{screens: screens}} = Api.fetch_config()
 
-      decoded = JSON.decode!(body)
-      assert Map.has_key?(decoded, "screens")
-      assert Map.has_key?(decoded["screens"], "TPS-TEST")
-      assert Map.has_key?(decoded["screens"], "TPS-SECOND")
+      assert Map.has_key?(screens, "SCREEN-1")
     end
 
     test "returns :error when API request fails" do
@@ -62,9 +53,7 @@ defmodule Screenplay.ScreensConfig.ApiTest do
       end)
 
       capture_log(fn ->
-        {:ok, body} = Api.fetch_config()
-        decoded = JSON.decode!(body)
-        assert decoded == %{"screens" => %{}}
+        assert Api.fetch_config() == {:ok, %Config{screens: %{}}}
       end)
     end
   end

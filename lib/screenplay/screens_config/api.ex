@@ -7,7 +7,7 @@ defmodule Screenplay.ScreensConfig.Api do
 
   alias ScreensConfig.Config
 
-  @spec fetch_config(list(String.t()) | nil) :: {:ok, String.t()} | {:error, term()}
+  @spec fetch_config(list(String.t()) | nil) :: {:ok, Config.t()} | {:error, term()}
   def fetch_config(screen_ids \\ nil) do
     url = get_config_url(screen_ids)
     headers = auth_headers()
@@ -73,24 +73,23 @@ defmodule Screenplay.ScreensConfig.Api do
     end
   end
 
-  @spec transform_api_response(String.t()) :: String.t()
+  @spec transform_api_response(String.t()) :: Config.t()
   defp transform_api_response(body) do
-    # Parse the API response and convert it to the format expected by screens_config
     with {:ok, %{"config" => config}} <- JSON.decode(body),
          {:ok, %{"screens" => screens}} <- JSON.decode(config) do
-      JSON.encode!(%{"screens" => screens})
+      Config.from_json(%{"screens" => screens})
     else
       {:ok, _unexpected} ->
         Logger.error("Unexpected API response format")
-        empty_screens_json()
+        empty_config()
 
       {:error, reason} ->
         Logger.error("Failed to parse API response: #{inspect(reason)}")
-        empty_screens_json()
+        empty_config()
     end
   end
 
-  defp empty_screens_json, do: "{\"screens\": {}}"
+  defp empty_config, do: %Config{screens: %{}}
 
   @spec get_config_url(list(String.t()) | nil) :: String.t()
   defp get_config_url(nil) do

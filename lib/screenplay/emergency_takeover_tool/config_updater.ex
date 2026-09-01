@@ -13,18 +13,15 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdater do
   @image_store Application.compile_env!(:screenplay, :image_store_module)
 
   def add_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
-    with {:ok, config} <- ConfigApi.fetch_config(showtime_screen_ids),
-         {:ok, config_deserialized} <- JSON.decode(config) do
-      %Config{screens: published_screens} =
-        config_deserialized |> Config.from_json()
+    case ConfigApi.fetch_config(showtime_screen_ids) do
+      {:ok, %Config{screens: published_screens}} ->
+        updated_screens =
+          published_screens
+          |> Enum.filter(fn {id, _screen} -> id in showtime_screen_ids end)
+          |> update_screens_with_emergency_takeover(alert_id, message)
 
-      updated_screens =
-        published_screens
-        |> Enum.filter(fn {id, _screen} -> id in showtime_screen_ids end)
-        |> update_screens_with_emergency_takeover(alert_id, message)
+        ConfigApi.put_config(%Config{screens: updated_screens})
 
-      ConfigApi.put_config(%Config{screens: updated_screens})
-    else
       _error ->
         {:error, "Could not fetch published screens config"}
     end
@@ -53,17 +50,15 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdater do
   end
 
   def clear_emergency_takeover_configs(showtime_screen_ids) do
-    with {:ok, config} <- ConfigApi.fetch_config(showtime_screen_ids),
-         {:ok, config_deserialized} <- JSON.decode(config) do
-      %Config{screens: published_screens} = Config.from_json(config_deserialized)
+    case ConfigApi.fetch_config(showtime_screen_ids) do
+      {:ok, %Config{screens: published_screens}} ->
+        updated_screens =
+          published_screens
+          |> Enum.filter(fn {id, _screen} -> id in showtime_screen_ids end)
+          |> clear_screens_emergency_takeover()
 
-      updated_screens =
-        published_screens
-        |> Enum.filter(fn {id, _screen} -> id in showtime_screen_ids end)
-        |> clear_screens_emergency_takeover()
+        ConfigApi.put_config(%Config{screens: updated_screens})
 
-      ConfigApi.put_config(%Config{screens: updated_screens})
-    else
       _error ->
         {:error, "Could not fetch published screens config"}
     end

@@ -7,9 +7,7 @@ defmodule Screenplay.ScreensConfig.Fetcher do
   require Logger
 
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias Screenplay.ScreensConfig.Api
-  alias ScreensConfig.Config
-
+  alias Screenplay.ScreensConfig.Api, as: ConfigApi
   @update_interval :timer.seconds(5)
 
   def start_link(_) do
@@ -35,18 +33,11 @@ defmodule Screenplay.ScreensConfig.Fetcher do
   end
 
   defp update do
-    case Api.fetch_config() do
-      {:ok, body} ->
-        case JSON.decode(body) do
-          {:ok, deserialized} ->
-            deserialized
-            |> Config.from_json()
-            |> config_to_cache_entries()
-            |> ScreensConfigStore.update_cache()
-
-          {:error, reason} ->
-            Logger.error("Failed to decode config JSON: #{inspect(reason)}")
-        end
+    case ConfigApi.fetch_config() do
+      {:ok, config} ->
+        config
+        |> config_to_cache_entries()
+        |> ScreensConfigStore.update_cache()
 
       {:error, reason} ->
         Logger.error("Failed to fetch from Screens API: #{inspect(reason)}")
