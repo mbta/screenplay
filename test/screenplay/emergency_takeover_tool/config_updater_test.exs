@@ -1,24 +1,21 @@
 defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
   use ExUnit.Case
 
+  import ExUnit.CaptureLog
   import Mox
 
   alias Screenplay.EmergencyTakeoverTool.ConfigUpdater
 
   alias ScreensConfig.{
-    Alerts,
     Config,
     ContentSummary,
-    Departures,
     ElevatorStatus,
     EmergencyTakeover,
-    Footer,
     Header,
-    LineMap,
     Screen
   }
 
-  alias ScreensConfig.Screen.{GlEink, PreFare}
+  alias ScreensConfig.Screen.PreFare
 
   setup :verify_on_exit!
 
@@ -53,45 +50,6 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
     },
     tags: []
   }
-  @gl_eink_screen %Screen{
-    vendor: :mercury,
-    device_id: nil,
-    name: nil,
-    app_id: :gl_eink_v2,
-    refresh_if_loaded_before: nil,
-    disabled: false,
-    hidden_from_screenplay: false,
-    app_params: %GlEink{
-      departures: %Departures{
-        sections: [
-          %Departures.Section{
-            query: %Departures.Query{
-              params: %Departures.Query.Params{
-                stop_ids: ["place-test"],
-                route_ids: ["Green-B"],
-                direction_id: 1
-              }
-            }
-          }
-        ]
-      },
-      footer: %Footer{stop_id: "place-test"},
-      header: %Header.Destination{
-        route_id: "Green-B",
-        direction_id: 1
-      },
-      alerts: %Alerts{stop_id: "456"},
-      line_map: %LineMap{
-        stop_id: "456",
-        station_id: "place-test",
-        direction_id: 1,
-        route_id: "Green-B"
-      },
-      evergreen_content: [],
-      platform_location: :back
-    },
-    tags: []
-  }
 
   describe "add_emergency_takeover_configs/3" do
     test "adds an emergency takeover config to a screen" do
@@ -100,9 +58,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
       message = %{type: :custom, text: %{indoor: "Indoor Message", outdoor: "Outdoor Message"}}
 
       expect_config_fetch_and_post(%{
-        "PRE-1" => @screen_without_takeover,
-        "PRE-2" => @screen_without_takeover,
-        "GL-1" => @gl_eink_screen
+        "PRE-1" => @screen_without_takeover
       })
 
       assert ConfigUpdater.add_emergency_takeover_configs(
@@ -125,7 +81,6 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                  expected_takeover
                )
 
-      # Only the modified screen should be in the posted data
       assert map_size(screens) == 1
     end
 
@@ -135,9 +90,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
       message = %{type: :canned, id: 1}
 
       expect_config_fetch_and_post(%{
-        "PRE-1" => @screen_without_takeover,
-        "PRE-2" => @screen_without_takeover,
-        "GL-1" => @gl_eink_screen
+        "PRE-1" => @screen_without_takeover
       })
 
       assert ConfigUpdater.add_emergency_takeover_configs(
@@ -162,8 +115,44 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                  expected_takeover
                )
 
-      # Only the modified screen should be in the posted data
       assert map_size(screens) == 1
+    end
+
+    test "warns when the API returns extra screen IDs" do
+      expect_config_fetch_and_post(%{
+        "PRE-1" => @screen_without_takeover,
+        "PRE-2" => @screen_without_takeover
+      })
+
+      log =
+        capture_log(fn ->
+          assert ConfigUpdater.add_emergency_takeover_configs(
+                   "alert-1",
+                   ["PRE-1"],
+                   %{type: :custom, text: %{indoor: "Indoor", outdoor: "Outdoor"}}
+                 ) == :ok
+        end)
+
+      assert log =~ "missing=[]"
+      assert log =~ ~s(extra=["PRE-2"])
+      assert map_size(posted_screens()) == 1
+    end
+
+    test "warns when the API omits requested screen IDs" do
+      expect_config_fetch_and_post(%{"PRE-1" => @screen_without_takeover})
+
+      log =
+        capture_log(fn ->
+          assert ConfigUpdater.add_emergency_takeover_configs(
+                   "alert-1",
+                   ["PRE-1", "PRE-2"],
+                   %{type: :custom, text: %{indoor: "Indoor", outdoor: "Outdoor"}}
+                 ) == :ok
+        end)
+
+      assert log =~ ~s(missing=["PRE-2"])
+      assert log =~ "extra=[]"
+      assert map_size(posted_screens()) == 1
     end
   end
 
@@ -183,9 +172,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
         )
 
       expect_config_fetch_and_post(%{
-        "PRE-1" => screen_with_takeover,
-        "PRE-2" => @screen_without_takeover,
-        "GL-1" => @gl_eink_screen
+        "PRE-1" => screen_with_takeover
       })
 
       assert ConfigUpdater.clear_emergency_takeover_configs([takeover_screen_id]) == :ok
@@ -193,7 +180,6 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
       screens = posted_screens()
 
       assert screens[takeover_screen_id] == @screen_without_takeover
-      # Only the modified screen should be in the posted data
       assert map_size(screens) == 1
     end
   end
