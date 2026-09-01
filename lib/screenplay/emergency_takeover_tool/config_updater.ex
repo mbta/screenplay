@@ -19,81 +19,67 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdater do
         ) :: :ok | {:error, String.t()}
   def add_emergency_takeover_configs(alert_id, showtime_screen_ids, message) do
     case ConfigApi.fetch_config(showtime_screen_ids) do
-      {:ok, %Config{screens: published_screens}} ->
-        updated_screens =
-          published_screens
-          |> validate_configs(showtime_screen_ids)
-          |> update_screens_with_emergency_takeover(alert_id, message)
-
-        ConfigApi.put_config(%Config{screens: updated_screens})
+      {:ok, %Config{screens: screens_to_update}} ->
+        screens_to_update
+        |> update_screens_with_emergency_takeover(alert_id, message)
+        |> ConfigApi.put_config()
 
       _error ->
         {:error, "Could not fetch published screens config"}
     end
   end
 
+  @spec update_screens_with_emergency_takeover(
+          %{String.t() => Screen.t()},
+          String.t(),
+          EmergencyTakeoverContext.message()
+        ) :: Config.t()
   defp update_screens_with_emergency_takeover(screens, alert_id, message) do
-    for {id, screen} <- screens,
-        into: %{} do
-      case screen do
-        %Screen{app_params: %{emergency_messaging_location: eml}} when not is_nil(eml) ->
-          emergency_takeover = build_emergency_takeover(message, alert_id, screen.app_id, eml)
+    updated_screens =
+      for {id, screen} <- screens,
+          into: %{} do
+        case screen do
+          %Screen{app_params: %{emergency_messaging_location: eml}} when not is_nil(eml) ->
+            emergency_takeover = build_emergency_takeover(message, alert_id, screen.app_id, eml)
 
-          {id,
-           put_in(
-             screen,
-             [Access.key!(:app_params), Access.key!(:emergency_takeover)],
-             emergency_takeover
-           )}
+            {id,
+             put_in(
+               screen,
+               [Access.key!(:app_params), Access.key!(:emergency_takeover)],
+               emergency_takeover
+             )}
 
-        _ ->
-          Logger.error("Tried to takeover #{id} without an emergency_messaging_location")
+          _ ->
+            Logger.error("Tried to takeover #{id} without an emergency_messaging_location")
 
-          {id, screen}
+            {id, screen}
+        end
       end
-    end
+
+    %Config{screens: updated_screens}
   end
 
+  @spec clear_emergency_takeover_configs([String.t()]) :: :ok | {:error, any()}
   def clear_emergency_takeover_configs(showtime_screen_ids) do
     case ConfigApi.fetch_config(showtime_screen_ids) do
-      {:ok, %Config{screens: published_screens}} ->
-        updated_screens =
-          published_screens
-          |> validate_configs(showtime_screen_ids)
-          |> clear_screens_emergency_takeover()
-
-        ConfigApi.put_config(%Config{screens: updated_screens})
+      {:ok, %Config{screens: screens_to_update}} ->
+        screens_to_update
+        |> clear_screens_emergency_takeover()
+        |> ConfigApi.put_config()
 
       _error ->
         {:error, "Could not fetch published screens config"}
     end
   end
 
+  @spec clear_screens_emergency_takeover(%{String.t() => Screen.t()}) :: Config.t()
   defp clear_screens_emergency_takeover(screens) do
-    for {id, screen} <- screens, into: %{} do
-      {id, put_in(screen, [Access.key!(:app_params), Access.key!(:emergency_takeover)], nil)}
-    end
-  end
+    updated_screens =
+      for {id, screen} <- screens, into: %{} do
+        {id, put_in(screen, [Access.key!(:app_params), Access.key!(:emergency_takeover)], nil)}
+      end
 
-  @spec validate_configs(%{String.t() => Screen.t()}, [String.t()]) :: %{String.t() => Screen.t()}
-  defp validate_configs(screens, requested_screen_ids) do
-    # Ensures that we received all of and only the Configs to be taken over
-    returned_screen_ids = screens |> Map.keys() |> MapSet.new()
-    requested_screen_ids = MapSet.new(requested_screen_ids)
-    missing_screen_ids = MapSet.difference(requested_screen_ids, returned_screen_ids)
-    extra_screen_ids = MapSet.difference(returned_screen_ids, requested_screen_ids)
-
-    if MapSet.size(missing_screen_ids) > 0 or MapSet.size(extra_screen_ids) > 0 do
-      Logger.warning(
-        "Screens API returned unexpected screen IDs when creating Emergency Takeovers: " <>
-          "missing=#{inspect(MapSet.to_list(missing_screen_ids))}, " <>
-          "extra=#{inspect(MapSet.to_list(extra_screen_ids))}"
-      )
-
-      Enum.filter(screens, fn {id, _screen} -> MapSet.member?(requested_screen_ids, id) end)
-    else
-      screens
-    end
+    %Config{screens: updated_screens}
   end
 
   @spec build_emergency_takeover(

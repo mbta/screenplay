@@ -1,7 +1,6 @@
 defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
   use ExUnit.Case
 
-  import ExUnit.CaptureLog
   import Mox
 
   alias Screenplay.EmergencyTakeoverTool.ConfigUpdater
@@ -40,7 +39,7 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
   }
 
   describe "add_emergency_takeover_configs/3" do
-    test "adds an emergency takeover config to a screen" do
+    test "adds a custom emergency takeover config to a screen" do
       alert_id = "alert-1"
       takeover_screen_id = "PRE-1"
       message = %{type: :custom, text: %{indoor: "Indoor Message", outdoor: "Outdoor Message"}}
@@ -104,43 +103,6 @@ defmodule Screenplay.EmergencyTakeoverTool.ConfigUpdaterTest do
                )
 
       assert map_size(screens) == 1
-    end
-
-    test "warns when the API returns extra screen IDs" do
-      expect_config_fetch_and_post(%{
-        "PRE-1" => @screen_without_takeover,
-        "PRE-2" => @screen_without_takeover
-      })
-
-      log =
-        capture_log(fn ->
-          assert ConfigUpdater.add_emergency_takeover_configs(
-                   "alert-1",
-                   ["PRE-1"],
-                   %{type: :custom, text: %{indoor: "Indoor", outdoor: "Outdoor"}}
-                 ) == :ok
-        end)
-
-      assert log =~ "missing=[]"
-      assert log =~ ~s(extra=["PRE-2"])
-      assert map_size(posted_screens()) == 1
-    end
-
-    test "warns when the API omits requested screen IDs" do
-      expect_config_fetch_and_post(%{"PRE-1" => @screen_without_takeover})
-
-      log =
-        capture_log(fn ->
-          assert ConfigUpdater.add_emergency_takeover_configs(
-                   "alert-1",
-                   ["PRE-1", "PRE-2"],
-                   %{type: :custom, text: %{indoor: "Indoor", outdoor: "Outdoor"}}
-                 ) == :ok
-        end)
-
-      assert log =~ ~s(missing=["PRE-2"])
-      assert log =~ "extra=[]"
-      assert map_size(posted_screens()) == 1
     end
   end
 
