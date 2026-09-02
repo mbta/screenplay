@@ -14,7 +14,6 @@ config :screenplay,
   config_fetcher: Screenplay.Places.LocalFetch,
   local_place_descriptions_file_spec: {:test, "place_descriptions.json"},
   local_paess_labels_file_spec: {:test, "paess_labels.json"},
-  screens_config_fetcher: Screenplay.ScreensConfig.Fetch.Local,
   local_screens_config_file_spec: {:test, "screens_config.json"},
   api_v3_url: "https://fake-mbta-api",
   api_key: "test_api_key",
@@ -23,7 +22,9 @@ config :screenplay,
   local_signs_json_path: {:test, "signs.json"},
   stops_mod: Screenplay.Stops.Mock,
   routes_mod: Screenplay.Routes.Mock,
-  http_client: HTTPoison.Mock
+  http_client: HTTPoison.Mock,
+  screens_url: "https://screens.example",
+  screens_api_key: "test_screens_api_key"
 
 config :ueberauth, Ueberauth,
   providers: [

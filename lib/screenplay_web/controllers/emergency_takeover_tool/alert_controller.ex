@@ -1,6 +1,5 @@
 defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
   use ScreenplayWeb, :controller
-
   alias Screenplay.EmergencyTakeovers
   alias Screenplay.EmergencyTakeoverTool.{ConfigUpdater, EmergencyTakeover}
   alias Screenplay.Outfront.SFTP
@@ -115,6 +114,7 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
            Enum.reduce_while(alerts, :ok, fn alert, _ ->
              case clear_single_alert(alert, user) do
                :ok -> {:cont, :ok}
+               {:error, reason} -> {:halt, {:error, reason}}
              end
            end) do
       json(conn, %{success: true})
@@ -123,11 +123,6 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
         conn
         |> put_status(:internal_server_error)
         |> json(%{success: false, error: reason})
-
-      _ ->
-        conn
-        |> put_status(:internal_server_error)
-        |> json(%{success: false, error: "An unknown error occurred while clearing all alerts."})
     end
   end
 
@@ -142,7 +137,8 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     end
   end
 
-  @spec add_outfront_takeovers(list(String.t()), %{String.t() => String.t()}) :: :ok
+  @spec add_outfront_takeovers(list(String.t()), %{String.t() => String.t()}) ::
+          :ok | {:error, String.t()}
   def add_outfront_takeovers(station_ids, images) do
     with {:ok, portrait_img_data, portrait_format} <- decode_image(images["indoor_portrait"]),
          {:ok, landscape_img_data, landscape_format} <- decode_image(images["outdoor_landscape"]),
@@ -261,13 +257,10 @@ defmodule ScreenplayWeb.EmergencyTakeoverTool.AlertController do
     else
       {:error, reason} ->
         {:error, "Failed to remove overlapping alerts: #{reason}"}
-
-      _ ->
-        {:error, "An unknown error occurred while removing overlapping alerts."}
     end
   end
 
-  @spec remove_takeovers_from_showtime_screens(list(String.t())) :: :ok
+  @spec remove_takeovers_from_showtime_screens(list(String.t())) :: :ok | {:error, String.t()}
   defp remove_takeovers_from_showtime_screens(station_ids) do
     station_ids
     |> showtime_screens_at_stations()

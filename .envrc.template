@@ -10,7 +10,6 @@ export API_V3_URL="https://api-v3.mbta.com"
 # export ENVIRONMENT_NAME=
 # export FULLSTORY_ORG_ID=
 export GUARDIAN_SECRET_KEY="test_auth_secret"
-export SCREENS_URL="https://screens.mbta.com"
 export SECRET_KEY_BASE="local_secret_key_base_at_least_64_bytes_________________________________"
 # export SFTP_HOST=
 # export SFTP_LOCAL_PATH=
@@ -26,6 +25,11 @@ export DATABASE_HOSTNAME="localhost"
 
 # Access key for allowing PA Message API calls. Required for endpoints in the /api/pa-messages scope. Generate a unique random string for local use.
 export SCREENPLAY_API_KEY="local_api_key"
+
+# Endpoint used for displaying screens and fetching screens configuration
+# Access the API Client Keys for the Screens API in 1Password
+export SCREENS_URL="https://screens.mbta.com"
+export SCREENS_API_KEY="local_screens_api_client_key"
 
 # Host and access key needed to communicate with Watts. Required when previewing PA message audio.
 # For local use, set to the same value as your local instance of Watts.

@@ -43,6 +43,7 @@ defmodule Screenplay.Outfront.SFTP do
     Enum.find(all_stations, &(&1.place_id == station_id))
   end
 
+  @spec set_takeover_images([String.t()], {binary(), String.t()}, {binary(), String.t()}) :: :ok
   def set_takeover_images(
         station_ids,
         {portrait_data, portrait_ext},
@@ -85,6 +86,7 @@ defmodule Screenplay.Outfront.SFTP do
     :ok
   end
 
+  @spec clear_takeover_images(list(String.t())) :: :ok
   def clear_takeover_images(station_ids) do
     run(fn conn ->
       all_stations = all_stations()

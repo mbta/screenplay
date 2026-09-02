@@ -1,13 +1,13 @@
-defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
+defmodule Screenplay.ScreensConfig.Fetcher do
   @moduledoc """
   GenServer that fetches and caches the Screens app config
   """
   use GenServer
 
-  alias Screenplay.ScreensConfig, as: ScreensConfigStore
-  alias Screenplay.ScreensConfig.Fetch
-  alias ScreensConfig.Config
+  require Logger
 
+  alias Screenplay.ScreensConfig, as: ScreensConfigStore
+  alias Screenplay.ScreensConfig.Api, as: ConfigApi
   @update_interval :timer.seconds(5)
 
   def start_link(_) do
@@ -33,13 +33,15 @@ defmodule Screenplay.ScreensConfig.Fetch.Fetcher do
   end
 
   defp update do
-    {:ok, body, _new_version} = Fetch.fetch_config()
-    {:ok, deserialized} = JSON.decode(body)
+    case ConfigApi.fetch_config() do
+      {:ok, config} ->
+        config
+        |> config_to_cache_entries()
+        |> ScreensConfigStore.update_cache()
 
-    deserialized
-    |> Config.from_json()
-    |> config_to_cache_entries()
-    |> ScreensConfigStore.update_cache()
+      {:error, reason} ->
+        Logger.error("Failed to fetch from Screens API: #{inspect(reason)}")
+    end
   end
 
   defp config_to_cache_entries(config) do

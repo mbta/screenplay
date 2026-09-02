@@ -6,7 +6,7 @@ defmodule Screenplay.ScreensConfig do
   use Supervisor
 
   alias Screenplay.ScreensConfig.Cache
-  alias Screenplay.ScreensConfig.Fetch.Fetcher
+  alias Screenplay.ScreensConfig.Fetcher
   alias ScreensConfig.Screen
 
   @spec start_link(any()) :: Supervisor.on_start()
@@ -16,10 +16,14 @@ defmodule Screenplay.ScreensConfig do
 
   @impl true
   def init(_) do
-    children = [
-      Cache,
-      Fetcher
-    ]
+    children =
+      case Application.get_env(:screenplay, :start_cache_processes, true) do
+        true ->
+          [Cache, Fetcher]
+
+        false ->
+          [Cache]
+      end
 
     Supervisor.init(children, strategy: :one_for_one)
   end
