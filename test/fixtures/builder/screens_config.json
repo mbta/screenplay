@@ -24,16 +24,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": 1,
-                  "route_ids": ["Green-C"],
-                  "route_type": null,
-                  "stop_ids": ["place-tapst"]
-                }
+              "params": {
+                "direction_id": 1,
+                "route_ids": [],
+                "mode": "gl",
+                "stop_ids": ["place-tapst"]
               },
               "layout": {
                 "max": null,
@@ -93,16 +88,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": [],
-                  "route_type": null,
-                  "stop_ids": ["place-wtcst"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "sl",
+                "stop_ids": ["place-wtcst"]
               },
               "layout": {
                 "max": null,
@@ -151,16 +141,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": [],
-                  "route_type": null,
-                  "stop_ids": ["7412"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "bus",
+                "stop_ids": ["7412"]
               },
               "layout": {
                 "max": null,
@@ -215,16 +200,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": [],
-                  "route_type": null,
-                  "stop_ids": ["10413"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "bus",
+                "stop_ids": ["10413"]
               },
               "layout": {
                 "max": null,
@@ -355,16 +335,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": [],
-                  "route_type": null,
-                  "stop_ids": ["117"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "bus",
+                "stop_ids": ["117"]
               },
               "layout": {
                 "max": 8,
@@ -388,16 +363,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": [],
-                  "route_type": null,
-                  "stop_ids": ["70203", "70204"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "gl",
+                "stop_ids": ["70203", "70204"]
               },
               "layout": {
                 "max": 4,
@@ -421,16 +391,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": [],
-                  "route_type": null,
-                  "stop_ids": ["70025", "70024"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "ol",
+                "stop_ids": ["70025", "70024"]
               },
               "layout": {
                 "max": null,
@@ -478,16 +443,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": ["Blue"],
-                  "route_type": null,
-                  "stop_ids": ["place-mvbcl"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": [],
+                "mode": "bl",
+                "stop_ids": ["place-mvbcl"]
               },
               "layout": {
                 "max": null,
@@ -515,16 +475,11 @@
                 "max_minutes": null,
                 "route_directions": null
               },
-              "query": {
-                "opts": {
-                  "include_schedules": false
-                },
-                "params": {
-                  "direction_id": "both",
-                  "route_ids": ["114", "116", "117", "120", "121"],
-                  "route_type": null,
-                  "stop_ids": ["place-mvbcl"]
-                }
+              "params": {
+                "direction_id": "both",
+                "route_ids": ["114", "116", "117", "120", "121"],
+                "mode": "bus",
+                "stop_ids": ["place-mvbcl"]
               },
               "layout": {
                 "max": null,
