@@ -12,7 +12,7 @@ defmodule Screenplay.Places.Builder do
   alias Screenplay.Places.Place.{OutfrontTakeoverScreen, PaEssScreen, ShowtimeScreen}
   alias Screenplay.ScreensConfig, as: ScreensConfigStore
   alias ScreensConfig.{Alerts, Departures, Footer, Header, MultiStopAlerts, Screen}
-  alias ScreensConfig.Departures.{Query, Section}
+  alias ScreensConfig.Departures.{Params, Section}
   alias ScreensConfig.Screen.{Busway, Dup, PreFare}
 
   use GenServer
@@ -257,8 +257,8 @@ defmodule Screenplay.Places.Builder do
     Enum.flat_map(
       sections,
       fn
-        %Section{query: nil} -> []
-        %Section{query: %Query{params: %Query.Params{stop_ids: stop_ids}}} -> stop_ids
+        %Section{params: nil} -> []
+        %Section{params: %Params{stop_ids: stop_ids}} -> stop_ids
       end
     )
   end
