@@ -1,27 +1,39 @@
 name: Deploy to ECS
 
 on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      DOCKER_REPO:
+        required: true
+      SLACK_WEBHOOK:
+        required: true
   workflow_dispatch:
     inputs:
       environment:
         type: environment
         required: true
         default: dev
-        options:
-        - dev
-        - dev-blue
-        - dev-green
   push:
     branches: [main]
 
 permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.environment || 'dev' }} 
+  cancel-in-progress: true
 
 jobs:
   call-workflow:
     uses: mbta/workflows/.github/workflows/deploy-ecs.yml@ba8d62bff3a4aa0df22eb2d6a1ce7ad4fb2eac1a # v5.1.1
     with:
       app-name: screenplay
-      environment: ${{ github.event.inputs.environment || 'dev' }}
+      environment: ${{ inputs.environment || 'dev' }}
     permissions:
       contents: read # Needed to check out the repository
       id-token: write # Needed to authenticate against AWS
