@@ -54,6 +54,10 @@ defmodule Screenplay.MixProject do
       {:gettext, "~> 0.24.0"},
       {:jason, "~> 1.4"},
       {:plug_cowboy, "~> 2.6"},
+      # `certifi` is transitively required by `ex_aws` -> `hackney`. Override it in response to
+      # the eMudhra CA compromise. If/when either of the two dependencies are upgraded to use
+      # `certifi@2.18.0+`, we can remove this.
+      {:certifi, "2.18.0", override: true},
       {:cowboy, "== 2.10.0"},
       {:credo, "~> 1.6"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
