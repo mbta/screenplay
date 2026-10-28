@@ -17,9 +17,14 @@ defmodule Screenplay.Places.Builder do
 
   use GenServer
 
+  require Logger
+
   @sl_route_ids ~w[741 742 743 746 749 751]
 
   @polling_interval :timer.minutes(5)
+  @retry_interval :timer.seconds(30)
+  @startup_attempts 3
+  @startup_retry_delay :timer.seconds(5)
   @config_fetcher Application.compile_env!(:screenplay, :config_fetcher)
   @stops_mod Application.compile_env(:screenplay, :stops_mod, Screenplay.Stops.Stop)
   @routes_mod Application.compile_env(:screenplay, :routes_mod, Screenplay.Routes.Route)
@@ -36,22 +41,52 @@ defmodule Screenplay.Places.Builder do
 
   @impl true
   def init(state) do
-    update_and_schedule()
-    {:ok, state}
+    case update_with_retries(@startup_attempts) do
+      :ok ->
+        Process.send_after(self(), :build, @polling_interval)
+        {:ok, state}
+
+      {:error, reason} ->
+        {:stop, reason}
+    end
   end
 
   @impl true
   def handle_info(:build, state) do
-    update_and_schedule()
+    interval =
+      case update() do
+        :ok -> @polling_interval
+        {:error, _} -> @retry_interval
+      end
+
+    Process.send_after(self(), :build, interval)
     {:noreply, state}
   end
 
-  defp update_and_schedule do
-    {:ok, _} =
-      build()
-      |> Places.update()
+  defp update_with_retries(1), do: update()
 
-    Process.send_after(self(), :build, @polling_interval)
+  defp update_with_retries(attempts) do
+    case update() do
+      :ok ->
+        :ok
+
+      {:error, _} ->
+        Process.sleep(@startup_retry_delay)
+        update_with_retries(attempts - 1)
+    end
+  end
+
+  defp update do
+    {:ok, _} = build() |> Places.update()
+    :ok
+  rescue
+    e ->
+      Logger.error("places_builder_failed " <> Exception.format(:error, e, __STACKTRACE__))
+      {:error, e}
+  catch
+    :exit, reason ->
+      Logger.error("places_builder_failed exit=#{inspect(reason)}")
+      {:error, reason}
   end
 
   defp build do
@@ -137,24 +172,32 @@ defmodule Screenplay.Places.Builder do
       fn %{id: id} = stop ->
         # Not a big fan of this. Goes through each station one by one.
         # Could not figure out how to get stops with route info all in one query.
-        {:ok, data} = @routes_mod.fetch_routes_for_stop(id)
+        # Return errors instead of crashing, since a crashing linked task would kill the Builder.
+        case @routes_mod.fetch_routes_for_stop(id) do
+          {:ok, data} ->
+            formatted_routes =
+              data |> format_routes() |> Enum.uniq()
 
-        formatted_routes =
-          data |> format_routes() |> Enum.uniq()
+            # If a place's stop shows Ferry departures from a separate nearby stop, add it here.
+            formatted_routes =
+              if id == "place-aqucl" do
+                formatted_routes ++ ["Ferry"]
+              else
+                formatted_routes
+              end
 
-        # If a place's stop shows Ferry departures from a separate nearby stop, add it here.
-        formatted_routes =
-          if id == "place-aqucl" do
-            formatted_routes ++ ["Ferry"]
-          else
-            formatted_routes
-          end
+            {:ok, Map.put(stop, :routes, sort_routes(formatted_routes))}
 
-        Map.put(stop, :routes, sort_routes(formatted_routes))
+          error ->
+            {:error, id, error}
+        end
       end,
       ordered: false
     )
-    |> Enum.map(fn {:ok, result} -> result end)
+    |> Enum.map(fn
+      {:ok, {:ok, result}} -> result
+      {:ok, {:error, id, error}} -> raise "Failed to fetch routes for #{id}: #{inspect(error)}"
+    end)
   end
 
   defp merge_duplicate_places({_id, [place]}), do: place
