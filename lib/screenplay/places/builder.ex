@@ -197,6 +197,7 @@ defmodule Screenplay.Places.Builder do
     |> Enum.map(fn
       {:ok, {:ok, result}} -> result
       {:ok, {:error, id, error}} -> raise "Failed to fetch routes for #{id}: #{inspect(error)}"
+      {:exit, reason} -> raise "Route fetch task exited: #{inspect(reason)}"
     end)
   end
 
