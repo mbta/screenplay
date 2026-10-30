@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactNode } from "react";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router";
 import { ScreenplayProvider } from "../../js/hooks/useScreenplayContext";
 import Dashboard from "../../js/components/Dashboard/Dashboard";
 import { render } from "@testing-library/react";
