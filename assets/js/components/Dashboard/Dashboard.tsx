@@ -10,7 +10,7 @@ import { fetchAlerts, fetchPlaces, fetchLineStops } from "Utils/api";
 import AlertBanner from "Components/AlertBanner";
 import LinkCopiedToast from "Components/LinkCopiedToast";
 import ActionOutcomeToast from "Components/ActionOutcomeToast";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 const Dashboard: ComponentType = () => {
   const {

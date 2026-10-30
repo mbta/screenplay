@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import moment from "moment";
 import {
   ArrowRightShort,

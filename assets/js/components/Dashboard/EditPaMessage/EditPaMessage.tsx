@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import useSWR, { mutate } from "swr";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { PaMessage } from "Models/pa_message";
 import PaMessageForm from "../PaMessageForm";
 import { updateExistingPaMessage } from "Utils/api";

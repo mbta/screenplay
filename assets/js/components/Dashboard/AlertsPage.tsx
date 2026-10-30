@@ -14,7 +14,7 @@ import { Screen } from "Models/screen";
 import { RouteType } from "Models/route_type";
 import { ScreensByAlert } from "Models/screensByAlert";
 import AlertCard from "Components/AlertCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { placesWithSelectedAlert } from "../../util";
 import {
   useAlertsListState,

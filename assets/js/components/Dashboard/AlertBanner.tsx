@@ -1,7 +1,7 @@
 import React, { ComponentType } from "react";
 import { ArrowRepeat, CheckCircleFill } from "react-bootstrap-icons";
 import { formatEffect, translateRouteID } from "../../util";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useScreenplayState } from "Hooks/useScreenplayContext";
 import { Alert } from "Models/alert";
 

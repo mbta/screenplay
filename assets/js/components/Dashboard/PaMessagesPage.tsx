@@ -1,6 +1,6 @@
 import React, { ComponentType, useState, useMemo, useEffect } from "react";
 import { BoxArrowUpRight, PlusCircleFill } from "react-bootstrap-icons";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router";
 import useSWR, { mutate } from "swr";
 import { PaMessage } from "Models/pa_message";
 import { useRouteToRouteIDsMap } from "Hooks/useRouteToRouteIDsMap";
