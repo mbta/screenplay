@@ -91,15 +91,15 @@ defmodule Screenplay.Alerts.Alert do
     }
   end
 
-  def ap_to_map({nil, end_t}) do
+  defp ap_to_map({nil, end_t}) do
     %{"start" => nil, "end" => DateTime.to_iso8601(end_t)}
   end
 
-  def ap_to_map({start_t, nil}) do
+  defp ap_to_map({start_t, nil}) do
     %{"start" => DateTime.to_iso8601(start_t), "end" => nil}
   end
 
-  def ap_to_map({start_t, end_t}) do
+  defp ap_to_map({start_t, end_t}) do
     %{"start" => DateTime.to_iso8601(start_t), "end" => DateTime.to_iso8601(end_t)}
   end
 
@@ -153,15 +153,15 @@ defmodule Screenplay.Alerts.Alert do
   end
 
   @spec in_active_period({DateTime.t() | nil, DateTime.t() | nil}, DateTime.t()) :: boolean()
-  def in_active_period({nil, end_t}, t) do
+  defp in_active_period({nil, end_t}, t) do
     DateTime.compare(t, end_t) in [:lt, :eq]
   end
 
-  def in_active_period({start_t, nil}, t) do
+  defp in_active_period({start_t, nil}, t) do
     DateTime.compare(t, start_t) in [:gt, :eq]
   end
 
-  def in_active_period({start_t, end_t}, t) do
+  defp in_active_period({start_t, end_t}, t) do
     DateTime.compare(t, start_t) in [:gt, :eq] && DateTime.compare(t, end_t) in [:lt, :eq]
   end
 

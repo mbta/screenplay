@@ -10,7 +10,6 @@ defmodule Screenplay.Alerts.CacheTest do
     _ = await_updated()
 
     assert [%Alert{id: "1"}] = Cache.alerts()
-    assert %Alert{id: "1"} = Cache.alert("1")
   end
 
   test "alerts that have ended are not added to the store" do
@@ -56,7 +55,6 @@ defmodule Screenplay.Alerts.CacheTest do
 
     alerts = Cache.alerts()
     assert alerts == []
-    refute Cache.alert("1")
   end
 
   defp await_updated do

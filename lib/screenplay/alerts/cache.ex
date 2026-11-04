@@ -23,17 +23,6 @@ defmodule Screenplay.Alerts.Cache do
   end
 
   @doc """
-  Retrieves an alert struct given an alert ID.
-  """
-  @spec alert(String.t()) :: Alert.t() | nil
-  def alert(alert_id) do
-    case :ets.match(:alerts, {alert_id, :"$1"}) do
-      [[alert]] -> alert
-      [] -> nil
-    end
-  end
-
-  @doc """
   Retrieves the full set of alerts.
   """
   @spec alerts :: list(Alert.t())
