@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router";
 import { ScreenplayProvider } from "../hooks/useScreenplayContext";
 import ErrorModal from "./Dashboard/ErrorModal";
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PaMessageForm from "../PaMessageForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { createNewPaMessage } from "Utils/api";
 import { isPaMessageAdmin } from "Utils/auth";
 

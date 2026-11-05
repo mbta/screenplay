@@ -4,7 +4,7 @@ import { updateExistingPaMessage } from "Utils/api";
 import type { PaMessage, PaMessageChange } from "Models/pa_message";
 import moment from "moment-timezone";
 import cx from "classnames";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Dropdown, FormCheck } from "react-bootstrap";
 import * as messageTableStyles from "Styles/message-table.module.scss";
 

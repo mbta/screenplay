@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Search } from "react-bootstrap-icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 
 const AlertNotFoundPage = (props: { validAlertId: string | undefined }) => {
   const navigate = useNavigate();

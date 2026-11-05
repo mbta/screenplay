@@ -19,7 +19,7 @@ import {
 import { SuppressedPrediction } from "Models/suppressed_prediction";
 import STATION_ORDER_BY_LINE from "Constants/stationOrder";
 import { useUniqueId } from "Hooks/useUniqueId";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import cx from "classnames";
 import { isSuppressionAdmin } from "Utils/auth";
 

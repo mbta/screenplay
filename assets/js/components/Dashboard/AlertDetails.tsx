@@ -2,7 +2,7 @@ import React, { ComponentType, useEffect, useState } from "react";
 import AlertCard from "Components/AlertCard";
 import AlertNotFoundPage from "Components/AlertNotFoundPage";
 import { PlacesList } from "Components/PlacesPage";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { Alert } from "Models/alert";
 import { Button, Modal } from "react-bootstrap";
 import {
