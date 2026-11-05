@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@fullstory/browser": "^2.0.8",
-    "@heroicons/react": "^2.1.5",
+    "@heroicons/react": "^2.2.0",
     "@sentry/fullstory": "^3.0.0",
     "@sentry/react": "^8.34.0",
     "@types/pluralize": "^0.0.33",
@@ -33,7 +33,7 @@
     "react-dom": "^18.3.1",
     "react-router": "^7.18.5",
     "react-tooltip": "^4.2.21",
-    "swr": "^2.2.5"
+    "swr": "^2.3.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
