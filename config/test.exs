@@ -24,7 +24,9 @@ config :screenplay,
   routes_mod: Screenplay.Routes.Mock,
   http_client: HTTPoison.Mock,
   screens_url: "https://screens.example",
-  screens_api_key: "test_screens_api_key"
+  screens_api_key: "test_screens_api_key",
+  alerts_cache_mod: Screenplay.Alerts.Cache.Mock,
+  pa_messages_mod: Screenplay.PaMessages.Mock
 
 config :ueberauth, Ueberauth,
   providers: [

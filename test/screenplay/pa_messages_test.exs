@@ -7,6 +7,69 @@ defmodule Screenplay.PaMessagesTest do
   alias Screenplay.PaMessages
   alias Screenplay.PaMessages.PaMessage
 
+  describe "list_pa_messages_with_alerts/1" do
+    setup do
+      %{now: ~U[2024-05-01T05:00:00Z]}
+    end
+
+    test "returns pa messages with current and future alerts", %{now: now} do
+      AlertsCacheHelpers.seed_alerts_cache(
+        3,
+        DateTime.add(now, -1, :hour),
+        DateTime.add(now, 1, :hour)
+      )
+
+      insert(:pa_message, %{
+        alert_id: "1",
+        start_datetime: DateTime.add(now, -4, :hour)
+      })
+
+      insert(:pa_message, %{
+        alert_id: "2",
+        start_datetime: DateTime.add(now, 1, :hour)
+      })
+
+      insert(:pa_message, %{
+        alert_id: "3",
+        start_datetime: DateTime.add(now, -1, :hour),
+        end_datetime: DateTime.add(now, 1, :hour)
+      })
+
+      assert [%PaMessage{alert_id: "1"}, %PaMessage{alert_id: "2"}, %PaMessage{alert_id: "3"}] =
+               PaMessages.list_pa_messages_with_alerts(%{now: now})
+    end
+
+    test "filters out pa messages with from the past", %{now: now} do
+      AlertsCacheHelpers.seed_alerts_cache(
+        2,
+        DateTime.add(now, -8, :hour),
+        DateTime.add(now, -1, :hour)
+      )
+
+      insert(:pa_message, %{
+        alert_id: "1",
+        start_datetime: DateTime.add(now, -2, :hour),
+        end_datetime: DateTime.add(now, -1, :hour)
+      })
+
+      assert [] = PaMessages.list_pa_messages_with_alerts(%{now: now})
+    end
+
+    test "excludes pa messages with no alert associated", %{now: now} do
+      AlertsCacheHelpers.seed_alerts_cache(
+        2,
+        DateTime.add(now, -1, :hour),
+        DateTime.add(now, 1, :hour)
+      )
+
+      insert(:pa_message, %{
+        start_datetime: DateTime.add(now, -4, :hour)
+      })
+
+      assert [] = PaMessages.list_pa_messages_with_alerts(%{now: now})
+    end
+  end
+
   describe "get_active_messages/0" do
     test "returns messages linked to an existing alert" do
       now = ~U[2024-05-01T05:00:00Z]
