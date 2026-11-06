@@ -58,7 +58,7 @@ const Dashboard: ComponentType = () => {
   }, [errorState]);
 
   // Fetch alerts every 4 seconds.
-  // Unlike line and stop data dispalyed on dashboard, alerts are subject to frequent updates
+  // Unlike line and stop data displayed on dashboard, alerts are subject to frequent updates
   useInterval(
     async () => {
       await updateAlertsData();
@@ -143,7 +143,7 @@ const Dashboard: ComponentType = () => {
         .sort((a1, a2) =>
           new Date(a1.updated_at) < new Date(a2.updated_at) ? 1 : -1,
         )
-        // get the first alert in the list or underfined if there are none
+        // get the first alert in the list or undefined if there are none
         .find((alert) => alert)
     );
   };

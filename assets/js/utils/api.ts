@@ -172,7 +172,7 @@ export const createSuppressedPrediction = withErrorHandling(
       method: "POST",
     }),
   {
-    customMessage: `Failed to create a prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+    customMessage: `Failed to create a prediction suppression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
   },
 );
 
@@ -183,7 +183,7 @@ export const deleteSuppressedPrediction = withErrorHandling(
       method: "DELETE",
     }),
   {
-    customMessage: `Failed to delete the prediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+    customMessage: `Failed to delete the prediction suppression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
   },
 );
 
@@ -191,7 +191,7 @@ export const updateSuppressedPrediction = withErrorHandling(
   (data: SuppressedPrediction) =>
     fetchOk(API_ENDPOINT_PREDICTION_SUPPRESSION, { body: data, method: "PUT" }),
   {
-    customMessage: `Failed to update theprediction supression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
+    customMessage: `Failed to update the prediction suppression. ${REFRESH_PAGE_ERROR_MESSAGE}`,
   },
 );
 
