@@ -16,7 +16,9 @@ defmodule Screenplay.Factory do
       audio_text: "",
       paused: false,
       saved: false,
-      message_type: ""
+      message_type: "",
+      alert_modes: [],
+      alert_service_effect: nil
     }
   end
 

@@ -5,13 +5,26 @@ import { AudioPreview, Page } from "./types";
 import SelectStationsAndZones from "./SelectStationsAndZones";
 import AssociateAlert from "./AssociateAlert";
 import StaticTemplatePage from "./StaticTemplatePage";
-import { Alert, InformedEntity } from "Models/alert";
+import { Alert, InformedEntity, isAlert } from "Models/alert";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import Toast from "Components/Toast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
 import fp from "lodash/fp";
 import type { PaMessageChange } from "Models/pa_message";
 import type { StaticTemplate } from "Models/static_template";
+
+/**
+ * Derives a unique list of route types from an alert
+ * @param alert The alert to inspect for route types that it impacts
+ * @returns a list of route types
+ */
+const routeTypesFromAlert = (alert: Alert): ReadonlyArray<string> => [
+  ...new Set(
+    alert.informed_entities
+      .map((ie) => ie.route_type?.toString(10) ?? null)
+      .filter((route_type) => typeof route_type === "string"),
+  ),
+];
 
 interface Props {
   title: string;
@@ -105,6 +118,27 @@ const PaMessageForm = ({
   const [signIds, setSignIds] = useState<string[]>(() => {
     return defaultValues?.sign_ids ?? [];
   });
+
+  const alertId = isAlert(associatedAlert)
+    ? associatedAlert.id
+    : typeof associatedAlert === "string"
+      ? associatedAlert
+      : null;
+
+  const [alertModes, setAlertModes] = useState<ReadonlyArray<string>>(() =>
+    isAlert(associatedAlert)
+      ? routeTypesFromAlert(associatedAlert)
+      : defaultValues?.alert_modes ?? [],
+  );
+
+  const [alertServiceEffect, setAlertServiceEffect] = useState<string | null>(
+    () => {
+      return isAlert(associatedAlert)
+        ? associatedAlert.effect
+        : defaultValues?.alert_service_effect ?? null;
+    },
+  );
+
   const places = usePlacesWithPaEss();
   const busRoutes = busRouteIdsAtPlaces(places);
 
@@ -118,6 +152,8 @@ const PaMessageForm = ({
     setEndDate(startDate);
     setEndTime(moment(startTime, "HH:mm").add(1, "hour").format("HH:mm"));
     setAssociatedAlert(null);
+    setAlertModes([]);
+    setAlertServiceEffect(null);
     setEndWithEffectPeriod(false);
   };
 
@@ -186,10 +222,7 @@ const PaMessageForm = ({
         hide={page !== Page.MAIN}
         onSubmit={() => {
           const formData: PaMessageChange = {
-            alert_id:
-              typeof associatedAlert === "string"
-                ? associatedAlert
-                : associatedAlert?.id ?? null,
+            alert_id: alertId,
             start_datetime: startDateTime.toISOString(),
             end_datetime: endWithEffectPeriod
               ? null
@@ -203,6 +236,8 @@ const PaMessageForm = ({
             audio_url: audioURL,
             message_type: selectedTemplate?.type ?? null,
             template_id: selectedTemplate?.id ?? null,
+            alert_modes: alertModes,
+            alert_service_effect: alertServiceEffect,
           };
 
           onSubmit(formData);
@@ -269,6 +304,8 @@ const PaMessageForm = ({
             importMessage,
           ) => {
             setAssociatedAlert(alert);
+            setAlertServiceEffect(alert.effect);
+            setAlertModes(routeTypesFromAlert(alert));
             setEndWithEffectPeriod(endWithEffectPeriod);
             if (importLocations) {
               onImportLocations(alert.informed_entities);

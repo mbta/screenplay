@@ -24,6 +24,8 @@ defmodule Screenplay.PaMessages.PaMessage do
           saved: boolean() | nil,
           message_type: message_type(),
           template_id: non_neg_integer() | nil,
+          alert_modes: [String.t()],
+          alert_service_effect: String.t() | nil,
           inserted_at: DateTime.t(),
           updated_at: DateTime.t()
         }
@@ -43,6 +45,8 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:saved, :boolean)
     field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
     field(:template_id, :integer)
+    field(:alert_modes, {:array, :string}, default: [])
+    field(:alert_service_effect, :string)
 
     timestamps(type: :utc_datetime)
   end
@@ -63,7 +67,9 @@ defmodule Screenplay.PaMessages.PaMessage do
       :paused,
       :saved,
       :message_type,
-      :template_id
+      :template_id,
+      :alert_modes,
+      :alert_service_effect
     ])
     |> validate_required([
       :start_datetime,
@@ -81,6 +87,8 @@ defmodule Screenplay.PaMessages.PaMessage do
     |> validate_start_date()
     |> validate_end_date()
     |> validate_audio_message()
+    |> validate_alert_modes()
+    |> validate_alert_service_effect()
     |> maybe_unpause()
   end
 
@@ -119,6 +127,34 @@ defmodule Screenplay.PaMessages.PaMessage do
 
       _ ->
         changeset
+    end
+  end
+
+  @spec validate_alert_modes(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp validate_alert_modes(changeset) do
+    alert_id = get_field(changeset, :alert_id)
+    alert_modes = get_field(changeset, :alert_modes)
+
+    if not Enum.empty?(alert_modes) and is_nil(alert_id) do
+      add_error(changeset, alert_modes, "alert modes cannot be set without an alert id")
+    else
+      changeset
+    end
+  end
+
+  @spec validate_alert_service_effect(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp validate_alert_service_effect(changeset) do
+    alert_id = get_field(changeset, :alert_id)
+    alert_service_effect = get_field(changeset, :alert_service_effect)
+
+    if is_binary(alert_service_effect) and alert_service_effect != "" and is_nil(alert_id) do
+      add_error(
+        changeset,
+        alert_service_effect,
+        "alert service effect cannot be set without an alert id"
+      )
+    else
+      changeset
     end
   end
 
