@@ -5,7 +5,7 @@ import { AudioPreview, Page } from "./types";
 import SelectStationsAndZones from "./SelectStationsAndZones";
 import AssociateAlert from "./AssociateAlert";
 import StaticTemplatePage from "./StaticTemplatePage";
-import { Alert, InformedEntity } from "Models/alert";
+import { Alert, InformedEntity, isAlert } from "Models/alert";
 import { usePlacesWithPaEss } from "Hooks/usePlacesWithPaEss";
 import Toast from "Components/Toast";
 import { busRouteIdsAtPlaces, getRouteIdsForSign } from "../../../util";
@@ -105,6 +105,27 @@ const PaMessageForm = ({
   const [signIds, setSignIds] = useState<string[]>(() => {
     return defaultValues?.sign_ids ?? [];
   });
+
+  const alertId = isAlert(associatedAlert)
+    ? associatedAlert.id
+    : typeof associatedAlert === "string"
+      ? associatedAlert
+      : null;
+
+  const alertModes = isAlert(associatedAlert)
+    ? [
+        ...new Set(
+          associatedAlert.informed_entities
+            .map((ie) => ie.route_type?.toString(10) ?? null)
+            .filter((route_type) => typeof route_type === "string"),
+        ),
+      ]
+    : defaultValues?.alert_modes ?? [];
+
+  const alertServiceEffect = isAlert(associatedAlert)
+    ? associatedAlert.effect
+    : defaultValues?.alert_service_effect ?? null;
+
   const places = usePlacesWithPaEss();
   const busRoutes = busRouteIdsAtPlaces(places);
 
@@ -186,10 +207,7 @@ const PaMessageForm = ({
         hide={page !== Page.MAIN}
         onSubmit={() => {
           const formData: PaMessageChange = {
-            alert_id:
-              typeof associatedAlert === "string"
-                ? associatedAlert
-                : associatedAlert?.id ?? null,
+            alert_id: alertId,
             start_datetime: startDateTime.toISOString(),
             end_datetime: endWithEffectPeriod
               ? null
@@ -203,6 +221,8 @@ const PaMessageForm = ({
             audio_url: audioURL,
             message_type: selectedTemplate?.type ?? null,
             template_id: selectedTemplate?.id ?? null,
+            alert_modes: alertModes,
+            alert_service_effect: alertServiceEffect,
           };
 
           onSubmit(formData);
