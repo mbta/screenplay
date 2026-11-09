@@ -18,11 +18,11 @@ import type { StaticTemplate } from "Models/static_template";
  * @param alert The alert to inspect for route types that it impacts
  * @returns a list of route types
  */
-const routeTypesFromAlert = (alert: Alert): ReadonlyArray<string> => [
+const routeTypesFromAlert = (alert: Alert): ReadonlyArray<number> => [
   ...new Set(
     alert.informed_entities
-      .map((ie) => ie.route_type?.toString(10) ?? null)
-      .filter((route_type) => typeof route_type === "string"),
+      .map((ie) => ie.route_type ?? null)
+      .filter((route_type) => route_type !== null),
   ),
 ];
 
@@ -125,7 +125,7 @@ const PaMessageForm = ({
       ? associatedAlert
       : null;
 
-  const [alertModes, setAlertModes] = useState<ReadonlyArray<string>>(() =>
+  const [alertModes, setAlertModes] = useState<ReadonlyArray<number>>(() =>
     isAlert(associatedAlert)
       ? routeTypesFromAlert(associatedAlert)
       : defaultValues?.alert_modes ?? [],

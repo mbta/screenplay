@@ -3,7 +3,7 @@ defmodule Screenplay.Repo.Migrations.AddAlertModeEffectToPaMessages do
 
   def change do
     alter table(:pa_message) do
-      add :alert_modes, {:array, :string}, default: [], null: false
+      add :alert_modes, {:array, :integer}, default: [], null: false
       add :alert_service_effect, :text
     end
   end

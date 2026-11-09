@@ -24,7 +24,7 @@ defmodule Screenplay.PaMessages.PaMessage do
           saved: boolean() | nil,
           message_type: message_type(),
           template_id: non_neg_integer() | nil,
-          alert_modes: [String.t()],
+          alert_modes: [number],
           alert_service_effect: String.t() | nil,
           inserted_at: DateTime.t(),
           updated_at: DateTime.t()
@@ -45,7 +45,7 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:saved, :boolean)
     field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
     field(:template_id, :integer)
-    field(:alert_modes, {:array, :string}, default: [])
+    field(:alert_modes, {:array, :integer}, default: [])
     field(:alert_service_effect, :string)
 
     timestamps(type: :utc_datetime)
