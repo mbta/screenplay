@@ -18,7 +18,7 @@ export interface PaMessage {
   updated_at: string;
   message_type: TemplateType | null;
   template_id: number | null;
-  alert_modes: ReadonlyArray<string>;
+  alert_modes: ReadonlyArray<number>;
   alert_service_effect: string | null;
 }
 
