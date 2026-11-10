@@ -5,7 +5,7 @@ interface Props {
   screen: Screen;
 }
 
-const ScreenSimulation = ({ screen }: Props): JSX.Element => {
+const ScreenSimulation = ({ screen }: Props): React.JSX.Element => {
   const src = useMemo(() => generateSource(screen), [screen]);
 
   return (

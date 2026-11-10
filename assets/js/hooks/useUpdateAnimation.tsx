@@ -6,7 +6,7 @@ export const useUpdateAnimation = (
   showAnimationOnMount?: boolean,
 ) => {
   const [showAnimation, setShowAnimation] = useState(false);
-  const timer = useRef<NodeJS.Timeout>();
+  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
   useEffect(() => {
     // Prevents animation when already showing and on page load.
     if (

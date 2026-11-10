@@ -6,7 +6,7 @@ interface OpenInTabButtonProps {
   url: string;
 }
 
-const OpenInTabButton = (props: OpenInTabButtonProps): JSX.Element => {
+const OpenInTabButton = (props: OpenInTabButtonProps): React.JSX.Element => {
   return (
     <OverlayTrigger
       key="bottom"

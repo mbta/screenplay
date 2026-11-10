@@ -8,7 +8,7 @@ interface CopyLinkButtonProps {
   queueToastExpiration: () => void;
 }
 
-const CopyLinkButton = (props: CopyLinkButtonProps): JSX.Element => {
+const CopyLinkButton = (props: CopyLinkButtonProps): React.JSX.Element => {
   const { setShowLinkCopied } = useScreenplayState();
 
   return (

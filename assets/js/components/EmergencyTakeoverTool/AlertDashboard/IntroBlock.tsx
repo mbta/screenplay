@@ -9,7 +9,7 @@ interface IntroBlockProps {
   startAlertWizard: () => void;
 }
 
-const IntroBlock = (props: IntroBlockProps): JSX.Element => {
+const IntroBlock = (props: IntroBlockProps): React.JSX.Element => {
   return (
     <div className="intro-block">
       <div className="exclamation-circle">

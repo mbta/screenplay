@@ -14,7 +14,7 @@ interface ScreenDetailProps {
   isMultipleScreens?: boolean;
 }
 
-const ScreenDetail = (props: ScreenDetailProps): JSX.Element => {
+const ScreenDetail = (props: ScreenDetailProps): React.JSX.Element => {
   const isMultipleScreens = props.screens.length > 1;
 
   return props.isInlineGroup ? (

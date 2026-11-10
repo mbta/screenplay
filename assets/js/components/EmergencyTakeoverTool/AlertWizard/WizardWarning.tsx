@@ -5,7 +5,7 @@ interface WizardWarningProps {
   stationNames: string[];
 }
 
-const WizardWarning = (props: WizardWarningProps): JSX.Element | null => {
+const WizardWarning = (props: WizardWarningProps): React.JSX.Element | null => {
   return (
     <>
       {props.stationNames.length > 0 && (
