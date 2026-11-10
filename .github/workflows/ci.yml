@@ -84,18 +84,7 @@ jobs:
           mix local.rebar --force
           mix local.hex --force
           mix deps.get
-      - name: Compile (warnings as errors)
-        run: mix compile --force --warnings-as-errors
-      - name: Check formatting
-        run: mix format --check-formatted
-      - name: Credo
-        run: mix credo --strict
-      - name: Run tests
-        run: mix test
-      - name: Security checks
-        run: mix sobelow --config
 
-      # NPM Build + Test
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -103,8 +92,19 @@ jobs:
           cache: "npm"
           cache-dependency-path: "./assets"
       - run: npm --prefix assets ci
-      - run: npm --prefix assets run deploy
-      - run: npm --prefix assets run check
-      - run: npm --prefix assets test
 
-      - uses: mbta/actions/dialyzer@788f8e264e9ebb1b76b927c89e6466d5a162be80 # v2.24
+      - parallel:
+        - name: Compile (warnings as errors)
+          run: mix compile --force --warnings-as-errors
+        - name: Check formatting
+          run: mix format --check-formatted
+        - name: Credo
+          run: mix credo --strict
+        - name: Run tests
+          run: mix test
+        - name: Security checks
+          run: mix sobelow --config
+        - uses: mbta/actions/dialyzer@788f8e264e9ebb1b76b927c89e6466d5a162be80 # v2.24
+        - run: npm --prefix assets run deploy
+        - run: npm --prefix assets run check
+        - run: npm --prefix assets test
