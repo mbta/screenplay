@@ -6,6 +6,7 @@ defmodule Screenplay.PaMessages do
   # Use sparingly!
   import Ecto.Query
 
+  alias Screenplay.Alerts.Alert
   alias Screenplay.Alerts.Cache, as: AlertsCache
   alias Screenplay.PaMessages.PaMessage
   alias Screenplay.Places.RoutesToSigns
@@ -96,7 +97,7 @@ defmodule Screenplay.PaMessages do
   @spec create_message(message :: map()) ::
           {:ok, PaMessage.t()} | {:error, Ecto.Changeset.t()}
   def create_message(message) do
-    %PaMessage{} |> PaMessage.changeset(message) |> Repo.insert()
+    %PaMessage{} |> PaMessage.changeset(message) |> set_alert_fields() |> Repo.insert()
   end
 
   @doc """
@@ -107,6 +108,32 @@ defmodule Screenplay.PaMessages do
   def update_message(pa_message, changes) do
     pa_message
     |> PaMessage.changeset(changes)
+    |> set_alert_fields()
     |> Repo.update()
+  end
+
+  @spec set_alert_fields(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp set_alert_fields(%Ecto.Changeset{valid?: false} = changeset), do: changeset
+
+  defp set_alert_fields(changeset) do
+    case Ecto.Changeset.fetch_change(changeset, :alert_id) do
+      :error ->
+        changeset
+
+      {:ok, nil} ->
+        PaMessage.set_alert_fields(changeset, nil)
+
+      {:ok, alert_id} ->
+        case AlertsCache.alerts() |> Enum.find(&(&1.id == alert_id)) do
+          nil ->
+            Ecto.Changeset.add_error(changeset, :alert_id, "could not find alert in alerts cache")
+
+          alert ->
+            PaMessage.set_alert_fields(changeset, %{
+              alert_service_effect: alert.effect,
+              alert_modes: Alert.route_types(alert)
+            })
+        end
+    end
   end
 end

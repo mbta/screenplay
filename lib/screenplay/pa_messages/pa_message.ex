@@ -67,9 +67,7 @@ defmodule Screenplay.PaMessages.PaMessage do
       :paused,
       :saved,
       :message_type,
-      :template_id,
-      :alert_modes,
-      :alert_service_effect
+      :template_id
     ])
     |> validate_required([
       :start_datetime,
@@ -87,9 +85,21 @@ defmodule Screenplay.PaMessages.PaMessage do
     |> validate_start_date()
     |> validate_end_date()
     |> validate_audio_message()
-    |> validate_alert_modes()
-    |> validate_alert_service_effect()
     |> maybe_unpause()
+  end
+
+  @spec set_alert_fields(Ecto.Changeset.t(), map() | nil) :: Ecto.Changeset.t()
+  def set_alert_fields(changeset, nil) do
+    set_alert_fields(changeset, %{alert_modes: [], alert_service_effect: nil})
+  end
+
+  def set_alert_fields(changeset, %{
+        alert_modes: alert_modes,
+        alert_service_effect: alert_service_effect
+      }) do
+    changeset
+    |> put_change(:alert_modes, alert_modes)
+    |> put_change(:alert_service_effect, alert_service_effect)
   end
 
   defp validate_start_date(changeset) do
@@ -127,34 +137,6 @@ defmodule Screenplay.PaMessages.PaMessage do
 
       _ ->
         changeset
-    end
-  end
-
-  @spec validate_alert_modes(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp validate_alert_modes(changeset) do
-    alert_id = get_field(changeset, :alert_id)
-    alert_modes = get_field(changeset, :alert_modes)
-
-    if not Enum.empty?(alert_modes) and is_nil(alert_id) do
-      add_error(changeset, alert_modes, "alert modes cannot be set without an alert id")
-    else
-      changeset
-    end
-  end
-
-  @spec validate_alert_service_effect(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp validate_alert_service_effect(changeset) do
-    alert_id = get_field(changeset, :alert_id)
-    alert_service_effect = get_field(changeset, :alert_service_effect)
-
-    if is_binary(alert_service_effect) and alert_service_effect != "" and is_nil(alert_id) do
-      add_error(
-        changeset,
-        alert_service_effect,
-        "alert service effect cannot be set without an alert id"
-      )
-    else
-      changeset
     end
   end
 

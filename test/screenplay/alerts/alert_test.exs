@@ -278,4 +278,32 @@ defmodule Screenplay.Alerts.AlertTest do
              )
     end
   end
+
+  describe "route_types/1" do
+    test "returns an empty list when there are no informed entities" do
+      assert [] = Alert.route_types(%Alert{})
+    end
+
+    test "returns an empty list when informed entities are empty" do
+      assert [] = Alert.route_types(%Alert{informed_entities: []})
+    end
+
+    test "returns an empty list when informed entities have no route_type" do
+      assert [] =
+               Alert.route_types(%Alert{informed_entities: [%{route: "blue"}, %{route: "red"}]})
+    end
+
+    test "returns a sorted, unique list of route_type" do
+      assert [0, 2, 3] =
+               Alert.route_types(%Alert{
+                 informed_entities: [
+                   %{route_type: 3},
+                   %{route_type: 2},
+                   %{route: "red"},
+                   %{route_type: 0},
+                   %{route_type: 2}
+                 ]
+               })
+    end
+  end
 end
