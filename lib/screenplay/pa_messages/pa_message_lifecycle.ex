@@ -76,16 +76,16 @@ defmodule Screenplay.PaMessages.PaMessageLifecycle do
     case @pa_messages_mod.update_message(pa_message, %{end_datetime: now}) do
       {:ok, changed_message} ->
         Logger.info(
-          "auto_closed_pa_message: PA Message #{changed_message.id} was closed due to a change in its associated alert #{changed_message.alert_id}."
+          "auto_closed_pa_message: PA Message id #{changed_message.id} was closed due to a change in its associated alert with id #{changed_message.alert_id}."
         )
 
       {:error, errors} ->
         Logger.error(
-          "auto_closed_pa_message_failure: PA Message #{pa_message.id}'s associated alert #{pa_message.alert_id} changed, but the PA Message failed to close."
+          "auto_closed_pa_message_failure: PA Message id #{pa_message.id}'s associated alert id #{pa_message.alert_id} changed, but the PA Message failed to close."
         )
 
         Logger.error(
-          "auto_closed_pa_message_failure_details: PA Message #{pa_message.id} failed to close due errors: #{errors}."
+          "auto_closed_pa_message_failure_details: PA Message id #{pa_message.id} failed to close due errors: #{errors}."
         )
     end
   end
