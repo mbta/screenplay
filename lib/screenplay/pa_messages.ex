@@ -113,7 +113,7 @@ defmodule Screenplay.PaMessages do
   end
 
   @spec set_alert_fields(Ecto.Changeset.t()) :: Ecto.Changeset.t()
-  defp set_alert_fields(%Ecto.Changeset{valid?: false} = changeset), do: changeset
+  defp set_alert_fields(changeset = %Ecto.Changeset{valid?: false}), do: changeset
 
   defp set_alert_fields(changeset) do
     case Ecto.Changeset.fetch_change(changeset, :alert_id) do
