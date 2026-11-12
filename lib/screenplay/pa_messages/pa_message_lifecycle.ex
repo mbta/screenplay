@@ -46,7 +46,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycle do
   end
 
   @impl GenServer
-  def handle_info(:update, %{now_fn: now_fn, update_interval_ms: update_interval_ms} = state) do
+  def handle_info(:update, state = %{now_fn: now_fn, update_interval_ms: update_interval_ms}) do
     schedule_update(update_interval_ms)
 
     end_pa_messages_with_changed_alerts(now_fn)
