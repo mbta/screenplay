@@ -61,7 +61,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycle do
 
     @pa_messages_mod.list_pa_messages_with_alerts(%{now: now})
     |> Enum.reject(&(alerts |> Map.get(&1.alert_id) |> alert_same_for_pa_message?(&1)))
-    |> Enum.each(&close_pa_message(&1, now))
+    |> Enum.each(&close_pa_message(&1))
   end
 
   @spec alert_same_for_pa_message?(Alert.t(), PaMessage.t()) :: boolean()
@@ -76,9 +76,12 @@ defmodule Screenplay.PaMessages.PaMessageLifecycle do
 
   defp alert_same_for_pa_message?(_, _), do: true
 
-  @spec close_pa_message(PaMessage.t(), DateTime.t()) :: :ok
-  defp close_pa_message(pa_message, now) do
-    case @pa_messages_mod.update_message(pa_message, %{end_datetime: now}) do
+  @spec close_pa_message(PaMessage.t()) :: :ok
+  defp close_pa_message(pa_message) do
+    # Set the end time to the start time, as "Future" messages could end up in
+    # a state where their end time is before their start time if we used 'now'
+    # (which would violate DB constraints).
+    case @pa_messages_mod.update_message(pa_message, %{end_datetime: pa_message.start_datetime}) do
       {:ok, changed_message} ->
         Logger.info(
           "auto_closed_pa_message: pa_message_id=#{changed_message.id} was closed due to a change in its associated alert_id=#{changed_message.alert_id}."

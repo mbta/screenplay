@@ -152,6 +152,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
 
     test "updates a pa message when an alert has a different effect", %{now_fn: now_fn} do
       alert_id = 2
+      pa_message_start_time = DateTime.add(@now, -1, :hour)
 
       expect(Screenplay.Alerts.Cache.Mock, :alerts, fn ->
         [
@@ -168,7 +169,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
         alert_id: alert_id,
         alert_modes: [1],
         alert_service_effect: "Station bypass due to flooding",
-        start_datetime: DateTime.add(@now, -1, :hour),
+        start_datetime: pa_message_start_time,
         end_datetime: DateTime.add(@now, 1, :hour)
       }
 
@@ -176,8 +177,8 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
       |> expect(:list_pa_messages_with_alerts, fn _ -> [pa_message] end)
       |> expect(:update_message, 1, fn msg, changes ->
         assert msg == pa_message
-        assert changes == %{end_datetime: @now}
-        {:ok, %{pa_message | end_datetime: @now}}
+        assert changes == %{end_datetime: pa_message_start_time}
+        {:ok, %{pa_message | end_datetime: pa_message_start_time}}
       end)
 
       {:ok, state} =
@@ -189,6 +190,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
     test "updates a pa message when an alert has a different mode", %{now_fn: now_fn} do
       alert_id = 2
       effect = "Station closure due to a rafter of wild turkeys"
+      pa_message_start_time = DateTime.add(@now, -1, :hour)
 
       expect(Screenplay.Alerts.Cache.Mock, :alerts, fn ->
         [
@@ -205,7 +207,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
         alert_id: alert_id,
         alert_modes: [1],
         alert_service_effect: effect,
-        start_datetime: DateTime.add(@now, -1, :hour),
+        start_datetime: pa_message_start_time,
         end_datetime: DateTime.add(@now, 1, :hour)
       }
 
@@ -213,8 +215,8 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
       |> expect(:list_pa_messages_with_alerts, fn _ -> [pa_message] end)
       |> expect(:update_message, 1, fn msg, changes ->
         assert msg == pa_message
-        assert changes == %{end_datetime: @now}
-        {:ok, %{pa_message | end_datetime: @now}}
+        assert changes == %{end_datetime: pa_message_start_time}
+        {:ok, %{pa_message | end_datetime: pa_message_start_time}}
       end)
 
       {:ok, state} =
@@ -225,6 +227,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
 
     test "updates a pa message when an alert has a different mode and effect", %{now_fn: now_fn} do
       alert_id = 2
+      pa_message_start_time = DateTime.add(@now, -1, :hour)
 
       expect(Screenplay.Alerts.Cache.Mock, :alerts, fn ->
         [
@@ -241,7 +244,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
         alert_id: alert_id,
         alert_modes: [1],
         alert_service_effect: "Station bypass due to flooding",
-        start_datetime: DateTime.add(@now, -1, :hour),
+        start_datetime: pa_message_start_time,
         end_datetime: DateTime.add(@now, 1, :hour)
       }
 
@@ -249,8 +252,8 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
       |> expect(:list_pa_messages_with_alerts, fn _ -> [pa_message] end)
       |> expect(:update_message, 1, fn msg, changes ->
         assert msg == pa_message
-        assert changes == %{end_datetime: @now}
-        {:ok, %{pa_message | end_datetime: @now}}
+        assert changes == %{end_datetime: pa_message_start_time}
+        {:ok, %{pa_message | end_datetime: pa_message_start_time}}
       end)
 
       {:ok, state} =
