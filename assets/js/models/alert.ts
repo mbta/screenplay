@@ -14,10 +14,13 @@ export interface ActivePeriod {
   end: string;
 }
 
+/**
+ * Describes an Alert retrieved from the V3 API.
+ */
 export interface Alert {
   id: string;
   effect: string;
-  severity: string;
+  severity: number;
   severity_string: string;
   header: string;
   informed_entities: InformedEntity[];

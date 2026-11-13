@@ -24,6 +24,8 @@ defmodule Screenplay.PaMessages.PaMessage do
           saved: boolean() | nil,
           message_type: message_type(),
           template_id: non_neg_integer() | nil,
+          alert_modes: [number],
+          alert_service_effect: String.t() | nil,
           inserted_at: DateTime.t(),
           updated_at: DateTime.t()
         }
@@ -43,6 +45,8 @@ defmodule Screenplay.PaMessages.PaMessage do
     field(:saved, :boolean)
     field(:message_type, Ecto.Enum, values: [nil, :psa, :emergency])
     field(:template_id, :integer)
+    field(:alert_modes, {:array, :integer}, default: [])
+    field(:alert_service_effect, :string)
 
     timestamps(type: :utc_datetime)
   end
@@ -82,6 +86,20 @@ defmodule Screenplay.PaMessages.PaMessage do
     |> validate_end_date()
     |> validate_audio_message()
     |> maybe_unpause()
+  end
+
+  @spec set_alert_fields(Ecto.Changeset.t(), map() | nil) :: Ecto.Changeset.t()
+  def set_alert_fields(changeset, nil) do
+    set_alert_fields(changeset, %{alert_modes: [], alert_service_effect: nil})
+  end
+
+  def set_alert_fields(changeset, %{
+        alert_modes: alert_modes,
+        alert_service_effect: alert_service_effect
+      }) do
+    changeset
+    |> put_change(:alert_modes, alert_modes)
+    |> put_change(:alert_service_effect, alert_service_effect)
   end
 
   defp validate_start_date(changeset) do

@@ -8,7 +8,7 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "STATION_CLOSURE",
-      severity: "4",
+      severity: 4,
       severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
@@ -29,7 +29,7 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "DELAY",
-      severity: "4",
+      severity: 4,
       severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
@@ -50,7 +50,7 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "DELAY",
-      severity: "4",
+      severity: 4,
       severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],
@@ -77,7 +77,7 @@ describe("AlertCard", () => {
     const alert: Alert = {
       id: "123",
       effect: "DELAY",
-      severity: "4",
+      severity: 4,
       severity_string: "up to 15 minutes",
       header: "This is an alert.",
       informed_entities: [],

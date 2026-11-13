@@ -38,10 +38,12 @@ defmodule Screenplay.Alerts.Alert do
 
   @type id :: String.t()
 
+  @type route_type :: non_neg_integer() | nil
+
   @type informed_entity :: %{
           stop: String.t() | nil,
           route: String.t() | nil,
-          route_type: non_neg_integer() | nil
+          route_type: route_type()
         }
 
   @type t :: %__MODULE__{
@@ -178,4 +180,20 @@ defmodule Screenplay.Alerts.Alert do
   def access_alert?(alert) do
     Enum.any?(alert.informed_entities, &(not is_nil(&1.facility)))
   end
+
+  @doc """
+  Retrieves the unique route types from all informed entities in an alert
+  """
+  @spec route_types(t()) :: [route_type()]
+  def route_types(%__MODULE__{informed_entities: ies}) when is_list(ies) do
+    ies
+    |> Enum.flat_map(fn
+      %{route_type: route_type} when not is_nil(route_type) -> [route_type]
+      _ -> []
+    end)
+    |> Enum.uniq()
+    |> Enum.sort()
+  end
+
+  def route_types(_), do: []
 end
