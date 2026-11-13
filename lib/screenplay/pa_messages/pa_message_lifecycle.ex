@@ -65,8 +65,13 @@ defmodule Screenplay.PaMessages.PaMessageLifecycle do
   end
 
   @spec alert_same_for_pa_message?(Alert.t(), PaMessage.t()) :: boolean()
-  defp alert_same_for_pa_message?(%Alert{effect: effect} = alert, msg) when not is_nil(effect) do
-    msg.alert_service_effect == effect and Enum.sort(msg.alert_modes) == Alert.route_types(alert)
+  defp alert_same_for_pa_message?(%Alert{effect: alert_effect} = alert, %{
+         alert_modes: [_ | _] = pa_alert_modes,
+         alert_service_effect: pa_alert_service_effect
+       })
+       when not is_nil(pa_alert_service_effect) do
+    pa_alert_service_effect == alert_effect and
+      Enum.sort(pa_alert_modes) == Alert.route_types(alert)
   end
 
   defp alert_same_for_pa_message?(_, _), do: true

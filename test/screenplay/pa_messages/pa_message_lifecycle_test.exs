@@ -259,7 +259,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
       PaMessageLifecycle.handle_info(:update, state)
     end
 
-    test "updates a pre-existing pa message for initial rollout", %{
+    test "does not update a pre-existing pa message for initial rollout", %{
       now_fn: now_fn
     } do
       alert_id = 2
@@ -287,11 +287,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycleTest do
 
       Screenplay.PaMessages.Mock
       |> expect(:list_pa_messages_with_alerts, fn _ -> [pa_message] end)
-      |> expect(:update_message, 1, fn msg, changes ->
-        assert msg == pa_message
-        assert changes == %{end_datetime: @now}
-        {:ok, %{pa_message | end_datetime: @now}}
-      end)
+      |> expect(:update_message, 0, fn _, _ -> :ok end)
 
       {:ok, state} =
         PaMessageLifecycle.init(now_fn: now_fn, update_interval_ms: @update_interval_ms)
