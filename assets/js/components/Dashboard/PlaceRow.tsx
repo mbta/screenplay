@@ -46,7 +46,7 @@ interface AccordionToggleProps {
 const AccordionToggle = ({
   eventKey,
   hidden,
-}: AccordionToggleProps): JSX.Element => {
+}: AccordionToggleProps): React.JSX.Element => {
   const { activeEventKey } = useContext(AccordionContext);
   const isOpen = activeEventKey?.includes(eventKey) || false;
   const Chevron = isOpen ? ChevronDown : ChevronRight;
@@ -70,7 +70,7 @@ interface SelectBoxToggleProps {
 const SelectBoxToggle = ({
   checked,
   disabled,
-}: SelectBoxToggleProps): JSX.Element => {
+}: SelectBoxToggleProps): React.JSX.Element => {
   return (
     <div className="place-row__toggle">
       <Form.Check disabled={disabled} checked={checked} readOnly />
@@ -115,7 +115,7 @@ const PlaceRow = ({
   children,
   variant,
   checked,
-}: PlaceRowProps): JSX.Element => {
+}: PlaceRowProps): React.JSX.Element => {
   const { routes, name, description, screens: allScreens } = place;
 
   const screens = sortScreens(allScreens).filter((screen) => !screen.hidden);

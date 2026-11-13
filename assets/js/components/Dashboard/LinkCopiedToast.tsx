@@ -6,7 +6,7 @@ interface LinkCopiedToastProps {
   show: boolean;
 }
 
-const LinkCopiedToast = (props: LinkCopiedToastProps): JSX.Element => {
+const LinkCopiedToast = (props: LinkCopiedToastProps): React.JSX.Element => {
   return (
     <Toast show={props.show} animation={true} className="link-copied-toast">
       <Toast.Body>

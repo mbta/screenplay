@@ -13,7 +13,7 @@ interface StationColumnProps {
   checkLine: (line: string, checked: boolean) => void;
 }
 
-const StationColumn = (props: StationColumnProps): JSX.Element => {
+const StationColumn = (props: StationColumnProps): React.JSX.Element => {
   const stationScreenOrientationList = useContext(
     StationScreenOrientationContext,
   );

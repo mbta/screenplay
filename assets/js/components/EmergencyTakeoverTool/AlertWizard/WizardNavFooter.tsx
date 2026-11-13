@@ -44,7 +44,7 @@ const disabledText = (step: number) => {
   }
 };
 
-const WizardNavFooter = (props: WizardNavFooterProps): JSX.Element => {
+const WizardNavFooter = (props: WizardNavFooterProps): React.JSX.Element => {
   return (
     <div className="wizard-nav-footer">
       {props.step !== 1 ? (

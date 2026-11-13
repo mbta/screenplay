@@ -19,7 +19,7 @@ interface AlertDetailsProps {
   triggerConfirmation: (modalDetails: ModalDetails) => void;
 }
 
-const AlertDetails = (props: AlertDetailsProps): JSX.Element => {
+const AlertDetails = (props: AlertDetailsProps): React.JSX.Element => {
   const {
     data,
     startEditWizard,

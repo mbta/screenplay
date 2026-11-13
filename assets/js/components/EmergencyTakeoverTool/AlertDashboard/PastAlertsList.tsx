@@ -19,7 +19,7 @@ export class PastAlertsList extends React.Component<
   PastAlertsListProps,
   PastAlertsListState
 > {
-  private pastAlertsHeaderRef: React.RefObject<HTMLInputElement>;
+  private pastAlertsHeaderRef: React.RefObject<HTMLInputElement | null>;
   constructor(props: PastAlertsListProps) {
     super(props);
     this.state = {
