@@ -93,7 +93,7 @@ defmodule Screenplay.PaMessages.PaMessageLifecycle do
         )
 
         Logger.error(
-          "auto_closed_pa_message_failure_details: pa_message_id=#{pa_message.id} failed to close due errors: #{errors}."
+          "auto_closed_pa_message_failure_details: pa_message_id=#{pa_message.id} failed to close due errors: #{inspect(errors)}."
         )
     end
   end
