@@ -1,3 +1,5 @@
+Mox.defmock(Screenplay.Alerts.Cache.Mock, for: Screenplay.Alerts.Cache)
+Mox.defmock(Screenplay.PaMessages.Mock, for: Screenplay.PaMessages)
 Mox.defmock(Screenplay.RoutePatterns.Mock, for: Screenplay.RoutePatterns.Behaviour)
 Mox.defmock(Screenplay.Stops.Mock, for: Screenplay.Stops.Stop)
 Mox.defmock(Screenplay.Routes.Mock, for: Screenplay.Routes.Route)
