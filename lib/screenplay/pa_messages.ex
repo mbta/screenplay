@@ -73,6 +73,25 @@ defmodule Screenplay.PaMessages do
   end
 
   @doc """
+  Lists PA messages that are associated with alerts that are currently active or occur in the
+  future.
+  """
+  @callback list_pa_messages_with_alerts(ListParams.t()) :: [PaMessage.t()]
+  def list_pa_messages_with_alerts(opts \\ %{}) do
+    opts = Map.put_new_lazy(opts, :now, &DateTime.utc_now/0)
+
+    alert_ids = AlertsCache.alert_ids()
+
+    now = opts[:now] || DateTime.utc_now()
+
+    PaMessage
+    |> PaMessage.Queries.state(:current_and_future, alert_ids, now)
+    |> order_by(desc: :inserted_at)
+    |> Repo.all()
+    |> Enum.reject(&is_nil(&1.alert_id))
+  end
+
+  @doc """
   Returns a list of the currently active PA Messages
   """
   @spec get_active_messages() :: [PaMessage.t()]
@@ -103,8 +122,8 @@ defmodule Screenplay.PaMessages do
   @doc """
   Updates an existing PA Message.
   """
-  @spec update_message(pa_message :: PaMessage.t(), changes :: map()) ::
-          {:ok, PaMessage.t()} | {:error, Ecto.Changeset.t()}
+  @callback update_message(pa_message :: PaMessage.t(), changes :: map()) ::
+              {:ok, PaMessage.t()} | {:error, Ecto.Changeset.t()}
   def update_message(pa_message, changes) do
     pa_message
     |> PaMessage.changeset(changes)

@@ -14,6 +14,7 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   def state(q, :current, alert_ids, now), do: current(q, alert_ids, now)
   def state(q, :future, _alert_ids, now), do: future(q, now)
   def state(q, :past, alert_ids, now), do: past(q, alert_ids, now)
+  def state(q, :current_and_future, alert_ids, now), do: current_and_future(q, alert_ids, now)
   def state(q, :all, _, _), do: q
 
   @doc """
@@ -42,13 +43,35 @@ defmodule Screenplay.PaMessages.PaMessage.Queries do
   either its end time is in the future or it has no end time and its associated
   alert is in passed list of alert IDs.
   """
-  @spec active(queryable :: Ecto.Queryable.t(), alert_ids :: [String.t()], now :: DateTime.t()) ::
+  @spec current(queryable :: Ecto.Queryable.t(), alert_ids :: [String.t()], now :: DateTime.t()) ::
           Ecto.Query.t()
   def current(q \\ PaMessage, alert_ids, now) do
     from m in q,
       where:
         m.start_datetime <= ^now and
           ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)
+  end
+
+  @doc """
+  Limit the query to PaMessages that are current or will occur in the future.
+
+  A PaMessage is considered "current" if its start time is in the past and
+  either its end time is in the future or it has no end time and its associated
+  alert is in passed list of alert IDs. A PaMessage that will occur in the future
+  has it's start time some point after the current time.
+  """
+  @spec current_and_future(
+          queryable :: Ecto.Queryable.t(),
+          alert_ids :: [String.t()],
+          now :: DateTime.t()
+        ) ::
+          Ecto.Query.t()
+  def current_and_future(q \\ PaMessage, alert_ids, now) do
+    from m in q,
+      where:
+        (m.start_datetime <= ^now and
+           ((is_nil(m.end_datetime) and m.alert_id in ^alert_ids) or m.end_datetime >= ^now)) or
+          ^now < m.start_datetime
   end
 
   @doc """

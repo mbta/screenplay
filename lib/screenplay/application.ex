@@ -21,7 +21,12 @@ defmodule Screenplay.Application do
         Screenplay.ScreensConfig
       ] ++
         if Application.get_env(:screenplay, :start_cache_processes) do
-          [Screenplay.Alerts.Cache, Screenplay.Places, Screenplay.PredictionSuppression]
+          [
+            Screenplay.Alerts.Cache,
+            Screenplay.PaMessages.PaMessageLifecycle,
+            Screenplay.Places,
+            Screenplay.PredictionSuppression
+          ]
         else
           []
         end ++
