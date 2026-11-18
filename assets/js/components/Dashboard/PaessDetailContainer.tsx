@@ -9,7 +9,7 @@ interface PaessDetailContainerProps {
 
 const PaessDetailContainer = (
   props: PaessDetailContainerProps,
-): React.JSX.Element => {
+): JSX.Element => {
   const zonePositions = {
     left: ["s", "w"],
     center: ["c", "m"],

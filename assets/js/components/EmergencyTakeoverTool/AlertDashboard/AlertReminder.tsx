@@ -11,7 +11,7 @@ const AlertReminder = ({
   clearAlert,
   editAlert,
   endDate,
-}: AlertReminderProps): React.JSX.Element | null => {
+}: AlertReminderProps): JSX.Element | null => {
   if (!endDate) return null;
   const endDateObj = new Date(endDate);
   if (new Date() < endDateObj) return null;

@@ -2,11 +2,11 @@ import React from "react";
 import Modal from "react-bootstrap/Modal";
 
 export interface ModalDetails {
-  icon: React.JSX.Element;
+  icon: JSX.Element;
   header: string;
   description: string;
   cancelText: string;
-  confirmJSX: React.JSX.Element;
+  confirmJSX: JSX.Element;
   onSubmit: (...args: any) => void;
 }
 
@@ -16,7 +16,7 @@ interface ModalProps {
   modalDetails: ModalDetails;
 }
 
-const ConfirmationModal = (props: ModalProps): React.JSX.Element => {
+const ConfirmationModal = (props: ModalProps): JSX.Element => {
   const { icon, header, description, cancelText, confirmJSX, onSubmit } =
     props.modalDetails;
   return (
