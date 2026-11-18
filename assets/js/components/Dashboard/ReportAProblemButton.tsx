@@ -8,7 +8,7 @@ interface ReportAProblemButtonProps {
 
 const ReportAProblemButton = (
   props: ReportAProblemButtonProps,
-): React.JSX.Element => {
+): JSX.Element => {
   return (
     <Button
       data-testid="report-a-problem"

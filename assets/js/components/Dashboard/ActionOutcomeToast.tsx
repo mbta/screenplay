@@ -16,7 +16,7 @@ const ActionOutcomeToast = ({
   show,
   isSuccessful = true,
   message,
-}: ActionOutcomeToastProps): React.JSX.Element => {
+}: ActionOutcomeToastProps): JSX.Element => {
   const toastClass = classNames({
     "action-outcome-toast": true,
     "action-outcome-toast--success": isSuccessful,

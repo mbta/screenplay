@@ -10,9 +10,7 @@ interface ScreenDetailHeaderProps {
   screenLocation: string;
 }
 
-const ScreenDetailHeader = (
-  props: ScreenDetailHeaderProps,
-): React.JSX.Element => {
+const ScreenDetailHeader = (props: ScreenDetailHeaderProps): JSX.Element => {
   const url = useMemo(() => generateSource(props.screen), [props.screen]);
 
   return (
