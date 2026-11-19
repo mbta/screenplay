@@ -38,6 +38,8 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     environment: environment,
+    // @ts-ignore - this value is generated at build time in `build.mjs`
+    release: __SENTRY_RELEASE__,
     integrations: [
       fullStoryIntegration(SENTRY_ORG_SLUG, { client: FullStory }),
     ],

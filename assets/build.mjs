@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 import { sassPlugin } from "esbuild-sass-plugin";
-import { exit } from "node:process";
+import { execSync } from "node:child_process";
+import process, { exit } from "node:process";
 
 const [cmd] = process.argv.slice(2);
 
@@ -19,6 +20,13 @@ const useKeywordAdoptionOpts = {
   // suppress those import statements.
   silenceDeprecations: ["import"],
 };
+
+/**
+ * @type {string}
+ */
+const gitSha =
+  process.env.GITHUB_SHA ||
+  execSync("git rev-parse --short HEAD").toString().trim();
 
 /**
  * @type {Partial<import("esbuild").BuildOptions>}
@@ -41,6 +49,10 @@ const opts = {
   ],
   loader: { ".svg": "file" },
   publicPath: "/assets/",
+  sourcemap: true,
+  define: {
+    __SENTRY_RELEASE__: JSON.stringify(gitSha),
+  },
 };
 
 if (cmd === "deploy") {
