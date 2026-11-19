@@ -11,7 +11,7 @@ interface PickStationsProps {
   activeAlertsStations: string[];
 }
 
-const PickStations = (props: PickStationsProps): JSX.Element => {
+const PickStations = (props: PickStationsProps): React.JSX.Element => {
   const { activeAlertsStations, selectedStations } = props;
   const filteredAlerts = useMemo(
     () =>

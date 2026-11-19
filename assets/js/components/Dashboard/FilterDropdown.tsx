@@ -51,7 +51,7 @@ const CustomMenu = React.forwardRef<HTMLElement, CustomMenuProps>(
  * Component used to display each place and their screen simulations.
  * Assumes it is displayed in an Accordion component from react-bootstrap.
  */
-const FilterDropdown = (props: FilterDropdownProps): JSX.Element => {
+const FilterDropdown = (props: FilterDropdownProps): React.JSX.Element => {
   const { list, selectedValue, onSelect } = props;
 
   const isDefault = () => selectedValue.label === list[0].label;

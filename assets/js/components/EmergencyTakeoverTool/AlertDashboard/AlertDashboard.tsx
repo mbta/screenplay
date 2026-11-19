@@ -11,7 +11,7 @@ interface AlertDashboardProps {
   closeModal: () => void;
 }
 
-const AlertDashboard = (props: AlertDashboardProps): JSX.Element => {
+const AlertDashboard = (props: AlertDashboardProps): React.JSX.Element => {
   return (
     <>
       <IntroBlock startAlertWizard={props.startAlertWizard} />

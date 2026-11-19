@@ -8,7 +8,9 @@ interface PaessScreenDetailProps {
   label?: string;
 }
 
-const PaessScreenDetail = (props: PaessScreenDetailProps): JSX.Element => {
+const PaessScreenDetail = (
+  props: PaessScreenDetailProps,
+): React.JSX.Element => {
   const generateSource = () => {
     const signsUiUrl = document
       .querySelector("meta[name=signs-ui-url]")

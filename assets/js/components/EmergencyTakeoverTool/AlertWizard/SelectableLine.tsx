@@ -7,7 +7,7 @@ interface SelectableLineProps {
   checkLine: (line: string, checked: boolean) => void;
 }
 
-const SelectableLine = (props: SelectableLineProps): JSX.Element => {
+const SelectableLine = (props: SelectableLineProps): React.JSX.Element => {
   const lineNameStyle = {
     backgroundColor: color(props.line),
   };

@@ -9,7 +9,9 @@ interface SelectableStationProps {
   checkStation: (station: Station) => void;
 }
 
-const SelectableStation = (props: SelectableStationProps): JSX.Element => {
+const SelectableStation = (
+  props: SelectableStationProps,
+): React.JSX.Element => {
   const stationNameStyle = {
     color: color(props.line),
   };

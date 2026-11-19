@@ -17,7 +17,7 @@ interface AlertCardProps {
   showAnimationOnMount?: boolean;
 }
 
-const AlertCard = (props: AlertCardProps): JSX.Element => {
+const AlertCard = (props: AlertCardProps): React.JSX.Element => {
   const { alert, numberOfPlaces, numberOfScreens, showAnimationOnMount } =
     props;
   const prevAlert = usePrevious(alert);

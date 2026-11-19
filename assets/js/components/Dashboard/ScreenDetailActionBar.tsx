@@ -15,7 +15,7 @@ interface ScreenDetailActionBarProps {
 
 const ScreenDetailActionBar = (
   props: ScreenDetailActionBarProps,
-): JSX.Element => {
+): React.JSX.Element => {
   const { setShowLinkCopied } = useScreenplayState();
 
   const queueToastExpiration = () => {

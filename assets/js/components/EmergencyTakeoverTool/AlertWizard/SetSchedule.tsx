@@ -5,7 +5,7 @@ interface SetScheduleProps {
   changeDuration: (event: any) => void;
 }
 
-const SetSchedule = (props: SetScheduleProps): JSX.Element => {
+const SetSchedule = (props: SetScheduleProps): React.JSX.Element => {
   return (
     <>
       <div className="step-instructions flex">

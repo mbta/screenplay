@@ -7,7 +7,7 @@ interface WizardStepperProps {
 
 const steps = ["Message", "Stations", "Schedule", "Confirm"];
 
-const WizardStepper = (props: WizardStepperProps): JSX.Element => {
+const WizardStepper = (props: WizardStepperProps): React.JSX.Element => {
   const activeStep = props.activeStep - 1;
   return (
     <div className="stepper">

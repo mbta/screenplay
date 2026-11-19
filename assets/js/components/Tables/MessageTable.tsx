@@ -10,7 +10,7 @@ interface MessageTableProps {
   addSelectColumn?: boolean;
   addMoreActions?: boolean;
   isReadOnly?: boolean;
-  rows: JSX.Element[];
+  rows: React.JSX.Element[];
   emptyStateText?: string;
   handleHeaderClick?: (header: string) => void;
   sortColumn?: string;
@@ -32,7 +32,7 @@ const MessageTable = ({
   handleHeaderClick = () => {},
   sortColumn = "",
   sortDirection = SortDirection.Asc,
-}: MessageTableProps): JSX.Element => {
+}: MessageTableProps): React.JSX.Element => {
   return (
     <>
       <table className={messageTableStyles.table}>

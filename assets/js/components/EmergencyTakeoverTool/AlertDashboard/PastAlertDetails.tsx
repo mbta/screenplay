@@ -12,7 +12,7 @@ interface PastAlertDetailsProps {
   data: AlertData;
 }
 
-const PastAlertDetails = (props: PastAlertDetailsProps): JSX.Element => {
+const PastAlertDetails = (props: PastAlertDetailsProps): React.JSX.Element => {
   const { cleared_at, cleared_by, created_by, message, schedule, station_ids } =
     props.data;
 

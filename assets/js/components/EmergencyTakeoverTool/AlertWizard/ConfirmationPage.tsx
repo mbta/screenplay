@@ -11,7 +11,7 @@ interface ConfirmationPageProps {
   duration: number | string;
 }
 
-const ConfirmationPage = (props: ConfirmationPageProps): JSX.Element => {
+const ConfirmationPage = (props: ConfirmationPageProps): React.JSX.Element => {
   let durationString = "",
     expirationString = "",
     expirationTime = "";

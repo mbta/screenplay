@@ -11,7 +11,9 @@ interface StackedStationCardsProps {
   className?: string;
 }
 
-const StackedStationCards = (props: StackedStationCardsProps): JSX.Element => {
+const StackedStationCards = (
+  props: StackedStationCardsProps,
+): React.JSX.Element => {
   const stationScreenOrientationList = useContext(
     StationScreenOrientationContext,
   );
