@@ -138,7 +138,7 @@ export const placesWithSelectedAlert = (
     : [];
 };
 
-export const signDirection = (sign: Screen) => {
+const signDirection = (sign: Screen) => {
   const directionIds = sign.routes?.map((r) => r.direction_id);
   if (fp.intersection(directionIds, [0, 1]).length === 2) {
     return "middle";
