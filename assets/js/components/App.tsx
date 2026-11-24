@@ -13,9 +13,7 @@ const AlertDetails = React.lazy(() => import("Components/AlertDetails"));
 const PaMessagesPage = React.lazy(() => import("Components/PaMessagesPage"));
 const NewPaMessage = React.lazy(() => import("Components/NewPaMessage"));
 const EditPaMessage = React.lazy(() => import("Components/EditPaMessage"));
-const UploadPaMessages = React.lazy(
-  () => import("Components/UploadPaMessages"),
-);
+
 const PredictionSuppressionPage = React.lazy(
   () => import("Components/PredictionSuppressionPage"),
 );
@@ -42,7 +40,6 @@ class AppRoutes extends React.Component {
             <Route path="alerts/:id" element={<AlertDetails />}></Route>
             <Route path="pa-messages" element={<PaMessagesPage />} />
             <Route path="pa-messages/new" element={<NewPaMessage />} />
-            <Route path="pa-messages/upload" element={<UploadPaMessages />} />
             <Route path="pa-messages/:id/edit" element={<EditPaMessage />} />
             <Route
               path="prediction-suppression"
