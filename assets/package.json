@@ -19,7 +19,7 @@
     "@sentry/fullstory": "^3.0.0",
     "@sentry/react": "^8.34.0",
     "@types/pluralize": "^0.0.33",
-    "bootstrap": "^5.3.8",
+    "bootstrap": "^5.3.9",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.23",
